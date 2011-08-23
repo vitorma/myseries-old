@@ -75,6 +75,14 @@
              - customize to your needs.
     -->
 
+    <target name="fetch-test-report">
+        <echo>Downloading test reports...</echo>
+        <exec executable="${adb}" failonerror="true" dir="junit-results">
+            <arg line="${adb.device.arg}" />
+            <arg value="pull" />
+            <arg value="/data/data/${tested.manifest.package}/files/" />
+        </exec>
+    </target>
 
     <target name="coverage" depends="-set-coverage-classpath, -install-instrumented, install"
                 description="Runs the tests against the instrumented code and generates
@@ -115,6 +123,9 @@
         <echo>Saving the report file in ${basedir}/coverage/coverage.xml</echo>
     </target>
 
-    <setup />
+     <property name="test.runner" value="pl.polidea.instrumentation.PolideaInstrumentationTestRunner" />
+     <setup import="no" />
+     <import file="${sdk.dir}/tools/ant/test_rules.xml" />
+
 
 </project>
