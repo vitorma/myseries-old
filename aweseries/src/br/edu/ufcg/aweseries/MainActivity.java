@@ -1,6 +1,5 @@
 package br.edu.ufcg.aweseries;
 
-import android.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,12 +23,12 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             this.seriesTextView.setText(e.getMessage());
         }
-        
+
         Button mySeries = (Button) findViewById(R.id.button1);
         mySeries.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MySeries.class));           
+                startActivity(new Intent(MainActivity.this, MySeries.class));
             }
         });
     }
