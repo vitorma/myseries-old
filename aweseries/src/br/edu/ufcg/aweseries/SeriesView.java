@@ -32,6 +32,9 @@ public class SeriesView extends Activity {
     private void populateView() {
         Bundle extras = getIntent().getExtras();
         TextView seriesName = (TextView) findViewById(R.id.seriesNameTextView);
+        seriesName.setText(R.string.unknownSeries);
+        TextView seriesReview =
+                (TextView) findViewById(R.id.seriesReviewTextView);
 
         if (extras != null) {
             db = new TheTVDB(extras.getString("api key"));
@@ -39,15 +42,35 @@ public class SeriesView extends Activity {
             seriesName.setText(extras.getString("series name"));
         }
 
-        TextView seriesReview =
-                (TextView) findViewById(R.id.seriesReviewTextView);
 
         try {
             Series series = db.getSeries(seriesId);
-            seriesReview.setText(series.toString());
+            seriesReview.setText(this.formatReview(series));
         } catch (Exception e) {
-            seriesName.setText(R.string.unknownSeries);
             seriesReview.setText(R.string.reviewNotAvailable);
         }
+    }
+    
+    /**
+     * Returns a string containing a short review of the series. 
+     * @param series The series object retrieve review from.
+     * @return A String containing the review.
+     */
+    private String formatReview(Series series) {
+        StringBuilder builder = new StringBuilder();
+        
+        String genres = series.getGenre().substring(1, series.getGenre().length()-1)
+                .replace("\\|", "").replaceAll("\\|", ", ");
+        
+        String actors = series.getActors().substring(1, series.getActors().length()-1)
+                .replace("\\|", "").replaceAll("\\|", ", ");
+        
+        builder.append(genres).append(" starring ");
+        builder.append(actors).append(". ");
+        builder.append("Airs every ").append(series.getAirsDay());
+        builder.append(" at ").append(series.getAirsTime());
+        builder.append(" on ").append(series.getNetwork());
+        
+        return builder.toString();
     }
 }

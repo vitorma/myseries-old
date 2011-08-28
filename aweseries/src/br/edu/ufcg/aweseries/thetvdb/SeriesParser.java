@@ -53,6 +53,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
 
         RootElement root = new RootElement("Data");
         Element element = root.getChild("Series");
+        
         element.getChild("id").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
@@ -64,6 +65,46 @@ public final class SeriesParser extends TheTVDBParser<Series> {
                 new EndTextElementListener() {
                     public void end(String body) {
                         series.setName(body);
+                    }
+                }
+        );
+        
+        element.getChild("Genre").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setGenre(body);
+                    }
+                }
+        );
+
+        element.getChild("Airs_DayOfWeek").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setAirsDay(body);
+                    }
+                }
+        );
+        
+        element.getChild("Airs_Time").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setAirsTime(body);
+                    }
+                }
+        );
+
+        element.getChild("Network").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setNetwork(body);
+                    }
+                }
+        );
+        
+        element.getChild("Actors").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setActors(body);
                     }
                 }
         );

@@ -1,5 +1,6 @@
 package br.edu.ufcg.aweseries;
 
+import br.edu.ufcg.aweseries.thetvdb.Series;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 import android.app.Activity;
@@ -16,10 +17,17 @@ import android.widget.TextView;
  */
 public class MySeries extends Activity {
     private final int chuckId = 80348;
+    private final int tbbtId = 80379;
+    private final int gotID = 121361;
+    private final int houseID = 73255;
+
+    private final String apiKey = "6F2B5A871C96FB05";
+    private final TheTVDB db = new TheTVDB(apiKey);
     private ListView listView;
 
     /*
      * (non-Javadoc)
+     * 
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
     @Override
@@ -36,7 +44,7 @@ public class MySeries extends Activity {
      */
     private void populateListView() {
         listView = (ListView) this.findViewById(R.id.mySeriesListView);
-        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item,
+        listView.setAdapter(new ArrayAdapter<Series>(this, R.layout.list_item,
                 mySeries()));
     }
 
@@ -50,10 +58,13 @@ public class MySeries extends Activity {
                     int position, long id) {
 
                 Intent intent = new Intent(view.getContext(), SeriesView.class);
-                intent.putExtra("api key", "6F2B5A871C96FB05");
-                intent.putExtra("series id", chuckId);
+                
+                intent.putExtra("api key", apiKey);
+                intent.putExtra("series id",
+                        Integer.parseInt(
+                        ((Series) parent.getItemAtPosition(position)).getId()));
                 intent.putExtra("series name",
-                        ((TextView) parent.getChildAt(position)).getText());
+                        ((Series) parent.getItemAtPosition(position)).getName());
                 try {
                     startActivity(intent);
                 } catch (Exception e) {
@@ -71,15 +82,17 @@ public class MySeries extends Activity {
      * 
      * @return followed series.
      */
-    private String[] mySeries() {
+    private Series[] mySeries() {
         try {
-            String[] series = new String[1];
-            series[0] =
-                    new TheTVDB("6F2B5A871C96FB05").getSeries(chuckId)
-                            .getName();
+            Series[] series = new Series[4];
+            series[0] = db.getSeries(chuckId);
+            series[1] = db.getSeries(gotID);
+            series[2] = db.getSeries(houseID);
+            series[3] = db.getSeries(tbbtId);
+            
             return series;
         } catch (Exception e) {
-            return new String[] { "" };
+            return new Series[] { };
         }
     }
 }
