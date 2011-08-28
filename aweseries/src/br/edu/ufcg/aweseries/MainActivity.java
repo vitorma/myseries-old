@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
         Button mySeries = (Button) findViewById(R.id.button1);
         mySeries.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {                
                 startActivity(new Intent(MainActivity.this, MySeries.class));
             }
         });

@@ -2,4 +2,8 @@
 <resources>
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">aweseries</string>
+    <string name="seasons">Seasons</string>
+    <string name="about">About</string>
+    <string name="unknownSeries">Unknown Series</string>
+    <string name="reviewNotAvailable">Review not available</string>
 </resources>
