@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries;
+package br.edu.ufcg.aweseries.gui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import br.edu.ufcg.aweseries.R;
+import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.R.id;
+import br.edu.ufcg.aweseries.R.layout;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 
 /**

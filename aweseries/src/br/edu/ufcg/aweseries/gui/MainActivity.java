@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries;
+package br.edu.ufcg.aweseries.gui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import br.edu.ufcg.aweseries.R;
+import br.edu.ufcg.aweseries.R.id;
+import br.edu.ufcg.aweseries.R.layout;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 public class MainActivity extends Activity {

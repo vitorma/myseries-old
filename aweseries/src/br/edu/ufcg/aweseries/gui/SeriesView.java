@@ -1,10 +1,15 @@
-package br.edu.ufcg.aweseries;
+package br.edu.ufcg.aweseries.gui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
+import br.edu.ufcg.aweseries.R;
+import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.R.id;
+import br.edu.ufcg.aweseries.R.layout;
+import br.edu.ufcg.aweseries.R.string;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 
 /**
