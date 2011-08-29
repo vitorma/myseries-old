@@ -7,25 +7,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import android.widget.Button;
-import br.edu.ufcg.aweseries.gui.MainActivity;
+import android.widget.TextView;
+import br.edu.ufcg.aweseries.gui.MySeries;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class MyActivityTest {
 
-    private MainActivity mainActivity;
+    private MySeries myActivity;
 
     @Before
     public void setUp() {
-        this.mainActivity = new MainActivity();
-        this.mainActivity.onCreate(null);
+        this.myActivity = new MySeries();
+        this.myActivity.onCreate(null);
     }
 
     @Test
     public void helloWorld() {
-        String hello = new MainActivity().getResources()
+        String hello = new MySeries().getResources()
                 .getString(R.string.hello);
 
         assertThat(hello, equalTo("Hello World, MainActivity!"));
@@ -33,9 +33,9 @@ public class MyActivityTest {
     
     @Test
     public void mySeriesButtonText() {
-        Button btMySeries = (Button) this.mainActivity
-                .findViewById(R.id.button1);
+        TextView textMySeries = (TextView) this.myActivity
+                .findViewById(R.id.textView1);
 
-        assertThat(btMySeries.getText().toString(), equalTo("My Series"));
+        assertThat(textMySeries.getText().toString(), equalTo("My Series"));
     }
 }
