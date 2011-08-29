@@ -14,11 +14,17 @@ public class Environment {
     }
 
     private SeriesProvider seriesProvider;
-    
+
+    /**
+     * @return a default series provider for the production environment
+     */
     private SeriesProvider defaultSeriesProvider() {
         return new SeriesProvider();
     }
 
+    /**
+     * @return the SeriesProvider for the app.
+     */
     public SeriesProvider getSeriesProvider() {
         if (this.seriesProvider == null) {
             this.seriesProvider = this.defaultSeriesProvider();

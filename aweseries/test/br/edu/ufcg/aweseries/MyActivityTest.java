@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.widget.Button;
+import br.edu.ufcg.aweseries.gui.MainActivity;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
