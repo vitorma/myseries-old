@@ -8,10 +8,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.R;
-import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.R.id;
-import br.edu.ufcg.aweseries.R.layout;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 
 /**
@@ -19,14 +17,8 @@ import br.edu.ufcg.aweseries.thetvdb.Series;
  */
 public class MySeries extends Activity {
 
-    private final SeriesProvider seriesProvider = new SeriesProvider();
     private ListView listView;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
     @Override
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
@@ -42,7 +34,7 @@ public class MySeries extends Activity {
     private void populateListView() {
         listView = (ListView) this.findViewById(R.id.mySeriesListView);
         listView.setAdapter(new ArrayAdapter<Series>(this, R.layout.list_item,
-                this.seriesProvider.mySeries()));
+                Environment.instance().getSeriesProvider().mySeries()));
     }
 
     /**

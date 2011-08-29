@@ -4,9 +4,12 @@ import br.edu.ufcg.aweseries.thetvdb.Series;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
- * Supply series information to the system.
+ * Supply series information to the system. It is a cache proxy for series
+ * data. All followed series are cached.
  * 
- * It is a cache proxy for series data. All followed series are cached.
+ * The private constructor avoids instantiation of the SeriesProvider.
+ * Most times, it should be gotten from Environment.getSeriesProvider().
+ * @see newSeriesProvider()
  */
 public class SeriesProvider {
     private final int chuckId = 80348;
@@ -16,6 +19,20 @@ public class SeriesProvider {
 
     private final String apiKey = "6F2B5A871C96FB05";
     private final TheTVDB db = new TheTVDB(apiKey);
+    
+    /**
+     * @see newSeriesProvider()
+     */
+    private SeriesProvider() {}
+
+    /**
+     * If you know what you are doing, use this method to instantiate a
+     * SeriesProvider.
+     * @see SeriesProvider()
+     */
+    public static SeriesProvider newSeriesProvider() {
+        return new SeriesProvider();
+    }
 
     /**
      * Returns an array with all followed series.

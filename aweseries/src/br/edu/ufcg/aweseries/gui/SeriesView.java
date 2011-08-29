@@ -5,18 +5,15 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
+import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.R.id;
-import br.edu.ufcg.aweseries.R.layout;
-import br.edu.ufcg.aweseries.R.string;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 
 /**
  * Displays a series short review.
  */
 public class SeriesView extends Activity {
-    private SeriesProvider seriesProvider;
     private int seriesId;
     private boolean loaded = false;
     private ProgressDialog dialog;
@@ -33,8 +30,6 @@ public class SeriesView extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.series_view);
         
-        this.seriesProvider = new SeriesProvider();
-
         // Show the contents we already know.
         this.seriesName = (TextView) findViewById(R.id.seriesNameTextView);
         this.seriesName.setText(R.string.unknownSeries);
@@ -98,7 +93,7 @@ public class SeriesView extends Activity {
      */
     private void downloadDescription() {
         try {
-            Series series = seriesProvider.getSeries(seriesId);
+            Series series = seriesProvider().getSeries(seriesId);
             this.seriesReview.setText(SeriesView.formatReview(series));
         } catch (Exception e) {
             this.seriesReview.setText(R.string.reviewNotAvailable);
@@ -149,4 +144,10 @@ public class SeriesView extends Activity {
         this.dialog.dismiss();
     }
 
+    /**
+     * @return the app's series provider
+     */
+    private SeriesProvider seriesProvider() {
+        return Environment.instance().getSeriesProvider();
+    }
 }

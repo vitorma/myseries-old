@@ -51,7 +51,7 @@ public class EnvironmentTest {
 
     @Test
     public void changeSeriesProvider() {
-        SeriesProvider sp = new SeriesProvider();
+        SeriesProvider sp = SeriesProvider.newSeriesProvider();
         
         environment.setSeriesProvider(sp);
         

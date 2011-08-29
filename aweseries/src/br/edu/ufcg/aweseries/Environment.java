@@ -19,7 +19,7 @@ public class Environment {
      * @return a default series provider for the production environment
      */
     private SeriesProvider defaultSeriesProvider() {
-        return new SeriesProvider();
+        return SeriesProvider.newSeriesProvider();
     }
 
     /**
