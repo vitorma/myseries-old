@@ -1,21 +1,18 @@
 package br.edu.ufcg.aweseries;
 
-import br.edu.ufcg.aweseries.thetvdb.Series;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
+import br.edu.ufcg.aweseries.thetvdb.Series;
 
 /**
  * Displays a series short review.
  */
 public class SeriesView extends Activity {
-    private TheTVDB db;
+    private SeriesProvider seriesProvider;
     private int seriesId;
-    private Intent intent;
     private boolean loaded = false;
     private ProgressDialog dialog;
     protected TextView seriesReview;
@@ -30,7 +27,8 @@ public class SeriesView extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.series_view);
-        this.intent = getIntent();
+        
+        this.seriesProvider = new SeriesProvider();
 
         // Show the contents we already know.
         this.seriesName = (TextView) findViewById(R.id.seriesNameTextView);
@@ -81,10 +79,9 @@ public class SeriesView extends Activity {
      * retrieved from TheTVDB database.
      */
     private void populateView() {
-        Bundle extras = this.intent.getExtras();
+        Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            db = new TheTVDB(extras.getString("api key"));
             seriesId = extras.getInt("series id");
             seriesName.setText(extras.getString("series name"));
         }
@@ -96,7 +93,7 @@ public class SeriesView extends Activity {
      */
     private void downloadDescription() {
         try {
-            Series series = db.getSeries(seriesId);
+            Series series = seriesProvider.getSeries(seriesId);
             this.seriesReview.setText(SeriesView.formatReview(series));
         } catch (Exception e) {
             this.seriesReview.setText(R.string.reviewNotAvailable);

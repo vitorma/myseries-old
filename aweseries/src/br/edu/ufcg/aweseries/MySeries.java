@@ -1,8 +1,5 @@
 package br.edu.ufcg.aweseries;
 
-import br.edu.ufcg.aweseries.thetvdb.Series;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,18 +8,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import br.edu.ufcg.aweseries.thetvdb.Series;
 
 /**
  * Displays current followed series.
  */
 public class MySeries extends Activity {
-    private final int chuckId = 80348;
-    private final int tbbtId = 80379;
-    private final int gotID = 121361;
-    private final int houseID = 73255;
 
-    private final String apiKey = "6F2B5A871C96FB05";
-    private final TheTVDB db = new TheTVDB(apiKey);
+    private final SeriesProvider seriesProvider = new SeriesProvider();
     private ListView listView;
 
     /*
@@ -45,7 +38,7 @@ public class MySeries extends Activity {
     private void populateListView() {
         listView = (ListView) this.findViewById(R.id.mySeriesListView);
         listView.setAdapter(new ArrayAdapter<Series>(this, R.layout.list_item,
-                mySeries()));
+                this.seriesProvider.mySeries()));
     }
 
     /**
@@ -59,7 +52,6 @@ public class MySeries extends Activity {
 
                 Intent intent = new Intent(view.getContext(), SeriesView.class);
                 
-                intent.putExtra("api key", apiKey);
                 intent.putExtra("series id",
                         Integer.parseInt(
                         ((Series) parent.getItemAtPosition(position)).getId()));
@@ -75,24 +67,5 @@ public class MySeries extends Activity {
                 }
             }
         });
-    }
-
-    /**
-     * Returns an array with the names of all followed series.
-     * 
-     * @return followed series.
-     */
-    private Series[] mySeries() {
-        try {
-            Series[] series = new Series[4];
-            series[0] = db.getSeries(chuckId);
-            series[1] = db.getSeries(gotID);
-            series[2] = db.getSeries(houseID);
-            series[3] = db.getSeries(tbbtId);
-            
-            return series;
-        } catch (Exception e) {
-            return new Series[] { };
-        }
     }
 }

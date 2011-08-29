@@ -1,6 +1,8 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
+
 public class Series {
+
     private String id;
 	private String name;
     private String genre;
