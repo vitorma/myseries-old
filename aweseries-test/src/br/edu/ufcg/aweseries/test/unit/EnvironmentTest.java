@@ -1,56 +1,48 @@
-package br.edu.ufcg.aweseries;
+package br.edu.ufcg.aweseries.test.unit;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import junit.framework.TestCase;
+import br.edu.ufcg.aweseries.Environment;
+import br.edu.ufcg.aweseries.SeriesProvider;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-public class EnvironmentTest {
+public class EnvironmentTest extends TestCase {
     
     private Environment environment;
 
-    @Before
     public void setUp() {
         this.environment = Environment.instance();
     }
     
-    @After
     public void tearDown() {
         this.environment = null;
     }
 
-    @Test
-    public void singletonEnvironment() {
+    public void testSingletonEnvironment() {
         Environment env1 = Environment.instance();
         Environment env2 = Environment.instance();
         
         assertThat(env1, sameInstance(env2));
     }
 
-    @Test
-    public void singletonNotNull() {
+    public void testSingletonNotNull() {
         assertThat(Environment.instance(), notNullValue());
     }
 
-    @Test
-    public void firstSeriesProviderNotNull() {
+    public void testFirstSeriesProviderNotNull() {
         assertThat(environment.getSeriesProvider(), notNullValue());
     }
 
-    @Test
-    public void returnsSameSeriesProviderEachCall() {
+    public void testReturnsSameSeriesProviderEachCall() {
         SeriesProvider sp1 = environment.getSeriesProvider();
         SeriesProvider sp2 = environment.getSeriesProvider();
         
         assertThat(sp1, sameInstance(sp2));
     }
 
-    @Test
-    public void changeSeriesProvider() {
+    public void testChangeSeriesProvider() {
         SeriesProvider sp = SeriesProvider.newSeriesProvider();
         
         environment.setSeriesProvider(sp);
@@ -58,8 +50,7 @@ public class EnvironmentTest {
         assertThat(environment.getSeriesProvider(), sameInstance(sp));
     }
 
-    @Test
-    public void settingSeriesProviderToNullMustInstantiateANewSeriesProvider(){
+    public void testSettingSeriesProviderToNullMustInstantiateANewSeriesProvider(){
         SeriesProvider oldSP = environment.getSeriesProvider();
         environment.setSeriesProvider(null);
         
