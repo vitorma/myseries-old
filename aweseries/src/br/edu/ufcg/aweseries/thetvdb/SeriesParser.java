@@ -100,7 +100,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Overview").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setGenre(body);
+                        series.setOverview(body);
                     }
                 }
         );

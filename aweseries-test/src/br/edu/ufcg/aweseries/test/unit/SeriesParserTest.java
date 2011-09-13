@@ -92,4 +92,12 @@ public class SeriesParserTest extends TestCase {
 		assertThat(seriesWithPoster.getPoster(), not(nullValue()));
 		assertThat(seriesWithPoster.getPoster(), equalTo("posters/80348-15.jpg"));
 	}
+
+	public void testSeriesOverview() {
+		ByteArrayInputStream seriesWithPosterStream = new ByteArrayInputStream(seriesWithPosterDescription.getBytes());
+		Series series = new SeriesParser(seriesWithPosterStream).parse();
+		
+		assertThat(series.getOverview(), not(nullValue()));
+		assertThat(series.getOverview(), equalTo("Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen government secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7."));
+	}
 }

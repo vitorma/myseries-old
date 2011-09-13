@@ -58,10 +58,15 @@ public class MySeries extends Activity {
 			
 			// load series data
 			name.setText(this.getItem(position).getName());
+
 			Bitmap poster = seriesProvider.getPoster(this.getItem(position));
 			if (poster != null) {
-				image.setImageBitmap(seriesProvider.getPoster(this.getItem(position)));
-			}
+				Bitmap smallerBmp = Bitmap.createScaledBitmap(
+						poster, 51, 75, true);
+				image.setImageBitmap(smallerBmp);
+			} /*else {
+				image.setImageResource(R.drawable.icon);
+			}*/
 
 			return itemView;
 		}
