@@ -15,9 +15,9 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
 
-public class MirrorParser extends TheTVDBParser<Mirrors> {
+public class MirrorsParser extends TheTVDBParser<Mirrors> {
 
-    public MirrorParser(String url) {
+    public MirrorsParser(String url) {
 	    super(url);
 	}
 
@@ -31,7 +31,7 @@ public class MirrorParser extends TheTVDBParser<Mirrors> {
         element.setEndElementListener(
                 new EndElementListener() {
                     public void end() {
-                        mirrors.add(mirror);
+                        mirrors.add(mirror.copy());
                     }
                 }
         );

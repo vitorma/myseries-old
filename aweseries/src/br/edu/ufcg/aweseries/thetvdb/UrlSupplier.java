@@ -15,7 +15,7 @@ public class UrlSupplier {
 	}
 
 	private void loadMirrors() {
-	    MirrorParser parser = new MirrorParser(this.getMirrorUrl());
+	    MirrorsParser parser = new MirrorsParser(this.getMirrorUrl());
 	    this.mirrors = parser.parse();
 	}
 	
@@ -31,8 +31,7 @@ public class UrlSupplier {
                 .append("/api/").append(this.apiKey);
     }
 
-    @SuppressWarnings("unused")
-    private StringBuilder getBannerUrl() {
+	private StringBuilder getBannerUrl() {
         return new StringBuilder(this.getMirrorPath(MirrorType.BANNER))
                 .append("/banners/");
     }
@@ -43,7 +42,7 @@ public class UrlSupplier {
                 .append("/api/").append(this.apiKey);
     }
 
-    //SERIES -------------------------------------------------------------------
+    //SERIES ------------------------------------------------------------------
     
     private StringBuilder getBaseSeriesUrlBuilder(int id) {
         return this.getXmlUrl().append("/series/").append(id);
@@ -60,4 +59,11 @@ public class UrlSupplier {
     public String getSeriesSearchUrl(String name) {
 		return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + name;
 	}
+
+    //BANNERS ------------------------------------------------------------------
+
+    // all the series banners file
+    public String getSeriesBannersUrl(int id) {
+    	return this.getBaseSeriesUrlBuilder(id).append("/banners.xml").toString();
+    }
 }

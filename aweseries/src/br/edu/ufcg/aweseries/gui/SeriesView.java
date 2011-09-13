@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.R;
@@ -19,12 +20,8 @@ public class SeriesView extends Activity {
     private ProgressDialog dialog;
     protected TextView seriesReview;
     private TextView seriesName;
+    private ImageView imageView;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +82,6 @@ public class SeriesView extends Activity {
             seriesId = extras.getInt("series id");
             seriesName.setText(extras.getString("series name"));
         }
-
     }
 
     /**
@@ -118,11 +114,11 @@ public class SeriesView extends Activity {
                         .substring(1, series.getActors().length() - 1)
                         .replace("\\|", "").replaceAll("\\|", ", ");
 
-        builder.append(genres).append(" starring ");
-        builder.append(actors).append(". ");
-        builder.append("Airs every ").append(series.getAirsDay());
-        builder.append(" at ").append(series.getAirsTime());
-        builder.append(" on ").append(series.getNetwork());
+        builder.append(genres)
+               .append(". Starring ").append(actors)
+               .append(". Airs every ").append(series.getAirsDay())
+               .append(" at ").append(series.getAirsTime())
+               .append(" on ").append(series.getNetwork()).append(".");
 
         return builder.toString();
     }

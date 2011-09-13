@@ -1,22 +1,35 @@
-//<?xml version="1.0" encoding="UTF-8" ?>
-//<Series>
-//   <id>80348</id>
-//   <Actors>|Zachary Levi|Adam Baldwin|Yvonne Strzechowski|</Actors>
-//   <Airs_DayOfWeek>Monday</Airs_DayOfWeek>
-//   <Airs_Time>8:00 PM</Airs_Time>
-//   <FirstAired>2007-09-24</FirstAired>
-//   <Genre>|Comedy|</Genre>
-//   <IMDB_ID>tt0934814</IMDB_ID>
-//   <Language>English</Language>
-//   <Network>NBC</Network>
-//   <Overview>Zachary Levi (Less Than Perfect) plays Chuck...</Overview>
-//   <Rating>9.0</Rating>
-//   <Runtime>30 mins</Runtime>
-//   <SeriesID>68724</SeriesID>
-//   <SeriesName>Chuck</SeriesName>
-//   <Status>Continuing</Status>
-//   <lastupdated>1200785226</lastupdated>
-// </Series>
+/*
+<?xml version="1.0" encoding="UTF-8" ?>
+<Data>
+  <Series>
+    <id>80348</id>
+    <Actors>|Zachary Levi|Yvonne Strahovski|Adam Baldwin|Bonita Friedericy|Julia Ling|Vik Sahay|Ryan McPartlin|Scott Krinsky|Mark Christopher Lawrence|Sarah Lancaster|Joshua Gomez|Mekenna Melvin|Linda Hamilton|Brandon Routh|Matthew Bomer|</Actors>
+    <Airs_DayOfWeek>Monday</Airs_DayOfWeek>
+    <Airs_Time>8:00 PM</Airs_Time>
+    <ContentRating>TV-PG</ContentRating>
+    <FirstAired>2007-09-24</FirstAired>
+    <Genre>|Action and Adventure|Comedy|Drama|</Genre>
+    <IMDB_ID>tt0934814</IMDB_ID>
+    <Language>en</Language>
+    <Network>NBC</Network>
+    <NetworkID></NetworkID>
+    <Overview>Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen government secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7.</Overview>
+    <Rating>8.8</Rating>
+    <RatingCount>654</RatingCount>
+    <Runtime>60</Runtime>
+    <SeriesID>68724</SeriesID>
+    <SeriesName>Chuck</SeriesName>
+    <Status>Continuing</Status>
+    <added></added>
+    <addedBy></addedBy>
+    <banner>graphical/80348-g21.jpg</banner>
+    <fanart>fanart/original/80348-18.jpg</fanart>
+    <lastupdated>1315862490</lastupdated>
+    <poster>posters/80348-15.jpg</poster>
+    <zap2it_id>EP00930779</zap2it_id>
+  </Series>
+</Data>
+*/
 
 //<?xml version="1.0" encoding="UTF-8" ?>
 //<Data>
@@ -53,7 +66,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
 
         RootElement root = new RootElement("Data");
         Element element = root.getChild("Series");
-        
+
         element.getChild("id").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
@@ -61,6 +74,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
                     }
                 }
         );
+
         element.getChild("SeriesName").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
@@ -68,13 +82,37 @@ public final class SeriesParser extends TheTVDBParser<Series> {
                     }
                 }
         );
-        
+
+        element.getChild("Status").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setStatus(body);
+                    }
+                }
+        );
+
+        element.getChild("Overview").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setGenre(body);
+                    }
+                }
+        );
+
         element.getChild("Genre").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
                         series.setGenre(body);
                     }
                 }
+        );
+        
+        element.getChild("Actors").setEndTextElementListener(
+        		new EndTextElementListener() {
+        			public void end(String body) {
+        				series.setActors(body);
+        			}
+        		}
         );
 
         element.getChild("Airs_DayOfWeek").setEndTextElementListener(
@@ -92,19 +130,27 @@ public final class SeriesParser extends TheTVDBParser<Series> {
                     }
                 }
         );
+        
+        element.getChild("FirstAired").setEndTextElementListener(
+        		new EndTextElementListener() {
+        			public void end(String body) {
+        				series.setFirstAired(body);
+        			}
+        		}
+        );
+
+        element.getChild("Runtime").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setRuntime(body);
+                    }
+                }
+        );
 
         element.getChild("Network").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
                         series.setNetwork(body);
-                    }
-                }
-        );
-        
-        element.getChild("Actors").setEndTextElementListener(
-                new EndTextElementListener() {
-                    public void end(String body) {
-                        series.setActors(body);
                     }
                 }
         );

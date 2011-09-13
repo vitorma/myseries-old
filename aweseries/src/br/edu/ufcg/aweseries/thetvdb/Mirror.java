@@ -25,6 +25,13 @@ public final class Mirror {
         this.path = path;
     }
 
+    public Mirror copy() {
+    	Mirror m = new Mirror();
+    	m.setPath(this.path);
+    	m.setTypeMask(this.typeMask);
+    	return m;
+    }
+
     //Generated hashCode and equals --------------------------------------------
 
     @Override
