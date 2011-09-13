@@ -1,11 +1,15 @@
 package br.edu.ufcg.aweseries.gui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.Environment;
@@ -28,12 +32,38 @@ public class MySeries extends Activity {
         setupItemClickListener();
     }
 
+    class SeriesItemViewAdapter extends ArrayAdapter<Series> {
+
+		public SeriesItemViewAdapter(Context context, int seriesItemResourceId,
+				Series[] objects) {
+			super(context, seriesItemResourceId, objects);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View itemView = convertView;
+
+			// if no view was passed, create one for the item
+			if (itemView == null) {
+				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                itemView = vi.inflate(R.layout.list_item, null);
+			}
+			
+			ImageView image = (ImageView) itemView.findViewById(R.id.itemSeriesImage);
+			TextView name = (TextView) itemView.findViewById(R.id.itemSeriesName);
+			
+			name.setText(this.getItem(position).getName());
+			return itemView;
+		}
+    }
     /**
      * Fills mySeriesListView with the current followed series.
      */
     private void populateListView() {
         listView = (ListView) this.findViewById(R.id.mySeriesListView);
-        listView.setAdapter(new ArrayAdapter<Series>(this, R.layout.list_item,
+
+        listView.setAdapter(new SeriesItemViewAdapter(this, R.layout.list_item,
                 Environment.instance().getSeriesProvider().mySeries()));
     }
 
