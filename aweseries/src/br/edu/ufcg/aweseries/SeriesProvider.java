@@ -1,7 +1,6 @@
 package br.edu.ufcg.aweseries;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
@@ -66,10 +65,6 @@ public class SeriesProvider {
     }
 
 	public Bitmap getPoster(Series series) {
-		Log.d("SP", "before getSeriesPoster call");
-		Bitmap poster = this.db.getSeriesPoster(series);
-		Log.d("SP", "after getSeriesPoster call");
-		return poster;
+		return this.db.getSeriesPoster(series);
 	}
-
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.ImageView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.R;
@@ -18,9 +17,9 @@ public class SeriesView extends Activity {
     private int seriesId;
     private boolean loaded = false;
     private ProgressDialog dialog;
-    protected TextView seriesReview;
+    protected TextView seriesOverview;
     private TextView seriesName;
-    private ImageView imageView;
+    private TextView seriesStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,17 +29,13 @@ public class SeriesView extends Activity {
         // Show the contents we already know.
         this.seriesName = (TextView) findViewById(R.id.seriesNameTextView);
         this.seriesName.setText(R.string.unknownSeries);
-        this.seriesReview = (TextView) findViewById(R.id.seriesReviewTextView);
-        this.seriesReview.setText("Loading...");
+        this.seriesOverview = (TextView) findViewById(R.id.seriesOverviewTextView);
+        this.seriesOverview.setText("Loading...");
+        this.seriesStatus = (TextView) findViewById(R.id.statusTextView);
 
         populateView();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see android.app.Activity#onWindowFocusChanged(boolean)
-     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -90,9 +85,18 @@ public class SeriesView extends Activity {
     private void downloadDescription() {
         try {
             Series series = seriesProvider().getSeries(seriesId);
-            this.seriesReview.setText(SeriesView.formatReview(series));
+            this.seriesName.setText(series.getName());
+            this.seriesOverview.setText(series.getOverview());
+            this.seriesStatus.setText(series.getStatus());
+//            Bitmap bmp. = seriesProvider().getPoster(series);
+//            if (bmp != null) {
+//            	WallpaperManager.
+//            	View v = this.findViewById(R.layout.series_view);
+////            	v.setBackgroundDrawable(BitmapDrawable.);
+//            }
+            
         } catch (Exception e) {
-            this.seriesReview.setText(R.string.reviewNotAvailable);
+            this.seriesOverview.setText(R.string.reviewNotAvailable);
         }
     }
 

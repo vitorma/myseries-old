@@ -6,4 +6,5 @@
     <string name="about">About</string>
     <string name="unknownSeries">Unknown Series</string>
     <string name="reviewNotAvailable">Review not available</string>
+    <string name="status_label">Status:</string>
 </resources>
