@@ -64,9 +64,9 @@ public class MySeries extends Activity {
 				Bitmap smallerBmp = Bitmap.createScaledBitmap(
 						poster, 51, 75, true);
 				image.setImageBitmap(smallerBmp);
-			} /*else {
+			} else {
 				image.setImageResource(R.drawable.icon);
-			}*/
+			}
 
 			return itemView;
 		}

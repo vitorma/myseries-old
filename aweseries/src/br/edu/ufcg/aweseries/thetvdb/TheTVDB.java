@@ -28,6 +28,9 @@ public class TheTVDB {
 
     public Bitmap getSeriesPoster(Series series) {
     	String url = this.urlSupplier.getSeriesPosterUrl(series.getPoster());
+    	if (url == null) {
+    		return null;
+    	}
     	try {
 			URL u = new URL(url);
 			InputStream bmpStream = u.openConnection().getInputStream();
@@ -45,6 +48,7 @@ public class TheTVDB {
 	        
 	        return banner;
 		} catch (MalformedURLException e) {
+			e.printStackTrace();
 			return null;
 		} catch (IOException e) {
 			throw new RuntimeException(e);

@@ -1,6 +1,7 @@
 package br.edu.ufcg.aweseries;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
@@ -17,7 +18,7 @@ public class SeriesProvider {
     private final int tbbtId = 80379;
     private final int gotID = 121361;
     private final int houseID = 73255;
-    private final int youngDraculaId = 68779;
+    private final int youngDraculaId = 80248;
 
     private final String apiKey = "6F2B5A871C96FB05";
     private final TheTVDB db = new TheTVDB(apiKey);
@@ -43,12 +44,12 @@ public class SeriesProvider {
      */
     public Series[] mySeries() {
         try {
-            Series[] series = new Series[4];
+            Series[] series = new Series[5];
             series[0] = db.getSeries(chuckId);
             series[1] = db.getSeries(gotID);
             series[2] = db.getSeries(houseID);
             series[3] = db.getSeries(tbbtId);
-            //series[4] = db.getSeries(youngDraculaId);
+            series[4] = db.getSeries(youngDraculaId);
             
             return series;
         } catch (Exception e) {
@@ -65,7 +66,10 @@ public class SeriesProvider {
     }
 
 	public Bitmap getPoster(Series series) {
-		return this.db.getSeriesPoster(series);
+		Log.d("SP", "before getSeriesPoster call");
+		Bitmap poster = this.db.getSeriesPoster(series);
+		Log.d("SP", "after getSeriesPoster call");
+		return poster;
 	}
 
 }
