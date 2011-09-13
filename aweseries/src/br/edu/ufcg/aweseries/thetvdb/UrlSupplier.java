@@ -62,8 +62,10 @@ public class UrlSupplier {
 
     //BANNERS ------------------------------------------------------------------
 
-    // all the series banners file
-    public String getSeriesBannersUrl(int id) {
-    	return this.getBaseSeriesUrlBuilder(id).append("/banners.xml").toString();
+    public String getSeriesPosterUrl(String filename) {
+    	if (filename == null || filename.trim().isEmpty()) {
+    		return null;
+    	}
+    	return this.getBannerUrl().append(filename).toString();
     }
 }

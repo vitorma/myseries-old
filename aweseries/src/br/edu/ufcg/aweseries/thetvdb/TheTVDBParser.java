@@ -7,21 +7,23 @@ import java.net.URL;
 
 public abstract class TheTVDBParser<T> implements Parser<T> {
 
-    private final URL url;
+	private InputStream inputStream;
+
+    protected TheTVDBParser(InputStream inputStream) {
+    	this.inputStream = inputStream;
+    }
 
     protected TheTVDBParser(String url) {
         try {
-            this.url = new URL(url);
+        	this.inputStream = new URL(url).openConnection().getInputStream();
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+        	throw new RuntimeException(e);
+        } catch (IOException e) {
+        	throw new RuntimeException(e);
         }
     }
 
     protected InputStream getInputStream() {
-        try {
-            return this.url.openConnection().getInputStream();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    	return this.inputStream;
     }
 }

@@ -21,16 +21,15 @@ public class TheTVDB {
         return new SeriesParser(url).parse();
     }
 
-    private Banner getSeriesBanner(int seriesId) {
-    	String url = this.urlSupplier.getSeriesBannersUrl(seriesId);
-    	return new BannersParser(url).parse().getSeriesBanner();
-    }
+//    private Banner getSeriesBanner(int seriesId) {
+//    	String url = this.urlSupplier.getSeriesBannersUrl(seriesId);
+//    	return new BannersParser(url).parse().getSeriesBanner();
+//    }
 
-    public Bitmap getBitMap(int seriesId) {
-    	String url = this.urlSupplier.getSeriesBannersUrl(seriesId);
-    	Banner b = new BannersParser(url).parse().getSeriesBanner();
+    public Bitmap getSeriesPoster(Series series) {
+    	String url = this.urlSupplier.getSeriesPosterUrl(series.getPoster());
     	try {
-			URL u = new URL(url + "/" + b.getPath());
+			URL u = new URL(url);
 			InputStream bmpStream = u.openConnection().getInputStream();
 			BufferedInputStream bmpBuffer = new BufferedInputStream(bmpStream);
 			
@@ -46,7 +45,7 @@ public class TheTVDB {
 	        
 	        return banner;
 		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
+			return null;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

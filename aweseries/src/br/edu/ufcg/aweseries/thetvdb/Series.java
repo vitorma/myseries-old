@@ -12,6 +12,7 @@ public class Series {
     private String firstAired;
     private String runtime;
     private String network;
+	private String poster;
 
     public String getId() {
 		return this.id;
@@ -57,6 +58,10 @@ public class Series {
 		return this.network;
 	}
 
+    public String getPoster() {
+		return this.poster;
+	}
+
     public void setId(String id) {
 		this.id = id;
 	}
@@ -100,6 +105,10 @@ public class Series {
     public void setNetwork(String network) {
 		this.network = network;
 	}
+    
+    public void setPoster(String poster) {
+    	this.poster = poster;
+    }
 
     @Override
     public String toString() {

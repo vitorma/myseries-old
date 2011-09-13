@@ -49,6 +49,8 @@
 
 package br.edu.ufcg.aweseries.thetvdb;
 
+import java.io.InputStream;
+
 import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
@@ -58,6 +60,10 @@ public final class SeriesParser extends TheTVDBParser<Series> {
 
     public SeriesParser(String url) {
         super(url);
+    }
+    
+    public SeriesParser(InputStream seriesInputStream) {
+    	super(seriesInputStream);
     }
 
     @Override
@@ -151,6 +157,14 @@ public final class SeriesParser extends TheTVDBParser<Series> {
                 new EndTextElementListener() {
                     public void end(String body) {
                         series.setNetwork(body);
+                    }
+                }
+        );
+
+        element.getChild("poster").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setPoster(body);
                     }
                 }
         );

@@ -3,6 +3,7 @@ package br.edu.ufcg.aweseries.gui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.R;
+import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 
 /**
@@ -33,11 +35,11 @@ public class MySeries extends Activity {
     }
 
     class SeriesItemViewAdapter extends ArrayAdapter<Series> {
-
+		private final SeriesProvider seriesProvider = Environment.instance().getSeriesProvider();
+		
 		public SeriesItemViewAdapter(Context context, int seriesItemResourceId,
 				Series[] objects) {
 			super(context, seriesItemResourceId, objects);
-			// TODO Auto-generated constructor stub
 		}
 		
 		@Override
@@ -50,10 +52,17 @@ public class MySeries extends Activity {
                 itemView = vi.inflate(R.layout.list_item, null);
 			}
 			
+			// get views for the series fields
 			ImageView image = (ImageView) itemView.findViewById(R.id.itemSeriesImage);
 			TextView name = (TextView) itemView.findViewById(R.id.itemSeriesName);
 			
+			// load series data
 			name.setText(this.getItem(position).getName());
+			Bitmap poster = seriesProvider.getPoster(this.getItem(position));
+			if (poster != null) {
+				image.setImageBitmap(seriesProvider.getPoster(this.getItem(position)));
+			}
+
 			return itemView;
 		}
     }
