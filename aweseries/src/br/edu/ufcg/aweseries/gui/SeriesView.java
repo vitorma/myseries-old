@@ -20,6 +20,14 @@ public class SeriesView extends Activity {
     protected TextView seriesOverview;
     private TextView seriesName;
     private TextView seriesStatus;
+    private TextView seriesAirTime;
+    private TextView seriesAirDays;
+    private TextView seriesDirectors;
+    private TextView seriesActors;
+    private TextView seriesFirsAirDay;
+    private TextView seriesRuntime;
+    private TextView seriesGenre;
+    private TextView seriesNetwork;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +40,14 @@ public class SeriesView extends Activity {
         this.seriesOverview = (TextView) findViewById(R.id.seriesOverviewTextView);
         this.seriesOverview.setText("Loading...");
         this.seriesStatus = (TextView) findViewById(R.id.statusTextView);
+        this.seriesAirTime = (TextView) findViewById(R.id.airTimeTextView);
+        this.seriesAirDays = (TextView) findViewById(R.id.airDaysTextView);
+        this.seriesDirectors = (TextView) findViewById(R.id.directedByTextView);
+        this.seriesActors = (TextView) findViewById(R.id.actorsTextView);
+        this.seriesFirsAirDay = (TextView) findViewById(R.id.firstAiredTextView);
+        this.seriesNetwork = (TextView) findViewById(R.id.networkTextView);
+        this.seriesGenre = (TextView) findViewById(R.id.genreTextView);
+        this.seriesRuntime = (TextView) findViewById(R.id.runtimeTextView);
 
         populateView();
     }
@@ -88,6 +104,15 @@ public class SeriesView extends Activity {
             this.seriesName.setText(series.getName());
             this.seriesOverview.setText(series.getOverview());
             this.seriesStatus.setText(series.getStatus());
+            this.seriesAirTime.setText(series.getAirsTime());
+            this.seriesAirDays.setText(series.getAirsDay());
+            this.seriesDirectors.setText(series.getId());
+            this.seriesActors.setText(series.getActors());
+            this.seriesFirsAirDay.setText(series.getFirstAired());
+            this.seriesNetwork.setText(series.getNetwork());
+            this.seriesGenre.setText(series.getGenre());
+            this.seriesRuntime.setText(series.getRuntime());
+//            
 //            Bitmap bmp. = seriesProvider().getPoster(series);
 //            if (bmp != null) {
 //            	WallpaperManager.
@@ -98,33 +123,6 @@ public class SeriesView extends Activity {
         } catch (Exception e) {
             this.seriesOverview.setText(R.string.reviewNotAvailable);
         }
-    }
-
-    /**
-     * Returns a string containing a short review of the series.
-     * 
-     * @param series The series object retrieve review from.
-     * @return A String containing the review.
-     */
-    private static String formatReview(Series series) {
-        StringBuilder builder = new StringBuilder();
-
-        String genres =
-                series.getGenre().substring(1, series.getGenre().length() - 1)
-                        .replace("\\|", "").replaceAll("\\|", ", ");
-
-        String actors =
-                series.getActors()
-                        .substring(1, series.getActors().length() - 1)
-                        .replace("\\|", "").replaceAll("\\|", ", ");
-
-        builder.append(genres)
-               .append(". Starring ").append(actors)
-               .append(". Airs every ").append(series.getAirsDay())
-               .append(" at ").append(series.getAirsTime())
-               .append(" on ").append(series.getNetwork()).append(".");
-
-        return builder.toString();
     }
 
     /**

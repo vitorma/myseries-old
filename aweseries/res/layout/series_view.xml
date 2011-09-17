@@ -3,18 +3,51 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" 
-  android:orientation="vertical">
-    <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/seriesNameTextView"></TextView>
+  android:weightSum="1" android:orientation="vertical">
+    <ImageView android:id="@+id/imageView1" android:src="@drawable/icon" android:layout_margin="2dip" android:layout_height="wrap_content" android:layout_width="wrap_content"></ImageView>
+    <TextView android:text="TextView" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/seriesNameTextView" android:layout_width="wrap_content"></TextView>
     <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall" android:id="@+id/seriesOverviewTextView"></TextView>
-    <TableLayout android:layout_height="wrap_content" android:id="@+id/tableLayout1" android:layout_width="match_parent">
+    <TableLayout android:id="@+id/tableLayout1" android:layout_width="match_parent" android:layout_height="wrap_content">
         <TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/status_label" android:id="@+id/textView1"></TextView>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView" android:id="@+id/statusTextView"></TextView>
         </TableRow>
-        <TableRow android:id="@+id/tableRow2" android:layout_width="wrap_content" android:layout_height="wrap_content"></TableRow>
-        <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="wrap_content"></TableRow>
-        <TableRow android:id="@+id/tableRow4" android:layout_width="wrap_content" android:layout_height="wrap_content"></TableRow>
+        <TableRow android:id="@+id/tableRow2" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content" android:id="@+id/textView2" android:layout_height="wrap_content" android:text="@string/airtime_label"></TextView>
+            <TextView android:text="TextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/airTimeTextView"></TextView>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content" android:id="@+id/textView4" android:text="@string/airday_label" android:layout_height="wrap_content"></TextView>
+            <TextView android:text="TextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/airDaysTextView"></TextView>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow4" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:id="@+id/textView8" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/directedby_label"></TextView>
+            <TextView android:text="TextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/directedByTextView"></TextView>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow5" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/firstaired_label" android:id="@+id/textView9"></TextView>
+            <TextView android:text="TextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/firstAiredTextView"></TextView>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow6" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/runtime_label" android:id="@+id/textView10"></TextView>
+            <TextView android:text="TextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/runtimeTextView"></TextView>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow7" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/network_label" android:id="@+id/textView11"></TextView>
+            <TextView android:text="TextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/networkTextView"></TextView>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow8" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView12" android:text="@string/genre_label"></TextView>
+            <TextView android:text="TextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/genreTextView"></TextView>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow9" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView13" android:text="@string/actors_label"></TextView>
+            <TextView android:text="TextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/actorsTextView"></TextView>
+        </TableRow>
     </TableLayout>
+    <TextSwitcher android:layout_width="match_parent" android:id="@+id/seasonsTextSwitcher" android:layout_height="wrap_content" android:layout_margin="5dip">
+        <TextView android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="wrap_content" android:id="@+id/seasonsTextView" android:text="@string/seasons"></TextView>
+    </TextSwitcher>
   
   
       

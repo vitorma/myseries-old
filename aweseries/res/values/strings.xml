@@ -7,4 +7,12 @@
     <string name="unknownSeries">Unknown Series</string>
     <string name="reviewNotAvailable">Review not available</string>
     <string name="status_label">Status:</string>
+    <string name="airtime_label">Air time: </string>
+    <string name="airday_label">Air days: </string>
+    <string name="directedby_label">Directed by: </string>
+    <string name="firstaired_label">First aired: </string>
+    <string name="runtime_label">Runtime: </string>
+    <string name="network_label">Network: </string>
+    <string name="genre_label">Genre: </string>
+    <string name="actors_label">Actors: </string>
 </resources>
