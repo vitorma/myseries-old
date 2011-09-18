@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:weightSum="1" android:orientation="vertical">
@@ -6,15 +7,16 @@
 	<LinearLayout android:layout_height="wrap_content"
 		android:layout_width="match_parent" android:id="@+id/linearLayout1"
 		android:weightSum="1">
-		<ImageView android:src="@drawable/icon"
-			android:layout_margin="2dip" android:id="@+id/seriesPosterImageView"
-			android:layout_width="wrap_content" android:layout_weight="0.19"
-			android:layout_height="95dp"></ImageView>
+		<ImageView android:src="@drawable/clapperboard"
+			android:id="@+id/seriesPosterImageView"
+			android:layout_width="50dp" android:layout_weight="0.15" android:layout_height="104dp" android:layout_margin="4dip"></ImageView>
 		<TableLayout android:layout_height="match_parent"
 			android:layout_width="wrap_content" android:id="@+id/linearLayout2"
 			android:layout_weight="0.30" android:orientation="vertical">
-			<TextView android:layout_margin="2dip" android:text="TextView" android:layout_height="wrap_content"
-				android:id="@+id/seriesNameTextView" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="match_parent" android:layout_gravity="center"></TextView>
+			<TextView android:layout_margin="2dip" android:text="TextView"
+				android:layout_height="wrap_content" android:id="@+id/seriesNameTextView"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:layout_width="match_parent" android:layout_gravity="center"></TextView>
 			<TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
 				<TextView android:layout_height="wrap_content"
@@ -45,102 +47,108 @@
 		</TableLayout>
 	</LinearLayout>
 
-
-	<TextView android:text="TextView" android:layout_height="wrap_content"
-		android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall"
-		android:id="@+id/seriesOverviewTextView" android:layout_margin="2dip"></TextView>
-
-	<TableLayout android:id="@+id/tableLayout1"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:shrinkColumns="1">
-
-		<TableRow android:id="@+id/tableRow4" android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-			<TextView android:id="@+id/textView8" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="@string/directedby_label"
-				android:layout_margin="1dip"></TextView>
-			<TextView android:text="TextView" android:layout_height="wrap_content"
-				android:id="@+id/directedByTextView" android:layout_width="match_parent"
-				android:layout_margin="1dip"></TextView>
-		</TableRow>
-
-		<TableRow android:id="@+id/tableRow5" android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-			<TextView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="@string/firstaired_label"
-				android:id="@+id/textView9" android:layout_margin="1dip"></TextView>
-			<TextView android:text="TextView" android:layout_height="wrap_content"
-				android:id="@+id/firstAiredTextView" android:layout_width="match_parent"
-				android:layout_margin="1dip"></TextView>
-		</TableRow>
-
-		<TableRow android:id="@+id/tableRow6" android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-			<TextView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="@string/runtime_label"
-				android:id="@+id/textView10" android:layout_margin="1dip"></TextView>
-			<TextView android:text="TextView" android:layout_height="wrap_content"
-				android:id="@+id/runtimeTextView" android:layout_width="match_parent"
-				android:layout_margin="1dip"></TextView>
-		</TableRow>
-
-		<TableRow android:id="@+id/tableRow7" android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-
-			<TextView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="@string/network_label"
-				android:id="@+id/textView11" android:layout_margin="1dip">
-			</TextView>
+	<ScrollView android:id="@+id/scrollView1"
+		android:layout_height="wrap_content" android:layout_width="match_parent">
+		<LinearLayout android:id="@+id/linearLayout3"
+			android:layout_height="match_parent"
+			android:orientation="vertical" android:layout_width="match_parent">
 
 			<TextView android:text="TextView" android:layout_height="wrap_content"
-				android:id="@+id/networkTextView" android:layout_width="match_parent"
-				android:layout_margin="1dip">
-			</TextView>
+				android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall"
+				android:id="@+id/seriesOverviewTextView" android:layout_margin="2dip"></TextView>
 
-		</TableRow>
+			<TableLayout android:id="@+id/tableLayout1"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:shrinkColumns="1">
 
-		<TableRow android:id="@+id/tableRow8" android:layout_width="match_parent"
-			android:layout_height="wrap_content" android:singleLine="false">
+				<TableRow android:id="@+id/tableRow4" android:layout_width="wrap_content"
+					android:layout_height="wrap_content">
+					<TextView android:id="@+id/textView8"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"
+						android:text="@string/directedby_label" android:layout_margin="1dip"></TextView>
+					<TextView android:text="TextView" android:layout_height="wrap_content"
+						android:id="@+id/directedByTextView" android:layout_width="match_parent"
+						android:layout_margin="1dip"></TextView>
+				</TableRow>
 
-			<TextView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:id="@+id/textView12"
-				android:text="@string/genre_label" android:layout_margin="1dip">
-			</TextView>
+				<TableRow android:id="@+id/tableRow5" android:layout_width="wrap_content"
+					android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:text="@string/firstaired_label"
+						android:id="@+id/textView9" android:layout_margin="1dip"></TextView>
+					<TextView android:text="TextView" android:layout_height="wrap_content"
+						android:id="@+id/firstAiredTextView" android:layout_width="match_parent"
+						android:layout_margin="1dip"></TextView>
+				</TableRow>
 
-			<TextView android:text="TextView" android:id="@+id/genreTextView"
-				android:layout_margin="1dip" android:layout_height="wrap_content" android:layout_width="match_parent">
-			</TextView>
+				<TableRow android:id="@+id/tableRow6" android:layout_width="wrap_content"
+					android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:text="@string/runtime_label"
+						android:id="@+id/textView10" android:layout_margin="1dip"></TextView>
+					<TextView android:text="TextView" android:layout_height="wrap_content"
+						android:id="@+id/runtimeTextView" android:layout_width="match_parent"
+						android:layout_margin="1dip"></TextView>
+				</TableRow>
 
-		</TableRow>
+				<TableRow android:id="@+id/tableRow7" android:layout_width="wrap_content"
+					android:layout_height="wrap_content">
 
-		<TableRow android:id="@+id/tableRow9" android:layout_width="match_parent"
-			android:layout_height="wrap_content" android:singleLine="false">
+					<TextView android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:text="@string/network_label"
+						android:id="@+id/textView11" android:layout_margin="1dip">
+					</TextView>
 
-			<TextView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:id="@+id/textView13"
-				android:text="@string/actors_label" android:layout_margin="1dip">
-			</TextView>
+					<TextView android:text="TextView" android:layout_height="wrap_content"
+						android:id="@+id/networkTextView" android:layout_width="match_parent"
+						android:layout_margin="1dip">
+					</TextView>
 
-			<TextView android:text="TextView" android:id="@+id/actorsTextView"
-				android:layout_margin="1dip" android:layout_height="wrap_content" android:layout_width="match_parent">
-			</TextView>
+				</TableRow>
 
-		</TableRow>
+				<TableRow android:id="@+id/tableRow8" android:layout_width="match_parent"
+					android:layout_height="wrap_content" android:singleLine="false">
 
-	</TableLayout>
+					<TextView android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:id="@+id/textView12"
+						android:text="@string/genre_label" android:layout_margin="1dip">
+					</TextView>
 
-	<TextSwitcher android:layout_width="match_parent"
-		android:id="@+id/seasonsTextSwitcher" android:layout_height="wrap_content"
-		android:layout_margin="5dip">
+					<TextView android:text="TextView" android:id="@+id/genreTextView"
+						android:layout_margin="1dip" android:layout_height="wrap_content"
+						android:layout_width="match_parent">
+					</TextView>
 
-		<TextView android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:layout_width="wrap_content" android:id="@+id/seasonsTextView"
-			android:text="@string/seasons">
-		</TextView>
+				</TableRow>
 
-	</TextSwitcher>
+				<TableRow android:id="@+id/tableRow9" android:layout_width="match_parent"
+					android:layout_height="wrap_content" android:singleLine="false">
 
+					<TextView android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:id="@+id/textView13"
+						android:text="@string/actors_label" android:layout_margin="1dip">
+					</TextView>
 
+					<TextView android:text="TextView" android:id="@+id/actorsTextView"
+						android:layout_margin="1dip" android:layout_height="wrap_content"
+						android:layout_width="match_parent">
+					</TextView>
 
+				</TableRow>
+
+			</TableLayout>
+
+			<TextSwitcher android:layout_width="match_parent"
+				android:id="@+id/seasonsTextSwitcher" android:layout_height="wrap_content"
+				android:layout_margin="5dip">
+
+				<TextView android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceLarge"
+					android:id="@+id/seasonsTextView"
+					android:text="@string/seasons" android:layout_width="match_parent">
+				</TextView>
+
+			</TextSwitcher>
+		</LinearLayout>
+	</ScrollView>
 </LinearLayout>
