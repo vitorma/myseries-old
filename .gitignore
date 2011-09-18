@@ -2,3 +2,7 @@
 */gen/
 */tmp/
 */local.properties
+
+*.class
+*.swp
+*~

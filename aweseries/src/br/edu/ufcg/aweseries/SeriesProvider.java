@@ -1,6 +1,7 @@
 package br.edu.ufcg.aweseries;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
@@ -64,7 +65,25 @@ public class SeriesProvider {
         return this.db.getSeries(id);
     }
 
-	public Bitmap getPoster(Series series) {
-		return this.db.getSeriesPoster(series);
-	}
+    public Bitmap getSmallPoster(Series series) {
+        Bitmap poster = this.db.getSeriesPoster(series);
+        
+        if (poster == null) {
+            return genericSmallPosterImage();
+        }
+
+        return smallPosterFrom(poster);
+    }
+    
+    private Bitmap genericSmallPosterImage() {
+        Bitmap genericPosterImage = BitmapFactory.decodeResource(
+                App.getContext().getResources(),
+                R.drawable.small_poster_clapperboard);
+        
+        return smallPosterFrom(genericPosterImage);
+    }
+    
+    private Bitmap smallPosterFrom(Bitmap standardPoster) {
+        return Bitmap.createScaledBitmap(standardPoster, 51, 75, true);
+    }
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,15 +59,8 @@ public class MySeries extends Activity {
 			// load series data
 			name.setText(this.getItem(position).getName());
 
-			Bitmap poster = seriesProvider.getPoster(this.getItem(position));
-			if (poster != null) {
-				Bitmap smallerBmp = Bitmap.createScaledBitmap(poster, 51, 75, true);
-				image.setImageBitmap(smallerBmp);
-			} else {
-				Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.small_poster_clapperboard);
-				Bitmap smallerBmp = Bitmap.createScaledBitmap(bmp, 51, 75, true);
-				image.setImageBitmap(smallerBmp);
-			}
+			Bitmap poster = seriesProvider.getSmallPoster(this.getItem(position));
+			image.setImageBitmap(poster);
 
 			return itemView;
 		}
