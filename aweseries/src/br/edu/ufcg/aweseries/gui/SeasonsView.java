@@ -2,7 +2,6 @@ package br.edu.ufcg.aweseries.gui;
 
 import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.R;
-import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.thetvdb.Season;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 import android.app.Activity;

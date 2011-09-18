@@ -2,8 +2,12 @@ package br.edu.ufcg.aweseries.gui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.R;
@@ -28,6 +32,7 @@ public class SeriesView extends Activity {
     private TextView seriesRuntime;
     private TextView seriesGenre;
     private TextView seriesNetwork;
+    private TextSwitcher seasonsTextSwitcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +53,34 @@ public class SeriesView extends Activity {
         this.seriesNetwork = (TextView) findViewById(R.id.networkTextView);
         this.seriesGenre = (TextView) findViewById(R.id.genreTextView);
         this.seriesRuntime = (TextView) findViewById(R.id.runtimeTextView);
+        this.seasonsTextSwitcher = (TextSwitcher) findViewById(R.id.seasonsTextSwitcher);
 
         populateView();
+        setupSwitcherListener();
+    }
+
+    private void setupSwitcherListener() {
+        this.seasonsTextSwitcher.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), SeasonsView.class);
+                intent.putExtra("series id", SeriesView.this.seriesId);
+                
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    TextView tv =
+                            (TextView) SeriesView.this
+                                    .findViewById(R.id.viewTitleTextView);
+                    tv.setText(e.getClass() + " " + e.getMessage());
+                }
+
+                
+            }
+        });
+
+        
     }
 
     @Override

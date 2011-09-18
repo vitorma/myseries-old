@@ -96,7 +96,7 @@ public class MySeries extends Activity {
                 } catch (Exception e) {
                     TextView tv =
                             (TextView) MySeries.this
-                                    .findViewById(R.id.viewTitleTextView);
+                                    .findViewById(R.id.seasonsTextView);
                     tv.setText(e.getClass() + " " + e.getMessage());
                 }
             }
