@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries.thetvdb.test.unit;
+package br.edu.ufcg.aweseries.test.unit.thetvdb;
 
 import junit.framework.TestCase;
 
