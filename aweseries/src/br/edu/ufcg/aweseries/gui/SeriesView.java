@@ -3,10 +3,12 @@ package br.edu.ufcg.aweseries.gui;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.Environment;
@@ -138,18 +140,23 @@ public class SeriesView extends Activity {
             this.seriesAirTime.setText(series.getAirsTime());
             this.seriesAirDays.setText(series.getAirsDay());
             this.seriesDirectors.setText(series.getId());
-            this.seriesActors.setText(series.getActors());
+            this.seriesActors.setText(series.getActorsAsString(", "));
             this.seriesFirsAirDay.setText(series.getFirstAired());
             this.seriesNetwork.setText(series.getNetwork());
-            this.seriesGenre.setText(series.getGenre());
+            this.seriesGenre.setText(series.getGenresAsString(", "));
             this.seriesRuntime.setText(series.getRuntime());
-//            
-//            Bitmap bmp. = seriesProvider().getPoster(series);
-//            if (bmp != null) {
-//            	WallpaperManager.
-//            	View v = this.findViewById(R.layout.series_view);
-////            	v.setBackgroundDrawable(BitmapDrawable.);
-//            }
+            
+            Bitmap bmp = seriesProvider().getSmallPoster(series);
+            if (bmp != null) {
+                // WallpaperManager.
+                // View v = this.findViewById(R.layout.series_view);
+                // // v.setBackgroundDrawable(BitmapDrawable.);
+                ImageView view =
+                        (ImageView) this
+                                .findViewById(R.id.seriesPosterImageView);
+                view.setImageBitmap(bmp);
+                
+            }
             
         } catch (Exception e) {
             this.seriesOverview.setText(R.string.reviewNotAvailable);

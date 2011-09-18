@@ -56,7 +56,7 @@ public class SeriesDBTest extends TestCase {
     private Series createTestSeries() {
         Series series = new Series();
         series.setName("SeriesName");
-        series.setActors("SeriesActors");
+        //series.setActors("SeriesActors");
         series.setNetwork("SeriesNetwork");
         series.setId("abcdefg");
         

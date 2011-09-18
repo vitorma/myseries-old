@@ -108,18 +108,25 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Genre").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setGenre(body);
+                        int bodyLength = body.length();
+                        for (String s : body.substring(1, bodyLength - 1)
+                                .split("\\|")) {
+                            series.addGenre(s.trim());
+                        }
                     }
                 }
         );
         
         element.getChild("Actors").setEndTextElementListener(
-        		new EndTextElementListener() {
-        			public void end(String body) {
-        				series.setActors(body);
-        			}
-        		}
-        );
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        int bodyLength = body.length();
+                        for (String s : body.substring(1, bodyLength - 1)
+                                .split("\\|")) {
+                            series.addActor(s.trim());
+                        }
+                    }
+                });
 
         element.getChild("Airs_DayOfWeek").setEndTextElementListener(
                 new EndTextElementListener() {
