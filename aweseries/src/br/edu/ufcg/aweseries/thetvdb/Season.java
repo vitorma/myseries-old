@@ -7,25 +7,31 @@ public class Season {
     /**
      * The number of this series.
      */
-    private int number;
-    
+    private final int number;
+
     /**
      * The episodes of this series.
      */
-    private java.util.List<Episode> episodes;
+    private final java.util.List<Episode> episodes;
 
     /**
      * The poster of this series.
      */
     private String poster;
 
+    public Season(final int seasonNumber) {
+        this(seasonNumber, "");
+    }
+
     /**
      * The number of the season.
      * 
      * @param seasonNumber
      */
-    public Season(final int seasonNumber) {
-        // TODO Auto-generated constructor stub
+    public Season(final int seasonNumber, final String poster) {
+        this.number = seasonNumber;
+        this.episodes = new java.util.ArrayList<Episode>();
+        this.poster = poster;
     }
 
     /**
@@ -35,7 +41,19 @@ public class Season {
      *            series, it will not be added.
      */
     public void addEpisode(final Episode episode) {
+        if (!this.getEpisodes().contains(episode)) {
+            this.episodes.add(episode);
+        }
+    }
 
+    /**
+     * Returns the i-th episode of this season.
+     * 
+     * @param i Episode index
+     * @return The episode at index i, if any
+     */
+    public Episode getEpisodeAt(final int i) {
+        return this.episodes.get(i);
     }
 
     /**
@@ -44,17 +62,7 @@ public class Season {
      * @return The list of episodes
      */
     public java.util.List<Episode> getEpisodes() {
-        return null;
-    }
-    
-    /**
-     * Returns the i-th episode of this season.
-     * 
-     * @param i Episode index
-     * @return The episode at index i, if any
-     */
-    public Episode getEpisodeAt(int i) {
-        return null;
+        return this.episodes;
     }
 
     /**
@@ -63,6 +71,12 @@ public class Season {
      * @return The next episode
      */
     public Episode getNextEpisode() {
+        for (final Episode episode : this.getEpisodes()) {
+            if (!episode.isViewed()) {
+                return episode;
+            }
+        }
+
         return null;
     }
 
@@ -74,72 +88,87 @@ public class Season {
     public int getNumber() {
         return this.number;
     }
+
     /**
      * Returns the number of episodes in this series.
      * 
      * @return The number of episodes
      */
     public int getNumberOfEpisodes() {
-        return 0;
+        return this.getEpisodes().size();
     }
+
     /**
      * Returns the poster of this series.
      * 
      * @return The poster
      */
     public String getPoster() {
-        return null;
+        return this.poster;
     }
-    
+
     /**
      * Returns the index of a given episode.
      * 
      * @param episode The episode to search
      * @return The index of the episode
      */
-    public int indexOf(Episode episode) {
-        return -1;
+    public int indexOf(final Episode episode) {
+        return this.getEpisodes().indexOf(episode);
     }
-    
+
     /**
      * Returns true if the i-th episode was marked as viewed.
      * 
      * @param i The index of the episode to query
      * @return True if episode at index i was marked as viewed
      */
-    public boolean isViewed(int i) {
-        return false;
+    public boolean isViewed(final int i) {
+        return this.getEpisodeAt(i).isViewed();
     }
-    
+
     /**
      * Marks all episodes in this season as not viewed.
      */
     public void markAllAsNotViewed() {
-        
+        for (final Episode episode : this.getEpisodes()) {
+            episode.markAsNotViewed();
+        }
     }
 
     /**
      * Marks all episodes in this season as viewed.
      */
     public void markAllAsViewed() {
-        
+        for (final Episode episode : this.getEpisodes()) {
+            episode.markAsViewed();
+        }
     }
-    
+
     /**
      * Marks the i-th episode as not viewed.
      * 
      * @param i Index of the episode to mark
      */
-    public void markAsNotViewed(int i) {
-        
+    public void markAsNotViewed(final int i) {
+        this.getEpisodeAt(i).markAsNotViewed();
     }
-        
+
     /**
      * Marks the i-th episode as viewed.
      * 
      * @param i Index of the episode to mark
      */
-    public void markAsViewed(int i) {
-        
+    public void markAsViewed(final int i) {
+        this.getEpisodeAt(i).markAsViewed();
+    }
+
+    /**
+     * Sets the poster for this series.
+     * 
+     * @param poster The new poster.
+     */
+    public void setPoster(final String poster) {
+        this.poster = poster;
     }
 }

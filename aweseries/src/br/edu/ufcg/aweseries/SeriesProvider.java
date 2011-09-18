@@ -2,6 +2,7 @@ package br.edu.ufcg.aweseries;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import br.edu.ufcg.aweseries.thetvdb.Season;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
@@ -85,5 +86,13 @@ public class SeriesProvider {
     
     private Bitmap smallPosterFrom(Bitmap standardPoster) {
         return Bitmap.createScaledBitmap(standardPoster, 51, 75, true);
+    }
+
+    public Season[] getSeasons(Series series) {
+        // TODO
+        Season season1 = new Season(1);
+        Season season2 = new Season(2);
+        
+        return new Season[] { season1 , season2 };
     }
 }

@@ -28,7 +28,7 @@ public class MySeries extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
-        setContentView(R.layout.my_series);
+        setContentView(R.layout.listing);
 
         populateListView();
         setupItemClickListener();
@@ -69,7 +69,7 @@ public class MySeries extends Activity {
      * Fills mySeriesListView with the current followed series.
      */
     private void populateListView() {
-        listView = (ListView) this.findViewById(R.id.mySeriesListView);
+        listView = (ListView) this.findViewById(R.id.listView);
 
         listView.setAdapter(new SeriesItemViewAdapter(this, R.layout.list_item,
                 Environment.instance().getSeriesProvider().mySeries()));
@@ -96,7 +96,7 @@ public class MySeries extends Activity {
                 } catch (Exception e) {
                     TextView tv =
                             (TextView) MySeries.this
-                                    .findViewById(R.id.textView1);
+                                    .findViewById(R.id.viewTitleTextView);
                     tv.setText(e.getClass() + " " + e.getMessage());
                 }
             }
