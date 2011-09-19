@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="AweSeriesUnitTest" default="help">
+    <property name="tested.project.dir" value="../aweseries" />
+    <property name="tested.project.classes.dir" value="${tested.project.dir}/bin/classes"/>
+    <property name="src.dir" value="src"/>
+    <property name="lib.dir" value="lib"/>
+
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="reports.dir" value="${build.dir}/reports"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+        <pathelement location="${tested.project.classes.dir}"/>
+    </path>
+
+    <path id="run.classpath">
+        <path refid="classpath"/>
+        <pathelement location="${classes.dir}"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="-compile-tested-project">
+        <subant target="compile" buildpath="${tested.project.dir}"/>
+    </target>
+
+    <target name="compile" depends="-compile-tested-project">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${reports.dir}"/>
+
+        <javac target="1.5" debug="true" destdir="${classes.dir}">
+            <src path="${src.dir}"/>
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="run-tests" depends="compile">
+        <junit printsummary="yes" failureproperty="test.failure">
+            <classpath refid="run.classpath"/>
+
+            <formatter type="xml"/>
+
+            <batchtest todir="${reports.dir}">
+                <fileset dir="${src.dir}" includes="**/*.java"/>
+            </batchtest>
+        </junit>
+
+        <fail message="One or more test cases failed" if="test.failure"/>
+
+    </target>
+
+</project>
