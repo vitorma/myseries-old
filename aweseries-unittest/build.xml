@@ -54,7 +54,7 @@
 
             <!-- settings for coverage analysis-->
             <jvmarg value="-Demma.coverage.out.file=${coverage.output.dir}/coverage.emma" />
-            <jvmarg value="-Demma.coverage.out.merge=false" />
+            <jvmarg value="-Demma.coverage.out.merge=true" />
 
             <batchtest todir="${reports.dir}">
                 <fileset dir="${src.dir}" includes="**/*.java"/>
