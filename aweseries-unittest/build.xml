@@ -9,9 +9,13 @@
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="reports.dir" value="${build.dir}/reports"/>
 
+    <path id="testedproject.classpath">
+        <pathelement location="${tested.project.classes.dir}"/>
+    </path>
+
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="*.jar"/>
-        <pathelement location="${tested.project.classes.dir}"/>
+        <path refid="testedproject.classpath"/>
     </path>
 
     <path id="run.classpath">
@@ -39,10 +43,18 @@
     </target>
 
     <target name="run-tests" depends="compile">
-        <junit printsummary="yes" failureproperty="test.failure">
+        <junit printsummary="yes" failureproperty="test.failure" fork="yes">
+            <!-- intrumentated code for coverage analysis-->
+            <classpath>
+                <pathelement location="${instrumentation.output.dir}"/>
+            </classpath>
             <classpath refid="run.classpath"/>
 
             <formatter type="xml"/>
+
+            <!-- settings for coverage analysis-->
+            <jvmarg value="-Demma.coverage.out.file=${coverage.output.dir}/coverage.emma" />
+            <jvmarg value="-Demma.coverage.out.merge=false" />
 
             <batchtest todir="${reports.dir}">
                 <fileset dir="${src.dir}" includes="**/*.java"/>
@@ -51,6 +63,57 @@
 
         <fail message="One or more test cases failed" if="test.failure"/>
 
+    </target>
+
+    <!-- code coverage section -->
+
+    <property name="emma.dir" value="${lib.dir}"/>
+
+    <path id="emma.lib">
+        <pathelement location="${emma.dir}/emma.jar" />
+        <pathelement location="${emma.dir}/emma_ant.jar" />
+    </path>
+
+    <taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+
+    <target name="coverage" depends="compile" >
+        <property name="emma.enabled" value="true" />
+
+        <!-- EMMA output directories: -->
+        <property name="instrumentation.output.dir" value="${build.dir}/instrumentation" />
+        <mkdir dir="${instrumentation.output.dir}" />
+
+        <property name="coverage.output.dir" value="${reports.dir}/coverage" />
+        <mkdir dir="${coverage.output.dir}" />
+
+        <!-- EMMA instr -->
+        <emma enabled="${emma.enabled}">
+            <instr instrpathref="testedproject.classpath"
+                   destdir="${instrumentation.output.dir}"
+                   metadatafile="${coverage.output.dir}/metadata.emma"
+                   merge="true">
+
+               <filter excludes="br.edu.ufcg.aweseries.gui.*" />
+               <filter excludes="br.edu.ufcg.aweseries.R" />
+               <filter excludes="br.edu.ufcg.aweseries.R$*" />
+           </instr>
+
+        </emma>
+
+        <!-- run tests -->
+        <antcall target="run-tests"/>
+
+        <!-- EMMA report -->
+        <emma enabled="${emma.enabled}">
+            <report>
+                <fileset dir="${coverage.output.dir}" >
+                    <include name="*.emma" />
+                </fileset>
+
+                <html outfile="${coverage.output.dir}/coverage.html" />
+                <xml outfile="${coverage.output.dir}/coverage.xml" />
+            </report>
+        </emma>
     </target>
 
 </project>
