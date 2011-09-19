@@ -1,8 +1,9 @@
 package br.edu.ufcg.aweseries.test.unit;
 
-import org.hamcrest.CoreMatchers;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,14 +30,14 @@ public class EnvironmentTest {
 
         this.environment.setSeriesProvider(sp);
 
-        Assert.assertThat(this.environment.getSeriesProvider(),
-                CoreMatchers.sameInstance(sp));
+        assertThat(this.environment.getSeriesProvider(),
+                sameInstance(sp));
     }
 
     @Test
     public void testFirstSeriesProviderNotNull() {
-        Assert.assertThat(this.environment.getSeriesProvider(),
-                CoreMatchers.notNullValue());
+        assertThat(this.environment.getSeriesProvider(),
+                notNullValue());
     }
 
     @Test
@@ -44,7 +45,7 @@ public class EnvironmentTest {
         final SeriesProvider sp1 = this.environment.getSeriesProvider();
         final SeriesProvider sp2 = this.environment.getSeriesProvider();
 
-        Assert.assertThat(sp1, CoreMatchers.sameInstance(sp2));
+        assertThat(sp1, sameInstance(sp2));
     }
 
     @Test
@@ -53,10 +54,10 @@ public class EnvironmentTest {
         final SeriesProvider oldSP = this.environment.getSeriesProvider();
         this.environment.setSeriesProvider(null);
 
-        Assert.assertThat(this.environment.getSeriesProvider(),
-                CoreMatchers.notNullValue());
-        Assert.assertThat(this.environment.getSeriesProvider(),
-                CoreMatchers.not(CoreMatchers.sameInstance(oldSP)));
+        assertThat(this.environment.getSeriesProvider(),
+                notNullValue());
+        assertThat(this.environment.getSeriesProvider(),
+                not(sameInstance(oldSP)));
     }
 
     @Test
@@ -64,11 +65,11 @@ public class EnvironmentTest {
         final Environment env1 = Environment.instance();
         final Environment env2 = Environment.instance();
 
-        Assert.assertThat(env1, CoreMatchers.sameInstance(env2));
+        assertThat(env1, sameInstance(env2));
     }
 
     @Test
     public void testSingletonNotNull() {
-        Assert.assertThat(Environment.instance(), CoreMatchers.notNullValue());
+        assertThat(Environment.instance(), notNullValue());
     }
 }

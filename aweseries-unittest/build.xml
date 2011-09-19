@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="AweSeriesUnitTest" default="help">
+<project name="AweSeriesUnitTest" default="run-tests">
     <property name="tested.project.dir" value="../aweseries" />
     <property name="tested.project.classes.dir" value="${tested.project.dir}/bin/classes"/>
     <property name="src.dir" value="src"/>
@@ -32,7 +32,7 @@
         <mkdir dir="${classes.dir}"/>
         <mkdir dir="${reports.dir}"/>
 
-        <javac target="1.5" debug="true" destdir="${classes.dir}">
+        <javac debug="true" destdir="${classes.dir}">
             <src path="${src.dir}"/>
             <classpath refid="classpath"/>
         </javac>

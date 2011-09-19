@@ -1,9 +1,11 @@
 package br.edu.ufcg.aweseries.test.unit.thetvdb;
 
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.*;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.matchers.JUnitMatchers;
 
 import br.edu.ufcg.aweseries.thetvdb.Episode;
 import br.edu.ufcg.aweseries.thetvdb.Season;
@@ -29,15 +31,14 @@ public class SeasonTest {
 
     @Test
     public final void testAddEpisode() {
-        Assert.assertThat(this.season.getEpisodes(),
-                JUnitMatchers.hasItems(this.episode1, this.episode2));
+        assertThat(this.season.getEpisodes(),
+                   hasItems(this.episode1, this.episode2));
         Assert.assertEquals(this.season.getNumberOfEpisodes(), 2);
 
         final Episode episode3 = new Episode();
         this.season.addEpisode(episode3);
         Assert.assertEquals(this.season.getNumberOfEpisodes(), 3);
-        Assert.assertThat(this.season.getEpisodes(),
-                JUnitMatchers.hasItem(episode3));
+        assertThat(this.season.getEpisodes(), hasItem(episode3));
 
         this.season.addEpisode(this.episode2);
         Assert.assertEquals(this.season.getNumberOfEpisodes(), 3);

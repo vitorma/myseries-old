@@ -3,6 +3,7 @@ package br.edu.ufcg.aweseries.test.integration;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 
 import br.edu.ufcg.aweseries.SeriesDB;
@@ -27,11 +28,13 @@ public class SeriesDBTest {
         this.db = new SeriesDB();
     }
 
+    @Test
     public void testDoesntReturnNullCollectionOfSeries() {
         Assert.assertThat(this.db.savedSeries(),
                 CoreMatchers.is(CoreMatchers.not(CoreMatchers.nullValue())));
     }
 
+    @Test
     public void testDoesntSaveNullSeries() {
         try {
             this.db.saveSeries(null);
@@ -40,6 +43,8 @@ public class SeriesDBTest {
         }
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
     public void testIncludeSeries() {
         final Series followedSeries = this.createTestSeries();
         this.db.saveSeries(followedSeries);
@@ -48,11 +53,13 @@ public class SeriesDBTest {
                 JUnitMatchers.hasItem(followedSeries));
     }
 
+    @Test
     public void testRetrieveNotSavedSeries() {
         Assert.assertThat(this.db.retrieveSeries("abcde"),
                 CoreMatchers.is(CoreMatchers.nullValue()));
     }
 
+    @Test
     public void testRetrieveSameSeries() {
         final Series savedSeries = this.createTestSeries();
         final String seriesId = savedSeries.getId();
