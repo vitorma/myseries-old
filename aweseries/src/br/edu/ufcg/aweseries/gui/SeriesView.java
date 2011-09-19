@@ -45,7 +45,6 @@ public class SeriesView extends Activity {
         this.seriesName = (TextView) findViewById(R.id.seriesNameTextView);
         this.seriesName.setText(R.string.unknownSeries);
         this.seriesOverview = (TextView) findViewById(R.id.seriesOverviewTextView);
-        this.seriesOverview.setText("Loading...");
         this.seriesStatus = (TextView) findViewById(R.id.statusTextView);
         this.seriesAirTime = (TextView) findViewById(R.id.airTimeTextView);
         this.seriesAirDays = (TextView) findViewById(R.id.airDaysTextView);
