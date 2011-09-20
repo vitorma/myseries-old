@@ -28,7 +28,6 @@ public class SeriesView extends Activity {
     private TextView seriesStatus;
     private TextView seriesAirTime;
     private TextView seriesAirDays;
-    private TextView seriesDirectors;
     private TextView seriesActors;
     private TextView seriesFirsAirDay;
     private TextView seriesRuntime;
@@ -48,7 +47,6 @@ public class SeriesView extends Activity {
         this.seriesStatus = (TextView) findViewById(R.id.statusTextView);
         this.seriesAirTime = (TextView) findViewById(R.id.airTimeTextView);
         this.seriesAirDays = (TextView) findViewById(R.id.airDaysTextView);
-        this.seriesDirectors = (TextView) findViewById(R.id.directedByTextView);
         this.seriesActors = (TextView) findViewById(R.id.actorsTextView);
         this.seriesFirsAirDay = (TextView) findViewById(R.id.firstAiredTextView);
         this.seriesNetwork = (TextView) findViewById(R.id.networkTextView);
@@ -138,12 +136,11 @@ public class SeriesView extends Activity {
             this.seriesStatus.setText(series.getStatus());
             this.seriesAirTime.setText(series.getAirsTime());
             this.seriesAirDays.setText(series.getAirsDay());
-            this.seriesDirectors.setText(series.getId());
             this.seriesActors.setText(series.getActorsAsString(", "));
             this.seriesFirsAirDay.setText(series.getFirstAired());
             this.seriesNetwork.setText(series.getNetwork());
             this.seriesGenre.setText(series.getGenresAsString(", "));
-            this.seriesRuntime.setText(series.getRuntime());
+            this.seriesRuntime.setText(series.getRuntime() + " minutes");
             
             Bitmap bmp = seriesProvider().getSmallPoster(series);
             if (bmp != null) {
