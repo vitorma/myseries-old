@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename local variable &apos;inputStream&apos; in &apos;br.edu.ufcg.aweseries.thetvdb.SeasonsParser.SeasonsParser(...)&apos; to &apos;url&apos;&#x0A;- Original project: &apos;aweseries&apos;&#x0A;- Original element: &apos;br.edu.ufcg.aweseries.thetvdb.SeasonsParser.SeasonsParser(String).inputStream&apos;&#x0A;- Renamed element: &apos;inputStream&apos;&#x0A;- Update references to refactored element" description="Rename local variable &apos;inputStream&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;br.edu.ufcg.aweseries.thetvdb{SeasonsParser.java[SeasonsParser~SeasonsParser~QString;@inputStream!274!291!281!291!QString;" name="url" references="true" stamp="1316349129312" version="1.0"/>
-</session>

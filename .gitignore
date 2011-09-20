@@ -3,6 +3,8 @@
 */tmp/
 */local.properties
 
+.metadata/
+
 *.class
 *.swp
 *~

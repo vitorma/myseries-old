@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring accessors="true" comment="Delete 1 element(s) from project &apos;aweseries-unittest&apos;&#x0A;- Original project: &apos;aweseries-unittest&apos;&#x0A;- Original element: &apos;br.edu.ufcg.aweseries.test.unit.thetvdb.SeasonsParserTest.java&apos;" description="Delete element" element1="/src&lt;br.edu.ufcg.aweseries.test.unit.thetvdb{SeasonsParserTest.java" elements="1" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1316493949373" subPackages="false" version="1.0"/>
-</session>

@@ -1,5 +1,0 @@
-package br.edu.ufcg.aweseries.thetvdb;
-
-public final class Seasons {
-	private Map<Integer, Season> seasons;
-}
