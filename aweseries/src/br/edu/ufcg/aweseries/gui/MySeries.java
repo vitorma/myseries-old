@@ -30,6 +30,11 @@ public class MySeries extends Activity {
         super.onCreate(savedInstanceBundle);
         setContentView(R.layout.listing);
 
+        // set view title
+        TextView listingTitle
+            = ((TextView) findViewById(R.id.listingTitleTextView));
+        listingTitle.setText("My Series");
+
         populateListView();
         setupItemClickListener();
     }

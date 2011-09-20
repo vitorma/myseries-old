@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.R;
+import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.thetvdb.Season;
 import br.edu.ufcg.aweseries.thetvdb.Series;
 
@@ -24,8 +25,19 @@ public class SeasonsView extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.listing);
+        
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            int seriesId = extras.getInt("series id");
+            this.series = seriesProvider().getSeries(seriesId);
+        }
+
+        // set view title
+        TextView listingTitle
+            = (TextView) findViewById(R.id.listingTitleTextView);
+        listingTitle.setText(this.series.getName() + "'s Seasons");
+
         populateSeasonsList();
     }
 
@@ -65,5 +77,12 @@ public class SeasonsView extends Activity {
         this.seasonsList.setAdapter(new SeasonItemViewAdapter(this,
         		R.layout.list_item, Environment.instance().getSeriesProvider()
         		.getSeasons(series)));
+    }
+
+    /**
+     * @return the app's series provider
+     */
+    private SeriesProvider seriesProvider() {
+        return Environment.instance().getSeriesProvider();
     }
 }

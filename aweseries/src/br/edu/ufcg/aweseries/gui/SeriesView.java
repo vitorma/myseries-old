@@ -55,10 +55,10 @@ public class SeriesView extends Activity {
         this.seasonsTextSwitcher = (TextSwitcher) findViewById(R.id.seasonsTextSwitcher);
 
         populateView();
-        setupSwitcherListener();
+        setupSeasonsSwitcherListener();
     }
 
-    private void setupSwitcherListener() {
+    private void setupSeasonsSwitcherListener() {
         this.seasonsTextSwitcher.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -71,7 +71,7 @@ public class SeriesView extends Activity {
                 } catch (Exception e) {
                     TextView tv =
                             (TextView) SeriesView.this
-                                    .findViewById(R.id.viewTitleTextView);
+                                    .findViewById(R.id.listingTitleTextView);
                     tv.setText(e.getClass() + " " + e.getMessage());
                 }
 

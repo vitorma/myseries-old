@@ -33,6 +33,10 @@ public class ViewListOfFollowedSeries extends
         super.tearDown();
     }
 
+    public void testViewTitle() {
+        assertThat(solo.searchText("My Series"), is(true));
+    }
+
     public void testUserFollowsASeries() {
         // Given
         String seriesName = "Chuck";
