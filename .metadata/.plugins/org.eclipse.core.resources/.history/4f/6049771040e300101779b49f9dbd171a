@@ -1,0 +1,11 @@
+package br.edu.ufcg.aweseries.test.unit.thetvdb;
+
+import org.junit.Test;
+
+public class SeasonsParserTest {
+
+	@Test
+	public final void testParse() {
+		
+	}
+}

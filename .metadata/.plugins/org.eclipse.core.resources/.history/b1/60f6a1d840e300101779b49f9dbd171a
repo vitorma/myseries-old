@@ -1,0 +1,18 @@
+package br.edu.ufcg.aweseries.test.unit.thetvdb;
+
+import org.junit.Test;
+
+import br.edu.ufcg.aweseries.thetvdb.UrlSupplier;
+
+public class SeasonsParserTest {
+	private static final String API_KEY = "6F2B5A871C96FB05";
+    private static final UrlSupplier supplier = new UrlSupplier(API_KEY);
+    private static final int CHUCK_ID = 80348; 
+
+    @Test
+	public final void testParse() {
+		String url = supplier.getFullSeriesUrl(CHUCK_ID);
+		System.out.println(url);
+		
+	}
+}

@@ -1,13 +1,13 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public final class Seasons {
-	private Map<Integer, Season> seasons;
+	private SortedMap<Integer, Season> seasons;
 
 	public Seasons() {
-		this.seasons = new HashMap<Integer, Season>();
+		this.seasons = new TreeMap<Integer, Season>();
 	}
 
 	public void addEpisode(Episode episode) {
@@ -23,5 +23,15 @@ public final class Seasons {
 
 	private boolean containsSeason(int i) {
 		return this.seasons.containsKey(i);
+	}
+
+	public Season[] toArray() {
+		Season[] array = new Season[this.seasons.size()];
+		int i = 0;
+		for (Season s : this.seasons.values()) {
+			array[i] = s;
+			i++;
+		}
+		return array;
 	}
 }

@@ -171,4 +171,8 @@ public class Season {
     public void setPoster(final String poster) {
         this.poster = poster;
     }
+
+    public String toString() {
+    	return this.getNumber() == 0 ? "Special Episodes" : "Season " + this.getNumber();
+    }
 }

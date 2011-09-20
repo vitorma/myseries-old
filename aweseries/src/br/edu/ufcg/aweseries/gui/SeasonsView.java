@@ -1,9 +1,5 @@
 package br.edu.ufcg.aweseries.gui;
 
-import br.edu.ufcg.aweseries.Environment;
-import br.edu.ufcg.aweseries.R;
-import br.edu.ufcg.aweseries.thetvdb.Season;
-import br.edu.ufcg.aweseries.thetvdb.Series;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import br.edu.ufcg.aweseries.Environment;
+import br.edu.ufcg.aweseries.R;
+import br.edu.ufcg.aweseries.thetvdb.Season;
+import br.edu.ufcg.aweseries.thetvdb.Series;
 
 /**
  * GUI representation of the list of seasons for a series.
@@ -62,11 +62,8 @@ public class SeasonsView extends Activity {
 
     private void populateSeasonsList() {
         this.seasonsList = (ListView) findViewById(R.id.listView);
-
         this.seasonsList.setAdapter(new SeasonItemViewAdapter(this,
-                R.layout.list_item, Environment.instance().getSeriesProvider()
-                        .getSeasons(series)));
-
+        		R.layout.list_item, Environment.instance().getSeriesProvider()
+        		.getSeasons(series)));
     }
-
 }

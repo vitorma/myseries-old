@@ -89,10 +89,9 @@ public class SeriesProvider {
     }
 
     public Season[] getSeasons(Series series) {
-        // TODO
-        Season season1 = new Season(1);
-        Season season2 = new Season(2);
-        
-        return new Season[] { season1 , season2 };
+    	if (series == null) {
+    		return new Season[] {};
+    	}
+        return this.db.getSeasons(Integer.valueOf(series.getId())).toArray();
     }
 }

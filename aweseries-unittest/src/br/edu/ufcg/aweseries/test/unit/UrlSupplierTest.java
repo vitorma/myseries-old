@@ -1,8 +1,9 @@
 package br.edu.ufcg.aweseries.test.unit;
 
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 import br.edu.ufcg.aweseries.thetvdb.UrlSupplier;
