@@ -1,0 +1,12 @@
+package br.edu.ufcg.aweseries.thetvdb;
+
+import java.util.Map;
+import java.util.HashMap;
+
+public final class Seasons {
+	private Map<Integer, Season> seasons;
+
+	public Seasons() {
+		this.seasons = new HashMap<Integer, Season>();
+	}
+}

@@ -1,0 +1,5 @@
+package br.edu.ufcg.aweseries.thetvdb;
+
+public final class SeasonsParser extends TheTVDBParser<Season> {
+
+}

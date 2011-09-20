@@ -1,0 +1,18 @@
+package br.edu.ufcg.aweseries.thetvdb;
+
+import java.io.InputStream;
+
+public final class SeasonsParser extends TheTVDBParser<Season> {
+
+	protected SeasonsParser(InputStream inputStream) {
+		super(inputStream);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public Season parse() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

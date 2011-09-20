@@ -1,0 +1,7 @@
+package br.edu.ufcg.aweseries.thetvdb;
+
+import java.util.Map;
+
+public final class Seasons {
+	private Map<Integer, Season> seasons;
+}

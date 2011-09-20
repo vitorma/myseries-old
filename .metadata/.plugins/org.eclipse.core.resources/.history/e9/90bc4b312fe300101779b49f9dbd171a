@@ -1,0 +1,33 @@
+package br.edu.ufcg.aweseries.thetvdb;
+
+public class Episode {
+    private boolean viewed;
+    private String seasonNumber;
+
+    public boolean isViewed() {
+        return this.viewed;
+    }
+
+    public void markAsViewed() {
+        this.viewed = true;
+    }
+
+    public void markAsNotViewed() {
+        this.viewed = false;        
+    }
+
+    public String getSeasonNumber() {
+    	return this.seasonNumber;
+    }
+
+    public void setSeasonNumber(String seasonNumber) {
+    	this.seasonNumber = seasonNumber;
+    }
+
+    public Episode copy() {
+    	Episode episode = new Episode();
+    	episode.viewed = this.viewed;
+    	episode.seasonNumber = this.seasonNumber;
+		return episode;
+    }
+}
