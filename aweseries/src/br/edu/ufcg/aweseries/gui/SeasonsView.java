@@ -55,14 +55,14 @@ public class SeasonsView extends Activity {
             if (itemView == null) {
                 LayoutInflater vi =
                         (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = vi.inflate(R.layout.list_item, null);
+                itemView = vi.inflate(R.layout.text_only_list_item, null);
             }
 
             // get views for the series fields
             // ImageView image =
             // (ImageView) itemView.findViewById(R.id.itemSeriesImage);
             TextView name =
-                    (TextView) itemView.findViewById(R.id.itemSeriesName);
+                    (TextView) itemView.findViewById(R.id.itemName);
 
             // load series data
             name.setText(this.getItem(position).toString());
