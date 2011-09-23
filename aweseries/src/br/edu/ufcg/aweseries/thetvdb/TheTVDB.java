@@ -21,11 +21,6 @@ public class TheTVDB {
         return new SeriesParser(url).parse();
     }
 
-//    private Banner getSeriesBanner(int seriesId) {
-//    	String url = this.urlSupplier.getSeriesBannersUrl(seriesId);
-//    	return new BannersParser(url).parse().getSeriesBanner();
-//    }
-
     public Bitmap getSeriesPoster(Series series) {
     	String url = this.urlSupplier.getSeriesPosterUrl(series.getPoster());
     	if (url == null) {
