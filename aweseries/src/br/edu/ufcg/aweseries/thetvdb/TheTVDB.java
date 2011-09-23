@@ -31,7 +31,7 @@ public class TheTVDB {
 			InputStream bmpStream = u.openConnection().getInputStream();
 			BufferedInputStream bmpBuffer = new BufferedInputStream(bmpStream);
 			
-			Bitmap banner = BitmapFactory.decodeStream(bmpBuffer);
+			Bitmap poster = BitmapFactory.decodeStream(bmpBuffer);
 			
 			// close buffers
 			if (bmpStream != null) {
@@ -41,7 +41,7 @@ public class TheTVDB {
 	         	bmpBuffer.close();
 	        }
 	        
-	        return banner;
+	        return poster;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			return null;

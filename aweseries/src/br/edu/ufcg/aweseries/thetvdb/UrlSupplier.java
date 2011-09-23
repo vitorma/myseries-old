@@ -60,7 +60,7 @@ public class UrlSupplier {
 		return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + name;
 	}
 
-    //BANNERS ------------------------------------------------------------------
+    //POSTERS -----------------------------------------------------------------
 
     public String getSeriesPosterUrl(String filename) {
     	if (filename == null || filename.trim().isEmpty()) {
