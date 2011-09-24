@@ -9,6 +9,8 @@
 
 package br.edu.ufcg.aweseries.thetvdb;
 
+import java.io.InputStream;
+
 import android.sax.Element;
 import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
@@ -17,8 +19,8 @@ import android.util.Xml;
 
 public class MirrorsParser extends TheTVDBParser<Mirrors> {
 
-    public MirrorsParser(String url) {
-	    super(url);
+    public MirrorsParser(InputStream inputStream) {
+	    super(inputStream);
 	}
 
     @Override

@@ -27,6 +27,7 @@ public class TheTVDB {
 			throw new RuntimeException(e);
 		}
     }
+
     public Series getSeries(int id) {
         String url = this.urlSupplier.getBaseSeriesUrl(id);
         return new SeriesParser(streamFor(url)).parse();

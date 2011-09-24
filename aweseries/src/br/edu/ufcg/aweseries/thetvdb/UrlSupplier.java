@@ -1,5 +1,10 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class UrlSupplier {
 	private String apiKey;
 	private Mirrors mirrors;
@@ -15,10 +20,23 @@ public class UrlSupplier {
 	}
 
 	private void loadMirrors() {
-	    MirrorsParser parser = new MirrorsParser(this.getMirrorUrl());
+	    MirrorsParser parser = new MirrorsParser(
+	    		streamFor(this.getMirrorUrl()));
 	    this.mirrors = parser.parse();
 	}
 	
+	private InputStream streamFor(String url) {
+		try {
+			return new URL(url).openConnection().getInputStream();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+
 	private String getMirrorPath(MirrorType type) {
 	    if (this.mirrors == null) {
 	        this.loadMirrors();
