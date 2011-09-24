@@ -5,13 +5,6 @@ package br.edu.ufcg.aweseries;
  * injection.
  */
 public class Environment {
-    private static Environment instance;
-    public static Environment instance() {
-        if (instance == null) {
-            instance = new Environment();
-        }
-        return instance;
-    }
 
     private SeriesProvider seriesProvider;
 

@@ -11,13 +11,21 @@ public class App extends Application {
 
     private static Context context;
 
+    private static Environment environment;
+
     @Override
     public void onCreate() {
         super.onCreate();
         context = this;
+
+        environment = new Environment();
     }
 
     public static Context getContext() {
         return context;
+    }
+
+    public static Environment environment() {
+    	return environment;
     }
 }

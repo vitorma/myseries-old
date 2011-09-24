@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import br.edu.ufcg.aweseries.Environment;
+import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.thetvdb.Season;
@@ -75,7 +75,7 @@ public class SeasonsView extends Activity {
     private void populateSeasonsList() {
         this.seasonsList = (ListView) findViewById(R.id.listView);
         this.seasonsList.setAdapter(new SeasonItemViewAdapter(this,
-        		R.layout.list_item, Environment.instance().getSeriesProvider()
+        		R.layout.list_item, App.environment().getSeriesProvider()
         		.getSeasons(series)));
     }
 
@@ -83,6 +83,6 @@ public class SeasonsView extends Activity {
      * @return the app's series provider
      */
     private SeriesProvider seriesProvider() {
-        return Environment.instance().getSeriesProvider();
+        return App.environment().getSeriesProvider();
     }
 }
