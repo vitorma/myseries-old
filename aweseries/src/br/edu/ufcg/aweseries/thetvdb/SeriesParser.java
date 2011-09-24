@@ -57,10 +57,6 @@ import android.sax.RootElement;
 import android.util.Xml;
 
 public final class SeriesParser extends TheTVDBParser<Series> {
-
-    public SeriesParser(String url) {
-        super(url);
-    }
     
     public SeriesParser(InputStream seriesInputStream) {
     	super(seriesInputStream);

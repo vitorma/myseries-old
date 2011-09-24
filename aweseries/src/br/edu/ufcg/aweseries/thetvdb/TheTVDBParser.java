@@ -13,6 +13,7 @@ public abstract class TheTVDBParser<T> implements Parser<T> {
     	this.inputStream = inputStream;
     }
 
+    @Deprecated
     protected TheTVDBParser(String url) {
         try {
         	this.inputStream = new URL(url).openConnection().getInputStream();

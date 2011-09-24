@@ -16,9 +16,20 @@ public class TheTVDB {
         this.urlSupplier = new UrlSupplier(apiKey);
     }
 
+    private InputStream streamFor(String url) {
+    	try {
+			return new URL(url).openConnection().getInputStream();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+    }
     public Series getSeries(int id) {
         String url = this.urlSupplier.getBaseSeriesUrl(id);
-        return new SeriesParser(url).parse();
+        return new SeriesParser(streamFor(url)).parse();
     }
 
     public Bitmap getSeriesPoster(Series series) {
