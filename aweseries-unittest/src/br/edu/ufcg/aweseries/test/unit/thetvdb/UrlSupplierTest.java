@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries.test.unit;
+package br.edu.ufcg.aweseries.test.unit.thetvdb;
 
 
 import static org.hamcrest.CoreMatchers.nullValue;
