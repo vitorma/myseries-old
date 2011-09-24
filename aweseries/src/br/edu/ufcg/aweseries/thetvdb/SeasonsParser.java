@@ -39,10 +39,6 @@ import android.util.Xml;
 
 public final class SeasonsParser extends TheTVDBParser<Seasons> {
 	
-	public SeasonsParser(String url) {
-		super(url);
-	}
-	
 	public SeasonsParser(InputStream inputStream) {
 		super(inputStream);
 	}

@@ -31,6 +31,11 @@ public class TheTVDB {
         String url = this.urlSupplier.getBaseSeriesUrl(id);
         return new SeriesParser(streamFor(url)).parse();
     }
+    
+    public Seasons getSeasons(int seriesId) {
+    	String url = this.urlSupplier.getFullSeriesUrl(seriesId);
+    	return new SeasonsParser(streamFor(url)).parse();
+    }
 
     public Bitmap getSeriesPoster(Series series) {
     	String url = this.urlSupplier.getSeriesPosterUrl(series.getPoster());
@@ -38,8 +43,7 @@ public class TheTVDB {
     		return null;
     	}
     	try {
-			URL u = new URL(url);
-			InputStream bmpStream = u.openConnection().getInputStream();
+			InputStream bmpStream = streamFor(url);
 			BufferedInputStream bmpBuffer = new BufferedInputStream(bmpStream);
 			
 			Bitmap poster = BitmapFactory.decodeStream(bmpBuffer);
@@ -59,10 +63,5 @@ public class TheTVDB {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-    }
-
-    public Seasons getSeasons(int seriesId) {
-    	String url = this.urlSupplier.getFullSeriesUrl(seriesId);
-		return new SeasonsParser(url).parse();
     }
 }
