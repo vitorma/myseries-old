@@ -16,7 +16,7 @@ public class EnvironmentTest {
 
     @Before
     public void setUp() {
-        this.environment = new Environment();
+        this.environment = Environment.newEnvironment();
     }
 
     @After

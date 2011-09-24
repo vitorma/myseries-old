@@ -6,6 +6,20 @@ package br.edu.ufcg.aweseries;
  */
 public class Environment {
 
+    /**
+     * If you know what you are doing, use this method to instantiate an
+     * Environment.
+     * @see Environment()
+     * @see App.environment()
+     */
+	public static Environment newEnvironment() {
+		return new Environment();
+	}
+    /**
+     * @see newSeriesProvider()
+     */
+	private Environment() {}
+
     private SeriesProvider seriesProvider;
 
     /**
