@@ -27,9 +27,12 @@
 //    <seriesid>80348</seriesid>
 //</Episode>
 
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.season;
 
 import java.io.InputStream;
+
+import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
+import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
 
 import android.sax.Element;
 import android.sax.EndElementListener;

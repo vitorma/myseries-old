@@ -6,6 +6,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
+import br.edu.ufcg.aweseries.thetvdb.season.SeasonsParser;
+import br.edu.ufcg.aweseries.thetvdb.series.Series;
+import br.edu.ufcg.aweseries.thetvdb.series.SeriesParser;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -14,18 +19,6 @@ public class TheTVDB {
 
     public TheTVDB(String apiKey) {
         this.urlSupplier = new UrlSupplier(apiKey);
-    }
-
-    private InputStream streamFor(String url) {
-    	try {
-			return new URL(url).openConnection().getInputStream();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
     }
 
     public Series getSeries(int id) {
@@ -43,24 +36,36 @@ public class TheTVDB {
     	if (url == null) {
     		return null;
     	}
+        return bitmapFrom(streamFor(url));
+    }
+
+    private InputStream streamFor(String url) {
+        try {
+            return new URL(url).openConnection().getInputStream();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Bitmap bitmapFrom(InputStream stream) {
     	try {
-			InputStream bmpStream = streamFor(url);
-			BufferedInputStream bmpBuffer = new BufferedInputStream(bmpStream);
+            BufferedInputStream bmpBuffer = new BufferedInputStream(stream);
 			
-			Bitmap poster = BitmapFactory.decodeStream(bmpBuffer);
-			
-			// close buffers
-			if (bmpStream != null) {
-	         	bmpStream.close();
-	        }
-	        if (bmpBuffer != null) {
-	         	bmpBuffer.close();
-	        }
-	        
+            Bitmap poster = BitmapFactory.decodeStream(bmpBuffer);
+
+            // close buffers
+            if (stream != null) {
+                stream.close();
+            }
+            if (bmpBuffer != null) {
+                bmpBuffer.close();
+            }
+
 	        return poster;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

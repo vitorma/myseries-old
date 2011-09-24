@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries.test.unit.thetvdb;
+package br.edu.ufcg.aweseries.test.unit.thetvdb.season;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.*;
@@ -7,8 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.edu.ufcg.aweseries.thetvdb.Episode;
-import br.edu.ufcg.aweseries.thetvdb.Season;
+import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
+import br.edu.ufcg.aweseries.thetvdb.season.Season;
 
 /**
  * Unit tests for the class {@link Season}.

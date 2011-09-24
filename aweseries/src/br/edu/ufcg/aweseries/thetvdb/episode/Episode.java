@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.episode;
 
 public class Episode {
 	private String id;

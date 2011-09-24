@@ -7,9 +7,11 @@
 //	 </Mirror>
 //	</Mirrors>
 
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.mirror;
 
 import java.io.InputStream;
+
+import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
 
 import android.sax.Element;
 import android.sax.EndElementListener;

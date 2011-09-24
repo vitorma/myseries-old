@@ -1,4 +1,6 @@
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.season;
+
+import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
 
 /**
  * Represents a season.

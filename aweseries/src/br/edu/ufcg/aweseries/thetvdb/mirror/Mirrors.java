@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.mirror;
 
 import java.util.ArrayList;
 import java.util.HashMap;

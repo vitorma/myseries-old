@@ -14,7 +14,7 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.thetvdb.Series;
+import br.edu.ufcg.aweseries.thetvdb.series.Series;
 
 /**
  * Displays a series short review.

@@ -12,8 +12,8 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.thetvdb.Season;
-import br.edu.ufcg.aweseries.thetvdb.Series;
+import br.edu.ufcg.aweseries.thetvdb.season.Season;
+import br.edu.ufcg.aweseries.thetvdb.series.Series;
 
 /**
  * GUI representation of the list of seasons for a series.

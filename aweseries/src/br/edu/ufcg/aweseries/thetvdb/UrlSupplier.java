@@ -5,6 +5,10 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import br.edu.ufcg.aweseries.thetvdb.mirror.MirrorType;
+import br.edu.ufcg.aweseries.thetvdb.mirror.Mirrors;
+import br.edu.ufcg.aweseries.thetvdb.mirror.MirrorsParser;
+
 public class UrlSupplier {
 	private String apiKey;
 	private Mirrors mirrors;

@@ -47,9 +47,11 @@
 // </Episode>
 //</Data> 
 
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.series;
 
 import java.io.InputStream;
+
+import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
 
 import android.sax.Element;
 import android.sax.EndTextElementListener;
