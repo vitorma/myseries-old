@@ -8,6 +8,10 @@ import java.net.URL;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
+import br.edu.ufcg.aweseries.thetvdb.season.SeasonsParser;
+import br.edu.ufcg.aweseries.thetvdb.series.Series;
+import br.edu.ufcg.aweseries.thetvdb.series.SeriesParser;
 
 public class TheTVDB {
     private final UrlSupplier urlSupplier;
@@ -18,7 +22,12 @@ public class TheTVDB {
 
     public Series getSeries(String seriesId) {
         String url = this.urlSupplier.getBaseSeriesUrl(seriesId);
-        return new SeriesParser(url).parse();
+        return new SeriesParser(streamFor(url)).parse();
+    }
+    
+    public Seasons getSeasons(String seriesId) {
+    	String url = this.urlSupplier.getFullSeriesUrl(seriesId);
+    	return new SeasonsParser(streamFor(url)).parse();
     }
 
     public Bitmap getSeriesPoster(Series series) {
@@ -26,32 +35,38 @@ public class TheTVDB {
     	if (url == null) {
     		return null;
     	}
+        return bitmapFrom(streamFor(url));
+    }
+
+    private InputStream streamFor(String url) {
+        try {
+            return new URL(url).openConnection().getInputStream();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Bitmap bitmapFrom(InputStream stream) {
     	try {
-			URL u = new URL(url);
-			InputStream bmpStream = u.openConnection().getInputStream();
-			BufferedInputStream bmpBuffer = new BufferedInputStream(bmpStream);
+            BufferedInputStream bmpBuffer = new BufferedInputStream(stream);
 			
-			Bitmap poster = BitmapFactory.decodeStream(bmpBuffer);
-			
-			// close buffers
-			if (bmpStream != null) {
-	         	bmpStream.close();
-	        }
-	        if (bmpBuffer != null) {
-	         	bmpBuffer.close();
-	        }
-	        
+            Bitmap poster = BitmapFactory.decodeStream(bmpBuffer);
+
+            // close buffers
+            if (stream != null) {
+                stream.close();
+            }
+            if (bmpBuffer != null) {
+                bmpBuffer.close();
+            }
+
 	        return poster;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-    }
-
-    public Seasons getSeasons(String seriesId) {
-    	String url = this.urlSupplier.getFullSeriesUrl(seriesId);
-		return new SeasonsParser(url).parse();
     }
 }

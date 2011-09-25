@@ -47,9 +47,11 @@
 // </Episode>
 //</Data> 
 
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.series;
 
 import java.io.InputStream;
+
+import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
 
 import android.sax.Element;
 import android.sax.EndTextElementListener;
@@ -57,10 +59,6 @@ import android.sax.RootElement;
 import android.util.Xml;
 
 public final class SeriesParser extends TheTVDBParser<Series> {
-
-    public SeriesParser(String url) {
-        super(url);
-    }
     
     public SeriesParser(InputStream seriesInputStream) {
     	super(seriesInputStream);

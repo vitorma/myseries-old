@@ -16,7 +16,7 @@ public class EnvironmentTest {
 
     @Before
     public void setUp() {
-        this.environment = Environment.instance();
+        this.environment = Environment.newEnvironment();
     }
 
     @After
@@ -36,8 +36,7 @@ public class EnvironmentTest {
 
     @Test
     public void testFirstSeriesProviderNotNull() {
-        assertThat(this.environment.getSeriesProvider(),
-                notNullValue());
+        assertThat(this.environment.getSeriesProvider(), notNullValue());
     }
 
     @Test
@@ -58,18 +57,5 @@ public class EnvironmentTest {
                 notNullValue());
         assertThat(this.environment.getSeriesProvider(),
                 not(sameInstance(oldSP)));
-    }
-
-    @Test
-    public void testSingletonEnvironment() {
-        final Environment env1 = Environment.instance();
-        final Environment env2 = Environment.instance();
-
-        assertThat(env1, sameInstance(env2));
-    }
-
-    @Test
-    public void testSingletonNotNull() {
-        assertThat(Environment.instance(), notNullValue());
     }
 }

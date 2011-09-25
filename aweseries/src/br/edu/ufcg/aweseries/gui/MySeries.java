@@ -13,10 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import br.edu.ufcg.aweseries.Environment;
+import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.thetvdb.Series;
+import br.edu.ufcg.aweseries.thetvdb.series.Series;
 
 /**
  * Displays current followed series.
@@ -40,7 +40,7 @@ public class MySeries extends Activity {
     }
 
     class SeriesItemViewAdapter extends ArrayAdapter<Series> {
-		private final SeriesProvider seriesProvider = Environment.instance().getSeriesProvider();
+		private final SeriesProvider seriesProvider = App.environment().getSeriesProvider();
 		
 		public SeriesItemViewAdapter(Context context, int seriesItemResourceId,
 				Series[] objects) {
@@ -77,7 +77,7 @@ public class MySeries extends Activity {
         listView = (ListView) this.findViewById(R.id.listView);
 
         listView.setAdapter(new SeriesItemViewAdapter(this, R.layout.list_item,
-                Environment.instance().getSeriesProvider().mySeries()));
+                App.environment().getSeriesProvider().mySeries()));
     }
 
     /**

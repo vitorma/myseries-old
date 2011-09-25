@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 
 import br.edu.ufcg.aweseries.SeriesDB;
-import br.edu.ufcg.aweseries.thetvdb.Series;
+import br.edu.ufcg.aweseries.thetvdb.series.Series;
 
 public class SeriesDBTest {
 

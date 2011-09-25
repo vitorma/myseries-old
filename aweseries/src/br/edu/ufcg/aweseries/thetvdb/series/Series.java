@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.series;
 
 import java.util.ArrayList;
 import java.util.List;

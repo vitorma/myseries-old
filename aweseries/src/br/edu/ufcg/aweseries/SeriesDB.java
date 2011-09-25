@@ -3,7 +3,7 @@ package br.edu.ufcg.aweseries;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import br.edu.ufcg.aweseries.thetvdb.Series;
+import br.edu.ufcg.aweseries.thetvdb.series.Series;
 
 public class SeriesDB {
     

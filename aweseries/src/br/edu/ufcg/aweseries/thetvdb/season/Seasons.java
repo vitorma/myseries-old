@@ -1,7 +1,9 @@
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.season;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
 
 public final class Seasons {
 	private SortedMap<Integer, Season> seasons;

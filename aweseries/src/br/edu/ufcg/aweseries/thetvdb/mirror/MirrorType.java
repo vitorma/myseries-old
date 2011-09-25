@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.thetvdb.mirror;
 
 public enum MirrorType {
 	XML(1), BANNER(2), ZIP(4);

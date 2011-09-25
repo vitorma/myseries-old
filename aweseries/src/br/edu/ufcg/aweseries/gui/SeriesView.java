@@ -11,10 +11,10 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import br.edu.ufcg.aweseries.Environment;
+import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.thetvdb.Series;
+import br.edu.ufcg.aweseries.thetvdb.series.Series;
 
 /**
  * Displays a series short review.
@@ -180,6 +180,6 @@ public class SeriesView extends Activity {
      * @return the app's series provider
      */
     private SeriesProvider seriesProvider() {
-        return Environment.instance().getSeriesProvider();
+        return App.environment().getSeriesProvider();
     }
 }
