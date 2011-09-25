@@ -16,8 +16,8 @@ public class TheTVDB {
         this.urlSupplier = new UrlSupplier(apiKey);
     }
 
-    public Series getSeries(int id) {
-        String url = this.urlSupplier.getBaseSeriesUrl(id);
+    public Series getSeries(String seriesId) {
+        String url = this.urlSupplier.getBaseSeriesUrl(seriesId);
         return new SeriesParser(url).parse();
     }
 
@@ -50,7 +50,7 @@ public class TheTVDB {
 		}
     }
 
-    public Seasons getSeasons(int seriesId) {
+    public Seasons getSeasons(String seriesId) {
     	String url = this.urlSupplier.getFullSeriesUrl(seriesId);
 		return new SeasonsParser(url).parse();
     }

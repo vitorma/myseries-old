@@ -44,15 +44,15 @@ public class UrlSupplier {
 
     //SERIES ------------------------------------------------------------------
     
-    private StringBuilder getBaseSeriesUrlBuilder(int id) {
+    private StringBuilder getBaseSeriesUrlBuilder(String id) {
         return this.getXmlUrl().append("/series/").append(id);
     }
 
-    public String getBaseSeriesUrl(int id) {
+    public String getBaseSeriesUrl(String id) {
         return this.getBaseSeriesUrlBuilder(id).toString();
     }
 
-    public String getFullSeriesUrl(int id) {
+    public String getFullSeriesUrl(String id) {
         return getBaseSeriesUrlBuilder(id).append("/all/").toString();
     }
 

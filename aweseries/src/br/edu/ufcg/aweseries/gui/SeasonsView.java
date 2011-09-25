@@ -29,7 +29,7 @@ public class SeasonsView extends Activity {
         
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            int seriesId = extras.getInt("series id");
+            String seriesId = extras.getString("series id");
             this.series = seriesProvider().getSeries(seriesId);
         }
 

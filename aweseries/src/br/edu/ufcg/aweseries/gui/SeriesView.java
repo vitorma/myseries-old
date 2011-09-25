@@ -20,7 +20,7 @@ import br.edu.ufcg.aweseries.thetvdb.Series;
  * Displays a series short review.
  */
 public class SeriesView extends Activity {
-    private int seriesId;
+    private String seriesId;
     private boolean loaded = false;
     private ProgressDialog dialog;
     protected TextView seriesOverview;
@@ -120,7 +120,7 @@ public class SeriesView extends Activity {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            seriesId = extras.getInt("series id");
+            seriesId = extras.getString("series id");
             seriesName.setText(extras.getString("series name"));
         }
     }

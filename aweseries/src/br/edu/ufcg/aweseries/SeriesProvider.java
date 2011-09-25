@@ -15,11 +15,11 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
-    private final int chuckId = 80348;
-    private final int tbbtId = 80379;
-    private final int gotID = 121361;
-    private final int houseID = 73255;
-    private final int youngDraculaId = 80248;
+    private final String chuckId = "80348";
+    private final String tbbtId = "80379";
+    private final String gotID = "121361";
+    private final String houseID = "73255";
+    private final String youngDraculaId = "80248";
 
     private final String apiKey = "6F2B5A871C96FB05";
     private final TheTVDB db = new TheTVDB(apiKey);
@@ -62,7 +62,7 @@ public class SeriesProvider {
      * @return series data for the requested series id.
      * @param id series id
      */
-    public Series getSeries(int id) {
+    public Series getSeries(String id) {
         return this.db.getSeries(id);
     }
 
@@ -92,6 +92,6 @@ public class SeriesProvider {
     	if (series == null) {
     		return new Season[] {};
     	}
-        return this.db.getSeasons(Integer.valueOf(series.getId())).toArray();
+        return this.db.getSeasons(series.getId()).toArray();
     }
 }
