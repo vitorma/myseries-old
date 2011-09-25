@@ -92,8 +92,7 @@ public class MySeries extends Activity {
                 Intent intent = new Intent(view.getContext(), SeriesView.class);
                 
                 intent.putExtra("series id",
-                        Integer.parseInt(
-                        ((Series) parent.getItemAtPosition(position)).getId()));
+                        ((Series) parent.getItemAtPosition(position)).getId());
                 intent.putExtra("series name",
                         ((Series) parent.getItemAtPosition(position)).getName());
                 try {
