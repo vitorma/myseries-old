@@ -3,6 +3,8 @@ package br.edu.ufcg.aweseries.thetvdb.series;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
+
 public class Series {
     private String id;
     private String name;
@@ -16,6 +18,7 @@ public class Series {
     private String runtime;
     private String network;
     private String poster;
+    private Seasons seasons;
 
     public Series(String id, String name) {
     	this.id = id;
@@ -85,6 +88,15 @@ public class Series {
     public String getPoster() {
         return this.poster;
     }
+
+    public Seasons getSeasons() {
+    	return this.seasons;
+    }
+
+    public void setSeasons(Seasons seasons) {
+    	//Is this the best approach? Talking about it.
+    	this.seasons = seasons;
+    }    
 
     public void setId(String id) {
         this.id = id;
