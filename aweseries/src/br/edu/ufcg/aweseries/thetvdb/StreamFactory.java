@@ -4,5 +4,7 @@ import java.io.InputStream;
 
 public interface StreamFactory {
 
-    public InputStream streamForSeries(String seriesId);
+    public InputStream streamForBaseSeries(String seriesId);
+
+    public InputStream streamForFullSeries(String seriesId);
 }

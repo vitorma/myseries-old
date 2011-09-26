@@ -28,7 +28,7 @@ public class TheTVDB {
     }
 
     public Series getSeries(String seriesId) {
-        return new SeriesParser(streamFactory.streamForSeries(seriesId)).parse();
+        return new SeriesParser(streamFactory.streamForBaseSeries(seriesId)).parse();
     }
 
     public Seasons getSeasons(String seriesId) {

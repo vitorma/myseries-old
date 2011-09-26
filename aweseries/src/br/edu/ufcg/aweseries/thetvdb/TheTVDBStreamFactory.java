@@ -14,7 +14,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
     }
 
     @Override
-    public InputStream streamForSeries(String seriesId) {
+    public InputStream streamForBaseSeries(String seriesId) {
         if (seriesId == null) {
             return null;
         }
@@ -22,6 +22,11 @@ public class TheTVDBStreamFactory implements StreamFactory {
         String seriesUrl = this.urlSupplier.getBaseSeriesUrl(seriesId);
 
         return streamFor(seriesUrl);
+    }
+
+    @Override
+    public InputStream streamForFullSeries(String seriesId) {
+        return null;
     }
 
     private InputStream streamFor(String url) {

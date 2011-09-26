@@ -6,6 +6,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
 import junit.framework.TestCase;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
@@ -17,6 +20,20 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     private final String chuckId = "80348";
     private final String chuckName = "Chuck";
 
+    private final List<String> baseSeriesContent = Arrays.asList(
+            "<id>" + chuckId + "</id>",
+            "<SeriesName>" + chuckName + "</SeriesName>"
+    );
+
+    private final List<String> fullSeriesOnlyContent = Arrays.asList(
+            "<Episode>", "</Episode>"
+    );
+
+    private final List<String> fullSeriesContent = new ArrayList<String>(baseSeriesContent);
+    {
+        fullSeriesContent.addAll(fullSeriesOnlyContent);
+    }
+
     private StreamFactory factory;
 
     private final String apiKey = "6F2B5A871C96FB05";
@@ -26,27 +43,39 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         this.factory = new TheTVDBStreamFactory(urlSupplier);
     }
 
-    public void testGettingNullSeriesStreamReturnsNull() {
-        assertThat(factory.streamForSeries(null), nullValue());
+    // Base Series -------------------------------------------------------------
+    public void testGettingNullBaseSeriesStreamReturnsNull() {
+        assertThat(factory.streamForBaseSeries(null), nullValue());
     }
 
-    public void testGettingChuckSeriesReturnsAnInstance() {
-        InputStream chuckStream = factory.streamForSeries(chuckId);
-        assertThat(chuckStream, not(nullValue()));
-    }
-
-    public void testGettingChuckSeriesReturnsChuckData() throws IOException {
-        InputStream chuckStream = factory.streamForSeries(chuckId);
+    public void testGettingChuckBaseSeriesReturnsChuckBaseData() throws IOException {
+        InputStream chuckStream = factory.streamForBaseSeries(chuckId);
 
         String contentOfChuckStream = contentOf(chuckStream);
 
-        assertThat(contentOfChuckStream,
-                   containsString("<id>" + chuckId + "</id>"));
-        assertThat(contentOfChuckStream,
-                   containsString("<SeriesName>" + chuckName + "</SeriesName>"));
+        for (String content : baseSeriesContent) {
+            assertThat(contentOfChuckStream, containsString(content));
+        }
+
+        for (String content : fullSeriesOnlyContent) {
+            assertThat(contentOfChuckStream, not(containsString(content)));
+        }
+    }
+
+    // Full Series -------------------------------------------------------------
+    public void testGettingNullFullSeriesStreamReturnsNull() {
+        assertThat(factory.streamForFullSeries(null), nullValue());
+    }
+
+    public void testGettingChuckFullSeriesReturnsChuckFullData() {
+        assertThat(factory.streamForFullSeries(chuckId), not(nullValue()));
     }
 
     private String contentOf(InputStream stream) throws IOException {
+        if (stream == null) {
+            throw new IllegalArgumentException("stream should not be null");
+        }
+
         InputStreamReader reader = new InputStreamReader(stream);
 
         StringBuilder builder = new StringBuilder();
