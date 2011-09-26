@@ -14,17 +14,23 @@ import br.edu.ufcg.aweseries.thetvdb.series.Series;
 import br.edu.ufcg.aweseries.thetvdb.series.SeriesParser;
 
 public class TheTVDB {
+    @Deprecated
     private final UrlSupplier urlSupplier;
 
+    private final StreamFactory streamFactory;
+
     public TheTVDB(String apiKey) {
+        // TODO: Create UrlSupplier as a local variable and pass it to the
+        // TheTVDBStreamFactory while this class does not receive a
+        // StreamFactory as a parameter in its constructor method.
         this.urlSupplier = new UrlSupplier(apiKey);
+        this.streamFactory = new TheTVDBStreamFactory(urlSupplier);
     }
 
     public Series getSeries(String seriesId) {
-        String url = this.urlSupplier.getBaseSeriesUrl(seriesId);
-        return new SeriesParser(streamFor(url)).parse();
+        return new SeriesParser(streamFactory.streamForSeries(seriesId)).parse();
     }
-    
+
     public Seasons getSeasons(String seriesId) {
     	String url = this.urlSupplier.getFullSeriesUrl(seriesId);
     	return new SeasonsParser(streamFor(url)).parse();

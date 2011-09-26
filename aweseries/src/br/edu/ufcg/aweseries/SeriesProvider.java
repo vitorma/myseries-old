@@ -23,7 +23,7 @@ public class SeriesProvider {
 
     private final String apiKey = "6F2B5A871C96FB05";
     private final TheTVDB db = new TheTVDB(apiKey);
-    
+
     /**
      * @see newSeriesProvider()
      */
@@ -50,7 +50,7 @@ public class SeriesProvider {
             series[2] = db.getSeries(houseID);
             series[3] = db.getSeries(tbbtId);
             series[4] = db.getSeries(youngDraculaId);
-            
+
             return series;
     }
 
@@ -62,32 +62,32 @@ public class SeriesProvider {
         return this.db.getSeries(id);
     }
 
+    public Season[] getSeasons(Series series) {
+        if (series == null) {
+            return new Season[] {};
+        }
+        return this.db.getSeasons(series.getId()).toArray();
+    }
+
     public Bitmap getSmallPoster(Series series) {
         Bitmap poster = this.db.getSeriesPoster(series);
-        
+
         if (poster == null) {
             return genericSmallPosterImage();
         }
 
         return smallPosterFrom(poster);
     }
-    
+
     private Bitmap genericSmallPosterImage() {
         Bitmap genericPosterImage = BitmapFactory.decodeResource(
                 App.getContext().getResources(),
                 R.drawable.small_poster_clapperboard);
-        
+
         return smallPosterFrom(genericPosterImage);
     }
-    
+
     private Bitmap smallPosterFrom(Bitmap standardPoster) {
         return Bitmap.createScaledBitmap(standardPoster, 51, 75, true);
-    }
-
-    public Season[] getSeasons(Series series) {
-    	if (series == null) {
-    		return new Season[] {};
-    	}
-        return this.db.getSeasons(series.getId()).toArray();
     }
 }
