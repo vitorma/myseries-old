@@ -2,8 +2,16 @@ package br.edu.ufcg.aweseries.thetvdb.episode;
 
 public class Episode {
 	private String id;
+	private String name;
     private boolean viewed;
     private int seasonNumber;
+
+    public Episode() {}
+
+    public Episode(String id, String name) {
+    	this.id = id;
+    	this.name = name;
+    }
 
     public void setId(String id) {
 		this.id = id;

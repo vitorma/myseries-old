@@ -1,7 +1,8 @@
 package br.edu.ufcg.aweseries.test.unit.thetvdb.season;
 
 import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.*;
+import static org.junit.matchers.JUnitMatchers.hasItem;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -75,13 +76,6 @@ public class SeasonTest {
     }
 
     @Test
-    public final void testSetPoster() {
-        Assert.assertEquals("", this.season.getPoster());
-        this.season.setPoster("Some poster");
-        Assert.assertEquals("Some poster", this.season.getPoster());
-    }
-
-    @Test
     public final void testIndexOf() {
         Assert.assertEquals(0, this.season.indexOf(episode1));
         Assert.assertEquals(1, this.season.indexOf(episode2));
@@ -141,23 +135,4 @@ public class SeasonTest {
         Assert.assertTrue(this.season.isViewed(0));
         Assert.assertTrue(this.season.isViewed(1));
     }
-
-    @Test
-    public final void testSeasonWithoutPoster() {
-        final Season newSeason = new Season(2);
-        Assert.assertEquals(2, newSeason.getNumber());
-        Assert.assertEquals(0, newSeason.getNumberOfEpisodes());
-        Assert.assertTrue(newSeason.getEpisodes().isEmpty());
-        Assert.assertEquals("", newSeason.getPoster());
-    }
-    
-    @Test
-    public final void testSeasonWithPoster() {
-        final Season newSeason = new Season(2, "ThePoster");
-        Assert.assertEquals(2, newSeason.getNumber());
-        Assert.assertEquals(0, newSeason.getNumberOfEpisodes());
-        Assert.assertTrue(newSeason.getEpisodes().isEmpty());
-        Assert.assertEquals("ThePoster", newSeason.getPoster());
-    }
-
 }
