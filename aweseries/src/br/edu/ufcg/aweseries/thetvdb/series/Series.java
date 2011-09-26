@@ -17,6 +17,11 @@ public class Series {
     private String network;
     private String poster;
 
+    public Series(String id, String name) {
+    	this.id = id;
+    	this.name = name;
+    }
+
     public Series() {
         this.actors = new ArrayList<String>();
         this.genres = new ArrayList<String>();
