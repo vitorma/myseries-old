@@ -16,24 +16,9 @@ public class Season {
      */
     private final java.util.List<Episode> episodes;
 
-    /**
-     * The poster of this series.
-     */
-    private String poster;
-
-    public Season(final int seasonNumber) {
-        this(seasonNumber, "");
-    }
-
-    /**
-     * The number of the season.
-     * 
-     * @param seasonNumber
-     */
-    public Season(final int seasonNumber, final String poster) {
+    public Season(int seasonNumber) {
         this.number = seasonNumber;
         this.episodes = new java.util.ArrayList<Episode>();
-        this.poster = poster;
     }
 
     /**
@@ -101,15 +86,6 @@ public class Season {
     }
 
     /**
-     * Returns the poster of this series.
-     * 
-     * @return The poster
-     */
-    public String getPoster() {
-        return this.poster;
-    }
-
-    /**
      * Returns the index of a given episode.
      * 
      * @param episode The episode to search
@@ -163,15 +139,6 @@ public class Season {
      */
     public void markAsViewed(final int i) {
         this.getEpisodeAt(i).markAsViewed();
-    }
-
-    /**
-     * Sets the poster for this series.
-     * 
-     * @param poster The new poster.
-     */
-    public void setPoster(final String poster) {
-        this.poster = poster;
     }
 
     public String toString() {
