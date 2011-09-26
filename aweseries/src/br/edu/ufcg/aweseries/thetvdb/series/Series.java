@@ -158,6 +158,17 @@ public class Series {
     }
 
     @Override
+    public int hashCode() {
+        return this.getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Series) &&
+               ((Series) obj).getId().equals(this.getId());
+    }
+
+    @Override
     public String toString() {
         return this.getName();
     }
