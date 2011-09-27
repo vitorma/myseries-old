@@ -52,7 +52,7 @@ public class ViewSeriesInformation extends
                            "Chuck",           // name
                            "Continuing",      // status
                                               "First aired",
-                           "Monday",          "Air days",
+                           "Friday",          "Air days",
                                               "Air time",
                            "60 minutes",      "Runtime",
                            "NBC",             "Network",

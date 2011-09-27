@@ -45,7 +45,10 @@ public class TheTVDBStreamFactoryTest extends TestCase {
 
     // Base Series -------------------------------------------------------------
     public void testGettingNullBaseSeriesStreamReturnsNull() {
-        assertThat(factory.streamForBaseSeries(null), nullValue());
+        try {
+            factory.streamForBaseSeries(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
     }
 
     public void testGettingChuckBaseSeriesReturnsChuckBaseData() throws IOException {
@@ -64,11 +67,20 @@ public class TheTVDBStreamFactoryTest extends TestCase {
 
     // Full Series -------------------------------------------------------------
     public void testGettingNullFullSeriesStreamReturnsNull() {
-        assertThat(factory.streamForFullSeries(null), nullValue());
+        try {
+            factory.streamForFullSeries(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
     }
 
-    public void testGettingChuckFullSeriesReturnsChuckFullData() {
-        assertThat(factory.streamForFullSeries(chuckId), not(nullValue()));
+    public void testGettingChuckFullSeriesReturnsChuckFullData() throws IOException {
+        InputStream chuckStream = factory.streamForFullSeries(chuckId);
+
+        String contentOfChuckStream = contentOf(chuckStream);
+
+        for (String content : fullSeriesContent) {
+            assertThat(contentOfChuckStream, containsString(content));
+        }
     }
 
     private String contentOf(InputStream stream) throws IOException {

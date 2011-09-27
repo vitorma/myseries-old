@@ -32,8 +32,7 @@ public class TheTVDB {
     }
 
     public Seasons getSeasons(String seriesId) {
-    	String url = this.urlSupplier.getFullSeriesUrl(seriesId);
-    	return new SeasonsParser(streamFor(url)).parse();
+        return new SeasonsParser(streamFactory.streamForFullSeries(seriesId)).parse();
     }
 
     public Bitmap getSeriesPoster(Series series) {

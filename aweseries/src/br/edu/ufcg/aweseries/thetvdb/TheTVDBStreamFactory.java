@@ -16,17 +16,21 @@ public class TheTVDBStreamFactory implements StreamFactory {
     @Override
     public InputStream streamForBaseSeries(String seriesId) {
         if (seriesId == null) {
-            return null;
+            throw new IllegalArgumentException("seriesId should not be null");
         }
 
-        String seriesUrl = this.urlSupplier.getBaseSeriesUrl(seriesId);
-
-        return streamFor(seriesUrl);
+        String baseSeriesUrl = this.urlSupplier.getBaseSeriesUrl(seriesId);
+        return streamFor(baseSeriesUrl);
     }
 
     @Override
     public InputStream streamForFullSeries(String seriesId) {
-        return null;
+        if (seriesId == null) {
+            throw new IllegalArgumentException("seriesId should not be null");
+        }
+
+        String fullSeriesUrl = this.urlSupplier.getFullSeriesUrl(seriesId);
+        return streamFor(fullSeriesUrl);
     }
 
     private InputStream streamFor(String url) {
