@@ -1,11 +1,5 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
@@ -36,42 +30,12 @@ public class TheTVDB {
     }
 
     public Bitmap getSeriesPoster(Series series) {
-    	String url = this.urlSupplier.getSeriesPosterUrl(series.getPoster());
-    	if (url == null) {
-    		return null;
-    	}
-        return bitmapFrom(streamFor(url));
-    }
+        final String posterPath = series.getPoster();
 
-    private InputStream streamFor(String url) {
-        try {
-            return new URL(url).openConnection().getInputStream();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+        if (posterPath == null || posterPath.trim().isEmpty()) {
+            return null;
         }
-    }
 
-    private Bitmap bitmapFrom(InputStream stream) {
-    	try {
-            BufferedInputStream bmpBuffer = new BufferedInputStream(stream);
-			
-            Bitmap poster = BitmapFactory.decodeStream(bmpBuffer);
-
-            // close buffers
-            if (stream != null) {
-                stream.close();
-            }
-            if (bmpBuffer != null) {
-                bmpBuffer.close();
-            }
-
-	        return poster;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+        return BitmapFactory.decodeStream(streamFactory.streamForSeriesPosterAt(posterPath));
     }
 }

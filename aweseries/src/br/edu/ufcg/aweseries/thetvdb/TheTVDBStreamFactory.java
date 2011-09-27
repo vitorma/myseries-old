@@ -33,6 +33,22 @@ public class TheTVDBStreamFactory implements StreamFactory {
         return streamFor(fullSeriesUrl);
     }
 
+    /**
+     * @return an InputStream for the poster at <bannermirror>/resourcePaths
+     */
+    @Override
+    public InputStream streamForSeriesPosterAt(String resourcePath) {
+        if (resourcePath == null) {
+            throw new IllegalArgumentException("resourcePath should not be null");
+        }
+        if (resourcePath.trim().isEmpty()) {
+            throw new IllegalArgumentException("resourcePath should not be empty");
+        }
+
+        String seriesPosterUrl = this.urlSupplier.getSeriesPosterUrl(resourcePath);
+        return streamFor(seriesPosterUrl);
+    }
+
     private InputStream streamFor(String url) {
         try {
             return new URL(url).openConnection().getInputStream();

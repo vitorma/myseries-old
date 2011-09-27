@@ -3,14 +3,16 @@ package br.edu.ufcg.aweseries.test.integration;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.TestCase;
+import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBStreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.UrlSupplier;
@@ -19,6 +21,7 @@ public class TheTVDBStreamFactoryTest extends TestCase {
 
     private final String chuckId = "80348";
     private final String chuckName = "Chuck";
+    private final String chuckPoster = "posters/80348-1.jpg";
 
     private final List<String> baseSeriesContent = Arrays.asList(
             "<id>" + chuckId + "</id>",
@@ -81,6 +84,44 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         for (String content : fullSeriesContent) {
             assertThat(contentOfChuckStream, containsString(content));
         }
+    }
+
+    // Full Series -------------------------------------------------------------
+    public void testGettingNullSeriesPosterThrowsException() {
+        try {
+            factory.streamForSeriesPosterAt(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testGettingSeriesPosterWithBlankPathThrowsException() {
+        try {
+            factory.streamForSeriesPosterAt("   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+        try {
+            factory.streamForSeriesPosterAt("");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testGettingSeriesPosterWithNonExistentResourcePathThrowException() {
+        String nonExistentResourcePath = chuckPoster.substring(0,
+                                                               chuckPoster.length() - 3);
+
+        try {
+            factory.streamForSeriesPosterAt(nonExistentResourcePath);
+            fail("Should have thrown a FileNotFoundException");
+        } catch (RuntimeException e) {
+            assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
+        }
+    }
+
+    public void testGettingSeriesPosterReturnsAStreamToABitmapableImage() {
+        InputStream posterStream = factory.streamForSeriesPosterAt(chuckPoster);
+        assertThat(posterStream, notNullValue());
+
+        assertThat(BitmapFactory.decodeStream(posterStream), notNullValue());
     }
 
     private String contentOf(InputStream stream) throws IOException {
