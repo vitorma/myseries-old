@@ -44,7 +44,7 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     }
 
     // Base Series -------------------------------------------------------------
-    public void testGettingNullBaseSeriesStreamReturnsNull() {
+    public void testGettingNullBaseSeriesStreamThrowsException() {
         try {
             factory.streamForBaseSeries(null);
             fail("Should have thrown an IllegalArgumentException");
@@ -66,7 +66,7 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     }
 
     // Full Series -------------------------------------------------------------
-    public void testGettingNullFullSeriesStreamReturnsNull() {
+    public void testGettingNullFullSeriesStreamThrowsException() {
         try {
             factory.streamForFullSeries(null);
             fail("Should have thrown an IllegalArgumentException");
