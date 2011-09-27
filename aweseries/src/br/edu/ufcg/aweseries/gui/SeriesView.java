@@ -136,10 +136,10 @@ public class SeriesView extends Activity {
             this.seriesStatus.setText(series.getStatus());
             this.seriesAirTime.setText(series.getAirsTime());
             this.seriesAirDays.setText(series.getAirsDay());
-            this.seriesActors.setText(series.getActorsAsString(", "));
+            this.seriesActors.setText(series.getActors());
             this.seriesFirsAirDay.setText(series.getFirstAired());
             this.seriesNetwork.setText(series.getNetwork());
-            this.seriesGenre.setText(series.getGenresAsString(", "));
+            this.seriesGenre.setText(series.getGenres());
             this.seriesRuntime.setText(series.getRuntime() + " minutes");
             
             Bitmap bmp = seriesProvider().getSmallPoster(series);

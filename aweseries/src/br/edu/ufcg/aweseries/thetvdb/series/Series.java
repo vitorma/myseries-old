@@ -1,8 +1,5 @@
 package br.edu.ufcg.aweseries.thetvdb.series;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
 
 public class Series {
@@ -15,8 +12,8 @@ public class Series {
     private String runtime;
     private String network;
     private String overview;
-    private List<String> genres;
-    private List<String> actors;
+    private String genres;
+    private String actors;
     private String poster;
     private Seasons seasons;
 
@@ -25,10 +22,7 @@ public class Series {
         this.name = name;
     }
 
-    public Series() {
-        this.actors = new ArrayList<String>();
-        this.genres = new ArrayList<String>();
-    }
+    public Series() {}
 
     public String getId() {
         return this.id;
@@ -66,34 +60,12 @@ public class Series {
         return this.overview;
     }
 
-    public List<String> getGenres() {
+    public String getGenres() {
         return this.genres;
     }
 
-    public String getGenresAsString(String separator) {
-        StringBuilder builder = new StringBuilder();
-
-        for (String genre : this.getGenres()) {
-            builder.append(genre);
-            builder.append(separator);
-        }
-
-        return builder.substring(0, builder.length() - separator.length());
-    }
-
-    public List<String> getActors() {
+    public String getActors() {
         return this.actors;
-    }
-
-    public String getActorsAsString(String separator) {
-        StringBuilder builder = new StringBuilder();
-
-        for (String actor : this.getActors()) {
-            builder.append(actor);
-            builder.append(separator);
-        }
-
-        return builder.substring(0, builder.length() - separator.length());
     }
 
     public String getPoster() {
@@ -140,12 +112,12 @@ public class Series {
         this.overview = overview;
     }
 
-    public void addGenre(String genre) {
-        this.genres.add(genre);
+    public void setGenres(String genres) {
+        this.genres = genres;
     }
 
-    public void addActor(String s) {
-        this.actors.add(s);
+    public void setActors(String actors) {
+        this.actors = actors;
     }
 
     public void setPoster(String poster) {
