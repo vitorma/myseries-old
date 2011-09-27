@@ -1,26 +1,28 @@
 package br.edu.ufcg.aweseries.thetvdb.series;
 
-import java.util.ArrayList;
-import java.util.List;
+import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
 
 public class Series {
     private String id;
     private String name;
     private String status;
-    private String overview;
-    private List<String> genres;
-    private List<String> actors;
     private String airsDay;
     private String airsTime;
     private String firstAired;
     private String runtime;
     private String network;
+    private String overview;
+    private String genres;
+    private String actors;
     private String poster;
+    private Seasons seasons;
 
-    public Series() {
-        this.actors = new ArrayList<String>();
-        this.genres = new ArrayList<String>();
+    public Series(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
+
+    public Series() {}
 
     public String getId() {
         return this.id;
@@ -32,29 +34,6 @@ public class Series {
 
     public String getStatus() {
         return this.status;
-    }
-
-    public String getOverview() {
-        return this.overview;
-    }
-
-    public List<String> getGenres() {
-        return this.genres;
-    }
-
-    public List<String> getActors() {
-        return this.actors;
-    }
-
-    public String getActorsAsString(String separator) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String actor : this.getActors()) {
-            stringBuilder.append(actor);
-            stringBuilder.append(separator);
-        }
-
-        return stringBuilder.substring(0,
-                stringBuilder.length() - separator.length());
     }
 
     public String getAirsDay() {
@@ -77,8 +56,24 @@ public class Series {
         return this.network;
     }
 
+    public String getOverview() {
+        return this.overview;
+    }
+
+    public String getGenres() {
+        return this.genres;
+    }
+
+    public String getActors() {
+        return this.actors;
+    }
+
     public String getPoster() {
         return this.poster;
+    }
+
+    public Seasons getSeasons() {
+        return this.seasons;
     }
 
     public void setId(String id) {
@@ -91,14 +86,6 @@ public class Series {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
-    public void addGenre(String genre) {
-        this.genres.add(genre);
     }
 
     public void setAirsDay(String airsDay) {
@@ -121,27 +108,40 @@ public class Series {
         this.network = network;
     }
 
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
+    }
+
+    public void setActors(String actors) {
+        this.actors = actors;
+    }
+
     public void setPoster(String poster) {
         this.poster = poster;
+    }
+
+    public void setSeasons(Seasons seasons) {
+        // Is this the best approach? Talking about it.
+        this.seasons = seasons;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Series) &&
+               ((Series) obj).getId().equals(this.getId());
     }
 
     @Override
     public String toString() {
         return this.getName();
-    }
-
-    public void addActor(String s) {
-        this.actors.add(s);
-    }
-
-    public String getGenresAsString(String separator) {
-        StringBuilder builder = new StringBuilder();
-        for (String s : this.genres) {
-            builder.append(s);
-            builder.append(separator);
-        }
-
-        return builder.substring(0, builder.length() - separator.length());
-
     }
 }

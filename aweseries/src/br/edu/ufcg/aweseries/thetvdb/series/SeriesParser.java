@@ -51,17 +51,17 @@ package br.edu.ufcg.aweseries.thetvdb.series;
 
 import java.io.InputStream;
 
-import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
-
 import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
+import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
+import br.edu.ufcg.aweseries.thetvdb.util.Strings;
 
 public final class SeriesParser extends TheTVDBParser<Series> {
-    
+
     public SeriesParser(InputStream seriesInputStream) {
-    	super(seriesInputStream);
+        super(seriesInputStream);
     }
 
     @Override
@@ -106,23 +106,15 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Genre").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        int bodyLength = body.length();
-                        for (String s : body.substring(1, bodyLength - 1)
-                                .split("\\|")) {
-                            series.addGenre(s.trim());
-                        }
+                        series.setGenres(Strings.normalizePipedString(body));
                     }
                 }
         );
-        
+
         element.getChild("Actors").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        int bodyLength = body.length();
-                        for (String s : body.substring(1, bodyLength - 1)
-                                .split("\\|")) {
-                            series.addActor(s.trim());
-                        }
+                        series.setActors(Strings.normalizePipedString(body));
                     }
                 });
 
@@ -133,7 +125,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
                     }
                 }
         );
-        
+
         element.getChild("Airs_Time").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
@@ -141,13 +133,13 @@ public final class SeriesParser extends TheTVDBParser<Series> {
                     }
                 }
         );
-        
+
         element.getChild("FirstAired").setEndTextElementListener(
-        		new EndTextElementListener() {
-        			public void end(String body) {
-        				series.setFirstAired(body);
-        			}
-        		}
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        series.setFirstAired(body);
+                    }
+                }
         );
 
         element.getChild("Runtime").setEndTextElementListener(
