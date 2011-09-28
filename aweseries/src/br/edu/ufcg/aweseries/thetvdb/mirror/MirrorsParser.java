@@ -18,7 +18,7 @@ import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
 
-public final class MirrorsParser extends TheTVDBParser<Mirrors> {
+public class MirrorsParser extends TheTVDBParser<Mirrors> {
 
     public MirrorsParser(InputStream inputStream) {
         super(inputStream);

@@ -3,7 +3,7 @@ package br.edu.ufcg.aweseries.thetvdb.series;
 import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
 import br.edu.ufcg.aweseries.util.Strings;
 
-public final class SeriesBuilder {
+public class SeriesBuilder {
     private String id;
     private String name;
     private String status;

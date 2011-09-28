@@ -1,6 +1,6 @@
 package br.edu.ufcg.aweseries.thetvdb.mirror;
 
-public final class MirrorBuilder {
+public class MirrorBuilder {
     private String path;
     private int typeMask;
 

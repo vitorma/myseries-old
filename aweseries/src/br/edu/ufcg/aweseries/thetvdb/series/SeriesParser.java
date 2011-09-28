@@ -57,7 +57,7 @@ import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
 
-public final class SeriesParser extends TheTVDBParser<Series> {
+public class SeriesParser extends TheTVDBParser<Series> {
 
     public SeriesParser(InputStream seriesInputStream) {
         super(seriesInputStream);

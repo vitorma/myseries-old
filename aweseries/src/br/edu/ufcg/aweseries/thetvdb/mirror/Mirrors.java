@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public final class Mirrors {
+public class Mirrors {
     private static final Random RANDOM = new Random();
     private Map<MirrorType, List<Mirror>> mirrors;
 

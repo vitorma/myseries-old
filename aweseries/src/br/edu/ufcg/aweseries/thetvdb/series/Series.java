@@ -84,46 +84,90 @@ public class Series {
     }
 
     public void setStatus(String status) {
+        if (status == null) {
+            throw new IllegalArgumentException("invalid status for series");
+        }
+
         this.status = status;
     }
 
     public void setAirsDay(String airsDay) {
+        if (airsDay == null) {
+            throw new IllegalArgumentException("invalid airs day for series");
+        }
+
         this.airsDay = airsDay;
     }
 
     public void setAirsTime(String airsTime) {
+        if (airsTime == null) {
+            throw new IllegalArgumentException("invalid airs time for series");
+        }
+
         this.airsTime = airsTime;
     }
 
     public void setFirstAired(String firstAired) {
+        if (firstAired == null) {
+            throw new IllegalArgumentException("invalid first aired for series");
+        }
+
         this.firstAired = firstAired;
     }
 
     public void setRuntime(String runtime) {
+        if (runtime == null) {
+            throw new IllegalArgumentException("invalid runtime for series");
+        }
+
         this.runtime = runtime;
     }
 
     public void setNetwork(String network) {
+        if (network == null) {
+            throw new IllegalArgumentException("invalid network for series");
+        }
+
         this.network = network;
     }
 
     public void setOverview(String overview) {
+        if (overview == null) {
+            throw new IllegalArgumentException("invalid overview for series");
+        }
+
         this.overview = overview;
     }
 
     public void setGenres(String genres) {
+        if (genres == null) {
+            throw new IllegalArgumentException("invalid genres for series");
+        }
+
         this.genres = genres;
     }
 
     public void setActors(String actors) {
+        if (actors == null) {
+            throw new IllegalArgumentException("invalid actors for series");
+        }
+
         this.actors = actors;
     }
 
     public void setPoster(String poster) {
+        if (poster == null) {
+            throw new IllegalArgumentException("invalid poster for series");
+        }
+
         this.poster = poster;
     }
 
     public void setSeasons(Seasons seasons) {
+        if (seasons == null) {
+            throw new IllegalArgumentException("invalid seasons for series");
+        }
+
         this.seasons = seasons;
     }
 
