@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import br.edu.ufcg.aweseries.test.util.ChuckSeries;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 
 public class TestStreamFactory implements StreamFactory {
@@ -30,15 +31,18 @@ public class TestStreamFactory implements StreamFactory {
 
         throw new RuntimeException(
                 new FileNotFoundException("TestStream doesn't have data about that series")); 
-        
     }
 
     @Override
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
-        // TODO Auto-generated method stub
-        return null;
+        if (resourcePath.equals(ChuckSeries.posterResourcePath)) {
+            return null;
+        }
+
+        throw new RuntimeException(
+                new FileNotFoundException("TestStream doesn't have data about that series")); 
     }
 
     private void checkIfItIsAValidUrlSuffix(String suffix, String parameterName) {

@@ -13,20 +13,21 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import android.graphics.BitmapFactory;
+import br.edu.ufcg.aweseries.test.util.ChuckSeries;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBStreamFactory;
 
 public class TheTVDBStreamFactoryTest extends TestCase {
 
-    private final String chuckId = "80348";
-    private final String chuckName = "Chuck";
-    private final String chuckPoster = "posters/80348-1.jpg";
+    private final String testSeriesId = ChuckSeries.id;
+    private final String testSeriesName = ChuckSeries.name;
+    private final String testSeriesPoster = ChuckSeries.posterResourcePath;
 
     private final String nonExistentSeriesId = "0";
 
     private final List<String> baseSeriesContent = Arrays.asList(
-            "<id>" + chuckId + "</id>",
-            "<SeriesName>" + chuckName + "</SeriesName>"
+            "<id>" + testSeriesId + "</id>",
+            "<SeriesName>" + testSeriesName + "</SeriesName>"
     );
 
     private final List<String> fullSeriesOnlyContent = Arrays.asList(
@@ -78,7 +79,7 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     }
 
     public void testGettingBaseSeriesReturnsBaseData() throws IOException {
-        InputStream chuckStream = factory().streamForBaseSeries(chuckId);
+        InputStream chuckStream = factory().streamForBaseSeries(testSeriesId);
 
         String contentOfChuckStream = contentOf(chuckStream);
 
@@ -120,7 +121,7 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     }
 
     public void testGettingFullSeriesReturnsFullData() throws IOException {
-        InputStream chuckStream = factory().streamForFullSeries(chuckId);
+        InputStream chuckStream = factory().streamForFullSeries(testSeriesId);
 
         String contentOfChuckStream = contentOf(chuckStream);
 
@@ -149,8 +150,8 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     }
 
     public void testGettingSeriesPosterWithNonExistentResourcePathThrowsException() {
-        String nonExistentResourcePath = chuckPoster.substring(0,
-                                                               chuckPoster.length() - 3);
+        String nonExistentResourcePath = testSeriesPoster.substring(0,
+                                                               testSeriesPoster.length() - 3);
 
         try {
             factory().streamForSeriesPosterAt(nonExistentResourcePath);
@@ -161,7 +162,7 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     }
 
     public void testGettingSeriesPosterReturnsAStreamToABitmapableImage() {
-        InputStream posterStream = factory().streamForSeriesPosterAt(chuckPoster);
+        InputStream posterStream = factory().streamForSeriesPosterAt(testSeriesPoster);
         assertThat(posterStream, notNullValue());
 
         assertThat(BitmapFactory.decodeStream(posterStream), notNullValue());

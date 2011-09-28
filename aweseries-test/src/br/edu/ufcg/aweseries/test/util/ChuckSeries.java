@@ -1,9 +1,10 @@
-package br.edu.ufcg.aweseries.test.acceptance.util;
+package br.edu.ufcg.aweseries.test.util;
 
 public class ChuckSeries {
 
     public static String id = "80348";
     public static String name = "Chuck";
+    public static String posterResourcePath = "posters/80348-16.jpg";
 
     public static String baseSeries =
             "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
