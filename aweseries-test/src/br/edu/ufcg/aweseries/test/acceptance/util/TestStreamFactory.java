@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import android.util.Base64;
+import android.util.Base64InputStream;
 import br.edu.ufcg.aweseries.test.util.ChuckSeries;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 
@@ -38,7 +40,10 @@ public class TestStreamFactory implements StreamFactory {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
         if (resourcePath.equals(ChuckSeries.posterResourcePath)) {
-            return null;
+            ByteArrayInputStream byteArrayStream
+                    = new ByteArrayInputStream(ChuckSeries.base64EncodedPoster);
+
+            return new Base64InputStream(byteArrayStream, Base64.DEFAULT);
         }
 
         throw new RuntimeException(
