@@ -4,6 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/junit4.jar"/>
 	<classpathentry kind="lib" path="lib/mockito-all-1.8.5.jar"/>
+	<classpathentry kind="lib" path="lib/android-10.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/aweseries"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
