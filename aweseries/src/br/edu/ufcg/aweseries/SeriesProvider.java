@@ -1,5 +1,8 @@
 package br.edu.ufcg.aweseries;
 
+import java.util.Comparator;
+import java.util.TreeSet;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
@@ -15,19 +18,8 @@ import br.edu.ufcg.aweseries.thetvdb.series.Series;
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
-    private final String chuckId = "80348";
-    private final String tbbtId = "80379";
-    private final String gotID = "121361";
-    private final String houseID = "73255";
-    private final String youngDraculaId = "80248";
 
-    private final String apiKey = "6F2B5A871C96FB05";
-    private final TheTVDB db = new TheTVDB(apiKey);
-
-    /**
-     * @see newSeriesProvider()
-     */
-    private SeriesProvider() {}
+    private TreeSet<Series> followedSeries;
 
     /**
      * If you know what you are doing, use this method to instantiate a
@@ -39,19 +31,41 @@ public class SeriesProvider {
     }
 
     /**
+     * @see newSeriesProvider()
+     */
+    private SeriesProvider() {
+        Comparator<Series> nameComparator = new Comparator<Series>() {
+
+            @Override
+            public int compare(Series object1, Series object2) {
+                return object1.getName().compareTo(object2.getName());
+            }
+        };
+
+        this.followedSeries = new TreeSet<Series>(nameComparator);
+    }
+    
+    private TheTVDB theTVDB() {
+        return App.environment().theTVDB();
+    }
+
+    /**
      * Returns an array with all followed series.
      * 
      * @return followed series.
      */
     public Series[] mySeries() {
-            Series[] series = new Series[5];
-            series[0] = db.getSeries(chuckId);
-            series[1] = db.getSeries(gotID);
-            series[2] = db.getSeries(houseID);
-            series[3] = db.getSeries(tbbtId);
-            series[4] = db.getSeries(youngDraculaId);
+        // It is very ugly, but is here because 
+        //     return (Series[]) this.followedSeries.toArray();
+        // generates a ClassCastException (I don't know why).
 
-            return series;
+        Series[] array = {};
+        array = this.followedSeries.toArray(array);
+        return array;
+    }
+
+    public void follow(Series series) {
+        this.followedSeries.add(series);
     }
 
     /**
@@ -59,18 +73,18 @@ public class SeriesProvider {
      * @param id series id
      */
     public Series getSeries(String id) {
-        return this.db.getSeries(id);
+        return this.theTVDB().getSeries(id);
     }
 
     public Season[] getSeasons(Series series) {
         if (series == null) {
             return new Season[] {};
         }
-        return this.db.getSeasons(series.getId()).toArray();
+        return this.theTVDB().getSeasons(series.getId()).toArray();
     }
 
     public Bitmap getSmallPoster(Series series) {
-        Bitmap poster = this.db.getSeriesPoster(series);
+        Bitmap poster = this.theTVDB().getSeriesPoster(series);
 
         if (poster == null) {
             return genericSmallPosterImage();
