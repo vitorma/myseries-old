@@ -8,16 +8,11 @@ import br.edu.ufcg.aweseries.thetvdb.series.Series;
 import br.edu.ufcg.aweseries.thetvdb.series.SeriesParser;
 
 public class TheTVDB {
-    @Deprecated
-    private final UrlSupplier urlSupplier;
 
     private final StreamFactory streamFactory;
 
     public TheTVDB(String apiKey) {
-        // TODO: Create UrlSupplier as a local variable and pass it to the
-        // TheTVDBStreamFactory while this class does not receive a
-        // StreamFactory as a parameter in its constructor method.
-        this.urlSupplier = new UrlSupplier(apiKey);
+        UrlSupplier urlSupplier = new UrlSupplier(apiKey);
         this.streamFactory = new TheTVDBStreamFactory(urlSupplier);
     }
 
