@@ -3,22 +3,26 @@ package br.edu.ufcg.aweseries.test.integration;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.TestCase;
+import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBStreamFactory;
-import br.edu.ufcg.aweseries.thetvdb.UrlSupplier;
 
 public class TheTVDBStreamFactoryTest extends TestCase {
 
     private final String chuckId = "80348";
     private final String chuckName = "Chuck";
+    private final String chuckPoster = "posters/80348-1.jpg";
+
+    private final String nonExistentSeriesId = "0";
 
     private final List<String> baseSeriesContent = Arrays.asList(
             "<id>" + chuckId + "</id>",
@@ -34,24 +38,39 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         fullSeriesContent.addAll(fullSeriesOnlyContent);
     }
 
-    private StreamFactory factory;
-
     private final String apiKey = "6F2B5A871C96FB05";
-    private UrlSupplier urlSupplier = new UrlSupplier(apiKey);
 
-    public void setUp() {
-        this.factory = new TheTVDBStreamFactory(urlSupplier);
-    }
+    private StreamFactory factory = new TheTVDBStreamFactory(apiKey);
 
     // Base Series -------------------------------------------------------------
-    public void testGettingNullBaseSeriesStreamReturnsNull() {
+    public void testGettingNullBaseSeriesStreamThrowsException() {
         try {
             factory.streamForBaseSeries(null);
             fail("Should have thrown an IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testGettingChuckBaseSeriesReturnsChuckBaseData() throws IOException {
+    public void testGettingBaseSeriesWithBlankSeriesIdThrowsException() {
+        try {
+            factory.streamForBaseSeries("   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+        try {
+            factory.streamForBaseSeries("");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testGettingBaseSeriesWithNonExistentSeriesIdThrowsException() {
+        try {
+            factory.streamForBaseSeries(nonExistentSeriesId);
+            fail("Should have thrown a FileNotFoundException");
+        } catch (RuntimeException e) {
+            assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
+        }
+    }
+
+    public void testGettingBaseSeriesReturnsBaseData() throws IOException {
         InputStream chuckStream = factory.streamForBaseSeries(chuckId);
 
         String contentOfChuckStream = contentOf(chuckStream);
@@ -66,14 +85,34 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     }
 
     // Full Series -------------------------------------------------------------
-    public void testGettingNullFullSeriesStreamReturnsNull() {
+    public void testGettingNullFullSeriesStreamThrowsException() {
         try {
             factory.streamForFullSeries(null);
             fail("Should have thrown an IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testGettingChuckFullSeriesReturnsChuckFullData() throws IOException {
+    public void testGettingFullSeriesWithBlankSeriesIdThrowsException() {
+        try {
+            factory.streamForFullSeries("   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+        try {
+            factory.streamForFullSeries("");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testGettingFullSeriesWithNonExistentSeriesIdThrowsException() {
+        try {
+            factory.streamForFullSeries(nonExistentSeriesId);
+            fail("Should have thrown a FileNotFoundException");
+        } catch (RuntimeException e) {
+            assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
+        }
+    }
+
+    public void testGettingFullSeriesReturnsFullData() throws IOException {
         InputStream chuckStream = factory.streamForFullSeries(chuckId);
 
         String contentOfChuckStream = contentOf(chuckStream);
@@ -81,6 +120,44 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         for (String content : fullSeriesContent) {
             assertThat(contentOfChuckStream, containsString(content));
         }
+    }
+
+    // Full Series -------------------------------------------------------------
+    public void testGettingNullSeriesPosterThrowsException() {
+        try {
+            factory.streamForSeriesPosterAt(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testGettingSeriesPosterWithBlankPathThrowsException() {
+        try {
+            factory.streamForSeriesPosterAt("   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+        try {
+            factory.streamForSeriesPosterAt("");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testGettingSeriesPosterWithNonExistentResourcePathThrowsException() {
+        String nonExistentResourcePath = chuckPoster.substring(0,
+                                                               chuckPoster.length() - 3);
+
+        try {
+            factory.streamForSeriesPosterAt(nonExistentResourcePath);
+            fail("Should have thrown a FileNotFoundException");
+        } catch (RuntimeException e) {
+            assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
+        }
+    }
+
+    public void testGettingSeriesPosterReturnsAStreamToABitmapableImage() {
+        InputStream posterStream = factory.streamForSeriesPosterAt(chuckPoster);
+        assertThat(posterStream, notNullValue());
+
+        assertThat(BitmapFactory.decodeStream(posterStream), notNullValue());
     }
 
     private String contentOf(InputStream stream) throws IOException {
