@@ -1,6 +1,7 @@
 package br.edu.ufcg.aweseries.thetvdb.series;
 
 import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class Series {
     private String id;
@@ -18,11 +19,17 @@ public class Series {
     private Seasons seasons;
 
     public Series(String id, String name) {
+        if (id == null || Strings.isBlank(id)) {
+            throw new IllegalArgumentException("invalid id for series");
+        }
+
+        if (name == null || Strings.isBlank(name)) {
+            throw new IllegalArgumentException("invalid name for series");
+        }
+
         this.id = id;
         this.name = name;
     }
-
-    public Series() {}
 
     public String getId() {
         return this.id;
@@ -76,14 +83,6 @@ public class Series {
         return this.seasons;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setStatus(String status) {
         this.status = status;
     }
@@ -125,7 +124,6 @@ public class Series {
     }
 
     public void setSeasons(Seasons seasons) {
-        // Is this the best approach? Talking about it.
         this.seasons = seasons;
     }
 

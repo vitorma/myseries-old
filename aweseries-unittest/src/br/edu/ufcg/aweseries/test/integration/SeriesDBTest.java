@@ -14,12 +14,9 @@ public class SeriesDBTest {
     private SeriesDB db;
 
     private Series createTestSeries() {
-        final Series series = new Series();
-        series.setName("SeriesName");
+        final Series series = new Series("abcdefg", "SeriesName");
         //series.setActors("SeriesActors");
         series.setNetwork("SeriesNetwork");
-        series.setId("abcdefg");
-
         return series;
     }
 

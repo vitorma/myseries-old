@@ -56,7 +56,6 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
-import br.edu.ufcg.aweseries.util.Strings;
 
 public final class SeriesParser extends TheTVDBParser<Series> {
 
@@ -66,7 +65,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
 
     @Override
     public Series parse() {
-        final Series series = new Series();
+        final SeriesBuilder builder = new SeriesBuilder();
 
         RootElement root = new RootElement("Data");
         Element element = root.getChild("Series");
@@ -74,7 +73,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("id").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setId(body);
+                        builder.withId(body);
                     }
                 }
         );
@@ -82,7 +81,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("SeriesName").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setName(body);
+                        builder.withName(body);
                     }
                 }
         );
@@ -90,38 +89,15 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Status").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setStatus(body);
+                        builder.withStatus(body);
                     }
                 }
         );
-
-        element.getChild("Overview").setEndTextElementListener(
-                new EndTextElementListener() {
-                    public void end(String body) {
-                        series.setOverview(body);
-                    }
-                }
-        );
-
-        element.getChild("Genre").setEndTextElementListener(
-                new EndTextElementListener() {
-                    public void end(String body) {
-                        series.setGenres(Strings.normalizePipeSeparated(body));
-                    }
-                }
-        );
-
-        element.getChild("Actors").setEndTextElementListener(
-                new EndTextElementListener() {
-                    public void end(String body) {
-                        series.setActors(Strings.normalizePipeSeparated(body));
-                    }
-                });
 
         element.getChild("Airs_DayOfWeek").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setAirsDay(body);
+                        builder.withAirsDay(body);
                     }
                 }
         );
@@ -129,7 +105,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Airs_Time").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setAirsTime(body);
+                        builder.withAirsTime(body);
                     }
                 }
         );
@@ -137,7 +113,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("FirstAired").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setFirstAired(body);
+                        builder.withFirstAired(body);
                     }
                 }
         );
@@ -145,7 +121,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Runtime").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setRuntime(body);
+                        builder.withRuntime(body);
                     }
                 }
         );
@@ -153,15 +129,38 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Network").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setNetwork(body);
+                        builder.withNetwork(body);
                     }
                 }
         );
 
+        element.getChild("Overview").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        builder.withOverview(body);
+                    }
+                }
+        );
+
+        element.getChild("Genre").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        builder.withGenres(body);
+                    }
+                }
+        );
+
+        element.getChild("Actors").setEndTextElementListener(
+                new EndTextElementListener() {
+                    public void end(String body) {
+                        builder.withActors(body);
+                    }
+                });
+
         element.getChild("poster").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setPoster(body);
+                        builder.withPoster(body);
                     }
                 }
         );
@@ -173,6 +172,6 @@ public final class SeriesParser extends TheTVDBParser<Series> {
             throw new RuntimeException(e);
         }
 
-        return series;
+        return builder.build();
     }
 }
