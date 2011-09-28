@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries.thetvdb.util;
+package br.edu.ufcg.aweseries.util;
 
 import java.util.regex.Pattern;
 

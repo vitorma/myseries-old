@@ -1,9 +1,9 @@
-package br.edu.ufcg.aweseries.test.unit.thetvdb.util;
+package br.edu.ufcg.aweseries.test.unit.util;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import br.edu.ufcg.aweseries.thetvdb.util.Strings;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class StringsTest {
 
