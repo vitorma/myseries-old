@@ -56,6 +56,7 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
+import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
 
 public class SeriesParser extends TheTVDBParser<Series> {
 
@@ -171,6 +172,8 @@ public class SeriesParser extends TheTVDBParser<Series> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        
+        builder.withSeasons(new Seasons());
 
         return builder.build();
     }
