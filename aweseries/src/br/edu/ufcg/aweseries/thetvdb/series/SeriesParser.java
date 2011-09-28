@@ -106,7 +106,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Genre").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setGenres(Strings.normalizePipedString(body));
+                        series.setGenres(Strings.normalizePipeSeparated(body));
                     }
                 }
         );
@@ -114,7 +114,7 @@ public final class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Actors").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        series.setActors(Strings.normalizePipedString(body));
+                        series.setActors(Strings.normalizePipeSeparated(body));
                     }
                 });
 
