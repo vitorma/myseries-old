@@ -23,6 +23,8 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     private final String chuckName = "Chuck";
     private final String chuckPoster = "posters/80348-1.jpg";
 
+    private final String nonExistentSeriesId = "0";
+
     private final List<String> baseSeriesContent = Arrays.asList(
             "<id>" + chuckId + "</id>",
             "<SeriesName>" + chuckName + "</SeriesName>"
@@ -54,7 +56,27 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testGettingChuckBaseSeriesReturnsChuckBaseData() throws IOException {
+    public void testGettingBaseSeriesWithBlankSeriesIdThrowsException() {
+        try {
+            factory.streamForBaseSeries("   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+        try {
+            factory.streamForBaseSeries("");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testGettingBaseSeriesWithNonExistentSeriesIdThrowException() {
+        try {
+            factory.streamForBaseSeries(nonExistentSeriesId);
+            fail("Should have thrown a FileNotFoundException");
+        } catch (RuntimeException e) {
+            assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
+        }
+    }
+
+    public void testGettingBaseSeriesReturnsBaseData() throws IOException {
         InputStream chuckStream = factory.streamForBaseSeries(chuckId);
 
         String contentOfChuckStream = contentOf(chuckStream);
@@ -76,7 +98,27 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testGettingChuckFullSeriesReturnsChuckFullData() throws IOException {
+    public void testGettingFullSeriesWithBlankSeriesIdThrowsException() {
+        try {
+            factory.streamForFullSeries("   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+        try {
+            factory.streamForFullSeries("");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testGettingFullSeriesWithNonExistentSeriesIdThrowException() {
+        try {
+            factory.streamForFullSeries(nonExistentSeriesId);
+            fail("Should have thrown a FileNotFoundException");
+        } catch (RuntimeException e) {
+            assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
+        }
+    }
+
+    public void testGettingFullSeriesReturnsFullData() throws IOException {
         InputStream chuckStream = factory.streamForFullSeries(chuckId);
 
         String contentOfChuckStream = contentOf(chuckStream);

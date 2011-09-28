@@ -15,9 +15,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
     @Override
     public InputStream streamForBaseSeries(String seriesId) {
-        if (seriesId == null) {
-            throw new IllegalArgumentException("seriesId should not be null");
-        }
+        this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
         String baseSeriesUrl = this.urlSupplier.getBaseSeriesUrl(seriesId);
         return streamFor(baseSeriesUrl);
@@ -25,9 +23,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
     @Override
     public InputStream streamForFullSeries(String seriesId) {
-        if (seriesId == null) {
-            throw new IllegalArgumentException("seriesId should not be null");
-        }
+        this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
         String fullSeriesUrl = this.urlSupplier.getFullSeriesUrl(seriesId);
         return streamFor(fullSeriesUrl);
@@ -38,15 +34,19 @@ public class TheTVDBStreamFactory implements StreamFactory {
      */
     @Override
     public InputStream streamForSeriesPosterAt(String resourcePath) {
-        if (resourcePath == null) {
-            throw new IllegalArgumentException("resourcePath should not be null");
-        }
-        if (resourcePath.trim().isEmpty()) {
-            throw new IllegalArgumentException("resourcePath should not be empty");
-        }
+        this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
         String seriesPosterUrl = this.urlSupplier.getSeriesPosterUrl(resourcePath);
         return streamFor(seriesPosterUrl);
+    }
+
+    private void checkIfItIsAValidUrlSuffix(String suffix, String parameterName) {
+        if (suffix == null) {
+            throw new IllegalArgumentException(parameterName + " should not be null");
+        }
+        if (suffix.trim().isEmpty()) {
+            throw new IllegalArgumentException(parameterName + " should not be blank");
+        }
     }
 
     private InputStream streamFor(String url) {
