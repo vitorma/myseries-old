@@ -1,55 +1,57 @@
-//	<?xml version="1.0" encoding="UTF-8" ?>
-//	<Mirrors>
-//	 <Mirror>
-//	   <id>1</id>
-//	   <mirrorpath>http://thetvdb.com</mirrorpath>
-//	   <typemask>7</typemask>
-//	 </Mirror>
-//	</Mirrors>
+//  <?xml version="1.0" encoding="UTF-8" ?>
+//  <Mirrors>
+//   <Mirror>
+//     <id>1</id>
+//     <mirrorpath>http://thetvdb.com</mirrorpath>
+//     <typemask>7</typemask>
+//   </Mirror>
+//  </Mirrors>
 
 package br.edu.ufcg.aweseries.thetvdb.mirror;
 
 import java.io.InputStream;
-
-import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
 
 import android.sax.Element;
 import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
+import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
 
-public class MirrorsParser extends TheTVDBParser<Mirrors> {
+public final class MirrorsParser extends TheTVDBParser<Mirrors> {
 
     public MirrorsParser(InputStream inputStream) {
-	    super(inputStream);
-	}
+        super(inputStream);
+    }
 
     @Override
     public Mirrors parse() {
         final Mirrors mirrors = new Mirrors();
-        final Mirror mirror = new Mirror();
+        final MirrorBuilder builder = new MirrorBuilder();
 
-        RootElement root = new RootElement("Mirrors");
-        Element element = root.getChild("Mirror");
+        final RootElement root = new RootElement("Mirrors");
+        final Element element = root.getChild("Mirror");
+
         element.setEndElementListener(
                 new EndElementListener() {
                     public void end() {
-                        mirrors.add(mirror.copy());
+                        mirrors.add(builder.build());
                     }
                 }
         );
+
         element.getChild("mirrorpath").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        mirror.setPath(body);
+                        builder.withPath(body);
                     }
                 }
         );
+
         element.getChild("typemask").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        mirror.setTypeMask(Integer.valueOf(body));
+                    	builder.withTypeMask(body);
                     }
                 }
         );

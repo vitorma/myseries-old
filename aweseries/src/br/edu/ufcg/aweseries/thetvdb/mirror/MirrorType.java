@@ -1,15 +1,15 @@
 package br.edu.ufcg.aweseries.thetvdb.mirror;
 
 public enum MirrorType {
-	XML(1), BANNER(2), ZIP(4);
+    XML(1), BANNER(2), ZIP(4);
 
-	private int mask;
+    private int mask;
 
-	MirrorType(int mask) {
-		this.mask = mask;
-	}
+    MirrorType(int mask) {
+        this.mask = mask;
+    }
 
-	public boolean matches(int i) {
-		return (i & this.mask) != 0;
-	}
+    public boolean matches(int i) {
+        return (i & this.mask) != 0;
+    }
 }
