@@ -9,8 +9,8 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
     private UrlSupplier urlSupplier;
 
-    public TheTVDBStreamFactory(UrlSupplier urlSupplier) {
-        this.urlSupplier = urlSupplier;
+    public TheTVDBStreamFactory(String apiKey) {
+        this.urlSupplier = new UrlSupplier(apiKey);
     }
 
     @Override

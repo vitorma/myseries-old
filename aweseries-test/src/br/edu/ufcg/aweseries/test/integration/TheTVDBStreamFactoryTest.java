@@ -15,7 +15,6 @@ import junit.framework.TestCase;
 import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBStreamFactory;
-import br.edu.ufcg.aweseries.thetvdb.UrlSupplier;
 
 public class TheTVDBStreamFactoryTest extends TestCase {
 
@@ -39,14 +38,9 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         fullSeriesContent.addAll(fullSeriesOnlyContent);
     }
 
-    private StreamFactory factory;
-
     private final String apiKey = "6F2B5A871C96FB05";
-    private UrlSupplier urlSupplier = new UrlSupplier(apiKey);
 
-    public void setUp() {
-        this.factory = new TheTVDBStreamFactory(urlSupplier);
-    }
+    private StreamFactory factory = new TheTVDBStreamFactory(apiKey);
 
     // Base Series -------------------------------------------------------------
     public void testGettingNullBaseSeriesStreamThrowsException() {
@@ -67,7 +61,7 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testGettingBaseSeriesWithNonExistentSeriesIdThrowException() {
+    public void testGettingBaseSeriesWithNonExistentSeriesIdThrowsException() {
         try {
             factory.streamForBaseSeries(nonExistentSeriesId);
             fail("Should have thrown a FileNotFoundException");
@@ -109,7 +103,7 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testGettingFullSeriesWithNonExistentSeriesIdThrowException() {
+    public void testGettingFullSeriesWithNonExistentSeriesIdThrowsException() {
         try {
             factory.streamForFullSeries(nonExistentSeriesId);
             fail("Should have thrown a FileNotFoundException");
@@ -147,7 +141,7 @@ public class TheTVDBStreamFactoryTest extends TestCase {
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testGettingSeriesPosterWithNonExistentResourcePathThrowException() {
+    public void testGettingSeriesPosterWithNonExistentResourcePathThrowsException() {
         String nonExistentResourcePath = chuckPoster.substring(0,
                                                                chuckPoster.length() - 3);
 

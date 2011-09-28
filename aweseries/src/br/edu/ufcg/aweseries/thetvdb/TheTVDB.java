@@ -12,8 +12,7 @@ public class TheTVDB {
     private final StreamFactory streamFactory;
 
     public TheTVDB(String apiKey) {
-        UrlSupplier urlSupplier = new UrlSupplier(apiKey);
-        this.streamFactory = new TheTVDBStreamFactory(urlSupplier);
+        this.streamFactory = new TheTVDBStreamFactory(apiKey);
     }
 
     public Series getSeries(String seriesId) {
