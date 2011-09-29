@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.gui.MySeries;
 
 public class AcceptanceTestCaseTest extends AcceptanceTestCase {
 
@@ -27,5 +28,9 @@ public class AcceptanceTestCaseTest extends AcceptanceTestCase {
 
     public void testDriverIsNotNull() {
         assertThat(this.driver(), notNullValue());
+    }
+
+    public void testSoloRunsMySeries() {
+        assertThat(this.solo().getCurrentActivity(), instanceOf(MySeries.class));
     }
 }

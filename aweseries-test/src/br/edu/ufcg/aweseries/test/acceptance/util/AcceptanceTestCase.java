@@ -10,7 +10,6 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 import com.jayway.android.robotium.solo.Solo;
 
 public class AcceptanceTestCase extends ActivityInstrumentationTestCase2<MySeries> {
-
     private Solo solo;
     private AppDriver driver;
 
@@ -28,11 +27,9 @@ public class AcceptanceTestCase extends ActivityInstrumentationTestCase2<MySerie
 
     /**
      * Must be called before the test's setUp commands.
-     *
-     * @param instrumentation ActivityInstrumentationTestCase2.getInstrumentation();
-     * @param activity ActivityInstrumentationTestCase2.getActivity();
      */
     public void setUp() {
+        SampleSeries.injectInstrumentation(getInstrumentation());
         App.environment().setTheTVDBTo(new TheTVDB(new TestStreamFactory()));
 
         // XXX: Avoids instantiation of the default SeriesProvider with some example series.
@@ -41,12 +38,10 @@ public class AcceptanceTestCase extends ActivityInstrumentationTestCase2<MySerie
 
         this.solo = new Solo(getInstrumentation(), getActivity());
         this.driver = new AppDriver(this.solo);
-
-        SampleSeries.injectInstrumentation(getInstrumentation());
     }
 
     /**
-     * Must be called before the test's tear down commands
+     * Must be called after the test's tear down commands
      */
     public void tearDown() throws Exception {
         try {
