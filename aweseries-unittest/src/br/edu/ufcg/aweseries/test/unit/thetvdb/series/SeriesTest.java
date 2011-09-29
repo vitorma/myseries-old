@@ -16,7 +16,7 @@ public class SeriesTest {
     private Series series4;
 
     @Before
-    public final void initialize() {
+    public final void setUp() {
         this.series1 = new Series("id 1", "series 1");
         this.series2 = new Series("id 1", "series 2");
         this.series3 = new Series("id 1", "series");
@@ -57,8 +57,10 @@ public class SeriesTest {
 
     @Test
     public final void testSeries() {
-        Assert.assertNotNull("series id should be initialized by the constructor", this.series1.getId());
-        Assert.assertNotNull("series name should be initialized by the constructor", this.series1.getName());
+        Assert.assertNotNull("series id should be initialized by the constructor",
+                this.series1.getId());
+        Assert.assertNotNull("series name should be initialized by the constructor",
+                this.series1.getName());
     }
 
     @Test
@@ -260,15 +262,23 @@ public class SeriesTest {
 
     @Test
     public final void testEqualsObject() {
-        Assert.assertTrue("series1 and series2 have the same id", this.series1.equals(this.series2));
-        Assert.assertTrue("series2 and series3 have the same id", this.series2.equals(this.series3));
-        Assert.assertFalse("series3 and series4 does not have the same id", this.series3.equals(this.series4));
+        Assert.assertTrue("series1 and series2 have the same id",
+                this.series1.equals(this.series2));
+        Assert.assertTrue("series2 and series3 have the same id",
+                this.series2.equals(this.series3));
+        Assert.assertFalse("series3 and series4 does not have the same id",
+                this.series3.equals(this.series4));
 
         for (int i = 1; i <= 1000; i++) {
-            Assert.assertTrue("equals should be consistently reflexive", this.series1.equals(this.series1));
-            Assert.assertTrue("equals should be consistently symmetric", this.series2.equals(this.series1));
-            Assert.assertTrue("equals should be consistently transitive", this.series1.equals(this.series3));
-            Assert.assertFalse("equals should consistently return false if the expected object is null", this.series1.equals(null));
+            Assert.assertTrue("equals should be consistently reflexive",
+                    this.series1.equals(this.series1));
+            Assert.assertTrue("equals should be consistently symmetric",
+                    this.series2.equals(this.series1));
+            Assert.assertTrue("equals should be consistently transitive",
+                    this.series1.equals(this.series3));
+            Assert.assertFalse(
+                    "equals should consistently return false if the expected object is null",
+                    this.series1.equals(null));
         }
     }
 
@@ -276,8 +286,12 @@ public class SeriesTest {
     public final void testHashCode() {
         final int hashCode = this.series1.hashCode();
         for (int i = 1; i <= 1000; i++) {
-            Assert.assertEquals("hashCode should be consistently returns the same value for the same object", hashCode, this.series1.hashCode());
-            Assert.assertEquals("hashCode should be consistently returns the same value for equal objects", this.series1.hashCode(), this.series2.hashCode());
+            Assert.assertEquals(
+                    "hashCode should consistently return the same value for the same object",
+                    hashCode, this.series1.hashCode());
+            Assert.assertEquals(
+                    "hashCode should consistently return the same value for equal objects",
+                    this.series1.hashCode(), this.series2.hashCode());
         }
     }
 
