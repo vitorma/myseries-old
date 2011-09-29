@@ -1,14 +1,13 @@
 package br.edu.ufcg.aweseries.test.unit.thetvdb.season;
 
-import org.junit.Assert;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.junit.matchers.JUnitMatchers;
+import org.mockito.Mockito;
 
 import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
 import br.edu.ufcg.aweseries.thetvdb.season.Season;
@@ -31,10 +30,6 @@ public class SeasonBuilderTest {
         this.episode1 = Mockito.mock(Episode.class);
         this.episode2 = Mockito.mock(Episode.class);
         this.episode3 = Mockito.mock(Episode.class);
-
-        this.episode1.setId("1");
-        this.episode2.setId("2");
-        this.episode3.setId("3");
 
         this.episodes.add(this.episode1);
         this.episodes.add(this.episode2);
