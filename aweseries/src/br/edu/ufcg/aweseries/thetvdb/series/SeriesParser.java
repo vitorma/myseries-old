@@ -49,13 +49,17 @@
 
 package br.edu.ufcg.aweseries.thetvdb.series;
 
+import java.io.IOException;
 import java.io.InputStream;
+
+import org.xml.sax.SAXException;
 
 import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class SeriesParser extends TheTVDBParser<Series> {
 
@@ -67,8 +71,8 @@ public class SeriesParser extends TheTVDBParser<Series> {
     public Series parse() {
         final SeriesBuilder builder = new SeriesBuilder();
 
-        RootElement root = new RootElement("Data");
-        Element element = root.getChild("Series");
+        final RootElement root = new RootElement("Data");
+        final Element element = root.getChild("Series");
 
         element.getChild("id").setEndTextElementListener(
                 new EndTextElementListener() {
@@ -145,7 +149,7 @@ public class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Genre").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        builder.withGenres(body);
+                        builder.withGenres(Strings.normalizePipeSeparated(body));
                     }
                 }
         );
@@ -153,7 +157,7 @@ public class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("Actors").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        builder.withActors(body);
+                        builder.withActors(Strings.normalizePipeSeparated(body));
                     }
                 });
 
@@ -166,9 +170,10 @@ public class SeriesParser extends TheTVDBParser<Series> {
         );
 
         try {
-            Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, 
-                    root.getContentHandler());
-        } catch (Exception e) {
+            Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root.getContentHandler());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SAXException e) {
             throw new RuntimeException(e);
         }
 
