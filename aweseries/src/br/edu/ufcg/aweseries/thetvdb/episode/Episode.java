@@ -1,38 +1,10 @@
-//<?xml version="1.0" encoding="UTF-8" ?>
-// <Episode>
-//    <id>332179</id>
-//    <DVD_chapter></DVD_chapter>
-//    <DVD_discid></DVD_discid>
-//    <DVD_episodenumber></DVD_episodenumber>
-//    <DVD_season></DVD_season>
-//    <Director>|Joseph McGinty Nichol|</Director>
-//    <EpisodeName>Chuck Versus the World</EpisodeName>
-//    <EpisodeNumber>1</EpisodeNumber>
-//    <FirstAired>2007-09-24</FirstAired>
-//    <GuestStars>|Julia Ling|Vik Sahay|Mieko Hillman|</GuestStars>
-//    <IMDB_ID></IMDB_ID>
-//    <Language>English</Language>
-//    <Overview>Chuck Bartowski is an average computer geek...</Overview>
-//    <ProductionCode></ProductionCode>
-//    <Rating>9.0</Rating>
-//    <SeasonNumber>1</SeasonNumber>
-//    <Writer>|Josh Schwartz|Chris Fedak|</Writer>
-//    <absolute_number></absolute_number>
-//    <airsafter_season></airsafter_season>
-//    <airsbefore_episode></airsbefore_episode>
-//    <airsbefore_season></airsbefore_season>
-//    <filename>episodes/80348-332179.jpg</filename>
-//    <lastupdated>1201292806</lastupdated>
-//    <seasonid>27985</seasonid>
-//    <seriesid>80348</seriesid>
-//</Episode>
-
 package br.edu.ufcg.aweseries.thetvdb.episode;
 
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class Episode {
     private String id;
+    private String seriesId;
     private int number;
     private int seasonNumber;
     private String name;
@@ -44,7 +16,6 @@ public class Episode {
     private String poster;
 
     private boolean viewed;
-    private String seriesId;
 
     public Episode() {}
 
