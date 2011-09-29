@@ -3,17 +3,19 @@ package br.edu.ufcg.aweseries.test.acceptance.util;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import br.edu.ufcg.aweseries.test.util.ChuckSeries;
+import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 
 public class TestStreamFactory implements StreamFactory {
+
+    private SampleSeries sampleSeries = SampleSeries.CHUCK;
 
     @Override
     public InputStream streamForBaseSeries(String seriesId) {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
-        if (seriesId.equals(ChuckSeries.id)) {
-            return ChuckSeries.baseSeriesStream();
+        if (seriesId.equals(this.sampleSeries.id())) {
+            return this.sampleSeries.baseSeriesStream();
         }
 
         throw new RuntimeException(
@@ -24,8 +26,8 @@ public class TestStreamFactory implements StreamFactory {
     public InputStream streamForFullSeries(String seriesId) {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
-        if (seriesId.equals(ChuckSeries.id)) {
-            return ChuckSeries.fullSeriesStream();
+        if (seriesId.equals(this.sampleSeries.id())) {
+            return this.sampleSeries.fullSeriesStream();
         }
 
         throw new RuntimeException(
@@ -36,8 +38,8 @@ public class TestStreamFactory implements StreamFactory {
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
-        if (resourcePath.equals(ChuckSeries.posterResourcePath)) {
-            return ChuckSeries.posterStream();
+        if (resourcePath.equals(this.sampleSeries.posterResourcePath())) {
+            return this.sampleSeries.posterStream();
         }
 
         throw new RuntimeException(

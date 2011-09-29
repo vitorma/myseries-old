@@ -4,13 +4,13 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import br.edu.ufcg.aweseries.test.acceptance.util.AcceptanceTestCase;
-import br.edu.ufcg.aweseries.test.util.ChuckSeries;
+import br.edu.ufcg.aweseries.test.util.SampleSeries;
 
 public class ViewSeriesInformation extends AcceptanceTestCase {
 
     public void testGetToSeriesInformationFromFollowedSeries() {
         // Given
-        String seriesName = ChuckSeries.name;
+        String seriesName = SampleSeries.CHUCK.name();
         this.driver().follow(seriesName);
         goToFollowedSeries(seriesName);
         

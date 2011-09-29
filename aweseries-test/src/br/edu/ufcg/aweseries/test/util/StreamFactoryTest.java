@@ -25,9 +25,10 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
      */
     protected abstract StreamFactory factory();
 
-    private final String testSeriesId = ChuckSeries.id;
-    private final String testSeriesName = ChuckSeries.name;
-    private final String testSeriesPoster = ChuckSeries.posterResourcePath;
+    // TODO: turn all these 3 variables into just one -> call everything through attr seriesSample
+    private final String testSeriesId = SampleSeries.CHUCK.id();
+    private final String testSeriesName = SampleSeries.CHUCK.name();
+    private final String testSeriesPoster = SampleSeries.CHUCK.posterResourcePath();
 
     private final String nonExistentSeriesId = "0";
 

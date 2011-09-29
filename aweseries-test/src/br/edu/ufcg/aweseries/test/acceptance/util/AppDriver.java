@@ -7,16 +7,17 @@ import android.app.Activity;
 import android.content.Intent;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.test.util.ChuckSeries;
+import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.series.Series;
 
 import com.jayway.android.robotium.solo.Solo;
 
 public class AppDriver {
 
+    // TODO: it should iterate all over the SeriesSample samples, storing their data
     private static Map<String, String> seriesNameToId = new HashMap<String, String>();
     {
-        seriesNameToId.put(ChuckSeries.name, ChuckSeries.id); 
+        seriesNameToId.put(SampleSeries.CHUCK.name(), SampleSeries.CHUCK.id()); 
     }
 
     private Solo solo;

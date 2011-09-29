@@ -4,6 +4,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.gui.MySeries;
+import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -40,6 +41,8 @@ public class AcceptanceTestCase extends ActivityInstrumentationTestCase2<MySerie
 
         this.solo = new Solo(getInstrumentation(), getActivity());
         this.driver = new AppDriver(this.solo);
+
+        SampleSeries.injectInstrumentation(getInstrumentation());
     }
 
     /**
