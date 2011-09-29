@@ -30,6 +30,9 @@ public class SeriesProvider {
         return new SeriesProvider();
     }
 
+    // XXX: It is here because the user can't follow a series yet. Remove it ASAP
+    public boolean loadExampleData = false;
+    
     /**
      * @see newSeriesProvider()
      */
@@ -48,13 +51,29 @@ public class SeriesProvider {
     private TheTVDB theTVDB() {
         return App.environment().theTVDB();
     }
-
     /**
      * Returns an array with all followed series.
      * 
      * @return followed series.
      */
     public Series[] mySeries() {
+        // XXX: It is here because the user can't follow a series yet. Remove it ASAP
+        if (this.loadExampleData) {
+            final String chuckId = "80348";
+            final String tbbtId = "80379";
+            final String gotID = "121361";
+            final String houseID = "73255";
+            final String youngDraculaId = "80248";
+            
+            this.follow(this.getSeries(chuckId));
+            this.follow(this.getSeries(tbbtId));
+            this.follow(this.getSeries(gotID));
+            this.follow(this.getSeries(houseID));
+            this.follow(this.getSeries(youngDraculaId));
+
+            this.loadExampleData = false;
+        }
+
         // It is very ugly, but is here because 
         //     return (Series[]) this.followedSeries.toArray();
         // generates a ClassCastException (I don't know why).
@@ -62,6 +81,10 @@ public class SeriesProvider {
         Series[] array = {};
         array = this.followedSeries.toArray(array);
         return array;
+    }
+
+    public void wipeFollowedSeries() {
+        this.followedSeries.clear();
     }
 
     public void follow(Series series) {

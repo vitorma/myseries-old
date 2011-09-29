@@ -41,20 +41,9 @@ public class Environment {
      * @return a default series provider for the production environment
      */
     private SeriesProvider defaultSeriesProvider() {
-        final String chuckId = "80348";
-        final String tbbtId = "80379";
-        final String gotID = "121361";
-        final String houseID = "73255";
-        final String youngDraculaId = "80248";
-
+        // XXX: It is here because the user can't follow a series yet. Remove it ASAP
         SeriesProvider sp = SeriesProvider.newSeriesProvider();
-
-        sp.follow(sp.getSeries(chuckId));
-        sp.follow(sp.getSeries(tbbtId));
-        sp.follow(sp.getSeries(gotID));
-        sp.follow(sp.getSeries(houseID));
-        sp.follow(sp.getSeries(youngDraculaId));
-
+        sp.loadExampleData = true;
         return sp;
     }
 

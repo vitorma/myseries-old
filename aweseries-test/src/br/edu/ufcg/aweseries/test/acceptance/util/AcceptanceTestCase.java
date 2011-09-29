@@ -2,7 +2,6 @@ package br.edu.ufcg.aweseries.test.acceptance.util;
 
 import android.test.ActivityInstrumentationTestCase2;
 import br.edu.ufcg.aweseries.App;
-import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.gui.MySeries;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
@@ -29,13 +28,24 @@ public class AcceptanceTestCase extends ActivityInstrumentationTestCase2<MySerie
      * Must be called before the test's setUp commands.
      */
     public void setUp() {
+        this.setUpTestStreamFactory();
+        this.clearUserData();
+        this.setUpTestTools();
+    }
+
+    private void setUpTestStreamFactory() {
         SampleSeries.injectInstrumentation(getInstrumentation());
         App.environment().setTheTVDBTo(new TheTVDB(new TestStreamFactory()));
+    }
 
-        // XXX: Avoids instantiation of the default SeriesProvider with some example series.
-        // It should not be necessary when the user may start following series.
-        App.environment().setSeriesProvider(SeriesProvider.newSeriesProvider());
+    private void clearUserData() {
+        // XXX: It is here because the user can't follow a series yet. Remove it ASAP
+        App.environment().getSeriesProvider().loadExampleData = false;
 
+        App.environment().getSeriesProvider().wipeFollowedSeries();
+    }
+
+    private void setUpTestTools() {
         this.solo = new Solo(getInstrumentation(), getActivity());
         this.driver = new AppDriver(this.solo);
     }

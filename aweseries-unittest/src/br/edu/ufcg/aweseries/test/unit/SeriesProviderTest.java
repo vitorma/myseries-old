@@ -62,4 +62,24 @@ public class SeriesProviderTest {
         assertThat(this.provider.mySeries()[0], equalTo(series1));
         assertThat(this.provider.mySeries()[1], equalTo(series2));
     }
+
+
+    @Test
+    public void theFollowedSeriesAreWiped() {
+        // given
+        Series series1 = mock(Series.class);
+        when(series1.getName()).thenReturn("A Series");
+
+        Series series2 = mock(Series.class);
+        when(series2.getName()).thenReturn("B Series");
+
+        this.provider.follow(series1);
+        this.provider.follow(series2);
+
+        // when
+        this.provider.wipeFollowedSeries();
+
+        // then
+        assertThat(this.provider.mySeries().length, equalTo(0));
+    }
 }
