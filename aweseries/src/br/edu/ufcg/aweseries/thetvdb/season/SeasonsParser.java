@@ -37,7 +37,7 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
-import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
+import br.edu.ufcg.aweseries.thetvdb.episode.EpisodeBuilder;
 
 public class SeasonsParser extends TheTVDBParser<Seasons> {
 	
@@ -48,7 +48,7 @@ public class SeasonsParser extends TheTVDBParser<Seasons> {
 	@Override
 	public Seasons parse() {
 		final Seasons seasons = new Seasons();
-		final Episode episode = new Episode();
+		final EpisodeBuilder builder = new EpisodeBuilder();
 
 		RootElement root = new RootElement("Data");
 		Element element = root.getChild("Episode");
@@ -56,21 +56,37 @@ public class SeasonsParser extends TheTVDBParser<Seasons> {
 		element.setEndElementListener(new EndElementListener() {
 			@Override
 			public void end() {
-				seasons.addEpisode(episode.copy());
+				seasons.addEpisode(builder.build());
 			}
 		});
 
 		element.getChild("id").setEndTextElementListener(new EndTextElementListener() {
 			@Override
 			public void end(String body) {
-				episode.setId(body);
+				builder.withId(body);
 			}
 		});
 
-		element.getChild("SeasonNumber").setEndTextElementListener(new EndTextElementListener() {
+        element.getChild("seriesid").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        builder.withSeriesId(body);
+                    }
+                });
+
+        element.getChild("EpisodeNumber").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        builder.withNumber(body);
+                    }
+                });
+
+        element.getChild("SeasonNumber").setEndTextElementListener(new EndTextElementListener() {
 			@Override
 			public void end(String body) {
-				episode.setSeasonNumber(Integer.valueOf(body));
+				builder.withSeasonNumber(body);
 			}
 		});
 

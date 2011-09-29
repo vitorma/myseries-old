@@ -28,8 +28,8 @@ public class SeasonTest {
     @Before
     public void setUp() throws Exception {
         this.season = new Season(1);
-        this.episode1 = new Episode();
-        this.episode2 = new Episode();
+        this.episode1 = new Episode("1", "1", 1, 1);
+        this.episode2 = new Episode("2", "2", 2, 2);
         this.season.addEpisode(this.episode1);
         this.season.addEpisode(this.episode2);
     }
@@ -41,7 +41,7 @@ public class SeasonTest {
                    hasItems(this.episode1, this.episode2));
         Assert.assertEquals(this.season.getNumberOfEpisodes(), 2);
 
-        final Episode episode3 = new Episode();
+        final Episode episode3 = new Episode("3", "3", 3, 3);
         this.season.addEpisode(episode3);
         Assert.assertEquals(this.season.getNumberOfEpisodes(), 3);
         assertThat(this.season.getEpisodes(), hasItem(episode3));
@@ -55,7 +55,7 @@ public class SeasonTest {
     public final void testGetEpisodeAt() {
         Assert.assertEquals(this.season.getEpisodeAt(0), this.episode1);
         Assert.assertEquals(this.season.getEpisodeAt(1), this.episode2);
-        final Episode episode3 = new Episode();
+        final Episode episode3 = new Episode("3", "3", 3, 3);
         this.season.addEpisode(episode3);
         Assert.assertEquals(this.season.getEpisodeAt(2), episode3);
     }
@@ -78,7 +78,7 @@ public class SeasonTest {
     @Test
     public final void testGetNumberOfEpisodes() {
         Assert.assertEquals(2, this.season.getNumberOfEpisodes());
-        final Episode episode3 = new Episode();
+        final Episode episode3 = new Episode("3", "3", 3, 3);
         this.season.addEpisode(episode3);
         Assert.assertEquals(3, this.season.getNumberOfEpisodes());
     }
@@ -88,7 +88,7 @@ public class SeasonTest {
     public final void testIndexOf() {
         Assert.assertEquals(0, this.season.indexOf(episode1));
         Assert.assertEquals(1, this.season.indexOf(episode2));
-        Assert.assertEquals(-1, this.season.indexOf(new Episode()));
+        Assert.assertEquals(-1, this.season.indexOf(new Episode("3", "3", 3, 3)));
     }
 
     @Ignore

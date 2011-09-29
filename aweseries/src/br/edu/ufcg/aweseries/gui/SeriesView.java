@@ -101,6 +101,7 @@ public class SeriesView extends Activity {
             };
 
             Thread t = new Thread() {
+                @Override
                 public void run() {
                     mHandler.post(mPopulateView);
                 }

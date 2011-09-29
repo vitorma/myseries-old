@@ -141,6 +141,7 @@ public class Season {
         this.getEpisodeAt(i).markAsViewed();
     }
 
+    @Override
     public String toString() {
     	return this.getNumber() == 0 ? "Special Episodes" : "Season " + this.getNumber();
     }

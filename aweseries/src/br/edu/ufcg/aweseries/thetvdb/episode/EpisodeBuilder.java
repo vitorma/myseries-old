@@ -16,6 +16,11 @@ public class EpisodeBuilder {
     private String poster;
     private boolean viewed;
 
+    public EpisodeBuilder() {
+        this.number = -1;
+        this.seasonNumber = -1;
+    }
+
     public EpisodeBuilder withId(String id) {
         this.id = id;
         return this;

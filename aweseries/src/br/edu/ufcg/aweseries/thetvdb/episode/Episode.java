@@ -17,13 +17,6 @@ public class Episode {
 
     private boolean viewed;
 
-    public Episode() {}
-
-    public Episode(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public Episode(String id, String seriesId, int number, int seasonNumber) {
         if (id == null || Strings.isBlank(id)) {
             throw new IllegalArgumentException("invalid id for episode");
@@ -31,6 +24,14 @@ public class Episode {
 
         if (seriesId == null || Strings.isBlank(seriesId)) {
             throw new IllegalArgumentException("invalid series id for episode");
+        }
+
+        if (number < 0) {
+            throw new IllegalArgumentException("invalid number for episode");
+        }
+
+        if (seasonNumber < 0) {
+            throw new IllegalArgumentException("invalid season number for episode");
         }
 
         this.id = id;
@@ -86,22 +87,6 @@ public class Episode {
         return this.viewed;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setSeriesId(String seriesId) {
-        this.seriesId = seriesId;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public void setSeasonNumber(int seasonNumber) {
-        this.seasonNumber = seasonNumber;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -140,14 +125,6 @@ public class Episode {
 
     public void markAsNotViewed() {
         this.viewed = false;
-    }
-
-    public Episode copy() {
-        Episode episode = new Episode();
-        episode.id = this.id;
-        episode.seasonNumber = this.seasonNumber;
-        episode.viewed = this.viewed;
-        return episode;
     }
 
     @Override
