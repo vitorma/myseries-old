@@ -1,10 +1,10 @@
 package br.edu.ufcg.aweseries.test.acceptance.util;
 
-import br.edu.ufcg.aweseries.test.integration.TheTVDBStreamFactoryTest;
 import br.edu.ufcg.aweseries.test.util.ChuckSeries;
+import br.edu.ufcg.aweseries.test.util.StreamFactoryTest;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 
-public class TestStreamFactoryTest extends TheTVDBStreamFactoryTest {
+public class TestStreamFactoryTest extends StreamFactoryTest {
 
     private StreamFactory streamFactory = new TestStreamFactory();
 
