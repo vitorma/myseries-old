@@ -63,4 +63,18 @@ public class AppDriver {
     private void saveReferenceToSeries(String seriesName, Series series) {
         this.series.put(seriesName, series);
     }
+
+    private void viewDetailsOf(String seriesName) {
+        this.solo.goBackToActivity("MySeries");
+        this.solo.clickOnText(seriesReferencedAs(seriesName).getName());
+    }
+
+    public void viewSeasonsOf(String seriesName) {
+        this.viewDetailsOf(seriesName);
+        this.solo.clickOnText("Seasons");
+    }
+
+    private Series seriesReferencedAs(String seriesName) {
+        return this.series.get(seriesName);
+    }
 }
