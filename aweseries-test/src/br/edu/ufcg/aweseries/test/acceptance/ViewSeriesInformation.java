@@ -1,48 +1,23 @@
 package br.edu.ufcg.aweseries.test.acceptance;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import android.test.ActivityInstrumentationTestCase2;
-import br.edu.ufcg.aweseries.gui.MySeries;
+import br.edu.ufcg.aweseries.test.acceptance.util.AcceptanceTestCase;
+import br.edu.ufcg.aweseries.test.util.ChuckSeries;
 
-import com.jayway.android.robotium.solo.Solo;
-
-public class ViewSeriesInformation extends
-        ActivityInstrumentationTestCase2<MySeries> {
-
-    private Solo solo;
-    
-    public ViewSeriesInformation() {
-        super("br.edu.ufcg.aweseries.gui", MySeries.class);
-    }
-
-    public void setUp() {
-        this.solo = new Solo(getInstrumentation(), getActivity());
-    }
-
-    public void tearDown() throws Exception {
-        try {
-            this.solo.finalize();
-        } catch (Throwable e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        getActivity().finish();
-        super.tearDown();
-    }
+public class ViewSeriesInformation extends AcceptanceTestCase {
 
     public void testGetToSeriesInformationFromFollowedSeries() {
         // Given
-        String seriesName = "Chuck";
-        followSeries(seriesName);
+        String seriesName = ChuckSeries.name;
+        this.driver().follow(seriesName);
         goToFollowedSeries(seriesName);
         
         // When
 
         // Then
-        assertThat(solo.searchText(seriesName), is(true));
+        assertThat(this.solo().searchText(seriesName), equalTo(true));
     }
     
     public void testSeriesInformationContent() {
@@ -64,16 +39,11 @@ public class ViewSeriesInformation extends
         
         for (String field : fields) {
             assertThat("Field "+ field + " was not found",
-                       solo.searchText(field), is(true));
+                       this.solo().searchText(field), is(true));
         }
     }
     
     private void goToFollowedSeries(String seriesName) {
-        solo.clickOnMenuItem(seriesName);
-    }
-
-    private void followSeries(String seriesName) {
-        // TODO: add the series to the user's list of followed series
-        // TODO: maybe it should be in an Application Driver class
+        this.solo().clickOnMenuItem(seriesName);
     }
 }

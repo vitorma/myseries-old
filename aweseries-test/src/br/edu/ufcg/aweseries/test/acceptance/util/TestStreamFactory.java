@@ -1,11 +1,8 @@
 package br.edu.ufcg.aweseries.test.acceptance.util;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import android.util.Base64;
-import android.util.Base64InputStream;
 import br.edu.ufcg.aweseries.test.util.ChuckSeries;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 
@@ -16,7 +13,7 @@ public class TestStreamFactory implements StreamFactory {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
         if (seriesId.equals(ChuckSeries.id)) {
-            return new ByteArrayInputStream(ChuckSeries.baseSeries.getBytes());
+            return ChuckSeries.baseSeriesStream();
         }
 
         throw new RuntimeException(
@@ -28,7 +25,7 @@ public class TestStreamFactory implements StreamFactory {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
         if (seriesId.equals(ChuckSeries.id)) {
-            return new ByteArrayInputStream(ChuckSeries.fullSeries.getBytes());
+            return ChuckSeries.fullSeriesStream();
         }
 
         throw new RuntimeException(
@@ -40,10 +37,7 @@ public class TestStreamFactory implements StreamFactory {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
         if (resourcePath.equals(ChuckSeries.posterResourcePath)) {
-            ByteArrayInputStream byteArrayStream
-                    = new ByteArrayInputStream(ChuckSeries.base64EncodedPoster);
-
-            return new Base64InputStream(byteArrayStream, Base64.DEFAULT);
+            return ChuckSeries.posterStream();
         }
 
         throw new RuntimeException(

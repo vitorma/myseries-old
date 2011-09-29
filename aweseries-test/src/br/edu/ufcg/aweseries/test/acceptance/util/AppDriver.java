@@ -52,7 +52,7 @@ public class AppDriver {
         Intent currentActivityIntent = currentActivity.getIntent();
 
         currentActivity.finish();
-        currentActivity.startActivity(currentActivityIntent);  
+        currentActivity.startActivity(currentActivityIntent);
     }
 
     private Series retrieveSeriesNamed(String seriesName) {

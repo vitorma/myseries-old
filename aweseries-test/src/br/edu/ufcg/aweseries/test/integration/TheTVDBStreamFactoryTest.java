@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.TestCase;
 import android.graphics.BitmapFactory;
+import android.test.InstrumentationTestCase;
 import br.edu.ufcg.aweseries.test.util.ChuckSeries;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDBStreamFactory;
 
-public class TheTVDBStreamFactoryTest extends TestCase {
+public class TheTVDBStreamFactoryTest extends InstrumentationTestCase {
 
     private final String testSeriesId = ChuckSeries.id;
     private final String testSeriesName = ChuckSeries.name;
@@ -79,16 +79,16 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     }
 
     public void testGettingBaseSeriesReturnsBaseData() throws IOException {
-        InputStream chuckStream = factory().streamForBaseSeries(testSeriesId);
+        InputStream testSeriesStream = factory().streamForBaseSeries(testSeriesId);
 
-        String contentOfChuckStream = contentOf(chuckStream);
+        String contentOfTestSeriesStream = contentOf(testSeriesStream);
 
         for (String content : baseSeriesContent) {
-            assertThat(contentOfChuckStream, containsString(content));
+            assertThat(contentOfTestSeriesStream, containsString(content));
         }
 
         for (String content : fullSeriesOnlyContent) {
-            assertThat(contentOfChuckStream, not(containsString(content)));
+            assertThat(contentOfTestSeriesStream, not(containsString(content)));
         }
     }
 
@@ -121,12 +121,12 @@ public class TheTVDBStreamFactoryTest extends TestCase {
     }
 
     public void testGettingFullSeriesReturnsFullData() throws IOException {
-        InputStream chuckStream = factory().streamForFullSeries(testSeriesId);
+        InputStream testSeriesStream = factory().streamForFullSeries(testSeriesId);
 
-        String contentOfChuckStream = contentOf(chuckStream);
+        String contentOfTestSeriesStream = contentOf(testSeriesStream);
 
         for (String content : fullSeriesContent) {
-            assertThat(contentOfChuckStream, containsString(content));
+            assertThat(contentOfTestSeriesStream, containsString(content));
         }
     }
 

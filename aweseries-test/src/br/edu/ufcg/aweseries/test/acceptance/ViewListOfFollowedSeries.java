@@ -8,6 +8,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ViewListOfFollowedSeries extends AcceptanceTestCase {
 
+    @Override
+    public void setUp() {
+        super.setUp();
+        ChuckSeries.resources = this.getInstrumentation().getContext().getResources();
+    }
+
     public void testUserFollowsASeries() {
         // Given
         this.driver().follow(ChuckSeries.name);
