@@ -31,16 +31,15 @@ package br.edu.ufcg.aweseries.thetvdb.season;
 
 import java.io.InputStream;
 
-import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
-import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
-
 import android.sax.Element;
 import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
+import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
+import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
 
-public final class SeasonsParser extends TheTVDBParser<Seasons> {
+public class SeasonsParser extends TheTVDBParser<Seasons> {
 	
 	public SeasonsParser(InputStream inputStream) {
 		super(inputStream);

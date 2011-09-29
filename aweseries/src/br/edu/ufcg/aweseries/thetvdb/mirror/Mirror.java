@@ -1,19 +1,15 @@
 package br.edu.ufcg.aweseries.thetvdb.mirror;
 
-/**
- * A TheTVDB mirror.
- *
- * @author Cleber Goncalves de Sousa
- */
-public final class Mirror {
-    private int typeMask;
+public class Mirror {
     private String path;
+    private int typeMask;
 
-    public int getTypeMask() {
-        return this.typeMask;
-    }
+    public Mirror(String path, int typeMask) {
+        if (path == null) {
+            throw new IllegalArgumentException("path should not be null");
+        }
 
-    public void setTypeMask(int typeMask) {
+        this.path = path;
         this.typeMask = typeMask;
     }
 
@@ -21,45 +17,18 @@ public final class Mirror {
         return this.path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public int getTypeMask() {
+        return this.typeMask;
     }
-
-    public Mirror copy() {
-    	Mirror m = new Mirror();
-    	m.setPath(this.path);
-    	m.setTypeMask(this.typeMask);
-    	return m;
-    }
-
-    //Generated hashCode and equals --------------------------------------------
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((this.path == null) ? 0 : this.path.hashCode());
-        result = prime * result + this.typeMask;
-        return result;
+        return this.getPath().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Mirror other = (Mirror) obj;
-        if (this.path == null) {
-            if (other.path != null)
-                return false;
-        } else if (!this.path.equals(other.path))
-            return false;
-        if (this.typeMask != other.typeMask)
-            return false;
-        return true;
+        return obj instanceof Mirror &&
+               ((Mirror) obj).getPath().equals(this.getPath());
     }
 }

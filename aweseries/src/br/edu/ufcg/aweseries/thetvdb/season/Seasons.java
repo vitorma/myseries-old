@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
 
-public final class Seasons {
+public class Seasons {
 	private SortedMap<Integer, Season> seasons;
 
 	public Seasons() {

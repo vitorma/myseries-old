@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public final class Mirrors {
+public class Mirrors {
     private static final Random RANDOM = new Random();
     private Map<MirrorType, List<Mirror>> mirrors;
 
@@ -18,15 +18,32 @@ public final class Mirrors {
     }
 
     public void add(Mirror mirror) {
-        if (mirror == null) {return;}
-        for (MirrorType type : MirrorType.values()) {
-            if (type.matches(mirror.getTypeMask())) {
-                this.mirrors.get(type).add(mirror);
-            }
+        if (mirror == null) {
+            throw new IllegalArgumentException("mirror should not be null");
+        }
+
+        for (MirrorType mt : this.getMirrorTypesFor(mirror.getTypeMask())) {
+            this.mirrors.get(mt).add(mirror);
         }
     }
 
+    private ArrayList<MirrorType> getMirrorTypesFor(int typeMask) {
+        final ArrayList<MirrorType> mirrorTypes = new ArrayList<MirrorType>();
+
+        for (MirrorType mt : MirrorType.values()) {
+            if (mt.matches(typeMask)) {
+                mirrorTypes.add(mt);
+            }
+        }
+
+        return mirrorTypes;
+    }
+
     public Mirror getRandomMirror(MirrorType type) {
+        if (type == null) {
+            throw new IllegalArgumentException("type should not be null");
+        }
+
         List<Mirror> candidates = this.mirrors.get(type);
         return candidates.get(RANDOM.nextInt(candidates.size()));
     }

@@ -1,6 +1,7 @@
 package br.edu.ufcg.aweseries.gui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,7 +36,12 @@ public class MySeries extends Activity {
             = ((TextView) findViewById(R.id.listingTitleTextView));
         listingTitle.setText("My Series");
 
-        populateListView();
+        // rounded with try-catch block to debbug purposes
+        try {
+            populateListView();
+        } catch (Exception e) {
+            new AlertDialog.Builder(this).setMessage(e.getMessage()).create().show();
+        }
         setupItemClickListener();
     }
 

@@ -1,9 +1,11 @@
 package br.edu.ufcg.aweseries.thetvdb.series;
 
 import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
-import br.edu.ufcg.aweseries.util.Strings;
 
-public final class SeriesBuilder {
+public class SeriesBuilder {
+    private static final String DEFAULT_STRING = "";
+    private static final Seasons DEFAULT_SEASONS = new Seasons();
+
     private String id;
     private String name;
     private String status;
@@ -64,12 +66,12 @@ public final class SeriesBuilder {
     }
 
     public SeriesBuilder withGenres(String genres) {
-        this.genres = Strings.normalizePipeSeparated(genres);
+        this.genres = genres;
         return this;
     }
 
     public SeriesBuilder withActors(String actors) {
-        this.actors = Strings.normalizePipeSeparated(actors);
+        this.actors = actors;
         return this;
     }
 
@@ -85,17 +87,19 @@ public final class SeriesBuilder {
 
     public Series build() {
         final Series series = new Series(this.id, this.name);
-        series.setStatus(this.status);
-        series.setAirsDay(airsDay);
-        series.setAirsTime(airsTime);
-        series.setFirstAired(firstAired);
-        series.setRuntime(runtime);
-        series.setNetwork(network);
-        series.setOverview(overview);
-        series.setGenres(genres);
-        series.setActors(actors);
-        series.setPoster(poster);
-        series.setSeasons(seasons);
+
+        series.setStatus(this.status != null ? this.status : DEFAULT_STRING);
+        series.setAirsDay(this.airsDay != null ? this.airsDay : DEFAULT_STRING);
+        series.setAirsTime(this.airsTime != null ? this.airsTime : DEFAULT_STRING);
+        series.setFirstAired(this.firstAired != null ? this.firstAired : DEFAULT_STRING);
+        series.setRuntime(this.runtime != null ? this.runtime : DEFAULT_STRING);
+        series.setNetwork(this.network != null ? this.network : DEFAULT_STRING);
+        series.setOverview(this.overview != null ? this.overview : DEFAULT_STRING);
+        series.setGenres(this.genres != null ? this.genres : DEFAULT_STRING);
+        series.setActors(this.actors != null ? this.actors : DEFAULT_STRING);
+        series.setPoster(this.poster != null ? this.poster : DEFAULT_STRING);
+        series.setSeasons(this.seasons != null ? this.seasons : DEFAULT_SEASONS);
+
         return series;
     }
 }

@@ -18,7 +18,19 @@ public class TheTVDB {
     public TheTVDB(StreamFactory streamFactory) {
         this.streamFactory = streamFactory;
     }
-
+    
+    public Series[] search(String seriesName) {
+        return null;
+    }
+    
+    public Series addSeasonsTo(Series series) {
+        return null;
+    }
+    
+    public Bitmap getPosterOf(Series series) {
+        return null;
+    }
+    
     public Series getSeries(String seriesId) {
         return new SeriesParser(streamFactory.streamForBaseSeries(seriesId)).parse();
     }
@@ -27,6 +39,7 @@ public class TheTVDB {
         return new SeasonsParser(streamFactory.streamForFullSeries(seriesId)).parse();
     }
 
+    @Deprecated
     public Bitmap getSeriesPoster(Series series) {
         final String posterPath = series.getPoster();
 
