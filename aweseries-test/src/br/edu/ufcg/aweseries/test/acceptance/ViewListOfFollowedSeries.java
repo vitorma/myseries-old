@@ -1,55 +1,25 @@
 package br.edu.ufcg.aweseries.test.acceptance;
 
-import static org.hamcrest.MatcherAssert.*;
+import br.edu.ufcg.aweseries.test.acceptance.util.AcceptanceTestCase;
+import br.edu.ufcg.aweseries.test.util.ChuckSeries;
+
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import android.test.ActivityInstrumentationTestCase2;
-import br.edu.ufcg.aweseries.gui.MySeries;
-
-import com.jayway.android.robotium.solo.Solo;
-
-public class ViewListOfFollowedSeries extends
-        ActivityInstrumentationTestCase2<MySeries> {
-
-    private Solo solo;
-    
-    public ViewListOfFollowedSeries() {
-        super("br.edu.ufcg.aweseries.gui", MySeries.class);
-    }
-
-    public void setUp() {
-        this.solo = new Solo(getInstrumentation(), getActivity());
-    }
-
-    public void tearDown() throws Exception {
-        try {
-            this.solo.finalize();
-        } catch (Throwable e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        getActivity().finish();
-        super.tearDown();
-    }
-
-    public void testViewTitle() {
-        assertThat(solo.searchText("My Series"), is(true));
-    }
+public class ViewListOfFollowedSeries extends AcceptanceTestCase {
 
     public void testUserFollowsASeries() {
         // Given
-        String seriesName = "Chuck";
-        followSeries(seriesName);
-        
-        // When
+        this.driver().follow(ChuckSeries.name);
 
-        // Then 
-        assertThat(solo.searchText(seriesName), is(true));
+        // When
+        // app is loaded
+
+        // Then
+        assertThat(this.solo().searchText(ChuckSeries.name), equalTo(true));
     }
-    
-    private void followSeries(String seriesName) {
-        // TODO: add the series to the user's list of followed series
-        // TODO: maybe it should be in an Application Driver class
+
+    public void testViewTitle() {
+        assertThat(this.solo().searchText("My Series"), equalTo(true));
     }
 }
