@@ -12,7 +12,11 @@ public class TheTVDB {
     private final StreamFactory streamFactory;
 
     public TheTVDB(String apiKey) {
-        this.streamFactory = new TheTVDBStreamFactory(apiKey);
+        this(new TheTVDBStreamFactory(apiKey));
+    }
+
+    public TheTVDB(StreamFactory streamFactory) {
+        this.streamFactory = streamFactory;
     }
     
     public Series[] search(String seriesName) {

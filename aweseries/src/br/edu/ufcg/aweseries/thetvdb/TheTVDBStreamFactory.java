@@ -1,5 +1,6 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -51,7 +52,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
     private InputStream streamFor(String url) {
         try {
-            return new URL(url).openConnection().getInputStream();
+            return new BufferedInputStream(new URL(url).openConnection().getInputStream());
         } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
