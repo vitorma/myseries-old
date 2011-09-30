@@ -9,5 +9,8 @@
                android:maxHeight="75dp"
                android:padding="5dp">
     </ImageView>
-    <TextView android:text="TextView" android:id="@+id/itemSeriesName" android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+    <LinearLayout android:id="@+id/linearLayout2" android:layout_width="wrap_content" android:layout_height="match_parent" android:orientation="vertical">
+        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:layout_height="wrap_content" android:id="@+id/itemSeriesName" android:layout_width="wrap_content" android:text="@string/loading_label"></TextView>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/loading_label" android:id="@+id/itemSeriesStatus"></TextView>
+    </LinearLayout>
 </LinearLayout>

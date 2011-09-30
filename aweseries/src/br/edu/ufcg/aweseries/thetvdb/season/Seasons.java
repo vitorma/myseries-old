@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
 
 public class Seasons {
+
     private TreeMap<Integer, Season> seasons;
 
     public Seasons() {

@@ -18,6 +18,7 @@ public class ViewListOfFollowedSeries extends AcceptanceTestCase {
 
         // Then
         assertThat(this.solo().searchText(sample.name()), equalTo(true));
+        assertThat(this.solo().searchText(sample.status()), equalTo(true));
     }
 
     public void testViewTitle() {

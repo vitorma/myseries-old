@@ -20,6 +20,11 @@ public abstract class SampleSeries {
         }
 
         @Override
+        public String status() {
+            return "Continuing";
+        }
+
+        @Override
         public String posterResourcePath() {
             return "posters/80348-16.jpg";
         }
@@ -42,6 +47,7 @@ public abstract class SampleSeries {
 
     public abstract String id();
     public abstract String name();
+    public abstract String status();
     public abstract String posterResourcePath();
 
     public abstract InputStream baseSeriesStream();

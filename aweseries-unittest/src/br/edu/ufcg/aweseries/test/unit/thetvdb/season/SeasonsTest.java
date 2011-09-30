@@ -58,7 +58,7 @@ public class SeasonsTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public final void testAddNullEpisode() {
         this.seasons.addEpisode(null);
     }
