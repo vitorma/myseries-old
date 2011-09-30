@@ -66,11 +66,15 @@ public class MySeries extends Activity {
 			// get views for the series fields
 			ImageView image = (ImageView) itemView.findViewById(R.id.itemSeriesImage);
 			TextView name = (TextView) itemView.findViewById(R.id.itemSeriesName);
+                        TextView status = (TextView) itemView.findViewById(R.id.itemSeriesStatus);
 			
 			// load series data
-			name.setText(this.getItem(position).getName());
+                        Series item = this.getItem(position);
 
-			Bitmap poster = seriesProvider.getSmallPoster(this.getItem(position));
+                        name.setText(item.getName());
+                        status.setText(item.getStatus());
+
+			Bitmap poster = seriesProvider.getSmallPoster(item);
 			image.setImageBitmap(poster);
 
 			return itemView;
