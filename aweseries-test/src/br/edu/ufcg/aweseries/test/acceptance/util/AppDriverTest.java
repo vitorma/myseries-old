@@ -72,8 +72,9 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
         super.tearDown();
     }
 
-    private SampleSeries sampleSeries = SampleSeries.CHUCK;
+    private String testSeriesName = SampleSeries.CHUCK.name();
 
+    // Construction ------------------------------------------------------------
     public void testNullSoloThrowsAnException() {
         try {
             new AppDriver(null);
@@ -81,6 +82,22 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
         } catch (IllegalArgumentException e) {}
     }
 
+    // Full Actions ------------------------------------------------------------
+    public void testFollowNullSeries() {
+        try {
+            this.driver().follow(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testFollowBlankSeries() {
+        try {
+            this.driver().follow("  \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    // Navigation --------------------------------------------------------------
     public void testViewMyFollowedSeries() {
         this.driver().viewMyFollowedSeries();
 
@@ -88,32 +105,68 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
     }
 
     public void testViewMyFollowedSeriesAfterViewingItsSeasons() {
-        this.driver().follow(sampleSeries.name());
-        this.driver().viewSeasonsOf(sampleSeries.name());
+        this.driver().follow(testSeriesName);
+        this.driver().viewSeasonsOf(testSeriesName);
         this.driver().viewMyFollowedSeries();
 
         assertThat(this.solo().getCurrentActivity(), instanceOf(MySeries.class));
     }
 
+    public void testViewDetailsOfNullSeries() {
+        try {
+            this.driver().viewDetailsOf(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testViewDetailsOfBlankSeries() {
+        try {
+            this.driver().viewDetailsOf("   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
     public void testViewDetailsOfSeries() {
-        this.driver().follow(sampleSeries.name());
-        this.driver().viewDetailsOf(sampleSeries.name());
+        this.driver().follow(testSeriesName);
+        this.driver().viewDetailsOf(testSeriesName);
 
         assertThat(this.solo().getCurrentActivity(), instanceOf(SeriesView.class));
     }
 
-    public void testViewSeasonsOf() {
-        this.driver().follow(sampleSeries.name());
-        this.driver().viewSeasonsOf(sampleSeries.name());
+    public void testViewSeasonsOfNullSeries() {
+        try {
+            this.driver().viewSeasonsOf(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testViewSeasonsOfBlankSeries() {
+        try {
+            this.driver().viewSeasonsOf("   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testViewSeasonsOfSeries() {
+        this.driver().follow(testSeriesName);
+        this.driver().viewSeasonsOf(testSeriesName);
 
         assertThat(this.solo().getCurrentActivity(), instanceOf(SeasonsView.class));
     }
 
     public void testViewDetailsOfSeriesAfterViewingItsSeasons() {
-        this.driver().follow(sampleSeries.name());
-        this.driver().viewSeasonsOf(sampleSeries.name());
-        this.driver().viewDetailsOf(sampleSeries.name());
+        this.driver().follow(testSeriesName);
+        this.driver().viewSeasonsOf(testSeriesName);
+        this.driver().viewDetailsOf(testSeriesName);
 
         assertThat(this.solo().getCurrentActivity(), instanceOf(SeriesView.class));
+    }
+
+    // Verification ------------------------------------------------------------
+    public void testAssertThatNullSeries() {
+        try {
+            this.driver().assertThatSeries(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
     }
 }
