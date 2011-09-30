@@ -14,13 +14,17 @@ public class ViewListOfFollowedSeries extends AcceptanceTestCase {
         this.driver().follow(sample.name());
 
         // When
-        // app is loaded
+        this.driver().viewMyFollowedSeries();
 
         // Then
         assertThat(this.solo().searchText(sample.name()), equalTo(true));
     }
 
     public void testViewTitle() {
+        // When
+        this.driver().viewMyFollowedSeries();
+
+        // Then
         assertThat(this.solo().searchText("My Series"), equalTo(true));
     }
 }
