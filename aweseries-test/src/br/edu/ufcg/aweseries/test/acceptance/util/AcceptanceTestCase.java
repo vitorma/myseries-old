@@ -13,7 +13,7 @@ public class AcceptanceTestCase extends ActivityInstrumentationTestCase2<MySerie
     private AppDriver driver;
 
     public AcceptanceTestCase() {
-        super("br.edu.ufcg.aweseries.gui", MySeries.class);
+        super(MySeries.class);
     }
 
     protected Solo solo() {
@@ -27,7 +27,10 @@ public class AcceptanceTestCase extends ActivityInstrumentationTestCase2<MySerie
     /**
      * Must be called before the test's setUp commands.
      */
-    public void setUp() {
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
         this.setUpTestStreamFactory();
         this.clearUserData();
         this.setUpTestTools();

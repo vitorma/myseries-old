@@ -1,9 +1,11 @@
 package br.edu.ufcg.aweseries.test.acceptance;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import junit.framework.AssertionFailedError;
 import android.test.ActivityInstrumentationTestCase2;
+
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.gui.MySeries;
 import br.edu.ufcg.aweseries.test.acceptance.util.AppDriver;
@@ -75,25 +77,25 @@ public class ViewSeriesInformation extends
         String seriesName = "Chuck";
         this.driver().follow(seriesName);
         try {
-            goToFollowedSeries(seriesName);
+            this.driver().viewDetailsOf(seriesName);
         } catch (AssertionFailedError e) {}
     }
 
     public void testGetToSeriesInformationFromFollowedSeries() {
         // Given
-        String seriesName = "Chuck";
-        this.driver().follow(seriesName);
-        goToFollowedSeries(seriesName);
+        this.driver().follow("Chuck");
         
         // When
+        this.driver.viewDetailsOf("Chuck");
 
         // Then
-        assertThat(this.solo().searchText(seriesName), is(true));
+        assertThat(this.solo().searchText("Chuck"), equalTo(true));
     }
     
     public void testSeriesInformationContent() {
-        this.testGetToSeriesInformationFromFollowedSeries();
-        
+        // Given
+        this.driver().follow("Chuck");
+
         String[] fields = {
                            "Chuck",           // name
                            "Continuing",      // status
@@ -105,16 +107,16 @@ public class ViewSeriesInformation extends
                            "Drama", "Action", "Genre",
                            "Zachary Levi",    "Actors",
                            "ace computer geek at Buy More" // overview
-                           
         };
         
+        // When
+        this.driver.viewDetailsOf("Chuck");
+
+        // Then
+        // fields must be visible
         for (String field : fields) {
             assertThat("Field "+ field + " was not found",
                        this.solo().searchText(field), is(true));
         }
-    }
-    
-    private void goToFollowedSeries(String seriesName) {
-        this.solo().clickOnMenuItem(seriesName);
     }
 }

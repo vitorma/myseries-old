@@ -9,7 +9,7 @@ import br.edu.ufcg.aweseries.gui.MySeries;
 
 public class AcceptanceTestCaseTest extends AcceptanceTestCase {
 
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
 
         assertThat(this.solo(), notNullValue());

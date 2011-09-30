@@ -64,8 +64,13 @@ public class AppDriver {
         this.series.put(seriesName, series);
     }
 
-    private void viewDetailsOf(String seriesName) {
-        this.solo.goBackToActivity("MySeries");
+    public void viewMyFollowedSeries() {
+        if (!"MySeries".equals(this.solo.getCurrentActivity().getClass().getSimpleName())) {
+            this.solo.goBackToActivity("MySeries");
+        }
+    }
+    public void viewDetailsOf(String seriesName) {
+        this.viewMyFollowedSeries();
         this.solo.clickOnText(seriesReferencedAs(seriesName).getName());
     }
 

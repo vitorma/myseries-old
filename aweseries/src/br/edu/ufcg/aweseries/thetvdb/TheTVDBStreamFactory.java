@@ -19,7 +19,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
         String baseSeriesUrl = this.urlSupplier.getBaseSeriesUrl(seriesId);
-        return streamFor(baseSeriesUrl);
+        return buffered(streamFor(baseSeriesUrl));
     }
 
     @Override
@@ -27,7 +27,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
         String fullSeriesUrl = this.urlSupplier.getFullSeriesUrl(seriesId);
-        return streamFor(fullSeriesUrl);
+        return buffered(streamFor(fullSeriesUrl));
     }
 
     /**
@@ -50,9 +50,13 @@ public class TheTVDBStreamFactory implements StreamFactory {
         }
     }
 
+    private BufferedInputStream buffered(InputStream stream) {
+        return new BufferedInputStream(stream);
+    }
+
     private InputStream streamFor(String url) {
         try {
-            return new BufferedInputStream(new URL(url).openConnection().getInputStream());
+            return new URL(url).openConnection().getInputStream();
         } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
