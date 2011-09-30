@@ -7,8 +7,8 @@ import android.app.Activity;
 import android.content.Intent;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
-import br.edu.ufcg.aweseries.thetvdb.series.Series;
 
 import com.jayway.android.robotium.solo.Solo;
 

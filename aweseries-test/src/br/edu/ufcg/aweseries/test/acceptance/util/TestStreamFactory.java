@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
-import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
+import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public class TestStreamFactory implements StreamFactory {
 

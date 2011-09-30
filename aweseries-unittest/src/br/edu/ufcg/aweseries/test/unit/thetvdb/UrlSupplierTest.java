@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import br.edu.ufcg.aweseries.thetvdb.UrlSupplier;
+import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlSupplier;
 
 public class UrlSupplierTest {
 

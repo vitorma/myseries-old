@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.thetvdb.series.Series;
+import br.edu.ufcg.aweseries.model.Series;
 
 public class SeriesProviderTest {
 

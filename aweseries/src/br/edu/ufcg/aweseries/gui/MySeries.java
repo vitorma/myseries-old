@@ -17,7 +17,7 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.thetvdb.series.Series;
+import br.edu.ufcg.aweseries.model.Series;
 
 /**
  * Displays current followed series.

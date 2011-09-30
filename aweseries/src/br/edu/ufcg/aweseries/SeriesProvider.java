@@ -5,9 +5,9 @@ import java.util.TreeSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import br.edu.ufcg.aweseries.model.Season;
+import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
-import br.edu.ufcg.aweseries.thetvdb.season.Season;
-import br.edu.ufcg.aweseries.thetvdb.series.Series;
 
 /**
  * Supply series information to the system. It is a cache proxy for series

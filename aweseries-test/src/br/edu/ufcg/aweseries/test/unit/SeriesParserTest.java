@@ -8,8 +8,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.ByteArrayInputStream;
 
 import junit.framework.TestCase;
-import br.edu.ufcg.aweseries.thetvdb.series.Series;
-import br.edu.ufcg.aweseries.thetvdb.series.SeriesParser;
+import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 
 public class SeriesParserTest extends TestCase {
 

@@ -4,11 +4,13 @@ import java.io.FileNotFoundException;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
-import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
-import br.edu.ufcg.aweseries.thetvdb.season.SeasonsParser;
-import br.edu.ufcg.aweseries.thetvdb.series.Series;
-import br.edu.ufcg.aweseries.thetvdb.series.SeriesParser;
+import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.Seasons;
+import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.thetvdb.parsing.SeasonsParser;
+import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
+import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
+import br.edu.ufcg.aweseries.thetvdb.stream.TheTVDBStreamFactory;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class TheTVDB {

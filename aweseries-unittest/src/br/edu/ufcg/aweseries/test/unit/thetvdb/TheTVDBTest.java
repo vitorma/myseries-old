@@ -8,8 +8,8 @@ import java.io.FileNotFoundException;
 import org.junit.Test;
 
 import br.edu.ufcg.aweseries.thetvdb.NonExistentSeriesException;
-import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
+import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public class TheTVDBTest {
 

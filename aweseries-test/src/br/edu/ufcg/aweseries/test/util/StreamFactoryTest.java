@@ -13,7 +13,7 @@ import java.util.List;
 
 import android.graphics.BitmapFactory;
 import android.test.InstrumentationTestCase;
-import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
+import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 /**
  * A set of tests that every StreamFactory should pass in order to properly run with AweSeries.
