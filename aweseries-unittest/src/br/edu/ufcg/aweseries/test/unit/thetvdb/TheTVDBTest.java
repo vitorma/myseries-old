@@ -1,5 +1,8 @@
 package br.edu.ufcg.aweseries.test.unit.thetvdb;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.FileNotFoundException;
 
 import org.junit.Test;
@@ -8,11 +11,10 @@ import br.edu.ufcg.aweseries.thetvdb.NonExistentSeriesException;
 import br.edu.ufcg.aweseries.thetvdb.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
-import static org.mockito.Mockito.*;
-
 public class TheTVDBTest {
 
-    // Constructor -------------------------------------------------------------
+    // Constructor --------------------------------------------------------------------------------
+
     @Test(expected = IllegalArgumentException.class)
     public void testNullApiKey() {
         new TheTVDB((String) null);
@@ -23,7 +25,8 @@ public class TheTVDBTest {
         new TheTVDB((StreamFactory) null);
     }
 
-    // getSeries ---------------------------------------------------------------
+    // getSeries ----------------------------------------------------------------------------------
+
     @Test(expected = IllegalArgumentException.class)
     public void testGettingNullSeries() {
         StreamFactory streamFactoryMock = mock(StreamFactory.class);
@@ -50,5 +53,35 @@ public class TheTVDBTest {
 
         TheTVDB theTVBD = new TheTVDB(streamFactoryMock);
         theTVBD.getSeries(nonExistentSeriesId);
+    }
+
+    // getFullSeries ------------------------------------------------------------------------------
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGettingNullFullSeries() {
+        StreamFactory streamFactoryMock = mock(StreamFactory.class);
+
+        TheTVDB theTVBD = new TheTVDB(streamFactoryMock);
+        theTVBD.getFullSeries(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGettingBlankFullSeries() {
+        StreamFactory streamFactoryMock = mock(StreamFactory.class);
+
+        TheTVDB theTVBD = new TheTVDB(streamFactoryMock);
+        theTVBD.getFullSeries("   \t \t ");
+    }
+
+    @Test(expected = NonExistentSeriesException.class)
+    public void testGettingNonExistentFullSeries() {
+        String nonExistentSeriesId = "0";
+
+        StreamFactory streamFactoryMock = mock(StreamFactory.class);
+        when(streamFactoryMock.streamForFullSeries(nonExistentSeriesId))
+                .thenThrow(new RuntimeException(new FileNotFoundException()));
+
+        TheTVDB theTVBD = new TheTVDB(streamFactoryMock);
+        theTVBD.getFullSeries(nonExistentSeriesId);
     }
 }
