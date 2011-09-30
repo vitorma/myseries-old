@@ -11,6 +11,9 @@ public class TheTVDBStreamFactory implements StreamFactory {
     private UrlSupplier urlSupplier;
 
     public TheTVDBStreamFactory(String apiKey) {
+        if (apiKey == null) {
+            throw new IllegalArgumentException("apiKey should not be null");
+        }
         this.urlSupplier = new UrlSupplier(apiKey);
     }
 

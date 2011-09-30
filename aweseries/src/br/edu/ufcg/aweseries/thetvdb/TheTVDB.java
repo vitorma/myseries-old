@@ -1,11 +1,14 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
+import java.io.FileNotFoundException;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
 import br.edu.ufcg.aweseries.thetvdb.season.SeasonsParser;
 import br.edu.ufcg.aweseries.thetvdb.series.Series;
 import br.edu.ufcg.aweseries.thetvdb.series.SeriesParser;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class TheTVDB {
 
@@ -16,6 +19,9 @@ public class TheTVDB {
     }
 
     public TheTVDB(StreamFactory streamFactory) {
+        if (streamFactory == null) {
+            throw new IllegalArgumentException("streamFactory should not be null");
+        }
         this.streamFactory = streamFactory;
     }
     
@@ -32,7 +38,21 @@ public class TheTVDB {
     }
     
     public Series getSeries(String seriesId) {
-        return new SeriesParser(streamFactory.streamForBaseSeries(seriesId)).parse();
+        if (seriesId == null) {
+            throw new IllegalArgumentException("seriesId should not be null");
+        }
+        if (Strings.isBlank(seriesId)) {
+            throw new IllegalArgumentException("seriesId should not be blank");
+        }
+        try {
+            return new SeriesParser(streamFactory.streamForBaseSeries(seriesId)).parse();
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw new NonExistentSeriesException(e);
+            }
+
+            throw e;
+        }
     }
 
     public Seasons getSeasons(String seriesId) {
