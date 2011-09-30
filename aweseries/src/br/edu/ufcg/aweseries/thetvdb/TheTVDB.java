@@ -29,16 +29,17 @@ public class TheTVDB {
         Series series = null;
         return series;
     }
+
 //--------------------------------------------------------------------------------------------------
 
     public Series addSeasonsTo(Series series) {
         return null;
     }
-    
+
     public Bitmap getPosterOf(Series series) {
         return null;
     }
-    
+
     public Series getSeries(String seriesId) {
         return new SeriesParser(streamFactory.streamForBaseSeries(seriesId)).parse();
     }
