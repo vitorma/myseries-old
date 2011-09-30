@@ -1,13 +1,10 @@
 package br.edu.ufcg.aweseries.test.unit.thetvdb.season;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.junit.matchers.JUnitMatchers.hasItems;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.matchers.JUnitMatchers;
 
 import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
 import br.edu.ufcg.aweseries.thetvdb.season.Season;
@@ -37,14 +34,14 @@ public class SeasonTest {
     @Ignore
     @Test
     public final void testAddEpisode() {
-        assertThat(this.season.getEpisodes(),
-                   hasItems(this.episode1, this.episode2));
+        Assert.assertThat(this.season.getEpisodes(),
+                JUnitMatchers.hasItems(this.episode1, this.episode2));
         Assert.assertEquals(this.season.getNumberOfEpisodes(), 2);
 
         final Episode episode3 = new Episode("3", "3", 3, 3);
         this.season.addEpisode(episode3);
         Assert.assertEquals(this.season.getNumberOfEpisodes(), 3);
-        assertThat(this.season.getEpisodes(), hasItem(episode3));
+        Assert.assertThat(this.season.getEpisodes(), JUnitMatchers.hasItem(episode3));
 
         this.season.addEpisode(this.episode2);
         Assert.assertEquals(this.season.getNumberOfEpisodes(), 3);
@@ -86,8 +83,8 @@ public class SeasonTest {
     @Ignore
     @Test
     public final void testIndexOf() {
-        Assert.assertEquals(0, this.season.indexOf(episode1));
-        Assert.assertEquals(1, this.season.indexOf(episode2));
+        Assert.assertEquals(0, this.season.indexOf(this.episode1));
+        Assert.assertEquals(1, this.season.indexOf(this.episode2));
         Assert.assertEquals(-1, this.season.indexOf(new Episode("3", "3", 3, 3)));
     }
 
