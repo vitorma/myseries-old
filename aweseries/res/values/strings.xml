@@ -8,7 +8,7 @@
     <string name="reviewNotAvailable">Review not available</string>
     <string name="status_label">Status:</string>
     <string name="airtime_label">Air time: </string>
-    <string name="airday_label">Air days: </string>
+    <string name="airday_label">Air day: </string>
     <string name="directedby_label">Directed by: </string>
     <string name="firstaired_label">First aired: </string>
     <string name="runtime_label">Runtime: </string>

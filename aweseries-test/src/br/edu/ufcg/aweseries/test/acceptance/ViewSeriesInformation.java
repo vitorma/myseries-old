@@ -99,13 +99,13 @@ public class ViewSeriesInformation extends
         String[] fields = {
                            "Chuck",           // name
                            "Continuing",      // status
-                                              "First aired",
-                           "Friday",          "Air days",
-                                              "Air time",
-                           "60 minutes",      "Runtime",
-                           "NBC",             "Network",
-                           "Drama", "Action", "Genre",
-                           "Zachary Levi",    "Actors",
+                                              "First aired:",
+                           "Friday",          "Air day:",
+                                              "Air time:",
+                           "60 minutes",      "Runtime:",
+                           "NBC",             "Network:",
+                           "Drama", "Action", "Genre:",
+                           "Zachary Levi",    "Actors:",
                            "ace computer geek at Buy More" // overview
         };
         
@@ -116,7 +116,7 @@ public class ViewSeriesInformation extends
         // fields must be visible
         for (String field : fields) {
             assertThat("Field "+ field + " was not found",
-                       this.solo().searchText(field), is(true));
+                       this.solo().searchText(field), equalTo(true));
         }
     }
 }
