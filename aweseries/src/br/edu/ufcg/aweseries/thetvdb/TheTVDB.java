@@ -32,7 +32,23 @@ public class TheTVDB {
     }
 
     public Series getFullSeries(String seriesId) {
-        return new SeriesParser(this.streamFactory.streamForFullSeries(seriesId)).parse();
+        if (seriesId == null) {
+            throw new IllegalArgumentException("seriesId should not be null");
+        }
+
+        if (Strings.isBlank(seriesId)) {
+            throw new IllegalArgumentException("seriesId should not be blank");
+        }
+
+        try {
+            return new SeriesParser(this.streamFactory.streamForFullSeries(seriesId)).parse();
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw new NonExistentSeriesException(e);
+            }
+
+            throw e;
+        }
     }
 
 //--------------------------------------------------------------------------------------------------
