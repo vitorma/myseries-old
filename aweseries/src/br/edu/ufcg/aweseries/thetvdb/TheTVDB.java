@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import br.edu.ufcg.aweseries.thetvdb.episode.Episode;
 import br.edu.ufcg.aweseries.thetvdb.season.Seasons;
 import br.edu.ufcg.aweseries.thetvdb.season.SeasonsParser;
 import br.edu.ufcg.aweseries.thetvdb.series.Series;
@@ -11,7 +12,6 @@ import br.edu.ufcg.aweseries.thetvdb.series.SeriesParser;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class TheTVDB {
-
     private final StreamFactory streamFactory;
 
     public TheTVDB(String apiKey) {
@@ -53,14 +53,7 @@ public class TheTVDB {
 
 //--------------------------------------------------------------------------------------------------
 
-    public Series addSeasonsTo(Series series) {
-        return null;
-    }
-
-    public Bitmap getPosterOf(Series series) {
-        return null;
-    }
-
+    @Deprecated
     public Series getSeries(String seriesId) {
         if (seriesId == null) {
             throw new IllegalArgumentException("seriesId should not be null");
@@ -74,11 +67,24 @@ public class TheTVDB {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new NonExistentSeriesException(e);
             }
-
+            
             throw e;
         }
     }
 
+//These methods will be the only ones called to retrieve posters in future--------------------------
+
+    public Bitmap getPosterOf(Series series) {
+        return null;
+    }
+
+    public Bitmap getPosterOf(Episode episode) {
+        return null;
+    }
+
+//--------------------------------------------------------------------------------------------------
+
+    @Deprecated
     public Seasons getSeasons(String seriesId) {
         return new SeasonsParser(streamFactory.streamForFullSeries(seriesId)).parse();
     }
