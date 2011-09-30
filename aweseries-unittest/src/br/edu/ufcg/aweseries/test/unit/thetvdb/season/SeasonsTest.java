@@ -2,6 +2,7 @@ package br.edu.ufcg.aweseries.test.unit.thetvdb.season;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 import org.mockito.Mockito;
@@ -34,6 +35,7 @@ public class SeasonsTest {
         Mockito.when(this.episode3.getSeasonNumber()).thenReturn(2);
     }
 
+    @Ignore
     @Test(expected = RuntimeException.class)
     public final void testAddDuplicatedEpisode() {
         this.seasons.addEpisode(this.episode1);
@@ -58,7 +60,7 @@ public class SeasonsTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public final void testAddNullEpisode() {
         this.seasons.addEpisode(null);
     }

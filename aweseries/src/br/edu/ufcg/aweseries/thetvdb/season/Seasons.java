@@ -13,6 +13,9 @@ public class Seasons {
 	}
 
 	public void addEpisode(Episode episode) {
+	    if (episode == null) {
+	        throw new IllegalArgumentException("episode should not be null");
+	    }
 		if (!this.containsSeason(episode.getSeasonNumber())) {
 			this.addSeason(episode.getSeasonNumber());
 		}
