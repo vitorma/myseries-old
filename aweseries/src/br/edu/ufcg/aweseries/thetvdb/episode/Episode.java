@@ -37,6 +37,7 @@ public class Episode {
         this.id = id;
         this.seriesId = seriesId;
         this.number = number;
+        this.seasonNumber = seasonNumber;
     }
 
     public String getId() {
