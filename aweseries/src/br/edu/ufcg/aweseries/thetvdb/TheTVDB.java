@@ -18,11 +18,19 @@ public class TheTVDB {
     public TheTVDB(StreamFactory streamFactory) {
         this.streamFactory = streamFactory;
     }
-    
+
+//These 2 methods will be the only ones called to retrieve series in future-------------------------
+
     public Series[] search(String seriesName) {
         return null;
     }
-    
+
+    public Series getFullSeries(String seriesId) {
+        Series series = null;
+        return series;
+    }
+//--------------------------------------------------------------------------------------------------
+
     public Series addSeasonsTo(Series series) {
         return null;
     }
