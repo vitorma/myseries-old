@@ -16,7 +16,7 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDBParser;
 
 public class EpisodesParser extends TheTVDBParser<List<Episode>> {
 
-    protected EpisodesParser(InputStream inputStream) {
+    public EpisodesParser(InputStream inputStream) {
         super(inputStream);
     }
 
@@ -25,8 +25,8 @@ public class EpisodesParser extends TheTVDBParser<List<Episode>> {
         final List<Episode> episodes = new ArrayList<Episode>();
         final EpisodeBuilder builder = new EpisodeBuilder();
 
-        RootElement root = new RootElement("Data");
-        Element element = root.getChild("Episode");
+        final RootElement root = new RootElement("Data");
+        final Element element = root.getChild("Episode");
 
         element.setEndElementListener(
                 new EndElementListener() {

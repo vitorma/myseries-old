@@ -24,19 +24,27 @@ public class TheTVDB {
         }
         this.streamFactory = streamFactory;
     }
-    
+
+//These 2 methods will be the only ones called to retrieve series in future-------------------------
+
     public Series[] search(String seriesName) {
         return null;
     }
-    
+
+    public Series getFullSeries(String seriesId) {
+        return new SeriesParser(this.streamFactory.streamForFullSeries(seriesId)).parse();
+    }
+
+//--------------------------------------------------------------------------------------------------
+
     public Series addSeasonsTo(Series series) {
         return null;
     }
-    
+
     public Bitmap getPosterOf(Series series) {
         return null;
     }
-    
+
     public Series getSeries(String seriesId) {
         if (seriesId == null) {
             throw new IllegalArgumentException("seriesId should not be null");

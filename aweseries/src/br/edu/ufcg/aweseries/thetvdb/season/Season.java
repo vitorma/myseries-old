@@ -16,8 +16,12 @@ public class Season {
      */
     private final java.util.List<Episode> episodes;
 
-    public Season(int seasonNumber) {
-        this.number = seasonNumber;
+    public Season(int number) {
+        if (number < 0) {
+            throw new IllegalArgumentException("invalid number for season");
+        }
+
+        this.number = number;
         this.episodes = new java.util.ArrayList<Episode>();
     }
 
@@ -28,9 +32,15 @@ public class Season {
      *            series, it will not be added.
      */
     public void addEpisode(final Episode episode) {
-        if (!this.getEpisodes().contains(episode)) {
-            this.episodes.add(episode);
+        if (episode == null) {
+            throw new IllegalArgumentException("episode should not be null");
         }
+
+        if (this.has(episode)) {
+            throw new IllegalArgumentException("episode already exists");
+        }
+
+        this.episodes.add(episode);
     }
 
     /**
@@ -40,7 +50,11 @@ public class Season {
      * @return The episode at index i, if any
      */
     public Episode getEpisodeAt(final int i) {
-        return this.episodes.get(i);
+        try {
+            return this.episodes.get(i);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("there is no episode at index " + i);
+        }
     }
 
     /**
@@ -95,6 +109,10 @@ public class Season {
         return this.getEpisodes().indexOf(episode);
     }
 
+    public boolean has(Episode episode) {
+        return this.getEpisodes().contains(episode);
+    }
+
     /**
      * Returns true if the i-th episode was marked as viewed.
      *
@@ -143,6 +161,6 @@ public class Season {
 
     @Override
     public String toString() {
-    	return this.getNumber() == 0 ? "Special Episodes" : "Season " + this.getNumber();
+        return this.getNumber() == 0 ? "Special Episodes" : "Season " + this.getNumber();
     }
 }
