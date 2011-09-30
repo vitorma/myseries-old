@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/linearLayout1" android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout android:id="@+id/linearLayout1" android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android" android:padding="5dp">
     <ImageView android:layout_height="wrap_content"
                android:src="@drawable/icon"
                android:layout_width="wrap_content"
                android:id="@+id/itemSeriesImage"
                android:scaleType="centerInside"
                android:maxWidth="51dp"
-               android:maxHeight="75dp"
-               android:padding="5dp">
+               android:maxHeight="75dp">
     </ImageView>
-    <LinearLayout android:id="@+id/linearLayout2" android:layout_width="wrap_content" android:layout_height="match_parent" android:orientation="vertical">
+    <LinearLayout android:id="@+id/linearLayout2" android:layout_width="wrap_content" android:layout_height="match_parent" android:orientation="vertical" android:paddingLeft="5dp">
         <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:layout_height="wrap_content" android:id="@+id/itemSeriesName" android:layout_width="wrap_content" android:text="@string/loading_label"></TextView>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/loading_label" android:id="@+id/itemSeriesStatus"></TextView>
     </LinearLayout>
