@@ -1,11 +1,18 @@
 package br.edu.ufcg.aweseries.data;
 
+import java.util.List;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.Series;
 
-public class DatabaseOpenHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private static final String DATABASE_NAME = "aweseries_db";
+
+    private static final int DATABASE_VERSION = 1;
 
     private static final String CREATE_TABLE_SERIES =
         "CREATE TABLE Series (" +
@@ -42,8 +49,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     private static final String DROP_TABLE_EPISODE = "DROP TABLE IF EXISTS Episode";
 
-    public DatabaseOpenHelper(Context context, String name, CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -66,4 +73,50 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL("PRAGMA foreign_keys=ON;");
         }
     }
+
+    public void addSeries(Series series) {
+        //TODO Implement
+    }
+
+    public void addEpisode(Episode episode) {
+        //TODO Implement (does it need be public?)
+    }
+
+    public void removeSeries(Series series) {
+        //TODO Implement
+    }
+
+    public void removeEpisode(Episode episode) {
+        //TODO Implement (does it need be public?)
+    }
+
+    public void updateSeries(Series series) {
+        //TODO Implement
+    }
+
+    public void updateEpisode(Episode episode) {
+        //TODO Implement (does it need be public?)
+    }
+
+    public Series getSeries(String id) {
+        //TODO Implement
+        return null;
+    }
+
+    public Episode getEpisode(String id) {
+        //TODO Implement (does it need be public?)
+        return null;
+    }
+
+    public List<Series> getAllSeries() {
+        //TODO Implement
+        return null;
+    }
+
+    public List<Series> getAllEpisodes(String seriesId) {
+        //TODO Implement (does it need be public?)
+        return null;
+    }
+
+    //TODO Another methods that i don't know what
 }
