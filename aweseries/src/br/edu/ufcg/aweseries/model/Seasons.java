@@ -1,5 +1,6 @@
 package br.edu.ufcg.aweseries.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -54,6 +55,16 @@ public class Seasons {
         }
 
         return false;
+    }
+
+    public List<Episode> getAllEpisodes() {
+        List<Episode> episodes = new ArrayList<Episode>();
+        
+        for (Season s : this.seasons.values()) {
+            episodes.addAll(s.getEpisodes());
+        }
+
+        return episodes;
     }
 
     public Season[] toArray() {
