@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import android.util.Log;
+
 
 public class Seasons {
 
@@ -19,7 +21,9 @@ public class Seasons {
         }
 
         if (this.hasEpisode(episode)) {
-            throw new IllegalArgumentException("episode already exists");
+            Log.w("Seasons", "episode already exists: " + episode);
+            return;
+//            throw new IllegalArgumentException("episode already exists");
         }
 
         if (!this.hasSeason(episode.getSeasonNumber())) {
@@ -34,7 +38,12 @@ public class Seasons {
             throw new IllegalArgumentException("episodes should not be null");
         }
 
+        if (episodes.isEmpty()) {
+            Log.e("Seasons", "episodes list is empty");
+        }
+
         for (Episode e : episodes) {
+            Log.w("Seasons", "adding episode" + e);
             this.addEpisode(e);
         }
     }

@@ -4,9 +4,11 @@ import java.io.FileNotFoundException;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Seasons;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.thetvdb.parsing.EpisodesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeasonsParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
@@ -43,13 +45,17 @@ public class TheTVDB {
         }
 
         try {
-            return new SeriesParser(this.streamFactory.streamForFullSeries(seriesId)).parse();
+            final SeriesParser seriesParser = new SeriesParser(this.streamFactory.streamForFullSeries(seriesId));
+            final Series series = seriesParser.parse();
+            final EpisodesParser episodesParser = new EpisodesParser(this.streamFactory.streamForFullSeries(seriesId));
+            series.getSeasons().addAllEpisodes(episodesParser.parse());
+            return series;
         } catch (RuntimeException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new NonExistentSeriesException(e);
             }
-
-            throw e;
+            Log.e("TheTVDB", e.getCause().getMessage());
+            return null;
         }
     }
 

@@ -3,6 +3,7 @@ package br.edu.ufcg.aweseries.thetvdb.parsing;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.xml.sax.SAXException;
@@ -133,6 +134,6 @@ public class EpisodesParser extends TheTVDBParser<List<Episode>> {
             throw new RuntimeException(e);
         }
 
-        return episodes;
+        return Collections.unmodifiableList(episodes);
     }
 }

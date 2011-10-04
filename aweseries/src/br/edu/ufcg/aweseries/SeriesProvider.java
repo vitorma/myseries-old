@@ -88,6 +88,9 @@ public class SeriesProvider {
     }
 
     public void follow(Series series) {
+        if (series == null) {
+            return;
+        }
         this.followedSeries.add(series);
     }
 
@@ -96,6 +99,11 @@ public class SeriesProvider {
      * @param id series id
      */
     public Series getSeries(String id) {
+        for (Series s : this.followedSeries) {
+            if (s.getId().equals(id)) {
+                return s;
+            }
+        }
         return this.theTVDB().getFullSeries(id);
     }
 
@@ -104,7 +112,7 @@ public class SeriesProvider {
         if (series == null) {
             return new Season[] {};
         }
-        return this.theTVDB().getFullSeries(series.getId()).getSeasons().toArray();
+        return series.getSeasons().toArray();
     }
 
     public Bitmap getSmallPoster(Series series) {
