@@ -65,6 +65,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String SELECT_ALL_SERIES =
         "SELECT * FROM Series";
 
+    private static final String SELECT_AN_EPISODE_BY_ID =
+        "SELECT * FROM Episode WHERE id=?";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -142,6 +145,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         s.getSeasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
         db.close();
         return s;
+    }
+
+    public Episode getEpisode(String id) {
+        final SQLiteDatabase db = this.getReadableDatabase();
+        final Cursor c = db.rawQuery(SELECT_AN_EPISODE_BY_ID, new String[] {id});
+        c.moveToFirst();
+        final Episode e = this.episodeByCurrentPositionOf(c);
+        db.close();
+        return e;
     }
 
     public List<Series> getAllSeries() {

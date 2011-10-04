@@ -6,6 +6,7 @@ import java.util.TreeSet;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.data.DatabaseHelper;
+import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
@@ -139,5 +140,9 @@ public class SeriesProvider {
 
     private Bitmap smallPosterFrom(Bitmap standardPoster) {
         return Bitmap.createScaledBitmap(standardPoster, 51, 75, true);
+    }
+
+    public Episode getEpisode(String episodeId) {
+        return this.dababaseHelper.getEpisode(episodeId);
     }
 }

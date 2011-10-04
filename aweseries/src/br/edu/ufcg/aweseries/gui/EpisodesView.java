@@ -4,10 +4,12 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -108,5 +110,30 @@ public class EpisodesView extends Activity {
      */
     private SeriesProvider seriesProvider() {
         return App.environment().getSeriesProvider();
+    }
+
+    /**
+     * Sets up a listener to item click events.
+     */
+    private void setupItemClickListener() {
+        episodesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                    int position, long id) {
+
+                Intent intent = new Intent(view.getContext(), EpisodeView.class);
+                
+                intent.putExtra("episode id",
+                        ((Episode) parent.getItemAtPosition(position)).getId());
+                intent.putExtra("episode name",
+                        ((Episode) parent.getItemAtPosition(position)).getName());
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    // Do nothing;
+                    //TODO Do something;
+                }
+            }
+        });
     }
 }
