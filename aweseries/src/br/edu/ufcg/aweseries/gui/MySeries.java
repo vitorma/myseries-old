@@ -110,7 +110,7 @@ public class MySeries extends Activity {
                 } catch (Exception e) {
                     TextView tv =
                             (TextView) MySeries.this
-                                    .findViewById(R.id.seasonsTextView);
+                                    .findViewById(R.id.seasonsButton);
                     tv.setText(e.getClass() + " " + e.getMessage());
                 }
             }
