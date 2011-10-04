@@ -20,6 +20,13 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".gui.SeasonsView"
-			android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+			android:theme="@android:style/Theme.Black.NoTitleBar">
+			<intent-filter>
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".gui.EpisodesView"
+			android:theme="@android:style/Theme.Black.NoTitleBar">
+		</activity>
 	</application>
 </manifest>

@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextSwitcher;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
@@ -33,7 +33,7 @@ public class SeriesView extends Activity {
     private TextView seriesRuntime;
     private TextView seriesGenre;
     private TextView seriesNetwork;
-    private TextSwitcher seasonsTextSwitcher;
+    private Button seasonsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +52,14 @@ public class SeriesView extends Activity {
         this.seriesNetwork = (TextView) findViewById(R.id.networkTextView);
         this.seriesGenre = (TextView) findViewById(R.id.genreTextView);
         this.seriesRuntime = (TextView) findViewById(R.id.runtimeTextView);
-        this.seasonsTextSwitcher = (TextSwitcher) findViewById(R.id.seasonsTextSwitcher);
+        this.seasonsButton = (Button) findViewById(R.id.seasonsButton);
 
         populateView();
-        setupSeasonsSwitcherListener();
+        setupSeasonsButtonListener();
     }
 
-    private void setupSeasonsSwitcherListener() {
-        this.seasonsTextSwitcher.setOnClickListener(new OnClickListener() {
+    private void setupSeasonsButtonListener() {
+        this.seasonsButton.setOnClickListener(new OnClickListener() {
             
             @Override
             public void onClick(View view) {
