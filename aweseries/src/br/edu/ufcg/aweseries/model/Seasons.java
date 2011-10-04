@@ -21,9 +21,7 @@ public class Seasons {
         }
 
         if (this.hasEpisode(episode)) {
-            Log.w("Seasons", "episode already exists: " + episode);
-            return;
-//            throw new IllegalArgumentException("episode already exists");
+            throw new IllegalArgumentException("episode already exists");
         }
 
         if (!this.hasSeason(episode.getSeasonNumber())) {
@@ -64,6 +62,10 @@ public class Seasons {
         }
 
         return false;
+    }
+
+    public Season getSeason (int i) {
+        return this.seasons.get(i);
     }
 
     public List<Episode> getAllEpisodes() {

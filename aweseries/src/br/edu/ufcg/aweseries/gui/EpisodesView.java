@@ -36,12 +36,7 @@ public class EpisodesView extends Activity {
             this.series = this.seriesProvider().getSeries(seriesId);
             final int seasonNumber = extras.getInt("season number");
 
-            for (final Season s : App.environment().getSeriesProvider().getSeasons(this.series)) {
-                if (s.getNumber() == seasonNumber) {
-                    this.season = s;
-                    break;
-                }
-            }
+            this.season = this.series.getSeasons().getSeason(seasonNumber);
         }
 
         final TextView listingTitle = (TextView) this.findViewById(R.id.listingTitleTextView);

@@ -6,10 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import br.edu.ufcg.aweseries.model.Episode;
-import br.edu.ufcg.aweseries.model.Seasons;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.parsing.EpisodesParser;
-import br.edu.ufcg.aweseries.thetvdb.parsing.SeasonsParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.stream.TheTVDBStreamFactory;
@@ -91,12 +89,6 @@ public class TheTVDB {
     }
 
 //--------------------------------------------------------------------------------------------------
-
-    @Deprecated
-    public Seasons getSeasons(String seriesId) {
-        return new SeasonsParser(streamFactory.streamForFullSeries(seriesId)).parse();
-    }
-
     @Deprecated
     public Bitmap getSeriesPoster(Series series) {
         final String posterPath = series.getPoster();

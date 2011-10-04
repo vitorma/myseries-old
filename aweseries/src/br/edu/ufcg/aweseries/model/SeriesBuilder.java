@@ -3,7 +3,6 @@ package br.edu.ufcg.aweseries.model;
 
 public class SeriesBuilder {
     private static final String DEFAULT_STRING = "";
-    private static final Seasons DEFAULT_SEASONS = new Seasons();
 
     private String id;
     private String name;
@@ -97,7 +96,7 @@ public class SeriesBuilder {
         series.setGenres(this.genres != null ? this.genres : DEFAULT_STRING);
         series.setActors(this.actors != null ? this.actors : DEFAULT_STRING);
         series.setPoster(this.poster != null ? this.poster : DEFAULT_STRING);
-        series.setSeasons(this.seasons != null ? this.seasons : DEFAULT_SEASONS);
+        series.setSeasons(this.seasons != null ? this.seasons : new Seasons());
 
         return series;
     }
