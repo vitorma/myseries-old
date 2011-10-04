@@ -99,11 +99,12 @@ public class SeriesProvider {
         return this.theTVDB().getFullSeries(id);
     }
 
+    @Deprecated
     public Season[] getSeasons(Series series) {
         if (series == null) {
             return new Season[] {};
         }
-        return this.theTVDB().getSeasons(series.getId()).toArray();
+        return this.theTVDB().getFullSeries(series.getId()).getSeasons().toArray();
     }
 
     public Bitmap getSmallPoster(Series series) {
