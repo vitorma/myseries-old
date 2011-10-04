@@ -96,7 +96,7 @@ public class SeriesProvider {
      * @param id series id
      */
     public Series getSeries(String id) {
-        return this.theTVDB().getSeries(id);
+        return this.theTVDB().getFullSeries(id);
     }
 
     public Season[] getSeasons(Series series) {
