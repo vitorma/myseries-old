@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import br.edu.ufcg.aweseries.data.DatabaseHelper;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
@@ -20,6 +21,7 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 public class SeriesProvider {
 
     private TreeSet<Series> followedSeries;
+    private DatabaseHelper dababaseHelper;
 
     /**
      * If you know what you are doing, use this method to instantiate a
@@ -38,7 +40,6 @@ public class SeriesProvider {
      */
     private SeriesProvider() {
         Comparator<Series> nameComparator = new Comparator<Series>() {
-
             @Override
             public int compare(Series object1, Series object2) {
                 return object1.getName().compareTo(object2.getName());
@@ -46,11 +47,13 @@ public class SeriesProvider {
         };
 
         this.followedSeries = new TreeSet<Series>(nameComparator);
+        this.dababaseHelper = new DatabaseHelper(App.getContext());
     }
-    
+
     private TheTVDB theTVDB() {
         return App.environment().theTVDB();
     }
+
     /**
      * Returns an array with all followed series.
      * 
@@ -79,7 +82,7 @@ public class SeriesProvider {
         // generates a ClassCastException (I don't know why).
 
         Series[] array = {};
-        array = this.followedSeries.toArray(array);
+        array = this.dababaseHelper.getAllSeries().toArray(array);
         return array;
     }
 
@@ -91,7 +94,7 @@ public class SeriesProvider {
         if (series == null) {
             return;
         }
-        this.followedSeries.add(series);
+        this.dababaseHelper.insert(series);
     }
 
     /**
@@ -99,12 +102,13 @@ public class SeriesProvider {
      * @param id series id
      */
     public Series getSeries(String id) {
-        for (Series s : this.followedSeries) {
-            if (s.getId().equals(id)) {
-                return s;
-            }
+        //Temporary implementation
+        try {
+            Series s = this.dababaseHelper.getSeries(id);
+            return s;
+        } catch (Exception e) {
+            return this.theTVDB().getFullSeries(id);
         }
-        return this.theTVDB().getFullSeries(id);
     }
 
     @Deprecated
