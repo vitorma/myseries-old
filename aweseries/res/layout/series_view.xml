@@ -7,9 +7,9 @@
 	<LinearLayout android:layout_height="wrap_content"
 		android:layout_width="match_parent" android:id="@+id/linearLayout1"
 		android:weightSum="1">
-		<ImageView android:src="@drawable/clapperboard" android:id="@+id/seriesPosterImageView"
-			android:layout_width="50dp" android:layout_weight="0.15"
-			android:layout_height="104dp" android:layout_margin="4dip"></ImageView>
+		<ImageView android:id="@+id/seriesPosterImageView"
+			android:layout_weight="0.15"
+			android:layout_margin="4dip" android:src="@drawable/small_poster_clapperboard" android:layout_height="100dp" android:layout_width="68dp"></ImageView>
 		<TableLayout android:layout_height="match_parent"
 			android:layout_width="wrap_content" android:id="@+id/linearLayout2"
 			android:layout_weight="0.30" android:orientation="vertical">

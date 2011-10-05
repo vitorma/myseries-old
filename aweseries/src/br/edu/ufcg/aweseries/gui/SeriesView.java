@@ -143,7 +143,7 @@ public class SeriesView extends Activity {
             this.seriesGenre.setText(series.getGenres());
             this.seriesRuntime.setText(series.getRuntime() + " minutes");
             
-            Bitmap bmp = seriesProvider().getSmallPoster(series);
+            Bitmap bmp = seriesProvider().getPosterOf(series);
             if (bmp != null) {
                 // WallpaperManager.
                 // View v = this.findViewById(R.layout.series_view);

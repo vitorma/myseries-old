@@ -69,17 +69,18 @@ public class MySeries extends Activity {
                         TextView status = (TextView) itemView.findViewById(R.id.itemSeriesStatus);
 			
 			// load series data
-                        Series item = this.getItem(position);
+            Series item = this.getItem(position);
 
-                        name.setText(item.getName());
-                        status.setText(item.getStatus());
+            name.setText(item.getName());
+            status.setText(item.getStatus());
 
-			Bitmap poster = seriesProvider.getSmallPoster(item);
+			Bitmap poster = this.seriesProvider.getPosterOf(item);
 			image.setImageBitmap(poster);
 
 			return itemView;
 		}
     }
+
     /**
      * Fills mySeriesListView with the current followed series.
      */

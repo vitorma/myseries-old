@@ -121,26 +121,27 @@ public class SeriesProvider {
         return series.getSeasons().toArray();
     }
 
-    public Bitmap getSmallPoster(Series series) {
+    /**
+     * @return a 102px x 150px Bitmap of the series' poster, or a clapperboard to be used as a
+     * generic poster
+     */
+    public Bitmap getPosterOf(Series series) {
         Bitmap poster = this.theTVDB().getSeriesPoster(series);
 
         if (poster == null) {
-            return genericSmallPosterImage();
+            return genericPosterImage();
         }
 
-        return smallPosterFrom(poster);
+        return Bitmap.createScaledBitmap(poster, 102, 150, true);
     }
 
-    private Bitmap genericSmallPosterImage() {
-        Bitmap genericPosterImage = BitmapFactory.decodeResource(
+    /**
+     * @return a 102px x 150px image of a clapperboard to be used as a generic poster
+     */
+    private Bitmap genericPosterImage() {
+        return BitmapFactory.decodeResource(
                 App.getContext().getResources(),
                 R.drawable.small_poster_clapperboard);
-
-        return smallPosterFrom(genericPosterImage);
-    }
-
-    private Bitmap smallPosterFrom(Bitmap standardPoster) {
-        return Bitmap.createScaledBitmap(standardPoster, 51, 75, true);
     }
 
     public Episode getEpisode(String episodeId) {
