@@ -16,7 +16,7 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  * data. All followed series are cached.
  * 
  * The private constructor avoids instantiation of the SeriesProvider.
- * Most times, it should be gotten from Environment.getSeriesProvider().
+ * Most times, it should be gotten from Environment.seriesProvider().
  * @see newSeriesProvider()
  */
 public class SeriesProvider {

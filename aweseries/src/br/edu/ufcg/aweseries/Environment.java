@@ -30,7 +30,7 @@ public class Environment {
     /**
      * @return the SeriesProvider for the app.
      */
-    public SeriesProvider getSeriesProvider() {
+    public SeriesProvider seriesProvider() {
         if (this.seriesProvider == null) {
             this.seriesProvider = this.defaultSeriesProvider();
         }
@@ -55,6 +55,9 @@ public class Environment {
         this.seriesProvider = newSeriesProvider;
     }
 
+    /**
+     * @return the thetvdb interface for the app.
+     */
     public TheTVDB theTVDB() {
         if (this.theTVDB == null) {
             this.theTVDB = this.defaultTheTVDB();
@@ -62,10 +65,17 @@ public class Environment {
         return this.theTVDB;
     }
 
+    /**
+     * @return a default thetvdb interface for the production environment
+     */
     private TheTVDB defaultTheTVDB() {
         return new TheTVDB(this.apiKey);
     }
 
+    /**
+     * Set the environment's thetvdb interface to newTheTVDB.
+     * If null, a new default thetvdb interface will be instantiated.
+     */
     public void setTheTVDBTo(TheTVDB newTheTVDB) {
         this.theTVDB = newTheTVDB;
     }

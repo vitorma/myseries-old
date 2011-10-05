@@ -46,7 +46,7 @@ public class MySeries extends Activity {
     }
 
     class SeriesItemViewAdapter extends ArrayAdapter<Series> {
-		private final SeriesProvider seriesProvider = App.environment().getSeriesProvider();
+		private final SeriesProvider seriesProvider = App.environment().seriesProvider();
 		
 		public SeriesItemViewAdapter(Context context, int seriesItemResourceId,
 				Series[] objects) {
@@ -88,7 +88,7 @@ public class MySeries extends Activity {
         listView = (ListView) this.findViewById(R.id.listView);
 
         listView.setAdapter(new SeriesItemViewAdapter(this, R.layout.list_item,
-                App.environment().getSeriesProvider().mySeries()));
+                App.environment().seriesProvider().mySeries()));
     }
 
     /**

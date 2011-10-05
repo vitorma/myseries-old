@@ -181,6 +181,6 @@ public class SeriesView extends Activity {
      * @return the app's series provider
      */
     private SeriesProvider seriesProvider() {
-        return App.environment().getSeriesProvider();
+        return App.environment().seriesProvider();
     }
 }

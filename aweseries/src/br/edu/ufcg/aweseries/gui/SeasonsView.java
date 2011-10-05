@@ -103,13 +103,13 @@ public class SeasonsView extends Activity {
     private void populateSeasonsList() {
         this.seasonsList = (ListView) findViewById(R.id.listView);
         this.seasonsList.setAdapter(new SeasonItemViewAdapter(this, R.layout.list_item, App
-                .environment().getSeriesProvider().getSeasons(series)));
+                .environment().seriesProvider().getSeasons(series)));
     }
 
     /**
      * @return the app's series provider
      */
     private SeriesProvider seriesProvider() {
-        return App.environment().getSeriesProvider();
+        return App.environment().seriesProvider();
     }
 }
