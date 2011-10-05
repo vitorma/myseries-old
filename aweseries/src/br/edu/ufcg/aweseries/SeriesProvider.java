@@ -21,6 +21,7 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  */
 public class SeriesProvider {
 
+    @Deprecated
     private TreeSet<Series> followedSeries;
     private DatabaseHelper dababaseHelper;
 
