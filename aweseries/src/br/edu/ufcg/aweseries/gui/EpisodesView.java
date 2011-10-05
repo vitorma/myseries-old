@@ -3,6 +3,7 @@ package br.edu.ufcg.aweseries.gui;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,7 +47,7 @@ public class EpisodesView extends Activity {
         listingTitle.setText(this.series.getName()
                 + String.format(" S%02d Episodes", this.season.getNumber()));
         this.populateEpisodesList();
-
+        this.setupItemClickListener();
     }
 
     private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> {
@@ -118,20 +119,14 @@ public class EpisodesView extends Activity {
     private void setupItemClickListener() {
         episodesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(view.getContext(), EpisodeView.class);
-                
-                intent.putExtra("episode id",
-                        ((Episode) parent.getItemAtPosition(position)).getId());
-                intent.putExtra("episode name",
-                        ((Episode) parent.getItemAtPosition(position)).getName());
+                intent.putExtra("episode id", ((Episode) parent.getItemAtPosition(position)).getId());
+                intent.putExtra("episode name", ((Episode) parent.getItemAtPosition(position)).getName());
                 try {
                     startActivity(intent);
                 } catch (Exception e) {
-                    // Do nothing;
-                    //TODO Do something;
+                    new AlertDialog.Builder(EpisodesView.this).setMessage(e.getMessage()).create().show();
                 }
             }
         });

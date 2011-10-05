@@ -41,7 +41,7 @@ public class Seasons {
         }
 
         for (Episode e : episodes) {
-            Log.w("Seasons", "adding episode" + e);
+            Log.w("Seasons", "adding episode " + e);
             this.addEpisode(e);
         }
     }

@@ -80,8 +80,8 @@ public class EpisodeView extends Activity {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            episodeId = extras.getString("episode id");
-            episodeName.setText(extras.getString("episode name"));
+            this.episodeId = extras.getString("episode id");
+            this.episodeName.setText(extras.getString("episode name"));
         }
     }
 
@@ -89,7 +89,7 @@ public class EpisodeView extends Activity {
      * Loads the description from database.
      */
     private void downloadDescription() {
-            Episode episode = seriesProvider().getEpisode(episodeId);
+            Episode episode = seriesProvider().getEpisode(this.episodeId);
             this.episodeName.setText(episode.getName());
             this.episodeOverview.setText(episode.getOverview());
             this.episodeFirstAired.setText(episode.getFirstAired());
