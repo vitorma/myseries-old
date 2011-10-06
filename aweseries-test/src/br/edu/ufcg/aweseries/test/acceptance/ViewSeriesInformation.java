@@ -67,6 +67,8 @@ public class ViewSeriesInformation extends
 
         getActivity().finish();
         super.tearDown();
+
+        this.clearUserData();
     }
 
     // Tests -------------------------------------------------------------------

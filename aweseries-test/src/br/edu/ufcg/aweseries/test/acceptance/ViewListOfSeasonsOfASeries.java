@@ -68,6 +68,8 @@ public class ViewListOfSeasonsOfASeries extends ActivityInstrumentationTestCase2
 
         getActivity().finish();
         super.tearDown();
+
+        this.clearUserData();
     }
 
     // Tests -------------------------------------------------------------------

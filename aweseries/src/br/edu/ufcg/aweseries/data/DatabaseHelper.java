@@ -137,6 +137,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteAllSeries() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("Series", null, null);
+        db.close();
+    }
+
     public Series getSeries(String id) {
         final SQLiteDatabase db = this.getReadableDatabase();
         final Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {id});

@@ -23,12 +23,4 @@ public class App extends Application {
     public static Environment environment() {
     	return environment;
     }
-
-    /**
-     * Sets the application's environment to newEnvironment. It's here for testing purposes.
-     * @param newEnvironment the environment to be set
-     */
-    public static void setEnvironment(Environment newEnvironment) {
-        environment = newEnvironment;
-    }
 }

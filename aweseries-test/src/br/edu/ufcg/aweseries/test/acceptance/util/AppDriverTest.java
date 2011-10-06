@@ -70,6 +70,8 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
 
         getActivity().finish();
         super.tearDown();
+
+        this.clearUserData();
     }
 
     private String testSeriesName = SampleSeries.CHUCK.name();

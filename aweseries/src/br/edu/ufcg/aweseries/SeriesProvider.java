@@ -1,8 +1,5 @@
 package br.edu.ufcg.aweseries;
 
-import java.util.Comparator;
-import java.util.TreeSet;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.data.DatabaseHelper;
@@ -21,9 +18,6 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  */
 public class SeriesProvider {
 
-    @Deprecated
-    private TreeSet<Series> followedSeries;
-
     /**
      * If you know what you are doing, use this method to instantiate a
      * SeriesProvider.
@@ -39,16 +33,7 @@ public class SeriesProvider {
     /**
      * @see newSeriesProvider()
      */
-    private SeriesProvider() {
-        Comparator<Series> nameComparator = new Comparator<Series>() {
-            @Override
-            public int compare(Series object1, Series object2) {
-                return object1.getName().compareTo(object2.getName());
-            }
-        };
-
-        this.followedSeries = new TreeSet<Series>(nameComparator);
-    }
+    private SeriesProvider() {}
 
     private DatabaseHelper localSeriesRepository() {
         return App.environment().localSeriesRepository();
@@ -91,7 +76,7 @@ public class SeriesProvider {
     }
 
     public void wipeFollowedSeries() {
-        this.followedSeries.clear();
+        this.localSeriesRepository().deleteAllSeries();
     }
 
     public void follow(Series series) {

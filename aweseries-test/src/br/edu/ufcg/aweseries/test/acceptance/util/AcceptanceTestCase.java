@@ -65,5 +65,7 @@ public class AcceptanceTestCase extends ActivityInstrumentationTestCase2<MySerie
 
         getActivity().finish();
         super.tearDown();
+
+        this.clearUserData();
     }
 }
