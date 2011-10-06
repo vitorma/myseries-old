@@ -4,10 +4,15 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.content.Context;
+import br.edu.ufcg.aweseries.App;
+import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.data.DatabaseHelper;
 import br.edu.ufcg.aweseries.model.Series;
 
 public class SeriesProviderTest {
@@ -16,7 +21,17 @@ public class SeriesProviderTest {
 
     @Before
     public void setUp() {
+        App.setEnvironment(Environment.newEnvironment(mock(Context.class)));
+
+        DatabaseHelper mockLocalSeriesRepository = mock(DatabaseHelper.class);
+        App.environment().setLocalSeriesRepositoryTo(mockLocalSeriesRepository);
+
         this.provider = SeriesProvider.newSeriesProvider();
+    }
+
+    @After
+    public void tearDown() {
+        this.provider.wipeFollowedSeries();
     }
 
     @Test
