@@ -2,6 +2,7 @@ package br.edu.ufcg.aweseries;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import br.edu.ufcg.aweseries.data.DatabaseHelper;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
@@ -51,17 +52,19 @@ public class SeriesProvider {
     public Series[] mySeries() {
         // XXX: It is here because the user can't follow a series yet. Remove it ASAP
         if (this.loadExampleData) {
+            Log.d("SeriesProvider", "Start Loading Series");
             final String chuckId = "80348";
             final String tbbtId = "80379";
             final String gotID = "121361";
             final String houseID = "73255";
             final String youngDraculaId = "80248";
-            
-            this.follow(this.getSeries(chuckId));
-            this.follow(this.getSeries(tbbtId));
-            this.follow(this.getSeries(gotID));
-            this.follow(this.getSeries(houseID));
-            this.follow(this.getSeries(youngDraculaId));
+
+            String[] seriesIds = new String[]{chuckId, tbbtId, gotID, houseID, youngDraculaId};
+            for (String seriesId : seriesIds) {
+                if (this.localSeriesRepository().getSeries(seriesId) == null) {
+                    this.follow(this.getSeries(seriesId));
+                }
+            }
 
             this.loadExampleData = false;
         }
