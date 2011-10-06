@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.content.Context;
 import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
@@ -18,7 +19,9 @@ public class EnvironmentTest {
 
     @Before
     public void setUp() {
-        this.environment = Environment.newEnvironment();
+        Context contextMock = mock(Context.class);
+
+        this.environment = Environment.newEnvironment(contextMock);
     }
 
     @After
@@ -26,38 +29,44 @@ public class EnvironmentTest {
         this.environment = null;
     }
 
-    // Series Provider --------------------------------------------------------
+    // Series Provider ---------------------------------------------------------
+    @Test(expected = IllegalArgumentException.class)
+    public void contextMustNotBeNull() {
+        Environment.newEnvironment(null);
+    }
+
+    // Series Provider ---------------------------------------------------------
     @Test
     public void testChangeSeriesProvider() {
         final SeriesProvider sp = SeriesProvider.newSeriesProvider();
 
         this.environment.setSeriesProvider(sp);
 
-        assertThat(this.environment.getSeriesProvider(),
+        assertThat(this.environment.seriesProvider(),
                 sameInstance(sp));
     }
 
     @Test
     public void testFirstSeriesProviderNotNull() {
-        assertThat(this.environment.getSeriesProvider(), notNullValue());
+        assertThat(this.environment.seriesProvider(), notNullValue());
     }
 
     @Test
     public void testReturnsSameSeriesProviderEachCall() {
-        final SeriesProvider sp1 = this.environment.getSeriesProvider();
-        final SeriesProvider sp2 = this.environment.getSeriesProvider();
+        final SeriesProvider sp1 = this.environment.seriesProvider();
+        final SeriesProvider sp2 = this.environment.seriesProvider();
 
         assertThat(sp1, sameInstance(sp2));
     }
 
     @Test
     public void testSettingSeriesProviderToNullMustInstantiateANewSeriesProvider() {
-        final SeriesProvider oldSP = this.environment.getSeriesProvider();
+        final SeriesProvider oldSP = this.environment.seriesProvider();
         this.environment.setSeriesProvider(null);
 
-        assertThat(this.environment.getSeriesProvider(),
+        assertThat(this.environment.seriesProvider(),
                 notNullValue());
-        assertThat(this.environment.getSeriesProvider(),
+        assertThat(this.environment.seriesProvider(),
                 not(sameInstance(oldSP)));
     }
 
@@ -92,4 +101,8 @@ public class EnvironmentTest {
         assertThat(this.environment.theTVDB(), notNullValue());
         assertThat(this.environment.theTVDB(), not(sameInstance(oldDB)));
     }
+
+    // LocalSeriesRepository ---------------------------------------------------
+    // The tests for localSeriesRepository are at
+    // aweseries-test/.../unit/EnvironmentLocalSeriesRepositoryTest
 }

@@ -1,5 +1,7 @@
 package br.edu.ufcg.aweseries;
 
+import android.content.Context;
+import br.edu.ufcg.aweseries.data.DatabaseHelper;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
@@ -8,8 +10,11 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  */
 public class Environment {
 
+    private Context context;
+
     private SeriesProvider seriesProvider;
     private TheTVDB theTVDB;
+    private DatabaseHelper localSeriesRepository;
 
     private final String apiKey = "6F2B5A871C96FB05";
 
@@ -19,13 +24,26 @@ public class Environment {
      * @see Environment()
      * @see App.environment()
      */
-    public static Environment newEnvironment() {
-        return new Environment();
+    public static Environment newEnvironment(Context context) {
+        return new Environment(context);
     }
+
     /**
      * @see newSeriesProvider()
      */
-    private Environment() {}
+    private Environment(Context context) {
+        if (context == null) {
+            throw new IllegalArgumentException("context should not be null");
+        }
+        this.context = context;
+    }
+
+    /**
+     * @return the application context.
+     */
+    public Context context() {
+        return this.context;
+    }
 
     /**
      * @return the SeriesProvider for the app.
@@ -78,5 +96,30 @@ public class Environment {
      */
     public void setTheTVDBTo(TheTVDB newTheTVDB) {
         this.theTVDB = newTheTVDB;
+    }
+
+    /**
+     * @return the local repository of series.
+     */
+    public DatabaseHelper localSeriesRepository() {
+        if (this.localSeriesRepository == null) {
+            this.localSeriesRepository = this.defaultLocalSeriesRepository();
+        }
+        return this.localSeriesRepository;
+    }
+
+    /**
+     * @return a default thetvdb interface for the production environment
+     */
+    private DatabaseHelper defaultLocalSeriesRepository() {
+        return new DatabaseHelper(this.context());
+    }
+
+    /**
+     * Set the environment's series repository to newSeriesRepository.
+     * If null, a new default series repository will be instantiated.
+     */
+    public void setLocalSeriesRepositoryTo(DatabaseHelper newSeriesRepository) {
+        this.localSeriesRepository = newSeriesRepository;
     }
 }

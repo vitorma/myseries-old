@@ -23,7 +23,6 @@ public class SeriesProvider {
 
     @Deprecated
     private TreeSet<Series> followedSeries;
-    private DatabaseHelper dababaseHelper;
 
     /**
      * If you know what you are doing, use this method to instantiate a
@@ -49,7 +48,10 @@ public class SeriesProvider {
         };
 
         this.followedSeries = new TreeSet<Series>(nameComparator);
-        this.dababaseHelper = new DatabaseHelper(App.getContext());
+    }
+
+    private DatabaseHelper localSeriesRepository() {
+        return App.environment().localSeriesRepository();
     }
 
     private TheTVDB theTVDB() {
@@ -84,7 +86,7 @@ public class SeriesProvider {
         // generates a ClassCastException (I don't know why).
 
         Series[] array = {};
-        array = this.dababaseHelper.getAllSeries().toArray(array);
+        array = this.localSeriesRepository().getAllSeries().toArray(array);
         return array;
     }
 
@@ -96,7 +98,7 @@ public class SeriesProvider {
         if (series == null) {
             return;
         }
-        this.dababaseHelper.insert(series);
+        this.localSeriesRepository().insert(series);
     }
 
     /**
@@ -106,7 +108,7 @@ public class SeriesProvider {
     public Series getSeries(String id) {
         //Temporary implementation
         try {
-            Series s = this.dababaseHelper.getSeries(id);
+            Series s = this.localSeriesRepository().getSeries(id);
             return s;
         } catch (Exception e) {
             return this.theTVDB().getFullSeries(id);
@@ -140,11 +142,11 @@ public class SeriesProvider {
      */
     private Bitmap genericPosterImage() {
         return BitmapFactory.decodeResource(
-                App.getContext().getResources(),
+                App.environment().context().getResources(),
                 R.drawable.small_poster_clapperboard);
     }
 
     public Episode getEpisode(String episodeId) {
-        return this.dababaseHelper.getEpisode(episodeId);
+        return this.localSeriesRepository().getEpisode(episodeId);
     }
 }

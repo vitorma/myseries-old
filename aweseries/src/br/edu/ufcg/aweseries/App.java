@@ -18,11 +18,7 @@ public class App extends Application {
         super.onCreate();
         context = this;
 
-        environment = Environment.newEnvironment();
-    }
-
-    public static Context getContext() {
-        return context;
+        environment = Environment.newEnvironment(context);
     }
 
     public static Environment environment() {

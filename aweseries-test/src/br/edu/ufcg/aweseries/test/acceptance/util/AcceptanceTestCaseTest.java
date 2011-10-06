@@ -17,7 +17,7 @@ public class AcceptanceTestCaseTest extends AcceptanceTestCase {
     }
 
     public void testUserFollowsNoSeries() {
-        SeriesProvider provider = App.environment().getSeriesProvider();
+        SeriesProvider provider = App.environment().seriesProvider();
 
         assertThat(provider.mySeries().length, equalTo(0));
     }

@@ -129,7 +129,7 @@ public class AppDriver {
 
     // Private tools -----------------------------------------------------------
     private SeriesProvider seriesProvider() {
-        return App.environment().getSeriesProvider();
+        return App.environment().seriesProvider();
     }
 
     private void validateSeriesName(String seriesName) {

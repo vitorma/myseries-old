@@ -48,9 +48,9 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
 
     private void clearUserData() {
         // XXX: It is here because the user can't follow a series yet. Remove it ASAP
-        App.environment().getSeriesProvider().loadExampleData = false;
+        App.environment().seriesProvider().loadExampleData = false;
 
-        App.environment().getSeriesProvider().wipeFollowedSeries();
+        App.environment().seriesProvider().wipeFollowedSeries();
     }
 
     private void setUpTestTools() {
