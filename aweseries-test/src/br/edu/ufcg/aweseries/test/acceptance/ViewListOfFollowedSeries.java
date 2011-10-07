@@ -15,8 +15,8 @@ public class ViewListOfFollowedSeries extends AcceptanceTestCase {
         this.driver().viewMyFollowedSeries();
 
         // Then
-        this.driver().assertThatSeries("Chuck").name().isPresent();
-        this.driver().assertThatSeries("Chuck").status().isPresent();
+        this.driver().assertThatSeries("Chuck").name().isShown();
+        this.driver().assertThatSeries("Chuck").status().isShown();
     }
 
     public void testViewTitle() {

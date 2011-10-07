@@ -201,10 +201,85 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
     }
 
     // Verification ------------------------------------------------------------
-    public void testAssertThatNullSeries() {
+    public void testAssertThatNullSeriesThrowsException() {
         try {
             this.driver().assertThatSeries(null);
             fail("Should have thrown an IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
+    }
+
+    public void testAssertThatEmptySeriesThrowsException() {
+        try {
+            this.driver().assertThatSeries("   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testAssertThatNotFollowedSeriesThrowsException() {
+        try {
+            this.driver().assertThatSeries("House");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testAssertThatRightSeriesReturnsSomeData() {
+        this.driver().follow(testSeriesName);
+
+        assertThat(this.driver().assertThatSeries(testSeriesName), notNullValue());
+    }
+
+    public void testAssertThatSeriesNullSeasonThrowsException() {
+        try {
+            this.driver().assertThatSeries(testSeriesName).season(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testAssertThatSeriesEmptySeasonThrowsException() {
+        try {
+            this.driver().follow(testSeriesName);
+
+            this.driver().assertThatSeries(testSeriesName).season("   \t ");
+
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testAssertThatSeriesInvalidSeasonThrowsException() {
+        try {
+            this.driver().follow(testSeriesName);
+
+            this.driver().assertThatSeries(testSeriesName).season("Season Blah");
+
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testAssertThatSeriesInvalidSeasonNumberThrowsException() {
+        try {
+            this.driver().follow(testSeriesName);
+
+            this.driver().assertThatSeries(testSeriesName).season("-1");
+
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testAssertThatSeriesSpecialEpisodesSeasonReturnsRightSeason() {
+        this.driver().follow(testSeriesName);
+
+        final String seasonName = this.driver().assertThatSeries(testSeriesName)
+                .season("Special Episodes").name().text();
+
+        assertThat(seasonName, equalTo("Special Episodes"));
+    }
+
+    public void testAssertThatSeriesUsualSeasonReturnsRightSeason() {
+        this.driver().follow(testSeriesName);
+
+        final String seasonName = this.driver().assertThatSeries(testSeriesName)
+                .season("1").name().text();
+
+        assertThat(seasonName, equalTo("Season 1"));
     }
 }

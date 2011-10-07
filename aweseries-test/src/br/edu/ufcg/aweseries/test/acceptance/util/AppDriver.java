@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
 
@@ -38,7 +39,7 @@ public class AppDriver {
 
     // Full Actions ------------------------------------------------------------
     public void follow(String seriesName) {
-        this.validateInputName(seriesName);
+        this.validateInputName(seriesName, "seriesName");
 
         Series series = retrieveSeriesNamed(seriesName);
 
@@ -68,6 +69,10 @@ public class AppDriver {
     }
     
     private Series seriesReferencedAs(String seriesName) {
+        if (!this.series.containsKey(seriesName)) {
+            throw new IllegalArgumentException("Series not followed yet");
+        }
+
         return this.series.get(seriesName);
     }
 
@@ -78,22 +83,22 @@ public class AppDriver {
         }
     }
     public void viewDetailsOf(String seriesName) {
-        this.validateInputName(seriesName);
+        this.validateInputName(seriesName, "seriesName");
 
         this.viewMyFollowedSeries();
         this.solo.clickOnText(seriesReferencedAs(seriesName).getName());
     }
 
     public void viewSeasonsOf(String seriesName) {
-        this.validateInputName(seriesName);
+        this.validateInputName(seriesName, "seriesName");
 
         this.viewDetailsOf(seriesName);
         this.solo.clickOnText("Seasons");
     }
 
     public void viewEpisodesOf(String seriesName, String seasonName) {
-        this.validateInputName(seriesName);
-        this.validateInputName(seasonName);
+        this.validateInputName(seriesName, "seriesName");
+        this.validateInputName(seasonName, "seasonName");
 
         this.viewSeasonsOf(seriesName);
         this.solo.clickOnText(seasonName);
@@ -101,13 +106,26 @@ public class AppDriver {
 
     // Verification ------------------------------------------------------------
     public SeriesAccessor assertThatSeries(String seriesName) {
-        return new SeriesAccessor(this.retrieveSeriesNamed(seriesName));
+        this.validateInputName(seriesName, "seriesName");
+
+        return new SeriesAccessor(this.seriesReferencedAs(seriesName));
     }
 
-    public class SeriesAccessor {
+    private abstract class Accessor {
+        protected TextAsserter asserterTo(String text) {
+            return new TextAsserter(text);
+        }
+    }
+
+    public class SeriesAccessor extends Accessor {
+
         private Series series;
 
         public SeriesAccessor(Series series) {
+            if (series == null) {
+                throw new IllegalArgumentException("series should not be null");
+            }
+
             this.series = series;
         }
 
@@ -119,8 +137,45 @@ public class AppDriver {
             return asserterTo(this.series.getStatus()); 
         }
 
-        private TextAsserter asserterTo(String text) {
-            return new TextAsserter(text);
+        public SeasonAccessor season(String seasonName) {
+            return new SeasonAccessor(seasonName, this.series);
+        }
+    }
+ 
+    public class SeasonAccessor extends Accessor  {
+
+        private Season season;
+
+        public SeasonAccessor(String seasonName, Series series) {
+            validateInputName(seasonName, "seasonName");
+            
+            this.season = series.getSeasons().getSeason(this.nameToNumber(seasonName));
+        }
+
+        public TextAsserter name() {
+            return asserterTo(this.numberToName(this.season.getNumber()));
+        }
+
+        private Integer nameToNumber(String seasonName) {
+            if ("Special Episodes".equals(seasonName)) {
+                return 0;
+            }
+            try {
+                Integer seriesNumber = Integer.parseInt(seasonName);
+ 
+                if (seriesNumber == null || seriesNumber < 0) {
+                    throw new IllegalArgumentException("seasonName is not a season name");
+                }
+
+                return seriesNumber;
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("seasonName is not a season name");
+            }
+        }
+
+        private String numberToName(int seasonNumber) {
+            return seasonNumber == 0 ? "Special Episodes"
+                                     : "Season " + this.season.getNumber() ;
         }
     }
 
@@ -131,8 +186,12 @@ public class AppDriver {
             this.text = text;
         }
 
-        public void isPresent() {
+        public void isShown() {
             assertThat(solo.searchText(text), equalTo(true));
+        }
+
+        public String text() {
+            return this.text;
         }
     }
 
@@ -141,12 +200,12 @@ public class AppDriver {
         return App.environment().seriesProvider();
     }
 
-    private void validateInputName(String seriesName) {
-        if (seriesName == null) {
-            throw new IllegalArgumentException("seriesName should not be null");
+    private void validateInputName(String name, String parameterName) {
+        if (name == null) {
+            throw new IllegalArgumentException(parameterName + " should not be null");
         }
-        if (seriesName.trim().isEmpty()) {
-            throw new IllegalArgumentException("seriesName should not be null");
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException(parameterName + " should not be empty");
         }
     }
 }
