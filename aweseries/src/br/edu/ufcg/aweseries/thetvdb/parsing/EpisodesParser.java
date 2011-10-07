@@ -15,6 +15,7 @@ import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.EpisodeBuilder;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class EpisodesParser extends TheTVDBParser<List<Episode>> {
 
@@ -114,7 +115,7 @@ public class EpisodesParser extends TheTVDBParser<List<Episode>> {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withGuestStars(body);
+                        builder.withGuestStars(Strings.normalizePipeSeparated(body));
                     }
                 });
 

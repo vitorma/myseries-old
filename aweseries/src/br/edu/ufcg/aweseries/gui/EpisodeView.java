@@ -25,18 +25,15 @@ public class EpisodeView extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.series_view);
-        
-        // Show the contents we already know.
-        this.episodeName = (TextView) findViewById(R.id.seriesNameTextView);
-        // TODO Change this resource
-        this.episodeName.setText(R.string.unknownSeries);
+        setContentView(R.layout.episode_view);
 
-        this.episodeFirstAired = (TextView) findViewById(R.id.firstAiredTextView);
-        this.episodeOverview = (TextView) findViewById(R.id.seriesOverviewTextView);
-        this.episodeDirector = (TextView) findViewById(R.id.statusTextView);
-        this.episodeWriter = (TextView) findViewById(R.id.airTimeTextView);
-        this.episodeGuestStars = (TextView) findViewById(R.id.airDaysTextView);
+        this.episodeName = (TextView) findViewById(R.id.episodeNameTextView);
+        this.episodeName.setText(R.string.unnamedEpisode);
+        this.episodeFirstAired = (TextView) findViewById(R.id.episodeFirstAiredTextView);
+        this.episodeOverview = (TextView) findViewById(R.id.episodeOverviewTextView);
+        this.episodeDirector = (TextView) findViewById(R.id.episodeDirectorTextView);
+        this.episodeWriter = (TextView) findViewById(R.id.episodeWriterTextView);
+        this.episodeGuestStars = (TextView) findViewById(R.id.episodeGuestStarsTextView);
 
         populateView();
     }

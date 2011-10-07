@@ -5,6 +5,7 @@
     <string name="seasons">Seasons</string>
     <string name="about">About</string>
     <string name="unknownSeries">Unknown Series</string>
+    <string name="unnamedEpisode">Unnamed Episode</string>
     <string name="reviewNotAvailable">Review not available</string>
     <string name="status_label">Status:</string>
     <string name="airtime_label">Air time: </string>
@@ -16,4 +17,9 @@
     <string name="genre_label">Genre: </string>
     <string name="actors_label">Actors: </string>
     <string name="loading_label">Loading...</string>
+    <string name="overview_label">Overview</string>
+    <string name="director_label">Director:</string>
+    <string name="writer_label">Writer:</string>
+    <string name="episode_overview_label">Overview:</string>
+    <string name="guest_stars_label">Guest stars:</string>
 </resources>
