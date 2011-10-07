@@ -26,24 +26,35 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
     protected abstract StreamFactory factory();
 
     // TODO: turn all these 3 variables into just one -> call everything through attr seriesSample
-    private final String testSeriesId = SampleSeries.CHUCK.id();
-    private final String testSeriesName = SampleSeries.CHUCK.name();
-    private final String testSeriesPoster = SampleSeries.CHUCK.posterResourcePath();
+    private String testSeriesId;
+    private String testSeriesName;
+    private String testSeriesPoster;
 
     private final String nonExistentSeriesId = "0";
 
-    private final List<String> baseSeriesContent = Arrays.asList(
-            "<id>" + testSeriesId + "</id>",
-            "<SeriesName>" + testSeriesName + "</SeriesName>"
-    );
+    private List<String> baseSeriesContent;
+    private List<String> fullSeriesOnlyContent;
+    private List<String> fullSeriesContent;
 
-    private final List<String> fullSeriesOnlyContent = Arrays.asList(
-            "<Episode>", "</Episode>"
-    );
+    @Override
+    public void setUp() {
+        this.testSeriesId = SampleSeries.CHUCK.series().getId();
+        this.testSeriesName = SampleSeries.CHUCK.series().getName();
+        this.testSeriesPoster = SampleSeries.CHUCK.series().getPoster();
 
-    private final List<String> fullSeriesContent = new ArrayList<String>(baseSeriesContent);
-    {
-        fullSeriesContent.addAll(fullSeriesOnlyContent);
+        this.baseSeriesContent = Arrays.asList(
+                "<id>" + testSeriesId + "</id>",
+                "<SeriesName>" + testSeriesName + "</SeriesName>"
+        );
+
+        this.fullSeriesOnlyContent = Arrays.asList(
+                "<Episode>", "</Episode>"
+        );
+
+        this.fullSeriesContent = new ArrayList<String>(baseSeriesContent);
+        {
+            fullSeriesContent.addAll(fullSeriesOnlyContent);
+        }
     }
 
     // Base Series -------------------------------------------------------------

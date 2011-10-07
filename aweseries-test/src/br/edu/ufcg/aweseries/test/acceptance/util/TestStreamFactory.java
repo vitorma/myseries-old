@@ -14,7 +14,7 @@ public class TestStreamFactory implements StreamFactory {
     public InputStream streamForBaseSeries(String seriesId) {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
-        if (seriesId.equals(this.sampleSeries.id())) {
+        if (seriesId.equals(this.sampleSeries.series().getId())) {
             return this.sampleSeries.baseSeriesStream();
         }
 
@@ -26,7 +26,7 @@ public class TestStreamFactory implements StreamFactory {
     public InputStream streamForFullSeries(String seriesId) {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
-        if (seriesId.equals(this.sampleSeries.id())) {
+        if (seriesId.equals(this.sampleSeries.series().getId())) {
             return this.sampleSeries.fullSeriesStream();
         }
 
@@ -38,7 +38,7 @@ public class TestStreamFactory implements StreamFactory {
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
-        if (resourcePath.equals(this.sampleSeries.posterResourcePath())) {
+        if (resourcePath.equals(this.sampleSeries.series().getPoster())) {
             return this.sampleSeries.posterStream();
         }
 

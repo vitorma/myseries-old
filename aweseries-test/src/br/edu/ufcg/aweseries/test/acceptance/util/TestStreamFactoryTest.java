@@ -9,8 +9,13 @@ public class TestStreamFactoryTest extends StreamFactoryTest {
     private StreamFactory streamFactory = new TestStreamFactory();
 
     @Override
-    protected StreamFactory factory() {
+    public void setUp() {
         SampleSeries.injectInstrumentation(getInstrumentation());
+        super.setUp();
+    }
+
+    @Override
+    protected StreamFactory factory() {
         return this.streamFactory;
     }
 }

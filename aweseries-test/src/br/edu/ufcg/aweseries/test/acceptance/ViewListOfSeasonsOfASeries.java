@@ -94,7 +94,7 @@ public class ViewListOfSeasonsOfASeries extends ActivityInstrumentationTestCase2
         assertThat(this.solo().searchText("Chuck's Seasons"), equalTo(true));
     }
 
-    public void testSeriesHasSpecialEpisodes() {
+    public void testUserFollowASeriesThatHasSpecialEpisodesAndFiveSeasons() {
         // Given
         this.driver().follow("Chuck");
 
@@ -102,28 +102,11 @@ public class ViewListOfSeasonsOfASeries extends ActivityInstrumentationTestCase2
         this.driver().viewSeasonsOf("Chuck");
 
         // Then
-        assertThat(this.solo().searchText("Special Episodes"), equalTo(true));
-    }
-
-    public void testSeriesDoesNotHaveSeason0() {
-        // Given
-        this.driver().follow("Chuck");
-
-        // When
-        this.driver().viewSeasonsOf("Chuck");
-
-        // Then
+        // It should have Special Episodes
         assertThat(this.solo().searchText("Season 0"), equalTo(false));
-    }
+        assertThat(this.solo().searchText("Special Episodes"), equalTo(true));
 
-    public void testSeriesHasFiveNormalSeasons() {
-        // Given
-        this.driver().follow("Chuck");
-
-        // When
-        this.driver().viewSeasonsOf("Chuck");
-
-        // Then
+        // And Five usual seasons
         assertThat(this.solo().searchText("Season 1"), equalTo(true));
         assertThat(this.solo().searchText("Season 2"), equalTo(true));
         assertThat(this.solo().searchText("Season 3"), equalTo(true));

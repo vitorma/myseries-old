@@ -4,6 +4,7 @@ import com.jayway.android.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
 import br.edu.ufcg.aweseries.App;
+import br.edu.ufcg.aweseries.gui.EpisodesView;
 import br.edu.ufcg.aweseries.gui.MySeries;
 import br.edu.ufcg.aweseries.gui.SeasonsView;
 import br.edu.ufcg.aweseries.gui.SeriesView;
@@ -74,7 +75,8 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
         this.clearUserData();
     }
 
-    private String testSeriesName = SampleSeries.CHUCK.name();
+    private String testSeriesName = "Chuck";
+    private String testSeasonName = "Season 1";
 
     // Construction ------------------------------------------------------------
     public void testNullSoloThrowsAnException() {
@@ -154,6 +156,40 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
         this.driver().viewSeasonsOf(testSeriesName);
 
         assertThat(this.solo().getCurrentActivity(), instanceOf(SeasonsView.class));
+    }
+
+    public void testViewEpisodesOfANullSeries() {
+        try {
+            this.driver().viewEpisodesOf(null, testSeasonName);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testViewEpisodesOfABlankSeries() {
+        try {
+            this.driver().viewEpisodesOf("   \t ", testSeasonName);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+    public void testViewEpisodesOfANullSeason() {
+        try {
+            this.driver().viewEpisodesOf(testSeriesName, null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testViewEpisodesOfABlankSeason() {
+        try {
+            this.driver().viewEpisodesOf(testSeasonName, "   \t ");
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testViewEpisodesOfASeason() {
+        this.driver().follow(testSeriesName);
+        this.driver().viewEpisodesOf(testSeriesName, testSeasonName);
+
+        assertThat(this.solo().getCurrentActivity(), instanceOf(EpisodesView.class));
     }
 
     public void testViewDetailsOfSeriesAfterViewingItsSeasons() {

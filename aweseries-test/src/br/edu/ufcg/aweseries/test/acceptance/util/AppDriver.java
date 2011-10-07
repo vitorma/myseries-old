@@ -20,7 +20,8 @@ public class AppDriver {
     // TODO: it should iterate all over the SeriesSample samples, storing their data
     private static Map<String, String> seriesNameToId = new HashMap<String, String>();
     {
-        seriesNameToId.put(SampleSeries.CHUCK.name(), SampleSeries.CHUCK.id()); 
+        seriesNameToId.put(SampleSeries.CHUCK.series().getName(),
+                           SampleSeries.CHUCK.series().getId()); 
     }
 
     private Solo solo;
@@ -37,7 +38,7 @@ public class AppDriver {
 
     // Full Actions ------------------------------------------------------------
     public void follow(String seriesName) {
-        this.validateSeriesName(seriesName);
+        this.validateInputName(seriesName);
 
         Series series = retrieveSeriesNamed(seriesName);
 
@@ -77,17 +78,25 @@ public class AppDriver {
         }
     }
     public void viewDetailsOf(String seriesName) {
-        this.validateSeriesName(seriesName);
+        this.validateInputName(seriesName);
 
         this.viewMyFollowedSeries();
         this.solo.clickOnText(seriesReferencedAs(seriesName).getName());
     }
 
     public void viewSeasonsOf(String seriesName) {
-        this.validateSeriesName(seriesName);
+        this.validateInputName(seriesName);
 
         this.viewDetailsOf(seriesName);
         this.solo.clickOnText("Seasons");
+    }
+
+    public void viewEpisodesOf(String seriesName, String seasonName) {
+        this.validateInputName(seriesName);
+        this.validateInputName(seasonName);
+
+        this.viewSeasonsOf(seriesName);
+        this.solo.clickOnText(seasonName);
     }
 
     // Verification ------------------------------------------------------------
@@ -132,7 +141,7 @@ public class AppDriver {
         return App.environment().seriesProvider();
     }
 
-    private void validateSeriesName(String seriesName) {
+    private void validateInputName(String seriesName) {
         if (seriesName == null) {
             throw new IllegalArgumentException("seriesName should not be null");
         }
