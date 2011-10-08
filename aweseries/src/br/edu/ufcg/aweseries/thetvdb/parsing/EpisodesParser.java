@@ -99,7 +99,7 @@ public class EpisodesParser extends TheTVDBParser<List<Episode>> {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withDirector(body);
+                        builder.withDirector(Strings.normalizePipeSeparated(body));
                     }
                 });
 
@@ -107,7 +107,7 @@ public class EpisodesParser extends TheTVDBParser<List<Episode>> {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withWriter(body);
+                        builder.withWriter(Strings.normalizePipeSeparated(body));
                     }
                 });
 
