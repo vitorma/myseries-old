@@ -185,4 +185,9 @@ public class Series {
     public String toString() {
         return this.getName();
     }
+
+    //TODO: Test
+    public boolean hasPoster() {
+        return (this.poster != null) && !Strings.isBlank(this.poster);
+    }
 }
