@@ -1,7 +1,5 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
-import java.io.FileNotFoundException;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -24,12 +22,12 @@ public class TheTVDB {
         if (streamFactory == null) {
             throw new IllegalArgumentException("streamFactory should not be null");
         }
+
         this.streamFactory = streamFactory;
     }
 
-//These 2 methods will be the only ones called to retrieve series in future-------------------------
-
     public Series[] search(String seriesName) {
+        //TODO: Implement it
         return null;
     }
 
@@ -43,60 +41,35 @@ public class TheTVDB {
         }
 
         try {
-            final SeriesParser seriesParser = new SeriesParser(this.streamFactory.streamForFullSeries(seriesId));
+            //TODO: Redesign FullSeriesParser and use it ASAP
+            final SeriesParser seriesParser = new SeriesParser(
+                    this.streamFactory.streamForFullSeries(seriesId));
             final Series series = seriesParser.parse();
-            final EpisodesParser episodesParser = new EpisodesParser(this.streamFactory.streamForFullSeries(seriesId));
+            final EpisodesParser episodesParser = new EpisodesParser(
+                    this.streamFactory.streamForFullSeries(seriesId));
             series.getSeasons().addAllEpisodes(episodesParser.parse());
             return series;
-        } catch (RuntimeException e) {
-            if (e.getCause() instanceof FileNotFoundException) {
-                throw new NonExistentSeriesException(e);
-            }
-            Log.e("TheTVDB", e.getCause().getMessage());
+        } catch (Exception e) {
+            Log.e("TheTVDB", "series coudn't be retrieved from The TVDB server: " + e.getMessage());
             return null;
         }
     }
 
-//--------------------------------------------------------------------------------------------------
-
-    @Deprecated
-    public Series getSeries(String seriesId) {
-        if (seriesId == null) {
-            throw new IllegalArgumentException("seriesId should not be null");
-        }
-        if (Strings.isBlank(seriesId)) {
-            throw new IllegalArgumentException("seriesId should not be blank");
-        }
-        try {
-            return new SeriesParser(streamFactory.streamForBaseSeries(seriesId)).parse();
-        } catch (RuntimeException e) {
-            if (e.getCause() instanceof FileNotFoundException) {
-                throw new NonExistentSeriesException(e);
-            }
-            
-            throw e;
-        }
-    }
-
-//These methods will be the only ones called to retrieve posters in future--------------------------
-
     public Bitmap getPosterOf(Series series) {
-        return null;
+        if (series == null) {
+            throw new IllegalArgumentException("series should not be null");
+        }
+
+        if (!series.hasPoster()) {
+            return null;
+        }
+
+        return BitmapFactory.decodeStream(
+                streamFactory.streamForSeriesPosterAt(series.getPoster()));
     }
 
     public Bitmap getPosterOf(Episode episode) {
+        //TODO: Implement it
         return null;
-    }
-
-//--------------------------------------------------------------------------------------------------
-    @Deprecated
-    public Bitmap getSeriesPoster(Series series) {
-        final String posterPath = series.getPoster();
-
-        if (posterPath == null || posterPath.trim().isEmpty()) {
-            return null;
-        }
-
-        return BitmapFactory.decodeStream(streamFactory.streamForSeriesPosterAt(posterPath));
     }
 }
