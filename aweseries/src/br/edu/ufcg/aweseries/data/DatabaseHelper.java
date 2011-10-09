@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.EpisodeBuilder;
 import br.edu.ufcg.aweseries.model.Series;
@@ -93,37 +94,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void insert(Series s) {
+    public void insert(Series series) {
+        if (series == null) {
+            throw new IllegalArgumentException("series should not be null");
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
-        db.insert("Series", null, this.contentValuesBy(s));
-        for (Episode e : s.getSeasons().getAllEpisodes()) {
+        db.insert("Series", null, this.contentValuesBy(series));
+        for (Episode e : series.getSeasons().getAllEpisodes()) {
             db.insert("Episode", null, this.contentValuesBy(e));
         }
         db.close();
     }
 
-    public void update(Series s) {
+    public void update(Series series) {
+        if (series == null) {
+            throw new IllegalArgumentException("series should not be null");
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
-        db.update("Series", this.contentValuesBy(s), "id=?", new String[] {s.getId()});
+        db.update("Series", this.contentValuesBy(series), "id=?", new String[] {series.getId()});
         db.close();
     }
 
-    public void updateFull(Series s) {
+    public void updateFull(Series series) {
+        if (series == null) {
+            throw new IllegalArgumentException("series should not be null");
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
-        db.update("Series", this.contentValuesBy(s), "id=?", new String[] {s.getId()});
-        for (Episode e : s.getSeasons().getAllEpisodes()) {
+        db.update("Series", this.contentValuesBy(series), "id=?", new String[] {series.getId()});
+        for (Episode e : series.getSeasons().getAllEpisodes()) {
             db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.getId()});
         }
         db.close();
     }
 
-    public void update(Episode e) {
+    public void update(Episode episode) {
+        if (episode == null) {
+            throw new IllegalArgumentException("episode should not be null");
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
-        db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.getId()});
+        db.update("Episode", this.contentValuesBy(episode), "id=?", new String[] {episode.getId()});
         db.close();
     }
 
     public void updateAll(List<Episode> episodes) {
+        if (episodes == null) {
+            throw new IllegalArgumentException("episodes should not be null");
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
         for (Episode e : episodes) {
             db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.getId()});
@@ -131,9 +152,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void delete(Series s) {
+    public void delete(Series series) {
+        if (series == null) {
+            throw new IllegalArgumentException("series should not be null");
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("Series", "id=?", new String[] {s.getId()});
+        db.delete("Series", "id=?", new String[] {series.getId()});
         db.close();
     }
 
@@ -143,20 +168,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Series getSeries(String id) {
+    public int countSeries() {
         final SQLiteDatabase db = this.getReadableDatabase();
-        final Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {id});
-        c.moveToFirst();
+        final Cursor c = db.rawQuery(SELECT_ALL_SERIES, null);
+        final int count = c.getCount();
+        db.close();
+        return count;
+    }
+
+    public boolean hasSeries() {
+        return this.countSeries() > 0;
+    }
+
+    public Series getSeries(String seriesId) {
+        if (seriesId == null) {
+            throw new IllegalArgumentException("series id should not be null");
+        }
+
+        final SQLiteDatabase db = this.getReadableDatabase();
+        final Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {seriesId});
+        if (!c.moveToFirst()) {
+            Log.d("DatabaseHelper", "There is no series with id " + seriesId);
+            return null;
+        }
         final Series s = this.seriesByCurrentPositionOf(c);
         s.getSeasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
         db.close();
         return s;
     }
 
-    public Episode getEpisode(String id) {
+    public Episode getEpisode(String episodeId) {
+        if (episodeId == null) {
+            throw new IllegalArgumentException("episode id should not be null");
+        }
+
         final SQLiteDatabase db = this.getReadableDatabase();
-        final Cursor c = db.rawQuery(SELECT_AN_EPISODE_BY_ID, new String[] {id});
-        c.moveToFirst();
+        final Cursor c = db.rawQuery(SELECT_AN_EPISODE_BY_ID, new String[] {episodeId});
+        if (!c.moveToFirst()) {
+            Log.d("DatabaseHelper", "There is no episode with id " + episodeId);
+            return null;
+        }
         final Episode e = this.episodeByCurrentPositionOf(c);
         db.close();
         return e;
