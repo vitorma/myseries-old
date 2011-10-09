@@ -38,6 +38,14 @@ public class Episode {
         this.seriesId = seriesId;
         this.number = number;
         this.seasonNumber = seasonNumber;
+        this.setDirector("");
+        this.setFirstAired("");
+        this.setGuestStars("");
+        this.setName("");
+        this.setOverview("");
+        this.setPoster("");
+        this.setWriter("");
+        this.setViewed(false);
     }
 
     public String getId() {
@@ -89,30 +97,58 @@ public class Episode {
     }
 
     public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Name should not be null");
+        }
+        
         this.name = name;
     }
 
     public void setFirstAired(String firstAired) {
+        if (firstAired == null) {
+            throw new IllegalArgumentException("First aired should not be null");
+        }
+        
         this.firstAired = firstAired;
     }
 
     public void setOverview(String overview) {
+        if (overview == null) {
+            throw new IllegalArgumentException("Overview should not be null");
+        }
+        
         this.overview = overview;
     }
 
     public void setDirector(String director) {
+        if (director == null) {
+            throw new IllegalArgumentException("Director should not be null");
+        }
+
         this.director = director;
     }
 
     public void setWriter(String writer) {
+        if (writer == null) {
+            throw new IllegalArgumentException("Writer should not be null");
+        }
+
         this.writer = writer;
     }
 
     public void setGuestStars(String guestStars) {
+        if (guestStars == null) {
+            throw new IllegalArgumentException("Guest stars should not be null");
+        }
+        
         this.guestStars = guestStars;
     }
 
     public void setPoster(String poster) {
+        if (poster == null) {
+            throw new IllegalArgumentException("Poster should not be null");
+        }
+        
         this.poster = poster;
     }
 

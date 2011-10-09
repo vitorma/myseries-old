@@ -46,7 +46,7 @@ public class EpisodeTest {
         Assert.assertEquals("", this.episode1.getOverview());
         Assert.assertEquals("", this.episode1.getWriter());
         Assert.assertEquals("", this.episode1.getPoster());
-                
+        Assert.assertEquals(false, this.episode1.isViewed());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -240,7 +240,16 @@ public class EpisodeTest {
 
     @Test
     public final void testSetPoster() {
-        fail("Not yet implemented");
+        String poster = "SomePoster";
+        this.episode1.setPoster(poster);
+        assertEquals(poster, episode1.getPoster());
+        this.episode1.setPoster("");
+        assertEquals("", episode1.getPoster());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public final void testSetPosterNull() {
+        this.episode1.setPoster(null);
     }
 
     @Test
