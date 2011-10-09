@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import br.edu.ufcg.aweseries.data.DatabaseHelper;
 import br.edu.ufcg.aweseries.model.Episode;
-import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.thetvdb.NonExistentSeriesException;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
@@ -52,7 +52,7 @@ public class SeriesProvider {
     public Series[] mySeries() {
         // XXX: It is here because the user can't follow a series yet. Remove it ASAP
         if (this.loadExampleData) {
-            Log.d("SeriesProvider", "Start Loading Series");
+            Log.d("SeriesProvider", "Start loading example data");
             final String chuckId = "80348";
             final String tbbtId = "80379";
             final String gotID = "121361";
@@ -61,54 +61,47 @@ public class SeriesProvider {
 
             String[] seriesIds = new String[]{chuckId, tbbtId, gotID, houseID, youngDraculaId};
             for (String seriesId : seriesIds) {
-                if (this.localSeriesRepository().getSeries(seriesId) == null) {
-                    this.follow(this.getSeries(seriesId));
-                }
+                this.follow(this.getSeries(seriesId));
             }
 
             this.loadExampleData = false;
         }
 
-        // It is very ugly, but is here because 
-        //     return (Series[]) this.followedSeries.toArray();
-        // generates a ClassCastException (I don't know why).
+        //TODO: Implement util.Arrays#toArray
+        return this.localSeriesRepository().getAllSeries().toArray(new Series[] {});
+    }
 
-        Series[] array = {};
-        array = this.localSeriesRepository().getAllSeries().toArray(array);
-        return array;
+    public void follow(Series series) {
+        this.localSeriesRepository().insert(series);
     }
 
     public void wipeFollowedSeries() {
         this.localSeriesRepository().deleteAllSeries();
     }
 
-    public void follow(Series series) {
+    public Series getSeries(String seriesId) {
+        Series series = this.getSeriesFromLocalRepository(seriesId);
+
         if (series == null) {
-            return;
+            series = this.getSeriesFromExternalServer(seriesId);
         }
-        this.localSeriesRepository().insert(series);
+
+        if (series == null) {
+            Log.d("SeriesProvider", "series not found: id = " + seriesId);
+            throw new NonExistentSeriesException();
+        }
+
+        return series;
     }
 
-    /**
-     * @return series data for the requested series id.
-     * @param id series id
-     */
-    public Series getSeries(String id) {
-        //Temporary implementation
-        try {
-            Series s = this.localSeriesRepository().getSeries(id);
-            return s;
-        } catch (Exception e) {
-            return this.theTVDB().getFullSeries(id);
-        }
+    private Series getSeriesFromExternalServer(String seriesId) {
+        Log.d("SeriesProvider", "getting series with id " + seriesId + " from external server");
+        return this.theTVDB().getFullSeries(seriesId);
     }
 
-    @Deprecated
-    public Season[] getSeasons(Series series) {
-        if (series == null) {
-            return new Season[] {};
-        }
-        return series.getSeasons().toArray();
+    private Series getSeriesFromLocalRepository(String seriesId) {
+        Log.d("SeriesProvider", "getting series with id " + seriesId + " from local repository");
+        return this.localSeriesRepository().getSeries(seriesId);
     }
 
     /**
@@ -116,7 +109,7 @@ public class SeriesProvider {
      * generic poster
      */
     public Bitmap getPosterOf(Series series) {
-        Bitmap poster = this.theTVDB().getSeriesPoster(series);
+        Bitmap poster = this.theTVDB().getPosterOf(series);
 
         if (poster == null) {
             return genericPosterImage();
