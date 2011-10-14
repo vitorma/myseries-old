@@ -1,5 +1,7 @@
 package br.edu.ufcg.aweseries;
 
+import java.util.List;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -77,6 +79,16 @@ public class SeriesProvider {
 
     public void wipeFollowedSeries() {
         this.localSeriesRepository().deleteAllSeries();
+    }
+
+    public List<Series> searchSeries(String seriesName) {
+        List<Series> searchResult = this.theTVDB().search(seriesName);
+
+        if (searchResult == null) {
+            throw new RuntimeException("no results found for criteria " + seriesName);
+        }
+
+        return searchResult;
     }
 
     public Series getSeries(String seriesId) {
