@@ -34,5 +34,9 @@
 		<activity android:name=".gui.EpisodeView"
             android:theme="@android:style/Theme.Black.NoTitleBar">
         </activity>
+        <activity android:name=".gui.SeriesSearchView"
+            android:theme="@android:style/Theme.Black.NoTitleBar">
+        </activity>
+        
 	</application>
 </manifest>
