@@ -33,7 +33,7 @@ public class Poster {
 
     @Override
     public int hashCode() {
-        return this.getImage().hashCode();
+        return this.getImage().getRowBytes();
     }
 
     @Override

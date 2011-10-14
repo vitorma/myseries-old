@@ -4,6 +4,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.io.ByteArrayOutputStream;
+
 import junit.framework.TestCase;
 import android.graphics.Bitmap;
 import br.edu.ufcg.aweseries.model.Poster;
@@ -32,17 +35,26 @@ public class PosterTest extends TestCase {
 
     public void testGetImage() {
         assertThat(this.poster.getImage(), notNullValue());
-        assertThat(this.poster.getImage(), equalTo(posterImage));
     }
 
     public void testToByteArrayReturnsImagesBytes() {
-        assertThat(this.poster.toByteArray(), equalTo(SampleBitmap.pixelBytes));
+        assertThat(this.poster.toByteArray(), equalTo(bytesFrom(scaled(posterImage))));
+    }
+
+    private byte[] bytesFrom(Bitmap bmp) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        return outputStream.toByteArray();
+    }
+
+    private Bitmap scaled(Bitmap bmp) {
+        return Bitmap.createScaledBitmap(bmp, 102, 150, true);
     }
 
     public void testEquals() {
-        Poster p1 = new Poster(SampleBitmap.pixel);
-        Poster p2 = new Poster(SampleBitmap.pixel);
-        Poster p3 = new Poster(SampleBitmap.pixel);
+        Poster p1 = new Poster(posterImage);
+        Poster p2 = new Poster(posterImage);
+        Poster p3 = new Poster(posterImage);
 
         for (int i = 0; i < 1000; ++i) {
             assertThat(p1, equalTo(p1));
@@ -56,8 +68,8 @@ public class PosterTest extends TestCase {
     }
 
     public void testHashCode() {
-        Poster p1 = new Poster(SampleBitmap.pixel);
-        Poster p2 = new Poster(SampleBitmap.pixel);
+        Poster p1 = new Poster(posterImage);
+        Poster p2 = new Poster(posterImage);
 
         for (int i = 0; i < 1000; ++i) {
             assertThat(p1.hashCode(), equalTo(p1.hashCode()));
