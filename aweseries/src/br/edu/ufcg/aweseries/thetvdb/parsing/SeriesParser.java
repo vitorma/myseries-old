@@ -27,8 +27,14 @@ public class SeriesParser {
     }
 
     public Series parse(String seriesId) {
-        final SeriesBuilder builder = new SeriesBuilder();
+        if (seriesId == null) {
+            throw new IllegalArgumentException("seriesId should not be null");
+        }
+        if (Strings.isBlank(seriesId)) {
+            throw new IllegalArgumentException("seriesId should not be blank");
+        }
 
+        final SeriesBuilder builder = new SeriesBuilder();
         final RootElement root = new RootElement("Data");
         final Element element = root.getChild("Series");
 

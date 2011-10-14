@@ -1,12 +1,14 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
+import java.util.List;
+
 import android.util.Log;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.parsing.EpisodesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
+import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesSearchParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.stream.TheTVDBStreamFactory;
-import br.edu.ufcg.aweseries.util.Strings;
 
 public class TheTVDB {
     private final StreamFactory streamFactory;
@@ -23,19 +25,17 @@ public class TheTVDB {
         this.streamFactory = streamFactory;
     }
 
-    public Series[] search(String seriesName) {
-        //TODO: Implement it
-        return null;
+    public List<Series> search(String seriesName) {
+        try {
+            final SeriesSearchParser parser = new SeriesSearchParser(this.streamFactory); 
+            return parser.parse(seriesName);
+        } catch (Exception e) {
+            Log.e("TheTVDB", "no results found for criteria " + seriesName + ": " + e.getMessage());
+            return null;
+        }
     }
 
     public Series getFullSeries(String seriesId) {
-        if (seriesId == null) {
-            throw new IllegalArgumentException("seriesId should not be null");
-        }
-        if (Strings.isBlank(seriesId)) {
-            throw new IllegalArgumentException("seriesId should not be blank");
-        }
-
         try {
             //TODO: Redesign FullSeriesParser and use it ASAP
             final SeriesParser seriesParser = new SeriesParser(this.streamFactory);
