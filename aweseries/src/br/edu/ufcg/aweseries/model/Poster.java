@@ -8,13 +8,17 @@ import android.graphics.Bitmap;
 
 public class Poster {
 
+    private static final int POSTER_WIDTH = 102; //px
+    private static final int POSTER_HEIGHT = 150; //px
+
     private Bitmap image;
 
     public Poster(Bitmap image) {
         if (image == null) {
             throw new IllegalArgumentException("image should not be null");
         }
-        this.image = image;
+
+        this.image = Bitmap.createScaledBitmap(image, POSTER_WIDTH, POSTER_HEIGHT, true);
     }
 
     public Bitmap getImage() {

@@ -1,9 +1,8 @@
 package br.edu.ufcg.aweseries.test.acceptance;
 
-import br.edu.ufcg.aweseries.test.acceptance.util.AcceptanceTestCase;
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import br.edu.ufcg.aweseries.test.acceptance.util.AcceptanceTestCase;
 
 public class ViewListOfFollowedSeries extends AcceptanceTestCase {
 
@@ -15,15 +14,9 @@ public class ViewListOfFollowedSeries extends AcceptanceTestCase {
         this.driver().viewMyFollowedSeries();
 
         // Then
+        assertThat(this.solo().searchText("My Series"), equalTo(true));
+
         this.driver().assertThatSeries("Chuck").name().isShown();
         this.driver().assertThatSeries("Chuck").status().isShown();
-    }
-
-    public void testViewTitle() {
-        // When
-        this.driver().viewMyFollowedSeries();
-
-        // Then
-        assertThat(this.solo().searchText("My Series"), equalTo(true));
     }
 }

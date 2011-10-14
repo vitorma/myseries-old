@@ -37,11 +37,11 @@ public class Seasons {
         }
 
         if (episodes.isEmpty()) {
-            Log.e("Seasons", "episodes list is empty");
+            Log.w("Seasons", "episodes list is empty");
         }
 
         for (Episode e : episodes) {
-            Log.w("Seasons", "adding episode " + e);
+            Log.d("Seasons", "adding episode " + e);
             this.addEpisode(e);
         }
     }

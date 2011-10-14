@@ -131,9 +131,7 @@ public class SeriesParser {
     private Bitmap scaledBitmapFrom(String resourcePath) {
         return Strings.isBlank(resourcePath)
                ? null
-               : Bitmap.createScaledBitmap(
-                         BitmapFactory.decodeStream(
-                                 this.streamFactory.streamForSeriesPosterAt(resourcePath)),
-                         102, 150, true);
+               : BitmapFactory.decodeStream(
+                       this.streamFactory.streamForSeriesPosterAt(resourcePath));
     }
 }
