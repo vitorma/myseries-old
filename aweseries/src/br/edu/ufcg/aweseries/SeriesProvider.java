@@ -117,7 +117,7 @@ public class SeriesProvider {
             return this.genericPosterImage();
         }
 
-        return Bitmap.createScaledBitmap(series.getPoster().getImage(), 102, 150, true);
+        return series.getPoster().getImage();
     }
 
     /**

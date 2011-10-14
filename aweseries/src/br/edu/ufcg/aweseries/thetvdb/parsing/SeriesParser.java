@@ -112,12 +112,13 @@ public class SeriesParser {
         element.getChild("poster").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        builder.withPoster((Bitmap) SeriesParser.this.bitmapFrom(body));
+                        builder.withPoster((Bitmap) SeriesParser.this.scaledBitmapFrom(body));
                     }
                 });
 
         try {
-            Xml.parse(this.streamFactory.streamForFullSeries(seriesId), Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(this.streamFactory.streamForFullSeries(seriesId),
+                    Xml.Encoding.UTF_8, root.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
@@ -127,12 +128,12 @@ public class SeriesParser {
         return builder.build();
     }
 
-    private Bitmap bitmapFrom(String resourcePath) {
+    private Bitmap scaledBitmapFrom(String resourcePath) {
         return Strings.isBlank(resourcePath)
                ? null
                : Bitmap.createScaledBitmap(
-                   BitmapFactory.decodeStream(
-                       this.streamFactory.streamForSeriesPosterAt(resourcePath)),
-                       102, 150, true);
+                         BitmapFactory.decodeStream(
+                                 this.streamFactory.streamForSeriesPosterAt(resourcePath)),
+                         102, 150, true);
     }
 }

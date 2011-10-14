@@ -1,8 +1,6 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
-import android.graphics.Bitmap;
 import android.util.Log;
-import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.parsing.EpisodesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
@@ -42,31 +40,15 @@ public class TheTVDB {
             //TODO: Redesign FullSeriesParser and use it ASAP
             final SeriesParser seriesParser = new SeriesParser(this.streamFactory);
             final Series series = seriesParser.parse(seriesId);
+
             final EpisodesParser episodesParser = new EpisodesParser(
                     this.streamFactory.streamForFullSeries(seriesId));
             series.getSeasons().addAllEpisodes(episodesParser.parse());
+
             return series;
         } catch (Exception e) {
             Log.e("TheTVDB", "series coudn't be retrieved from The TVDB server: " + e.getMessage());
             return null;
         }
-    }
-
-    @Deprecated
-    public Bitmap getPosterOf(Series series) {
-        if (series == null) {
-            throw new IllegalArgumentException("series should not be null");
-        }
-
-        if (!series.hasPoster()) {
-            return null;
-        }
-
-        return null;
-    }
-
-    public Bitmap getPosterOf(Episode episode) {
-        //TODO: Implement it
-        return null;
     }
 }
