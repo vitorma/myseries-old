@@ -6,45 +6,43 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import br.edu.ufcg.aweseries.thetvdb.parsing.MirrorsParser;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class UrlSupplier {
-	private String apiKey;
-	private Mirrors mirrors;
+    private String apiKey;
+    private Mirrors mirrors;
 
-	public UrlSupplier(String apiKey) {
-		this.apiKey = apiKey;
-	}
+    public UrlSupplier(String apiKey) {
+        this.apiKey = apiKey;
+    }
 
-	//MIRRORS-------------------------------------------------------------------
-	
-	private String getMirrorUrl() {
-	    return "http://thetvdb.com/api/" + this.apiKey + "/mirrors.xml";
-	}
+    //MIRRORS---------------------------------------------------------------------------------------
 
-	private void loadMirrors() {
-	    MirrorsParser parser = new MirrorsParser(
-	    		streamFor(this.getMirrorUrl()));
-	    this.mirrors = parser.parse();
-	}
-	
-	private InputStream streamFor(String url) {
-		try {
-			return new URL(url).openConnection().getInputStream();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-	}
+    private String getMirrorUrl() {
+        return "http://thetvdb.com/api/" + this.apiKey + "/mirrors.xml";
+    }
 
-	private String getMirrorPath(MirrorType type) {
-	    if (this.mirrors == null) {
-	        this.loadMirrors();
-	    }
-	    return this.mirrors.getRandomMirror(type).getPath();
-	}
+    private void loadMirrors() {
+        this.mirrors = new MirrorsParser(streamFor(this.getMirrorUrl())).parse();
+    }
+
+    private InputStream streamFor(String url) {
+        try {
+            return new URL(url).openConnection().getInputStream();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getMirrorPath(MirrorType type) {
+        if (this.mirrors == null) {
+            this.loadMirrors();
+        }
+
+        return this.mirrors.getRandomMirror(type).getPath();
+    }
 
     private StringBuilder getXmlUrl() {
         return new StringBuilder(this.getMirrorPath(MirrorType.XML))
@@ -62,30 +60,31 @@ public class UrlSupplier {
                 .append("/api/").append(this.apiKey);
     }
 
-    //SERIES ------------------------------------------------------------------
-    
-    private StringBuilder getBaseSeriesUrlBuilder(String id) {
+    //SERIES ---------------------------------------------------------------------------------------
+
+    private StringBuilder getSeriesUrlBuilder(String id) {
         return this.getXmlUrl().append("/series/").append(id);
     }
 
     public String getBaseSeriesUrl(String id) {
-        return this.getBaseSeriesUrlBuilder(id).toString();
+        return this.getSeriesUrlBuilder(id).toString();
     }
 
     public String getFullSeriesUrl(String id) {
-        return getBaseSeriesUrlBuilder(id).append("/all/").toString();
+        return getSeriesUrlBuilder(id).append("/all/").toString();
     }
 
     public String getSeriesSearchUrl(String name) {
-		return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + name;
-	}
+        return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + name;
+    }
 
-    //POSTERS -----------------------------------------------------------------
+    //POSTERS --------------------------------------------------------------------------------------
 
     public String getSeriesPosterUrl(String filename) {
-    	if (filename == null || filename.trim().isEmpty()) {
-    		return null;
-    	}
-    	return this.getBannerUrl().append(filename).toString();
+        if (filename == null || Strings.isBlank(filename)) {
+            return null;
+        }
+
+        return this.getBannerUrl().append(filename).toString();
     }
 }
