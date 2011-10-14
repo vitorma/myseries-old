@@ -1,6 +1,9 @@
 package br.edu.ufcg.aweseries.test.util;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.FileNotFoundException;
@@ -19,7 +22,9 @@ import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
  * A set of tests that every StreamFactory should pass in order to properly run with AweSeries.
  */
 public abstract class StreamFactoryTest extends InstrumentationTestCase {
-    
+
+    private static final String NON_EXISTENT_POSTER_RESOURCE_PATH = "nonExistent";
+
     /**
      * Hook for testing the same properties on other StreamFactories
      */
@@ -38,9 +43,11 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
     @Override
     public void setUp() {
+        SampleSeries.injectInstrumentation(getInstrumentation());
+
         this.testSeriesId = SampleSeries.CHUCK.series().getId();
         this.testSeriesName = SampleSeries.CHUCK.series().getName();
-        this.testSeriesPoster = SampleSeries.CHUCK.series().getPoster();
+        this.testSeriesPoster = SampleSeries.CHUCK.posterResourcePath();
 
         this.baseSeriesContent = Arrays.asList(
                 "<id>" + testSeriesId + "</id>",
@@ -157,8 +164,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
     }
 
     public void testGettingSeriesPosterWithNonExistentResourcePathThrowsException() {
-        String nonExistentResourcePath = testSeriesPoster.substring(0,
-                                                               testSeriesPoster.length() - 3);
+        String nonExistentResourcePath = NON_EXISTENT_POSTER_RESOURCE_PATH;
 
         try {
             factory().streamForSeriesPosterAt(nonExistentResourcePath);

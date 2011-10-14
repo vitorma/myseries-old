@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import br.edu.ufcg.aweseries.model.Poster;
 import br.edu.ufcg.aweseries.model.Seasons;
 import br.edu.ufcg.aweseries.model.Series;
 
@@ -31,7 +32,7 @@ public class SeriesTest {
         this.series1.setOverview("overview 1");
         this.series1.setGenres("genres 1");
         this.series1.setActors("actors 1");
-        this.series1.setPoster("poster 1");
+        this.series1.setPoster(Mockito.mock(Poster.class));
         this.series1.setSeasons(Mockito.mock(Seasons.class));
     }
 
@@ -120,7 +121,7 @@ public class SeriesTest {
 
     @Test
     public final void testGetPoster() {
-        Assert.assertEquals("poster 1", this.series1.getPoster());
+        Assert.assertNotNull(this.series1.getPoster());
     }
 
     @Test
@@ -236,16 +237,12 @@ public class SeriesTest {
         Assert.assertEquals("actors 2", this.series2.getActors());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public final void testSetNullPoster() {
-        this.series2.setPoster(null);
-    }
-
     @Test
     public final void testSetPoster() {
-        Assert.assertNull(this.series2.getPoster());
-        this.series2.setPoster("poster 2");
-        Assert.assertEquals("poster 2", this.series2.getPoster());
+        Poster p = Mockito.mock(Poster.class);
+        Assert.assertFalse(p.equals(this.series1.getPoster()));
+        this.series1.setPoster(p);
+        Assert.assertEquals(p, this.series1.getPoster());
     }
 
     @Test(expected = IllegalArgumentException.class)

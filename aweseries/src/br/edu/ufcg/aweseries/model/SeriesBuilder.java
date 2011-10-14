@@ -1,5 +1,8 @@
 package br.edu.ufcg.aweseries.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 
 public class SeriesBuilder {
     private static final String DEFAULT_STRING = "";
@@ -15,7 +18,7 @@ public class SeriesBuilder {
     private String overview;
     private String genres;
     private String actors;
-    private String poster;
+    private Bitmap posterBitmap;
     private Seasons seasons;
 
     public SeriesBuilder withId(String id) {
@@ -73,8 +76,17 @@ public class SeriesBuilder {
         return this;
     }
 
-    public SeriesBuilder withPoster(String poster) {
-        this.poster = poster;
+    public SeriesBuilder withPoster(Bitmap posterBitmap) {
+        this.posterBitmap = posterBitmap;
+        return this;
+    }
+
+    public SeriesBuilder withPoster(byte[] posterBitmap) {
+        if (posterBitmap == null) {
+            this.posterBitmap = null;
+        } else {
+            this.posterBitmap = BitmapFactory.decodeByteArray(posterBitmap, 0, posterBitmap.length);
+        }
         return this;
     }
 
@@ -95,7 +107,7 @@ public class SeriesBuilder {
         series.setOverview(this.overview != null ? this.overview : DEFAULT_STRING);
         series.setGenres(this.genres != null ? this.genres : DEFAULT_STRING);
         series.setActors(this.actors != null ? this.actors : DEFAULT_STRING);
-        series.setPoster(this.poster != null ? this.poster : DEFAULT_STRING);
+        series.setPoster(this.posterBitmap != null ? new Poster(this.posterBitmap) : null);
         series.setSeasons(this.seasons != null ? this.seasons : new Seasons());
 
         return series;

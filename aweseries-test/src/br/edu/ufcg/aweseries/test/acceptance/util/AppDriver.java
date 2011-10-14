@@ -1,5 +1,8 @@
 package br.edu.ufcg.aweseries.test.acceptance.util;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,13 +16,10 @@ import br.edu.ufcg.aweseries.test.util.SampleSeries;
 
 import com.jayway.android.robotium.solo.Solo;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 public class AppDriver {
 
     // TODO: it should iterate all over the SeriesSample samples, storing their data
-    private static Map<String, String> seriesNameToId = new HashMap<String, String>();
+    private Map<String, String> seriesNameToId = new HashMap<String, String>();
     {
         seriesNameToId.put(SampleSeries.CHUCK.series().getName(),
                            SampleSeries.CHUCK.series().getId()); 

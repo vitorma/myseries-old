@@ -14,7 +14,7 @@ public class Series {
     private String overview;
     private String genres;
     private String actors;
-    private String poster;
+    private Poster poster;
     private Seasons seasons;
 
     public Series(String id, String name) {
@@ -74,7 +74,7 @@ public class Series {
         return this.actors;
     }
 
-    public String getPoster() {
+    public Poster getPoster() {
         return this.poster;
     }
 
@@ -154,11 +154,7 @@ public class Series {
         this.actors = actors;
     }
 
-    public void setPoster(String poster) {
-        if (poster == null) {
-            throw new IllegalArgumentException("invalid poster for series");
-        }
-
+    public void setPoster(Poster poster) {
         this.poster = poster;
     }
 
@@ -188,6 +184,6 @@ public class Series {
 
     //TODO: Test
     public boolean hasPoster() {
-        return (this.poster != null) && !Strings.isBlank(this.poster);
+        return this.poster != null;
     }
 }

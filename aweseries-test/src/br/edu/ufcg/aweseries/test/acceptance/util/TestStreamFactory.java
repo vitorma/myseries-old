@@ -38,7 +38,7 @@ public class TestStreamFactory implements StreamFactory {
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
-        if (resourcePath.equals(this.sampleSeries.series().getPoster())) {
+        if (resourcePath.equals(this.sampleSeries.posterResourcePath())) {
             return this.sampleSeries.posterStream();
         }
 

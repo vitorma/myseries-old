@@ -109,13 +109,15 @@ public class SeriesProvider {
      * generic poster
      */
     public Bitmap getPosterOf(Series series) {
-        Bitmap poster = this.theTVDB().getPosterOf(series);
-
-        if (poster == null) {
-            return genericPosterImage();
+        if (series == null) {
+            throw new IllegalArgumentException("series should not be null");
         }
 
-        return Bitmap.createScaledBitmap(poster, 102, 150, true);
+        if (!series.hasPoster()) {
+            return this.genericPosterImage();
+        }
+
+        return Bitmap.createScaledBitmap(series.getPoster().getImage(), 102, 150, true);
     }
 
     /**

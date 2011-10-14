@@ -1,26 +1,32 @@
 package br.edu.ufcg.aweseries.thetvdb.parsing;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.xml.sax.SAXException;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.model.SeriesBuilder;
+import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.util.Strings;
 
-public class SeriesParser extends TheTVDBParser<Series> {
+public class SeriesParser {
+    private StreamFactory streamFactory;
 
-    public SeriesParser(InputStream seriesInputStream) {
-        super(seriesInputStream);
+    public SeriesParser(StreamFactory streamFactory) {
+        if (streamFactory == null) {
+            throw new IllegalArgumentException("streamFactory should not be null");
+        }
+
+        this.streamFactory = streamFactory;
     }
 
-    @Override
-    public Series parse() {
+    public Series parse(String seriesId) {
         final SeriesBuilder builder = new SeriesBuilder();
 
         final RootElement root = new RootElement("Data");
@@ -106,12 +112,12 @@ public class SeriesParser extends TheTVDBParser<Series> {
         element.getChild("poster").setEndTextElementListener(
                 new EndTextElementListener() {
                     public void end(String body) {
-                        builder.withPoster(body);
+                        builder.withPoster((Bitmap) SeriesParser.this.bitmapFrom(body));
                     }
                 });
 
         try {
-            Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(this.streamFactory.streamForFullSeries(seriesId), Xml.Encoding.UTF_8, root.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
@@ -119,5 +125,14 @@ public class SeriesParser extends TheTVDBParser<Series> {
         }
 
         return builder.build();
+    }
+
+    private Bitmap bitmapFrom(String resourcePath) {
+        return Strings.isBlank(resourcePath)
+               ? null
+               : Bitmap.createScaledBitmap(
+                   BitmapFactory.decodeStream(
+                       this.streamFactory.streamForSeriesPosterAt(resourcePath)),
+                       102, 150, true);
     }
 }

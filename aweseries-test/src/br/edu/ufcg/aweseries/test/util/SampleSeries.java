@@ -8,9 +8,20 @@ import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.test.R;
 import br.edu.ufcg.aweseries.thetvdb.parsing.EpisodesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
+import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public abstract class SampleSeries {
     public static final SampleSeries CHUCK = new SampleSeries() {
+
+        @Override
+        public String posterResourcePath() {
+            return "posters/80348-16.jpg";
+        }
+
+        @Override
+        protected String id() {
+            return "80348";
+        }
 
         @Override
         public InputStream baseSeriesStream() {
@@ -28,16 +39,36 @@ public abstract class SampleSeries {
         }
     };
 
+    public abstract String posterResourcePath();
+
     public abstract InputStream baseSeriesStream();
     public abstract InputStream fullSeriesStream();
     public abstract InputStream posterStream();
+
+    protected abstract String id();
 
     /**
      * @see TheTVDB.getFullSeries()
      */
     public Series series() {
-        final SeriesParser seriesParser = new SeriesParser(fullSeriesStream());
-        final Series series = seriesParser.parse();
+        final SeriesParser seriesParser = new SeriesParser(new StreamFactory() {
+            @Override
+            public InputStream streamForBaseSeries(String seriesId) {
+                return baseSeriesStream();
+            }
+
+            @Override
+            public InputStream streamForFullSeries(String seriesId) {
+                return fullSeriesStream();
+            }
+
+            @Override
+            public InputStream streamForSeriesPosterAt(String resourcePath) {
+                return posterStream();
+            }
+        });
+
+        final Series series = seriesParser.parse(this.id());
 
         final EpisodesParser episodesParser = new EpisodesParser(fullSeriesStream());
         series.getSeasons().addAllEpisodes(episodesParser.parse());

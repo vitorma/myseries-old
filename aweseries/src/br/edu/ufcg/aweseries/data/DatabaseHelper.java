@@ -33,7 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         "overview TEXT NOT NULL, " +
         "genres TEXT NOT NULL, " +
         "actors TEXT NOT NULL, " +
-        "poster TEXT NOT NULL);";
+        "poster BLOB);";
 
     private static final String CREATE_TABLE_EPISODES =
         "CREATE TABLE Episode (" +
@@ -248,7 +248,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put("overview", s.getOverview());
         cv.put("genres", s.getGenres());
         cv.put("actors", s.getActors());
-        cv.put("poster", s.getPoster());
+        cv.put("poster", (s.getPoster() != null) ? s.getPoster().toByteArray(): null);
         return cv;
     }
 
@@ -299,7 +299,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             .withOverview(c.getString(c.getColumnIndex("overview")))
             .withGenres(c.getString(c.getColumnIndex("genres")))
             .withActors(c.getString(c.getColumnIndex("actors")))
-            .withPoster(c.getString(c.getColumnIndex("poster")))
+            .withPoster(c.getBlob(c.getColumnIndex("poster")))
             .build();
     }
 }
