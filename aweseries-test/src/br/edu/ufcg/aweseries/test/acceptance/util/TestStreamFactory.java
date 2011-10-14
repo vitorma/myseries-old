@@ -35,6 +35,12 @@ public class TestStreamFactory implements StreamFactory {
     }
 
     @Override
+    public InputStream streamForSeriesSearch(String seriesName) {
+        //TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
@@ -55,5 +61,3 @@ public class TestStreamFactory implements StreamFactory {
         }
     }
 }
-
-

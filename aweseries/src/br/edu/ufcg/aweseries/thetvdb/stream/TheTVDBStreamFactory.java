@@ -7,16 +7,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlSupplier;
-
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class TheTVDBStreamFactory implements StreamFactory {
-
     private UrlSupplier urlSupplier;
 
     public TheTVDBStreamFactory(String apiKey) {
         if (apiKey == null) {
             throw new IllegalArgumentException("apiKey should not be null");
         }
+
         this.urlSupplier = new UrlSupplier(apiKey);
     }
 
@@ -36,9 +36,14 @@ public class TheTVDBStreamFactory implements StreamFactory {
         return buffered(streamFor(fullSeriesUrl));
     }
 
-    /**
-     * @return an InputStream for the poster at <bannermirror>/resourcePaths
-     */
+    @Override
+    public InputStream streamForSeriesSearch(String seriesName) {
+        this.checkIfItIsAValidUrlSuffix(seriesName, "seriesName");
+
+        String seriesSearchUrl = this.urlSupplier.getSeriesSearchUrl(seriesName);
+        return buffered(streamFor(seriesSearchUrl));
+    }
+
     @Override
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
@@ -51,7 +56,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
         if (suffix == null) {
             throw new IllegalArgumentException(parameterName + " should not be null");
         }
-        if (suffix.trim().isEmpty()) {
+        if (Strings.isBlank(suffix)) {
             throw new IllegalArgumentException(parameterName + " should not be blank");
         }
     }
@@ -64,10 +69,8 @@ public class TheTVDBStreamFactory implements StreamFactory {
         try {
             return new URL(url).openConnection().getInputStream();
         } catch (MalformedURLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

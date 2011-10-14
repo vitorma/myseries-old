@@ -63,6 +63,12 @@ public abstract class SampleSeries {
             }
 
             @Override
+            public InputStream streamForSeriesSearch(String seriesName) {
+                //TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
             public InputStream streamForSeriesPosterAt(String resourcePath) {
                 return posterStream();
             }
