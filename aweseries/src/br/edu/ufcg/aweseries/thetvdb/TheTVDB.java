@@ -2,7 +2,6 @@ package br.edu.ufcg.aweseries.thetvdb;
 
 import java.util.List;
 
-import android.util.Log;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.parsing.EpisodesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
@@ -30,7 +29,6 @@ public class TheTVDB {
             final SeriesSearchParser parser = new SeriesSearchParser(this.streamFactory); 
             return parser.parse(seriesName);
         } catch (Exception e) {
-            Log.e("TheTVDB", "no results found for criteria " + seriesName + ": " + e.getMessage());
             return null;
         }
     }
@@ -47,7 +45,6 @@ public class TheTVDB {
 
             return series;
         } catch (Exception e) {
-            Log.e("TheTVDB", "series coudn't be retrieved from The TVDB server: " + e.getMessage());
             return null;
         }
     }
