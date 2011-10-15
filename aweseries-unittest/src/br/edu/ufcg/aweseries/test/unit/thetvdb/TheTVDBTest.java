@@ -1,6 +1,7 @@
 package br.edu.ufcg.aweseries.test.unit.thetvdb;
 
 import static org.mockito.Mockito.mock;
+import junit.framework.Assert;
 
 import org.junit.Test;
 
@@ -23,19 +24,21 @@ public class TheTVDBTest {
 
     // getFullSeries ------------------------------------------------------------------------------
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGettingNullFullSeries() {
         StreamFactory streamFactoryMock = mock(StreamFactory.class);
 
         TheTVDB theTVBD = new TheTVDB(streamFactoryMock);
-        theTVBD.getFullSeries(null);
+        Assert.assertNull("TheTVDB should return a null Series for a null seriesId",
+                theTVBD.getFullSeries(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGettingBlankFullSeries() {
         StreamFactory streamFactoryMock = mock(StreamFactory.class);
 
         TheTVDB theTVBD = new TheTVDB(streamFactoryMock);
-        theTVBD.getFullSeries("   \t \t ");
+        Assert.assertNull("TheTVDB should return a null Series for a blank seriesId",
+                theTVBD.getFullSeries("   \t \t "));
     }
 }
