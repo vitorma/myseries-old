@@ -22,4 +22,6 @@
     <string name="writer_label">Writer:</string>
     <string name="episode_overview_label">Overview:</string>
     <string name="guest_stars_label">Guest stars:</string>
+    <string name="followSeries">Follow</string>
+    <string name="back">Back</string>
 </resources>
