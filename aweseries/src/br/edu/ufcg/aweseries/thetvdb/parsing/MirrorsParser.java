@@ -35,6 +35,7 @@ public class MirrorsParser extends TheTVDBParser<Mirrors> {
 
         element.setEndElementListener(
                 new EndElementListener() {
+                    @Override
                     public void end() {
                         mirrors.add(builder.build());
                     }
@@ -43,6 +44,7 @@ public class MirrorsParser extends TheTVDBParser<Mirrors> {
 
         element.getChild("mirrorpath").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withPath(body);
                     }
@@ -51,8 +53,9 @@ public class MirrorsParser extends TheTVDBParser<Mirrors> {
 
         element.getChild("typemask").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
-                    	builder.withTypeMask(body);
+                        builder.withTypeMask(body);
                     }
                 }
         );
