@@ -54,6 +54,7 @@ public class SeriesProvider {
     public Series[] mySeries() {
         // XXX: It is here because the user can't follow a series yet. Remove it ASAP
         if (this.loadExampleData) {
+            this.wipeFollowedSeries();
             Log.d("SeriesProvider", "Start loading example data");
             final String chuckId = "80348";
             final String tbbtId = "80379";
@@ -99,8 +100,9 @@ public class SeriesProvider {
         }
 
         if (series == null) {
-            Log.d("SeriesProvider", "series not found: id = " + seriesId);
-            throw new NonExistentSeriesException();
+            final String message = "series not found: id = " + seriesId;
+            Log.d("SeriesProvider", message);
+            throw new NonExistentSeriesException(message);
         }
 
         return series;
