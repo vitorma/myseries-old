@@ -1,7 +1,5 @@
 package br.edu.ufcg.aweseries.gui;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -45,10 +43,8 @@ public class SeriesSearchView extends Activity {
                         .findViewById(R.id.searchResultsListView);
 
                 try {
-                    final List<Series> searchResults = App.environment().seriesProvider()
-                            .searchSeries(searchField.getText().toString());
-
-                    final Series[] searchResultsArray = (Series[]) searchResults.toArray();
+                    final Series[] searchResultsArray = App.environment().seriesProvider()
+                    .searchSeries(searchField.getText().toString());
 
                     resultsListView.setAdapter(new SeriesItemViewAdapter(SeriesSearchView.this,
                             R.layout.list_item, searchResultsArray));
