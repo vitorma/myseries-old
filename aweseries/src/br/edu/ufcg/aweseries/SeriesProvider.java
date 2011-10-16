@@ -95,14 +95,14 @@ public class SeriesProvider {
         this.localSeriesRepository().deleteAllSeries();
     }
 
-    public List<Series> searchSeries(String seriesName) {
+    public Series[] searchSeries(String seriesName) {
         List<Series> searchResult = this.theTVDB().search(seriesName);
 
         if (searchResult == null) {
             throw new RuntimeException("no results found for criteria " + seriesName);
         }
-
-        return searchResult;
+        //TODO: Implement util.Arrays#toArray
+        return searchResult.toArray(new Series[] {});
     }
 
     public Series getSeries(String seriesId) {
