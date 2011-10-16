@@ -1,6 +1,8 @@
 package br.edu.ufcg.aweseries;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -70,8 +72,19 @@ public class SeriesProvider {
             this.loadExampleData = false;
         }
 
+        return this.sortSeriesByName(this.localSeriesRepository().getAllSeries());
+    }
+
+    private Series[] sortSeriesByName(List<Series> series) {
+        TreeSet<Series> sorted = new TreeSet<Series>(new Comparator<Series>() {
+            @Override
+            public int compare(Series s1, Series s2) {
+                return s1.getName().compareTo(s2.getName());
+            }
+        });
+        sorted.addAll(series);
         //TODO: Implement util.Arrays#toArray
-        return this.localSeriesRepository().getAllSeries().toArray(new Series[] {});
+        return sorted.toArray(new Series[] {});
     }
 
     public void follow(Series series) {

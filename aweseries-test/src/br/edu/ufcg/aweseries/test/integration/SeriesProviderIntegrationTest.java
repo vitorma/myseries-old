@@ -1,9 +1,8 @@
 package br.edu.ufcg.aweseries.test.integration;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import junit.framework.TestCase;
-
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Series;
@@ -16,11 +15,13 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  */
 public class SeriesProviderIntegrationTest extends TestCase {
 
+    @Override
     public void setUp() {
         App.environment().setTheTVDBTo(new TheTVDB(new TestStreamFactory()));
         App.environment().seriesProvider().loadExampleData = false;
     }
 
+    @Override
     public void tearDown() {
         this.seriesProvider().wipeFollowedSeries();
     }
