@@ -13,9 +13,8 @@
 			<requestFocus></requestFocus>
 		</AutoCompleteTextView>
 
-		<ImageButton android:src="@android:drawable/ic_search_category_default"
-			android:layout_width="52dp" android:layout_height="match_parent"
-			android:background="@drawable/seasons_button" android:id="@+id/searchButton">
+		<ImageButton android:layout_width="52dp" android:layout_height="match_parent"
+			android:background="@drawable/seasons_button" android:id="@+id/searchButton" android:src="@drawable/ic_search_category_default">
 		</ImageButton>
 	</LinearLayout>
 
