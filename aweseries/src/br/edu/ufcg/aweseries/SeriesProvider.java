@@ -56,7 +56,6 @@ public class SeriesProvider {
     public Series[] mySeries() {
         // XXX: It is here because the user can't follow a series yet. Remove it ASAP
         if (this.loadExampleData) {
-            this.wipeFollowedSeries();
             Log.d("SeriesProvider", "Start loading example data");
             final String chuckId = "80348";
             final String tbbtId = "80379";
@@ -66,7 +65,12 @@ public class SeriesProvider {
 
             String[] seriesIds = new String[]{chuckId, tbbtId, gotID, houseID, youngDraculaId};
             for (String seriesId : seriesIds) {
-                this.follow(this.getSeries(seriesId));
+                try {
+                    this.follow(this.getSeries(seriesId));
+                } catch (NonExistentSeriesException e) {
+                    Log.w("SeriesProvider", e.getMessage());
+                    continue;
+                }
             }
 
             this.loadExampleData = false;
