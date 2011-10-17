@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.method.KeyListener;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -33,13 +30,6 @@ public class SeriesSearchView extends Activity {
 
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
-        this.setupSearchFieldReturnListener();
-    }
-
-    private void setupSearchFieldReturnListener() {
-        final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchView.this
-                .findViewById(R.id.searchField);
-            
     }
 
     /**
@@ -80,33 +70,96 @@ public class SeriesSearchView extends Activity {
      */
     private void setupItemClickListener() {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /** Current selected item. */
+            private Series selectedItem;
+
+            /** Custom dialog to show the overview of a series. */
+            private Dialog dialog;
+
+            private boolean userFollowsSeries = false;
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Dialog dialog = new Dialog(SeriesSearchView.this);
-                dialog.setContentView(R.layout.series_overview_dialog);
+                this.selectedItem = (Series) parent.getItemAtPosition(position);
 
-                final TextView seriesOverview = (TextView) dialog
-                        .findViewById(R.id.overviewTextView);
-                final Button backButton = (Button) dialog.findViewById(R.id.backButton);
+                this.dialog = new Dialog(SeriesSearchView.this);
+                this.dialog.setContentView(R.layout.series_overview_dialog);
+
+                this.updateDialogText();
+                this.setBackButtonClickListener();
+                this.setFollowButtonClickListener();
+
+                this.dialog.show();
+
+            }
+
+            /**
+             * Sets a listener to 'Back' button click events.
+             */
+            private void setBackButtonClickListener() {
+                final Button backButton = (Button) this.dialog.findViewById(R.id.backButton);
 
                 backButton.setOnClickListener(new OnClickListener() {
                     @Override
-                    public void onClick(View arg0) {
+                    public void onClick(View v) {
                         dialog.dismiss();
                     }
                 });
+            }
 
-                final Series selectedItem = (Series) parent.getItemAtPosition(position);
+            /**
+             * Sets a listener to 'Follow' button click events.
+             */
+            // TODO Auto-generated method stub
 
-                dialog.setTitle(selectedItem.getName());
-                seriesOverview.setText(selectedItem.getOverview());
+            private void setFollowButtonClickListener() {
+                final Button followButton = (Button) this.dialog.findViewById(R.id.followButton);
 
-                dialog.show();
+                for (final Series s : App.environment().seriesProvider().mySeries()) {
+                    if (s.equals(this.selectedItem)) {
+                        this.userFollowsSeries = true;
+                        break;
+                    }
+                }
+
+                if (!this.userFollowsSeries) {
+
+                    followButton.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            App.environment().seriesProvider().follow(selectedItem);
+                        }
+                    });
+
+                }
+
+                else {
+                    followButton.setText(R.string.unfollowSeries);
+                    
+                    followButton.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            App.environment().seriesProvider().unfollow(selectedItem);
+                        }
+                    });
+                }
 
             }
+
+            /**
+             * Updates the overviewTextView and the title of the dialog.
+             */
+            private void updateDialogText() {
+                final TextView seriesOverview = (TextView) this.dialog
+                        .findViewById(R.id.overviewTextView);
+
+                this.dialog.setTitle(this.selectedItem.getName());
+                seriesOverview.setText(this.selectedItem.getOverview());
+            }
+
         });
     }
-    
+
     @Override
     public boolean onSearchRequested() {
         final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchView.this
@@ -115,7 +168,7 @@ public class SeriesSearchView extends Activity {
         searchField.selectAll();
         return true;
     }
-    
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

@@ -16,9 +16,9 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 /**
  * Supply series information to the system. It is a cache proxy for series
  * data. All followed series are cached.
- * 
  * The private constructor avoids instantiation of the SeriesProvider.
  * Most times, it should be gotten from Environment.seriesProvider().
+ * 
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
@@ -26,6 +26,7 @@ public class SeriesProvider {
     /**
      * If you know what you are doing, use this method to instantiate a
      * SeriesProvider.
+     * 
      * @see SeriesProvider()
      */
     public static SeriesProvider newSeriesProvider() {
@@ -34,11 +35,12 @@ public class SeriesProvider {
 
     // XXX: It is here because the user can't follow a series yet. Remove it ASAP
     public boolean loadExampleData = false;
-    
+
     /**
      * @see newSeriesProvider()
      */
-    private SeriesProvider() {}
+    private SeriesProvider() {
+    }
 
     private DatabaseHelper localSeriesRepository() {
         return App.environment().localSeriesRepository();
@@ -63,7 +65,7 @@ public class SeriesProvider {
             final String houseID = "73255";
             final String youngDraculaId = "80248";
 
-            String[] seriesIds = new String[]{chuckId, tbbtId, gotID, houseID, youngDraculaId};
+            String[] seriesIds = new String[] { chuckId, tbbtId, gotID, houseID, youngDraculaId };
             for (String seriesId : seriesIds) {
                 try {
                     this.follow(this.getSeries(seriesId));
@@ -141,7 +143,7 @@ public class SeriesProvider {
 
     /**
      * @return a 102px x 150px Bitmap of the series' poster, or a clapperboard to be used as a
-     * generic poster
+     *         generic poster
      */
     public Bitmap getPosterOf(Series series) {
         if (series == null) {
@@ -159,8 +161,7 @@ public class SeriesProvider {
      * @return a 102px x 150px image of a clapperboard to be used as a generic poster
      */
     private Bitmap genericPosterImage() {
-        return BitmapFactory.decodeResource(
-                App.environment().context().getResources(),
+        return BitmapFactory.decodeResource(App.environment().context().getResources(),
                 R.drawable.small_poster_clapperboard);
     }
 
