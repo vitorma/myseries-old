@@ -75,7 +75,8 @@ public class UrlSupplier {
     }
 
     public String getSeriesSearchUrl(String name) {
-        return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + name;
+        return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" +
+               name.trim().replaceAll("\\s+", "%20");
     }
 
     //POSTERS --------------------------------------------------------------------------------------
