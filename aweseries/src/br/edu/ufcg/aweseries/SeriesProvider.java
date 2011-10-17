@@ -95,6 +95,10 @@ public class SeriesProvider {
         this.localSeriesRepository().insert(series);
     }
 
+    public void unfollow(Series series) {
+        this.localSeriesRepository().delete(series);
+    }
+
     public void wipeFollowedSeries() {
         this.localSeriesRepository().deleteAllSeries();
     }

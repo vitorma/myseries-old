@@ -28,8 +28,12 @@ public abstract class Strings {
 
         return builder.toString();
     }
-    
+
     public static boolean isEmpty(String string) {
+        if (string == null) {
+            throw new IllegalArgumentException("string should not be null");
+        }
+
         return string.equals("");
     }
 }
