@@ -37,19 +37,19 @@ public class TheTVDBStreamFactory implements StreamFactory {
     }
 
     @Override
-    public InputStream streamForSeriesSearch(String seriesName) {
-        this.checkIfItIsAValidUrlSuffix(seriesName, "seriesName");
-
-        String seriesSearchUrl = this.urlSupplier.getSeriesSearchUrl(seriesName);
-        return buffered(streamFor(seriesSearchUrl));
-    }
-
-    @Override
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
         String seriesPosterUrl = this.urlSupplier.getSeriesPosterUrl(resourcePath);
         return streamFor(seriesPosterUrl);
+    }
+
+    @Override
+    public InputStream streamForSeriesSearch(String seriesName) {
+        this.checkIfItIsAValidUrlSuffix(seriesName, "seriesName");
+
+        String seriesSearchUrl = this.urlSupplier.getSeriesSearchUrl(seriesName);
+        return buffered(streamFor(seriesSearchUrl));
     }
 
     private void checkIfItIsAValidUrlSuffix(String suffix, String parameterName) {

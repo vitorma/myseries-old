@@ -8,7 +8,7 @@ public interface StreamFactory {
 
     public InputStream streamForFullSeries(String seriesId);
 
-    public InputStream streamForSeriesSearch(String seriesName);
-
     public InputStream streamForSeriesPosterAt(String resourcePath);
+
+    public InputStream streamForSeriesSearch(String seriesName);
 }

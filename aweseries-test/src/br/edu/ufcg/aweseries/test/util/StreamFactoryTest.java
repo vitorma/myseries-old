@@ -24,22 +24,23 @@ import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
     private static final String NON_EXISTENT_POSTER_RESOURCE_PATH = "nonExistent";
+    private static final String NON_EXISTENT_SERIES_ID = "0";
+
+    private static final String BLANK_STRING = "   \t  \n \t  ";
 
     /**
      * Hook for testing the same properties on other StreamFactories
      */
     protected abstract StreamFactory factory();
 
-    // TODO: turn all these 3 variables into just one -> call everything through attr seriesSample
     private String testSeriesId;
     private String testSeriesName;
     private String testSeriesPoster;
 
-    private final String nonExistentSeriesId = "0";
-
     private List<String> baseSeriesContent;
     private List<String> fullSeriesOnlyContent;
     private List<String> fullSeriesContent;
+    private List<String> seriesSearchContent;
 
     @Override
     public void setUp() {
@@ -62,6 +63,15 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
         {
             fullSeriesContent.addAll(fullSeriesOnlyContent);
         }
+
+        this.seriesSearchContent = Arrays.asList(
+                "<Series>", "</Series>",
+                "<seriesid>" + testSeriesId + "</seriesid>",
+                "<language>", "</language>",
+                "<SeriesName>" + testSeriesName + "</SeriesName>",
+                "<FirstAired>", "</FirstAired>",
+                "<id>" + testSeriesId + "</id>"
+        );
     }
 
     // Base Series -------------------------------------------------------------
@@ -74,18 +84,14 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
     public void testGettingBaseSeriesWithBlankSeriesIdThrowsException() {
         try {
-            factory().streamForBaseSeries("   \t ");
-            fail("Should have thrown an IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
-        try {
-            factory().streamForBaseSeries("");
+            factory().streamForBaseSeries(BLANK_STRING);
             fail("Should have thrown an IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
     }
 
     public void testGettingBaseSeriesWithNonExistentSeriesIdThrowsException() {
         try {
-            factory().streamForBaseSeries(nonExistentSeriesId);
+            factory().streamForBaseSeries(NON_EXISTENT_SERIES_ID);
             fail("Should have thrown a FileNotFoundException");
         } catch (RuntimeException e) {
             assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
@@ -116,18 +122,14 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
     public void testGettingFullSeriesWithBlankSeriesIdThrowsException() {
         try {
-            factory().streamForFullSeries("   \t ");
-            fail("Should have thrown an IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
-        try {
-            factory().streamForFullSeries("");
+            factory().streamForFullSeries(BLANK_STRING);
             fail("Should have thrown an IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
     }
 
     public void testGettingFullSeriesWithNonExistentSeriesIdThrowsException() {
         try {
-            factory().streamForFullSeries(nonExistentSeriesId);
+            factory().streamForFullSeries(NON_EXISTENT_SERIES_ID);
             fail("Should have thrown a FileNotFoundException");
         } catch (RuntimeException e) {
             assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
@@ -144,7 +146,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
         }
     }
 
-    // Full Series -------------------------------------------------------------
+    // Series Poster -----------------------------------------------------------
     public void testGettingNullSeriesPosterThrowsException() {
         try {
             factory().streamForSeriesPosterAt(null);
@@ -154,20 +156,14 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
     public void testGettingSeriesPosterWithBlankPathThrowsException() {
         try {
-            factory().streamForSeriesPosterAt("   \t ");
-            fail("Should have thrown an IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
-        try {
-            factory().streamForSeriesPosterAt("");
+            factory().streamForSeriesPosterAt(BLANK_STRING);
             fail("Should have thrown an IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
     }
 
     public void testGettingSeriesPosterWithNonExistentResourcePathThrowsException() {
-        String nonExistentResourcePath = NON_EXISTENT_POSTER_RESOURCE_PATH;
-
         try {
-            factory().streamForSeriesPosterAt(nonExistentResourcePath);
+            factory().streamForSeriesPosterAt(NON_EXISTENT_POSTER_RESOURCE_PATH);
             fail("Should have thrown a FileNotFoundException");
         } catch (RuntimeException e) {
             assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
@@ -181,6 +177,35 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
         assertThat(BitmapFactory.decodeStream(posterStream), notNullValue());
     }
 
+    // Series Search -----------------------------------------------------------
+    // XXX
+    public void failing_testSearchingForNullSeriesThrowsAnException() {
+        try {
+            this.factory().streamForSeriesSearch(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    // XXX
+    public void failing_testSearchingForBlankSeriesReturnsNoResults() {
+        try {
+            this.factory().streamForSeriesSearch(BLANK_STRING);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    // XXX
+    public void failing_testSearchingForValidSeriesReturnsValidResultData() throws IOException {
+        InputStream seriesSearchStream = factory().streamForSeriesSearch(testSeriesName);
+
+        String contentOfSeriesSearchStream = contentOf(seriesSearchStream);
+
+        for (String content : this.seriesSearchContent) {
+            assertThat(contentOfSeriesSearchStream, containsString(content));
+        }
+    }
+
+    // Test tools --------------------------------------------------------------
     private String contentOf(InputStream stream) throws IOException {
         if (stream == null) {
             throw new IllegalArgumentException("stream should not be null");
