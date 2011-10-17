@@ -21,6 +21,7 @@ import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class EpisodesView extends Activity {
     private ListView episodesList;
@@ -79,7 +80,7 @@ public class EpisodesView extends Activity {
             final String episodeName = this.getItem(position).getName();
             final String episodeNumberRep = String.format("Episode %02d", this.getItem(position)
                     .getNumber());
-            if ((episodeName != null) && !episodeName.trim().isEmpty()) {
+            if ((episodeName != null) && !Strings.isBlank(episodeName)) {
                 nameTextView.setText(episodeName);
                 numberTextView.setText(episodeNumberRep);
             }
