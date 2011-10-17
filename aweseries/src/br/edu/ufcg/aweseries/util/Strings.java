@@ -6,7 +6,7 @@ public abstract class Strings {
             throw new IllegalArgumentException("string should not be null");
         }
 
-        return string.trim().isEmpty();
+        return Strings.isEmpty(string.trim());
     }
 
     public static String normalizePipeSeparated(String string) {
@@ -27,5 +27,9 @@ public abstract class Strings {
         }
 
         return builder.toString();
+    }
+    
+    public static boolean isEmpty(String string) {
+        return string.equals("");
     }
 }

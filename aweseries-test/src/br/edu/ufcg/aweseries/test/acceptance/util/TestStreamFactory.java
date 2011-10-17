@@ -56,7 +56,7 @@ public class TestStreamFactory implements StreamFactory {
         if (suffix == null) {
             throw new IllegalArgumentException(parameterName + " should not be null");
         }
-        if (suffix.trim().isEmpty()) {
+        if (suffix.trim().equals("")) {
             throw new IllegalArgumentException(parameterName + " should not be blank");
         }
     }
