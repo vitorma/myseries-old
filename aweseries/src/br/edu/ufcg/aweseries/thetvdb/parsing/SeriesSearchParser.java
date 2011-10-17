@@ -52,6 +52,7 @@ public class SeriesSearchParser {
 
         element.getChild("id").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withId(body);
                     }
@@ -59,6 +60,7 @@ public class SeriesSearchParser {
 
         element.getChild("SeriesName").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withName(body);
                     }
@@ -66,6 +68,7 @@ public class SeriesSearchParser {
 
         element.getChild("Overview").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withOverview(body);
                     }

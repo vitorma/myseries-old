@@ -40,6 +40,7 @@ public class SeriesParser {
 
         element.getChild("id").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withId(body);
                     }
@@ -47,6 +48,7 @@ public class SeriesParser {
 
         element.getChild("SeriesName").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withName(body);
                     }
@@ -54,6 +56,7 @@ public class SeriesParser {
 
         element.getChild("Status").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withStatus(body);
                     }
@@ -61,6 +64,7 @@ public class SeriesParser {
 
         element.getChild("Airs_DayOfWeek").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withAirsDay(body);
                     }
@@ -68,6 +72,7 @@ public class SeriesParser {
 
         element.getChild("Airs_Time").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withAirsTime(body);
                     }
@@ -75,6 +80,7 @@ public class SeriesParser {
 
         element.getChild("FirstAired").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withFirstAired(body);
                     }
@@ -82,6 +88,7 @@ public class SeriesParser {
 
         element.getChild("Runtime").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withRuntime(body);
                     }
@@ -89,6 +96,7 @@ public class SeriesParser {
 
         element.getChild("Network").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withNetwork(body);
                     }
@@ -96,6 +104,7 @@ public class SeriesParser {
 
         element.getChild("Overview").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withOverview(body);
                     }
@@ -103,6 +112,7 @@ public class SeriesParser {
 
         element.getChild("Genre").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withGenres(Strings.normalizePipeSeparated(body));
                     }
@@ -110,6 +120,7 @@ public class SeriesParser {
 
         element.getChild("Actors").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withActors(Strings.normalizePipeSeparated(body));
                     }
@@ -117,6 +128,7 @@ public class SeriesParser {
 
         element.getChild("poster").setEndTextElementListener(
                 new EndTextElementListener() {
+                    @Override
                     public void end(String body) {
                         builder.withPoster((Bitmap) SeriesParser.this.scaledBitmapFrom(body));
                     }

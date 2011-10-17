@@ -1,6 +1,8 @@
 package br.edu.ufcg.aweseries;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,6 +56,7 @@ public class SeriesProvider {
     public Series[] mySeries() {
         // XXX: It is here because the user can't follow a series yet. Remove it ASAP
         if (this.loadExampleData) {
+            this.wipeFollowedSeries();
             Log.d("SeriesProvider", "Start loading example data");
             final String chuckId = "80348";
             final String tbbtId = "80379";
@@ -69,8 +72,19 @@ public class SeriesProvider {
             this.loadExampleData = false;
         }
 
+        return this.sortSeriesByName(this.localSeriesRepository().getAllSeries());
+    }
+
+    private Series[] sortSeriesByName(List<Series> series) {
+        TreeSet<Series> sorted = new TreeSet<Series>(new Comparator<Series>() {
+            @Override
+            public int compare(Series s1, Series s2) {
+                return s1.getName().compareTo(s2.getName());
+            }
+        });
+        sorted.addAll(series);
         //TODO: Implement util.Arrays#toArray
-        return this.localSeriesRepository().getAllSeries().toArray(new Series[] {});
+        return sorted.toArray(new Series[] {});
     }
 
     public void follow(Series series) {
@@ -81,14 +95,14 @@ public class SeriesProvider {
         this.localSeriesRepository().deleteAllSeries();
     }
 
-    public List<Series> searchSeries(String seriesName) {
+    public Series[] searchSeries(String seriesName) {
         List<Series> searchResult = this.theTVDB().search(seriesName);
 
         if (searchResult == null) {
             throw new RuntimeException("no results found for criteria " + seriesName);
         }
-
-        return searchResult;
+        //TODO: Implement util.Arrays#toArray
+        return searchResult.toArray(new Series[] {});
     }
 
     public Series getSeries(String seriesId) {
@@ -99,8 +113,9 @@ public class SeriesProvider {
         }
 
         if (series == null) {
-            Log.d("SeriesProvider", "series not found: id = " + seriesId);
-            throw new NonExistentSeriesException();
+            final String message = "series not found: id = " + seriesId;
+            Log.d("SeriesProvider", message);
+            throw new NonExistentSeriesException(message);
         }
 
         return series;

@@ -24,15 +24,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         "CREATE TABLE Series (" +
         "id TEXT PRIMARY KEY, " +
         "name TEXT NOT NULL, " +
-        "status TEXT NOT NULL, " +
-        "airsDay TEXT NOT NULL, " +
-        "airsTime TEXT NOT NULL, " +
-        "firstAired TEXT NOT NULL, " +
-        "runtime TEXT NOT NULL, " +
-        "network TEXT NOT NULL, " +
-        "overview TEXT NOT NULL, " +
-        "genres TEXT NOT NULL, " +
-        "actors TEXT NOT NULL, " +
+        "status TEXT, " +
+        "airsDay TEXT, " +
+        "airsTime TEXT, " +
+        "firstAired TEXT, " +
+        "runtime TEXT, " +
+        "network TEXT, " +
+        "overview TEXT, " +
+        "genres TEXT, " +
+        "actors TEXT, " +
         "poster BLOB);";
 
     private static final String CREATE_TABLE_EPISODES =
@@ -41,14 +41,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         "seriesId TEXT NOT NULL, " +
         "number INTEGER NOT NULL, " +
         "seasonNumber INTEGER NOT NULL, " +
-        "name TEXT NOT NULL, " +
-        "firstAired TEXT NOT NULL, " +
-        "overview TEXT NOT NULL, " +
-        "director TEXT NOT NULL, " +
-        "writer TEXT NOT NULL, " +
-        "guestStars TEXT NOT NULL, " +
-        "poster TEXT NOT NULL, " +
-        "viewed TEXT NOT NULL, " +
+        "name TEXT, " +
+        "firstAired TEXT, " +
+        "overview TEXT, " +
+        "director TEXT, " +
+        "writer TEXT, " +
+        "guestStars TEXT, " +
+        "poster TEXT, " +
+        "viewed TEXT, " +
         "FOREIGN KEY(seriesId) REFERENCES Series(id) ON DELETE CASCADE ON UPDATE CASCADE);";
 
     private static final String DROP_TABLE_SERIES =

@@ -26,7 +26,7 @@ public class TheTVDB {
 
     public List<Series> search(String seriesName) {
         try {
-            final SeriesSearchParser parser = new SeriesSearchParser(this.streamFactory); 
+            final SeriesSearchParser parser = new SeriesSearchParser(this.streamFactory);
             return parser.parse(seriesName);
         } catch (Exception e) {
             return null;
