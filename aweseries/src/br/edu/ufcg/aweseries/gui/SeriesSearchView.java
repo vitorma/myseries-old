@@ -115,35 +115,29 @@ public class SeriesSearchView extends Activity {
             private void setFollowButtonClickListener() {
                 final Button followButton = (Button) this.dialog.findViewById(R.id.followButton);
 
-                for (final Series s : App.environment().seriesProvider().mySeries()) {
-                    if (s.equals(this.selectedItem)) {
-                        this.userFollowsSeries = true;
-                        break;
-                    }
-                }
+                this.userFollowsSeries = App.environment().seriesProvider().follows(this.selectedItem);
 
-                if (!this.userFollowsSeries) {
-
-                    followButton.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            App.environment().seriesProvider().follow(selectedItem);
-                        }
-                    });
-
-                }
-
-                else {
+                if (this.userFollowsSeries) {
                     followButton.setText(R.string.unfollowSeries);
-                    
+                } else {
+                    followButton.setText(R.string.followSeries);
+                }
+
+                if (this.userFollowsSeries) {
                     followButton.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             App.environment().seriesProvider().unfollow(selectedItem);
                         }
                     });
+                } else {
+                    followButton.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            App.environment().seriesProvider().follow(selectedItem);
+                        }
+                    });
                 }
-
             }
 
             /**

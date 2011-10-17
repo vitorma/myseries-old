@@ -19,6 +19,7 @@ public class SeriesProviderIntegrationTest extends TestCase {
     public void setUp() {
         App.environment().setTheTVDBTo(new TheTVDB(new TestStreamFactory()));
         App.environment().seriesProvider().loadExampleData = false;
+        App.environment().seriesProvider().wipeFollowedSeries();
     }
 
     @Override
@@ -84,5 +85,41 @@ public class SeriesProviderIntegrationTest extends TestCase {
 
         // then
         assertThat(this.seriesProvider().mySeries().length, equalTo(0));
+    }
+
+    public void testNullFollowedSeriesThrowsException() {
+        try {
+            this.seriesProvider().follows(null);
+            fail("Should have thrown a IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testFollowedSeriesAreSeenAsFollowed() {
+        Series series1 = this.testSeries("SeriesName");
+
+        this.seriesProvider().follow(series1);
+
+        assertThat(this.seriesProvider().mySeries().length, equalTo(1));
+        assertThat(this.seriesProvider().follows(series1), equalTo(true));
+    }
+
+    public void testNotFollowedSeriesArentSeenAsFollowed() {
+        Series series1 = this.testSeries("SeriesName");
+
+        assertThat(this.seriesProvider().mySeries().length, equalTo(0));
+        assertThat(this.seriesProvider().follows(series1), equalTo(false));
+    }
+
+    public void testUnfollowedSeriesArentSeenAsFollowed() {
+        // given
+        Series series1 = this.testSeries("SeriesName");
+        this.seriesProvider().follow(series1);
+
+        // when
+        this.seriesProvider().unfollow(series1);
+
+        // then
+        assertThat(this.seriesProvider().mySeries().length, equalTo(0));
+        assertThat(this.seriesProvider().follows(series1), equalTo(false));
     }
 }

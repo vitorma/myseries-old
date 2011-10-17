@@ -101,6 +101,14 @@ public class SeriesProvider {
         this.localSeriesRepository().delete(series);
     }
 
+    public boolean follows(Series series) {
+        if (series == null) {
+            throw new IllegalArgumentException("series should not be null");
+        }
+
+        return this.localSeriesRepository().getSeries(series.getId()) != null;
+    }
+
     public void wipeFollowedSeries() {
         this.localSeriesRepository().deleteAllSeries();
     }
@@ -111,6 +119,7 @@ public class SeriesProvider {
         if (searchResult == null) {
             throw new RuntimeException("no results found for criteria " + seriesName);
         }
+
         //TODO: Implement util.Arrays#toArray
         return searchResult.toArray(new Series[] {});
     }
