@@ -204,7 +204,7 @@ public class AppDriver {
         if (name == null) {
             throw new IllegalArgumentException(parameterName + " should not be null");
         }
-        if (name.trim().isEmpty()) {
+        if (name.trim().equals("")) {
             throw new IllegalArgumentException(parameterName + " should not be empty");
         }
     }
