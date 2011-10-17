@@ -27,26 +27,9 @@ import br.edu.ufcg.aweseries.model.Series;
  * Displays current followed series.
  */
 public class MySeries extends Activity {
-
     private ListView listView;
 
-    @Override
-    public void onCreate(Bundle savedInstanceBundle) {
-        super.onCreate(savedInstanceBundle);
-        setContentView(R.layout.listing);
-
-        // set view title
-        TextView listingTitle = ((TextView) findViewById(R.id.listingTitleTextView));
-        listingTitle.setText("My Series");
-
-        // rounded with try-catch block to debbug purposes
-        try {
-            populateListView();
-        } catch (Exception e) {
-            new AlertDialog.Builder(this).setMessage(e.getMessage()).create().show();
-        }
-        setupItemClickListener();
-    }
+    //Adapter---------------------------------------------------------------------------------------
 
     class SeriesItemViewAdapter extends ArrayAdapter<Series> {
         private final SeriesProvider seriesProvider = App.environment().seriesProvider();
@@ -61,7 +44,8 @@ public class MySeries extends Activity {
 
             // if no view was passed, create one for the item
             if (itemView == null) {
-                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater vi =
+                    (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = vi.inflate(R.layout.list_item, null);
             }
 
@@ -72,10 +56,8 @@ public class MySeries extends Activity {
 
             // load series data
             Series item = this.getItem(position);
-
             name.setText(item.getName());
             status.setText(item.getStatus());
-
             Bitmap poster = this.seriesProvider.getPosterOf(item);
             image.setImageBitmap(poster);
 
@@ -83,29 +65,73 @@ public class MySeries extends Activity {
         }
     }
 
-    /**
-     * Fills mySeriesListView with the current followed series.
-     */
-    private void populateListView() {
-        listView = (ListView) this.findViewById(R.id.listView);
+    //Interface methods-----------------------------------------------------------------------------
 
-        listView.setAdapter(new SeriesItemViewAdapter(this, R.layout.list_item, App.environment()
-                .seriesProvider().mySeries()));
+    @Override
+    public void onCreate(Bundle savedInstanceBundle) {
+        super.onCreate(savedInstanceBundle);
+        this.setContentView(R.layout.listing);
+        this.setViewTitle();
+
+        // rounded with try-catch block for debbug purposes
+        try {
+            this.populateListView();
+        } catch (Exception e) {
+            //TODO A better dialog with a OK button
+            new AlertDialog.Builder(this).setMessage(e.getMessage()).create().show();
+        }
+
+        this.setupItemClickListener();
     }
 
-    /**
-     * Sets up a listener to item click events.
-     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.my_series_options_menu, menu);
+        return true;
+        
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.addSeriesMenuItem:
+                showSearchActivity();
+                return true;
+                
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+        showSearchActivity();
+        return true;
+    }
+
+    //Extracted methods-----------------------------------------------------------------------------
+
+    private void setViewTitle() {
+        TextView listingTitle = ((TextView) findViewById(R.id.listingTitleTextView));
+        listingTitle.setText("My Series");
+    }
+
+    private void populateListView() {
+        this.listView = (ListView) this.findViewById(R.id.listView);
+        this.listView.setAdapter(new SeriesItemViewAdapter(
+                this, R.layout.list_item, App.environment().seriesProvider().mySeries()));
+    }
+
     private void setupItemClickListener() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Intent intent = new Intent(view.getContext(), SeriesView.class);
-
                 intent.putExtra("series id", ((Series) parent.getItemAtPosition(position)).getId());
                 intent.putExtra("series name",
                         ((Series) parent.getItemAtPosition(position)).getName());
+
                 try {
                     startActivity(intent);
                 } catch (Exception e) {
@@ -116,37 +142,7 @@ public class MySeries extends Activity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.my_series_options_menu, menu);
-        return true;
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.addSeriesMenuItem:
-                showSearchActivity();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
-
-    }
-
-    @Override
-    public boolean onSearchRequested() {
-        showSearchActivity();
-        return true;
-    }
-
     private void showSearchActivity() {
-
         Intent intent = new Intent(this, SeriesSearchView.class);
 
         try {
@@ -154,7 +150,5 @@ public class MySeries extends Activity {
         } catch (Exception e) {
             Log.e("MySeries", "Unable to start search activity"); //XXX
         }
-
     }
-
 }
