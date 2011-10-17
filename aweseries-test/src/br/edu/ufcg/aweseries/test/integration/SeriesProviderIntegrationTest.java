@@ -2,21 +2,22 @@ package br.edu.ufcg.aweseries.test.integration;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import junit.framework.TestCase;
+import android.test.InstrumentationTestCase;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.model.SeriesBuilder;
 import br.edu.ufcg.aweseries.test.acceptance.util.TestStreamFactory;
+import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
  * Test SeriesProvider API.
  */
-public class SeriesProviderIntegrationTest extends TestCase {
+public class SeriesProviderIntegrationTest extends InstrumentationTestCase {
 
     @Override
     public void setUp() {
+        SampleSeries.injectInstrumentation(getInstrumentation());
         App.environment().setTheTVDBTo(new TheTVDB(new TestStreamFactory()));
         App.environment().seriesProvider().loadExampleData = false;
         App.environment().seriesProvider().wipeFollowedSeries();
@@ -32,9 +33,13 @@ public class SeriesProviderIntegrationTest extends TestCase {
     }
 
     private Series testSeries(String name) {
-        return new SeriesBuilder().withId(String.valueOf(name.hashCode()))
-                                  .withName(name)
-                                  .build();
+        if (name.equals("Chuck")) {
+            return SampleSeries.CHUCK.series();
+        } else if (name.equals("House")) {
+            return SampleSeries.HOUSE.series();
+        }
+
+        return null;
     }
 
     public void testNoSeriesAreFollowedInTheBeggining() {
@@ -42,7 +47,7 @@ public class SeriesProviderIntegrationTest extends TestCase {
     }
 
     public void testFollowingASeriesMakesItAppearInFollowedSeries() {
-        Series series = this.testSeries("SeriesName");
+        Series series = this.testSeries("Chuck");
 
         this.seriesProvider().follow(series);
 
@@ -51,7 +56,7 @@ public class SeriesProviderIntegrationTest extends TestCase {
     }
 
     public void testFollowingASeriesTwiceMakesItAppearOnlyOnceInFollowedSeries() {
-        Series series = this.testSeries("SeriesName");
+        Series series = this.testSeries("Chuck");
 
         this.seriesProvider().follow(series);
         this.seriesProvider().follow(series);
@@ -61,8 +66,8 @@ public class SeriesProviderIntegrationTest extends TestCase {
     }
 
     public void testFollowedSeriesAreReturnedOrderedByTheirName() {
-        Series series1 = this.testSeries("A Series");
-        Series series2 = this.testSeries("B Series");
+        Series series1 = this.testSeries("Chuck");
+        Series series2 = this.testSeries("House");
 
         this.seriesProvider().follow(series1);
         this.seriesProvider().follow(series2);
@@ -74,8 +79,8 @@ public class SeriesProviderIntegrationTest extends TestCase {
 
     public void testFollowedSeriesAreWiped() {
         // given
-        Series series1 = this.testSeries("A Series");
-        Series series2 = this.testSeries("B Series");
+        Series series1 = this.testSeries("Chuck");
+        Series series2 = this.testSeries("House");
 
         this.seriesProvider().follow(series1);
         this.seriesProvider().follow(series2);
@@ -95,7 +100,7 @@ public class SeriesProviderIntegrationTest extends TestCase {
     }
 
     public void testFollowedSeriesAreSeenAsFollowed() {
-        Series series1 = this.testSeries("SeriesName");
+        Series series1 = this.testSeries("Chuck");
 
         this.seriesProvider().follow(series1);
 
@@ -104,7 +109,7 @@ public class SeriesProviderIntegrationTest extends TestCase {
     }
 
     public void testNotFollowedSeriesArentSeenAsFollowed() {
-        Series series1 = this.testSeries("SeriesName");
+        Series series1 = this.testSeries("Chuck");
 
         assertThat(this.seriesProvider().mySeries().length, equalTo(0));
         assertThat(this.seriesProvider().follows(series1), equalTo(false));
@@ -112,7 +117,7 @@ public class SeriesProviderIntegrationTest extends TestCase {
 
     public void testUnfollowedSeriesArentSeenAsFollowed() {
         // given
-        Series series1 = this.testSeries("SeriesName");
+        Series series1 = this.testSeries("Chuck");
         this.seriesProvider().follow(series1);
 
         // when

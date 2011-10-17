@@ -1,6 +1,9 @@
 package br.edu.ufcg.aweseries.test.util;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.app.Instrumentation;
 import android.content.res.Resources;
@@ -12,15 +15,14 @@ import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public abstract class SampleSeries {
     public static final SampleSeries CHUCK = new SampleSeries() {
+        @Override
+        public String id() {
+            return "80348";
+        }
 
         @Override
         public String posterResourcePath() {
             return "posters/80348-16.jpg";
-        }
-
-        @Override
-        protected String id() {
-            return "80348";
         }
 
         @Override
@@ -39,13 +41,42 @@ public abstract class SampleSeries {
         }
     };
 
+    public static final SampleSeries HOUSE = new SampleSeries() {
+        @Override
+        public String id() {
+            return "73255";
+        }
+
+        @Override
+        public String posterResourcePath() {
+            return "posters/73255-37.jpg";
+        }
+
+        @Override
+        public InputStream baseSeriesStream() {
+            return this.rawResource(R.raw.house_base_series);
+        }
+
+        @Override
+        public InputStream fullSeriesStream() {
+            return this.rawResource(R.raw.house_full_series);
+        }
+
+        @Override
+        public InputStream posterStream() {
+            return this.rawResource(R.raw.house_poster_37);
+        }
+    };
+
+    public static final Set<SampleSeries> allSamples
+            = new HashSet<SampleSeries>(Arrays.asList(CHUCK, HOUSE));
+
+    public abstract String id();
     public abstract String posterResourcePath();
 
     public abstract InputStream baseSeriesStream();
     public abstract InputStream fullSeriesStream();
     public abstract InputStream posterStream();
-
-    protected abstract String id();
 
     /**
      * @see TheTVDB.getFullSeries()

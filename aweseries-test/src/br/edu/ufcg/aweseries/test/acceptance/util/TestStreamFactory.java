@@ -2,20 +2,23 @@ package br.edu.ufcg.aweseries.test.acceptance.util;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Set;
 
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public class TestStreamFactory implements StreamFactory {
 
-    private SampleSeries sampleSeries = SampleSeries.CHUCK;
+    private Set<SampleSeries> allSampleSeries = SampleSeries.allSamples;
 
     @Override
     public InputStream streamForBaseSeries(String seriesId) {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
-        if (seriesId.equals(this.sampleSeries.series().getId())) {
-            return this.sampleSeries.baseSeriesStream();
+        for (SampleSeries s : this.allSampleSeries) {
+            if (s.id().equals(seriesId)) {
+                return s.baseSeriesStream();
+            }
         }
 
         throw new RuntimeException(
@@ -26,8 +29,10 @@ public class TestStreamFactory implements StreamFactory {
     public InputStream streamForFullSeries(String seriesId) {
         this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
-        if (seriesId.equals(this.sampleSeries.series().getId())) {
-            return this.sampleSeries.fullSeriesStream();
+        for (SampleSeries s : this.allSampleSeries) {
+            if (s.id().equals(seriesId)) {
+                return s.fullSeriesStream();
+            }
         }
 
         throw new RuntimeException(
@@ -44,8 +49,10 @@ public class TestStreamFactory implements StreamFactory {
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
-        if (resourcePath.equals(this.sampleSeries.posterResourcePath())) {
-            return this.sampleSeries.posterStream();
+        for (SampleSeries s : this.allSampleSeries) {
+            if (s.posterResourcePath().equals(resourcePath)) {
+                return s.posterStream();
+            }
         }
 
         throw new RuntimeException(

@@ -94,7 +94,9 @@ public class SeriesProvider {
     }
 
     public void follow(Series series) {
-        this.localSeriesRepository().insert(series);
+        Series fullSeries = this.theTVDB().getFullSeries(series.getId());
+
+        this.localSeriesRepository().insert(fullSeries);
     }
 
     public void unfollow(Series series) {
