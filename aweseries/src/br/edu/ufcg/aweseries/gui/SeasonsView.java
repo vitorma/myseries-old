@@ -72,6 +72,7 @@ public class SeasonsView extends Activity {
 
     }
 
+    //XXX: Use TextViewAdapter instead.
     private class SeasonItemViewAdapter extends ArrayAdapter<Season> {
         public SeasonItemViewAdapter(Context context, int seasonsItemResourceId, Season[] objects) {
             super(context, seasonsItemResourceId, objects);

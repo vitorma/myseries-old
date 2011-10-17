@@ -2,34 +2,49 @@ package br.edu.ufcg.aweseries.gui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.method.KeyListener;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
-import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Series;
 
 public class SeriesSearchView extends Activity {
+    private ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         this.setContentView(R.layout.search);
 
+        this.listView = (ListView) SeriesSearchView.this.findViewById(R.id.searchResultsListView);
+
         this.setupSearchButtonClickListener();
+        this.setupItemClickListener();
+        this.setupSearchFieldReturnListener();
     }
 
+    private void setupSearchFieldReturnListener() {
+        final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchView.this
+                .findViewById(R.id.searchField);
+            
+    }
+
+    /**
+     * Sets up a listener to clicks at search button events.
+     */
     private void setupSearchButtonClickListener() {
         final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
 
@@ -44,10 +59,10 @@ public class SeriesSearchView extends Activity {
 
                 try {
                     final Series[] searchResultsArray = App.environment().seriesProvider()
-                    .searchSeries(searchField.getText().toString());
+                            .searchSeries(searchField.getText().toString());
 
-                    resultsListView.setAdapter(new SeriesItemViewAdapter(SeriesSearchView.this,
-                            R.layout.list_item, searchResultsArray));
+                    resultsListView.setAdapter(new TextOnlyViewAdapter(SeriesSearchView.this,
+                            SeriesSearchView.this, R.layout.list_item, searchResultsArray));
 
                 } catch (final Exception e) {
                     Log.e(SeriesSearchView.class.getName(), e.getMessage());
@@ -60,40 +75,50 @@ public class SeriesSearchView extends Activity {
         });
     }
 
-    class SeriesItemViewAdapter extends ArrayAdapter<Series> {
-        private final SeriesProvider seriesProvider = App.environment().seriesProvider();
+    /**
+     * Sets up a listener to item click events.
+     */
+    private void setupItemClickListener() {
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final Dialog dialog = new Dialog(SeriesSearchView.this);
+                dialog.setContentView(R.layout.series_overview_dialog);
 
-        public SeriesItemViewAdapter(Context context, int seriesItemResourceId, Series[] objects) {
-            super(context, seriesItemResourceId, objects);
-        }
+                final TextView seriesOverview = (TextView) dialog
+                        .findViewById(R.id.overviewTextView);
+                final Button backButton = (Button) dialog.findViewById(R.id.backButton);
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View itemView = convertView;
+                backButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        dialog.dismiss();
+                    }
+                });
 
-            // if no view was passed, create one for the item
-            if (itemView == null) {
-                final LayoutInflater vi = (LayoutInflater) SeriesSearchView.this
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = vi.inflate(R.layout.list_item, null);
+                final Series selectedItem = (Series) parent.getItemAtPosition(position);
+
+                dialog.setTitle(selectedItem.getName());
+                seriesOverview.setText(selectedItem.getOverview());
+
+                dialog.show();
+
             }
-
-            // get views for the series fields
-            final ImageView image = (ImageView) itemView.findViewById(R.id.itemSeriesImage);
-            final TextView name = (TextView) itemView.findViewById(R.id.itemSeriesName);
-            final TextView status = (TextView) itemView.findViewById(R.id.itemSeriesStatus);
-
-            // load series data
-            final Series item = this.getItem(position);
-
-            name.setText(item.getName());
-            status.setText(item.getStatus());
-
-            final Bitmap poster = this.seriesProvider.getPosterOf(item);
-            image.setImageBitmap(poster);
-
-            return itemView;
-        }
+        });
     }
-
+    
+    @Override
+    public boolean onSearchRequested() {
+        final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchView.this
+                .findViewById(R.id.searchField);
+        searchField.requestFocus();
+        searchField.selectAll();
+        return true;
+    }
+    
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        this.onSearchRequested();
+    }
 }

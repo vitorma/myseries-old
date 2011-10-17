@@ -139,6 +139,12 @@ public class MySeries extends Activity {
 
     }
 
+    @Override
+    public boolean onSearchRequested() {
+        showSearchActivity();
+        return true;
+    }
+
     private void showSearchActivity() {
 
         Intent intent = new Intent(this, SeriesSearchView.class);
