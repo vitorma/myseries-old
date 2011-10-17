@@ -25,7 +25,7 @@ public class EpisodeView extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.episode_view);
+        this.setContentView(R.layout.episode_view);
 
         this.episodeName = (TextView) findViewById(R.id.episodeNameTextView);
         this.episodeName.setText(R.string.unnamedEpisode);
@@ -35,7 +35,7 @@ public class EpisodeView extends Activity {
         this.episodeWriter = (TextView) findViewById(R.id.episodeWriterTextView);
         this.episodeGuestStars = (TextView) findViewById(R.id.episodeGuestStarsTextView);
 
-        populateView();
+        this.populateView();
     }
 
     @Override
@@ -88,12 +88,11 @@ public class EpisodeView extends Activity {
     private void downloadDescription() {
             Episode episode = seriesProvider().getEpisode(this.episodeId);
             this.episodeName.setText(episode.getName());
-            this.episodeOverview.setText(episode.getOverview());
             this.episodeFirstAired.setText(episode.getFirstAired());
-            this.episodeOverview.setText(episode.getOverview());
             this.episodeDirector.setText(episode.getDirector());
             this.episodeWriter.setText(episode.getWriter());
             this.episodeGuestStars.setText(episode.getGuestStars());
+            this.episodeOverview.setText(episode.getOverview());
     }
 
     /**
