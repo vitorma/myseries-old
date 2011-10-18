@@ -18,10 +18,12 @@ public class PosterTest extends TestCase {
 
     private Poster poster;
 
+    @Override
     public void setUp() throws Exception {
         this.poster = new Poster(posterImage);
     }
 
+    @Override
     public void tearDown() throws Exception {
         this.poster = null;
     }
@@ -76,5 +78,4 @@ public class PosterTest extends TestCase {
             assertThat(p1.hashCode(), equalTo(p2.hashCode()));
         }
     }
-
 }

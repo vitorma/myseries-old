@@ -37,9 +37,6 @@ public class SeriesProvider {
         return new SeriesProvider();
     }
 
-    // XXX: It is here because the user can't follow a series yet. Remove it ASAP
-    public boolean loadExampleData = false;
-
     /**
      * @see newSeriesProvider()
      */
@@ -56,31 +53,9 @@ public class SeriesProvider {
     }
 
     public List<Series> mySeries() {
-        // XXX: It is here because the user can't follow a series yet. Remove it ASAP
-        if (this.loadExampleData) {
-            Log.d("SeriesProvider", "Start loading example data");
-            final String chuckId = "80348";
-            final String tbbtId = "80379";
-            final String gotID = "121361";
-            final String houseID = "73255";
-            final String youngDraculaId = "80248";
-
-            String[] seriesIds = new String[] { chuckId, tbbtId, gotID, houseID, youngDraculaId };
-            for (String seriesId : seriesIds) {
-                try {
-                    this.follow(this.getSeries(seriesId));
-                } catch (Exception e) {
-                    Log.w("SeriesProvider", e.getMessage());
-                    continue;
-                }
-            }
-
-            this.loadExampleData = false;
-        }
-
         return this.sortSeriesByName(this.localSeriesRepository().getAllSeries());
     }
-    
+
     private List<Series> sortSeriesByName(List<Series> series) {
         ArrayList<Series> sorted = new ArrayList<Series>(series);
         Comparator<Series> comparator = new Comparator<Series>() {

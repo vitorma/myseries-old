@@ -1,9 +1,8 @@
 package br.edu.ufcg.aweseries.test.acceptance;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import junit.framework.AssertionFailedError;
-
-import com.jayway.android.robotium.solo.Solo;
-
 import android.test.ActivityInstrumentationTestCase2;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.gui.MySeries;
@@ -11,8 +10,8 @@ import br.edu.ufcg.aweseries.test.acceptance.util.AppDriver;
 import br.edu.ufcg.aweseries.test.acceptance.util.TestStreamFactory;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
+
+import com.jayway.android.robotium.solo.Solo;
 
 public class ViewListOfSeasonsOfASeries extends ActivityInstrumentationTestCase2<MySeries> {
     private Solo solo;
@@ -33,6 +32,7 @@ public class ViewListOfSeasonsOfASeries extends ActivityInstrumentationTestCase2
     /**
      * Must be called before the test's setUp commands.
      */
+    @Override
     public void setUp() {
         this.setUpTestStreamFactory();
         this.clearUserData();
@@ -45,9 +45,6 @@ public class ViewListOfSeasonsOfASeries extends ActivityInstrumentationTestCase2
     }
 
     private void clearUserData() {
-        // XXX: It is here because the user can't follow a series yet. Remove it ASAP
-        App.environment().seriesProvider().loadExampleData = false;
-
         App.environment().seriesProvider().wipeFollowedSeries();
     }
 
@@ -59,6 +56,7 @@ public class ViewListOfSeasonsOfASeries extends ActivityInstrumentationTestCase2
     /**
      * Must be called after the test's tear down commands
      */
+    @Override
     public void tearDown() throws Exception {
         try {
             this.solo.finalize();

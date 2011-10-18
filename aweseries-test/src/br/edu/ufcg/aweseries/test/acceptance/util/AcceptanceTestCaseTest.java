@@ -10,6 +10,7 @@ import br.edu.ufcg.aweseries.gui.MySeries;
 
 public class AcceptanceTestCaseTest extends AcceptanceTestCase {
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
 

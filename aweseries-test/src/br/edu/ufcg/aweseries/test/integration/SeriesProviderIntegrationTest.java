@@ -19,7 +19,6 @@ public class SeriesProviderIntegrationTest extends InstrumentationTestCase {
     public void setUp() {
         SampleSeries.injectInstrumentation(getInstrumentation());
         App.environment().setTheTVDBTo(new TheTVDB(new TestStreamFactory()));
-        App.environment().seriesProvider().loadExampleData = false;
         App.environment().seriesProvider().wipeFollowedSeries();
     }
 

@@ -1,7 +1,9 @@
 package br.edu.ufcg.aweseries.test.acceptance.util;
 
-import com.jayway.android.robotium.solo.Solo;
-
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import android.test.ActivityInstrumentationTestCase2;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.gui.EpisodesView;
@@ -11,8 +13,7 @@ import br.edu.ufcg.aweseries.gui.SeriesView;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
+import com.jayway.android.robotium.solo.Solo;
 
 public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
     private Solo solo;
@@ -48,9 +49,6 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
     }
 
     private void clearUserData() {
-        // XXX: It is here because the user can't follow a series yet. Remove it ASAP
-        App.environment().seriesProvider().loadExampleData = false;
-
         App.environment().seriesProvider().wipeFollowedSeries();
     }
 
@@ -62,6 +60,7 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<MySeries> {
     /**
      * Must be called after the test's tear down commands
      */
+    @Override
     public void tearDown() throws Exception {
         try {
             this.solo.finalize();

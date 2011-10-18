@@ -17,7 +17,8 @@ import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public class SeriesParserTest extends TestCase {
 
-	private String seriesWithoutPosterDescription =
+	@SuppressWarnings("unused")
+    private String seriesWithoutPosterDescription =
 		"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
 		"<Data>" +
 		"  <Series>" +

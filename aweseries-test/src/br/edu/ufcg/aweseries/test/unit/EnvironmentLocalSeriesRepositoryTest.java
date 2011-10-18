@@ -4,12 +4,11 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
-
+import junit.framework.TestCase;
 import android.content.Context;
 import android.test.mock.MockContext;
 import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.data.DatabaseHelper;
-import junit.framework.TestCase;
 
 public class EnvironmentLocalSeriesRepositoryTest extends TestCase {
 
@@ -19,10 +18,12 @@ public class EnvironmentLocalSeriesRepositoryTest extends TestCase {
         return new MockContext();
     }
 
+    @Override
     public void setUp() {
         this.environment = Environment.newEnvironment(this.createContextMock());
     }
 
+    @Override
     public void tearDown() {
         this.environment = null;
     }

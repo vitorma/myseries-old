@@ -59,10 +59,7 @@ public class Environment {
      * @return a default series provider for the production environment
      */
     private SeriesProvider defaultSeriesProvider() {
-        // XXX: It is here because the user can't follow a series yet. Remove it ASAP
-        SeriesProvider sp = SeriesProvider.newSeriesProvider();
-        sp.loadExampleData = true;
-        return sp;
+        return SeriesProvider.newSeriesProvider();
     }
 
     /**

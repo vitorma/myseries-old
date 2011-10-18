@@ -1,11 +1,9 @@
 package br.edu.ufcg.aweseries.test.acceptance;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-
 import junit.framework.AssertionFailedError;
 import android.test.ActivityInstrumentationTestCase2;
-
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.gui.MySeries;
 import br.edu.ufcg.aweseries.test.acceptance.util.AppDriver;
@@ -33,6 +31,7 @@ public class ViewSeriesInformation extends
         return this.driver;
     }
 
+    @Override
     public void setUp() {
         this.setUpTestStreamFactory();
         this.clearUserData();
@@ -45,9 +44,6 @@ public class ViewSeriesInformation extends
     }
 
     private void clearUserData() {
-        // XXX: It is here because the user can't follow a series yet. Remove it ASAP
-        App.environment().seriesProvider().loadExampleData = false;
-
         App.environment().seriesProvider().wipeFollowedSeries();
     }
 
@@ -56,6 +52,7 @@ public class ViewSeriesInformation extends
         this.driver = new AppDriver(this.solo);
     }
 
+    @Override
     public void tearDown() throws Exception {
         this.clearUserData();
 

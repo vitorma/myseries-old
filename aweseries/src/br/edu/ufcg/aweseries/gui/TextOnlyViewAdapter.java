@@ -6,17 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
-import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Series;
 
 public final class TextOnlyViewAdapter extends ArrayAdapter<Series> {
-    /**
-     * 
-     */
     private final SeriesSearchView seriesSearchView;
-    private final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
     public TextOnlyViewAdapter(SeriesSearchView seriesSearchView, Context context,
             int seriesItemResourceId, Series[] objects) {
