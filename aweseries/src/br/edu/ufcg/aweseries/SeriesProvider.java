@@ -1,8 +1,10 @@
 package br.edu.ufcg.aweseries;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +25,8 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  */
 public class SeriesProvider {
 
+    private HashSet<SeriesProviderListener> listeners;
+
     /**
      * If you know what you are doing, use this method to instantiate a
      * SeriesProvider.
@@ -40,6 +44,7 @@ public class SeriesProvider {
      * @see newSeriesProvider()
      */
     private SeriesProvider() {
+        this.listeners = new HashSet<SeriesProviderListener>();
     }
 
     private DatabaseHelper localSeriesRepository() {
@@ -50,12 +55,7 @@ public class SeriesProvider {
         return App.environment().theTVDB();
     }
 
-    /**
-     * Returns an array with all followed series.
-     * 
-     * @return followed series.
-     */
-    public Series[] mySeries() {
+    public List<Series> mySeries() {
         // XXX: It is here because the user can't follow a series yet. Remove it ASAP
         if (this.loadExampleData) {
             Log.d("SeriesProvider", "Start loading example data");
@@ -69,7 +69,7 @@ public class SeriesProvider {
             for (String seriesId : seriesIds) {
                 try {
                     this.follow(this.getSeries(seriesId));
-                } catch (NonExistentSeriesException e) {
+                } catch (Exception e) {
                     Log.w("SeriesProvider", e.getMessage());
                     continue;
                 }
@@ -80,27 +80,28 @@ public class SeriesProvider {
 
         return this.sortSeriesByName(this.localSeriesRepository().getAllSeries());
     }
-
-    private Series[] sortSeriesByName(List<Series> series) {
-        TreeSet<Series> sorted = new TreeSet<Series>(new Comparator<Series>() {
+    
+    private List<Series> sortSeriesByName(List<Series> series) {
+        ArrayList<Series> sorted = new ArrayList<Series>(series);
+        Comparator<Series> comparator = new Comparator<Series>() {
             @Override
             public int compare(Series s1, Series s2) {
                 return s1.getName().compareTo(s2.getName());
             }
-        });
-        sorted.addAll(series);
-        //TODO: Implement util.Arrays#toArray
-        return sorted.toArray(new Series[] {});
+        };
+        Collections.sort(sorted, comparator);
+        return sorted;
     }
 
     public void follow(Series series) {
         Series fullSeries = this.theTVDB().getFullSeries(series.getId());
-
         this.localSeriesRepository().insert(fullSeries);
+        this.notifyListenersAboutFollowedSeries(fullSeries);
     }
 
     public void unfollow(Series series) {
         this.localSeriesRepository().delete(series);
+        this.notifyListenersAboutUnfollowedSeries(series);
     }
 
     public boolean follows(Series series) {
@@ -112,6 +113,10 @@ public class SeriesProvider {
     }
 
     public void wipeFollowedSeries() {
+        for (Series s : this.localSeriesRepository().getAllSeries()) {
+            this.notifyListenersAboutUnfollowedSeries(s);
+        }
+
         this.localSeriesRepository().deleteAllSeries();
     }
 
@@ -178,5 +183,21 @@ public class SeriesProvider {
 
     public Episode getEpisode(String episodeId) {
         return this.localSeriesRepository().getEpisode(episodeId);
+    }
+
+    public void addListener(SeriesProviderListener listener) {
+        this.listeners.add(listener);
+    }
+
+    private void notifyListenersAboutUnfollowedSeries(Series series) {
+        for (SeriesProviderListener listener : this.listeners) {
+            listener.onUnfollowing(series);
+        }
+    }
+
+    private void notifyListenersAboutFollowedSeries(Series series) {
+        for (SeriesProviderListener listener : this.listeners) {
+            listener.onFollowing(series);
+        }
     }
 }
