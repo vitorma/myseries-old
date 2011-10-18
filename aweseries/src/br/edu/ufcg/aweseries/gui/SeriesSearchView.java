@@ -3,6 +3,7 @@ package br.edu.ufcg.aweseries.gui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -115,7 +116,8 @@ public class SeriesSearchView extends Activity {
             private void setFollowButtonClickListener() {
                 final Button followButton = (Button) this.dialog.findViewById(R.id.followButton);
 
-                this.userFollowsSeries = App.environment().seriesProvider().follows(this.selectedItem);
+                this.userFollowsSeries = App.environment().seriesProvider()
+                        .follows(this.selectedItem);
 
                 if (this.userFollowsSeries) {
                     followButton.setText(R.string.unfollowSeries);
@@ -123,21 +125,21 @@ public class SeriesSearchView extends Activity {
                     followButton.setText(R.string.followSeries);
                 }
 
-                if (this.userFollowsSeries) {
-                    followButton.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                followButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (userFollowsSeries) {
                             App.environment().seriesProvider().unfollow(selectedItem);
-                        }
-                    });
-                } else {
-                    followButton.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                            userFollowsSeries = false;
+                            followButton.setText(R.string.followSeries);
+                        } else {
                             App.environment().seriesProvider().follow(selectedItem);
+                            userFollowsSeries = true;
+                            followButton.setText(R.string.unfollowSeries);
                         }
-                    });
-                }
+                    }
+                });
+
             }
 
             /**
