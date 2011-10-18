@@ -43,7 +43,7 @@ public class SeriesProviderIntegrationTest extends InstrumentationTestCase {
     }
 
     public void testNoSeriesAreFollowedInTheBeggining() {
-        assertThat(this.seriesProvider().mySeries().length, equalTo(0));
+        assertThat(this.seriesProvider().mySeries().size(), equalTo(0));
     }
 
     public void testFollowingASeriesMakesItAppearInFollowedSeries() {
@@ -51,8 +51,8 @@ public class SeriesProviderIntegrationTest extends InstrumentationTestCase {
 
         this.seriesProvider().follow(series);
 
-        assertThat(this.seriesProvider().mySeries().length, equalTo(1));
-        assertThat(this.seriesProvider().mySeries()[0], equalTo(series));
+        assertThat(this.seriesProvider().mySeries().size(), equalTo(1));
+        assertThat(this.seriesProvider().mySeries().get(0), equalTo(series));
     }
 
     public void testFollowingASeriesTwiceMakesItAppearOnlyOnceInFollowedSeries() {
@@ -61,8 +61,8 @@ public class SeriesProviderIntegrationTest extends InstrumentationTestCase {
         this.seriesProvider().follow(series);
         this.seriesProvider().follow(series);
 
-        assertThat(this.seriesProvider().mySeries().length, equalTo(1));
-        assertThat(this.seriesProvider().mySeries()[0], equalTo(series));
+        assertThat(this.seriesProvider().mySeries().size(), equalTo(1));
+        assertThat(this.seriesProvider().mySeries().get(0), equalTo(series));
     }
 
     public void testFollowedSeriesAreReturnedOrderedByTheirName() {
@@ -72,9 +72,9 @@ public class SeriesProviderIntegrationTest extends InstrumentationTestCase {
         this.seriesProvider().follow(series1);
         this.seriesProvider().follow(series2);
 
-        assertThat(this.seriesProvider().mySeries().length, equalTo(2));
-        assertThat(this.seriesProvider().mySeries()[0], equalTo(series1));
-        assertThat(this.seriesProvider().mySeries()[1], equalTo(series2));
+        assertThat(this.seriesProvider().mySeries().size(), equalTo(2));
+        assertThat(this.seriesProvider().mySeries().get(0), equalTo(series1));
+        assertThat(this.seriesProvider().mySeries().get(1), equalTo(series2));
     }
 
     public void testFollowedSeriesAreWiped() {
@@ -89,7 +89,7 @@ public class SeriesProviderIntegrationTest extends InstrumentationTestCase {
         this.seriesProvider().wipeFollowedSeries();
 
         // then
-        assertThat(this.seriesProvider().mySeries().length, equalTo(0));
+        assertThat(this.seriesProvider().mySeries().size(), equalTo(0));
     }
 
     public void testNullFollowedSeriesThrowsException() {
@@ -104,14 +104,14 @@ public class SeriesProviderIntegrationTest extends InstrumentationTestCase {
 
         this.seriesProvider().follow(series1);
 
-        assertThat(this.seriesProvider().mySeries().length, equalTo(1));
+        assertThat(this.seriesProvider().mySeries().size(), equalTo(1));
         assertThat(this.seriesProvider().follows(series1), equalTo(true));
     }
 
     public void testNotFollowedSeriesArentSeenAsFollowed() {
         Series series1 = this.testSeries("Chuck");
 
-        assertThat(this.seriesProvider().mySeries().length, equalTo(0));
+        assertThat(this.seriesProvider().mySeries().size(), equalTo(0));
         assertThat(this.seriesProvider().follows(series1), equalTo(false));
     }
 
@@ -124,7 +124,7 @@ public class SeriesProviderIntegrationTest extends InstrumentationTestCase {
         this.seriesProvider().unfollow(series1);
 
         // then
-        assertThat(this.seriesProvider().mySeries().length, equalTo(0));
+        assertThat(this.seriesProvider().mySeries().size(), equalTo(0));
         assertThat(this.seriesProvider().follows(series1), equalTo(false));
     }
 }

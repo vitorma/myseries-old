@@ -1,8 +1,9 @@
 package br.edu.ufcg.aweseries.test.acceptance.util;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
-
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.gui.MySeries;
@@ -19,7 +20,7 @@ public class AcceptanceTestCaseTest extends AcceptanceTestCase {
     public void testUserFollowsNoSeries() {
         SeriesProvider provider = App.environment().seriesProvider();
 
-        assertThat(provider.mySeries().length, equalTo(0));
+        assertThat(provider.mySeries().size(), equalTo(0));
     }
 
     public void testSoloIsNotNull() {
