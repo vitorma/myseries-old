@@ -172,6 +172,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         final SQLiteDatabase db = this.getReadableDatabase();
         final Cursor c = db.rawQuery(SELECT_ALL_SERIES, null);
         final int count = c.getCount();
+        c.close();
         db.close();
         return count;
     }
@@ -189,10 +190,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         final Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {seriesId});
         if (!c.moveToFirst()) {
             Log.d("DatabaseHelper", "There is no series with id " + seriesId);
+            c.close();
             return null;
         }
         final Series s = this.seriesByCurrentPositionOf(c);
         s.getSeasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
+        c.close();
         db.close();
         return s;
     }
@@ -206,9 +209,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         final Cursor c = db.rawQuery(SELECT_AN_EPISODE_BY_ID, new String[] {episodeId});
         if (!c.moveToFirst()) {
             Log.d("DatabaseHelper", "There is no episode with id " + episodeId);
+            c.close();
             return null;
         }
         final Episode e = this.episodeByCurrentPositionOf(c);
+        c.close();
         db.close();
         return e;
     }
@@ -222,6 +227,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             s.getSeasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
             allSeries.add(s);
         }
+        c.close();
         db.close();
         return allSeries;
     }
@@ -232,6 +238,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while(c.moveToNext()) {
             allEpisodes.add(this.episodeByCurrentPositionOf(c));
         }
+        c.close();
         return allEpisodes;
     }
 
