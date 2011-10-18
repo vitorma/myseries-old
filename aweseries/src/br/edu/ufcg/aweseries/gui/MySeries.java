@@ -2,8 +2,10 @@ package br.edu.ufcg.aweseries.gui;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -132,11 +134,33 @@ public class MySeries extends ListActivity {
             @Override
             public boolean onItemLongClick(
                     AdapterView<?> parent, View view, int position, long id) {
-                Series series = (Series) parent.getItemAtPosition(position);
-                App.environment().seriesProvider().unfollow(series);
+                MySeries.this.showUnfollowingDialog((Series) parent.getItemAtPosition(position));
                 return true;
             }
         });
+    }
+
+    private void showUnfollowingDialog(final Series series) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    App.environment().seriesProvider().unfollow(series);
+                    dialog.dismiss();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+                    break;
+                }
+            }
+        };
+
+        new AlertDialog.Builder(this)
+           .setMessage("Are you sure you want unfollow " + series.getName() + "?")
+           .setPositiveButton("Yes", dialogClickListener)
+           .setNegativeButton("No", dialogClickListener)
+           .show();
     }
 
     private void showSearchActivity() {
