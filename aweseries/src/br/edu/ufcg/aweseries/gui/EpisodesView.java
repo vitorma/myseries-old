@@ -7,12 +7,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
@@ -58,7 +61,7 @@ public class EpisodesView extends Activity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             View itemView = convertView;
 
             // if no view was passed, create one for the item
@@ -74,7 +77,8 @@ public class EpisodesView extends Activity {
                     .findViewById(R.id.episodeNumberTextView);
             final TextView dateTextView = (TextView) itemView
                     .findViewById(R.id.episodeDateTextView);
-            final TextView isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
+            final CheckBox isViewedCheckBox = (CheckBox) itemView
+                    .findViewById(R.id.episodeIsViewedCheckBox);
 
             // load episode data
             final String episodeName = this.getItem(position).getName();
@@ -95,6 +99,16 @@ public class EpisodesView extends Activity {
             }
 
             isViewedCheckBox.setPressed(this.getItem(position).isViewed());
+            isViewedCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+                    EpisodeItemViewAdapter.this.getItem(position).setViewed(arg1);
+                    Log.d(this.getClass().getName(),
+                            String.format("%s viewed: %b", getItem(position).getName(),
+                                    getItem(position).isViewed()));
+                }
+            });
 
             return itemView;
         }
@@ -118,16 +132,19 @@ public class EpisodesView extends Activity {
      * Sets up a listener to item click events.
      */
     private void setupItemClickListener() {
-        episodesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.episodesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(view.getContext(), EpisodeView.class);
-                intent.putExtra("episode id", ((Episode) parent.getItemAtPosition(position)).getId());
-                intent.putExtra("episode name", ((Episode) parent.getItemAtPosition(position)).getName());
+                final Intent intent = new Intent(view.getContext(), EpisodeView.class);
+                intent.putExtra("episode id",
+                        ((Episode) parent.getItemAtPosition(position)).getId());
+                intent.putExtra("episode name",
+                        ((Episode) parent.getItemAtPosition(position)).getName());
                 try {
-                    startActivity(intent);
-                } catch (Exception e) {
-                    new AlertDialog.Builder(EpisodesView.this).setMessage(e.getMessage()).create().show();
+                    EpisodesView.this.startActivity(intent);
+                } catch (final Exception e) {
+                    new AlertDialog.Builder(EpisodesView.this).setMessage(e.getMessage()).create()
+                            .show();
                 }
             }
         });

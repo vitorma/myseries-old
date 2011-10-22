@@ -22,18 +22,19 @@ import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.SeriesProviderListener;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class MySeries extends ListActivity {
     private MySeriesViewAdapter dataAdapter;
 
     //View Adapter----------------------------------------------------------------------------------
 
-    private class MySeriesViewAdapter extends ArrayAdapter<Series>
-            implements SeriesProviderListener {
+    private class MySeriesViewAdapter extends ArrayAdapter<Series> implements
+            SeriesProviderListener {
         private final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
-        public MySeriesViewAdapter(
-                Context context, int seriesItemResourceId, List<Series> objects) {
+        public MySeriesViewAdapter(Context context, int seriesItemResourceId, 
+                List<Series> objects) {
             super(context, seriesItemResourceId, objects);
             this.seriesProvider.addListener(this);
         }
@@ -44,21 +45,29 @@ public class MySeries extends ListActivity {
 
             // if no view was passed, create one for the item
             if (itemView == null) {
-                LayoutInflater li = (LayoutInflater) getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
+                final LayoutInflater li = (LayoutInflater) MySeries.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.list_item, null);
             }
 
             // get views for the series fields
-            ImageView image = (ImageView) itemView.findViewById(R.id.itemSeriesImage);
-            TextView name = (TextView) itemView.findViewById(R.id.itemSeriesName);
-            TextView status = (TextView) itemView.findViewById(R.id.itemSeriesStatus);
+            final ImageView image = (ImageView) itemView.findViewById(R.id.itemSeriesImage);
+            final TextView name = (TextView) itemView.findViewById(R.id.itemSeriesName);
+            final TextView status = (TextView) itemView.findViewById(R.id.itemSeriesStatus);
+            final TextView network = (TextView) itemView.findViewById(R.id.networkTextView);
+            final TextView airTime = (TextView) itemView.findViewById(R.id.airTimeTextView);
 
             // load series data
-            Series item = this.getItem(position);
+            final Series item = this.getItem(position);
             name.setText(item.getName());
             status.setText(item.getStatus());
             image.setImageBitmap(App.environment().seriesProvider().getPosterOf(item));
+            network.setText(item.getNetwork());
+            if (!Strings.isEmpty(item.getAirsDay())) {
+                airTime.setText(item.getAirsDay() + "|" + item.getAirsTime());
+            } else {
+                airTime.setText("");
+            }
 
             return itemView;
         }
@@ -111,8 +120,8 @@ public class MySeries extends ListActivity {
     //Private---------------------------------------------------------------------------------------
 
     private void initAdapter() {
-        this.dataAdapter = new MySeriesViewAdapter(
-                this, R.layout.list_item, App.environment().seriesProvider().mySeries());
+        this.dataAdapter = new MySeriesViewAdapter(this, R.layout.list_item, App.environment()
+                .seriesProvider().mySeries());
         this.setListAdapter(this.dataAdapter);
     }
 
@@ -120,8 +129,8 @@ public class MySeries extends ListActivity {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(view.getContext(), SeriesView.class);
-                Series series = (Series) parent.getItemAtPosition(position);
+                final Intent intent = new Intent(view.getContext(), SeriesView.class);
+                final Series series = (Series) parent.getItemAtPosition(position);
                 intent.putExtra("series id", series.getId());
                 intent.putExtra("series name", series.getName());
                 MySeries.this.startActivity(intent);
@@ -132,8 +141,8 @@ public class MySeries extends ListActivity {
     private void setupItemLongClickListener() {
         this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(
-                    AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, 
+                    long id) {
                 MySeries.this.showUnfollowingDialog((Series) parent.getItemAtPosition(position));
                 return true;
             }
@@ -141,30 +150,30 @@ public class MySeries extends ListActivity {
     }
 
     private void showUnfollowingDialog(final Series series) {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        final DialogInterface.OnClickListener dialogClickListener 
+                = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    App.environment().seriesProvider().unfollow(series);
-                    dialog.dismiss();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    dialog.dismiss();
-                    break;
+                    case DialogInterface.BUTTON_POSITIVE:
+                        App.environment().seriesProvider().unfollow(series);
+                        dialog.dismiss();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
                 }
             }
         };
 
         new AlertDialog.Builder(this)
-           .setMessage("Are you sure you want unfollow " + series.getName() + "?")
-           .setPositiveButton("Yes", dialogClickListener)
-           .setNegativeButton("No", dialogClickListener)
-           .show();
+                .setMessage("Are you sure you want unfollow " + series.getName() + "?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     private void showSearchActivity() {
-        Intent intent = new Intent(this, SeriesSearchView.class);
+        final Intent intent = new Intent(this, SeriesSearchView.class);
         this.startActivity(intent);
     }
 }

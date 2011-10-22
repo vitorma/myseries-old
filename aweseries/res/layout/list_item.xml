@@ -12,7 +12,8 @@
 	<LinearLayout android:id="@+id/linearLayout2"
 		android:layout_gravity="center_vertical" android:layout_height="wrap_content"
 		android:orientation="vertical" android:paddingLeft="5dp"
-		android:layout_width="wrap_content" android:layout_weight="0.9">
+		android:layout_width="wrap_content" android:layout_weight="0.9"
+		android:layout_marginRight="7dip">
 		<TextView android:textAppearance="?android:attr/textAppearanceMedium"
 			android:id="@+id/itemSeriesName" android:text="@string/loading_label"
 			android:layout_height="wrap_content" android:layout_weight="1"
@@ -21,10 +22,12 @@
 			android:marqueeRepeatLimit="marquee_forever"></TextView>
 		<TextView android:textAppearance="?android:attr/textAppearanceSmall"
 			android:layout_height="0dp" android:layout_weight="1"
-			android:layout_width="wrap_content" android:text="@string/loading_label" android:id="@+id/nextAirTextView"></TextView>
+			android:layout_width="wrap_content" android:text="@string/loading_label"
+			android:id="@+id/nextAirTextView"></TextView>
 		<TextView android:textAppearance="?android:attr/textAppearanceSmall"
 			android:layout_height="0dp" android:layout_weight="1"
-			android:layout_width="wrap_content" android:text="@string/loading_label" android:id="@+id/nextToWatchTextView"></TextView>
+			android:layout_width="wrap_content" android:text="@string/loading_label"
+			android:id="@+id/nextToWatchTextView"></TextView>
 
 	</LinearLayout>
 
@@ -37,10 +40,12 @@
 			android:layout_width="wrap_content" android:maxLines="1"></TextView>
 		<TextView android:textAppearance="?android:attr/textAppearanceSmall"
 			android:layout_height="0dp" android:layout_weight="1"
-			android:layout_width="wrap_content" android:text="@string/loading_label" android:id="@+id/airTimeTextView"></TextView>
+			android:layout_width="wrap_content" android:text="@string/loading_label"
+			android:id="@+id/airTimeTextView" android:layout_gravity="right"></TextView>
 		<TextView android:textAppearance="?android:attr/textAppearanceSmall"
 			android:layout_height="0dp" android:layout_weight="1"
-			android:layout_width="wrap_content" android:text="@string/loading_label" android:id="@+id/channelTextView"></TextView>
+			android:layout_width="wrap_content" android:text="@string/loading_label"
+			android:id="@+id/networkTextView" android:layout_gravity="right"></TextView>
 	</LinearLayout>
 
 </LinearLayout>
