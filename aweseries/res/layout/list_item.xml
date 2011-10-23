@@ -1,44 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/linearLayout1"
-    android:layout_width="match_parent" android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="5dp" android:baselineAligned="true">
+    android:padding="5dp"
+    android:baselineAligned="true">
 
     <ImageView android:id="@+id/itemSeriesImage"
-        android:layout_gravity="center_vertical" android:scaleType="centerInside"
-        android:layout_height="60dp" android:layout_width="41dp"
+        android:layout_gravity="center_vertical"
+        android:scaleType="centerInside"
+        android:layout_height="60dp"
+        android:layout_width="41dp"
         android:src="@drawable/small_poster_clapperboard">
     </ImageView>
 
-    <LinearLayout android:id="@+id/linearLayout2"
-        android:layout_gravity="center_vertical" android:layout_height="wrap_content"
-        android:orientation="vertical" android:paddingLeft="5dp"
-        android:layout_width="wrap_content" android:layout_weight="0.9"
+    <LinearLayout android:id="@+id/linearLayout11"
+        android:layout_height="fill_parent"
+        android:layout_gravity="fill_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:layout_width="wrap_content"
+        android:layout_weight="0.9"
         android:layout_marginRight="7dip">
 
-        <TextView android:id="@+id/itemSeriesName"
-            android:text="@string/loading_label"
-            android:layout_height="wrap_content" android:layout_weight="1"
-            android:lines="1" android:layout_width="wrap_content"
-            android:scrollHorizontally="true" android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <LinearLayout android:id="@+id/linearLayout111"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="top|left"
+        android:orientation="vertical">
 
-        <TextView android:id="@+id/latestToAirsTextView"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:text="@string/loading_label"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            <TextView android:id="@+id/itemSeriesName"
+                android:text="@string/loading_label"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:lines="1"
+                android:scrollHorizontally="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:layout_gravity="top|left"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-        <TextView android:id="@+id/nextToViewTextView"
-            android:layout_height="0dp" android:layout_weight="1"
-            android:layout_width="wrap_content" android:text="@string/loading_label"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/linearLayout112"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:orientation="vertical">
+
+            <TextView android:id="@+id/nextToViewTextView"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:text="@string/loading_label"
+                android:lines="1"
+                android:scrollHorizontally="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:layout_gravity="bottom|left"
+                style="@style/aweseries_style.10dp"/>
+
+            <TextView android:id="@+id/latestToAirsTextView"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/loading_label"
+                android:lines="1"
+                android:scrollHorizontally="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:layout_gravity="bottom|left"
+                style="@style/aweseries_style.10dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/linearLayout3"
+    <LinearLayout android:id="@+id/linearLayout12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

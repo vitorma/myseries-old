@@ -1,11 +1,12 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import android.util.Log;
-
 
 public class Seasons {
 
@@ -70,7 +71,7 @@ public class Seasons {
 
     public List<Episode> getAllEpisodes() {
         List<Episode> episodes = new ArrayList<Episode>();
-        
+
         for (Season s : this.seasons.values()) {
             episodes.addAll(s.getEpisodes());
         }
@@ -88,5 +89,33 @@ public class Seasons {
         }
 
         return array;
+    }
+
+    public Episode getNextEpisodeToView() {
+        for (Episode e : this.getAllEpisodesSortedByNumber()) {
+            if (!e.isViewed()) {
+                return e;
+            }
+        }
+
+        return null;
+    }
+
+    public Episode getLatestEpisodeToAirs() {
+        final TreeSet<Episode> episodes = this.getAllEpisodesSortedByNumber();
+        return episodes.isEmpty() ? null : episodes.last();
+    }
+
+    private TreeSet<Episode> getAllEpisodesSortedByNumber() {
+        TreeSet<Episode> episodes = new TreeSet<Episode>(new Comparator<Episode>() {
+            @Override
+            public int compare(Episode e1, Episode e2) {
+                return e1.getNumber() - e2.getNumber();
+            }
+        });
+
+        episodes.addAll(this.getAllEpisodes());
+
+        return episodes;
     }
 }

@@ -56,6 +56,8 @@ public class MySeries extends ListActivity {
             final TextView status = (TextView) itemView.findViewById(R.id.itemSeriesStatus);
             final TextView network = (TextView) itemView.findViewById(R.id.networkTextView);
             final TextView airTime = (TextView) itemView.findViewById(R.id.airTimeTextView);
+            final TextView nextToView = (TextView) itemView.findViewById(R.id.nextToViewTextView);
+            final TextView latestToAirs = (TextView) itemView.findViewById(R.id.latestToAirsTextView);
 
             // load series data
             final Series item = this.getItem(position);
@@ -68,6 +70,11 @@ public class MySeries extends ListActivity {
             } else {
                 airTime.setText("");
             }
+
+            nextToView.setText(
+                    "next to view: " + item.getSeasons().getNextEpisodeToView());
+            latestToAirs.setText(
+                    "latest to airs: " + item.getSeasons().getLatestEpisodeToAirs());
 
             return itemView;
         }
