@@ -189,15 +189,17 @@ public class SeriesProvider {
     }
     
     public void markEpisodeAsViewed(Episode episode) {
-        this.getEpisode(episode.getId()).markAsViewed();
-        this.notifyListenersAboutEpisodeMarkedAsViewed(episode);
-        localSeriesRepository().update(episode);
+        Episode ep = this.getEpisode(episode.getId());
+        ep.markAsViewed();
+        localSeriesRepository().update(ep);
+        this.notifyListenersAboutEpisodeMarkedAsNotViewed(ep);
     }
 
     public void markEpisodeAsNotViewed(Episode episode) {
-        this.getEpisode(episode.getId()).markAsNotViewed();
-        this.notifyListenersAboutEpisodeMarkedAsNotViewed(episode);
-        localSeriesRepository().update(episode);
+        Episode ep = this.getEpisode(episode.getId());
+        ep.markAsNotViewed();
+        localSeriesRepository().update(ep);
+        this.notifyListenersAboutEpisodeMarkedAsNotViewed(ep);
     }
     
 }

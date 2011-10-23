@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -99,21 +100,19 @@ public class EpisodesView extends Activity {
             }
 
             isViewedCheckBox.setChecked(episode.isViewed());
-            isViewedCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            isViewedCheckBox.setOnClickListener(new OnClickListener() {
 
                 @Override
-                public void onCheckedChanged(CompoundButton commandButton, boolean checked) {
-
-                    episode.setViewed(checked);
-
-                    if (checked) {
-                        EpisodesView.this.seriesProvider().markEpisodeAsViewed(episode);
-                    } else {
-                        EpisodesView.this.seriesProvider().markEpisodeAsNotViewed(episode);
+                public void onClick(View arg0) {
+                    if (isViewedCheckBox.isChecked()) {
+                        episode.markAsViewed();
+                        seriesProvider().markEpisodeAsViewed(episode);
                     }
-
-                    Log.d(this.getClass().getName(),
-                            String.format("%s viewed: %b", episode.getName(), episode.isViewed()));
+                    else {
+                        episode.markAsNotViewed();
+                        seriesProvider().markEpisodeAsNotViewed(episode);
+                    }
+                        
                 }
             });
 
