@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
@@ -14,6 +14,7 @@ import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Episode;
 
 public class EpisodeView extends Activity {
+    private Episode episode;
     private String episodeId;
     private TextView episodeName;
     private TextView episodeFirstAired;
@@ -26,16 +27,16 @@ public class EpisodeView extends Activity {
     private ProgressDialog dialog;
 
     private void setCheckBoxListener() {
-        this.isViewed.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+        this.isViewed.setOnClickListener(new OnClickListener() {
 
             @Override
-            public void onCheckedChanged(CompoundButton checkButton, boolean checked) {
-                if (checked) {
-                    EpisodeView.this.seriesProvider().getEpisode(EpisodeView.this.episodeId)
-                            .markAsViewed();
+            public void onClick(View view) {
+                if (EpisodeView.this.isViewed.isChecked()) {
+                    EpisodeView.this.seriesProvider().markEpisodeAsViewed(EpisodeView.this.episode);
+                    seriesProvider().markEpisodeAsViewed(episode);
                 } else {
-                    EpisodeView.this.seriesProvider().getEpisode(EpisodeView.this.episodeId)
-                            .markAsNotViewed();
+                    EpisodeView.this.seriesProvider().markEpisodeAsNotViewed(EpisodeView.this.episode);
+                    seriesProvider().markEpisodeAsNotViewed(episode);
                 }
             }
         });
@@ -90,14 +91,14 @@ public class EpisodeView extends Activity {
     }
 
     private void downloadDescription() {
-        final Episode episode = this.seriesProvider().getEpisode(this.episodeId);
-        this.episodeName.setText(episode.getName());
-        this.episodeFirstAired.setText(episode.getFirstAired());
-        this.episodeDirector.setText(episode.getDirector());
-        this.episodeWriter.setText(episode.getWriter());
-        this.episodeGuestStars.setText(episode.getGuestStars());
-        this.episodeOverview.setText(episode.getOverview());
-        this.isViewed.setChecked(episode.isViewed());
+        this.episode = this.seriesProvider().getEpisode(this.episodeId);
+        this.episodeName.setText(this.episode.getName());
+        this.episodeFirstAired.setText(this.episode.getFirstAired());
+        this.episodeDirector.setText(this.episode.getDirector());
+        this.episodeWriter.setText(this.episode.getWriter());
+        this.episodeGuestStars.setText(this.episode.getGuestStars());
+        this.episodeOverview.setText(this.episode.getOverview());
+        this.isViewed.setChecked(this.episode.isViewed());
 
     }
 

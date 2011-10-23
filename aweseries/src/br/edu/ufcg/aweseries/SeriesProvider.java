@@ -192,7 +192,7 @@ public class SeriesProvider {
         Episode ep = this.getEpisode(episode.getId());
         ep.markAsViewed();
         localSeriesRepository().update(ep);
-        this.notifyListenersAboutEpisodeMarkedAsNotViewed(ep);
+        this.notifyListenersAboutEpisodeMarkedAsViewed(ep);
     }
 
     public void markEpisodeAsNotViewed(Episode episode) {

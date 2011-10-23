@@ -1,5 +1,6 @@
 package br.edu.ufcg.aweseries.gui;
 
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
@@ -7,7 +8,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,13 +15,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.SeriesProviderListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
@@ -31,6 +30,16 @@ public class EpisodesView extends Activity {
     private ListView episodesList;
     private Season season;
     private Series series;
+    private static final EpisodeComparator comparator = new EpisodeComparator();
+    
+    private static class EpisodeComparator implements Comparator<Episode> {
+        @Override
+        public int compare(Episode episodeA, Episode episodeB) {
+            return episodeA.getNumber() - episodeB.getNumber();
+        }
+    };
+
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +64,11 @@ public class EpisodesView extends Activity {
         this.setupItemClickListener();
     }
 
-    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> {
+    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements SeriesProviderListener {
         public EpisodeItemViewAdapter(Context context, int episodesItemResourceId,
                 List<Episode> list) {
             super(context, episodesItemResourceId, list);
+            seriesProvider().addListener(this);
         }
 
         @Override
@@ -117,6 +127,30 @@ public class EpisodesView extends Activity {
             });
 
             return itemView;
+        }
+
+        @Override
+        public void onUnfollowing(Series series) {
+            // Not my business
+        }
+
+        @Override
+        public void onFollowing(Series series) {
+            // Not my business
+        }
+
+        @Override
+        public void onEpisodeMarkedAsViewed(Episode episode) {
+            this.remove(episode);
+            this.add(episode);
+            this.sort(comparator);
+        }
+
+        @Override
+        public void onEpisodeMarkedAsNotViewed(Episode episode) {
+            this.remove(episode);
+            this.add(episode);
+            this.sort(comparator);
         }
     }
 
