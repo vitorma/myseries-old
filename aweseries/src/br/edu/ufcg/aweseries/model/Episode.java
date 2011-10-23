@@ -64,6 +64,10 @@ public class Episode {
         return this.seasonNumber;
     }
 
+    public boolean isSpecial() {
+        return this.getSeasonNumber() == 0;
+    }
+
     public String getName() {
         return this.name;
     }
@@ -108,7 +112,7 @@ public class Episode {
         if (firstAired == null) {
             throw new IllegalArgumentException("First aired should not be null");
         }
-        
+
         this.firstAired = firstAired;
     }
 
@@ -116,7 +120,7 @@ public class Episode {
         if (overview == null) {
             throw new IllegalArgumentException("Overview should not be null");
         }
-        
+
         this.overview = overview;
     }
 
@@ -140,7 +144,7 @@ public class Episode {
         if (guestStars == null) {
             throw new IllegalArgumentException("Guest stars should not be null");
         }
-        
+
         this.guestStars = guestStars;
     }
 
@@ -148,7 +152,7 @@ public class Episode {
         if (poster == null) {
             throw new IllegalArgumentException("Poster should not be null");
         }
-        
+
         this.poster = poster;
     }
 

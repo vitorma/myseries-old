@@ -92,7 +92,7 @@ public class Seasons {
     }
 
     public Episode getNextEpisodeToView() {
-        for (Episode e : this.getAllEpisodesSortedByNumber()) {
+        for (Episode e : this.getAllEpisodesSortedByNumber(1)) {
             if (!e.isViewed()) {
                 return e;
             }
@@ -102,14 +102,22 @@ public class Seasons {
     }
 
     public Episode getLatestEpisodeToAirs() {
-        final TreeSet<Episode> episodes = this.getAllEpisodesSortedByNumber();
+        final TreeSet<Episode> episodes = this.getAllEpisodesSortedByNumber(-1);
         return episodes.isEmpty() ? null : episodes.last();
     }
 
-    private TreeSet<Episode> getAllEpisodesSortedByNumber() {
+    private TreeSet<Episode> getAllEpisodesSortedByNumber(final int returnForEspecial) {
         TreeSet<Episode> episodes = new TreeSet<Episode>(new Comparator<Episode>() {
             @Override
             public int compare(Episode e1, Episode e2) {
+                if (e1.isSpecial()) {
+                    return e2.isSpecial() ? (e1.getNumber() - e2.getNumber()) : returnForEspecial;
+                }
+
+                if (e2.isSpecial()) {
+                    return -returnForEspecial;
+                }
+
                 return (e1.getSeasonNumber() != e2.getSeasonNumber())
                         ? e1.getSeasonNumber() - e2.getSeasonNumber()
                         : e1.getNumber() - e2.getNumber();
