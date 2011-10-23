@@ -50,6 +50,12 @@ public class Series {
         return this.airsTime;
     }
 
+    public String getAirsDayAndTime() {
+        return Strings.isBlank(this.getAirsDay())
+               ? ""
+               : this.getAirsDay().substring(0, 3) + " " + this.getAirsTime();
+    }
+
     public String getFirstAired() {
         return this.firstAired;
     }

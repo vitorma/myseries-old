@@ -24,7 +24,6 @@ import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.SeriesProviderListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.util.Strings;
 
 public class MySeries extends ListActivity {
     private MySeriesViewAdapter dataAdapter;
@@ -73,18 +72,13 @@ public class MySeries extends ListActivity {
 
             // load series data
             final Series item = this.getItem(position);
-            name.setText(item.getName());
-            status.setText(item.getStatus());
             image.setImageBitmap(App.environment().seriesProvider().getPosterOf(item));
-            network.setText(item.getNetwork());
-            if (!Strings.isEmpty(item.getAirsDay())) {
-                airTime.setText(item.getAirsDay() + " " + item.getAirsTime());
-            } else {
-                airTime.setText("");
-            }
-
+            name.setText(item.getName());
             nextToView.setText(item.getSeasons().getNextEpisodeToView().toString());
             latestToAirs.setText(item.getSeasons().getLatestEpisodeToAirs().toString());
+            status.setText(item.getStatus());
+            network.setText(item.getNetwork());
+            airTime.setText(item.getAirsDayAndTime());
 
             return itemView;
         }
