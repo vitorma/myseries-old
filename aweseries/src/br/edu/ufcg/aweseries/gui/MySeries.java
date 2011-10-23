@@ -88,7 +88,7 @@ public class MySeries extends ListActivity {
 
             return itemView;
         }
-
+        
         @Override
         public void onUnfollowing(Series series) {
             this.remove(series);
@@ -99,18 +99,20 @@ public class MySeries extends ListActivity {
             this.add(series);
             this.sort(comparator);
         }
-
+        
         @Override
         public void onEpisodeMarkedAsViewed(Episode episode) {
-            this.remove(seriesProvider.getSeries(episode.getSeriesId()));
-            this.add(seriesProvider.getSeries(episode.getSeriesId()));
+            Series series = seriesProvider.getSeries(episode.getSeriesId());
+            this.remove(series);
+            this.add(series);
             this.sort(comparator);
         }
 
         @Override
         public void onEpisodeMarkedAsNotViewed(Episode episode) {
-            this.remove(seriesProvider.getSeries(episode.getSeriesId()));
-            this.add(seriesProvider.getSeries(episode.getSeriesId()));
+            Series series = seriesProvider.getSeries(episode.getSeriesId());
+            this.remove(series);
+            this.add(series);
             this.sort(comparator);
         }
     }
