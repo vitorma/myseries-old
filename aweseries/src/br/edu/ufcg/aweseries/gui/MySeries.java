@@ -47,7 +47,7 @@ public class MySeries extends ListActivity {
             if (itemView == null) {
                 final LayoutInflater li = (LayoutInflater) MySeries.this
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = li.inflate(R.layout.list_item, null);
+                itemView = li.inflate(R.layout.my_series_item, null);
             }
 
             // get views for the series fields
@@ -71,10 +71,8 @@ public class MySeries extends ListActivity {
                 airTime.setText("");
             }
 
-            nextToView.setText(
-                    "next to view: " + item.getSeasons().getNextEpisodeToView());
-            latestToAirs.setText(
-                    "latest to airs: " + item.getSeasons().getLatestEpisodeToAirs());
+            nextToView.setText(item.getSeasons().getNextEpisodeToView().toString());
+            latestToAirs.setText(item.getSeasons().getLatestEpisodeToAirs().toString());
 
             return itemView;
         }

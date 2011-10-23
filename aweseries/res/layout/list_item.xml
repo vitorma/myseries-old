@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="5dp"
+    android:orientation="horizontal"
     android:baselineAligned="true">
 
     <ImageView android:id="@+id/itemSeriesImage"
