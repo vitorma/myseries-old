@@ -1,51 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/linearLayout1"
-	android:layout_width="match_parent" android:layout_height="fill_parent"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:padding="5dp" android:baselineAligned="true">
-	<ImageView android:id="@+id/itemSeriesImage"
-		android:layout_gravity="center_vertical" android:scaleType="centerInside"
-		android:layout_height="60dp" android:layout_width="41dp"
-		android:src="@drawable/small_poster_clapperboard">
-	</ImageView>
+    android:layout_width="match_parent" android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="5dp" android:baselineAligned="true">
 
-	<LinearLayout android:id="@+id/linearLayout2"
-		android:layout_gravity="center_vertical" android:layout_height="wrap_content"
-		android:orientation="vertical" android:paddingLeft="5dp"
-		android:layout_width="wrap_content" android:layout_weight="0.9"
-		android:layout_marginRight="7dip">
-		<TextView android:textAppearance="?android:attr/textAppearanceMedium"
-			android:id="@+id/itemSeriesName" android:text="@string/loading_label"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:lines="1" android:layout_width="wrap_content"
-			android:scrollHorizontally="true" android:ellipsize="marquee"
-			android:marqueeRepeatLimit="marquee_forever"></TextView>
-		<TextView android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_height="0dp" android:layout_weight="1"
-			android:layout_width="wrap_content" android:text="@string/loading_label"
-			android:id="@+id/nextAirTextView"></TextView>
-		<TextView android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_height="0dp" android:layout_weight="1"
-			android:layout_width="wrap_content" android:text="@string/loading_label"
-			android:id="@+id/nextToWatchTextView"></TextView>
+    <ImageView android:id="@+id/itemSeriesImage"
+        android:layout_gravity="center_vertical" android:scaleType="centerInside"
+        android:layout_height="60dp" android:layout_width="41dp"
+        android:src="@drawable/small_poster_clapperboard">
+    </ImageView>
 
-	</LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout2"
+        android:layout_gravity="center_vertical" android:layout_height="wrap_content"
+        android:orientation="vertical" android:paddingLeft="5dp"
+        android:layout_width="wrap_content" android:layout_weight="0.9"
+        android:layout_marginRight="7dip">
 
-	<LinearLayout android:id="@+id/linearLayout3"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:orientation="vertical" android:paddingLeft="5dp"
-		android:layout_gravity="right|center_vertical" android:layout_margin="1dip">
-		<TextView android:layout_height="wrap_content" android:text="@string/loading_label"
-			android:id="@+id/itemSeriesStatus" android:layout_gravity="right"
-			android:layout_width="wrap_content" android:maxLines="1"></TextView>
-		<TextView android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_height="0dp" android:layout_weight="1"
-			android:layout_width="wrap_content" android:text="@string/loading_label"
-			android:id="@+id/airTimeTextView" android:layout_gravity="right"></TextView>
-		<TextView android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_height="0dp" android:layout_weight="1"
-			android:layout_width="wrap_content" android:text="@string/loading_label"
-			android:id="@+id/networkTextView" android:layout_gravity="right"></TextView>
-	</LinearLayout>
+        <TextView android:id="@+id/itemSeriesName"
+            android:text="@string/loading_label"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:lines="1" android:layout_width="wrap_content"
+            android:scrollHorizontally="true" android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView android:id="@+id/latestToAirsTextView"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:text="@string/loading_label"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <TextView android:id="@+id/nextToViewTextView"
+            android:layout_height="0dp" android:layout_weight="1"
+            android:layout_width="wrap_content" android:text="@string/loading_label"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:layout_gravity="top|right"
+        android:layout_margin="1dip">
+
+        <TextView android:id="@+id/itemSeriesStatus"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_label"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:maxLines="1"
+            style="@style/aweseries_style.10dp"/>
+
+        <TextView android:id="@+id/airTimeTextView"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:text="@string/loading_label"
+            android:layout_gravity="right"
+            style="@style/aweseries_style.10dp"/>
+
+        <TextView android:id="@+id/networkTextView"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:text="@string/loading_label"
+            android:layout_gravity="right"
+            style="@style/aweseries_style.10dp"/>
+    </LinearLayout>
 
 </LinearLayout>

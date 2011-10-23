@@ -64,7 +64,7 @@ public class MySeries extends ListActivity {
             image.setImageBitmap(App.environment().seriesProvider().getPosterOf(item));
             network.setText(item.getNetwork());
             if (!Strings.isEmpty(item.getAirsDay())) {
-                airTime.setText(item.getAirsDay() + "|" + item.getAirsTime());
+                airTime.setText(item.getAirsDay() + " " + item.getAirsTime());
             } else {
                 airTime.setText("");
             }
