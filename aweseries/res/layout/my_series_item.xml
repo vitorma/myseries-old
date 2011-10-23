@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="5dp"
+    android:orientation="horizontal"
+    android:baselineAligned="true">
+
+    <ImageView android:id="@+id/itemSeriesImage"
+        android:src="@drawable/small_poster_clapperboard"
+        android:layout_width="41dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_vertical"
+        android:scaleType="centerInside"/>
+
+    <RelativeLayout android:id="@+id/linearLayout11"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:paddingLeft="5dp"
+        android:layout_weight="1">
+
+        <TextView android:id="@+id/itemSeriesName"
+            android:text="@string/loading_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="70dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView android:id="@+id/latestToAirsLabelTextView"
+            android:text="latest to airs: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            style="@style/aweseries_style.10dp"/>
+
+        <TextView android:id="@+id/latestToAirsTextView"
+            android:text="@string/loading_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/latestToAirsLabelTextView"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            style="@style/aweseries_style.10dp"/>
+
+        <TextView android:id="@+id/nextToViewLabelTextView"
+            android:text="next to view: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_above="@id/latestToAirsLabelTextView"
+            style="@style/aweseries_style.10dp"/>
+
+        <TextView android:id="@+id/nextToViewTextView"
+            android:text="@string/loading_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="70dp"
+            android:layout_toRightOf="@id/nextToViewLabelTextView"
+            android:layout_above="@id/latestToAirsTextView"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            style="@style/aweseries_style.10dp"/>
+
+        <TextView android:id="@+id/itemSeriesStatus"
+            android:text="@string/loading_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:maxLines="1"
+            style="@style/aweseries_style.10dp"/>
+
+        <TextView android:id="@+id/airTimeTextView"
+            android:text="@string/loading_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/itemSeriesStatus"
+            style="@style/aweseries_style.10dp"/>
+
+        <TextView android:id="@+id/networkTextView"
+            android:text="@string/loading_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/airTimeTextView"
+            style="@style/aweseries_style.10dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
