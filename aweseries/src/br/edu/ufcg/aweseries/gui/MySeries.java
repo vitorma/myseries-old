@@ -1,5 +1,6 @@
 package br.edu.ufcg.aweseries.gui;
 
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -21,11 +22,22 @@ import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.SeriesProviderListener;
+import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class MySeries extends ListActivity {
     private MySeriesViewAdapter dataAdapter;
+    private final static SeriesComparator comparator = new SeriesComparator();
+
+    //Series Comparator
+
+    private static class SeriesComparator implements Comparator<Series> {
+        @Override
+        public int compare(Series seriesA, Series seriesB) {
+            return seriesA.getName().compareTo(seriesB.getName());
+        }
+    }
 
     //View Adapter----------------------------------------------------------------------------------
 
@@ -33,8 +45,7 @@ public class MySeries extends ListActivity {
             SeriesProviderListener {
         private final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
-        public MySeriesViewAdapter(Context context, int seriesItemResourceId, 
-                List<Series> objects) {
+        public MySeriesViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);
             this.seriesProvider.addListener(this);
         }
@@ -57,7 +68,8 @@ public class MySeries extends ListActivity {
             final TextView network = (TextView) itemView.findViewById(R.id.networkTextView);
             final TextView airTime = (TextView) itemView.findViewById(R.id.airTimeTextView);
             final TextView nextToView = (TextView) itemView.findViewById(R.id.nextToViewTextView);
-            final TextView latestToAirs = (TextView) itemView.findViewById(R.id.latestToAirsTextView);
+            final TextView latestToAirs = (TextView) itemView
+                    .findViewById(R.id.latestToAirsTextView);
 
             // load series data
             final Series item = this.getItem(position);
@@ -85,6 +97,21 @@ public class MySeries extends ListActivity {
         @Override
         public void onFollowing(Series series) {
             this.add(series);
+            this.sort(comparator);
+        }
+
+        @Override
+        public void onEpisodeMarkedAsViewed(Episode episode) {
+            this.remove(seriesProvider.getSeries(episode.getSeriesId()));
+            this.add(seriesProvider.getSeries(episode.getSeriesId()));
+            this.sort(comparator);
+        }
+
+        @Override
+        public void onEpisodeMarkedAsNotViewed(Episode episode) {
+            this.remove(seriesProvider.getSeries(episode.getSeriesId()));
+            this.add(seriesProvider.getSeries(episode.getSeriesId()));
+            this.sort(comparator);
         }
     }
 
@@ -97,6 +124,7 @@ public class MySeries extends ListActivity {
         this.initAdapter();
         this.setupItemClickListener();
         this.setupItemLongClickListener();
+        this.dataAdapter.sort(comparator);
     }
 
     @Override
@@ -146,8 +174,7 @@ public class MySeries extends ListActivity {
     private void setupItemLongClickListener() {
         this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, 
-                    long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 MySeries.this.showUnfollowingDialog((Series) parent.getItemAtPosition(position));
                 return true;
             }
@@ -155,8 +182,7 @@ public class MySeries extends ListActivity {
     }
 
     private void showUnfollowingDialog(final Series series) {
-        final DialogInterface.OnClickListener dialogClickListener 
-                = new DialogInterface.OnClickListener() {
+        final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {

@@ -2,7 +2,7 @@ package br.edu.ufcg.aweseries.model;
 
 import br.edu.ufcg.aweseries.util.Strings;
 
-public class Series {
+public class Series implements Comparable<Series> {
     private String id;
     private String name;
     private String status;
@@ -186,4 +186,9 @@ public class Series {
     public boolean hasPoster() {
         return this.poster != null;
     }
+
+    @Override
+    public int compareTo(Series otherSeries) {
+        return this.name.compareTo(otherSeries.getName());
+    }   
 }

@@ -175,4 +175,29 @@ public class SeriesProvider {
             listener.onFollowing(series);
         }
     }
+    
+    private void notifyListenersAboutEpisodeMarkedAsViewed(Episode episode) {
+        for (SeriesProviderListener listener : this.listeners) {
+            listener.onEpisodeMarkedAsViewed(episode);
+        }
+    }
+
+    private void notifyListenersAboutEpisodeMarkedAsNotViewed(Episode episode) {
+        for (SeriesProviderListener listener : this.listeners) {
+            listener.onEpisodeMarkedAsNotViewed(episode);
+        }
+    }
+    
+    public void markEpisodeAsViewed(Episode episode) {
+        this.getEpisode(episode.getId()).markAsViewed();
+        this.notifyListenersAboutEpisodeMarkedAsViewed(episode);
+        localSeriesRepository().update(episode);
+    }
+
+    public void markEpisodeAsNotViewed(Episode episode) {
+        this.getEpisode(episode.getId()).markAsNotViewed();
+        this.notifyListenersAboutEpisodeMarkedAsNotViewed(episode);
+        localSeriesRepository().update(episode);
+    }
+    
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
@@ -18,6 +19,7 @@ public class EpisodeView extends Activity {
     private TextView episodeDirector;
     private TextView episodeWriter;
     private TextView episodeGuestStars;
+    private CheckBox isViewed;
     private boolean loaded = false;
     private ProgressDialog dialog;
 
@@ -32,6 +34,7 @@ public class EpisodeView extends Activity {
         this.episodeDirector = (TextView) findViewById(R.id.episodeDirectorTextView);
         this.episodeWriter = (TextView) findViewById(R.id.episodeWriterTextView);
         this.episodeGuestStars = (TextView) findViewById(R.id.episodeGuestStarsTextView);
+        this.isViewed = (CheckBox) findViewById(R.id.isEpisodeViewedCheckBox);
         this.populateView();
     }
 
@@ -75,6 +78,8 @@ public class EpisodeView extends Activity {
             this.episodeWriter.setText(episode.getWriter());
             this.episodeGuestStars.setText(episode.getGuestStars());
             this.episodeOverview.setText(episode.getOverview());
+            this.isViewed.setChecked(episode.isViewed());
+            
     }
 
     private void showProgressDialog() {

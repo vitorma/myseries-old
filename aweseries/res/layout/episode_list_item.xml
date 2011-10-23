@@ -5,7 +5,8 @@
 	android:weightSum="1">
 	<CheckBox android:id="@+id/episodeIsViewedCheckBox"
 		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:layout_margin="5dip"></CheckBox>
+		android:layout_margin="5dip" android:focusable="false"
+		android:focusableInTouchMode="false"></CheckBox>
 	<LinearLayout android:layout_height="match_parent"
 		android:id="@+id/linearLayout1" android:orientation="vertical"
 		android:layout_weight="0.40" android:layout_width="match_parent">

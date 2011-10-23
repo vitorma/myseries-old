@@ -63,6 +63,7 @@ public class EpisodesView extends Activity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View itemView = convertView;
+            final Episode episode = this.getItem(position);
 
             // if no view was passed, create one for the item
             if (itemView == null) {
@@ -81,9 +82,8 @@ public class EpisodesView extends Activity {
                     .findViewById(R.id.episodeIsViewedCheckBox);
 
             // load episode data
-            final String episodeName = this.getItem(position).getName();
-            final String episodeNumberRep = String.format("Episode %02d", this.getItem(position)
-                    .getNumber());
+            final String episodeName = episode.getName();
+            final String episodeNumberRep = String.format("Episode %02d", episode.getNumber());
             if ((episodeName != null) && !Strings.isBlank(episodeName)) {
                 nameTextView.setText(episodeName);
                 numberTextView.setText(episodeNumberRep);
@@ -94,25 +94,31 @@ public class EpisodesView extends Activity {
                 numberTextView.setText(episodeNumberRep);
             }
 
-            if (this.getItem(position).getFirstAired() != null) {
-                dateTextView.setText(this.getItem(position).getFirstAired());
+            if (episode.getFirstAired() != null) {
+                dateTextView.setText(episode.getFirstAired());
             }
 
-            isViewedCheckBox.setPressed(this.getItem(position).isViewed());
+            isViewedCheckBox.setChecked(episode.isViewed());
             isViewedCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
                 @Override
-                public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-                    EpisodeItemViewAdapter.this.getItem(position).setViewed(arg1);
+                public void onCheckedChanged(CompoundButton commandButton, boolean checked) {
+
+                    episode.setViewed(checked);
+
+                    if (checked) {
+                        EpisodesView.this.seriesProvider().markEpisodeAsViewed(episode);
+                    } else {
+                        EpisodesView.this.seriesProvider().markEpisodeAsNotViewed(episode);
+                    }
+
                     Log.d(this.getClass().getName(),
-                            String.format("%s viewed: %b", getItem(position).getName(),
-                                    getItem(position).isViewed()));
+                            String.format("%s viewed: %b", episode.getName(), episode.isViewed()));
                 }
             });
 
             return itemView;
         }
-
     }
 
     private void populateEpisodesList() {
