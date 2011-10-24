@@ -1,11 +1,10 @@
 package br.edu.ufcg.aweseries.test.unit.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.matchers.JUnitMatchers;
 
 import br.edu.ufcg.aweseries.model.Episode;
 

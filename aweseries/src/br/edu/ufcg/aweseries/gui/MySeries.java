@@ -3,6 +3,7 @@ package br.edu.ufcg.aweseries.gui;
 import java.util.Comparator;
 import java.util.List;
 
+import android.R.id;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -57,7 +58,7 @@ public class MySeries extends ListActivity {
             if (itemView == null) {
                 final LayoutInflater li = (LayoutInflater) MySeries.this
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = li.inflate(R.layout.my_series_item, null);
+                itemView = li.inflate(R.layout.my_series_list_item, null);
             }
 
             // get views for the series fields
@@ -116,7 +117,8 @@ public class MySeries extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.my_series);
+        this.setContentView(R.layout.list_activity_layout);
+        this.adjustContentView();
         this.initAdapter();
         this.setupItemClickListener();
         this.setupItemLongClickListener();
@@ -147,6 +149,14 @@ public class MySeries extends ListActivity {
     }
 
     //Private---------------------------------------------------------------------------------------
+
+    private void adjustContentView() {
+        final TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
+        title.setText("My Series");
+        
+        final TextView empty = (TextView) this.findViewById(id.empty);
+        empty.setText("No series followed");
+    }
 
     private void initAdapter() {
         this.dataAdapter = new MySeriesViewAdapter(this, R.layout.list_item, App.environment()
