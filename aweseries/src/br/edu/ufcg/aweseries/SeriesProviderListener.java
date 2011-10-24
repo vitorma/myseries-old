@@ -1,6 +1,7 @@
 package br.edu.ufcg.aweseries;
 
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
 public interface SeriesProviderListener {
@@ -12,4 +13,8 @@ public interface SeriesProviderListener {
     public void onEpisodeMarkedAsViewed(Episode episode);
 
     public void onEpisodeMarkedAsNotViewed(Episode episode);
+    
+    public void onSeasonMarkedAsViewed(Season season);
+    
+    public void onSeasonMarkedAsNotViewed(Season season);
 }

@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import br.edu.ufcg.aweseries.data.DatabaseHelper;
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.NonExistentSeriesException;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
@@ -25,7 +26,7 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  */
 public class SeriesProvider {
 
-    private HashSet<SeriesProviderListener> listeners;
+    private final HashSet<SeriesProviderListener> listeners;
 
     /**
      * If you know what you are doing, use this method to instantiate a
@@ -57,8 +58,8 @@ public class SeriesProvider {
     }
 
     private List<Series> sortSeriesByName(List<Series> series) {
-        ArrayList<Series> sorted = new ArrayList<Series>(series);
-        Comparator<Series> comparator = new Comparator<Series>() {
+        final ArrayList<Series> sorted = new ArrayList<Series>(series);
+        final Comparator<Series> comparator = new Comparator<Series>() {
             @Override
             public int compare(Series s1, Series s2) {
                 return s1.getName().compareTo(s2.getName());
@@ -69,7 +70,7 @@ public class SeriesProvider {
     }
 
     public void follow(Series series) {
-        Series fullSeries = this.theTVDB().getFullSeries(series.getId());
+        final Series fullSeries = this.theTVDB().getFullSeries(series.getId());
         this.localSeriesRepository().insert(fullSeries);
         this.notifyListenersAboutFollowedSeries(fullSeries);
     }
@@ -88,7 +89,7 @@ public class SeriesProvider {
     }
 
     public void wipeFollowedSeries() {
-        for (Series s : this.localSeriesRepository().getAllSeries()) {
+        for (final Series s : this.localSeriesRepository().getAllSeries()) {
             this.notifyListenersAboutUnfollowedSeries(s);
         }
 
@@ -96,7 +97,7 @@ public class SeriesProvider {
     }
 
     public Series[] searchSeries(String seriesName) {
-        List<Series> searchResult = this.theTVDB().search(seriesName);
+        final List<Series> searchResult = this.theTVDB().search(seriesName);
 
         if (searchResult == null) {
             throw new RuntimeException("no results found for criteria " + seriesName);
@@ -165,41 +166,71 @@ public class SeriesProvider {
     }
 
     private void notifyListenersAboutUnfollowedSeries(Series series) {
-        for (SeriesProviderListener listener : this.listeners) {
+        for (final SeriesProviderListener listener : this.listeners) {
             listener.onUnfollowing(series);
         }
     }
 
     private void notifyListenersAboutFollowedSeries(Series series) {
-        for (SeriesProviderListener listener : this.listeners) {
+        for (final SeriesProviderListener listener : this.listeners) {
             listener.onFollowing(series);
         }
     }
-    
+
     private void notifyListenersAboutEpisodeMarkedAsViewed(Episode episode) {
-        for (SeriesProviderListener listener : this.listeners) {
+        for (final SeriesProviderListener listener : this.listeners) {
             listener.onEpisodeMarkedAsViewed(episode);
         }
     }
 
     private void notifyListenersAboutEpisodeMarkedAsNotViewed(Episode episode) {
-        for (SeriesProviderListener listener : this.listeners) {
+        for (final SeriesProviderListener listener : this.listeners) {
             listener.onEpisodeMarkedAsNotViewed(episode);
         }
     }
-    
+
+    private void notifyListenersAboutSeasonMarkedAsNotViewed(Season season) {
+        for (final SeriesProviderListener listener : this.listeners) {
+            listener.onSeasonMarkedAsNotViewed(season);
+        }
+    }
+
+    private void notifyListenersAboutSeasonMarkedAsViewed(Season season) {
+        for (final SeriesProviderListener listener : this.listeners) {
+            listener.onSeasonMarkedAsViewed(season);
+        }
+    }
+
+    public void markSeasonAsViewed(Season season) {
+        for (final Episode episode : season.getEpisodes()) {
+            final Episode ep = this.localSeriesRepository().getEpisode(episode.getId());
+            ep.markAsViewed();
+            this.localSeriesRepository().update(ep);
+        }
+        this.notifyListenersAboutSeasonMarkedAsViewed(season);
+    }
+
+    public void markSeasonAsNotViewed(Season season) {
+        for (final Episode episode : season.getEpisodes()) {
+            final Episode ep = this.localSeriesRepository().getEpisode(episode.getId());
+            ep.markAsNotViewed();
+            this.localSeriesRepository().update(ep);
+        }
+        this.notifyListenersAboutSeasonMarkedAsNotViewed(season);
+    }
+
     public void markEpisodeAsViewed(Episode episode) {
-        Episode ep = this.getEpisode(episode.getId());
+        final Episode ep = this.getEpisode(episode.getId());
         ep.markAsViewed();
-        localSeriesRepository().update(ep);
+        this.localSeriesRepository().update(ep);
         this.notifyListenersAboutEpisodeMarkedAsViewed(ep);
     }
 
     public void markEpisodeAsNotViewed(Episode episode) {
-        Episode ep = this.getEpisode(episode.getId());
+        final Episode ep = this.getEpisode(episode.getId());
         ep.markAsNotViewed();
-        localSeriesRepository().update(ep);
+        this.localSeriesRepository().update(ep);
         this.notifyListenersAboutEpisodeMarkedAsNotViewed(ep);
     }
-    
+
 }
