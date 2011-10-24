@@ -23,6 +23,7 @@ import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.SeriesProviderListener;
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
 public class MySeries extends ListActivity {
@@ -74,15 +75,26 @@ public class MySeries extends ListActivity {
             final Series item = this.getItem(position);
             image.setImageBitmap(App.environment().seriesProvider().getPosterOf(item));
             name.setText(item.getName());
-            nextToView.setText(item.getSeasons().getNextEpisodeToView().toString());
-            latestToAirs.setText(item.getSeasons().getLatestEpisodeToAirs().toString());
+
+            if (item.getSeasons().getNextEpisodeToView() != null) {
+                nextToView.setText(item.getSeasons().getNextEpisodeToView().toString());
+            } else {
+                nextToView.setText(R.string.allEpisodesViewed);
+            }
+
+            if (item.getSeasons().getLatestEpisodeToAirs() != null) {
+                latestToAirs.setText(item.getSeasons().getLatestEpisodeToAirs().toString());
+            } else {
+                latestToAirs.setText(R.string.noEpisodeAiredYet);
+            }
+
             status.setText(item.getStatus());
             network.setText(item.getNetwork());
             airTime.setText(item.getAirsDayAndTime());
 
             return itemView;
         }
-        
+
         @Override
         public void onUnfollowing(Series series) {
             this.remove(series);
@@ -93,10 +105,10 @@ public class MySeries extends ListActivity {
             this.add(series);
             this.sort(comparator);
         }
-        
+
         @Override
         public void onEpisodeMarkedAsViewed(Episode episode) {
-            Series series = seriesProvider.getSeries(episode.getSeriesId());
+            final Series series = this.seriesProvider.getSeries(episode.getSeriesId());
             this.remove(series);
             this.add(series);
             this.sort(comparator);
@@ -104,7 +116,25 @@ public class MySeries extends ListActivity {
 
         @Override
         public void onEpisodeMarkedAsNotViewed(Episode episode) {
-            Series series = seriesProvider.getSeries(episode.getSeriesId());
+            final Series series = this.seriesProvider.getSeries(episode.getSeriesId());
+            this.remove(series);
+            this.add(series);
+            this.sort(comparator);
+        }
+
+        @Override
+        public void onSeasonMarkedAsViewed(Season season) {
+            final Series series = this.seriesProvider.getSeries(season.getEpisodeAt(0)
+                    .getSeriesId());
+            this.remove(series);
+            this.add(series);
+            this.sort(comparator);
+        }
+
+        @Override
+        public void onSeasonMarkedAsNotViewed(Season season) {
+            final Series series = this.seriesProvider.getSeries(season.getEpisodeAt(0)
+                    .getSeriesId());
             this.remove(series);
             this.add(series);
             this.sort(comparator);

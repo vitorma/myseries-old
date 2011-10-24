@@ -25,4 +25,6 @@
     <string name="followSeries">Follow</string>
     <string name="back">Back</string>
     <string name="unfollowSeries">Unfollow</string>
+    <string name="allEpisodesViewed">all episodes viewed</string>
+    <string name="noEpisodeAiredYet">no episode aired yet</string>
 </resources>

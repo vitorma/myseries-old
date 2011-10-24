@@ -7,14 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.SeriesProviderListener;
+import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
@@ -73,7 +77,8 @@ public class SeasonsView extends Activity {
     }
 
     //XXX: Use TextViewAdapter instead.
-    private class SeasonItemViewAdapter extends ArrayAdapter<Season> {
+    private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements
+            SeriesProviderListener {
         public SeasonItemViewAdapter(Context context, int seasonsItemResourceId, Season[] objects) {
             super(context, seasonsItemResourceId, objects);
         }
@@ -81,30 +86,90 @@ public class SeasonsView extends Activity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View itemView = convertView;
+            final Season season = getItem(position);
 
             // if no view was passed, create one for the item
             if (itemView == null) {
                 LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = vi.inflate(R.layout.text_only_list_item, null);
+                itemView = vi.inflate(R.layout.season_list_item, null);
             }
 
             // get views for the series fields
-            // ImageView image =
-            // (ImageView) itemView.findViewById(R.id.itemSeriesImage);
             TextView name = (TextView) itemView.findViewById(R.id.itemName);
 
             // load series data
             name.setText(this.getItem(position).toString());
 
+            final CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
+            
+            boolean allEpisodesViewed = true;
+            for (Episode episode : season.getEpisodes()) {
+                if (!episode.isViewed()) {
+                    allEpisodesViewed = false;
+                    break;
+                }
+            }
+            
+            isSeasonViewed.setChecked(allEpisodesViewed);
+            
+            isSeasonViewed.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    if (isSeasonViewed.isChecked()) {
+                        seriesProvider().markSeasonAsViewed(season);
+                    } else {
+                        seriesProvider().markSeasonAsNotViewed(season);
+                    }
+
+                }
+            });
+
             return itemView;
+        }
+
+        @Override
+        public void onUnfollowing(Series series) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onFollowing(Series series) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onEpisodeMarkedAsViewed(Episode episode) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onEpisodeMarkedAsNotViewed(Episode episode) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onSeasonMarkedAsViewed(Season season) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onSeasonMarkedAsNotViewed(Season season) {
+            // TODO Auto-generated method stub
+
         }
 
     }
 
     private void populateSeasonsList() {
         this.seasonsList = (ListView) findViewById(R.id.listView);
-        this.seasonsList.setAdapter(new SeasonItemViewAdapter(
-                this, R.layout.list_item, this.series.getSeasons().toArray()));
+        this.seasonsList.setAdapter(new SeasonItemViewAdapter(this, R.layout.list_item, this.series
+                .getSeasons().toArray()));
     }
 
     /**

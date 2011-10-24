@@ -31,15 +31,13 @@ public class EpisodesView extends Activity {
     private Season season;
     private Series series;
     private static final EpisodeComparator comparator = new EpisodeComparator();
-    
+
     private static class EpisodeComparator implements Comparator<Episode> {
         @Override
         public int compare(Episode episodeA, Episode episodeB) {
             return episodeA.getNumber() - episodeB.getNumber();
         }
     };
-
-    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +62,8 @@ public class EpisodesView extends Activity {
         this.setupItemClickListener();
     }
 
-    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements SeriesProviderListener {
+    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements
+            SeriesProviderListener {
         public EpisodeItemViewAdapter(Context context, int episodesItemResourceId,
                 List<Episode> list) {
             super(context, episodesItemResourceId, list);
@@ -117,12 +116,11 @@ public class EpisodesView extends Activity {
                     if (isViewedCheckBox.isChecked()) {
                         episode.markAsViewed();
                         seriesProvider().markEpisodeAsViewed(episode);
-                    }
-                    else {
+                    } else {
                         episode.markAsNotViewed();
                         seriesProvider().markEpisodeAsNotViewed(episode);
                     }
-                        
+
                 }
             });
 
@@ -151,6 +149,16 @@ public class EpisodesView extends Activity {
             this.remove(episode);
             this.add(episode);
             this.sort(comparator);
+        }
+
+        @Override
+        public void onSeasonMarkedAsViewed(Season season) {
+            // Not my business
+        }
+
+        @Override
+        public void onSeasonMarkedAsNotViewed(Season season) {
+            // Not my business
         }
     }
 
