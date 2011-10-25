@@ -3,6 +3,7 @@ package br.edu.ufcg.aweseries.model;
 
 public class EpisodeBuilder {
     private static final String DEFAULT_STRING = "";
+    private static final String DEFAULT_NAME = "Unnamed Episode";
 
     private String id;
     private String seriesId;
@@ -103,7 +104,7 @@ public class EpisodeBuilder {
     public Episode build() {
         Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
 
-        episode.setName(this.name != null ? this.name : DEFAULT_STRING);
+        episode.setName(this.name != null ? this.name : DEFAULT_NAME);
         episode.setFirstAired(this.firstAired != null ? this.firstAired : DEFAULT_STRING);
         episode.setOverview(this.overview != null ? this.overview : DEFAULT_STRING);
         episode.setDirector(this.director != null ? this.director : DEFAULT_STRING);

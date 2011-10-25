@@ -28,10 +28,12 @@ import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
 public class MySeries extends ListActivity {
-    private MySeriesViewAdapter dataAdapter;
-    private final static SeriesComparator comparator = new SeriesComparator();
+    private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
+    private static final SeriesComparator comparator = new SeriesComparator();
 
-    //Series Comparator
+    private SeriesItemViewAdapter dataAdapter;
+
+    //Series comparator-------------------------------------------------------------------------------------------------
 
     private static class SeriesComparator implements Comparator<Series> {
         @Override
@@ -40,15 +42,13 @@ public class MySeries extends ListActivity {
         }
     }
 
-    //View Adapter----------------------------------------------------------------------------------
+    //Series item view adapter------------------------------------------------------------------------------------------
 
-    private class MySeriesViewAdapter extends ArrayAdapter<Series> implements
-            SeriesProviderListener {
-        private final SeriesProvider seriesProvider = App.environment().seriesProvider();
+    private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements SeriesProviderListener {
 
-        public MySeriesViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
+        public SeriesItemViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);
-            this.seriesProvider.addListener(this);
+            seriesProvider.addListener(this);
         }
 
         @Override
@@ -57,8 +57,8 @@ public class MySeries extends ListActivity {
 
             // if no view was passed, create one for the item
             if (itemView == null) {
-                final LayoutInflater li = (LayoutInflater) MySeries.this
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final LayoutInflater li =
+                    (LayoutInflater) MySeries.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.my_series_list_item, null);
             }
 
@@ -69,8 +69,7 @@ public class MySeries extends ListActivity {
             final TextView network = (TextView) itemView.findViewById(R.id.networkTextView);
             final TextView airTime = (TextView) itemView.findViewById(R.id.airTimeTextView);
             final TextView nextToView = (TextView) itemView.findViewById(R.id.nextToViewTextView);
-            final TextView latestToAirs = (TextView) itemView
-                    .findViewById(R.id.latestToAirsTextView);
+            final TextView latestToAirs = (TextView) itemView.findViewById(R.id.latestToAirsTextView);
 
             // load series data
             final Series item = this.getItem(position);
@@ -109,7 +108,7 @@ public class MySeries extends ListActivity {
 
         @Override
         public void onEpisodeMarkedAsViewed(Episode episode) {
-            final Series series = this.seriesProvider.getSeries(episode.getSeriesId());
+            final Series series = seriesProvider.getSeries(episode.getSeriesId());
             this.remove(series);
             this.add(series);
             this.sort(comparator);
@@ -117,7 +116,7 @@ public class MySeries extends ListActivity {
 
         @Override
         public void onEpisodeMarkedAsNotViewed(Episode episode) {
-            final Series series = this.seriesProvider.getSeries(episode.getSeriesId());
+            final Series series = seriesProvider.getSeries(episode.getSeriesId());
             this.remove(series);
             this.add(series);
             this.sort(comparator);
@@ -125,8 +124,7 @@ public class MySeries extends ListActivity {
 
         @Override
         public void onSeasonMarkedAsViewed(Season season) {
-            final Series series = this.seriesProvider.getSeries(season.getEpisodeAt(0)
-                    .getSeriesId());
+            final Series series = seriesProvider.getSeries(season.getEpisodeAt(0).getSeriesId());
             this.remove(series);
             this.add(series);
             this.sort(comparator);
@@ -134,22 +132,21 @@ public class MySeries extends ListActivity {
 
         @Override
         public void onSeasonMarkedAsNotViewed(Season season) {
-            final Series series = this.seriesProvider.getSeries(season.getEpisodeAt(0)
-                    .getSeriesId());
+            final Series series = seriesProvider.getSeries(season.getEpisodeAt(0).getSeriesId());
             this.remove(series);
             this.add(series);
             this.sort(comparator);
         }
     }
 
-    //Interface-------------------------------------------------------------------------------------
+    //Interface---------------------------------------------------------------------------------------------------------
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.list_activity_layout);
+        this.setContentView(R.layout.list);
         this.adjustContentView();
-        this.initAdapter();
+        this.setAdapter();
         this.setupItemClickListener();
         this.setupItemLongClickListener();
         this.dataAdapter.sort(comparator);
@@ -178,7 +175,7 @@ public class MySeries extends ListActivity {
         return true;
     }
 
-    //Private---------------------------------------------------------------------------------------
+    //Private-----------------------------------------------------------------------------------------------------------
 
     private void adjustContentView() {
         final TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
@@ -188,9 +185,8 @@ public class MySeries extends ListActivity {
         empty.setText("No series followed");
     }
 
-    private void initAdapter() {
-        this.dataAdapter = new MySeriesViewAdapter(this, R.layout.list_item, App.environment()
-                .seriesProvider().mySeries());
+    private void setAdapter() {
+        this.dataAdapter = new SeriesItemViewAdapter(this, R.layout.my_series_list_item, seriesProvider.mySeries());
         this.setListAdapter(this.dataAdapter);
     }
 
@@ -223,7 +219,7 @@ public class MySeries extends ListActivity {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        App.environment().seriesProvider().unfollow(series);
+                        seriesProvider.unfollow(series);
                         dialog.dismiss();
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:

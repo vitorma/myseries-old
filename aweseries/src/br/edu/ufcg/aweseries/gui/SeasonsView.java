@@ -129,38 +129,32 @@ public class SeasonsView extends Activity {
         }
 
         @Override
-        public void onUnfollowing(Series series) {
-            // TODO Auto-generated method stub
-
-        }
+        public void onUnfollowing(Series series) {/* Not my business */}
 
         @Override
-        public void onFollowing(Series series) {
-            // TODO Auto-generated method stub
-
-        }
+        public void onFollowing(Series series) {/* Not my business */}
 
         @Override
         public void onEpisodeMarkedAsViewed(Episode episode) {
-            // TODO Auto-generated method stub
+            // TODO Implement
 
         }
 
         @Override
         public void onEpisodeMarkedAsNotViewed(Episode episode) {
-            // TODO Auto-generated method stub
+            // TODO Implement
 
         }
 
         @Override
         public void onSeasonMarkedAsViewed(Season season) {
-            // TODO Auto-generated method stub
+            // TODO Implement
 
         }
 
         @Override
         public void onSeasonMarkedAsNotViewed(Season season) {
-            // TODO Auto-generated method stub
+            // TODO Implement
 
         }
 
