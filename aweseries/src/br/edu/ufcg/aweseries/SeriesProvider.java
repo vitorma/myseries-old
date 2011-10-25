@@ -202,17 +202,13 @@ public class SeriesProvider {
     }
 
     public void markSeasonAsViewed(Season season) {
-        for (final Episode episode : season.getEpisodes()) {
-            episode.markAsViewed();
-        }
+        season.markAllAsViewed();
         this.localSeriesRepository().updateAll(season.getEpisodes());
         this.notifyListenersAboutSeasonMarkedAsViewed(season);
     }
 
     public void markSeasonAsNotViewed(Season season) {
-        for (final Episode episode : season.getEpisodes()) {
-            episode.markAsNotViewed();
-        }
+        season.markAllAsNotViewed();
         this.localSeriesRepository().updateAll(season.getEpisodes());
         this.notifyListenersAboutSeasonMarkedAsNotViewed(season);
     }

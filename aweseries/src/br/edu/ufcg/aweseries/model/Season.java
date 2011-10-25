@@ -1,5 +1,7 @@
 package br.edu.ufcg.aweseries.model;
 
+import java.util.ArrayList;
+
 
 /**
  * Represents a season.
@@ -62,7 +64,7 @@ public class Season {
      * @return The list of episodes
      */
     public java.util.List<Episode> getEpisodes() {
-        return this.episodes;
+        return new ArrayList<Episode>(this.episodes);
     }
 
     /**

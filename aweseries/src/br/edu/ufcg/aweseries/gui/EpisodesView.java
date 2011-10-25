@@ -31,6 +31,7 @@ public class EpisodesView extends ListActivity {
     private Series series;
     private Season season;
     private EpisodeItemViewAdapter dataAdapter;
+    private CheckBox isSeasonViewed;
 
     //Episode comparator------------------------------------------------------------------------------------------------
 
@@ -96,23 +97,69 @@ public class EpisodesView extends ListActivity {
 
         @Override
         public void onEpisodeMarkedAsViewed(Episode episode) {
+            final Season season = EpisodesView.this.season;
+
+            if (season.getNumber() != episode.getSeasonNumber()) {
+                return;
+            }
+
             this.remove(episode);
             this.add(episode);
             this.sort(comparator);
+
+            int index = season.indexOf(episode);
+            season.markAsViewed(index);
+
+            if (season.areAllViewed()) {
+                EpisodesView.this.isSeasonViewed.setChecked(true);
+            }
         }
 
         @Override
         public void onEpisodeMarkedAsNotViewed(Episode episode) {
+            final Season season = EpisodesView.this.season;
+
+            if (season.getNumber() != episode.getSeasonNumber()) {
+                return;
+            }
+
             this.remove(episode);
             this.add(episode);
+            this.sort(comparator);
+
+            int index = season.indexOf(episode);
+            season.markAsNotViewed(index);
+
+            EpisodesView.this.isSeasonViewed.setChecked(false);
+        }
+
+        @Override
+        public void onSeasonMarkedAsViewed(Season season) {
+            if (EpisodesView.this.season.getNumber() != season.getNumber()) {
+                return;
+            }
+
+            this.clear();
+            for (Episode e : season.getEpisodes()) {
+                this.add(e);
+            }
+
             this.sort(comparator);
         }
 
         @Override
-        public void onSeasonMarkedAsViewed(Season season) {/* Not my business */}
+        public void onSeasonMarkedAsNotViewed(Season season) {
+            if (EpisodesView.this.season.getNumber() != season.getNumber()) {
+                return;
+            }
 
-        @Override
-        public void onSeasonMarkedAsNotViewed(Season season) {/* Not my business */}
+            this.clear();
+            for (Episode e : season.getEpisodes()) {
+                this.add(e);
+            }
+
+            this.sort(comparator);
+        }
     }
 
     //Interface---------------------------------------------------------------------------------------------------------
@@ -123,6 +170,7 @@ public class EpisodesView extends ListActivity {
         this.setContentView(R.layout.list_with_checkbox);
         this.populateView();
         this.setupItemClickListener();
+        this.setupCheckBoxClickListener();
     }
 
     //Private-----------------------------------------------------------------------------------------------------------
@@ -137,12 +185,12 @@ public class EpisodesView extends ListActivity {
         final TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
         title.setText(this.series.getName());
 
-        final CheckBox isSeasonViewed = (CheckBox) this.findViewById(R.id.isSeasonViewedCheckBox);
-        isSeasonViewed.setChecked(this.season.areAllViewed());
+        this.isSeasonViewed = (CheckBox) this.findViewById(R.id.isSeasonViewedCheckBox);
+        this.isSeasonViewed.setChecked(this.season.areAllViewed());
 
         final TextView seasonName = (TextView) this.findViewById(R.id.seasonTextView);
         seasonName.setText(this.season.toString());
-        
+
         final TextView empty = (TextView) this.findViewById(id.empty);
         empty.setText("No episodes");
     }
@@ -167,6 +215,19 @@ public class EpisodesView extends ListActivity {
                 final Episode episode = (Episode) parent.getItemAtPosition(position);
                 intent.putExtra("episode id", episode.getId());
                 EpisodesView.this.startActivity(intent);
+            }
+        });
+    }
+
+    private void setupCheckBoxClickListener() {
+        this.isSeasonViewed.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if (isSeasonViewed.isChecked()) {
+                    seriesProvider.markSeasonAsViewed(EpisodesView.this.season);
+                } else {
+                    seriesProvider.markSeasonAsNotViewed(EpisodesView.this.season);
+                }
             }
         });
     }
