@@ -43,7 +43,7 @@ public class SeasonsView extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_with_checkbox);
+        setContentView(R.layout.listing);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -52,7 +52,7 @@ public class SeasonsView extends ListActivity {
         }
 
         //set view title
-        TextView listingTitle = (TextView) findViewById(R.id.listTitleTextView);
+        TextView listingTitle = (TextView) findViewById(R.id.listingTitleTextView);
         listingTitle.setText(this.series.getName() + "'s Seasons");
 
         populateSeasonsList();
