@@ -131,6 +131,16 @@ public class Season {
         }
     }
 
+    public boolean areAllViewed() {
+        for (Episode e : this.getEpisodes()) {
+            if (!e.isViewed()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Marks all episodes in this season as viewed.
      */
