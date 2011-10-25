@@ -78,6 +78,16 @@ public class Seasons {
 
         return episodes;
     }
+    
+    public List<Season> toList() {
+        
+        final List<Season> list = new ArrayList<Season>();
+        for (Season season : this.seasons.values()) {
+            list.add(season);
+        }
+        
+        return list;
+    }
 
     public Season[] toArray() {
         final Season[] array = new Season[this.seasons.size()];
