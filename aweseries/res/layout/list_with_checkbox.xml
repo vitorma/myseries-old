@@ -10,6 +10,27 @@
         android:layout_height="wrap_content"
         android:text="List Activity View"/>
 
+    <LinearLayout 
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|left">
+
+            <CheckBox android:id="@+id/isSeasonViewedCheckBox"
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
+                android:focusable="false"/>
+
+            <TextView android:id="@+id/seasonTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Season Name"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    </LinearLayout>
+
     <ListView android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -135,8 +135,14 @@ public class EpisodesView extends ListActivity {
 
     private void adjustContentView() {
         final TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
-        title.setText(this.series.getName() + String.format(" S%02d Episodes", this.season.getNumber()));
+        title.setText(this.series.getName());
 
+        final CheckBox isSeasonViewed = (CheckBox) this.findViewById(R.id.isSeasonViewedCheckBox);
+        isSeasonViewed.setChecked(this.season.areAllViewed());
+
+        final TextView seasonName = (TextView) this.findViewById(R.id.seasonTextView);
+        seasonName.setText(this.season.toString());
+        
         final TextView empty = (TextView) this.findViewById(id.empty);
         empty.setText("No episodes");
     }
