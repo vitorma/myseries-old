@@ -22,7 +22,7 @@ public class Episode {
     private String guestStars;
     private String poster;
 
-    private boolean viewed;
+    private boolean seen;
 
     public Episode(String id, String seriesId, int number, int seasonNumber) {
         if (id == null || Strings.isBlank(id)) {
@@ -52,7 +52,7 @@ public class Episode {
         this.setOverview("");
         this.setPoster("");
         this.setWriter("");
-        this.setViewed(false);
+        this.markWetherSeen(false);
     }
 
     public String getId() {
@@ -135,8 +135,8 @@ public class Episode {
         return this.poster;
     }
 
-    public boolean isViewed() {
-        return this.viewed;
+    public boolean wasSeen() {
+        return this.seen;
     }
 
     public void setName(String name) {
@@ -195,16 +195,16 @@ public class Episode {
         this.poster = poster;
     }
 
-    public void setViewed(boolean viewed) {
-        this.viewed = viewed;
+    public void markWetherSeen(boolean seen) {
+        this.seen = seen;
     }
 
-    public void markAsViewed() {
-        this.viewed = true;
+    public void markAsSeen() {
+        this.seen = true;
     }
 
-    public void markAsNotViewed() {
-        this.viewed = false;
+    public void markAsNotSeen() {
+        this.seen = false;
     }
 
     @Override

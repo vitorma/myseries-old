@@ -272,7 +272,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put("writer", e.getWriter());
         cv.put("guestStars", e.getGuestStars());
         cv.put("poster", e.getPoster());
-        cv.put("viewed", String.valueOf(e.isViewed()));
+        cv.put("viewed", String.valueOf(e.wasSeen()));
         return cv;
     }
 

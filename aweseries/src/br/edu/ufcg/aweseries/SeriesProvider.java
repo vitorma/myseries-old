@@ -177,51 +177,51 @@ public class SeriesProvider {
         }
     }
 
-    private void notifyListenersAboutEpisodeMarkedAsViewed(Episode episode) {
+    private void notifyListenersAboutEpisodeMarkedAsSeen(Episode episode) {
         for (final SeriesProviderListener listener : this.listeners) {
-            listener.onEpisodeMarkedAsViewed(episode);
+            listener.onMarkedAsSeen(episode);
         }
     }
 
-    private void notifyListenersAboutEpisodeMarkedAsNotViewed(Episode episode) {
+    private void notifyListenersAboutEpisodeMarkedAsNotSeen(Episode episode) {
         for (final SeriesProviderListener listener : this.listeners) {
-            listener.onEpisodeMarkedAsNotViewed(episode);
+            listener.onMarkedAsNotSeen(episode);
+        }
+    }
+    
+    private void notifyListenersAboutSeasonMarkedAsSeen(Season season) {
+        for (final SeriesProviderListener listener : this.listeners) {
+            listener.onMarkedAsSeen(season);
         }
     }
 
-    private void notifyListenersAboutSeasonMarkedAsNotViewed(Season season) {
+    private void notifyListenersAboutSeasonMarkedAsNotSeen(Season season) {
         for (final SeriesProviderListener listener : this.listeners) {
-            listener.onSeasonMarkedAsNotViewed(season);
+            listener.onMarkedAsNotSeen(season);
         }
     }
 
-    private void notifyListenersAboutSeasonMarkedAsViewed(Season season) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onSeasonMarkedAsViewed(season);
-        }
-    }
-
-    public void markSeasonAsViewed(Season season) {
+    public void markSeasonAsSeen(Season season) {
         season.markAllAsViewed();
         this.localSeriesRepository().updateAll(season.getEpisodes());
-        this.notifyListenersAboutSeasonMarkedAsViewed(season);
+        this.notifyListenersAboutSeasonMarkedAsSeen(season);
     }
 
-    public void markSeasonAsNotViewed(Season season) {
+    public void markSeasonAsNotSeen(Season season) {
         season.markAllAsNotViewed();
         this.localSeriesRepository().updateAll(season.getEpisodes());
-        this.notifyListenersAboutSeasonMarkedAsNotViewed(season);
+        this.notifyListenersAboutSeasonMarkedAsNotSeen(season);
     }
 
-    public void markEpisodeAsViewed(Episode episode) {
-        episode.markAsViewed();
+    public void markEpisodeAsSeen(Episode episode) {
+        episode.markAsSeen();
         this.localSeriesRepository().update(episode);
-        this.notifyListenersAboutEpisodeMarkedAsViewed(episode);
+        this.notifyListenersAboutEpisodeMarkedAsSeen(episode);
     }
 
-    public void markEpisodeAsNotViewed(Episode episode) {
-        episode.markAsNotViewed();
+    public void markEpisodeAsNotSeen(Episode episode) {
+        episode.markAsNotSeen();
         this.localSeriesRepository().update(episode);
-        this.notifyListenersAboutEpisodeMarkedAsNotViewed(episode);
+        this.notifyListenersAboutEpisodeMarkedAsNotSeen(episode);
     }
 }

@@ -193,7 +193,13 @@ public class Series {
         return this.poster != null;
     }
 
+    //TODO Test
     public boolean isContinuing() {
         return this.status.equals("Continuing");
+    }
+
+    //TODO Test
+    public boolean isEnded() {
+        return this.status.equals("Ended");
     }
 }

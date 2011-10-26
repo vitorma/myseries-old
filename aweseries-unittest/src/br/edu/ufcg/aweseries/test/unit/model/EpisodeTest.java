@@ -45,7 +45,7 @@ public class EpisodeTest {
         Assert.assertEquals("", this.episode1.getOverview());
         Assert.assertEquals("", this.episode1.getWriter());
         Assert.assertEquals("", this.episode1.getPoster());
-        Assert.assertEquals(false, this.episode1.isViewed());
+        Assert.assertEquals(false, this.episode1.wasSeen());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -143,16 +143,16 @@ public class EpisodeTest {
 
     @Test
     public final void testMarkAsNotViewed() {
-        this.episode1.setViewed(true);
-        this.episode1.markAsNotViewed();
-        Assert.assertFalse(this.episode1.isViewed());
+        this.episode1.markWetherSeen(true);
+        this.episode1.markAsNotSeen();
+        Assert.assertFalse(this.episode1.wasSeen());
     }
 
     @Test
     public final void testMarkAsViewed() {
-        this.episode1.setViewed(false);
-        this.episode1.markAsViewed();
-        Assert.assertTrue(this.episode1.isViewed());
+        this.episode1.markWetherSeen(false);
+        this.episode1.markAsSeen();
+        Assert.assertTrue(this.episode1.wasSeen());
     }
 
     @Test
@@ -253,12 +253,12 @@ public class EpisodeTest {
 
     @Test
     public final void testSetViewed() {
-        this.episode1.setViewed(false);
-        Assert.assertFalse(this.episode1.isViewed());
-        this.episode1.setViewed(true);
-        Assert.assertTrue(this.episode1.isViewed());
-        this.episode1.setViewed(false);
-        Assert.assertFalse(this.episode1.isViewed());
+        this.episode1.markWetherSeen(false);
+        Assert.assertFalse(this.episode1.wasSeen());
+        this.episode1.markWetherSeen(true);
+        Assert.assertTrue(this.episode1.wasSeen());
+        this.episode1.markWetherSeen(false);
+        Assert.assertFalse(this.episode1.wasSeen());
     }
 
     @Test

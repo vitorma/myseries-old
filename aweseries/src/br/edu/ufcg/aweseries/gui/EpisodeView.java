@@ -60,7 +60,7 @@ public class EpisodeView extends Activity {
         this.episodeWriter.setText(this.episode.getWriter());
         this.episodeGuestStars.setText(this.episode.getGuestStars());
         this.episodeOverview.setText(this.episode.getOverview());
-        this.isViewed.setChecked(this.episode.isViewed());
+        this.isViewed.setChecked(this.episode.wasSeen());
     }
 
     private void setCheckBoxListener() {
@@ -68,9 +68,9 @@ public class EpisodeView extends Activity {
             @Override
             public void onClick(View view) {
                 if (EpisodeView.this.isViewed.isChecked()) {
-                    seriesProvider.markEpisodeAsViewed(EpisodeView.this.episode);
+                    seriesProvider.markEpisodeAsSeen(EpisodeView.this.episode);
                 } else {
-                    seriesProvider.markEpisodeAsNotViewed(EpisodeView.this.episode);
+                    seriesProvider.markEpisodeAsNotSeen(EpisodeView.this.episode);
                 }
             }
         });

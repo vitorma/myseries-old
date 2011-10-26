@@ -106,7 +106,7 @@ public class SeasonsView extends ListActivity {
 
             boolean allEpisodesViewed = true;
             for (Episode episode : season.getEpisodes()) {
-                if (!episode.isViewed()) {
+                if (!episode.wasSeen()) {
                     allEpisodesViewed = false;
                     break;
                 }
@@ -119,9 +119,9 @@ public class SeasonsView extends ListActivity {
                 @Override
                 public void onClick(View arg0) {
                     if (isSeasonViewed.isChecked()) {
-                        seriesProvider().markSeasonAsViewed(season);
+                        seriesProvider().markSeasonAsSeen(season);
                     } else {
-                        seriesProvider().markSeasonAsNotViewed(season);
+                        seriesProvider().markSeasonAsNotSeen(season);
                     }
 
                 }
@@ -139,7 +139,7 @@ public class SeasonsView extends ListActivity {
         }
 
         @Override
-        public void onEpisodeMarkedAsViewed(Episode episode) {
+        public void onMarkedAsSeen(Episode episode) {
             final String seriesId = episode.getSeriesId();
             final int seasonNumber = episode.getSeasonNumber();
 
@@ -154,7 +154,7 @@ public class SeasonsView extends ListActivity {
         }
 
         @Override
-        public void onEpisodeMarkedAsNotViewed(Episode episode) {
+        public void onMarkedAsNotSeen(Episode episode) {
             final String seriesId = episode.getSeriesId();
             final int seasonNumber = episode.getSeasonNumber();
 
@@ -167,14 +167,14 @@ public class SeasonsView extends ListActivity {
         }
 
         @Override
-        public void onSeasonMarkedAsViewed(Season season) {
+        public void onMarkedAsSeen(Season season) {
             this.remove(season);
             this.add(season);
             this.sort(comparator);
         }
 
         @Override
-        public void onSeasonMarkedAsNotViewed(Season season) {
+        public void onMarkedAsNotSeen(Season season) {
             this.remove(season);
             this.add(season);
             this.sort(comparator);

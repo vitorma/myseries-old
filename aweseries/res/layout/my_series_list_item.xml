@@ -34,9 +34,10 @@
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <TextView android:id="@+id/latestToAirLabelTextView"
-            android:text="latest to air: "
+            android:text="@string/nextEpisodeToAir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="2dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             style="@style/aweseries_style.10dp"/>
@@ -54,20 +55,21 @@
             android:marqueeRepeatLimit="marquee_forever"
             style="@style/aweseries_style.10dp"/>
 
-        <TextView android:id="@+id/nextToViewLabelTextView"
-            android:text="next to view: "
+        <TextView android:id="@+id/nextToSeeLabelTextView"
+            android:text="@string/nextEpisodeToSee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="2dp"
             android:layout_alignParentLeft="true"
             android:layout_above="@id/latestToAirLabelTextView"
             style="@style/aweseries_style.10dp"/>
 
-        <TextView android:id="@+id/nextToViewTextView"
+        <TextView android:id="@+id/nextToSeeTextView"
             android:text="@string/loading_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="70dp"
-            android:layout_toRightOf="@id/nextToViewLabelTextView"
+            android:layout_toRightOf="@id/nextToSeeLabelTextView"
             android:layout_above="@id/latestToAirTextView"
             android:lines="1"
             android:scrollHorizontally="true"

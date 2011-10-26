@@ -111,7 +111,7 @@ public class EpisodeBuilder {
         episode.setWriter(this.writer != null ? this.writer : DEFAULT_STRING);
         episode.setGuestStars(this.guestStars != null ? this.guestStars : DEFAULT_STRING);
         episode.setPoster(this.poster != null ? this.poster : DEFAULT_STRING);
-        episode.setViewed(this.viewed);
+        episode.markWetherSeen(this.viewed);
 
         return episode;
     }

@@ -10,11 +10,11 @@ public interface SeriesProviderListener {
 
     public void onFollowing(Series series);
     
-    public void onEpisodeMarkedAsViewed(Episode episode);
+    public void onMarkedAsSeen(Episode episode);
 
-    public void onEpisodeMarkedAsNotViewed(Episode episode);
+    public void onMarkedAsNotSeen(Episode episode);
     
-    public void onSeasonMarkedAsViewed(Season season);
+    public void onMarkedAsSeen(Season season);
     
-    public void onSeasonMarkedAsNotViewed(Season season);
+    public void onMarkedAsNotSeen(Season season);
 }

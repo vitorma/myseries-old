@@ -105,7 +105,7 @@ public class Seasons {
 
     public Episode getNextEpisodeToView() {
         for (Episode e : this.getAllEpisodesSortedByDate()) {
-            if (!e.isViewed()) {
+            if (!e.wasSeen()) {
                 return e;
             }
         }

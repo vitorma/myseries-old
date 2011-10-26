@@ -75,7 +75,7 @@ public class Season {
      */
     public Episode getNextEpisode() {
         for (final Episode episode : this.getEpisodes()) {
-            if (!episode.isViewed()) {
+            if (!episode.wasSeen()) {
                 return episode;
             }
         }
@@ -124,7 +124,7 @@ public class Season {
      * @return True if episode at index i was marked as viewed
      */
     public boolean isViewed(final int i) {
-        return this.getEpisodeAt(i).isViewed();
+        return this.getEpisodeAt(i).wasSeen();
     }
 
     /**
@@ -132,13 +132,13 @@ public class Season {
      */
     public void markAllAsNotViewed() {
         for (final Episode episode : this.getEpisodes()) {
-            episode.markAsNotViewed();
+            episode.markAsNotSeen();
         }
     }
 
     public boolean areAllViewed() {
         for (Episode e : this.getEpisodes()) {
-            if (!e.isViewed()) {
+            if (!e.wasSeen()) {
                 return false;
             }
         }
@@ -151,7 +151,7 @@ public class Season {
      */
     public void markAllAsViewed() {
         for (final Episode episode : this.getEpisodes()) {
-            episode.markAsViewed();
+            episode.markAsSeen();
         }
     }
 
@@ -162,7 +162,7 @@ public class Season {
      *            Index of the episode to mark
      */
     public void markAsNotViewed(final int i) {
-        this.getEpisodeAt(i).markAsNotViewed();
+        this.getEpisodeAt(i).markAsNotSeen();
     }
 
     /**
@@ -172,7 +172,7 @@ public class Season {
      *            Index of the episode to mark
      */
     public void markAsViewed(final int i) {
-        this.getEpisodeAt(i).markAsViewed();
+        this.getEpisodeAt(i).markAsSeen();
     }
 
     @Override

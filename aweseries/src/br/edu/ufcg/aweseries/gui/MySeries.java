@@ -68,34 +68,47 @@ public class MySeries extends ListActivity {
             final TextView status = (TextView) itemView.findViewById(R.id.statusTextView);
             final TextView network = (TextView) itemView.findViewById(R.id.networkTextView);
             final TextView airTime = (TextView) itemView.findViewById(R.id.airTimeTextView);
-            final TextView nextToView = (TextView) itemView.findViewById(R.id.nextToViewTextView);
+            final TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
             final TextView latestToAir = (TextView) itemView.findViewById(R.id.latestToAirTextView);
             final TextView latestToAirLabel = (TextView) itemView.findViewById(R.id.latestToAirLabelTextView);
 
             // load series data
             final Series item = this.getItem(position);
-            image.setImageBitmap(App.environment().seriesProvider().getPosterOf(item));
+            image.setImageBitmap(seriesProvider.getPosterOf(item));
             name.setText(item.getName());
-
-            if (item.getSeasons().getNextEpisodeToView() != null) {
-                nextToView.setText(item.getSeasons().getNextEpisodeToView().toString());
-            } else {
-                nextToView.setText(R.string.allEpisodesViewed);
-            }
-
-            if (item.isContinuing()) {
-                latestToAirLabel.setText("next to air: ");
-                final Episode e = item.getSeasons().getNextEpisodeToAir();
-                latestToAir.setText((e != null) ? e.toString() : "No episode to air");
-            } else {
-                latestToAirLabel.setText("last aired: ");
-                final Episode e = item.getSeasons().getLastAiredEpisode();
-                latestToAir.setText((e != null) ? e.toString() : "No episode aired");
-            }
 
             status.setText(item.getStatus());
             network.setText(item.getNetwork());
             airTime.setText(item.getAirsDayAndTime());
+
+            // next episode to see
+            final Episode nextEpisodeToSee = item.getSeasons().getNextEpisodeToView();
+            if (nextEpisodeToSee != null) {
+                nextToSee.setText(nextEpisodeToSee.toString());
+            } else {
+                nextToSee.setText(R.string.noEpisodeToSee);
+            }
+
+            // latest episode to air
+            if (item.isContinuing()) {
+                latestToAirLabel.setText(R.string.nextEpisodeToAir);
+                final Episode nextEpisodeToAir = item.getSeasons().getNextEpisodeToAir();
+                if (nextEpisodeToAir != null) {
+                    latestToAir.setText(nextEpisodeToAir.toString());
+                } else {
+                    latestToAir.setText(R.string.noEpisodeToAir);
+                }
+            }
+
+            if (item.isEnded()) {
+                latestToAirLabel.setText(R.string.lastEpisodeAired);
+                final Episode e = item.getSeasons().getLastAiredEpisode();
+                if (e != null) {
+                    latestToAir.setText(e.toString());
+                } else {
+                    latestToAir.setText(R.string.noEpisodeAired);
+                }
+            }
 
             return itemView;
         }
@@ -112,7 +125,7 @@ public class MySeries extends ListActivity {
         }
 
         @Override
-        public void onEpisodeMarkedAsViewed(Episode episode) {
+        public void onMarkedAsSeen(Episode episode) {
             final Series series = seriesProvider.getSeries(episode.getSeriesId());
             this.remove(series);
             this.add(series);
@@ -120,7 +133,7 @@ public class MySeries extends ListActivity {
         }
 
         @Override
-        public void onEpisodeMarkedAsNotViewed(Episode episode) {
+        public void onMarkedAsNotSeen(Episode episode) {
             final Series series = seriesProvider.getSeries(episode.getSeriesId());
             this.remove(series);
             this.add(series);
@@ -128,7 +141,7 @@ public class MySeries extends ListActivity {
         }
 
         @Override
-        public void onSeasonMarkedAsViewed(Season season) {
+        public void onMarkedAsSeen(Season season) {
             final Series series = seriesProvider.getSeries(season.getEpisodeAt(0).getSeriesId());
             this.remove(series);
             this.add(series);
@@ -136,7 +149,7 @@ public class MySeries extends ListActivity {
         }
 
         @Override
-        public void onSeasonMarkedAsNotViewed(Season season) {
+        public void onMarkedAsNotSeen(Season season) {
             final Series series = seriesProvider.getSeries(season.getEpisodeAt(0).getSeriesId());
             this.remove(series);
             this.add(series);

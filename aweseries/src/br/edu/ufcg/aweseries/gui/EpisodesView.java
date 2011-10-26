@@ -73,15 +73,15 @@ public class EpisodesView extends ListActivity {
             nameTextView.setText(episode.getName());
             numberTextView.setText(String.format("Episode %02d", episode.getNumber()));
             dateTextView.setText(episode.getFirstAired());
-            isViewedCheckBox.setChecked(episode.isViewed());
+            isViewedCheckBox.setChecked(episode.wasSeen());
 
             isViewedCheckBox.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
                     if (isViewedCheckBox.isChecked()) {
-                        seriesProvider.markEpisodeAsViewed(episode);
+                        seriesProvider.markEpisodeAsSeen(episode);
                     } else {
-                        seriesProvider.markEpisodeAsNotViewed(episode);
+                        seriesProvider.markEpisodeAsNotSeen(episode);
                     }
                 }
             });
@@ -96,7 +96,7 @@ public class EpisodesView extends ListActivity {
         public void onFollowing(Series series) {/* Not my business */}
 
         @Override
-        public void onEpisodeMarkedAsViewed(Episode episode) {
+        public void onMarkedAsSeen(Episode episode) {
             final Season season = EpisodesView.this.season;
 
             if (season.getNumber() != episode.getSeasonNumber()) {
@@ -116,7 +116,7 @@ public class EpisodesView extends ListActivity {
         }
 
         @Override
-        public void onEpisodeMarkedAsNotViewed(Episode episode) {
+        public void onMarkedAsNotSeen(Episode episode) {
             final Season season = EpisodesView.this.season;
 
             if (season.getNumber() != episode.getSeasonNumber()) {
@@ -134,7 +134,7 @@ public class EpisodesView extends ListActivity {
         }
 
         @Override
-        public void onSeasonMarkedAsViewed(Season season) {
+        public void onMarkedAsSeen(Season season) {
             if (EpisodesView.this.season.getNumber() != season.getNumber()) {
                 return;
             }
@@ -148,7 +148,7 @@ public class EpisodesView extends ListActivity {
         }
 
         @Override
-        public void onSeasonMarkedAsNotViewed(Season season) {
+        public void onMarkedAsNotSeen(Season season) {
             if (EpisodesView.this.season.getNumber() != season.getNumber()) {
                 return;
             }
@@ -224,9 +224,9 @@ public class EpisodesView extends ListActivity {
             @Override
             public void onClick(View arg0) {
                 if (isSeasonViewed.isChecked()) {
-                    seriesProvider.markSeasonAsViewed(EpisodesView.this.season);
+                    seriesProvider.markSeasonAsSeen(EpisodesView.this.season);
                 } else {
-                    seriesProvider.markSeasonAsNotViewed(EpisodesView.this.season);
+                    seriesProvider.markSeasonAsNotSeen(EpisodesView.this.season);
                 }
             }
         });
