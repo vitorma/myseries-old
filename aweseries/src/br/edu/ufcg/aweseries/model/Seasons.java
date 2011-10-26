@@ -2,6 +2,8 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -65,7 +67,7 @@ public class Seasons {
         return false;
     }
 
-    public Season getSeason (int i) {
+    public Season getSeason(int i) {
         return this.seasons.get(i);
     }
 
@@ -78,7 +80,7 @@ public class Seasons {
 
         return episodes;
     }
-    
+
     public List<Season> toList() {
         
         final List<Season> list = new ArrayList<Season>();
@@ -102,7 +104,7 @@ public class Seasons {
     }
 
     public Episode getNextEpisodeToView() {
-        for (Episode e : this.getAllEpisodesSortedByNumber(1)) {
+        for (Episode e : this.getAllEpisodesSortedByDate()) {
             if (!e.isViewed()) {
                 return e;
             }
@@ -111,26 +113,44 @@ public class Seasons {
         return null;
     }
 
-    public Episode getLatestEpisodeToAirs() {
-        final TreeSet<Episode> episodes = this.getAllEpisodesSortedByNumber(-1);
-        return episodes.isEmpty() ? null : episodes.last();
+    public Episode getNextEpisodeToAir() {
+        final TreeSet<Episode> episodes = this.getAllEpisodesSortedByDate();
+
+        final Date today = new Date();
+
+        for (Episode e : episodes) {
+            if (e.airedFrom(today)) {
+                return e;
+            }
+        }
+
+        return null;
     }
 
-    private TreeSet<Episode> getAllEpisodesSortedByNumber(final int returnForEspecial) {
+    public Episode getLastAiredEpisode() {
+        final TreeSet<Episode> episodes = this.getAllEpisodesSortedByDate();
+
+        if (episodes.isEmpty()) return null;
+
+        final Date today = new Date();
+        final Iterator<Episode> it = episodes.iterator();
+
+        Episode last = it.next();
+        while (it.hasNext()) {
+            Episode current = it.next();
+            if (current.airedUntil(today)) {
+                last = current;
+            }
+        }
+
+        return last;
+    }
+
+    private TreeSet<Episode> getAllEpisodesSortedByDate() {
         TreeSet<Episode> episodes = new TreeSet<Episode>(new Comparator<Episode>() {
             @Override
             public int compare(Episode e1, Episode e2) {
-                if (e1.isSpecial()) {
-                    return e2.isSpecial() ? (e1.getNumber() - e2.getNumber()) : returnForEspecial;
-                }
-
-                if (e2.isSpecial()) {
-                    return -returnForEspecial;
-                }
-
-                return (e1.getSeasonNumber() != e2.getSeasonNumber())
-                        ? e1.getSeasonNumber() - e2.getSeasonNumber()
-                        : e1.getNumber() - e2.getNumber();
+                return e1.getDateFirstAired().compareTo(e2.getDateFirstAired());
             }
         });
 

@@ -1,8 +1,15 @@
 package br.edu.ufcg.aweseries.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class Episode {
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     private String id;
     private String seriesId;
     private int number;
@@ -74,6 +81,38 @@ public class Episode {
 
     public String getFirstAired() {
         return this.firstAired;
+    }
+
+    public Date getDateFirstAired() {
+        if (Strings.isBlank(this.getFirstAired())) {
+            return new Date(Long.MAX_VALUE);
+        }
+
+        try {
+            return dateFormat.parse(this.getFirstAired());
+        } catch (ParseException e) {
+            return new Date(Long.MAX_VALUE);
+        }
+    }
+
+    public boolean airedBefore(Date d) {
+        return this.getDateFirstAired().compareTo(d) < 0;
+    }
+
+    public boolean airedUntil(Date d) {
+        return this.getDateFirstAired().compareTo(d) <= 0;
+    }
+
+    public boolean airedAt(Date d) {
+        return this.getDateFirstAired().compareTo(d) == 0;
+    }
+
+    public boolean airedFrom(Date d) {
+        return this.getDateFirstAired().compareTo(d) >= 0;
+    }
+
+    public boolean airedAfter(Date d) {
+        return this.getDateFirstAired().compareTo(d) > 0;
     }
 
     public String getOverview() {

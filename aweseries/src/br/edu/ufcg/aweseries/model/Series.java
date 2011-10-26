@@ -192,4 +192,8 @@ public class Series {
     public boolean hasPoster() {
         return this.poster != null;
     }
+
+    public boolean isContinuing() {
+        return this.status.equals("Continuing");
+    }
 }

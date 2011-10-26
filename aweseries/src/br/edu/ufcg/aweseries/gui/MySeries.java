@@ -63,13 +63,14 @@ public class MySeries extends ListActivity {
             }
 
             // get views for the series fields
-            final ImageView image = (ImageView) itemView.findViewById(R.id.itemSeriesImage);
-            final TextView name = (TextView) itemView.findViewById(R.id.itemSeriesName);
-            final TextView status = (TextView) itemView.findViewById(R.id.itemSeriesStatus);
+            final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
+            final TextView name = (TextView) itemView.findViewById(R.id.nameTextView);
+            final TextView status = (TextView) itemView.findViewById(R.id.statusTextView);
             final TextView network = (TextView) itemView.findViewById(R.id.networkTextView);
             final TextView airTime = (TextView) itemView.findViewById(R.id.airTimeTextView);
             final TextView nextToView = (TextView) itemView.findViewById(R.id.nextToViewTextView);
-            final TextView latestToAirs = (TextView) itemView.findViewById(R.id.latestToAirsTextView);
+            final TextView latestToAir = (TextView) itemView.findViewById(R.id.latestToAirTextView);
+            final TextView latestToAirLabel = (TextView) itemView.findViewById(R.id.latestToAirLabelTextView);
 
             // load series data
             final Series item = this.getItem(position);
@@ -82,10 +83,14 @@ public class MySeries extends ListActivity {
                 nextToView.setText(R.string.allEpisodesViewed);
             }
 
-            if (item.getSeasons().getLatestEpisodeToAirs() != null) {
-                latestToAirs.setText(item.getSeasons().getLatestEpisodeToAirs().toString());
+            if (item.isContinuing()) {
+                latestToAirLabel.setText("next to air: ");
+                final Episode e = item.getSeasons().getNextEpisodeToAir();
+                latestToAir.setText((e != null) ? e.toString() : "No episode to air");
             } else {
-                latestToAirs.setText(R.string.noEpisodeAiredYet);
+                latestToAirLabel.setText("last aired: ");
+                final Episode e = item.getSeasons().getLastAiredEpisode();
+                latestToAir.setText((e != null) ? e.toString() : "No episode aired");
             }
 
             status.setText(item.getStatus());
