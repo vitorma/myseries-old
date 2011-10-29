@@ -28,6 +28,7 @@ public class SeriesSearchParser {
         this.streamFactory = streamFactory;
     }
 
+    //TODO Refactoring: extract definition of listeners, maybe creating an inner type
     public List<Series> parse(String seriesName) {
         if (seriesName == null) {
             throw new IllegalArgumentException("seriesName should not be null");
@@ -75,8 +76,7 @@ public class SeriesSearchParser {
                 });
 
         try {
-            Xml.parse(this.streamFactory.streamForSeriesSearch(seriesName),
-                    Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(this.streamFactory.streamForSeriesSearch(seriesName), Xml.Encoding.UTF_8, root.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
