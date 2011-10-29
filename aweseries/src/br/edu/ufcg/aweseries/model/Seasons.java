@@ -150,7 +150,7 @@ public class Seasons {
         TreeSet<Episode> episodes = new TreeSet<Episode>(new Comparator<Episode>() {
             @Override
             public int compare(Episode e1, Episode e2) {
-                return e1.getDateFirstAired().compareTo(e2.getDateFirstAired());
+                return e1.getFirstAired().compareTo(e2.getFirstAired());
             }
         });
 

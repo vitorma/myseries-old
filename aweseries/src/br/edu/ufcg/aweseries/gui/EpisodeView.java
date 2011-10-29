@@ -55,7 +55,7 @@ public class EpisodeView extends Activity {
         this.getExtras();
 
         this.episodeName.setText(this.episode.getName());
-        this.episodeFirstAired.setText(this.episode.getFirstAired());
+        this.episodeFirstAired.setText(this.episode.getFirstAiredAsString());
         this.episodeDirector.setText(this.episode.getDirector());
         this.episodeWriter.setText(this.episode.getWriter());
         this.episodeGuestStars.setText(this.episode.getGuestStars());

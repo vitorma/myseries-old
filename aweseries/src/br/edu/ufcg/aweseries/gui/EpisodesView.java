@@ -72,7 +72,7 @@ public class EpisodesView extends ListActivity {
             final Episode episode = this.getItem(position);
             nameTextView.setText(episode.getName());
             numberTextView.setText(String.format("Episode %02d", episode.getNumber()));
-            dateTextView.setText(episode.getFirstAired());
+            dateTextView.setText(episode.getFirstAiredAsString());
             isViewedCheckBox.setChecked(episode.wasSeen());
 
             isViewedCheckBox.setOnClickListener(new OnClickListener() {

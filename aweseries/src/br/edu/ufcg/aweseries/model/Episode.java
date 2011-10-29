@@ -1,7 +1,6 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,7 +14,7 @@ public class Episode {
     private int number;
     private int seasonNumber;
     private String name;
-    private String firstAired;
+    private Date firstAired;
     private String overview;
     private String director;
     private String writer;
@@ -46,9 +45,9 @@ public class Episode {
         this.number = number;
         this.seasonNumber = seasonNumber;
         this.setDirector("");
-        this.setFirstAired("");
         this.setGuestStars("");
         this.setName("");
+        this.setFirstAired(new Date(Long.MAX_VALUE));
         this.setOverview("");
         this.setPoster("");
         this.setWriter("");
@@ -79,40 +78,72 @@ public class Episode {
         return this.name;
     }
 
-    public String getFirstAired() {
+    public Date getFirstAired() {
         return this.firstAired;
     }
 
-    public Date getDateFirstAired() {
-        if (Strings.isBlank(this.getFirstAired())) {
-            return new Date(Long.MAX_VALUE);
+    public String getFirstAiredAsString() {
+        return (this.getFirstAired().equals(new Date(Long.MAX_VALUE)))
+               ? ""
+               : dateFormat.format(this.getFirstAired());
+    }
+
+    public boolean airedBefore(Date date) {
+        if (date == null) {
+            throw new IllegalArgumentException("date should not be null");
         }
 
-        try {
-            return dateFormat.parse(this.getFirstAired());
-        } catch (ParseException e) {
-            return new Date(Long.MAX_VALUE);
+        return this.getFirstAired().compareTo(date) < 0;
+    }
+
+    public boolean airedUntil(Date date) {
+        if (date == null) {
+            throw new IllegalArgumentException("date should not be null");
         }
+
+        return this.getFirstAired().compareTo(date) <= 0;
     }
 
-    public boolean airedBefore(Date d) {
-        return this.getDateFirstAired().compareTo(d) < 0;
+    public boolean airedAt(Date date) {
+        if (date == null) {
+            throw new IllegalArgumentException("date should not be null");
+        }
+
+        return this.getFirstAired().compareTo(date) == 0;
     }
 
-    public boolean airedUntil(Date d) {
-        return this.getDateFirstAired().compareTo(d) <= 0;
+    public boolean airedFrom(Date date) {
+        if (date == null) {
+            throw new IllegalArgumentException("date should not be null");
+        }
+
+        return this.getFirstAired().compareTo(date) >= 0;
     }
 
-    public boolean airedAt(Date d) {
-        return this.getDateFirstAired().compareTo(d) == 0;
+    public boolean airedAfter(Date date) {
+        if (date == null) {
+            throw new IllegalArgumentException("date should not be null");
+        }
+
+        return this.getFirstAired().compareTo(date) > 0;
     }
 
-    public boolean airedFrom(Date d) {
-        return this.getDateFirstAired().compareTo(d) >= 0;
+    public int compareByDateTo(Episode other) {
+        if (other == null) {
+            throw new IllegalArgumentException("other should not be null");
+        }
+
+        return this.getFirstAired().compareTo(other.getFirstAired());
     }
 
-    public boolean airedAfter(Date d) {
-        return this.getDateFirstAired().compareTo(d) > 0;
+    public int compareByNumberTo(Episode other) {
+        if (other == null) {
+            throw new IllegalArgumentException("other should not be null");
+        }
+
+        return (this.getSeasonNumber() != other.getSeasonNumber())
+               ? (this.getSeasonNumber() - other.getSeasonNumber())
+               : (this.getNumber() - other.getNumber());
     }
 
     public String getOverview() {
@@ -147,9 +178,9 @@ public class Episode {
         this.name = name;
     }
 
-    public void setFirstAired(String firstAired) {
+    public void setFirstAired(Date firstAired) {
         if (firstAired == null) {
-            throw new IllegalArgumentException("First aired should not be null");
+            throw new IllegalArgumentException("FirstAired should not be null");
         }
 
         this.firstAired = firstAired;

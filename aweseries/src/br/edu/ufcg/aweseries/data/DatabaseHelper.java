@@ -42,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         "number INTEGER NOT NULL, " +
         "seasonNumber INTEGER NOT NULL, " +
         "name TEXT, " +
-        "firstAired TEXT, " +
+        "firstAired INTEGER, " +
         "overview TEXT, " +
         "director TEXT, " +
         "writer TEXT, " +
@@ -266,7 +266,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put("number", e.getNumber());
         cv.put("seasonNumber", e.getSeasonNumber());
         cv.put("name", e.getName());
-        cv.put("firstAired", e.getFirstAired());
+        cv.put("firstAired", e.getFirstAired().getTime());
         cv.put("overview", e.getOverview());
         cv.put("director", e.getDirector());
         cv.put("writer", e.getWriter());
@@ -283,7 +283,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             .withNumber(c.getInt(c.getColumnIndex("number")))
             .withSeasonNumber(c.getInt(c.getColumnIndex("seasonNumber")))
             .withName(c.getString(c.getColumnIndex("name")))
-            .withFirstAired(c.getString(c.getColumnIndex("firstAired")))
+            .withFirstAired(c.getLong(c.getColumnIndex("firstAired")))
             .withOverview(c.getString(c.getColumnIndex("overview")))
             .withDirector(c.getString(c.getColumnIndex("director")))
             .withWriter(c.getString(c.getColumnIndex("writer")))

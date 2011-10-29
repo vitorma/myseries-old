@@ -1,6 +1,9 @@
 package br.edu.ufcg.aweseries.test.unit.model;
 
 import static org.junit.Assert.assertEquals;
+
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -39,7 +42,7 @@ public class EpisodeTest {
         Assert.assertEquals(validEpisodeNumber, this.episode1.getNumber());
         Assert.assertEquals(validSeasonNumber, this.episode1.getSeasonNumber());
         Assert.assertEquals("", this.episode1.getDirector());
-        Assert.assertEquals("", this.episode1.getFirstAired());
+        Assert.assertEquals(new Date(Long.MAX_VALUE), this.episode1.getFirstAired());
         Assert.assertEquals("", this.episode1.getGuestStars());
         Assert.assertEquals("", this.episode1.getName());
         Assert.assertEquals("", this.episode1.getOverview());
@@ -171,10 +174,12 @@ public class EpisodeTest {
 
     @Test
     public final void testSetFirstAired() {
-        this.episode1.setFirstAired("12/14/1969");
-        assertEquals("12/14/1969", this.episode1.getFirstAired());
-        this.episode1.setFirstAired("");
-        assertEquals("", this.episode1.getFirstAired());
+        final Date today = new Date();
+        final Date aDay = new Date(Long.MAX_VALUE);
+        this.episode1.setFirstAired(today);
+        assertEquals(today, this.episode1.getFirstAired());
+        this.episode1.setFirstAired(aDay);
+        assertEquals(aDay, this.episode1.getFirstAired());
     }
 
     @Test(expected = IllegalArgumentException.class)

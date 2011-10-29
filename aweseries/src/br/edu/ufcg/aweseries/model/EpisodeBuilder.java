@@ -1,16 +1,20 @@
 package br.edu.ufcg.aweseries.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EpisodeBuilder {
     private static final String DEFAULT_STRING = "";
     private static final String DEFAULT_NAME = "Unnamed Episode";
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private String id;
     private String seriesId;
     private int number;
     private int seasonNumber;
     private String name;
-    private String firstAired;
+    private Date firstAired;
     private String overview;
     private String director;
     private String writer;
@@ -21,6 +25,7 @@ public class EpisodeBuilder {
     public EpisodeBuilder() {
         this.number = -1;
         this.seasonNumber = -1;
+        this.firstAired = new Date(Long.MAX_VALUE);
     }
 
     public EpisodeBuilder withId(String id) {
@@ -42,7 +47,7 @@ public class EpisodeBuilder {
         try {
             this.number = Integer.valueOf(number);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("number should be an integer");
+            //Do nothing - number already is -1;
         }
         return this;
     }
@@ -56,7 +61,7 @@ public class EpisodeBuilder {
         try {
             this.seasonNumber = Integer.valueOf(seasonNumber);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("season number should be an integer");
+            //Do nothing - seasonNumber already is -1
         }
         return this;
     }
@@ -67,7 +72,16 @@ public class EpisodeBuilder {
     }
 
     public EpisodeBuilder withFirstAired(String firstAired) {
-        this.firstAired = firstAired;
+        try {
+            this.firstAired = dateFormat.parse(firstAired);
+        } catch (Exception e) {
+            //Do nothing - firstAired already is null
+        }
+        return this;
+    }
+
+    public EpisodeBuilder withFirstAired(long firstAired) {
+        this.firstAired = new Date(firstAired);
         return this;
     }
 
@@ -105,7 +119,7 @@ public class EpisodeBuilder {
         Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
 
         episode.setName(this.name != null ? this.name : DEFAULT_NAME);
-        episode.setFirstAired(this.firstAired != null ? this.firstAired : DEFAULT_STRING);
+        episode.setFirstAired(this.firstAired != null ? this.firstAired : new Date(Long.MAX_VALUE));
         episode.setOverview(this.overview != null ? this.overview : DEFAULT_STRING);
         episode.setDirector(this.director != null ? this.director : DEFAULT_STRING);
         episode.setWriter(this.writer != null ? this.writer : DEFAULT_STRING);
