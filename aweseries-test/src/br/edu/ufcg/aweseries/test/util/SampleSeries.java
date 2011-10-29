@@ -9,7 +9,6 @@ import android.app.Instrumentation;
 import android.content.res.Resources;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.test.R;
-import br.edu.ufcg.aweseries.thetvdb.parsing.EpisodesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
@@ -105,12 +104,7 @@ public abstract class SampleSeries {
             }
         });
 
-        final Series series = seriesParser.parse(this.id());
-
-        final EpisodesParser episodesParser = new EpisodesParser(fullSeriesStream());
-        series.getSeasons().addAllEpisodes(episodesParser.parse());
-
-        return series;
+        return seriesParser.parse(this.id());
     }
 
     private static Resources resources;
