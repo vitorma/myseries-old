@@ -1,8 +1,8 @@
 package br.edu.ufcg.aweseries.gui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,22 +11,20 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.model.Series;
 
-public class SeriesSearchView extends Activity {
-    private ListView listView;
-
+/**
+ * Search view. Allows user to find a series by its name and start/stop following it.
+ */
+public class SeriesSearchView extends ListActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         this.setContentView(R.layout.search);
-
-        this.listView = (ListView) SeriesSearchView.this.findViewById(R.id.searchResultsListView);
 
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
@@ -40,19 +38,18 @@ public class SeriesSearchView extends Activity {
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchView.this
+            public void onClick(final View v) {
+                final AutoCompleteTextView searchField 
+                = (AutoCompleteTextView) SeriesSearchView.this
                         .findViewById(R.id.searchField);
-
-                final ListView resultsListView = (ListView) SeriesSearchView.this
-                        .findViewById(R.id.searchResultsListView);
 
                 try {
                     final Series[] searchResultsArray = App.environment().seriesProvider()
                             .searchSeries(searchField.getText().toString());
 
-                    resultsListView.setAdapter(new TextOnlyViewAdapter(SeriesSearchView.this,
-                            SeriesSearchView.this, R.layout.list_item, searchResultsArray));
+                    SeriesSearchView.this.setListAdapter(new TextOnlyViewAdapter(
+                            SeriesSearchView.this, SeriesSearchView.this, R.layout.list_item,
+                            searchResultsArray));
 
                 } catch (final Exception e) {
                     Log.e(SeriesSearchView.class.getName(), e.getMessage());
@@ -69,7 +66,7 @@ public class SeriesSearchView extends Activity {
      * Sets up a listener to item click events.
      */
     private void setupItemClickListener() {
-        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             /** Current selected item. */
             private Series selectedItem;
 
@@ -79,7 +76,8 @@ public class SeriesSearchView extends Activity {
             private boolean userFollowsSeries = false;
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view,
+                    final int position, final long id) {
                 this.selectedItem = (Series) parent.getItemAtPosition(position);
 
                 this.dialog = new Dialog(SeriesSearchView.this);
@@ -101,7 +99,7 @@ public class SeriesSearchView extends Activity {
 
                 backButton.setOnClickListener(new OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(final View v) {
                         dialog.dismiss();
                     }
                 });
@@ -126,7 +124,7 @@ public class SeriesSearchView extends Activity {
 
                 followButton.setOnClickListener(new OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(final View v) {
                         if (userFollowsSeries) {
                             App.environment().seriesProvider().unfollow(selectedItem);
                             userFollowsSeries = false;
@@ -156,7 +154,7 @@ public class SeriesSearchView extends Activity {
     }
 
     @Override
-    public boolean onSearchRequested() {
+    public final boolean onSearchRequested() {
         final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchView.this
                 .findViewById(R.id.searchField);
         searchField.requestFocus();
@@ -165,7 +163,7 @@ public class SeriesSearchView extends Activity {
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+    public final void onWindowFocusChanged(final boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         this.onSearchRequested();
     }
