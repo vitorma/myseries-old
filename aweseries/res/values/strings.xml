@@ -28,7 +28,9 @@
     <string name="nextEpisodeToSee">next to see:</string>
     <string name="nextEpisodeToAir">next to air:</string>
     <string name="lastEpisodeAired">last aired:</string>
-    <string name="noEpisodeToSee">no episode to see</string>
-    <string name="noEpisodeToAir">no episode to air</string>
+    <string name="upToDate">up to date</string>
     <string name="noEpisodeAired">no episode aired</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="doYouWantToStopFollowing">&quot;Do you want to stop following %s?&quot;</string>
 </resources>

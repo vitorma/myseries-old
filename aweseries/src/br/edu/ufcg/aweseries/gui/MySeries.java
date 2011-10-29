@@ -44,7 +44,8 @@ public class MySeries extends ListActivity {
 
     //Series item view adapter------------------------------------------------------------------------------------------
 
-    private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements SeriesProviderListener {
+    private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements
+            SeriesProviderListener {
 
         public SeriesItemViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);
@@ -57,8 +58,8 @@ public class MySeries extends ListActivity {
 
             // if no view was passed, create one for the item
             if (itemView == null) {
-                final LayoutInflater li =
-                    (LayoutInflater) MySeries.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final LayoutInflater li = (LayoutInflater) MySeries.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.my_series_list_item, null);
             }
 
@@ -70,7 +71,8 @@ public class MySeries extends ListActivity {
             final TextView airTime = (TextView) itemView.findViewById(R.id.airTimeTextView);
             final TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
             final TextView latestToAir = (TextView) itemView.findViewById(R.id.latestToAirTextView);
-            final TextView latestToAirLabel = (TextView) itemView.findViewById(R.id.latestToAirLabelTextView);
+            final TextView latestToAirLabel = (TextView) itemView
+                    .findViewById(R.id.latestToAirLabelTextView);
 
             // load series data
             final Series item = this.getItem(position);
@@ -86,7 +88,7 @@ public class MySeries extends ListActivity {
             if (nextEpisodeToSee != null) {
                 nextToSee.setText(nextEpisodeToSee.toString());
             } else {
-                nextToSee.setText(R.string.noEpisodeToSee);
+                nextToSee.setText(R.string.upToDate);
             }
 
             // latest episode to air
@@ -96,7 +98,7 @@ public class MySeries extends ListActivity {
                 if (nextEpisodeToAir != null) {
                     latestToAir.setText(nextEpisodeToAir.toString());
                 } else {
-                    latestToAir.setText(R.string.noEpisodeToAir);
+                    latestToAir.setText(R.string.upToDate);
                 }
             }
 
@@ -198,13 +200,14 @@ public class MySeries extends ListActivity {
     private void adjustContentView() {
         final TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
         title.setText("My Series");
-        
+
         final TextView empty = (TextView) this.findViewById(id.empty);
         empty.setText("No series followed");
     }
 
     private void setAdapter() {
-        this.dataAdapter = new SeriesItemViewAdapter(this, R.layout.my_series_list_item, seriesProvider.mySeries());
+        this.dataAdapter = new SeriesItemViewAdapter(this, R.layout.my_series_list_item,
+                seriesProvider.mySeries());
         this.setListAdapter(this.dataAdapter);
     }
 
@@ -248,9 +251,11 @@ public class MySeries extends ListActivity {
         };
 
         new AlertDialog.Builder(this)
-                .setMessage("Are you sure you want unfollow " + series.getName() + "?")
-                .setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+                .setMessage(
+                        String.format(getString(R.string.doYouWantToStopFollowing),
+                                series.getName()))
+                .setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
     private void showSearchActivity() {
