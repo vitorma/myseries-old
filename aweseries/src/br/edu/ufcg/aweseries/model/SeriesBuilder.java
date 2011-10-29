@@ -3,7 +3,6 @@ package br.edu.ufcg.aweseries.model;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-
 public class SeriesBuilder {
     private static final String DEFAULT_STRING = "";
 
@@ -20,6 +19,10 @@ public class SeriesBuilder {
     private String actors;
     private Bitmap posterBitmap;
     private Seasons seasons;
+
+    public SeriesBuilder() {
+        this.seasons = new Seasons();
+    }
 
     public SeriesBuilder withId(String id) {
         this.id = id;
@@ -82,16 +85,14 @@ public class SeriesBuilder {
     }
 
     public SeriesBuilder withPoster(byte[] posterBitmap) {
-        if (posterBitmap == null) {
-            this.posterBitmap = null;
-        } else {
+        if (posterBitmap != null) {
             this.posterBitmap = BitmapFactory.decodeByteArray(posterBitmap, 0, posterBitmap.length);
         }
         return this;
     }
 
-    public SeriesBuilder withSeasons(Seasons seasons) {
-        this.seasons = seasons;
+    public SeriesBuilder withEpisode(Episode episode) {
+        this.seasons.addEpisode(episode);
         return this;
     }
 
@@ -108,7 +109,7 @@ public class SeriesBuilder {
         series.setGenres(this.genres != null ? this.genres : DEFAULT_STRING);
         series.setActors(this.actors != null ? this.actors : DEFAULT_STRING);
         series.setPoster(this.posterBitmap != null ? new Poster(this.posterBitmap) : null);
-        series.setSeasons(this.seasons != null ? this.seasons : new Seasons());
+        series.setSeasons(this.seasons);
 
         return series;
     }
