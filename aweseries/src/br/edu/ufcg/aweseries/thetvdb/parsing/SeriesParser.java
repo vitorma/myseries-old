@@ -7,9 +7,11 @@ import org.xml.sax.SAXException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.sax.Element;
+import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
+import br.edu.ufcg.aweseries.model.EpisodeBuilder;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.model.SeriesBuilder;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
@@ -26,6 +28,7 @@ public class SeriesParser {
         this.streamFactory = streamFactory;
     }
 
+    //TODO Refactoring: extract definition of listeners, maybe creating inner types
     public Series parse(String seriesId) {
         if (seriesId == null) {
             throw new IllegalArgumentException("seriesId should not be null");
@@ -34,122 +37,231 @@ public class SeriesParser {
             throw new IllegalArgumentException("seriesId should not be blank");
         }
 
-        final SeriesBuilder builder = new SeriesBuilder();
+        //Builders------------------------------------------------------------------------------------------------------
+
+        final SeriesBuilder seriesBuilder = new SeriesBuilder();
+        final EpisodeBuilder episodeBuilder = new EpisodeBuilder();
+
+        //Root element--------------------------------------------------------------------------------------------------
+
         final RootElement root = new RootElement("Data");
-        final Element element = root.getChild("Series");
 
-        element.getChild("id").setEndTextElementListener(
+        //Series element------------------------------------------------------------------------------------------------
+
+        final Element seriesElement = root.getChild("Series");
+
+        seriesElement.getChild("id").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withId(body);
+                        seriesBuilder.withId(body);
                     }
                 });
 
-        element.getChild("SeriesName").setEndTextElementListener(
+        seriesElement.getChild("SeriesName").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withName(body);
+                        seriesBuilder.withName(body);
                     }
                 });
 
-        element.getChild("Status").setEndTextElementListener(
+        seriesElement.getChild("Status").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withStatus(body);
+                        seriesBuilder.withStatus(body);
                     }
                 });
 
-        element.getChild("Airs_DayOfWeek").setEndTextElementListener(
+        seriesElement.getChild("Airs_DayOfWeek").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withAirsDay(body);
+                        seriesBuilder.withAirsDay(body);
                     }
                 });
 
-        element.getChild("Airs_Time").setEndTextElementListener(
+        seriesElement.getChild("Airs_Time").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withAirsTime(body);
+                        seriesBuilder.withAirsTime(body);
                     }
                 });
 
-        element.getChild("FirstAired").setEndTextElementListener(
+        seriesElement.getChild("FirstAired").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withFirstAired(body);
+                        seriesBuilder.withFirstAired(body);
                     }
                 });
 
-        element.getChild("Runtime").setEndTextElementListener(
+        seriesElement.getChild("Runtime").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withRuntime(body);
+                        seriesBuilder.withRuntime(body);
                     }
                 });
 
-        element.getChild("Network").setEndTextElementListener(
+        seriesElement.getChild("Network").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withNetwork(body);
+                        seriesBuilder.withNetwork(body);
                     }
                 });
 
-        element.getChild("Overview").setEndTextElementListener(
+        seriesElement.getChild("Overview").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withOverview(body);
+                        seriesBuilder.withOverview(body);
                     }
                 });
 
-        element.getChild("Genre").setEndTextElementListener(
+        seriesElement.getChild("Genre").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withGenres(Strings.normalizePipeSeparated(body));
+                        seriesBuilder.withGenres(body);
                     }
                 });
 
-        element.getChild("Actors").setEndTextElementListener(
+        seriesElement.getChild("Actors").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withActors(Strings.normalizePipeSeparated(body));
+                        seriesBuilder.withActors(body);
                     }
                 });
 
-        element.getChild("poster").setEndTextElementListener(
+        seriesElement.getChild("poster").setEndTextElementListener(
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withPoster((Bitmap) SeriesParser.this.scaledBitmapFrom(body));
+                        seriesBuilder.withPoster((Bitmap) SeriesParser.this.scaledBitmapFrom(body));
                     }
                 });
+
+        //Episode element-----------------------------------------------------------------------------------------------
+
+        final Element episodeElement = root.getChild("Episode");
+
+        episodeElement.setEndElementListener(
+                new EndElementListener() {
+                    @Override
+                    public void end() {
+                        seriesBuilder.withEpisode(episodeBuilder.build());
+                    }
+                });
+
+        episodeElement.getChild("id").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withId(body);
+                    }
+                });
+
+        episodeElement.getChild("seriesid").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withSeriesId(body);
+                    }
+                });
+
+        episodeElement.getChild("EpisodeNumber").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withNumber(body);
+                    }
+                });
+
+        episodeElement.getChild("SeasonNumber").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withSeasonNumber(body);
+                    }
+                });
+
+        episodeElement.getChild("EpisodeName").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withName(body);
+                    }
+                });
+
+        episodeElement.getChild("FirstAired").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withFirstAired(body);
+                    }
+                });
+
+        episodeElement.getChild("Overview").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withOverview(body);
+                    }
+                });
+
+        episodeElement.getChild("Director").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withDirector(body);
+                    }
+                });
+
+        episodeElement.getChild("Writer").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withWriter(body);
+                    }
+                });
+
+        episodeElement.getChild("GuestStars").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withGuestStars(body);
+                    }
+                });
+
+        episodeElement.getChild("filename").setEndTextElementListener(
+                new EndTextElementListener() {
+                    @Override
+                    public void end(String body) {
+                        episodeBuilder.withPoster(body);
+                    }
+                });
+
+        //Parse---------------------------------------------------------------------------------------------------------
 
         try {
-            Xml.parse(this.streamFactory.streamForFullSeries(seriesId),
-                    Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(this.streamFactory.streamForFullSeries(seriesId), Xml.Encoding.UTF_8, root.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
             throw new RuntimeException(e);
         }
 
-        return builder.build();
+        return seriesBuilder.build();
     }
 
     private Bitmap scaledBitmapFrom(String resourcePath) {
         return Strings.isBlank(resourcePath)
                ? null
-               : BitmapFactory.decodeStream(
-                       this.streamFactory.streamForSeriesPosterAt(resourcePath));
+               : BitmapFactory.decodeStream(this.streamFactory.streamForSeriesPosterAt(resourcePath));
     }
 }

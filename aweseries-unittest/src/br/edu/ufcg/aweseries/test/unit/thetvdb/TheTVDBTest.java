@@ -30,7 +30,7 @@ public class TheTVDBTest {
 
         TheTVDB theTVBD = new TheTVDB(streamFactoryMock);
         Assert.assertNull("TheTVDB should return a null Series for a null seriesId",
-                theTVBD.getFullSeries(null));
+                theTVBD.getSeries(null));
     }
 
     @Test
@@ -39,6 +39,6 @@ public class TheTVDBTest {
 
         TheTVDB theTVBD = new TheTVDB(streamFactoryMock);
         Assert.assertNull("TheTVDB should return a null Series for a blank seriesId",
-                theTVBD.getFullSeries("   \t \t "));
+                theTVBD.getSeries("   \t \t "));
     }
 }

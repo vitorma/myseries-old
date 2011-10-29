@@ -70,7 +70,7 @@ public class SeriesProvider {
     }
 
     public void follow(Series series) {
-        final Series fullSeries = this.theTVDB().getFullSeries(series.getId());
+        final Series fullSeries = this.theTVDB().getSeries(series.getId());
         this.localSeriesRepository().insert(fullSeries);
         this.notifyListenersAboutFollowedSeries(fullSeries);
     }
@@ -125,7 +125,7 @@ public class SeriesProvider {
 
     private Series getSeriesFromExternalServer(String seriesId) {
         Log.d("SeriesProvider", "getting series with id " + seriesId + " from external server");
-        return this.theTVDB().getFullSeries(seriesId);
+        return this.theTVDB().getSeries(seriesId);
     }
 
     private Series getSeriesFromLocalRepository(String seriesId) {
