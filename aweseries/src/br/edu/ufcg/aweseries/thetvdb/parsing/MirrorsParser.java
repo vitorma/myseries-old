@@ -9,7 +9,10 @@
 
 package br.edu.ufcg.aweseries.thetvdb.parsing;
 
+import java.io.IOException;
 import java.io.InputStream;
+
+import org.xml.sax.SAXException;
 
 import android.sax.Element;
 import android.sax.EndElementListener;
@@ -19,13 +22,18 @@ import android.util.Xml;
 import br.edu.ufcg.aweseries.thetvdb.stream.url.MirrorBuilder;
 import br.edu.ufcg.aweseries.thetvdb.stream.url.Mirrors;
 
-public class MirrorsParser extends TheTVDBParser<Mirrors> {
+public class MirrorsParser {
+
+    private InputStream inputStream;
 
     public MirrorsParser(InputStream inputStream) {
-        super(inputStream);
+        if (inputStream == null) {
+            throw new IllegalArgumentException("inputStream should not be null");
+        }
+
+        this.inputStream = inputStream;
     }
 
-    @Override
     public Mirrors parse() {
         final Mirrors mirrors = new Mirrors();
         final MirrorBuilder builder = new MirrorBuilder();
@@ -61,9 +69,10 @@ public class MirrorsParser extends TheTVDBParser<Mirrors> {
         );
 
         try {
-            Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, 
-                    root.getContentHandler());
-        } catch (Exception e) {
+            Xml.parse(this.inputStream, Xml.Encoding.UTF_8, root.getContentHandler());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SAXException e) {
             throw new RuntimeException(e);
         }
 
