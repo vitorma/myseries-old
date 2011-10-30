@@ -25,6 +25,7 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
+    private Series currentSeries;
 
     private final HashSet<SeriesProviderListener> listeners;
 
@@ -108,7 +109,12 @@ public class SeriesProvider {
     }
 
     public Series getSeries(String seriesId) {
-        Series series = this.getSeriesFromLocalRepository(seriesId);
+
+        Series series = this.getSeriesFromCache(seriesId);
+
+        if (series == null) {
+            series = this.getSeriesFromLocalRepository(seriesId);
+        }
 
         if (series == null) {
             series = this.getSeriesFromExternalServer(seriesId);
@@ -120,6 +126,7 @@ public class SeriesProvider {
             throw new NonExistentSeriesException(message);
         }
 
+        this.currentSeries = series;
         return series;
     }
 
@@ -131,6 +138,15 @@ public class SeriesProvider {
     private Series getSeriesFromLocalRepository(String seriesId) {
         Log.d("SeriesProvider", "getting series with id " + seriesId + " from local repository");
         return this.localSeriesRepository().getSeries(seriesId);
+    }
+
+    private Series getSeriesFromCache(String seriesId) {
+        Log.d("SeriesProvider", "getting series with id " + seriesId + " from cache");
+        if (this.currentSeries != null && this.currentSeries.getId().equals(seriesId)) {
+            return this.currentSeries;
+        }
+
+        return null;
     }
 
     /**
@@ -188,7 +204,7 @@ public class SeriesProvider {
             listener.onMarkedAsNotSeen(episode);
         }
     }
-    
+
     private void notifyListenersAboutSeasonMarkedAsSeen(Season season) {
         for (final SeriesProviderListener listener : this.listeners) {
             listener.onMarkedAsSeen(season);
