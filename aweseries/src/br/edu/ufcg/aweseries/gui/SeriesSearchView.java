@@ -39,8 +39,7 @@ public class SeriesSearchView extends ListActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final AutoCompleteTextView searchField 
-                = (AutoCompleteTextView) SeriesSearchView.this
+                final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchView.this
                         .findViewById(R.id.searchField);
 
                 try {
@@ -48,8 +47,8 @@ public class SeriesSearchView extends ListActivity {
                             .searchSeries(searchField.getText().toString());
 
                     SeriesSearchView.this.setListAdapter(new TextOnlyViewAdapter(
-                            SeriesSearchView.this, SeriesSearchView.this, R.layout.list_item,
-                            searchResultsArray));
+                            SeriesSearchView.this, SeriesSearchView.this,
+                            R.layout.text_only_list_item, searchResultsArray));
 
                 } catch (final Exception e) {
                     Log.e(SeriesSearchView.class.getName(), e.getMessage());

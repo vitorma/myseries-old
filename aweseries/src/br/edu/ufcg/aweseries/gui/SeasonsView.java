@@ -183,7 +183,7 @@ public class SeasonsView extends ListActivity {
 
     private void populateSeasonsList() {
 
-        this.dataAdapter = new SeasonItemViewAdapter(this, R.layout.list_item, this.series
+        this.dataAdapter = new SeasonItemViewAdapter(this, R.layout.season_list_item, this.series
                 .getSeasons().toList());
         this.setListAdapter(this.dataAdapter);
         this.dataAdapter.sort(comparator);
