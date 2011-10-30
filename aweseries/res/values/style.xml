@@ -16,6 +16,10 @@
     <style name="aweseries_style.30dp">
         <item name="android:textSize">30dp</item>
     </style>
+    <style name="aweseries_style.12dp"><item name="android:textSize">12dp</item>
+    </style>
+    <style name="aweseries_style.15dp"><item name="android:textSize">15dp</item></style>
+    
 
 </resources>
 
