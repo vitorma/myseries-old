@@ -1,21 +1,31 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import android.util.Log;
 
-public class Seasons {
+public class Seasons implements Iterable<Season> {
 
-    private TreeMap<Integer, Season> seasons;
+    private TreeMap<Integer, Season> map;
 
     public Seasons() {
-        this.seasons = new TreeMap<Integer, Season>();
+        this.map = new TreeMap<Integer, Season>();
+    }
+
+    private int getFirstSeasonNumber() {
+        return this.map.firstKey();
+    }
+
+    public int getLastSeasonNumber() {
+        return this.map.lastKey();
+    }
+
+    public int getNumberOfSeasons() {
+        return this.map.size();
     }
 
     public void addEpisode(Episode episode) {
@@ -23,24 +33,16 @@ public class Seasons {
             throw new IllegalArgumentException("episode should not be null");
         }
 
-        if (this.hasEpisode(episode)) {
-            throw new IllegalArgumentException("episode already exists");
-        }
-
         if (!this.hasSeason(episode.getSeasonNumber())) {
             this.addSeason(episode.getSeasonNumber());
         }
 
-        this.seasons.get(episode.getSeasonNumber()).addEpisode(episode);
+        this.map.get(episode.getSeasonNumber()).addEpisode(episode);
     }
 
     public void addAllEpisodes(List<Episode> episodes) {
         if (episodes == null) {
             throw new IllegalArgumentException("episodes should not be null");
-        }
-
-        if (episodes.isEmpty()) {
-            Log.w("Seasons", "episodes list is empty");
         }
 
         for (Episode e : episodes) {
@@ -50,31 +52,21 @@ public class Seasons {
     }
 
     private void addSeason(int seasonNumber) {
-        this.seasons.put(seasonNumber, new Season(seasonNumber));
+        this.map.put(seasonNumber, new Season(seasonNumber));
     }
 
-    private boolean hasSeason(int i) {
-        return this.seasons.containsKey(i);
+    private boolean hasSeason(int seasonNumber) {
+        return this.map.containsKey(seasonNumber);
     }
 
-    private boolean hasEpisode(Episode episode) {
-        for (Season s : this.seasons.values()) {
-            if (s.has(episode)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public Season getSeason(int i) {
-        return this.seasons.get(i);
+    public Season getSeason(int seasonNumber) {
+        return this.map.get(seasonNumber);
     }
 
     public List<Episode> getAllEpisodes() {
         List<Episode> episodes = new ArrayList<Episode>();
 
-        for (Season s : this.seasons.values()) {
+        for (Season s : this) {
             episodes.addAll(s.getEpisodes());
         }
 
@@ -82,20 +74,20 @@ public class Seasons {
     }
 
     public List<Season> toList() {
-        
         final List<Season> list = new ArrayList<Season>();
-        for (Season season : this.seasons.values()) {
+
+        for (Season season : this) {
             list.add(season);
         }
-        
+
         return list;
     }
 
     public Season[] toArray() {
-        final Season[] array = new Season[this.seasons.size()];
+        final Season[] array = new Season[this.getNumberOfSeasons()];
 
         int i = 0;
-        for (Season s : this.seasons.values()) {
+        for (Season s : this) {
             array[i] = s;
             i++;
         }
@@ -103,59 +95,89 @@ public class Seasons {
         return array;
     }
 
-    public Episode getNextEpisodeToView() {
-        for (Episode e : this.getAllEpisodesSortedByDate()) {
-            if (!e.wasSeen()) {
-                return e;
-            }
+    public Episode getNextEpisodeToSee() {
+        for (final Season s : this) {
+            final Episode next = s.getNextEpisodeToSee();
+            if (next != null) return next;
         }
 
         return null;
     }
 
     public Episode getNextEpisodeToAir() {
-        final TreeSet<Episode> episodes = this.getAllEpisodesSortedByDate();
-
-        final Date today = new Date();
-
-        for (Episode e : episodes) {
-            if (e.airedFrom(today)) {
-                return e;
-            }
+        for (final Season s : this) {
+            final Episode next = s.getNextEpisodeToAir();
+            if (next != null) return next;
         }
 
         return null;
     }
 
     public Episode getLastAiredEpisode() {
-        final TreeSet<Episode> episodes = this.getAllEpisodesSortedByDate();
+        final Iterator<Season> it = this.reversedIterator();
 
-        if (episodes.isEmpty()) return null;
-
-        final Date today = new Date();
-        final Iterator<Episode> it = episodes.iterator();
-
-        Episode last = it.next();
         while (it.hasNext()) {
-            Episode current = it.next();
-            if (current.airedUntil(today)) {
-                last = current;
-            }
+            final Episode last = it.next().getLastAiredEpisode();
+            if (last != null) return last;
         }
 
-        return last;
+        return null;
     }
 
-    private TreeSet<Episode> getAllEpisodesSortedByDate() {
-        TreeSet<Episode> episodes = new TreeSet<Episode>(new Comparator<Episode>() {
+    @Override
+    public Iterator<Season> iterator() {
+        return new Iterator<Season>() {
+            private int seasonNumber =
+                (getNumberOfSeasons() > 0) ? Seasons.this.getFirstSeasonNumber() : Integer.MAX_VALUE;
+
             @Override
-            public int compare(Episode e1, Episode e2) {
-                return e1.getFirstAired().compareTo(e2.getFirstAired());
+            public boolean hasNext() {
+                return (getNumberOfSeasons() > 0) && (this.seasonNumber <= Seasons.this.getLastSeasonNumber());
             }
-        });
 
-        episodes.addAll(this.getAllEpisodes());
+            @Override
+            public Season next() {
+                if (!this.hasNext()) {
+                    throw new NoSuchElementException();
+                }
 
-        return episodes;
+                Season next = Seasons.this.getSeason(this.seasonNumber);
+                this.seasonNumber++;
+                return next;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    public Iterator<Season> reversedIterator() {
+        return new Iterator<Season>() {
+            private int seasonNumber =
+                (getNumberOfSeasons() > 0) ? Seasons.this.getLastSeasonNumber() : Integer.MIN_VALUE;
+
+            @Override
+            public boolean hasNext() {
+                return (getNumberOfSeasons() > 0) && (this.seasonNumber >= Seasons.this.getFirstSeasonNumber());
+            }
+
+            @Override
+            public Season next() {
+                if (!this.hasNext()) {
+                    throw new NoSuchElementException();
+                }
+
+                Season next = Seasons.this.getSeason(this.seasonNumber);
+                this.seasonNumber--;
+                return next;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 }

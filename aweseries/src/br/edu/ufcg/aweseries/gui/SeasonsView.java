@@ -146,7 +146,7 @@ public class SeasonsView extends ListActivity {
             final Season season = seriesProvider().getSeries(seriesId).getSeasons()
                     .getSeason(seasonNumber);
 
-            if (season.areAllViewed()) {
+            if (season.areAllSeen()) {
                 this.remove(season);
                 this.add(season);
                 this.sort(comparator);

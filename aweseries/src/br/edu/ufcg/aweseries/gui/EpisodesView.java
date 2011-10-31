@@ -107,10 +107,10 @@ public class EpisodesView extends ListActivity {
             this.add(episode);
             this.sort(comparator);
 
-            int index = season.indexOf(episode);
-            season.markAsViewed(index);
+            Episode e = season.get(episode.getNumber());
+            e.markAsSeen();
 
-            if (season.areAllViewed()) {
+            if (season.areAllSeen()) {
                 EpisodesView.this.isSeasonViewed.setChecked(true);
             }
         }
@@ -127,8 +127,8 @@ public class EpisodesView extends ListActivity {
             this.add(episode);
             this.sort(comparator);
 
-            int index = season.indexOf(episode);
-            season.markAsNotViewed(index);
+            Episode e = season.get(episode.getNumber());
+            e.markAsNotSeen();
 
             EpisodesView.this.isSeasonViewed.setChecked(false);
         }
@@ -186,7 +186,7 @@ public class EpisodesView extends ListActivity {
         title.setText(this.series.getName());
 
         this.isSeasonViewed = (CheckBox) this.findViewById(R.id.isSeasonViewedCheckBox);
-        this.isSeasonViewed.setChecked(this.season.areAllViewed());
+        this.isSeasonViewed.setChecked(this.season.areAllSeen());
 
         final TextView seasonName = (TextView) this.findViewById(R.id.seasonTextView);
         seasonName.setText(this.season.toString());

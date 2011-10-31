@@ -84,7 +84,7 @@ public class MySeries extends ListActivity {
             airTime.setText(item.getAirsDayAndTime());
 
             // next episode to see
-            final Episode nextEpisodeToSee = item.getSeasons().getNextEpisodeToView();
+            final Episode nextEpisodeToSee = item.getSeasons().getNextEpisodeToSee();
             if (nextEpisodeToSee != null) {
                 nextToSee.setText(nextEpisodeToSee.toString());
             } else {
@@ -144,7 +144,7 @@ public class MySeries extends ListActivity {
 
         @Override
         public void onMarkedAsSeen(Season season) {
-            final Series series = seriesProvider.getSeries(season.getEpisodeAt(0).getSeriesId());
+            final Series series = seriesProvider.getSeries(season.getFirst().getSeriesId());
             this.remove(series);
             this.add(series);
             this.sort(comparator);
@@ -152,7 +152,7 @@ public class MySeries extends ListActivity {
 
         @Override
         public void onMarkedAsNotSeen(Season season) {
-            final Series series = seriesProvider.getSeries(season.getEpisodeAt(0).getSeriesId());
+            final Series series = seriesProvider.getSeries(season.getFirst().getSeriesId());
             this.remove(series);
             this.add(series);
             this.sort(comparator);

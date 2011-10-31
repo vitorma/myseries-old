@@ -25,7 +25,6 @@ public class EpisodeBuilder {
     public EpisodeBuilder() {
         this.number = -1;
         this.seasonNumber = -1;
-        this.firstAired = new Date(Long.MAX_VALUE);
     }
 
     public EpisodeBuilder withId(String id) {
@@ -80,10 +79,10 @@ public class EpisodeBuilder {
         return this;
     }
 
-    public EpisodeBuilder withFirstAired(long firstAired) {
-        this.firstAired = new Date(firstAired);
-        return this;
-    }
+//    public EpisodeBuilder withFirstAired(long firstAired) {
+//        this.firstAired = new Date(firstAired);
+//        return this;
+//    }
 
     public EpisodeBuilder withOverview(String overview) {
         this.overview = overview;
@@ -119,7 +118,7 @@ public class EpisodeBuilder {
         Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
 
         episode.setName(this.name != null ? this.name : DEFAULT_NAME);
-        episode.setFirstAired(this.firstAired != null ? this.firstAired : new Date(Long.MAX_VALUE));
+        episode.setFirstAired(this.firstAired);
         episode.setOverview(this.overview != null ? this.overview : DEFAULT_STRING);
         episode.setDirector(this.director != null ? this.director : DEFAULT_STRING);
         episode.setWriter(this.writer != null ? this.writer : DEFAULT_STRING);

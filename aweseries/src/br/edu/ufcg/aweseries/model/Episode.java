@@ -47,7 +47,6 @@ public class Episode {
         this.setDirector("");
         this.setGuestStars("");
         this.setName("");
-        this.setFirstAired(new Date(Long.MAX_VALUE));
         this.setOverview("");
         this.setPoster("");
         this.setWriter("");
@@ -82,10 +81,12 @@ public class Episode {
         return this.firstAired;
     }
 
+    public boolean hasFirstAired() {
+        return this.firstAired != null;
+    }
+
     public String getFirstAiredAsString() {
-        return (this.getFirstAired().equals(new Date(Long.MAX_VALUE)))
-               ? ""
-               : dateFormat.format(this.getFirstAired());
+        return (this.hasFirstAired()) ? dateFormat.format(this.getFirstAired()) : "";
     }
 
     public boolean airedBefore(Date date) {
@@ -93,7 +94,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.getFirstAired().compareTo(date) < 0;
+        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) < 0) : false;
     }
 
     public boolean airedUntil(Date date) {
@@ -101,7 +102,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.getFirstAired().compareTo(date) <= 0;
+        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) <= 0) : false;
     }
 
     public boolean airedAt(Date date) {
@@ -109,7 +110,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.getFirstAired().compareTo(date) == 0;
+        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) == 0) : false;
     }
 
     public boolean airedFrom(Date date) {
@@ -117,7 +118,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.getFirstAired().compareTo(date) >= 0;
+        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) >= 0) : false;
     }
 
     public boolean airedAfter(Date date) {
@@ -125,25 +126,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.getFirstAired().compareTo(date) > 0;
-    }
-
-    public int compareByDateTo(Episode other) {
-        if (other == null) {
-            throw new IllegalArgumentException("other should not be null");
-        }
-
-        return this.getFirstAired().compareTo(other.getFirstAired());
-    }
-
-    public int compareByNumberTo(Episode other) {
-        if (other == null) {
-            throw new IllegalArgumentException("other should not be null");
-        }
-
-        return (this.getSeasonNumber() != other.getSeasonNumber())
-               ? (this.getSeasonNumber() - other.getSeasonNumber())
-               : (this.getNumber() - other.getNumber());
+        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) > 0) : false;
     }
 
     public String getOverview() {
@@ -179,10 +162,6 @@ public class Episode {
     }
 
     public void setFirstAired(Date firstAired) {
-        if (firstAired == null) {
-            throw new IllegalArgumentException("FirstAired should not be null");
-        }
-
         this.firstAired = firstAired;
     }
 

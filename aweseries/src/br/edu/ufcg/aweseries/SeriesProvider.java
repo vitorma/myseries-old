@@ -72,6 +72,7 @@ public class SeriesProvider {
 
     public void follow(Series series) {
         final Series fullSeries = this.theTVDB().getSeries(series.getId());
+
         this.localSeriesRepository().insert(fullSeries);
         this.notifyListenersAboutFollowedSeries(fullSeries);
     }
@@ -218,13 +219,13 @@ public class SeriesProvider {
     }
 
     public void markSeasonAsSeen(Season season) {
-        season.markAllAsViewed();
+        season.markAllAsSeen();
         this.localSeriesRepository().updateAll(season.getEpisodes());
         this.notifyListenersAboutSeasonMarkedAsSeen(season);
     }
 
     public void markSeasonAsNotSeen(Season season) {
-        season.markAllAsNotViewed();
+        season.markAllAsNotSeen();
         this.localSeriesRepository().updateAll(season.getEpisodes());
         this.notifyListenersAboutSeasonMarkedAsNotSeen(season);
     }

@@ -1,20 +1,16 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.TreeMap;
 
-/**
- * Represents a season.
- */
-public class Season {
-    /**
-     * The number of this series.
-     */
+public class Season implements Iterable<Episode> {
+
     private final int number;
-
-    /**
-     * The episodes of this series.
-     */
-    private final java.util.List<Episode> episodes;
+    private final TreeMap<Integer, Episode> map;
 
     public Season(int number) {
         if (number < 0) {
@@ -22,16 +18,75 @@ public class Season {
         }
 
         this.number = number;
-        this.episodes = new java.util.ArrayList<Episode>();
+        this.map = new TreeMap<Integer, Episode>();
     }
 
-    /**
-     * Adds an episode to this series.
-     * 
-     * @param episode
-     *            The episode to add. If the episode is already in the
-     *            series, it will not be added.
-     */
+    public int getNumber() {
+        return this.number;
+    }
+    
+    public int getNumberOfEpisodes() {
+        return this.map.size();
+    }
+
+    public List<Episode> getEpisodes() {
+        return new ArrayList<Episode>(this.map.values());
+    }
+
+    private int getFirstEpisodeNumber() {
+        return this.map.firstKey();
+    }
+
+    private int getLastEpisodeNumber() {
+        return this.map.lastKey();
+    }
+
+    public Episode getFirst() {
+        return this.map.get(this.getFirstEpisodeNumber());
+    }
+
+    public Episode getLast() {
+        return this.map.get(this.getLastEpisodeNumber());
+    }
+
+    public Episode get(int episodeNumber) {
+        return this.map.get(episodeNumber);
+    }
+
+    public boolean has(Episode episode) {
+        return this.map.containsValue(episode);
+    }
+
+    public Episode getNextEpisodeToSee() {
+        for (final Episode e : this) {
+            if (!e.wasSeen()) return e;
+        }
+
+        return null;
+    }
+
+    public Episode getNextEpisodeToAir() {
+        final Date today = new Date();
+
+        for (final Episode e : this) {
+            if (e.airedFrom(today)) return e;
+        }
+
+        return null;
+    }
+
+    public Episode getLastAiredEpisode() {
+        final Date today = new Date();
+        final Iterator<Episode> it = this.reversedIterator();
+
+        while (it.hasNext()) {
+            final Episode e = it.next();
+            if (e.airedUntil(today)) return e;
+        }
+
+        return null;
+    }
+
     public void addEpisode(final Episode episode) {
         if (episode == null) {
             throw new IllegalArgumentException("episode should not be null");
@@ -41,164 +96,101 @@ public class Season {
             throw new IllegalArgumentException("episode already exists");
         }
 
-        this.episodes.add(episode);
+        this.map.put(episode.getNumber(), episode);
     }
-
-    /**
-     * Returns the i-th episode of this season.
-     * 
-     * @param i
-     *            Episode index
-     * @return The episode at index i, if any
-     */
-    public Episode getEpisodeAt(final int i) {
-        try {
-            return this.episodes.get(i);
-        } catch (IndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("there is no episode at index " + i);
-        }
-    }
-
-    /**
-     * Returns the list of episodes in this series.
-     * 
-     * @return The list of episodes
-     */
-    public java.util.List<Episode> getEpisodes() {
-        return new ArrayList<Episode>(this.episodes);
-    }
-
-    /**
-     * Returns the next episode to be aired.
-     * 
-     * @return The next episode
-     */
-    public Episode getNextEpisode() {
-        for (final Episode episode : this.getEpisodes()) {
-            if (!episode.wasSeen()) {
-                return episode;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the number of this season.
-     * 
-     * @return Number of season
-     */
-    public int getNumber() {
-        return this.number;
-    }
-
-    /**
-     * Returns the number of episodes in this series.
-     * 
-     * @return The number of episodes
-     */
-    public int getNumberOfEpisodes() {
-        return this.getEpisodes().size();
-    }
-
-    /**
-     * Returns the index of a given episode.
-     * 
-     * @param episode
-     *            The episode to search
-     * @return The index of the episode
-     */
-    public int indexOf(final Episode episode) {
-        return this.getEpisodes().indexOf(episode);
-    }
-
-    public boolean has(Episode episode) {
-        return this.getEpisodes().contains(episode);
-    }
-
-    /**
-     * Returns true if the i-th episode was marked as viewed.
-     * 
-     * @param i
-     *            The index of the episode to query
-     * @return True if episode at index i was marked as viewed
-     */
-    public boolean isViewed(final int i) {
-        return this.getEpisodeAt(i).wasSeen();
-    }
-
-    /**
-     * Marks all episodes in this season as not viewed.
-     */
-    public void markAllAsNotViewed() {
-        for (final Episode episode : this.getEpisodes()) {
-            episode.markAsNotSeen();
-        }
-    }
-
-    public boolean areAllViewed() {
-        for (Episode e : this.getEpisodes()) {
+    
+    public boolean areAllSeen() {
+        for (final Episode e : this) {
             if (!e.wasSeen()) {
                 return false;
             }
         }
-
+        
         return true;
     }
 
-    /**
-     * Marks all episodes in this season as viewed.
-     */
-    public void markAllAsViewed() {
-        for (final Episode episode : this.getEpisodes()) {
-            episode.markAsSeen();
+    public void markAllAsSeen() {
+        for (final Episode e : this) {
+            e.markAsSeen();
         }
     }
 
-    /**
-     * Marks the i-th episode as not viewed.
-     * 
-     * @param i
-     *            Index of the episode to mark
-     */
-    public void markAsNotViewed(final int i) {
-        this.getEpisodeAt(i).markAsNotSeen();
-    }
-
-    /**
-     * Marks the i-th episode as viewed.
-     * 
-     * @param i
-     *            Index of the episode to mark
-     */
-    public void markAsViewed(final int i) {
-        this.getEpisodeAt(i).markAsSeen();
-    }
-
-    @Override
-    public String toString() {
-        return this.getNumber() == 0 ? "Special Episodes" : "Season " + this.getNumber();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        boolean theyAreEqual = false;
-
-        if (o instanceof Season) {
-            final Season otherSeason = (Season) o;
-
-            theyAreEqual = (otherSeason.getNumber() == this.getNumber());
+    public void markAllAsNotSeen() {
+        for (final Episode e : this) {
+            e.markAsNotSeen();
         }
+    }
 
-        return theyAreEqual;
+    @Override
+    public Iterator<Episode> iterator() {
+        return new Iterator<Episode>() {
+            private int episodeNumber =
+                (getNumberOfEpisodes() > 0) ? Season.this.getFirstEpisodeNumber() : Integer.MAX_VALUE;
 
+            @Override
+            public boolean hasNext() {
+                return (getNumberOfEpisodes() > 0) && (this.episodeNumber <= Season.this.getLastEpisodeNumber());
+            }
+
+            @Override
+            public Episode next() {
+                if (!this.hasNext()) {
+                    throw new NoSuchElementException();
+                }
+
+                Episode next = Season.this.get(this.episodeNumber);
+                this.episodeNumber++;
+                return next;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    public Iterator<Episode> reversedIterator() {
+        return new Iterator<Episode>() {
+            private int episodeNumber =
+                (getNumberOfEpisodes() > 0) ? Season.this.getLastEpisodeNumber() : Integer.MIN_VALUE;
+
+            @Override
+            public boolean hasNext() {
+                return (getNumberOfEpisodes() > 0) && (this.episodeNumber >= Season.this.getFirstEpisodeNumber());
+            }
+
+            @Override
+            public Episode next() {
+                if (!this.hasNext()) {
+                    throw new NoSuchElementException();
+                }
+
+                Episode next = Season.this.get(this.episodeNumber);
+                this.episodeNumber--;
+                return next;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     @Override
     public int hashCode() {
-        final int prime = 17;
-
-        return prime * this.getNumber();
+        return this.getNumber();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Season) &&
+        (((Season) o).getNumber() == this.getNumber());
+    }
+
+    @Override
+    public String toString() {
+        return (this.getNumber() == 0) ? "Special Episodes" : "Season " + this.getNumber();
+    }
 }
