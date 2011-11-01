@@ -168,7 +168,7 @@ public class MySeries extends ListActivity {
         this.setContentView(R.layout.list);
         this.adjustContentView();
         this.setAdapter();
-        this.setUpRecentAndUpcomingButtonsClickListener();
+        this.setUpRecentAndUpcomingButtonClickListener();
         this.setupItemClickListener();
         this.setupItemLongClickListener();
         this.dataAdapter.sort(comparator);
@@ -265,7 +265,7 @@ public class MySeries extends ListActivity {
         this.startActivity(intent);
     }
 
-    private void setUpRecentAndUpcomingButtonsClickListener() {
+    private void setUpRecentAndUpcomingButtonClickListener() {
         ImageButton recentAndUpcomingEpisodesButton
                 = (ImageButton) this.findViewById(R.id.recentAndUpcomingEpisodesButton);
 
@@ -278,8 +278,7 @@ public class MySeries extends ListActivity {
     }
 
     private void showRecentAndUpcomingEpisodesActivity() {
-        // TODO Use the tab container activity here
-        final Intent intent = new Intent(this, RecentEpisodesActivity.class);
+        final Intent intent = new Intent(this, RecentAndUpcomingEpisodesActivity.class);
         this.startActivity(intent);
     }
 }

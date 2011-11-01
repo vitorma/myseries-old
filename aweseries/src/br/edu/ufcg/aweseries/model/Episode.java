@@ -131,10 +131,10 @@ public class Episode {
 
     public int compareByDateTo(Episode other) {
         if (!this.hasFirstAired()) {
-            return other.hasFirstAired() ? -1 : this.compareByNumberTo(other);
+            return other.hasFirstAired() ? 1 : this.compareByNumberTo(other);
         }
 
-        return other.hasFirstAired() ? this.getFirstAired().compareTo(other.getFirstAired()) : 1;
+        return other.hasFirstAired() ? this.getFirstAired().compareTo(other.getFirstAired()) : -1;
     }
 
     private int compareByNumberTo(Episode other) {
