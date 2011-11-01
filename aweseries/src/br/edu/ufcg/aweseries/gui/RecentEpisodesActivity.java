@@ -12,11 +12,13 @@ import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -50,19 +52,17 @@ public class RecentEpisodesActivity extends ListActivity {
         this.setListAdapter(dataAdapter);
     }
 
-    /*
-    private void setupItemClickListener() {
+    private void setUpEpisodeItemClickListener() {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(view.getContext(), EpisodeView.class);
                 final Episode episode = (Episode) parent.getItemAtPosition(position);
                 intent.putExtra("episode id", episode.getId());
-                EpisodesView.this.startActivity(intent);
+                startActivity(intent);
             }
         });
     }
-    */
 
     private SeriesProvider seriesProvider() {
         return App.environment().seriesProvider();
