@@ -180,6 +180,16 @@ public class SeriesProvider {
         return recent;
     }
 
+    public List<Episode> upcoming() {
+        List<Episode> upcoming = new ArrayList<Episode>();
+
+        for (Series s : this.mySeries()) {
+            upcoming.addAll(s.getSeasons().getNextEpisodesToAir());
+        }
+
+        return upcoming;
+    }
+
     public void addListener(SeriesProviderListener listener) {
         this.listeners.add(listener);
     }
