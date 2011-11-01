@@ -1,14 +1,22 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import android.util.Log;
 
 public class Seasons implements Iterable<Season> {
+    private static final Comparator<Episode> EPISODE_COMPARATOR = new Comparator<Episode>() {
+        @Override
+        public int compare(Episode e1, Episode e2) {
+            return e1.compareByDateTo(e2);
+        }
+    };
 
     private TreeMap<Integer, Season> map;
 
@@ -122,6 +130,17 @@ public class Seasons implements Iterable<Season> {
         }
 
         return null;
+    }
+
+
+    public TreeSet<Episode> getLastAiredNotSeenEpisodes() {
+        TreeSet<Episode> set = new TreeSet<Episode>(EPISODE_COMPARATOR);
+
+        for (Season s : this) {
+            set.addAll(s.getLastAiredNotSeenEpisodes());
+        }
+
+        return set;
     }
 
     @Override

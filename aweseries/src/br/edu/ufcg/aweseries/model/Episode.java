@@ -129,6 +129,20 @@ public class Episode {
         return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) > 0) : false;
     }
 
+    public int compareByDateTo(Episode other) {
+        if (!this.hasFirstAired()) {
+            return other.hasFirstAired() ? -1 : this.compareByNumberTo(other);
+        }
+
+        return other.hasFirstAired() ? this.getFirstAired().compareTo(other.getFirstAired()) : 1;
+    }
+
+    private int compareByNumberTo(Episode other) {
+        return (this.getSeasonNumber() != other.getSeasonNumber())
+               ? (this.getSeasonNumber() - other.getSeasonNumber())
+               : (this.getNumber() - other.getNumber());
+    }
+
     public String getOverview() {
         return this.overview;
     }
