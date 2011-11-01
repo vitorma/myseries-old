@@ -5,20 +5,20 @@
     <style name="aweseries_style">
     </style>
 
-    <style name="aweseries_style.10dp">
-        <item name="android:textSize">10dp</item>
+    <style name="aweseries_style.10sp">
+        <item name="android:textSize">10sp</item>
     </style>
 
-    <style name="aweseries_style.20dp">
-        <item name="android:textSize">20dp</item>
+    <style name="aweseries_style.20sp">
+        <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="aweseries_style.30dp">
-        <item name="android:textSize">30dp</item>
+    <style name="aweseries_style.30sp">
+        <item name="android:textSize">30sp</item>
     </style>
-    <style name="aweseries_style.12dp"><item name="android:textSize">12dp</item>
+    <style name="aweseries_style.12sp"><item name="android:textSize">12sp</item>
     </style>
-    <style name="aweseries_style.15dp"><item name="android:textSize">15dp</item></style>
+    <style name="aweseries_style.15sp"><item name="android:textSize">15sp</item></style>
     
 
 </resources>
