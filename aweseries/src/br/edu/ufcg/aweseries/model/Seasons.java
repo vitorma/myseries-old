@@ -133,14 +133,24 @@ public class Seasons implements Iterable<Season> {
     }
 
 
-    public TreeSet<Episode> getLastAiredNotSeenEpisodes() {
-        TreeSet<Episode> set = new TreeSet<Episode>(EPISODE_COMPARATOR);
+    public List<Episode> getLastAiredNotSeenEpisodes() {
+        List<Episode> list = new ArrayList<Episode>();
 
         for (Season s : this) {
-            set.addAll(s.getLastAiredNotSeenEpisodes());
+            list.addAll(s.getLastAiredNotSeenEpisodes());
         }
 
-        return set;
+        return list;
+    }
+
+    public List<Episode> getNextEpisodesToAir() {
+        List<Episode> list = new ArrayList<Episode>();
+
+        for (Season s : this) {
+            list.addAll(s.getNextEpisodesToAir());
+        }
+
+        return list;
     }
 
     @Override
