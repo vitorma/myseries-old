@@ -28,7 +28,7 @@ public class RecentEpisodesActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.list);
+        this.setContentView(R.layout.list_without_toolbar);
         this.populateView();
 //        this.setupItemClickListener();
     }
@@ -39,9 +39,6 @@ public class RecentEpisodesActivity extends ListActivity {
     }
 
     private void setUpContentView() {
-        final TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
-        title.setText("Last not seen episodes");
-
         final TextView empty = (TextView) this.findViewById(android.R.id.empty);
         empty.setText("No episodes");
     }
