@@ -24,7 +24,7 @@
             android:text="@string/loading_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="70dp"
+            android:paddingRight="80dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:lines="1"
@@ -40,7 +40,7 @@
             android:paddingRight="2dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            style="@style/aweseries_style.15dp"/>
+            style="@style/aweseries_style.15sp"/>
 
         <TextView android:id="@+id/latestToAirTextView"
             android:text="@string/loading_label"
@@ -53,7 +53,7 @@
             android:scrollHorizontally="true"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
-            style="@style/aweseries_style.15dp"/>
+            style="@style/aweseries_style.15sp"/>
 
         <TextView android:id="@+id/nextToSeeLabelTextView"
             android:text="@string/nextEpisodeToSee"
@@ -62,7 +62,7 @@
             android:paddingRight="2dp"
             android:layout_alignParentLeft="true"
             android:layout_above="@id/latestToAirLabelTextView"
-            style="@style/aweseries_style.15dp"/>
+            style="@style/aweseries_style.15sp"/>
 
         <TextView android:id="@+id/nextToSeeTextView"
             android:text="@string/loading_label"
@@ -75,7 +75,7 @@
             android:scrollHorizontally="true"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
-            style="@style/aweseries_style.15dp"/>
+            style="@style/aweseries_style.15sp"/>
 
         <TextView android:id="@+id/statusTextView"
             android:text="@string/loading_label"
@@ -84,7 +84,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:maxLines="1"
-            style="@style/aweseries_style.12dp"/>
+            style="@style/aweseries_style.15sp"/>
 
         <TextView android:id="@+id/airTimeTextView"
             android:text="@string/loading_label"
@@ -96,7 +96,7 @@
             android:scrollHorizontally="true"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
-            style="@style/aweseries_style.12dp"/>
+            style="@style/aweseries_style.15sp"/>
 
         <TextView android:id="@+id/networkTextView"
             android:text="@string/loading_label"
@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@id/airTimeTextView"
-            style="@style/aweseries_style.12dp"/>
+            style="@style/aweseries_style.15sp"/>
 
     </RelativeLayout>
 
