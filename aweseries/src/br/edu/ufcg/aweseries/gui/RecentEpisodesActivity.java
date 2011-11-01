@@ -32,7 +32,7 @@ public class RecentEpisodesActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.list_without_toolbar);
         this.populateView();
-        //        this.setupItemClickListener();
+        this.setUpEpisodeItemClickListener();
     }
 
     private void populateView() {
@@ -47,7 +47,7 @@ public class RecentEpisodesActivity extends ListActivity {
 
     private void setUpListAdapter() {
         EpisodeItemViewAdapter dataAdapter = new EpisodeItemViewAdapter(this,
-                R.layout.episode_list_item, this.seriesProvider().recentNotSeenEpisodes());
+                R.layout.episode_alone_list_item, this.seriesProvider().recentNotSeenEpisodes());
         dataAdapter.sort(comparator);
         this.setListAdapter(dataAdapter);
     }
