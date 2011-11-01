@@ -1,8 +1,6 @@
 package br.edu.ufcg.aweseries;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -25,6 +23,7 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
+    private List<Series> mySeries;
     private Series currentSeries;
 
     private final HashSet<SeriesProviderListener> listeners;
@@ -55,31 +54,24 @@ public class SeriesProvider {
     }
 
     public List<Series> mySeries() {
-        return this.sortSeriesByName(this.localSeriesRepository().getAllSeries());
-    }
+        if (this.mySeries == null) {
+            this.mySeries = this.localSeriesRepository().getAllSeries();
+        }
 
-    private List<Series> sortSeriesByName(List<Series> series) {
-        final ArrayList<Series> sorted = new ArrayList<Series>(series);
-        final Comparator<Series> comparator = new Comparator<Series>() {
-            @Override
-            public int compare(Series s1, Series s2) {
-                return s1.getName().compareTo(s2.getName());
-            }
-        };
-        Collections.sort(sorted, comparator);
-        return sorted;
+        return new ArrayList<Series>(this.mySeries);
     }
 
     public void follow(Series series) {
         final Series fullSeries = this.theTVDB().getSeries(series.getId());
-
-        this.localSeriesRepository().insert(fullSeries);
+        this.mySeries.add(fullSeries);
         this.notifyListenersAboutFollowedSeries(fullSeries);
+        this.localSeriesRepository().insert(fullSeries);
     }
 
     public void unfollow(Series series) {
-        this.localSeriesRepository().delete(series);
+        this.mySeries.remove(series);
         this.notifyListenersAboutUnfollowedSeries(series);
+        this.localSeriesRepository().delete(series);
     }
 
     public boolean follows(Series series) {
@@ -87,7 +79,7 @@ public class SeriesProvider {
             throw new IllegalArgumentException("series should not be null");
         }
 
-        return this.localSeriesRepository().getSeries(series.getId()) != null;
+        return this.mySeries.contains(series);
     }
 
     public void wipeFollowedSeries() {
@@ -220,24 +212,32 @@ public class SeriesProvider {
 
     public void markSeasonAsSeen(Season season) {
         season.markAllAsSeen();
+        this.mySeries.remove(this.currentSeries);
+        this.mySeries.add(this.currentSeries);
         this.localSeriesRepository().updateAll(season.getEpisodes());
         this.notifyListenersAboutSeasonMarkedAsSeen(season);
     }
 
     public void markSeasonAsNotSeen(Season season) {
         season.markAllAsNotSeen();
+        this.mySeries.remove(this.currentSeries);
+        this.mySeries.add(this.currentSeries);
         this.localSeriesRepository().updateAll(season.getEpisodes());
         this.notifyListenersAboutSeasonMarkedAsNotSeen(season);
     }
 
     public void markEpisodeAsSeen(Episode episode) {
         episode.markAsSeen();
+        this.mySeries.remove(this.currentSeries);
+        this.mySeries.add(this.currentSeries);
         this.localSeriesRepository().update(episode);
         this.notifyListenersAboutEpisodeMarkedAsSeen(episode);
     }
 
     public void markEpisodeAsNotSeen(Episode episode) {
         episode.markAsNotSeen();
+        this.mySeries.remove(this.currentSeries);
+        this.mySeries.add(this.currentSeries);
         this.localSeriesRepository().update(episode);
         this.notifyListenersAboutEpisodeMarkedAsNotSeen(episode);
     }
