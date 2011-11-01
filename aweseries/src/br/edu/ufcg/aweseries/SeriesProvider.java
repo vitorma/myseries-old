@@ -64,14 +64,14 @@ public class SeriesProvider {
     public void follow(Series series) {
         final Series fullSeries = this.theTVDB().getSeries(series.getId());
         this.mySeries.add(fullSeries);
-        this.notifyListenersAboutFollowedSeries(fullSeries);
         this.localSeriesRepository().insert(fullSeries);
+        this.notifyListenersAboutFollowedSeries(fullSeries);
     }
 
     public void unfollow(Series series) {
         this.mySeries.remove(series);
-        this.notifyListenersAboutUnfollowedSeries(series);
         this.localSeriesRepository().delete(series);
+        this.notifyListenersAboutUnfollowedSeries(series);
     }
 
     public boolean follows(Series series) {
@@ -79,7 +79,7 @@ public class SeriesProvider {
             throw new IllegalArgumentException("series should not be null");
         }
 
-        return this.mySeries.contains(series);
+        return this.mySeries().contains(series);
     }
 
     public void wipeFollowedSeries() {
@@ -168,6 +168,16 @@ public class SeriesProvider {
 
     public Episode getEpisode(String episodeId) {
         return this.localSeriesRepository().getEpisode(episodeId);
+    }
+
+    public List<Episode> recent() {
+        List<Episode> recent = new ArrayList<Episode>();
+
+        for (Series s : this.mySeries()) {
+            recent.addAll(s.getSeasons().getLastAiredNotSeenEpisodes());
+        }
+
+        return recent;
     }
 
     public void addListener(SeriesProviderListener listener) {
