@@ -55,8 +55,15 @@
             android:name=".gui.RecentAndUpcomingEpisodesActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
-        <activity android:name=".gui.RecentEpisodesActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar">
+        <activity
+            android:name=".gui.RecentEpisodesActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
+                <activity
+            android:name=".gui.UpcomingEpisodesActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+            
+            
     </application>
 </manifest>

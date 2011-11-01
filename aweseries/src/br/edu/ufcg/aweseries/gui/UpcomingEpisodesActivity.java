@@ -21,7 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-public class RecentEpisodesActivity extends ListActivity {
+public class UpcomingEpisodesActivity extends ListActivity {
 
     private static final EpisodeComparator comparator = new EpisodeComparator();
 
@@ -45,7 +45,7 @@ public class RecentEpisodesActivity extends ListActivity {
 
     private void setUpListAdapter() {
         EpisodeItemViewAdapter dataAdapter = new EpisodeItemViewAdapter(this,
-                R.layout.episode_list_item, this.seriesProvider().recentNotSeenEpisodes());
+                R.layout.episode_list_item, this.seriesProvider().upcoming());
         dataAdapter.sort(comparator);
         this.setListAdapter(dataAdapter);
     }
@@ -94,7 +94,7 @@ public class RecentEpisodesActivity extends ListActivity {
 
             // if no view was passed, create one for the item
             if (itemView == null) {
-                final LayoutInflater li = (LayoutInflater) RecentEpisodesActivity.this
+                final LayoutInflater li = (LayoutInflater) UpcomingEpisodesActivity.this
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.episode_list_item, null);
             }
