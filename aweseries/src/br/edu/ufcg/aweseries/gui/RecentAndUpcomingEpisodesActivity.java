@@ -23,10 +23,10 @@ public class RecentAndUpcomingEpisodesActivity extends TabActivity {
         recentEpisodesTabSpec.setIndicator("Recent Episodes");
         recentEpisodesTabSpec.setContent(new Intent(this, RecentEpisodesActivity.class));
         upcomingEpisodesTabSpec.setIndicator("Upcoming Episodes");
-        //upcomingEpisodesTabSpec.setContent(new Intent(this, UpcomingEpisodesActivity.class));
+        upcomingEpisodesTabSpec.setContent(new Intent(this, UpcomingEpisodesActivity.class));
 
         tabHost.addTab(recentEpisodesTabSpec);
-        //tabHost.addTab(upcomingEpisodesTabSpec);
+        tabHost.addTab(upcomingEpisodesTabSpec);
 
     }
 }
