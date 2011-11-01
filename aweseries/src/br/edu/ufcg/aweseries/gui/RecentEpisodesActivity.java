@@ -93,19 +93,24 @@ public class RecentEpisodesActivity extends ListActivity {
             if (itemView == null) {
                 final LayoutInflater li =
                     (LayoutInflater) RecentEpisodesActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = li.inflate(R.layout.episode_list_item, null);
+                itemView = li.inflate(R.layout.episode_alone_list_item, null);
             }
 
             // get views for the episodes fields
             final TextView nameTextView = (TextView) itemView.findViewById(R.id.episodeNameTextView);
-            final TextView numberTextView = (TextView) itemView.findViewById(R.id.episodeNumberTextView);
+            final TextView seriesTextView = (TextView) itemView.findViewById(R.id.episodeSeriesTextView);
+            final TextView seasonEpisodeTextView = (TextView) itemView.findViewById(R.id.episodeSeasonEpisodeTextView);
             final TextView dateTextView = (TextView) itemView.findViewById(R.id.episodeDateTextView);
             final CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
 
             // load episode data
             final Episode episode = this.getItem(position);
+            final Series series = RecentEpisodesActivity.this.seriesProvider().getSeries(episode.getSeriesId());
+            final Season season = series.getSeasons().getSeason(episode.getSeasonNumber());
+
             nameTextView.setText(episode.getName());
-            numberTextView.setText(String.format("Episode %02d", episode.getNumber()));
+            seriesTextView.setText(series.getName());
+            seasonEpisodeTextView.setText(String.format("Season %02d - Episode %02d", season.getNumber(), episode.getNumber()));
             dateTextView.setText(episode.getFirstAiredAsString());
             isViewedCheckBox.setChecked(episode.wasSeen());
 
