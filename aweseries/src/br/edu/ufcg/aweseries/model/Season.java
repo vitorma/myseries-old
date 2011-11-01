@@ -100,6 +100,19 @@ public class Season implements Iterable<Episode> {
         return list;
     }
 
+    public List<Episode> getNextEpisodesToAir() {
+        final Date today = new Date();
+        final List<Episode> list = new ArrayList<Episode>();
+
+        for (Episode e : this) {
+            if (e.airedFrom(today)) {
+                list.add(e);
+            }
+        }
+
+        return list;
+    }
+
     public void addEpisode(final Episode episode) {
         if (episode == null) {
             throw new IllegalArgumentException("episode should not be null");
