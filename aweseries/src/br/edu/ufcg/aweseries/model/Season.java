@@ -91,7 +91,7 @@ public class Season implements Iterable<Episode> {
         final Date today = new Date();
         final List<Episode> list = new ArrayList<Episode>();
 
-        for (Episode e : this) {
+        for (final Episode e : this) {
             if (e.airedUntil(today) && !e.wasSeen()) {
                 list.add(e);
             }
