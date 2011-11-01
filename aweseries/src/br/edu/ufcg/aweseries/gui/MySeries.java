@@ -3,7 +3,6 @@ package br.edu.ufcg.aweseries.gui;
 import java.util.Comparator;
 import java.util.List;
 
-import android.R.id;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -14,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
@@ -167,6 +168,7 @@ public class MySeries extends ListActivity {
         this.setContentView(R.layout.list);
         this.adjustContentView();
         this.setAdapter();
+        this.setUpRecentAndUpcomingButtonsClickListener();
         this.setupItemClickListener();
         this.setupItemLongClickListener();
         this.dataAdapter.sort(comparator);
@@ -201,7 +203,7 @@ public class MySeries extends ListActivity {
         final TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
         title.setText("My Series");
 
-        final TextView empty = (TextView) this.findViewById(id.empty);
+        final TextView empty = (TextView) this.findViewById(android.R.id.empty);
         empty.setText("No series followed");
     }
 
@@ -260,6 +262,24 @@ public class MySeries extends ListActivity {
 
     private void showSearchActivity() {
         final Intent intent = new Intent(this, SeriesSearchView.class);
+        this.startActivity(intent);
+    }
+
+    private void setUpRecentAndUpcomingButtonsClickListener() {
+        ImageButton recentAndUpcomingEpisodesButton
+                = (ImageButton) this.findViewById(R.id.recentAndUpcomingEpisodesButton);
+
+        recentAndUpcomingEpisodesButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MySeries.this.showRecentAndUpcomingEpisodesActivity();
+            }
+        });
+    }
+
+    private void showRecentAndUpcomingEpisodesActivity() {
+        // TODO Use the tab container activity here
+        final Intent intent = new Intent(this, RecentEpisodesActivity.class);
         this.startActivity(intent);
     }
 }

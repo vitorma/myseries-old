@@ -170,7 +170,7 @@ public class SeriesProvider {
         return this.localSeriesRepository().getEpisode(episodeId);
     }
 
-    public List<Episode> recent() {
+    public List<Episode> recentNotSeenEpisodes() {
         List<Episode> recent = new ArrayList<Episode>();
 
         for (Series s : this.mySeries()) {
