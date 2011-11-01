@@ -14,9 +14,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
@@ -169,7 +172,22 @@ public class MySeries extends ListActivity {
         this.setAdapter();
         this.setupItemClickListener();
         this.setupItemLongClickListener();
+        this.setupRecentAndUpcomingButtonClickListener();
         this.dataAdapter.sort(comparator);
+    }
+
+    private void setupRecentAndUpcomingButtonClickListener() {
+        ImageButton button = (ImageButton) this.findViewById(R.id.imageButton1);
+
+        button.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(MySeries.this,
+                        RecentAndUpcomingEpisodesActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
