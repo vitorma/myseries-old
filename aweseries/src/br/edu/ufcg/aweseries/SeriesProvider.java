@@ -24,6 +24,7 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  */
 public class SeriesProvider {
     private Series currentSeries;
+    private List<Series> mySeries;
 
     private final HashSet<SeriesProviderListener> listeners;
 
@@ -53,7 +54,10 @@ public class SeriesProvider {
     }
 
     public List<Series> mySeries() {
-        return this.localSeriesRepository().getAllSeries();
+        if (this.mySeries == null) {
+            this.mySeries = this.localSeriesRepository().getAllSeries();
+        }
+        return this.mySeries;
     }
 
     public void follow(Series series) {

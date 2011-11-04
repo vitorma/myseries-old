@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical|left"
+    android:padding="5dp"
     android:orientation="horizontal"
-    android:weightSum="1" >
+    android:baselineAligned="true">
 
     <CheckBox
         android:id="@+id/episodeIsViewedCheckBox"
@@ -12,12 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dip"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"/>
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/episodeNameTextView"
@@ -37,15 +38,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/episodeNameTextView"
+            android:layout_above="@+id/episodeSeasonEpisodeTextView"
             android:text="@string/loading_label" />
 
         <TextView
             android:id="@+id/episodeSeasonEpisodeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/episodeSeriesTextView"
             android:text="@string/loading_label" />
 
         <TextView
