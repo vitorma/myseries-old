@@ -1,22 +1,15 @@
 package br.edu.ufcg.aweseries.gui.desktop_widget;
 
 import br.edu.ufcg.aweseries.App;
-import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.gui.UpcomingEpisodesActivity;
-import br.edu.ufcg.aweseries.model.Episode;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-import android.widget.RemoteViews.RemoteView;
-import android.widget.TextView;
 
 public class AweseriesWidgetProvider extends AppWidgetProvider {
     SeriesProvider seriesProvider = App.environment().seriesProvider();

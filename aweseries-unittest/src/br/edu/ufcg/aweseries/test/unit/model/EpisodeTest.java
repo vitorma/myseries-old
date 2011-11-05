@@ -2,8 +2,6 @@ package br.edu.ufcg.aweseries.test.unit.model;
 
 import static org.junit.Assert.assertEquals;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -29,7 +27,6 @@ public class EpisodeTest {
 
     @Before
     public void setUp() throws Exception {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         this.episode1 = new Episode(validEpisodeId, validSeriesId, validEpisodeNumber,
                 validSeasonNumber);
         this.episode1Copy = new Episode(validEpisodeId, validSeriesId, validEpisodeNumber,
