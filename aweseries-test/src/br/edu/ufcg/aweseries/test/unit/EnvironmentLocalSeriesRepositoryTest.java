@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import android.content.Context;
 import android.test.mock.MockContext;
 import br.edu.ufcg.aweseries.Environment;
-import br.edu.ufcg.aweseries.data.DatabaseHelper;
+import br.edu.ufcg.aweseries.repository.DatabaseHelper;
 
 public class EnvironmentLocalSeriesRepositoryTest extends TestCase {
 

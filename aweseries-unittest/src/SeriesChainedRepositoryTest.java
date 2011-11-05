@@ -5,8 +5,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.edu.ufcg.aweseries.data.SeriesChainedRepository;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.repository.SeriesChainedRepository;
 
 public class SeriesChainedRepositoryTest {
 	private SeriesChainedRepository scr1;

@@ -1,7 +1,7 @@
 package br.edu.ufcg.aweseries;
 
 import android.content.Context;
-import br.edu.ufcg.aweseries.data.DatabaseHelper;
+import br.edu.ufcg.aweseries.repository.DatabaseHelper;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**

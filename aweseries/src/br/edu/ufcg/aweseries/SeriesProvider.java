@@ -7,10 +7,10 @@ import java.util.List;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import br.edu.ufcg.aweseries.data.DatabaseHelper;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.repository.DatabaseHelper;
 import br.edu.ufcg.aweseries.thetvdb.NonExistentSeriesException;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
