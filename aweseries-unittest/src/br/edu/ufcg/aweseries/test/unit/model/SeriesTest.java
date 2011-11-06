@@ -16,6 +16,17 @@ public class SeriesTest {
     private Series series3;
     private Series series4;
 
+    private Poster mockPoster() {
+        Poster p = Mockito.mock(Poster.class);
+        return p;
+    }
+
+    private SeasonSet mockSeasonSet(String seriesId) {
+        SeasonSet ss = Mockito.mock(SeasonSet.class);
+        Mockito.when(ss.getSeriesId()).thenReturn(seriesId);
+        return ss;
+    }
+
     @Before
     public final void setUp() {
         this.series1 = new Series("id 1", "series 1");
@@ -32,10 +43,8 @@ public class SeriesTest {
         this.series1.setOverview("overview 1");
         this.series1.setGenres("genres 1");
         this.series1.setActors("actors 1");
-        this.series1.setPoster(Mockito.mock(Poster.class));
-        SeasonSet ss = Mockito.mock(SeasonSet.class);
-        Mockito.when(ss.getSeriesId()).thenReturn(this.series1.getId());
-        this.series1.setSeasons(ss);
+        this.series1.setPoster(this.mockPoster());
+        this.series1.setSeasons(this.mockSeasonSet(this.series1.getId()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -60,10 +69,8 @@ public class SeriesTest {
 
     @Test
     public final void testSeries() {
-        Assert.assertNotNull("series id should be initialized by the constructor",
-                this.series1.getId());
-        Assert.assertNotNull("series name should be initialized by the constructor",
-                this.series1.getName());
+        Assert.assertNotNull(this.series1.getId());
+        Assert.assertNotNull(this.series1.getName());
     }
 
     @Test
@@ -241,8 +248,7 @@ public class SeriesTest {
 
     @Test
     public final void testSetPoster() {
-        Poster p = Mockito.mock(Poster.class);
-        Assert.assertFalse(p.equals(this.series1.getPoster()));
+        Poster p = this.mockPoster();
         this.series1.setPoster(p);
         Assert.assertEquals(p, this.series1.getPoster());
     }
@@ -255,8 +261,7 @@ public class SeriesTest {
     @Test
     public final void testSetSeasons() {
         Assert.assertNull(this.series2.getSeasons());
-        SeasonSet ss = Mockito.mock(SeasonSet.class);
-        Mockito.when(ss.getSeriesId()).thenReturn(this.series2.getId());
+        SeasonSet ss = this.mockSeasonSet(this.series2.getId());
         this.series2.setSeasons(ss);
         Assert.assertNotNull(this.series2.getSeasons());
     }
