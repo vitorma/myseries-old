@@ -15,7 +15,7 @@ public class Series {
     private String genres;
     private String actors;
     private Poster poster;
-    private Seasons seasons;
+    private SeasonSet seasons;
 
     public Series(String id, String name) {
         if (id == null || Strings.isBlank(id)) {
@@ -84,7 +84,7 @@ public class Series {
         return this.poster;
     }
 
-    public Seasons getSeasons() {
+    public SeasonSet getSeasons() {
         return this.seasons;
     }
 
@@ -164,8 +164,8 @@ public class Series {
         this.poster = poster;
     }
 
-    public void setSeasons(Seasons seasons) {
-        if (seasons == null) {
+    public void setSeasons(SeasonSet seasons) {
+        if ((seasons == null) || !seasons.getSeriesId().equals(this.id)) {
             throw new IllegalArgumentException("invalid seasons for series");
         }
 

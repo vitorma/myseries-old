@@ -7,18 +7,30 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
+import br.edu.ufcg.aweseries.util.Strings;
+
 public class Season implements Iterable<Episode> {
 
-    private final int number;
-    private final TreeMap<Integer, Episode> map;
+    private int number;
+    private String seriesId;
+    private TreeMap<Integer, Episode> map;
 
-    public Season(int number) {
+    public Season(String seriesId, int number) {
+        if ((seriesId == null) || Strings.isBlank(seriesId)) {
+            throw new IllegalArgumentException("invalid series id for season");
+        }
+
         if (number < 0) {
             throw new IllegalArgumentException("invalid number for season");
         }
 
+        this.seriesId = seriesId;
         this.number = number;
         this.map = new TreeMap<Integer, Episode>();
+    }
+
+    public String getSeriesId() {
+        return this.seriesId;
     }
 
     public int getNumber() {
@@ -116,6 +128,14 @@ public class Season implements Iterable<Episode> {
     public void addEpisode(final Episode episode) {
         if (episode == null) {
             throw new IllegalArgumentException("episode should not be null");
+        }
+
+        if (!episode.getSeriesId().equals(this.seriesId)) {
+            throw new IllegalArgumentException("episode belongs to another series");
+        }
+
+        if (episode.getSeasonNumber() != this.number) {
+            throw new IllegalArgumentException("episode belongs to another series");
         }
 
         if (this.has(episode)) {

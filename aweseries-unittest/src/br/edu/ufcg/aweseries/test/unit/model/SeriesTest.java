@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import br.edu.ufcg.aweseries.model.Poster;
-import br.edu.ufcg.aweseries.model.Seasons;
+import br.edu.ufcg.aweseries.model.SeasonSet;
 import br.edu.ufcg.aweseries.model.Series;
 
 public class SeriesTest {
@@ -33,7 +33,9 @@ public class SeriesTest {
         this.series1.setGenres("genres 1");
         this.series1.setActors("actors 1");
         this.series1.setPoster(Mockito.mock(Poster.class));
-        this.series1.setSeasons(Mockito.mock(Seasons.class));
+        SeasonSet ss = Mockito.mock(SeasonSet.class);
+        Mockito.when(ss.getSeriesId()).thenReturn(this.series1.getId());
+        this.series1.setSeasons(ss);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -253,7 +255,9 @@ public class SeriesTest {
     @Test
     public final void testSetSeasons() {
         Assert.assertNull(this.series2.getSeasons());
-        this.series2.setSeasons(Mockito.mock(Seasons.class));
+        SeasonSet ss = Mockito.mock(SeasonSet.class);
+        Mockito.when(ss.getSeriesId()).thenReturn(this.series2.getId());
+        this.series2.setSeasons(ss);
         Assert.assertNotNull(this.series2.getSeasons());
     }
 

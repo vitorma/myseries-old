@@ -18,11 +18,7 @@ public class SeriesBuilder {
     private String genres;
     private String actors;
     private Bitmap posterBitmap;
-    private Seasons seasons;
-
-    public SeriesBuilder() {
-        this.seasons = new Seasons();
-    }
+    private SeasonSet seasons;
 
     public SeriesBuilder withId(String id) {
         this.id = id;
@@ -92,6 +88,14 @@ public class SeriesBuilder {
     }
 
     public SeriesBuilder withEpisode(Episode episode) {
+        if (episode == null) {
+            return this;
+        }
+
+        if (this.seasons == null) {
+            this.seasons = new SeasonSet(episode.getSeriesId());
+        }
+
         this.seasons.addEpisode(episode);
         return this;
     }
@@ -109,7 +113,7 @@ public class SeriesBuilder {
         series.setGenres(this.genres != null ? this.genres : DEFAULT_STRING);
         series.setActors(this.actors != null ? this.actors : DEFAULT_STRING);
         series.setPoster(this.posterBitmap != null ? new Poster(this.posterBitmap) : null);
-        series.setSeasons(this.seasons);
+        series.setSeasons(this.seasons != null ? this.seasons : new SeasonSet(this.id));
 
         return series;
     }
