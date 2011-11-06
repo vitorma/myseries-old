@@ -10,7 +10,7 @@ import android.util.Log;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.repository.DatabaseHelper;
+import br.edu.ufcg.aweseries.repository.SeriesDatabase;
 import br.edu.ufcg.aweseries.thetvdb.NonExistentSeriesException;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
@@ -45,7 +45,7 @@ public class SeriesProvider {
         this.listeners = new HashSet<SeriesProviderListener>();
     }
 
-    private DatabaseHelper localSeriesRepository() {
+    private SeriesDatabase localSeriesRepository() {
         return App.environment().localSeriesRepository();
     }
 
@@ -55,7 +55,7 @@ public class SeriesProvider {
 
     public List<Series> mySeries() {
         if (this.mySeries == null) {
-            this.mySeries = this.localSeriesRepository().getAllSeries();
+            this.mySeries = this.localSeriesRepository().getAll();
         }
         return this.mySeries;
     }
@@ -80,11 +80,11 @@ public class SeriesProvider {
     }
 
     public void wipeFollowedSeries() {
-        for (final Series s : this.localSeriesRepository().getAllSeries()) {
+        for (final Series s : this.localSeriesRepository().getAll()) {
             this.notifyListenersAboutUnfollowedSeries(s);
         }
 
-        this.localSeriesRepository().deleteAllSeries();
+        this.localSeriesRepository().clear();
     }
 
     public Series[] searchSeries(String seriesName) {
@@ -127,7 +127,7 @@ public class SeriesProvider {
 
     private Series getSeriesFromLocalRepository(String seriesId) {
         Log.d("SeriesProvider", "getting series with id " + seriesId + " from local repository");
-        return this.localSeriesRepository().getSeries(seriesId);
+        return this.localSeriesRepository().get(seriesId);
     }
 
     private Series getSeriesFromCache(String seriesId) {

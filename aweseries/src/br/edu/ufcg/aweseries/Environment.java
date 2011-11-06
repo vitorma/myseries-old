@@ -1,7 +1,7 @@
 package br.edu.ufcg.aweseries;
 
 import android.content.Context;
-import br.edu.ufcg.aweseries.repository.DatabaseHelper;
+import br.edu.ufcg.aweseries.repository.SeriesDatabase;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
@@ -14,7 +14,7 @@ public class Environment {
 
     private SeriesProvider seriesProvider;
     private TheTVDB theTVDB;
-    private DatabaseHelper localSeriesRepository;
+    private SeriesDatabase localSeriesRepository;
 
     private final String apiKey = "6F2B5A871C96FB05";
 
@@ -98,7 +98,7 @@ public class Environment {
     /**
      * @return the local repository of series.
      */
-    public DatabaseHelper localSeriesRepository() {
+    public SeriesDatabase localSeriesRepository() {
         if (this.localSeriesRepository == null) {
             this.localSeriesRepository = this.defaultLocalSeriesRepository();
         }
@@ -108,15 +108,15 @@ public class Environment {
     /**
      * @return a default thetvdb interface for the production environment
      */
-    private DatabaseHelper defaultLocalSeriesRepository() {
-        return new DatabaseHelper(this.context());
+    private SeriesDatabase defaultLocalSeriesRepository() {
+        return new SeriesDatabase(this.context());
     }
 
     /**
      * Set the environment's series repository to newSeriesRepository.
      * If null, a new default series repository will be instantiated.
      */
-    public void setLocalSeriesRepositoryTo(DatabaseHelper newSeriesRepository) {
+    public void setLocalSeriesRepositoryTo(SeriesDatabase newSeriesRepository) {
         this.localSeriesRepository = newSeriesRepository;
     }
 }
