@@ -27,7 +27,7 @@ public abstract class SeriesChainedRepository implements Repository<Series> {
 
     public abstract void clear();
 
-    public abstract boolean contains(String seriesId);
+    public abstract boolean contains(Series series);
 
     public abstract Series get(String seriesId);
 

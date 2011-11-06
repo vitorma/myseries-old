@@ -147,13 +147,13 @@ public class SeriesDatabase extends SQLiteOpenHelper implements Repository<Serie
     }
 
     @Override
-    public boolean contains(String seriesId) {
-        if (seriesId == null) {
+    public boolean contains(Series series) {
+        if (series == null) {
             throw new IllegalArgumentException("series should not be null");
         }
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {seriesId});
+        Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {series.getId()});
         boolean contains = c.getCount() > 0;
         c.close();
         db.close();

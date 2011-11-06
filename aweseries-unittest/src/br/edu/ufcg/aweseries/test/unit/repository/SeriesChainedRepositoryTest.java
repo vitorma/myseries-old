@@ -34,7 +34,7 @@ public class SeriesChainedRepositoryTest {
             public Series get(String seriesId) {return null;}
 
             @Override
-            public boolean contains(String seriesId) {return false;}
+            public boolean contains(Series series) {return false;}
         };
 
         return scr;

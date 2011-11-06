@@ -14,7 +14,7 @@ public interface Repository<T> {
 
     public abstract void clear();
 
-    public abstract boolean contains(String id);
+    public abstract boolean contains(Series series);
 
     public abstract Series get(String id);
 
