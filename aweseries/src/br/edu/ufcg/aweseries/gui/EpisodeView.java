@@ -47,7 +47,10 @@ public class EpisodeView extends Activity {
 
     private void getExtras() {
         final Bundle extras = this.getIntent().getExtras();
-        this.episode = seriesProvider.getEpisode(extras.getString("episode id"));
+        String seriesId = extras.getString("series id");
+        int seasonNumber = extras.getInt("season number");
+        int episodeNumber = extras.getInt("episode number");
+        this.episode = seriesProvider.getSeries(seriesId).getSeasons().getSeason(seasonNumber).get(episodeNumber);
     }
 
     private void populateView() {
