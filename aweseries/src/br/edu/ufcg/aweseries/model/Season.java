@@ -183,31 +183,7 @@ public class Season implements Iterable<Episode>, DomainEntityListener<Episode> 
 
     @Override
     public Iterator<Episode> iterator() {
-        return new Iterator<Episode>() {
-            private int episodeNumber =
-                (getNumberOfEpisodes() > 0) ? Season.this.getFirstEpisodeNumber() : Integer.MAX_VALUE;
-
-            @Override
-            public boolean hasNext() {
-                return (getNumberOfEpisodes() > 0) && (this.episodeNumber <= Season.this.getLastEpisodeNumber());
-            }
-
-            @Override
-            public Episode next() {
-                if (!this.hasNext()) {
-                    throw new NoSuchElementException();
-                }
-
-                Episode next = Season.this.get(this.episodeNumber);
-                this.episodeNumber++;
-                return next;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+        return this.map.values().iterator();
     }
 
     public Iterator<Episode> reversedIterator() {
@@ -269,6 +245,14 @@ public class Season implements Iterable<Episode>, DomainEntityListener<Episode> 
         this.nextEpisodeToSee = nextEpisodeToSee;
     }
 
+    public boolean addListener(DomainEntityListener<Season> listener) {
+        return this.listeners.add(listener);        
+    }
+
+    public boolean removeListener(DomainEntityListener<Season> listener) {
+        return this.listeners.remove(listener);        
+    }
+    
     private void notifyListeners() {
         for (final DomainEntityListener<Season> listener : this.listeners) {
             listener.onUpdate(this);

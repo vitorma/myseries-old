@@ -278,11 +278,11 @@ public class Episode {
         }
     }
 
-    public void addListener(DomainEntityListener<Episode> listener) {
-        this.listeners.add(listener);
+    public boolean addListener(DomainEntityListener<Episode> listener) {
+        return this.listeners.add(listener);
     }
     
-    public void removeListener(DomainEntityListener<Episode> listener) {
-        this.listeners.remove(listener);
+    public boolean removeListener(DomainEntityListener<Episode> listener) {
+        return this.listeners.remove(listener);
     }
 }
