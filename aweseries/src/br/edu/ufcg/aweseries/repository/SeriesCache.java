@@ -21,7 +21,7 @@ public class SeriesCache extends SeriesChainedRepository {
         this.currentSeriesSet = new SeriesSet();
         this.currentSeriesSet.addAll(this.nextRepository().getAll());
 
-        this.threadPoolExecutor = Executors.newCachedThreadPool();
+        this.threadPoolExecutor = Executors.newSingleThreadExecutor();
     }
 
     @Override
