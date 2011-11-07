@@ -1,5 +1,6 @@
 package br.edu.ufcg.aweseries.gui.desktop_widget;
 
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.IntentService;
@@ -9,6 +10,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
@@ -21,8 +23,20 @@ import br.edu.ufcg.aweseries.model.Series;
 public class AweseriesWidgetProvider extends AppWidgetProvider {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final int layout = R.layout.aweseries_desktop_widget;
-    private static final int itemLayout = R.layout.episode_alone_list_item;
+    private static final int itemLayout = R.layout.widget_list_item;
     private static final int noItemLayout = R.layout.text_only_list_item;
+    private static final String REFRESH = "br.edu.ufcg.aweseries.gui.desktop_widget.REFRESH";
+
+    private static final int LIMIT = 6;
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (REFRESH.equals(intent.getAction())) {
+            context.startService(createUpdateIntent(context));
+        } else {
+            super.onReceive(context, intent);
+        }
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -36,7 +50,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
     public static class UpdateService extends IntentService {
 
         public UpdateService() {
-            super("gui.desktop_widget.AweseriesWidgetProvider$UpdateService");
+            super("br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService");
         }
 
         @Override
@@ -45,38 +59,48 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
             AppWidgetManager mgr = AppWidgetManager.getInstance(this);
 
             Intent i = new Intent(this, AweseriesWidgetProvider.class);
-            mgr.updateAppWidget(me, buildUpdate(this, layout, itemLayout, noItemLayout, i));
+            mgr.updateAppWidget(me, buildUpdate(this, layout, itemLayout, noItemLayout, LIMIT, i));
         }
 
-        protected RemoteViews buildUpdate(Context context, int layout, int itemLayout, int noItemLayout, Intent updateIntent) {
+        protected RemoteViews buildUpdate(Context context, int layout, int itemLayout, int noItemLayout, int limit, Intent updateIntent) {
             RemoteViews views = new RemoteViews(context.getPackageName(), layout);
-            views.removeAllViews(layout);
+            views.removeAllViews(R.id.innerLinearLayout);
 
             List<Episode> recent = seriesProvider.recentNotSeenEpisodes();
 
             if (recent.isEmpty()) {
+                Log.d("Widget", "recent list is empty");
                 RemoteViews item = new RemoteViews(context.getPackageName(), noItemLayout);
                 item.setTextViewText(R.id.itemName, context.getString(R.string.upToDate));
-                views.addView(layout, item);
+                views.addView(R.id.innerLinearLayout, item);
             } else {
-                for (Episode e : recent) {
+                Log.d("Widget", "recent list is not empty");
+                
+                int viewsToAdd = limit;
+                Iterator<Episode> it = recent.iterator();
+                
+                while (it.hasNext() && viewsToAdd > 0) {
+                    Episode e = it.next();
                     Series series = seriesProvider.getSeries(e.getSeriesId());
                     Season season = series.getSeasons().getSeason(e.getSeasonNumber());
-
+                    
                     RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
-                    item.setTextViewText(R.id.episodeNameTextView, e.getName());
-                    item.setTextViewText(R.id.episodeSeriesTextView, series.getName());
-                    item.setTextViewText(R.id.episodeSeasonEpisodeTextView, String.format("Season %02d - Episode %02d", season.getNumber(), e.getNumber()));
-                    item.setTextViewText(R.id.episodeDateTextView, e.getFirstAiredAsString());
-
-                    views.addView(layout, item);
+                    item.setTextViewText(R.id.widgetEpisodeNameTextView, e.getName());
+                    item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.getName());
+                    item.setTextViewText(R.id.widgetEpisodeSeasonEpisodeTextView, String.format("Season %02d - Episode %02d", season.getNumber(), e.getNumber()));
+                    item.setTextViewText(R.id.widgetEpisodeDateTextView, e.getFirstAiredAsString());
+                    
+                    views.addView(R.id.innerLinearLayout, item);
+                    viewsToAdd--;
                 }
             }
 
             Intent intent = new Intent(context, RecentEpisodesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            views.setOnClickPendingIntent(layout, pendingIntent);
+            views.setOnClickPendingIntent(R.id.innerLinearLayout, pendingIntent);
+            
+            updateIntent.setAction(REFRESH);
 
             return views;
         }

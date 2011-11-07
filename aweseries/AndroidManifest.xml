@@ -75,5 +75,7 @@
                 android:resource="@xml/recent_episodes_appwidget_info" />
         </receiver>
 
+        <service android:name="br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService" >
+        </service>
     </application>
 </manifest>
