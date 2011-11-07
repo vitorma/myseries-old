@@ -38,7 +38,7 @@
     </target>
 
     <target name="-compile-tested-project">
-        <subant target="compile" buildpath="${tested.project.dir}"/>
+        <subant target="debug" buildpath="${tested.project.dir}"/>
     </target>
 
     <target name="compile" depends="-compile-tested-project">
