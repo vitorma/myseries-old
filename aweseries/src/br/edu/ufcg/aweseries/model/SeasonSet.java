@@ -1,17 +1,20 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.TreeMap;
 
 import android.util.Log;
 import br.edu.ufcg.aweseries.util.Strings;
 
-public class SeasonSet implements Iterable<Season> {
+public class SeasonSet implements Iterable<Season>, DomainEntityListener<Season> {
     private TreeMap<Integer, Season> map;
     private String seriesId;
+    private Set<DomainEntityListener<SeasonSet>> listeners;
 
     public SeasonSet(String seriesId) {
         if ((seriesId == null) || Strings.isBlank(seriesId)) {
@@ -20,6 +23,7 @@ public class SeasonSet implements Iterable<Season> {
 
         this.seriesId = seriesId;
         this.map = new TreeMap<Integer, Season>();
+        this.listeners = new HashSet<DomainEntityListener<SeasonSet>>();
     }
 
     public String getSeriesId() {
@@ -66,7 +70,10 @@ public class SeasonSet implements Iterable<Season> {
     }
 
     private void addSeason(int seasonNumber) {
-        this.map.put(seasonNumber, new Season(this.seriesId, seasonNumber));
+        Season newSeason = new Season(this.seriesId, seasonNumber);
+        newSeason.addListener(this);
+        
+        this.map.put(seasonNumber, newSeason);
     }
 
     private boolean hasSeason(int seasonNumber) {
@@ -214,5 +221,24 @@ public class SeasonSet implements Iterable<Season> {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    @Override
+    public void onUpdate(Season entity) {
+        this.notifyListeners();
+    }
+    
+    public boolean addListener(DomainEntityListener<SeasonSet> listener) {
+        return this.listeners.add(listener);
+    }
+    
+    public boolean removeListener(DomainEntityListener<SeasonSet> listener) {
+        return this.listeners.remove(listener);
+    }
+    
+    private void notifyListeners() {
+        for (DomainEntityListener<SeasonSet> listener : this.listeners) {
+            listener.onUpdate(this);            
+        }        
     }
 }
