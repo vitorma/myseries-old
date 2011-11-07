@@ -213,7 +213,9 @@ public class EpisodesView extends ListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(view.getContext(), EpisodeView.class);
                 final Episode episode = (Episode) parent.getItemAtPosition(position);
-                intent.putExtra("episode id", episode.getId());
+                intent.putExtra("series id", episode.getSeriesId());
+                intent.putExtra("season number", episode.getSeasonNumber());
+                intent.putExtra("episode number", episode.getNumber());
                 EpisodesView.this.startActivity(intent);
             }
         });
