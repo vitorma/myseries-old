@@ -3,6 +3,8 @@ package br.edu.ufcg.aweseries.model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import br.edu.ufcg.aweseries.util.Strings;
 
@@ -23,6 +25,8 @@ public class Episode {
 
     private boolean seen;
 
+    private Set<DomainEntityListener<Episode>> listeners;
+
     public Episode(String id, String seriesId, int number, int seasonNumber) {
         if (id == null || Strings.isBlank(id)) {
             throw new IllegalArgumentException("invalid id for episode");
@@ -39,6 +43,8 @@ public class Episode {
         if (seasonNumber < 0) {
             throw new IllegalArgumentException("invalid season number for episode");
         }
+
+        this.listeners = new HashSet<DomainEntityListener<Episode>>();
 
         this.id = id;
         this.seriesId = seriesId;
@@ -173,10 +179,14 @@ public class Episode {
         }
         
         this.name = name;
+        
+        this.notifyListeners();
     }
 
     public void setFirstAired(Date firstAired) {
         this.firstAired = firstAired;
+        
+        this.notifyListeners();
     }
 
     public void setOverview(String overview) {
@@ -185,6 +195,8 @@ public class Episode {
         }
 
         this.overview = overview;
+        
+        this.notifyListeners();
     }
 
     public void setDirector(String director) {
@@ -193,6 +205,8 @@ public class Episode {
         }
 
         this.director = director;
+        
+        this.notifyListeners();
     }
 
     public void setWriter(String writer) {
@@ -201,6 +215,8 @@ public class Episode {
         }
 
         this.writer = writer;
+        
+        this.notifyListeners();
     }
 
     public void setGuestStars(String guestStars) {
@@ -209,6 +225,7 @@ public class Episode {
         }
 
         this.guestStars = guestStars;
+        this.notifyListeners();
     }
 
     public void setPoster(String poster) {
@@ -217,18 +234,26 @@ public class Episode {
         }
 
         this.poster = poster;
+        
+        this.notifyListeners();
     }
 
     public void markWetherSeen(boolean seen) {
         this.seen = seen;
+        
+        this.notifyListeners();
     }
 
     public void markAsSeen() {
         this.seen = true;
+        
+        this.notifyListeners();
     }
 
     public void markAsNotSeen() {
         this.seen = false;
+        
+        this.notifyListeners();
     }
 
     @Override
@@ -245,5 +270,19 @@ public class Episode {
     @Override
     public String toString() {
         return this.getName();
+    }
+    
+    private void notifyListeners() {
+        for (final DomainEntityListener<Episode> listener : this.listeners) {
+            listener.onUpdate(this);            
+        }
+    }
+
+    public void addListener(DomainEntityListener<Episode> listener) {
+        this.listeners.add(listener);
+    }
+    
+    public void removeListener(DomainEntityListener<Episode> listener) {
+        this.listeners.remove(listener);
     }
 }

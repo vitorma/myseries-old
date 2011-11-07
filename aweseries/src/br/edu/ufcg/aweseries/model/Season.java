@@ -2,18 +2,22 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.util.Strings;
 
-public class Season implements Iterable<Episode> {
+public class Season implements Iterable<Episode>, DomainEntityListener<Episode> {
 
     private int number;
     private String seriesId;
     private TreeMap<Integer, Episode> map;
+    private Set<DomainEntityListener<Season>> listeners;
+    private boolean allSeen;
 
     public Season(String seriesId, int number) {
         if ((seriesId == null) || Strings.isBlank(seriesId)) {
@@ -27,6 +31,8 @@ public class Season implements Iterable<Episode> {
         this.seriesId = seriesId;
         this.number = number;
         this.map = new TreeMap<Integer, Episode>();
+        this.listeners = new HashSet<DomainEntityListener<Season>>();
+        this.allSeen = false;
     }
 
     public String getSeriesId() {
@@ -142,29 +148,48 @@ public class Season implements Iterable<Episode> {
             throw new IllegalArgumentException("episode already exists");
         }
 
+        episode.addListener(this);
+        
         this.map.put(episode.getNumber(), episode);
+        
+        if (this.allSeen && !episode.wasSeen() || !this.allSeen && !episode.wasSeen()) {
+            this.updateAllSeen();
+        }
+        
+        this.notifyListeners();
     }
     
-    public boolean areAllSeen() {
+    public void updateAllSeen() {
         for (final Episode e : this) {
             if (!e.wasSeen()) {
-                return false;
+                this.allSeen = false;
+                return;
             }
         }
         
-        return true;
+        this.allSeen = true;
+    }
+    
+    public boolean areAllSeen() {
+        return this.allSeen;
     }
 
     public void markAllAsSeen() {
         for (final Episode e : this) {
             e.markAsSeen();
         }
+        
+        this.updateAllSeen();
+        this.notifyListeners();
     }
 
     public void markAllAsNotSeen() {
         for (final Episode e : this) {
             e.markAsNotSeen();
         }
+        
+        this.updateAllSeen();
+        this.notifyListeners();
     }
 
     @Override
@@ -238,5 +263,19 @@ public class Season implements Iterable<Episode> {
     @Override
     public String toString() {
         return (this.getNumber() == 0) ? "Special Episodes" : "Season " + this.getNumber();
+    }
+
+    @Override
+    public void onUpdate(Episode episode) {
+        if ((!this.allSeen && episode.wasSeen()) || (this.allSeen && !episode.wasSeen())) {
+            this.updateAllSeen();
+            this.notifyListeners();
+        }
+    }
+
+    private void notifyListeners() {
+        for (final DomainEntityListener<Season> listener : this.listeners) {
+            listener.onUpdate(this);
+        }
     }
 }
