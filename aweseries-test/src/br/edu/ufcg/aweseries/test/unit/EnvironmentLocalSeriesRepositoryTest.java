@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import android.content.Context;
 import android.test.mock.MockContext;
 import br.edu.ufcg.aweseries.Environment;
-import br.edu.ufcg.aweseries.data.DatabaseHelper;
+import br.edu.ufcg.aweseries.repository.SeriesDatabase;
 
 public class EnvironmentLocalSeriesRepositoryTest extends TestCase {
 
@@ -30,7 +30,7 @@ public class EnvironmentLocalSeriesRepositoryTest extends TestCase {
 
     // LocalSeriesRepository ---------------------------------------------------
     public void testSetLocalSeriesRepository() {
-        final DatabaseHelper repository = new DatabaseHelper(this.createContextMock());
+        final SeriesDatabase repository = new SeriesDatabase(this.createContextMock());
 
         this.environment.setLocalSeriesRepositoryTo(repository);
         assertThat(this.environment.localSeriesRepository(), sameInstance(repository));
@@ -41,14 +41,14 @@ public class EnvironmentLocalSeriesRepositoryTest extends TestCase {
     }
 
     public void testReturnsSameLocalSeriesRepositoryEachCall() {
-        final DatabaseHelper repository1 = this.environment.localSeriesRepository();
-        final DatabaseHelper repository2 = this.environment.localSeriesRepository();
+        final SeriesDatabase repository1 = this.environment.localSeriesRepository();
+        final SeriesDatabase repository2 = this.environment.localSeriesRepository();
 
         assertThat(repository1, sameInstance(repository2));
     }
 
     public void testSettingLocalSeriesRepositoryToNullMustInstantiateANewLocalSeriesRepository() {
-        final DatabaseHelper oldRepository = this.environment.localSeriesRepository();
+        final SeriesDatabase oldRepository = this.environment.localSeriesRepository();
 
         this.environment.setLocalSeriesRepositoryTo(null);
 

@@ -47,7 +47,7 @@ public class UpcomingEpisodesActivity extends ListActivity {
 
     private void setUpListAdapter() {
         EpisodeItemViewAdapter dataAdapter = new EpisodeItemViewAdapter(this,
-                R.layout.episode_alone_list_item, this.seriesProvider().upcoming());
+                R.layout.episode_alone_list_item, this.seriesProvider().nextEpisodesToAir());
         dataAdapter.sort(comparator);
         this.setListAdapter(dataAdapter);
     }

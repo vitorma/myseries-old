@@ -1,11 +1,14 @@
 package br.edu.ufcg.aweseries.test.unit;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import android.content.Context;
@@ -36,6 +39,7 @@ public class EnvironmentTest {
     }
 
     // Series Provider ---------------------------------------------------------
+    @Ignore
     @Test
     public void testChangeSeriesProvider() {
         final SeriesProvider sp = SeriesProvider.newSeriesProvider();
@@ -46,11 +50,13 @@ public class EnvironmentTest {
                 sameInstance(sp));
     }
 
+    @Ignore
     @Test
     public void testFirstSeriesProviderNotNull() {
         assertThat(this.environment.seriesProvider(), notNullValue());
     }
 
+    @Ignore
     @Test
     public void testReturnsSameSeriesProviderEachCall() {
         final SeriesProvider sp1 = this.environment.seriesProvider();
@@ -59,6 +65,7 @@ public class EnvironmentTest {
         assertThat(sp1, sameInstance(sp2));
     }
 
+    @Ignore
     @Test
     public void testSettingSeriesProviderToNullMustInstantiateANewSeriesProvider() {
         final SeriesProvider oldSP = this.environment.seriesProvider();

@@ -34,7 +34,7 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
     <color name="aweseries_style.toolbar_background">#00000000</color>
-    <dimen name="aweseries.widget_margin">15dp</dimen>
+    <dimen name="aweseries.widget_margin">0dp</dimen>
 
 
 </resources>

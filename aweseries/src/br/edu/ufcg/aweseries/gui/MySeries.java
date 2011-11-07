@@ -1,5 +1,6 @@
 package br.edu.ufcg.aweseries.gui;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -209,7 +210,7 @@ public class MySeries extends ListActivity {
 
     private void setAdapter() {
         this.dataAdapter = new SeriesItemViewAdapter(this, R.layout.my_series_list_item,
-                seriesProvider.mySeries());
+                new ArrayList<Series>(seriesProvider.followedSeries()));
         this.setListAdapter(this.dataAdapter);
     }
 

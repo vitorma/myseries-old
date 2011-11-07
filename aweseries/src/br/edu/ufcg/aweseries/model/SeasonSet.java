@@ -5,13 +5,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
+
 import android.util.Log;
+import br.edu.ufcg.aweseries.util.Strings;
 
-public class Seasons implements Iterable<Season> {
+public class SeasonSet implements Iterable<Season> {
     private TreeMap<Integer, Season> map;
+    private String seriesId;
 
-    public Seasons() {
+    public SeasonSet(String seriesId) {
+        if ((seriesId == null) || Strings.isBlank(seriesId)) {
+            throw new IllegalArgumentException("invalid series id for season set");
+        }
+
+        this.seriesId = seriesId;
         this.map = new TreeMap<Integer, Season>();
+    }
+
+    public String getSeriesId() {
+        return this.seriesId;
     }
 
     private int getFirstSeasonNumber() {
@@ -29,6 +41,10 @@ public class Seasons implements Iterable<Season> {
     public void addEpisode(Episode episode) {
         if (episode == null) {
             throw new IllegalArgumentException("episode should not be null");
+        }
+
+        if (!episode.getSeriesId().equals(this.seriesId)) {
+            throw new IllegalArgumentException("episode belongs to another series");
         }
 
         if (!this.hasSeason(episode.getSeasonNumber())) {
@@ -50,7 +66,7 @@ public class Seasons implements Iterable<Season> {
     }
 
     private void addSeason(int seasonNumber) {
-        this.map.put(seasonNumber, new Season(seasonNumber));
+        this.map.put(seasonNumber, new Season(this.seriesId, seasonNumber));
     }
 
     private boolean hasSeason(int seasonNumber) {
@@ -147,11 +163,11 @@ public class Seasons implements Iterable<Season> {
     public Iterator<Season> iterator() {
         return new Iterator<Season>() {
             private int seasonNumber =
-                (getNumberOfSeasons() > 0) ? Seasons.this.getFirstSeasonNumber() : Integer.MAX_VALUE;
+                (getNumberOfSeasons() > 0) ? SeasonSet.this.getFirstSeasonNumber() : Integer.MAX_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (getNumberOfSeasons() > 0) && (this.seasonNumber <= Seasons.this.getLastSeasonNumber());
+                return (getNumberOfSeasons() > 0) && (this.seasonNumber <= SeasonSet.this.getLastSeasonNumber());
             }
 
             @Override
@@ -160,7 +176,7 @@ public class Seasons implements Iterable<Season> {
                     throw new NoSuchElementException();
                 }
 
-                Season next = Seasons.this.getSeason(this.seasonNumber);
+                Season next = SeasonSet.this.getSeason(this.seasonNumber);
                 this.seasonNumber++;
                 return next;
             }
@@ -175,11 +191,11 @@ public class Seasons implements Iterable<Season> {
     public Iterator<Season> reversedIterator() {
         return new Iterator<Season>() {
             private int seasonNumber =
-                (getNumberOfSeasons() > 0) ? Seasons.this.getLastSeasonNumber() : Integer.MIN_VALUE;
+                (getNumberOfSeasons() > 0) ? SeasonSet.this.getLastSeasonNumber() : Integer.MIN_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (getNumberOfSeasons() > 0) && (this.seasonNumber >= Seasons.this.getFirstSeasonNumber());
+                return (getNumberOfSeasons() > 0) && (this.seasonNumber >= SeasonSet.this.getFirstSeasonNumber());
             }
 
             @Override
@@ -188,7 +204,7 @@ public class Seasons implements Iterable<Season> {
                     throw new NoSuchElementException();
                 }
 
-                Season next = Seasons.this.getSeason(this.seasonNumber);
+                Season next = SeasonSet.this.getSeason(this.seasonNumber);
                 this.seasonNumber--;
                 return next;
             }

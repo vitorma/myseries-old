@@ -1,22 +1,24 @@
 package br.edu.ufcg.aweseries.test.unit.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import br.edu.ufcg.aweseries.model.DomainEntityListener;
 import br.edu.ufcg.aweseries.model.Episode;
 
 public class EpisodeTest {
 
     private Episode episode1;
     private Episode episode2;
+    private DomainEntityListener<Episode> episode1Listener;
     private Episode episode1Copy;
     private static final String validEpisodeId = "1234";
     private static final String anotherValidEpisodeId = "1235";
@@ -29,13 +31,14 @@ public class EpisodeTest {
 
     @Before
     public void setUp() throws Exception {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         this.episode1 = new Episode(validEpisodeId, validSeriesId, validEpisodeNumber,
                 validSeasonNumber);
         this.episode1Copy = new Episode(validEpisodeId, validSeriesId, validEpisodeNumber,
                 validSeasonNumber);
         this.episode2 = new Episode(anotherValidEpisodeId, validSeriesId, validEpisodeNumber,
                 validSeasonNumber);
+        this.episode1Listener = Mockito.mock(DomainEntityListener.class);
+        this.episode1.addListener(this.episode1Listener);
     }
 
     @Test
@@ -157,7 +160,9 @@ public class EpisodeTest {
     @Test
     public final void testMarkAsViewed() {
         this.episode1.markWetherSeen(false);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         this.episode1.markAsSeen();
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         Assert.assertTrue(this.episode1.wasSeen());
     }
 
@@ -165,8 +170,10 @@ public class EpisodeTest {
     public final void testSetDirector() {
         final String director = "Michael Palin";
         this.episode1.setDirector(director);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         assertEquals(director, this.episode1.getDirector());
         this.episode1.setDirector("");
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         assertEquals("", this.episode1.getDirector());
     }
 
@@ -180,8 +187,10 @@ public class EpisodeTest {
         final Date today = new Date();
         final Date aDay = new Date(Long.MAX_VALUE);
         this.episode1.setFirstAired(today);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         assertEquals(today, this.episode1.getFirstAired());
         this.episode1.setFirstAired(aDay);
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         assertEquals(aDay, this.episode1.getFirstAired());
     }
 
@@ -189,8 +198,10 @@ public class EpisodeTest {
     public final void testSetGuestStars() {
         final String guestStars = "Fred Tomlinson Singers";
         this.episode1.setGuestStars(guestStars);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         assertEquals(guestStars, this.episode1.getGuestStars());
         this.episode1.setGuestStars("");
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         assertEquals("", this.episode1.getGuestStars());
     }
     
@@ -203,8 +214,10 @@ public class EpisodeTest {
     public final void testSetName() {
         final String name = "The Lumberjack Song";
         this.episode1.setName(name);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         assertEquals(name, this.episode1.getName());
         this.episode1.setName("");
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         assertEquals("", this.episode1.getName());
     }
     
@@ -230,8 +243,10 @@ public class EpisodeTest {
                 + "members of an actual singing troupe, such as the Fred Tomlinson Singers "
                 + "in the TV version).";
         this.episode1.setOverview(overview);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         assertEquals(overview, this.episode1.getOverview());
         this.episode1.setOverview("");
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         assertEquals("", this.episode1.getOverview());
     }
     
@@ -244,8 +259,10 @@ public class EpisodeTest {
     public final void testSetPoster() {
         String poster = "SomePoster";
         this.episode1.setPoster(poster);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         assertEquals(poster, episode1.getPoster());
         this.episode1.setPoster("");
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         assertEquals("", episode1.getPoster());
     }
 
@@ -257,10 +274,13 @@ public class EpisodeTest {
     @Test
     public final void testSetViewed() {
         this.episode1.markWetherSeen(false);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         Assert.assertFalse(this.episode1.wasSeen());
         this.episode1.markWetherSeen(true);
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         Assert.assertTrue(this.episode1.wasSeen());
         this.episode1.markWetherSeen(false);
+        verify(this.episode1Listener, times(3)).onUpdate(this.episode1);
         Assert.assertFalse(this.episode1.wasSeen());
     }
 
@@ -268,8 +288,10 @@ public class EpisodeTest {
     public final void testSetWriter() {
         final String writer = "Terry Jones";
         this.episode1.setWriter(writer);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         Assert.assertEquals(writer, this.episode1.getWriter());
         this.episode1.setWriter("");
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         Assert.assertEquals("", this.episode1.getWriter());
     }
 
@@ -282,9 +304,11 @@ public class EpisodeTest {
     public final void testToString() {
         final String name = "The Lumberjack Song";
         this.episode1.setName(name);
+        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         Assert.assertEquals(name, this.episode1.toString());
         
         this.episode1.setName("");
+        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         Assert.assertEquals("", this.episode1.toString());
     }
 }

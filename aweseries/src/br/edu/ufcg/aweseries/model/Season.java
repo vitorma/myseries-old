@@ -2,23 +2,41 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.TreeMap;
 
-public class Season implements Iterable<Episode> {
+import br.edu.ufcg.aweseries.util.Strings;
 
-    private final int number;
-    private final TreeMap<Integer, Episode> map;
+public class Season implements Iterable<Episode>, DomainEntityListener<Episode> {
 
-    public Season(int number) {
+    private int number;
+    private String seriesId;
+    private TreeMap<Integer, Episode> map;
+    private Set<DomainEntityListener<Season>> listeners;
+    private Episode nextEpisodeToSee;
+    
+
+    public Season(String seriesId, int number) {
+        if ((seriesId == null) || Strings.isBlank(seriesId)) {
+            throw new IllegalArgumentException("invalid series id for season");
+        }
+
         if (number < 0) {
             throw new IllegalArgumentException("invalid number for season");
         }
 
+        this.seriesId = seriesId;
         this.number = number;
         this.map = new TreeMap<Integer, Episode>();
+        this.listeners = new HashSet<DomainEntityListener<Season>>();
+    }
+
+    public String getSeriesId() {
+        return this.seriesId;
     }
 
     public int getNumber() {
@@ -57,12 +75,16 @@ public class Season implements Iterable<Episode> {
         return this.map.containsValue(episode);
     }
 
-    public Episode getNextEpisodeToSee() {
+    private Episode findNextEpisodeToSee() {
         for (final Episode e : this) {
             if (!e.wasSeen()) return e;
         }
 
         return null;
+    }
+    
+    public Episode getNextEpisodeToSee() {
+        return this.nextEpisodeToSee;
     }
 
     public Episode getNextEpisodeToAir() {
@@ -118,11 +140,23 @@ public class Season implements Iterable<Episode> {
             throw new IllegalArgumentException("episode should not be null");
         }
 
+        if (!episode.getSeriesId().equals(this.seriesId)) {
+            throw new IllegalArgumentException("episode belongs to another series");
+        }
+
+        if (episode.getSeasonNumber() != this.number) {
+            throw new IllegalArgumentException("episode belongs to another series");
+        }
+
         if (this.has(episode)) {
             throw new IllegalArgumentException("episode already exists");
         }
 
+        episode.addListener(this);
+        
         this.map.put(episode.getNumber(), episode);
+        
+        this.onUpdate(episode);
     }
     
     public boolean areAllSeen() {
@@ -149,31 +183,7 @@ public class Season implements Iterable<Episode> {
 
     @Override
     public Iterator<Episode> iterator() {
-        return new Iterator<Episode>() {
-            private int episodeNumber =
-                (getNumberOfEpisodes() > 0) ? Season.this.getFirstEpisodeNumber() : Integer.MAX_VALUE;
-
-            @Override
-            public boolean hasNext() {
-                return (getNumberOfEpisodes() > 0) && (this.episodeNumber <= Season.this.getLastEpisodeNumber());
-            }
-
-            @Override
-            public Episode next() {
-                if (!this.hasNext()) {
-                    throw new NoSuchElementException();
-                }
-
-                Episode next = Season.this.get(this.episodeNumber);
-                this.episodeNumber++;
-                return next;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+        return this.map.values().iterator();
     }
 
     public Iterator<Episode> reversedIterator() {
@@ -218,5 +228,34 @@ public class Season implements Iterable<Episode> {
     @Override
     public String toString() {
         return (this.getNumber() == 0) ? "Special Episodes" : "Season " + this.getNumber();
+    }
+
+    @Override
+    public void onUpdate(Episode episode) {
+        Episode nextEpisodeToSee = findNextEpisodeToSee();
+        
+        if (nextEpisodeToSee == this.nextEpisodeToSee) {
+            return;
+        }
+        
+        if (nextEpisodeToSee == null || !nextEpisodeToSee.equals(this.nextEpisodeToSee)) {
+            this.notifyListeners();
+        }
+                
+        this.nextEpisodeToSee = nextEpisodeToSee;
+    }
+
+    public boolean addListener(DomainEntityListener<Season> listener) {
+        return this.listeners.add(listener);        
+    }
+
+    public boolean removeListener(DomainEntityListener<Season> listener) {
+        return this.listeners.remove(listener);        
+    }
+    
+    private void notifyListeners() {
+        for (final DomainEntityListener<Season> listener : this.listeners) {
+            listener.onUpdate(this);
+        }
     }
 }
