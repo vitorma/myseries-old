@@ -85,17 +85,16 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                     Series series = seriesProvider.getSeries(e.getSeriesId());
                     Season season = series.getSeasons().getSeason(e.getSeasonNumber());
 
-                    Bitmap poster = series.getPoster().getImage();
-                    String pre = String.format("S%02d" + "E%02d", season.getNumber(), e.getNumber());
-
                     RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
-                    if (poster != null) {
+                    if (series.hasPoster()) {
+                        Bitmap poster = series.getPoster().getImage();
                         item.setImageViewBitmap(R.id.widgetPoster, poster);
                     }
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.getName());
+                    String pre = String.format("S%02d" + "E%02d", season.getNumber(), e.getNumber());
                     item.setTextViewText(R.id.widgetEpisodeNameTextView, pre + " - " + e.getName());
                     item.setTextViewText(R.id.widgetEpisodeDateTextView, e.getFirstAiredAsString());
-                    
+
                     views.addView(R.id.innerLinearLayout, item);
                     viewsToAdd--;
                 }
