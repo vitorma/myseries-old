@@ -3,6 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/aweseries_desktop_widget"
     android:updatePeriodMillis="3600000"
-    android:minWidth="216dp"
-    android:minHeight="216dp">
+    android:minWidth="294dp"
+    android:minHeight="294dp">
 </appwidget-provider>
