@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
@@ -26,7 +28,8 @@ public class SeriesProvider {
     private static final TheTVDB theTVDB = App.environment().theTVDB();
 
     private Repository<Series> seriesRepository;
-    private HashSet<SeriesProviderListener> listeners; //TODO Remove this attribute ASAP
+
+    private Set<FollowingSeriesListener> followingSeriesListeners;
 
     /**
      * If you know what you are doing, use this method to instantiate a
@@ -40,7 +43,7 @@ public class SeriesProvider {
 
     private SeriesProvider() {
         this.seriesRepository = new SeriesCache();
-        this.listeners = new HashSet<SeriesProviderListener>();
+        this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
     }
     
     public Collection<Series> followedSeries() {
@@ -59,14 +62,31 @@ public class SeriesProvider {
     }
 
     public void follow(Series series) {
-        final Series fullSeries = theTVDB.getSeries(series.getId());
-        this.seriesRepository.insert(fullSeries);
-        this.notifyListenersAboutFollowedSeries(fullSeries);
+        new FollowSeriesTask().execute(series);
     }
+
+    private class FollowSeriesTask extends AsyncTask<Series, Void, Void> {
+        private Series followedSeries;
+
+        @Override
+        protected Void doInBackground(Series... params) {
+            Series seriesToFollow = params[0];
+
+            this.followedSeries = theTVDB.getSeries(seriesToFollow.getId());
+            SeriesProvider.this.seriesRepository.insert(this.followedSeries);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            SeriesProvider.this.notifyListenersOfFollowedSeries(followedSeries);
+        }
+    };
 
     public void unfollow(Series series) {
         this.seriesRepository.delete(series);
-        this.notifyListenersAboutUnfollowedSeries(series);
+        this.notifyListenersOfUnfollowedSeries(series);
     }
 
     public boolean follows(Series series) {
@@ -75,12 +95,28 @@ public class SeriesProvider {
 
     public void wipeFollowedSeries() {
         for (final Series s : this.followedSeries()) {
-            this.notifyListenersAboutUnfollowedSeries(s);
+            this.notifyListenersOfUnfollowedSeries(s);
         }
 
         this.seriesRepository.clear();
     }
-    
+
+    private void notifyListenersOfFollowedSeries(Series followedSeries) {
+        for (FollowingSeriesListener listener : this.followingSeriesListeners) {
+            listener.onFollowing(followedSeries);
+        }
+    }
+
+    private void notifyListenersOfUnfollowedSeries(Series unfollowedSeries) {
+        for (FollowingSeriesListener listener : this.followingSeriesListeners) {
+            listener.onUnfollowing(unfollowedSeries);
+        }
+    }
+
+    public void addFollowingSeriesListener(FollowingSeriesListener listener) {
+        this.followingSeriesListeners.add(listener);
+    }
+
     public Series getSeries(String seriesId) {
         return this.seriesRepository.get(seriesId);
     }
@@ -129,64 +165,20 @@ public class SeriesProvider {
     public void markSeasonAsSeen(Season season) {
         season.markAllAsSeen();
         this.seriesRepository.update(this.getSeries(season.getSeriesId()));
-        this.notifyListenersAboutSeasonMarkedAsSeen(season);
     }
     
     public void markSeasonAsNotSeen(Season season) {
         season.markAllAsNotSeen();
         this.seriesRepository.update(this.getSeries(season.getSeriesId()));
-        this.notifyListenersAboutSeasonMarkedAsNotSeen(season);
     }
     
     public void markEpisodeAsSeen(Episode episode) {
         episode.markAsSeen();
         this.seriesRepository.update(this.getSeries(episode.getSeriesId()));
-        this.notifyListenersAboutEpisodeMarkedAsSeen(episode);
     }
     
     public void markEpisodeAsNotSeen(Episode episode) {
         episode.markAsNotSeen();
         this.seriesRepository.update(this.getSeries(episode.getSeriesId()));
-        this.notifyListenersAboutEpisodeMarkedAsNotSeen(episode);
-    }
-
-    public void addListener(SeriesProviderListener listener) {
-        this.listeners.add(listener);
-    }
-
-    private void notifyListenersAboutUnfollowedSeries(Series series) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onUnfollowing(series);
-        }
-    }
-
-    private void notifyListenersAboutFollowedSeries(Series series) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onFollowing(series);
-        }
-    }
-
-    private void notifyListenersAboutEpisodeMarkedAsSeen(Episode episode) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onMarkedAsSeen(episode);
-        }
-    }
-
-    private void notifyListenersAboutEpisodeMarkedAsNotSeen(Episode episode) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onMarkedAsNotSeen(episode);
-        }
-    }
-
-    private void notifyListenersAboutSeasonMarkedAsSeen(Season season) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onMarkedAsSeen(season);
-        }
-    }
-
-    private void notifyListenersAboutSeasonMarkedAsNotSeen(Season season) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onMarkedAsNotSeen(season);
-        }
     }
 }
