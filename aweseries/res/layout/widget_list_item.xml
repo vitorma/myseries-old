@@ -12,7 +12,7 @@
         android:layout_alignBottom="@+id/widgetEpisodeDateTextView"
         android:layout_alignTop="@+id/widgetEpisodeSeriesTextView"
         android:layout_marginRight="5dp"
-        android:src="@drawable/clapperboard" >
+        android:src="@drawable/small_poster_clapperboard" >
     </ImageView>
 
     <TextView
