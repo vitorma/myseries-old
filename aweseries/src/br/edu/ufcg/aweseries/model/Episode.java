@@ -143,7 +143,7 @@ public class Episode {
         return other.hasFirstAired() ? this.getFirstAired().compareTo(other.getFirstAired()) : -1;
     }
 
-    private int compareByNumberTo(Episode other) {
+    public int compareByNumberTo(Episode other) {
         return (this.getSeasonNumber() != other.getSeasonNumber())
                ? (this.getSeasonNumber() - other.getSeasonNumber())
                : (this.getNumber() - other.getNumber());

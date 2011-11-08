@@ -24,7 +24,8 @@ public class RecentEpisodesActivity extends OutOfContextEpisodesActivity {
     private static class EpisodeComparator implements Comparator<Episode> {
         @Override
         public int compare(Episode episodeA, Episode episodeB) {
-            return episodeB.compareByDateTo(episodeA);
+            int byDate = episodeB.compareByDateTo(episodeA);
+            return byDate == 0 ? episodeB.compareByNumberTo(episodeA) : byDate;
         }
     };
 }
