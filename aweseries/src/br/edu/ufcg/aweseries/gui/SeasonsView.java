@@ -18,8 +18,7 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.SeriesProviderListener;
-import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.DomainEntityListener;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
@@ -27,11 +26,10 @@ import br.edu.ufcg.aweseries.model.Series;
  * GUI representation of the list of seasons for a series.
  */
 public class SeasonsView extends ListActivity {
-    private static final SeasonComparator comparator = new SeasonComparator();
+    private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
+    private static final SeasonComparator SEASON_COMPARATOR = new SeasonComparator();
 
     private Series series;
-
-    private SeasonItemViewAdapter dataAdapter;
 
     private static final class SeasonComparator implements Comparator<Season> {
         @Override
@@ -45,21 +43,25 @@ public class SeasonsView extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listing);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String seriesId = extras.getString("series id");
-            this.series = seriesProvider().getSeries(seriesId);
-        }
+        this.loadSeries();
 
         //set view title
         TextView listingTitle = (TextView) findViewById(R.id.listingTitleTextView);
         listingTitle.setText(this.series.getName() + "'s Seasons");
 
         populateSeasonsList();
-        setupItemClickListener();
+        setUpSeasonItemClickListener();
     }
 
-    private void setupItemClickListener() {
+    private void loadSeries() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String seriesId = extras.getString("series id");
+            this.series = seriesProvider.getSeries(seriesId);
+        }
+    }
+
+    private void setUpSeasonItemClickListener() {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -76,123 +78,71 @@ public class SeasonsView extends ListActivity {
     }
 
     //XXX: Use TextViewAdapter instead.
-    private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements
-            SeriesProviderListener {
+    private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements DomainEntityListener<Season> {
         public SeasonItemViewAdapter(Context context, int seasonsItemResourceId,
                 List<Season> objects) {
             super(context, seasonsItemResourceId, objects);
-            seriesProvider().addListener(this);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View itemView = convertView;
-            final Season season = getItem(position);
+            View itemView = itemViewFrom(convertView);
 
-            // if no view was passed, create one for the item
-            if (itemView == null) {
-                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = vi.inflate(R.layout.season_list_item, null);
-            }
+            Season season = getItem(position);
+            season.addListener(this);
 
-            // get views for the series fields
-            TextView name = (TextView) itemView.findViewById(R.id.itemName);
-
-            // load series data
-            name.setText(this.getItem(position).toString());
-
-            final CheckBox isSeasonViewed = (CheckBox) itemView
-                    .findViewById(R.id.isSeasonViewedCheckBox);
-
-            boolean allEpisodesViewed = true;
-            for (Episode episode : season.getEpisodes()) {
-                if (!episode.wasSeen()) {
-                    allEpisodesViewed = false;
-                    break;
-                }
-            }
-
-            isSeasonViewed.setChecked(allEpisodesViewed);
-
-            isSeasonViewed.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View arg0) {
-                    if (isSeasonViewed.isChecked()) {
-                        seriesProvider().markSeasonAsSeen(season);
-                    } else {
-                        seriesProvider().markSeasonAsNotSeen(season);
-                    }
-
-                }
-            });
+            this.showSeasonDataOn(season, itemView);
+            this.setUpSeenSeasonCheckBoxListenerFor(season, itemView);
 
             return itemView;
         }
 
-        @Override
-        public void onUnfollowing(Series series) {/* Not my business */
-        }
+        private View itemViewFrom(View convertView) {
+            View itemView = convertView;
 
-        @Override
-        public void onFollowing(Series series) {/* Not my business */
-        }
-
-        @Override
-        public void onMarkedAsSeen(Episode episode) {
-            final String seriesId = episode.getSeriesId();
-            final int seasonNumber = episode.getSeasonNumber();
-
-            final Season season = seriesProvider().getSeries(seriesId).getSeasons()
-                    .getSeason(seasonNumber);
-
-            if (season.areAllSeen()) {
-                this.remove(season);
-                this.add(season);
-                this.sort(comparator);
+            // if no view was passed, create one for the item
+            if (itemView == null) {
+                final LayoutInflater li =
+                    (LayoutInflater) SeasonsView.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                itemView = li.inflate(R.layout.season_list_item, null);
             }
+
+            return itemView;
+        }
+
+        private void showSeasonDataOn(Season season, View itemView) {
+            TextView name = (TextView) itemView.findViewById(R.id.itemName);
+            name.setText(season.toString());
+
+            CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
+            isSeasonViewed.setChecked(season.areAllSeen());
+        }
+
+        private void setUpSeenSeasonCheckBoxListenerFor(final Season season, View itemView) {
+            final CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
+
+            isSeasonViewed.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    if (isSeasonViewed.isChecked()) {
+                        seriesProvider.markSeasonAsSeen(season);
+                    } else {
+                        seriesProvider.markSeasonAsNotSeen(season);
+                    }
+                }
+            });
         }
 
         @Override
-        public void onMarkedAsNotSeen(Episode episode) {
-            final String seriesId = episode.getSeriesId();
-            final int seasonNumber = episode.getSeasonNumber();
-
-            final Season season = seriesProvider().getSeries(seriesId).getSeasons()
-                    .getSeason(seasonNumber);
-
-            this.remove(season);
-            this.add(season);
-            this.sort(comparator);
-        }
-
-        @Override
-        public void onMarkedAsSeen(Season season) {
-            this.remove(season);
-            this.add(season);
-            this.sort(comparator);
-        }
-
-        @Override
-        public void onMarkedAsNotSeen(Season season) {
-            this.remove(season);
-            this.add(season);
-            this.sort(comparator);
+        public void onUpdate(Season season) {
+            this.notifyDataSetChanged();
         }
     }
 
     private void populateSeasonsList() {
-
-        this.dataAdapter = new SeasonItemViewAdapter(this, R.layout.season_list_item, this.series
-                .getSeasons().toList());
-        this.setListAdapter(this.dataAdapter);
-        this.dataAdapter.sort(comparator);
-    }
-
-    /**
-     * @return the app's series provider
-     */
-    private SeriesProvider seriesProvider() {
-        return App.environment().seriesProvider();
+        SeasonItemViewAdapter dataAdapter = new SeasonItemViewAdapter(this, R.layout.season_list_item,
+                this.series.getSeasons().toList());
+        this.setListAdapter(dataAdapter);
+        dataAdapter.sort(SEASON_COMPARATOR);
     }
 }
