@@ -15,7 +15,7 @@ import android.widget.RemoteViews;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.gui.RecentEpisodesActivity;
+import br.edu.ufcg.aweseries.gui.RecentAndUpcomingEpisodesActivity;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
@@ -95,12 +95,14 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                 }
             }
 
-            Intent intent = new Intent(context, RecentEpisodesActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new Intent(context, RecentAndUpcomingEpisodesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             views.setOnClickPendingIntent(R.id.innerLinearLayout, pendingIntent);
-            
+
             updateIntent.setAction(REFRESH);
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, updateIntent, 0);
+            views.setOnClickPendingIntent(R.id.ImageButtonWidget, pi);
 
             return views;
         }

@@ -24,10 +24,8 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.SeriesProviderListener;
 import br.edu.ufcg.aweseries.model.DomainEntityListener;
 import br.edu.ufcg.aweseries.model.Episode;
-import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
 public class MySeries extends ListActivity {
