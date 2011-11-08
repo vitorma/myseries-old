@@ -14,12 +14,13 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.model.DomainEntityListener;
 import br.edu.ufcg.aweseries.model.Series;
 
 /**
  * Displays a series short review.
  */
-public class SeriesView extends Activity {
+public class SeriesView extends Activity implements DomainEntityListener<Series> {
     private String seriesId;
     private boolean loaded = false;
     private ProgressDialog dialog;
@@ -112,6 +113,14 @@ public class SeriesView extends Activity {
             loaded = true;
         }
     }
+    
+    @Override
+    public void onBackPressed() {
+        Series series = seriesProvider().getSeries(seriesId);
+        series.removeListener(this);
+        super.onBackPressed();
+        
+    }
 
     /**
      * Populates seriesNameTextView and seriesReviewTextField with the data
@@ -132,6 +141,8 @@ public class SeriesView extends Activity {
     private void downloadDescription() {
         try {
             Series series = seriesProvider().getSeries(seriesId);
+            series.addListener(this);
+            
             this.seriesName.setText(series.getName());
             this.seriesOverview.setText(series.getOverview());
             this.seriesStatus.setText(series.getStatus());
@@ -182,5 +193,10 @@ public class SeriesView extends Activity {
      */
     private SeriesProvider seriesProvider() {
         return App.environment().seriesProvider();
+    }
+
+    @Override
+    public void onUpdate(Series entity) {
+        this.downloadDescription();
     }
 }
