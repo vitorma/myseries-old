@@ -27,6 +27,5 @@ public class RecentAndUpcomingEpisodesActivity extends TabActivity {
 
         tabHost.addTab(recentEpisodesTabSpec);
         tabHost.addTab(upcomingEpisodesTabSpec);
-
     }
 }

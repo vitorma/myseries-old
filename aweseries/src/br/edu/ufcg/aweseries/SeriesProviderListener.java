@@ -4,6 +4,7 @@ import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
+@Deprecated
 public interface SeriesProviderListener {
 
     public void onUnfollowing(Series series);
