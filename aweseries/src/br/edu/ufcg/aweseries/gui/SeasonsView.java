@@ -26,11 +26,10 @@ import br.edu.ufcg.aweseries.model.Series;
  * GUI representation of the list of seasons for a series.
  */
 public class SeasonsView extends ListActivity {
-    private static final SeasonComparator comparator = new SeasonComparator();
+    private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
+    private static final SeasonComparator SEASON_COMPARATOR = new SeasonComparator();
 
     private Series series;
-
-    private SeasonItemViewAdapter dataAdapter;
 
     private static final class SeasonComparator implements Comparator<Season> {
         @Override
@@ -44,21 +43,25 @@ public class SeasonsView extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listing);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String seriesId = extras.getString("series id");
-            this.series = seriesProvider().getSeries(seriesId);
-        }
+        this.loadSeries();
 
         //set view title
         TextView listingTitle = (TextView) findViewById(R.id.listingTitleTextView);
         listingTitle.setText(this.series.getName() + "'s Seasons");
 
         populateSeasonsList();
-        setupItemClickListener();
+        setUpSeasonItemClickListener();
     }
 
-    private void setupItemClickListener() {
+    private void loadSeries() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String seriesId = extras.getString("series id");
+            this.series = seriesProvider.getSeries(seriesId);
+        }
+    }
+
+    private void setUpSeasonItemClickListener() {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -122,9 +125,9 @@ public class SeasonsView extends ListActivity {
                 @Override
                 public void onClick(View arg0) {
                     if (isSeasonViewed.isChecked()) {
-                        seriesProvider().markSeasonAsSeen(season);
+                        seriesProvider.markSeasonAsSeen(season);
                     } else {
-                        seriesProvider().markSeasonAsNotSeen(season);
+                        seriesProvider.markSeasonAsNotSeen(season);
                     }
                 }
             });
@@ -137,17 +140,9 @@ public class SeasonsView extends ListActivity {
     }
 
     private void populateSeasonsList() {
-
-        this.dataAdapter = new SeasonItemViewAdapter(this, R.layout.season_list_item, this.series
-                .getSeasons().toList());
-        this.setListAdapter(this.dataAdapter);
-        this.dataAdapter.sort(comparator);
-    }
-
-    /**
-     * @return the app's series provider
-     */
-    private SeriesProvider seriesProvider() {
-        return App.environment().seriesProvider();
+        SeasonItemViewAdapter dataAdapter = new SeasonItemViewAdapter(this, R.layout.season_list_item,
+                this.series.getSeasons().toList());
+        this.setListAdapter(dataAdapter);
+        dataAdapter.sort(SEASON_COMPARATOR);
     }
 }
