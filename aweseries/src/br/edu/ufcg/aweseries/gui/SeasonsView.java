@@ -18,8 +18,7 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.SeriesProviderListener;
-import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.DomainEntityListener;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
@@ -76,46 +75,50 @@ public class SeasonsView extends ListActivity {
     }
 
     //XXX: Use TextViewAdapter instead.
-    private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements
-            SeriesProviderListener {
+    private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements DomainEntityListener<Season> {
         public SeasonItemViewAdapter(Context context, int seasonsItemResourceId,
                 List<Season> objects) {
             super(context, seasonsItemResourceId, objects);
-            seriesProvider().addListener(this);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            View itemView = itemViewFrom(convertView);
+
+            Season season = getItem(position);
+            season.addListener(this);
+
+            this.showSeasonDataOn(season, itemView);
+            this.setUpSeenSeasonCheckBoxListenerFor(season, itemView);
+
+            return itemView;
+        }
+
+        private View itemViewFrom(View convertView) {
             View itemView = convertView;
-            final Season season = getItem(position);
 
             // if no view was passed, create one for the item
             if (itemView == null) {
-                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = vi.inflate(R.layout.season_list_item, null);
+                final LayoutInflater li =
+                    (LayoutInflater) SeasonsView.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                itemView = li.inflate(R.layout.season_list_item, null);
             }
 
-            // get views for the series fields
+            return itemView;
+        }
+
+        private void showSeasonDataOn(Season season, View itemView) {
             TextView name = (TextView) itemView.findViewById(R.id.itemName);
+            name.setText(season.toString());
 
-            // load series data
-            name.setText(this.getItem(position).toString());
+            CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
+            isSeasonViewed.setChecked(season.areAllSeen());
+        }
 
-            final CheckBox isSeasonViewed = (CheckBox) itemView
-                    .findViewById(R.id.isSeasonViewedCheckBox);
-
-            boolean allEpisodesViewed = true;
-            for (Episode episode : season.getEpisodes()) {
-                if (!episode.wasSeen()) {
-                    allEpisodesViewed = false;
-                    break;
-                }
-            }
-
-            isSeasonViewed.setChecked(allEpisodesViewed);
+        private void setUpSeenSeasonCheckBoxListenerFor(final Season season, View itemView) {
+            final CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
 
             isSeasonViewed.setOnClickListener(new OnClickListener() {
-
                 @Override
                 public void onClick(View arg0) {
                     if (isSeasonViewed.isChecked()) {
@@ -123,61 +126,13 @@ public class SeasonsView extends ListActivity {
                     } else {
                         seriesProvider().markSeasonAsNotSeen(season);
                     }
-
                 }
             });
-
-            return itemView;
         }
 
         @Override
-        public void onUnfollowing(Series series) {/* Not my business */
-        }
-
-        @Override
-        public void onFollowing(Series series) {/* Not my business */
-        }
-
-        @Override
-        public void onMarkedAsSeen(Episode episode) {
-            final String seriesId = episode.getSeriesId();
-            final int seasonNumber = episode.getSeasonNumber();
-
-            final Season season = seriesProvider().getSeries(seriesId).getSeasons()
-                    .getSeason(seasonNumber);
-
-            if (season.areAllSeen()) {
-                this.remove(season);
-                this.add(season);
-                this.sort(comparator);
-            }
-        }
-
-        @Override
-        public void onMarkedAsNotSeen(Episode episode) {
-            final String seriesId = episode.getSeriesId();
-            final int seasonNumber = episode.getSeasonNumber();
-
-            final Season season = seriesProvider().getSeries(seriesId).getSeasons()
-                    .getSeason(seasonNumber);
-
-            this.remove(season);
-            this.add(season);
-            this.sort(comparator);
-        }
-
-        @Override
-        public void onMarkedAsSeen(Season season) {
-            this.remove(season);
-            this.add(season);
-            this.sort(comparator);
-        }
-
-        @Override
-        public void onMarkedAsNotSeen(Season season) {
-            this.remove(season);
-            this.add(season);
-            this.sort(comparator);
+        public void onUpdate(Season season) {
+            this.notifyDataSetChanged();
         }
     }
 
