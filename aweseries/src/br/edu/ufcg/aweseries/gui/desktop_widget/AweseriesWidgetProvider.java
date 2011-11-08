@@ -28,7 +28,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
     private static final int noItemLayout = R.layout.text_only_list_item;
     private static final String REFRESH = "br.edu.ufcg.aweseries.gui.desktop_widget.REFRESH";
 
-    private static final int LIMIT = 6;
+    private static final int LIMIT = 9;
 
     @Override
     public void onReceive(Context context, Intent intent) {
