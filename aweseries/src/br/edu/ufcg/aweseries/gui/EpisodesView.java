@@ -3,7 +3,6 @@ package br.edu.ufcg.aweseries.gui;
 import java.util.Comparator;
 import java.util.List;
 
-import android.R.id;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -170,7 +169,7 @@ public class EpisodesView extends ListActivity {
         this.setContentView(R.layout.list_with_checkbox);
         this.populateView();
         this.setupItemClickListener();
-        this.setupCheckBoxClickListener();
+        this.setUpSeenCheckBoxClickListener();
     }
 
     //Private-----------------------------------------------------------------------------------------------------------
@@ -191,7 +190,7 @@ public class EpisodesView extends ListActivity {
         final TextView seasonName = (TextView) this.findViewById(R.id.seasonTextView);
         seasonName.setText(this.season.toString());
 
-        final TextView empty = (TextView) this.findViewById(id.empty);
+        final TextView empty = (TextView) this.findViewById(android.R.id.empty);
         empty.setText("No episodes");
     }
 
@@ -221,7 +220,7 @@ public class EpisodesView extends ListActivity {
         });
     }
 
-    private void setupCheckBoxClickListener() {
+    private void setUpSeenCheckBoxClickListener() {
         this.isSeasonViewed.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {

@@ -30,32 +30,14 @@ public class EpisodeView extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.episode_view);
         this.populateView();
-        this.setCheckBoxListener();
+        this.setUpSeenEpisodeCheckBox();
     }
 
     //Private-----------------------------------------------------------------------------------------------------------
 
-    private void setFields() {
-        this.episodeName = (TextView) this.findViewById(R.id.episodeNameTextView);
-        this.episodeFirstAired = (TextView) this.findViewById(R.id.episodeFirstAiredTextView);
-        this.episodeOverview = (TextView) this.findViewById(R.id.episodeOverviewTextView);
-        this.episodeDirector = (TextView) this.findViewById(R.id.episodeDirectorTextView);
-        this.episodeWriter = (TextView) this.findViewById(R.id.episodeWriterTextView);
-        this.episodeGuestStars = (TextView) this.findViewById(R.id.episodeGuestStarsTextView);
-        this.isViewed = (CheckBox) this.findViewById(R.id.isEpisodeViewedCheckBox);
-    }
-
-    private void getExtras() {
-        final Bundle extras = this.getIntent().getExtras();
-        String seriesId = extras.getString("series id");
-        int seasonNumber = extras.getInt("season number");
-        int episodeNumber = extras.getInt("episode number");
-        this.episode = seriesProvider.getSeries(seriesId).getSeasons().getSeason(seasonNumber).get(episodeNumber);
-    }
-
     private void populateView() {
-        this.setFields();
-        this.getExtras();
+        this.setUpLocalReferencesToViewFields();
+        this.loadEpisode();
 
         this.episodeName.setText(this.episode.getName());
         this.episodeFirstAired.setText(this.episode.getFirstAiredAsString());
@@ -66,7 +48,27 @@ public class EpisodeView extends Activity {
         this.isViewed.setChecked(this.episode.wasSeen());
     }
 
-    private void setCheckBoxListener() {
+    private void setUpLocalReferencesToViewFields() {
+        this.episodeName = (TextView) this.findViewById(R.id.episodeNameTextView);
+        this.episodeFirstAired = (TextView) this.findViewById(R.id.episodeFirstAiredTextView);
+        this.episodeOverview = (TextView) this.findViewById(R.id.episodeOverviewTextView);
+        this.episodeDirector = (TextView) this.findViewById(R.id.episodeDirectorTextView);
+        this.episodeWriter = (TextView) this.findViewById(R.id.episodeWriterTextView);
+        this.episodeGuestStars = (TextView) this.findViewById(R.id.episodeGuestStarsTextView);
+        this.isViewed = (CheckBox) this.findViewById(R.id.isEpisodeViewedCheckBox);
+    }
+
+    private void loadEpisode() {
+        final Bundle extras = this.getIntent().getExtras();
+
+        String seriesId = extras.getString("series id");
+        int seasonNumber = extras.getInt("season number");
+        int episodeNumber = extras.getInt("episode number");
+
+        this.episode = seriesProvider.getSeries(seriesId).getSeasons().getSeason(seasonNumber).get(episodeNumber);
+    }
+
+    private void setUpSeenEpisodeCheckBox() {
         this.isViewed.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

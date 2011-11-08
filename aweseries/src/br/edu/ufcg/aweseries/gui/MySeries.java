@@ -25,6 +25,7 @@ import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.SeriesProviderListener;
+import br.edu.ufcg.aweseries.model.DomainEntityListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
@@ -47,11 +48,13 @@ public class MySeries extends ListActivity {
     //Series item view adapter------------------------------------------------------------------------------------------
 
     private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements
-            SeriesProviderListener {
+            DomainEntityListener<Series> {
 
         public SeriesItemViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);
-            seriesProvider.addListener(this);
+            for (Series series : objects) {
+                series.addListener(this);
+            }
         }
 
         @Override
@@ -118,43 +121,7 @@ public class MySeries extends ListActivity {
         }
 
         @Override
-        public void onUnfollowing(Series series) {
-            this.remove(series);
-        }
-
-        @Override
-        public void onFollowing(Series series) {
-            this.add(series);
-            this.sort(comparator);
-        }
-
-        @Override
-        public void onMarkedAsSeen(Episode episode) {
-            final Series series = seriesProvider.getSeries(episode.getSeriesId());
-            this.remove(series);
-            this.add(series);
-            this.sort(comparator);
-        }
-
-        @Override
-        public void onMarkedAsNotSeen(Episode episode) {
-            final Series series = seriesProvider.getSeries(episode.getSeriesId());
-            this.remove(series);
-            this.add(series);
-            this.sort(comparator);
-        }
-
-        @Override
-        public void onMarkedAsSeen(Season season) {
-            final Series series = seriesProvider.getSeries(season.getFirst().getSeriesId());
-            this.remove(series);
-            this.add(series);
-            this.sort(comparator);
-        }
-
-        @Override
-        public void onMarkedAsNotSeen(Season season) {
-            final Series series = seriesProvider.getSeries(season.getFirst().getSeriesId());
+        public void onUpdate(Series series) {
             this.remove(series);
             this.add(series);
             this.sort(comparator);

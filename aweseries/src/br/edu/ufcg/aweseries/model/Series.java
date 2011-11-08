@@ -1,8 +1,11 @@
 package br.edu.ufcg.aweseries.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import br.edu.ufcg.aweseries.util.Strings;
 
-public class Series {
+public class Series implements DomainEntityListener<SeasonSet> {
     private String id;
     private String name;
     private String status;
@@ -16,6 +19,7 @@ public class Series {
     private String actors;
     private Poster poster;
     private SeasonSet seasons;
+    private Set<DomainEntityListener<Series>> listeners;
 
     public Series(String id, String name) {
         if (id == null || Strings.isBlank(id)) {
@@ -28,6 +32,8 @@ public class Series {
 
         this.id = id;
         this.name = name;
+        
+        this.listeners = new HashSet<DomainEntityListener<Series>>();
     }
 
     public String getId() {
@@ -94,6 +100,7 @@ public class Series {
         }
 
         this.status = status;
+        this.notifyListeners();
     }
 
     public void setAirsDay(String airsDay) {
@@ -102,6 +109,7 @@ public class Series {
         }
 
         this.airsDay = airsDay;
+        this.notifyListeners();
     }
 
     public void setAirsTime(String airsTime) {
@@ -110,6 +118,7 @@ public class Series {
         }
 
         this.airsTime = airsTime;
+        this.notifyListeners();
     }
 
     public void setFirstAired(String firstAired) {
@@ -118,6 +127,7 @@ public class Series {
         }
 
         this.firstAired = firstAired;
+        this.notifyListeners();
     }
 
     public void setRuntime(String runtime) {
@@ -126,6 +136,7 @@ public class Series {
         }
 
         this.runtime = runtime;
+        this.notifyListeners();
     }
 
     public void setNetwork(String network) {
@@ -134,6 +145,7 @@ public class Series {
         }
 
         this.network = network;
+        this.notifyListeners();
     }
 
     public void setOverview(String overview) {
@@ -142,6 +154,7 @@ public class Series {
         }
 
         this.overview = overview;
+        this.notifyListeners();
     }
 
     public void setGenres(String genres) {
@@ -150,6 +163,7 @@ public class Series {
         }
 
         this.genres = genres;
+        this.notifyListeners();
     }
 
     public void setActors(String actors) {
@@ -158,10 +172,12 @@ public class Series {
         }
 
         this.actors = actors;
+        this.notifyListeners();
     }
 
     public void setPoster(Poster poster) {
         this.poster = poster;
+        this.notifyListeners();
     }
 
     public void setSeasons(SeasonSet seasons) {
@@ -169,7 +185,9 @@ public class Series {
             throw new IllegalArgumentException("invalid seasons for series");
         }
 
+        seasons.addListener(this);
         this.seasons = seasons;
+        this.notifyListeners();
     }
 
     @Override
@@ -201,5 +219,26 @@ public class Series {
     //TODO Test
     public boolean isEnded() {
         return this.status.equals("Ended");
+    }
+
+    @Override
+    public void onUpdate(SeasonSet entity) {
+        this.notifyListeners();
+    }
+
+    //TODO Test
+    public boolean addListener(DomainEntityListener<Series> listener) {
+        return this.listeners.add(listener);
+    }
+
+    //TODO Test
+    public boolean removeListener(DomainEntityListener<Series> listener) {
+        return this.listeners.remove(listener);
+    }
+
+    private void notifyListeners() {
+        for (DomainEntityListener<Series> listener : this.listeners) {
+            listener.onUpdate(this);            
+        }        
     }
 }
