@@ -33,4 +33,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="doYouWantToStopFollowing">&quot;Do you want to stop following %s?&quot;</string>
+    <string name="series_will_be_added">The Series %s will be added to your list soon.</string>
+    <string name="series_will_be_removed">The Series %s will be removed from your list soon.</string>
+    <string name="now_you_follow_series">Now you follow %s.</string>
+    <string name="you_no_longer_follow">You no longer follow %s.</string>
 </resources>

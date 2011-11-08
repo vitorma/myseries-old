@@ -3,6 +3,7 @@ package br.edu.ufcg.aweseries.gui;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.model.Series;
@@ -20,6 +22,39 @@ import br.edu.ufcg.aweseries.model.Series;
  * Search view. Allows user to find a series by its name and start/stop following it.
  */
 public class SeriesSearchView extends ListActivity {
+
+    private class FollowSeriesTask extends AsyncTask<Series, Void, Void> {
+        private String followMessage;
+
+        @Override
+        protected Void doInBackground(Series... params) {
+            final Series series = params[0];
+
+            final boolean userFollowsSeries = App.environment().seriesProvider().follows(series);
+            if (userFollowsSeries) {
+                App.environment().seriesProvider().unfollow(series);
+                this.followMessage = String.format(
+                        SeriesSearchView.this.getString(R.string.you_no_longer_follow),
+                        series.getName());
+            } else {
+                App.environment().seriesProvider().follow(series);
+                this.followMessage = String.format(
+                        SeriesSearchView.this.getString(R.string.now_you_follow_series),
+                        series.getName());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            final Toast toast = Toast.makeText(SeriesSearchView.this, this.followMessage,
+                    Toast.LENGTH_LONG);
+            toast.show();
+        }
+
+    };
+
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,15 +159,29 @@ public class SeriesSearchView extends ListActivity {
                 followButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(final View v) {
+                        String message;
                         if (userFollowsSeries) {
-                            App.environment().seriesProvider().unfollow(selectedItem);
                             userFollowsSeries = false;
                             followButton.setText(R.string.followSeries);
+                            message = String.format(SeriesSearchView.this
+                                    .getString(R.string.series_will_be_removed), selectedItem
+                                    .getName());
                         } else {
-                            App.environment().seriesProvider().follow(selectedItem);
                             userFollowsSeries = true;
                             followButton.setText(R.string.unfollowSeries);
+                            message = String.format(
+                                    SeriesSearchView.this.getString(R.string.series_will_be_added),
+                                    selectedItem.getName());
                         }
+
+                        final Series[] params = { selectedItem };
+                        new FollowSeriesTask().execute(params);
+
+                        dialog.dismiss();
+
+                        final Toast toast = Toast.makeText(SeriesSearchView.this, message,
+                                Toast.LENGTH_LONG);
+                        toast.show();
                     }
                 });
 
