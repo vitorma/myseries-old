@@ -62,8 +62,10 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(view.getContext(), EpisodeView.class);
-                final Episode episode = (Episode) parent.getItemAtPosition(position);
-                intent.putExtra("episode id", episode.getId());
+                Episode episode = (Episode) parent.getItemAtPosition(position);
+                intent.putExtra("series id", episode.getSeriesId());
+                intent.putExtra("season number", episode.getSeasonNumber());
+                intent.putExtra("episode number", episode.getNumber());
                 startActivity(intent);
             }
         });
@@ -145,6 +147,9 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
         public void onUpdate(Episode episode) {
             if (episode.wasSeen()) {
                 this.remove(episode);
+            } else {
+                this.add(episode);
+                this.sort(OutOfContextEpisodesActivity.this.episodesComparator());
             }
         }
     }
