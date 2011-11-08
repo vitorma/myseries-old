@@ -1,7 +1,10 @@
 package br.edu.ufcg.aweseries.gui.desktop_widget;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -67,7 +70,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), layout);
             views.removeAllViews(R.id.innerLinearLayout);
 
-            List<Episode> recent = seriesProvider.recentNotSeenEpisodes();
+            SortedSet<Episode> recent = this.sortedSetBy(seriesProvider.recentNotSeenEpisodes());
 
             if (recent.isEmpty()) {
                 Log.d("Widget", "recent list is empty");
@@ -110,6 +113,22 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.ImageButtonWidget, pi);
 
             return views;
+        }
+
+        private SortedSet<Episode> sortedSetBy(List<Episode> list) {
+            SortedSet<Episode> sorted = new TreeSet<Episode>(this.comparator());
+            sorted.addAll(list);
+            return sorted;
+        }
+
+        private Comparator<Episode> comparator() {
+            return new Comparator<Episode>() {
+                @Override
+                public int compare(Episode episodeA, Episode episodeB) {
+                    int byDate = episodeB.compareByDateTo(episodeA);
+                    return (byDate == 0) ? episodeB.compareByNumberTo(episodeA) : byDate;
+                }
+            };
         }
     }
 }
