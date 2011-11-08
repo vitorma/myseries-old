@@ -2,7 +2,6 @@ package br.edu.ufcg.aweseries;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import android.graphics.Bitmap;
@@ -26,7 +25,6 @@ public class SeriesProvider {
     private static final TheTVDB theTVDB = App.environment().theTVDB();
 
     private Repository<Series> seriesRepository;
-    private HashSet<SeriesProviderListener> listeners; //TODO Remove this attribute ASAP
 
     /**
      * If you know what you are doing, use this method to instantiate a
@@ -40,7 +38,6 @@ public class SeriesProvider {
 
     private SeriesProvider() {
         this.seriesRepository = new SeriesCache();
-        this.listeners = new HashSet<SeriesProviderListener>();
     }
     
     public Collection<Series> followedSeries() {
@@ -61,12 +58,18 @@ public class SeriesProvider {
     public void follow(Series series) {
         final Series fullSeries = theTVDB.getSeries(series.getId());
         this.seriesRepository.insert(fullSeries);
+        // TODO: use the right interface for this job
+        /*
         this.notifyListenersAboutFollowedSeries(fullSeries);
+        */
     }
 
     public void unfollow(Series series) {
         this.seriesRepository.delete(series);
+        // TODO: use the right interface for this job
+        /*
         this.notifyListenersAboutUnfollowedSeries(series);
+        */
     }
 
     public boolean follows(Series series) {
@@ -74,9 +77,12 @@ public class SeriesProvider {
     }
 
     public void wipeFollowedSeries() {
+        // TODO: use the right interface for this job
+        /*
         for (final Series s : this.followedSeries()) {
             this.notifyListenersAboutUnfollowedSeries(s);
         }
+        */
 
         this.seriesRepository.clear();
     }
@@ -129,64 +135,20 @@ public class SeriesProvider {
     public void markSeasonAsSeen(Season season) {
         season.markAllAsSeen();
         this.seriesRepository.update(this.getSeries(season.getSeriesId()));
-        this.notifyListenersAboutSeasonMarkedAsSeen(season);
     }
     
     public void markSeasonAsNotSeen(Season season) {
         season.markAllAsNotSeen();
         this.seriesRepository.update(this.getSeries(season.getSeriesId()));
-        this.notifyListenersAboutSeasonMarkedAsNotSeen(season);
     }
     
     public void markEpisodeAsSeen(Episode episode) {
         episode.markAsSeen();
         this.seriesRepository.update(this.getSeries(episode.getSeriesId()));
-        this.notifyListenersAboutEpisodeMarkedAsSeen(episode);
     }
     
     public void markEpisodeAsNotSeen(Episode episode) {
         episode.markAsNotSeen();
         this.seriesRepository.update(this.getSeries(episode.getSeriesId()));
-        this.notifyListenersAboutEpisodeMarkedAsNotSeen(episode);
-    }
-
-    public void addListener(SeriesProviderListener listener) {
-        this.listeners.add(listener);
-    }
-
-    private void notifyListenersAboutUnfollowedSeries(Series series) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onUnfollowing(series);
-        }
-    }
-
-    private void notifyListenersAboutFollowedSeries(Series series) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onFollowing(series);
-        }
-    }
-
-    private void notifyListenersAboutEpisodeMarkedAsSeen(Episode episode) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onMarkedAsSeen(episode);
-        }
-    }
-
-    private void notifyListenersAboutEpisodeMarkedAsNotSeen(Episode episode) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onMarkedAsNotSeen(episode);
-        }
-    }
-
-    private void notifyListenersAboutSeasonMarkedAsSeen(Season season) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onMarkedAsSeen(season);
-        }
-    }
-
-    private void notifyListenersAboutSeasonMarkedAsNotSeen(Season season) {
-        for (final SeriesProviderListener listener : this.listeners) {
-            listener.onMarkedAsNotSeen(season);
-        }
     }
 }

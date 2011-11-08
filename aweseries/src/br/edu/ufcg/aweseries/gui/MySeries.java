@@ -120,9 +120,7 @@ public class MySeries extends ListActivity {
 
         @Override
         public void onUpdate(Series series) {
-            this.remove(series);
-            this.add(series);
-            this.sort(comparator);
+            this.notifyDataSetChanged();
         }
     }
 
