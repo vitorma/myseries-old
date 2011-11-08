@@ -83,11 +83,11 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                     Episode e = it.next();
                     Series series = seriesProvider.getSeries(e.getSeriesId());
                     Season season = series.getSeasons().getSeason(e.getSeasonNumber());
-                    
+                    String pre = String.format("S%02d" + "E%02d", season.getNumber(), e.getNumber());
+
                     RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
-                    item.setTextViewText(R.id.widgetEpisodeNameTextView, e.getName());
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.getName());
-                    item.setTextViewText(R.id.widgetEpisodeSeasonEpisodeTextView, String.format("Season %02d - Episode %02d", season.getNumber(), e.getNumber()));
+                    item.setTextViewText(R.id.widgetEpisodeNameTextView, pre + " - " + e.getName());
                     item.setTextViewText(R.id.widgetEpisodeDateTextView, e.getFirstAiredAsString());
                     
                     views.addView(R.id.innerLinearLayout, item);
