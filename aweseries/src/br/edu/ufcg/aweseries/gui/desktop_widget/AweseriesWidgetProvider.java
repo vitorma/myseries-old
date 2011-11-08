@@ -10,6 +10,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.RemoteViews;
 import br.edu.ufcg.aweseries.App;
@@ -83,9 +84,14 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                     Episode e = it.next();
                     Series series = seriesProvider.getSeries(e.getSeriesId());
                     Season season = series.getSeasons().getSeason(e.getSeasonNumber());
+
+                    Bitmap poster = series.getPoster().getImage();
                     String pre = String.format("S%02d" + "E%02d", season.getNumber(), e.getNumber());
 
                     RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
+                    if (poster != null) {
+                        item.setImageViewBitmap(R.id.widgetPoster, poster);
+                    }
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.getName());
                     item.setTextViewText(R.id.widgetEpisodeNameTextView, pre + " - " + e.getName());
                     item.setTextViewText(R.id.widgetEpisodeDateTextView, e.getFirstAiredAsString());
