@@ -2,10 +2,13 @@ package br.edu.ufcg.aweseries;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
@@ -26,6 +29,8 @@ public class SeriesProvider {
 
     private Repository<Series> seriesRepository;
 
+    private Set<FollowingSeriesListener> followingSeriesListeners;
+
     /**
      * If you know what you are doing, use this method to instantiate a
      * SeriesProvider.
@@ -38,6 +43,7 @@ public class SeriesProvider {
 
     private SeriesProvider() {
         this.seriesRepository = new SeriesCache();
+        this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
     }
     
     public Collection<Series> followedSeries() {
@@ -56,20 +62,31 @@ public class SeriesProvider {
     }
 
     public void follow(Series series) {
-        final Series fullSeries = theTVDB.getSeries(series.getId());
-        this.seriesRepository.insert(fullSeries);
-        // TODO: use the right interface for this job
-        /*
-        this.notifyListenersAboutFollowedSeries(fullSeries);
-        */
+        new FollowSeriesTask().execute(series);
     }
+
+    private class FollowSeriesTask extends AsyncTask<Series, Void, Void> {
+        private Series followedSeries;
+
+        @Override
+        protected Void doInBackground(Series... params) {
+            Series seriesToFollow = params[0];
+
+            this.followedSeries = theTVDB.getSeries(seriesToFollow.getId());
+            SeriesProvider.this.seriesRepository.insert(this.followedSeries);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            SeriesProvider.this.notifyListenersOfFollowedSeries(followedSeries);
+        }
+    };
 
     public void unfollow(Series series) {
         this.seriesRepository.delete(series);
-        // TODO: use the right interface for this job
-        /*
-        this.notifyListenersAboutUnfollowedSeries(series);
-        */
+        this.notifyListenersOfUnfollowedSeries(series);
     }
 
     public boolean follows(Series series) {
@@ -77,16 +94,29 @@ public class SeriesProvider {
     }
 
     public void wipeFollowedSeries() {
-        // TODO: use the right interface for this job
-        /*
         for (final Series s : this.followedSeries()) {
-            this.notifyListenersAboutUnfollowedSeries(s);
+            this.notifyListenersOfUnfollowedSeries(s);
         }
-        */
 
         this.seriesRepository.clear();
     }
-    
+
+    private void notifyListenersOfFollowedSeries(Series followedSeries) {
+        for (FollowingSeriesListener listener : this.followingSeriesListeners) {
+            listener.onFollowing(followedSeries);
+        }
+    }
+
+    private void notifyListenersOfUnfollowedSeries(Series unfollowedSeries) {
+        for (FollowingSeriesListener listener : this.followingSeriesListeners) {
+            listener.onUnfollowing(unfollowedSeries);
+        }
+    }
+
+    public void addFollowingSeriesListener(FollowingSeriesListener listener) {
+        this.followingSeriesListeners.add(listener);
+    }
+
     public Series getSeries(String seriesId) {
         return this.seriesRepository.get(seriesId);
     }

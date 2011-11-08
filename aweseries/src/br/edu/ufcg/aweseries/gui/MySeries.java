@@ -21,13 +21,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
+import br.edu.ufcg.aweseries.FollowingSeriesListener;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.SeriesProviderListener;
 import br.edu.ufcg.aweseries.model.DomainEntityListener;
 import br.edu.ufcg.aweseries.model.Episode;
-import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
 public class MySeries extends ListActivity {
@@ -48,10 +48,13 @@ public class MySeries extends ListActivity {
     //Series item view adapter------------------------------------------------------------------------------------------
 
     private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements
-            DomainEntityListener<Series> {
+            DomainEntityListener<Series>, FollowingSeriesListener {
 
         public SeriesItemViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);
+
+            seriesProvider.addFollowingSeriesListener(this);
+
             for (Series series : objects) {
                 series.addListener(this);
             }
@@ -124,6 +127,41 @@ public class MySeries extends ListActivity {
         public void onUpdate(Series series) {
             this.notifyDataSetChanged();
         }
+
+        @Override
+        public void onFollowing(Series followedSeries) {
+            this.add(followedSeries);
+            this.sort(comparator);
+        }
+
+        @Override
+        public void onUnfollowing(Series unfollowedSeries) {
+            this.remove(unfollowedSeries);
+        }
+    }
+
+    private static class FollowingSeriesToaster implements FollowingSeriesListener {
+
+        @Override
+        public void onFollowing(Series followedSeries) {
+            String message = String.format(App.environment().context().getString(R.string.now_you_follow_series),
+                                           followedSeries.getName());
+
+            this.showToastWith(message);
+        }
+
+        @Override
+        public void onUnfollowing(Series unfollowedSeries) {
+            String message = String.format(App.environment().context().getString(R.string.you_no_longer_follow),
+                                           unfollowedSeries.getName());
+
+            this.showToastWith(message);
+        }
+
+        private void showToastWith(String message) {
+            Toast toast = Toast.makeText(App.environment().context(), message, Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     //Interface---------------------------------------------------------------------------------------------------------
@@ -131,6 +169,9 @@ public class MySeries extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        seriesProvider.addFollowingSeriesListener(new FollowingSeriesToaster());
+
         this.setContentView(R.layout.list);
         this.adjustContentView();
         this.setAdapter();

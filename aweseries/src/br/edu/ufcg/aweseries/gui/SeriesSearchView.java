@@ -3,7 +3,6 @@ package br.edu.ufcg.aweseries.gui;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,49 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
+import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Series;
 
 /**
  * Search view. Allows user to find a series by its name and start/stop following it.
  */
 public class SeriesSearchView extends ListActivity {
-
-    private class FollowSeriesTask extends AsyncTask<Series, Void, Void> {
-        private String followMessage;
-
-        @Override
-        protected Void doInBackground(Series... params) {
-            final Series series = params[0];
-
-            final boolean userFollowsSeries = App.environment().seriesProvider().follows(series);
-            if (userFollowsSeries) {
-                App.environment().seriesProvider().unfollow(series);
-                this.followMessage = String.format(
-                        SeriesSearchView.this.getString(R.string.you_no_longer_follow),
-                        series.getName());
-            } else {
-                App.environment().seriesProvider().follow(series);
-                this.followMessage = String.format(
-                        SeriesSearchView.this.getString(R.string.now_you_follow_series),
-                        series.getName());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            final Toast toast = Toast.makeText(SeriesSearchView.this, this.followMessage,
-                    Toast.LENGTH_LONG);
-            toast.show();
-        }
-
-    };
+    private final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         this.setContentView(R.layout.search);
 
         this.setupSearchButtonClickListener();
@@ -107,8 +75,6 @@ public class SeriesSearchView extends ListActivity {
             /** Custom dialog to show the overview of a series. */
             private Dialog dialog;
 
-            private boolean userFollowsSeries = false;
-
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
                     final int position, final long id) {
@@ -147,10 +113,9 @@ public class SeriesSearchView extends ListActivity {
             private void setFollowButtonClickListener() {
                 final Button followButton = (Button) this.dialog.findViewById(R.id.followButton);
 
-                this.userFollowsSeries = App.environment().seriesProvider()
-                        .follows(this.selectedItem);
+                final boolean userFollowsSeries = seriesProvider.follows(this.selectedItem);
 
-                if (this.userFollowsSeries) {
+                if (userFollowsSeries) {
                     followButton.setText(R.string.unfollowSeries);
                 } else {
                     followButton.setText(R.string.followSeries);
@@ -159,28 +124,23 @@ public class SeriesSearchView extends ListActivity {
                 followButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(final View v) {
-                        String message;
                         if (userFollowsSeries) {
-                            userFollowsSeries = false;
-                            followButton.setText(R.string.followSeries);
-                            message = String.format(SeriesSearchView.this
-                                    .getString(R.string.series_will_be_removed), selectedItem
-                                    .getName());
+                            seriesProvider.unfollow(selectedItem);
                         } else {
-                            userFollowsSeries = true;
-                            followButton.setText(R.string.unfollowSeries);
-                            message = String.format(
+                            seriesProvider.follow(selectedItem);
+
+                            String message = String.format(
                                     SeriesSearchView.this.getString(R.string.series_will_be_added),
                                     selectedItem.getName());
+
+                            this.showToastWith(message);
                         }
 
-                        final Series[] params = { selectedItem };
-                        new FollowSeriesTask().execute(params);
-
                         dialog.dismiss();
+                    }
 
-                        final Toast toast = Toast.makeText(SeriesSearchView.this, message,
-                                Toast.LENGTH_LONG);
+                    private void showToastWith(String message) {
+                        Toast toast = Toast.makeText(App.environment().context(), message, Toast.LENGTH_LONG);
                         toast.show();
                     }
                 });
@@ -191,13 +151,11 @@ public class SeriesSearchView extends ListActivity {
              * Updates the overviewTextView and the title of the dialog.
              */
             private void updateDialogText() {
-                final TextView seriesOverview = (TextView) this.dialog
-                        .findViewById(R.id.overviewTextView);
+                TextView seriesOverview = (TextView) this.dialog.findViewById(R.id.overviewTextView);
 
                 this.dialog.setTitle(this.selectedItem.getName());
                 seriesOverview.setText(this.selectedItem.getOverview());
             }
-
         });
     }
 
