@@ -126,7 +126,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        seriesBuilder.withGenres(body);
+                        seriesBuilder.withGenres(Strings.normalizePipeSeparated(body));
                     }
                 });
 
@@ -134,7 +134,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        seriesBuilder.withActors(body);
+                        seriesBuilder.withActors(Strings.normalizePipeSeparated(body));
                     }
                 });
 
@@ -218,7 +218,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withDirector(body);
+                        episodeBuilder.withDirector(Strings.normalizePipeSeparated(body));
                     }
                 });
 
@@ -226,7 +226,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withWriter(body);
+                        episodeBuilder.withWriter(Strings.normalizePipeSeparated(body));
                     }
                 });
 
@@ -234,7 +234,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withGuestStars(body);
+                        episodeBuilder.withGuestStars(Strings.normalizePipeSeparated(body));
                     }
                 });
 
