@@ -39,10 +39,11 @@ public class EnvironmentTest {
     }
 
     // Series Provider ---------------------------------------------------------
-    @Ignore
+    @Ignore //TODO: Implement Logger and remove this annotation
     @Test
     public void testChangeSeriesProvider() {
-        final SeriesProvider sp = SeriesProvider.newSeriesProvider();
+        final SeriesProvider sp = SeriesProvider.newInstance(
+        		this.environment.theTVDB(), this.environment.seriesRepositoryFactory());
 
         this.environment.setSeriesProvider(sp);
 

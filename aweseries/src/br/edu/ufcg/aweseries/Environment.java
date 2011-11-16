@@ -1,7 +1,9 @@
 package br.edu.ufcg.aweseries;
 
 import android.content.Context;
+import br.edu.ufcg.aweseries.repository.DefaultSeriesRepositoryFactory;
 import br.edu.ufcg.aweseries.repository.SeriesDatabase;
+import br.edu.ufcg.aweseries.repository.SeriesRepositoryFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
@@ -11,9 +13,9 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 public class Environment {
 
     private Context context;
-
-    private SeriesProvider seriesProvider;
+    private SeriesRepositoryFactory seriesRepositoryFactory;
     private TheTVDB theTVDB;
+    private SeriesProvider seriesProvider;
     private SeriesDatabase localSeriesRepository;
 
     private final String apiKey = "6F2B5A871C96FB05";
@@ -59,7 +61,7 @@ public class Environment {
      * @return a default series provider for the production environment
      */
     private SeriesProvider defaultSeriesProvider() {
-        return SeriesProvider.newSeriesProvider();
+        return SeriesProvider.newInstance(this.theTVDB(), this.seriesRepositoryFactory());
     }
 
     /**
@@ -94,6 +96,23 @@ public class Environment {
     public void setTheTVDBTo(TheTVDB newTheTVDB) {
         this.theTVDB = newTheTVDB;
     }
+
+    public SeriesRepositoryFactory seriesRepositoryFactory() {
+        if (this.seriesRepositoryFactory == null) {
+            this.seriesRepositoryFactory = this.defaultSeriesRepositoryFactory();
+        }
+        return this.seriesRepositoryFactory;
+    }
+
+    private SeriesRepositoryFactory defaultSeriesRepositoryFactory() {
+        return new DefaultSeriesRepositoryFactory(this.context);
+    }
+
+    public void setSeriesRepositoryFactoryTo(SeriesRepositoryFactory newSeriesRepositoryFactory) {
+        this.seriesRepositoryFactory = newSeriesRepositoryFactory;
+    }
+
+    //TODO: Remove methods below ASAP-----------------------------------------------------------------------------------
 
     /**
      * @return the local repository of series.

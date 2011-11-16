@@ -4,13 +4,13 @@ import java.util.Collection;
 
 import br.edu.ufcg.aweseries.model.Series;
 
-public interface Repository<T> {
+public interface SeriesRepository {
 
-    public abstract void insert(T t);
+    public abstract void insert(Series series);
 
-    public abstract void update(T t);
+    public abstract void update(Series series);
 
-    public abstract void delete(T t);
+    public abstract void delete(Series series);
 
     public abstract void clear();
 
@@ -18,5 +18,5 @@ public interface Repository<T> {
 
     public abstract Series get(String id);
 
-    public abstract Collection<T> getAll();
+    public abstract Collection<Series> getAll();
 }

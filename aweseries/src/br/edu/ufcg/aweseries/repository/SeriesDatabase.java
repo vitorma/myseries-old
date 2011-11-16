@@ -14,7 +14,7 @@ import br.edu.ufcg.aweseries.model.EpisodeBuilder;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.model.SeriesBuilder;
 
-public class SeriesDatabase extends SQLiteOpenHelper implements Repository<Series> {
+public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository {
 
     private static final String DATABASE_NAME = "aweseries_db";
 
@@ -98,7 +98,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements Repository<Serie
         }
     }
 
-    //Repository--------------------------------------------------------------------------------------------------------
+    //SeriesRepository--------------------------------------------------------------------------------------------------
 
     @Override
     public void insert(Series series) {

@@ -12,8 +12,8 @@ import android.os.AsyncTask;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.repository.Repository;
-import br.edu.ufcg.aweseries.repository.SeriesCache;
+import br.edu.ufcg.aweseries.repository.SeriesRepository;
+import br.edu.ufcg.aweseries.repository.SeriesRepositoryFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
@@ -25,24 +25,24 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
-    private static final TheTVDB theTVDB = App.environment().theTVDB();
-
-    private Repository<Series> seriesRepository;
-
+    private TheTVDB theTVDB;
+    private SeriesRepository seriesRepository;
     private Set<FollowingSeriesListener> followingSeriesListeners;
 
-    /**
-     * If you know what you are doing, use this method to instantiate a
-     * SeriesProvider.
-     * 
-     * @see SeriesProvider()
-     */
-    public static SeriesProvider newSeriesProvider() {
-        return new SeriesProvider();
+    public static SeriesProvider newInstance(TheTVDB theTVDB, SeriesRepositoryFactory seriesRepositoryFactory) {
+        return new SeriesProvider(theTVDB, seriesRepositoryFactory);
     }
 
-    private SeriesProvider() {
-        this.seriesRepository = new SeriesCache();
+    private SeriesProvider(TheTVDB theTVDB, SeriesRepositoryFactory seriesRepositoryFactory) {
+        if (theTVDB == null) {
+            throw new IllegalArgumentException("theTVDB should not be null");
+        }
+        if (seriesRepositoryFactory == null) {
+            throw new IllegalArgumentException("seriesRepositoryFactory should not be null");
+        }
+
+        this.theTVDB = theTVDB;
+        this.seriesRepository = seriesRepositoryFactory.newSeriesCachedRepository();
         this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
     }
     
@@ -51,7 +51,7 @@ public class SeriesProvider {
     }
     
     public Series[] searchSeries(String seriesName) {
-        final List<Series> searchResult = theTVDB.search(seriesName);
+        final List<Series> searchResult = this.theTVDB.search(seriesName);
         
         if (searchResult == null) {
             throw new RuntimeException("no results found for criteria " + seriesName);
@@ -72,7 +72,7 @@ public class SeriesProvider {
         protected Void doInBackground(Series... params) {
             Series seriesToFollow = params[0];
 
-            this.followedSeries = theTVDB.getSeries(seriesToFollow.getId());
+            this.followedSeries = SeriesProvider.this.theTVDB.getSeries(seriesToFollow.getId());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 
             return null;
