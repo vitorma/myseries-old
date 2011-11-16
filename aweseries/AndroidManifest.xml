@@ -15,7 +15,7 @@
         android:name=".App">
         <activity
             android:label="@string/app_name"
-            android:name=".gui.MySeries"
+            android:name=".gui.SeriesListActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,32 +24,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.SeriesView"
+            android:name=".gui.SeriesDetailsActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.SeasonsView"
+            android:name=".gui.SeasonListActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.EpisodesView"
+            android:name=".gui.EpisodeListActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.EpisodeView"
+            android:name=".gui.EpisodeDetailsActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar">
         </activity>
         <activity
-            android:name=".gui.SeriesSearchView"
+            android:name=".gui.SeriesSearchActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar">
         </activity>
         <activity

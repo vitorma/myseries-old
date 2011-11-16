@@ -20,7 +20,7 @@ import br.edu.ufcg.aweseries.model.Series;
 /**
  * Displays a series short review.
  */
-public class SeriesView extends Activity implements DomainEntityListener<Series> {
+public class SeriesDetailsActivity extends Activity implements DomainEntityListener<Series> {
     private String seriesId;
     private boolean loaded = false;
     private ProgressDialog dialog;
@@ -64,14 +64,14 @@ public class SeriesView extends Activity implements DomainEntityListener<Series>
             
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), SeasonsView.class);
-                intent.putExtra("series id", SeriesView.this.seriesId);
+                Intent intent = new Intent(view.getContext(), SeasonListActivity.class);
+                intent.putExtra("series id", SeriesDetailsActivity.this.seriesId);
                 
                 try {
                     startActivity(intent);
                 } catch (Exception e) {
                     TextView tv =
-                            (TextView) SeriesView.this
+                            (TextView) SeriesDetailsActivity.this
                                     .findViewById(R.id.listingTitleTextView);
                     tv.setText(e.getClass() + " " + e.getMessage());
                 }
@@ -177,7 +177,7 @@ public class SeriesView extends Activity implements DomainEntityListener<Series>
     private void showProgressDialog() {
         this.dialog =
                 ProgressDialog
-                        .show(SeriesView.this, "", "Downloading...", true);
+                        .show(SeriesDetailsActivity.this, "", "Downloading...", true);
 
     }
 

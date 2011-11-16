@@ -21,7 +21,7 @@ import br.edu.ufcg.aweseries.model.Series;
 /**
  * Search view. Allows user to find a series by its name and start/stop following it.
  */
-public class SeriesSearchView extends ListActivity {
+public class SeriesSearchActivity extends ListActivity {
     private final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
     @Override
@@ -42,21 +42,21 @@ public class SeriesSearchView extends ListActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchView.this
+                final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchActivity.this
                         .findViewById(R.id.searchField);
 
                 try {
                     final Series[] searchResultsArray = App.environment().seriesProvider()
                             .searchSeries(searchField.getText().toString());
 
-                    SeriesSearchView.this.setListAdapter(new TextOnlyViewAdapter(
-                            SeriesSearchView.this, SeriesSearchView.this,
+                    SeriesSearchActivity.this.setListAdapter(new TextOnlyViewAdapter(
+                            SeriesSearchActivity.this, SeriesSearchActivity.this,
                             R.layout.text_only_list_item, searchResultsArray));
 
                 } catch (final Exception e) {
-                    Log.e(SeriesSearchView.class.getName(), e.getMessage());
+                    Log.e(SeriesSearchActivity.class.getName(), e.getMessage());
                     final AlertDialog.Builder builder = new AlertDialog.Builder(
-                            SeriesSearchView.this);
+                            SeriesSearchActivity.this);
                     builder.setMessage(e.getMessage());
                     builder.create().show();
                 }
@@ -80,7 +80,7 @@ public class SeriesSearchView extends ListActivity {
                     final int position, final long id) {
                 this.selectedItem = (Series) parent.getItemAtPosition(position);
 
-                this.dialog = new Dialog(SeriesSearchView.this);
+                this.dialog = new Dialog(SeriesSearchActivity.this);
                 this.dialog.setContentView(R.layout.series_overview_dialog);
 
                 this.updateDialogText();
@@ -130,7 +130,7 @@ public class SeriesSearchView extends ListActivity {
                             seriesProvider.follow(selectedItem);
 
                             String message = String.format(
-                                    SeriesSearchView.this.getString(R.string.series_will_be_added),
+                                    SeriesSearchActivity.this.getString(R.string.series_will_be_added),
                                     selectedItem.getName());
 
                             this.showToastWith(message);
@@ -161,7 +161,7 @@ public class SeriesSearchView extends ListActivity {
 
     @Override
     public final boolean onSearchRequested() {
-        final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchView.this
+        final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchActivity.this
                 .findViewById(R.id.searchField);
         searchField.requestFocus();
         searchField.selectAll();

@@ -10,9 +10,9 @@ import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.model.Series;
 
 public final class TextOnlyViewAdapter extends ArrayAdapter<Series> {
-    private final SeriesSearchView seriesSearchView;
+    private final SeriesSearchActivity seriesSearchView;
 
-    public TextOnlyViewAdapter(SeriesSearchView seriesSearchView, Context context,
+    public TextOnlyViewAdapter(SeriesSearchActivity seriesSearchView, Context context,
             int seriesItemResourceId, Series[] objects) {
         super(context, seriesItemResourceId, objects);
         this.seriesSearchView = seriesSearchView;

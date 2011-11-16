@@ -23,7 +23,7 @@ import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
-public class EpisodesView extends ListActivity {
+public class EpisodeListActivity extends ListActivity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final EpisodeComparator EPISODE_COMPARATOR = new EpisodeComparator();
 
@@ -66,7 +66,7 @@ public class EpisodesView extends ListActivity {
             // if no view was passed, create one for the item
             if (itemView == null) {
                 final LayoutInflater li =
-                    (LayoutInflater) EpisodesView.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    (LayoutInflater) EpisodeListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.episode_list_item, null);
             }
 
@@ -167,12 +167,12 @@ public class EpisodesView extends ListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Episode episode = (Episode) parent.getItemAtPosition(position);
 
-                Intent intent = new Intent(view.getContext(), EpisodeView.class);
+                Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
                 intent.putExtra("series id", episode.getSeriesId());
                 intent.putExtra("season number", episode.getSeasonNumber());
                 intent.putExtra("episode number", episode.getNumber());
 
-                EpisodesView.this.startActivity(intent);
+                EpisodeListActivity.this.startActivity(intent);
             }
         });
     }
@@ -182,9 +182,9 @@ public class EpisodesView extends ListActivity {
             @Override
             public void onClick(View arg0) {
                 if (isSeasonViewed.isChecked()) {
-                    seriesProvider.markSeasonAsSeen(EpisodesView.this.season);
+                    seriesProvider.markSeasonAsSeen(EpisodeListActivity.this.season);
                 } else {
-                    seriesProvider.markSeasonAsNotSeen(EpisodesView.this.season);
+                    seriesProvider.markSeasonAsNotSeen(EpisodeListActivity.this.season);
                 }
             }
         });
@@ -194,7 +194,7 @@ public class EpisodesView extends ListActivity {
         this.season.addListener(new DomainEntityListener<Season>() {
             @Override
             public void onUpdate(Season entity) {
-                EpisodesView.this.loadSeasonDataOnView();
+                EpisodeListActivity.this.loadSeasonDataOnView();
             }
         });
     }

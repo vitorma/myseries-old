@@ -11,7 +11,7 @@ import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Episode;
 
-public class EpisodeView extends Activity {
+public class EpisodeDetailsActivity extends Activity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
     private Episode episode;
@@ -72,10 +72,10 @@ public class EpisodeView extends Activity {
         this.isViewed.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (EpisodeView.this.isViewed.isChecked()) {
-                    seriesProvider.markEpisodeAsSeen(EpisodeView.this.episode);
+                if (EpisodeDetailsActivity.this.isViewed.isChecked()) {
+                    seriesProvider.markEpisodeAsSeen(EpisodeDetailsActivity.this.episode);
                 } else {
-                    seriesProvider.markEpisodeAsNotSeen(EpisodeView.this.episode);
+                    seriesProvider.markEpisodeAsNotSeen(EpisodeDetailsActivity.this.episode);
                 }
             }
         });

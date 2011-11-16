@@ -25,7 +25,7 @@ import br.edu.ufcg.aweseries.model.Series;
 /**
  * GUI representation of the list of seasons for a series.
  */
-public class SeasonsView extends ListActivity {
+public class SeasonListActivity extends ListActivity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final SeasonComparator SEASON_COMPARATOR = new SeasonComparator();
 
@@ -67,11 +67,11 @@ public class SeasonsView extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(view.getContext(), EpisodesView.class);
+                Intent intent = new Intent(view.getContext(), EpisodeListActivity.class);
                 final Season season = (Season) parent.getItemAtPosition(position);
                 intent.putExtra("season number", season.getNumber());
                 intent.putExtra("series id", series.getId());
-                SeasonsView.this.startActivity(intent);
+                SeasonListActivity.this.startActivity(intent);
             }
         });
 
@@ -103,7 +103,7 @@ public class SeasonsView extends ListActivity {
             // if no view was passed, create one for the item
             if (itemView == null) {
                 final LayoutInflater li =
-                    (LayoutInflater) SeasonsView.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    (LayoutInflater) SeasonListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.season_list_item, null);
             }
 

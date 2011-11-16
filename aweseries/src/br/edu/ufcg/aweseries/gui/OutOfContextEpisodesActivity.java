@@ -61,7 +61,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Intent intent = new Intent(view.getContext(), EpisodeView.class);
+                final Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
                 Episode episode = (Episode) parent.getItemAtPosition(position);
                 intent.putExtra("series id", episode.getSeriesId());
                 intent.putExtra("season number", episode.getSeasonNumber());

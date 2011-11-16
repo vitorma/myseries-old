@@ -30,7 +30,7 @@ import br.edu.ufcg.aweseries.model.DomainEntityListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 
-public class MySeries extends ListActivity {
+public class SeriesListActivity extends ListActivity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final SeriesComparator comparator = new SeriesComparator();
 
@@ -66,7 +66,7 @@ public class MySeries extends ListActivity {
 
             // if no view was passed, create one for the item
             if (itemView == null) {
-                final LayoutInflater li = (LayoutInflater) MySeries.this
+                final LayoutInflater li = (LayoutInflater) SeriesListActivity.this
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.my_series_list_item, null);
             }
@@ -225,11 +225,11 @@ public class MySeries extends ListActivity {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Intent intent = new Intent(view.getContext(), SeriesView.class);
+                final Intent intent = new Intent(view.getContext(), SeriesDetailsActivity.class);
                 final Series series = (Series) parent.getItemAtPosition(position);
                 intent.putExtra("series id", series.getId());
                 intent.putExtra("series name", series.getName());
-                MySeries.this.startActivity(intent);
+                SeriesListActivity.this.startActivity(intent);
             }
         });
     }
@@ -238,7 +238,7 @@ public class MySeries extends ListActivity {
         this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                MySeries.this.showUnfollowingDialog((Series) parent.getItemAtPosition(position));
+                SeriesListActivity.this.showUnfollowingDialog((Series) parent.getItemAtPosition(position));
                 return true;
             }
         });
@@ -269,7 +269,7 @@ public class MySeries extends ListActivity {
     }
 
     private void showSearchActivity() {
-        final Intent intent = new Intent(this, SeriesSearchView.class);
+        final Intent intent = new Intent(this, SeriesSearchActivity.class);
         this.startActivity(intent);
     }
 
@@ -280,7 +280,7 @@ public class MySeries extends ListActivity {
         recentAndUpcomingEpisodesButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                MySeries.this.showRecentAndUpcomingEpisodesActivity();
+                SeriesListActivity.this.showRecentAndUpcomingEpisodesActivity();
             }
         });
     }
