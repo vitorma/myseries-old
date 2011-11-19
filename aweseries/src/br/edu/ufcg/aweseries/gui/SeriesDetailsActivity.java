@@ -30,16 +30,21 @@
 package br.edu.ufcg.aweseries.gui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
@@ -86,6 +91,49 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
 
         populateView();
         setupSeasonsButtonListener();
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.getMenuInflater().inflate(R.menu.series_details_options_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.stopFollowingSeriesMenuItem:
+                this.showUnfollowingDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    private void showUnfollowingDialog() {
+        final Series series = seriesProvider().getSeries(this.seriesId);
+        final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        onBackPressed();
+                        seriesProvider().unfollow(series);
+                        dialog.dismiss();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+        
+        new AlertDialog.Builder(this)
+        .setMessage(
+                String.format(getString(R.string.doYouWantToStopFollowing),
+                        series.getName()))
+        .setPositiveButton(R.string.yes, dialogClickListener)
+        .setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
     private void setupSeasonsButtonListener() {

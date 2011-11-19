@@ -212,7 +212,7 @@ public class SeriesListActivity extends ListActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.getMenuInflater().inflate(R.menu.my_series_options_menu, menu);
+        this.getMenuInflater().inflate(R.menu.series_list_options_menu, menu);
         return true;
     }
 
