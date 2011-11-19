@@ -143,7 +143,7 @@ public class Season implements Iterable<Episode>, DomainEntityListener<Episode> 
         final List<Episode> list = new ArrayList<Episode>();
 
         for (final Episode e : this) {
-            if (e.airedUntil(today) && !e.wasSeen()) {
+            if (e.airedBefore(today) && !e.wasSeen()) {
                 list.add(e);
             }
         }
