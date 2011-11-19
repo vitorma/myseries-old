@@ -63,7 +63,15 @@ public class SeasonListActivity extends ListActivity {
     private static final class SeasonComparator implements Comparator<Season> {
         @Override
         public int compare(Season seasonA, Season seasonB) {
-            return seasonA.getNumber() - seasonB.getNumber();
+            if (seasonA.getNumber() == 0) {
+                return -seasonB.getNumber();
+            }
+            
+            if (seasonB.getNumber() == 0) {
+                return seasonA.getNumber();
+            }
+            
+            return seasonB.getNumber() - seasonA.getNumber();
         }
     }
 
