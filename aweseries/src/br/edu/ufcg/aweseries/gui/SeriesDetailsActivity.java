@@ -49,6 +49,7 @@ import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.DomainEntityListener;
+import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 
 /**
@@ -69,6 +70,9 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
     private TextView seriesGenre;
     private TextView seriesNetwork;
     private Button seasonsButton;
+    private TextView nextToAir;
+    private TextView nextToSee;
+    private TextView nextToAirLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,9 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
         this.seriesGenre = (TextView) findViewById(R.id.genreTextView);
         this.seriesRuntime = (TextView) findViewById(R.id.runtimeTextView);
         this.seasonsButton = (Button) findViewById(R.id.seasonsButton);
+        this.nextToAir = (TextView) findViewById(R.id.nextToAirTextView);
+        this.nextToAirLabel = (TextView) findViewById(R.id.nextToAirLabel);
+        this.nextToSee = (TextView) findViewById(R.id.nextToSeeTextView);
 
         populateView();
         setupSeasonsButtonListener();
@@ -152,8 +159,6 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
                                     .findViewById(R.id.listingTitleTextView);
                     tv.setText(e.getClass() + " " + e.getMessage());
                 }
-
-                
             }
         });
 
@@ -230,6 +235,36 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
             this.seriesNetwork.setText(series.getNetwork());
             this.seriesGenre.setText(series.getGenres());
             this.seriesRuntime.setText(series.getRuntime() + " minutes");
+            
+            
+            if (series.isContinuing()) {
+                final Episode nextToAir = series.getSeasons().getNextEpisodeToAir();
+
+                if (nextToAir != null) {
+                    this.nextToAir.setText(series.getSeasons().getNextEpisodeToAir().getName());
+                } else {
+                    this.nextToAir.setText(R.string.upToDate);
+
+                }
+            }
+
+            if (series.isEnded()) {
+                this.nextToAirLabel.setText(R.string.lastEpisodeAired);
+                final Episode e = series.getSeasons().getLastAiredEpisode();
+                if (e != null) {
+                    this.nextToAir.setText(e.toString());
+                } else {
+                    this.nextToAir.setText(R.string.noEpisodeAired);
+                }
+
+            }
+
+            final Episode nextToSee = series.getSeasons().getNextEpisodeToSee();
+            if (nextToSee != null) {
+                this.nextToSee.setText(series.getSeasons().getNextEpisodeToSee().getName());
+            } else {
+                this.nextToSee.setText(R.string.upToDate);
+            }
             
             Bitmap bmp = seriesProvider().getPosterOf(series);
             if (bmp != null) {

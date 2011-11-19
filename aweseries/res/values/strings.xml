@@ -25,8 +25,8 @@
     <string name="followSeries">Follow</string>
     <string name="back">Back</string>
     <string name="unfollowSeries">Unfollow</string>
-    <string name="nextEpisodeToSee">next to see:</string>
-    <string name="nextEpisodeToAir">next to air:</string>
+    <string name="nextEpisodeToSee">Next to see:</string>
+    <string name="nextEpisodeToAir">Next to air:</string>
     <string name="lastEpisodeAired">last aired:</string>
     <string name="upToDate">up to date</string>
     <string name="noEpisodeAired">no episode aired</string>
