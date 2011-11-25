@@ -37,4 +37,7 @@
     <string name="series_will_be_removed">The Series %s will be removed from your list soon.</string>
     <string name="now_you_follow_series">Now you follow %s.</string>
     <string name="you_no_longer_follow">You no longer follow %s.</string>
+    <string name="small_widget_name">aweseries (4x1)</string>
+    <string name="med_widget_name">aweseries (4x2)</string>
+    <string name="large_widget_name">aweseries (4x4)</string>
 </resources>

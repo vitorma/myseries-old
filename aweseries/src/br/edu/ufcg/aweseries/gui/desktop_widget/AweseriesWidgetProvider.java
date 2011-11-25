@@ -95,7 +95,8 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
             mgr.updateAppWidget(me, buildUpdate(this, layout, itemLayout, noItemLayout, LIMIT, i));
         }
 
-        protected RemoteViews buildUpdate(Context context, int layout, int itemLayout, int noItemLayout, int limit, Intent updateIntent) {
+        protected RemoteViews buildUpdate(Context context, int layout, int itemLayout,
+                int noItemLayout, int limit, Intent updateIntent) {
             RemoteViews views = new RemoteViews(context.getPackageName(), layout);
             views.removeAllViews(R.id.innerLinearLayout);
 
@@ -123,7 +124,8 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                         item.setImageViewBitmap(R.id.widgetPoster, poster);
                     }
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.getName());
-                    String pre = String.format("S%02d" + "E%02d", season.getNumber(), e.getNumber());
+                    String pre = String
+                            .format("S%02d" + "E%02d", season.getNumber(), e.getNumber());
                     item.setTextViewText(R.id.widgetEpisodeNameTextView, pre + " - " + e.getName());
                     item.setTextViewText(R.id.widgetEpisodeDateTextView, e.getFirstAiredAsString());
 

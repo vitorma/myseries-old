@@ -72,10 +72,35 @@
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/recent_episodes_appwidget_info" />
+                android:resource="@xml/recent_episodes_appwidget_info_4x4" />
         </receiver>
 
-        <service android:name="br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService" >
+        <receiver android:name=".gui.desktop_widget.AweseriesWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recent_episodes_appwidget_info_4x2" />
+        </receiver>
+
+        <receiver android:name=".gui.desktop_widget.AweseriesWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recent_episodes_appwidget_info_4x1" />
+        </receiver>
+
+
+        <service
+            android:name="br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService">
         </service>
+
+        <service
+            android:name="br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService">
+        </service>
+
     </application>
 </manifest>
