@@ -66,11 +66,11 @@ public class SeasonListActivity extends ListActivity {
             if (seasonA.getNumber() == 0) {
                 return -seasonB.getNumber();
             }
-            
+
             if (seasonB.getNumber() == 0) {
                 return seasonA.getNumber();
             }
-            
+
             return seasonB.getNumber() - seasonA.getNumber();
         }
     }
@@ -84,7 +84,8 @@ public class SeasonListActivity extends ListActivity {
 
         //set view title
         TextView listingTitle = (TextView) findViewById(R.id.listingTitleTextView);
-        listingTitle.setText(this.series.getName() + "'s Seasons");
+        listingTitle.setText(String.format(this.getString(R.string.seasons_of_series),
+                this.series.getName()));
 
         populateSeasonsList();
         setUpSeasonItemClickListener();
@@ -115,7 +116,8 @@ public class SeasonListActivity extends ListActivity {
     }
 
     //XXX: Use TextViewAdapter instead.
-    private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements DomainEntityListener<Season> {
+    private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements
+            DomainEntityListener<Season> {
         public SeasonItemViewAdapter(Context context, int seasonsItemResourceId,
                 List<Season> objects) {
             super(context, seasonsItemResourceId, objects);
@@ -139,8 +141,8 @@ public class SeasonListActivity extends ListActivity {
 
             // if no view was passed, create one for the item
             if (itemView == null) {
-                final LayoutInflater li =
-                    (LayoutInflater) SeasonListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final LayoutInflater li = (LayoutInflater) SeasonListActivity.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.season_list_item, null);
             }
 
@@ -156,7 +158,8 @@ public class SeasonListActivity extends ListActivity {
         }
 
         private void setUpSeenSeasonCheckBoxListenerFor(final Season season, View itemView) {
-            final CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
+            final CheckBox isSeasonViewed = (CheckBox) itemView
+                    .findViewById(R.id.isSeasonViewedCheckBox);
 
             isSeasonViewed.setOnClickListener(new OnClickListener() {
                 @Override
@@ -177,8 +180,8 @@ public class SeasonListActivity extends ListActivity {
     }
 
     private void populateSeasonsList() {
-        SeasonItemViewAdapter dataAdapter = new SeasonItemViewAdapter(this, R.layout.season_list_item,
-                this.series.getSeasons().toList());
+        SeasonItemViewAdapter dataAdapter = new SeasonItemViewAdapter(this,
+                R.layout.season_list_item, this.series.getSeasons().toList());
         this.setListAdapter(dataAdapter);
         dataAdapter.sort(SEASON_COMPARATOR);
     }

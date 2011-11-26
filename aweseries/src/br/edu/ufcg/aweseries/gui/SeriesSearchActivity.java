@@ -145,7 +145,7 @@ public class SeriesSearchActivity extends ListActivity {
                 final boolean userFollowsSeries = seriesProvider.follows(this.selectedItem);
 
                 if (userFollowsSeries) {
-                    followButton.setText(R.string.unfollow);
+                    followButton.setText(R.string.stop_following);
                 } else {
                     followButton.setText(R.string.follow);
                 }
@@ -158,9 +158,9 @@ public class SeriesSearchActivity extends ListActivity {
                         } else {
                             seriesProvider.follow(selectedItem);
 
-                            String message = String.format(
-                                    SeriesSearchActivity.this.getString(R.string.series_will_be_added),
-                                    selectedItem.getName());
+                            String message = String.format(SeriesSearchActivity.this
+                                    .getString(R.string.series_will_be_added), selectedItem
+                                    .getName());
 
                             this.showToastWith(message);
                         }
@@ -169,18 +169,19 @@ public class SeriesSearchActivity extends ListActivity {
                     }
 
                     private void showToastWith(String message) {
-                        Toast toast = Toast.makeText(App.environment().context(), message, Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(App.environment().context(), message,
+                                Toast.LENGTH_LONG);
                         toast.show();
                     }
                 });
-
             }
 
             /**
              * Updates the overviewTextView and the title of the dialog.
              */
             private void updateDialogText() {
-                TextView seriesOverview = (TextView) this.dialog.findViewById(R.id.overviewTextView);
+                TextView seriesOverview = (TextView) this.dialog
+                        .findViewById(R.id.overviewTextView);
 
                 this.dialog.setTitle(this.selectedItem.getName());
                 seriesOverview.setText(this.selectedItem.getOverview());

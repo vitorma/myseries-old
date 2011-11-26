@@ -31,8 +31,8 @@ public class AweseriesMedWidgetProvider extends AweseriesWidgetProvider {
             Intent i = new Intent(this, AweseriesMedWidgetProvider.class);
             manager.updateAppWidget(
                     componentName,
-                    buildUpdate(this, super.getLayout(), super.getItemLayout(),
-                            super.getNoItemLayout(), LIMIT, i));
+                    buildUpdate(this, super.layout(), super.itemLayout(),
+                            super.noItemLayout(), LIMIT, i));
         }
     }
 }

@@ -238,10 +238,10 @@ public class SeriesListActivity extends ListActivity {
 
     private void adjustContentView() {
         final TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
-        title.setText("My Series");
+        title.setText(R.string.my_series);
 
         final TextView empty = (TextView) this.findViewById(android.R.id.empty);
-        empty.setText("No series followed");
+        empty.setText(R.string.no_series_followed);
     }
 
     private void setAdapter() {

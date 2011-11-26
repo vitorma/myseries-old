@@ -29,12 +29,12 @@
 
 package br.edu.ufcg.aweseries.gui;
 
-import br.edu.ufcg.aweseries.R;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import br.edu.ufcg.aweseries.R;
 
 public class RecentAndUpcomingEpisodesActivity extends TabActivity {
     private TabHost tabHost;
@@ -42,19 +42,19 @@ public class RecentAndUpcomingEpisodesActivity extends TabActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.recent_and_upcoming_view);
+        this.setContentView(R.layout.recent_and_upcoming_view);
 
-        this.tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        this.tabHost = (TabHost) this.findViewById(android.R.id.tabhost);
 
-        TabSpec recentEpisodesTabSpec = tabHost.newTabSpec("recent");
-        TabSpec upcomingEpisodesTabSpec = tabHost.newTabSpec("upcoming");
+        final TabSpec recentEpisodesTabSpec = this.tabHost.newTabSpec("recent");
+        final TabSpec upcomingEpisodesTabSpec = this.tabHost.newTabSpec("upcoming");
 
-        recentEpisodesTabSpec.setIndicator("Recent Episodes");
+        recentEpisodesTabSpec.setIndicator(this.getString(R.string.recent_episodes));
         recentEpisodesTabSpec.setContent(new Intent(this, RecentEpisodesActivity.class));
-        upcomingEpisodesTabSpec.setIndicator("Upcoming Episodes");
+        upcomingEpisodesTabSpec.setIndicator(this.getString(R.string.upcoming_episodes));
         upcomingEpisodesTabSpec.setContent(new Intent(this, UpcomingEpisodesActivity.class));
 
-        tabHost.addTab(recentEpisodesTabSpec);
-        tabHost.addTab(upcomingEpisodesTabSpec);
+        this.tabHost.addTab(recentEpisodesTabSpec);
+        this.tabHost.addTab(upcomingEpisodesTabSpec);
     }
 }

@@ -71,8 +71,10 @@ public class EpisodeListActivity extends ListActivity {
 
     //Episode item view adapter-----------------------------------------------------------------------------------------
 
-    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements DomainEntityListener<Episode> {
-        public EpisodeItemViewAdapter(Context context, int episodeItemResourceId, List<Episode> objects) {
+    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements
+            DomainEntityListener<Episode> {
+        public EpisodeItemViewAdapter(Context context, int episodeItemResourceId,
+                List<Episode> objects) {
             super(context, episodeItemResourceId, objects);
         }
 
@@ -94,8 +96,8 @@ public class EpisodeListActivity extends ListActivity {
 
             // if no view was passed, create one for the item
             if (itemView == null) {
-                final LayoutInflater li =
-                    (LayoutInflater) EpisodeListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final LayoutInflater li = (LayoutInflater) EpisodeListActivity.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.episode_list_item, null);
             }
 
@@ -106,16 +108,19 @@ public class EpisodeListActivity extends ListActivity {
             TextView nameTextView = (TextView) itemView.findViewById(R.id.episodeNameTextView);
             TextView numberTextView = (TextView) itemView.findViewById(R.id.episodeNumberTextView);
             TextView dateTextView = (TextView) itemView.findViewById(R.id.episodeDateTextView);
-            CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
+            CheckBox isViewedCheckBox = (CheckBox) itemView
+                    .findViewById(R.id.episodeIsViewedCheckBox);
 
             nameTextView.setText(episode.getName());
-            numberTextView.setText(String.format("Episode %02d", episode.getNumber()));
+            numberTextView.setText(String.format(getString(R.string.episode_number_format),
+                    episode.getNumber()));
             dateTextView.setText(episode.getFirstAiredAsString());
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 
         private void setUpSeenEpisodeCheckBoxFor(final Episode episode, View itemView) {
-            final CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
+            final CheckBox isViewedCheckBox = (CheckBox) itemView
+                    .findViewById(R.id.episodeIsViewedCheckBox);
 
             isViewedCheckBox.setOnClickListener(new OnClickListener() {
                 @Override
@@ -171,9 +176,9 @@ public class EpisodeListActivity extends ListActivity {
     private void setUpListActivityParameters() {
         TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
         title.setText(this.series.getName());
-        
+
         TextView empty = (TextView) this.findViewById(android.R.id.empty);
-        empty.setText("No episodes");
+        empty.setText(R.string.no_episodes);
     }
 
     private void loadSeasonDataOnView() {
@@ -183,9 +188,10 @@ public class EpisodeListActivity extends ListActivity {
         TextView seasonName = (TextView) this.findViewById(R.id.seasonTextView);
         seasonName.setText(this.season.toString());
     }
-    
+
     private void setUpEpisodeListAdapter() {
-        EpisodeItemViewAdapter dataAdapter = new EpisodeItemViewAdapter(this, R.layout.episode_list_item, this.season.getEpisodes());
+        EpisodeItemViewAdapter dataAdapter = new EpisodeItemViewAdapter(this,
+                R.layout.episode_list_item, this.season.getEpisodes());
         this.setListAdapter(dataAdapter);
         dataAdapter.sort(EPISODE_COMPARATOR);
     }

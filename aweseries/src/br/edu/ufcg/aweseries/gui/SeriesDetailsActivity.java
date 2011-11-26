@@ -78,7 +78,7 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.series_view);
-        
+
         // Show the contents we already know.
         this.seriesName = (TextView) findViewById(R.id.seriesNameTextView);
         this.seriesName.setText(R.string.unknown_series);
@@ -99,13 +99,13 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
         populateView();
         setupSeasonsButtonListener();
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.series_details_options_menu, menu);
         return true;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -116,7 +116,7 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
                 return super.onOptionsItemSelected(item);
         }
     }
-    
+
     private void showUnfollowingDialog() {
         final Series series = seriesProvider().getSeries(this.seriesId);
         final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -134,35 +134,33 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
                 }
             }
         };
-        
+
         new AlertDialog.Builder(this)
-        .setMessage(
-                String.format(getString(R.string.do_you_want_to_stop_following),
-                        series.getName()))
-        .setPositiveButton(R.string.yes, dialogClickListener)
-        .setNegativeButton(R.string.no, dialogClickListener).show();
+                .setMessage(
+                        String.format(getString(R.string.do_you_want_to_stop_following),
+                                series.getName()))
+                .setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
     private void setupSeasonsButtonListener() {
         this.seasonsButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), SeasonListActivity.class);
                 intent.putExtra("series id", SeriesDetailsActivity.this.seriesId);
-                
+
                 try {
                     startActivity(intent);
                 } catch (Exception e) {
-                    TextView tv =
-                            (TextView) SeriesDetailsActivity.this
-                                    .findViewById(R.id.listingTitleTextView);
+                    TextView tv = (TextView) SeriesDetailsActivity.this
+                            .findViewById(R.id.listingTitleTextView);
                     tv.setText(e.getClass() + " " + e.getMessage());
                 }
             }
         });
 
-        
     }
 
     @Override
@@ -195,13 +193,13 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
             loaded = true;
         }
     }
-    
+
     @Override
     public void onBackPressed() {
         Series series = seriesProvider().getSeries(seriesId);
         series.removeListener(this);
         super.onBackPressed();
-        
+
     }
 
     /**
@@ -224,7 +222,7 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
         try {
             Series series = seriesProvider().getSeries(seriesId);
             series.addListener(this);
-            
+
             this.seriesName.setText(series.getName());
             this.seriesOverview.setText(series.getOverview());
             this.seriesStatus.setText(series.getStatus());
@@ -234,9 +232,9 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
             this.seriesFirsAirDay.setText(series.getFirstAired());
             this.seriesNetwork.setText(series.getNetwork());
             this.seriesGenre.setText(series.getGenres());
-            this.seriesRuntime.setText(series.getRuntime() + " minutes");
-            
-            
+            this.seriesRuntime.setText(String.format(
+                    this.getString(R.string.runtime_minutes_format), series.getRuntime()));
+
             if (series.isContinuing()) {
                 final Episode nextToAir = series.getSeasons().getNextEpisodeToAir();
 
@@ -265,19 +263,17 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
             } else {
                 this.nextToSee.setText(R.string.up_to_date);
             }
-            
+
             Bitmap bmp = seriesProvider().getPosterOf(series);
             if (bmp != null) {
                 // WallpaperManager.
                 // View v = this.findViewById(R.layout.series_view);
                 // // v.setBackgroundDrawable(BitmapDrawable.);
-                ImageView view =
-                        (ImageView) this
-                                .findViewById(R.id.seriesPosterImageView);
+                ImageView view = (ImageView) this.findViewById(R.id.seriesPosterImageView);
                 view.setImageBitmap(bmp);
-                
+
             }
-            
+
         } catch (Exception e) {
             this.seriesOverview.setText(R.string.review_not_available);
         }
@@ -287,9 +283,8 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
      * Shows progress dialog.
      */
     private void showProgressDialog() {
-        this.dialog =
-                ProgressDialog
-                        .show(SeriesDetailsActivity.this, "", "Downloading...", true);
+        this.dialog = ProgressDialog.show(SeriesDetailsActivity.this, "",
+                this.getString(R.string.loading_dialog_text), true);
 
     }
 

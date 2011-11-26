@@ -6,13 +6,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import br.edu.ufcg.aweseries.App;
-import br.edu.ufcg.aweseries.R;
-import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.gui.RecentAndUpcomingEpisodesActivity;
-import br.edu.ufcg.aweseries.model.Episode;
-import br.edu.ufcg.aweseries.model.Season;
-import br.edu.ufcg.aweseries.model.Series;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -23,6 +16,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.RemoteViews;
+import br.edu.ufcg.aweseries.App;
+import br.edu.ufcg.aweseries.R;
+import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.gui.RecentAndUpcomingEpisodesActivity;
+import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.Season;
+import br.edu.ufcg.aweseries.model.Series;
 
 public class AweseriesWidgetProvider extends AppWidgetProvider {
 
@@ -35,100 +35,103 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
     protected static final int LIMIT = 9;
 
     public static class UpdateService extends IntentService {
-    
+
         public UpdateService() {
             super("br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService");
         }
-        
+
         public UpdateService(String s) {
             super(s);
         }
-    
+
         @Override
         public void onHandleIntent(Intent intent) {
-            ComponentName me = new ComponentName(this, AweseriesWidgetProvider.class);
-            AppWidgetManager mgr = AppWidgetManager.getInstance(this);
-    
-            Intent i = new Intent(this, AweseriesWidgetProvider.class);
-            mgr.updateAppWidget(me, buildUpdate(this, layout, itemLayout, noItemLayout, 9, i));
+            final ComponentName me = new ComponentName(this, AweseriesWidgetProvider.class);
+            final AppWidgetManager mgr = AppWidgetManager.getInstance(this);
+
+            final Intent i = new Intent(this, AweseriesWidgetProvider.class);
+            mgr.updateAppWidget(me, this.buildUpdate(this, layout, itemLayout, noItemLayout, 9, i));
         }
-    
+
         protected RemoteViews buildUpdate(Context context, int layout, int itemLayout,
                 int noItemLayout, int limit, Intent updateIntent) {
-            RemoteViews views = new RemoteViews(context.getPackageName(), layout);
+            final RemoteViews views = new RemoteViews(context.getPackageName(), layout);
             views.removeAllViews(R.id.innerLinearLayout);
-    
-            SortedSet<Episode> recent = this.sortedSetBy(seriesProvider.recentNotSeenEpisodes());
-    
+
+            final SortedSet<Episode> recent = this.sortedSetBy(seriesProvider
+                    .recentNotSeenEpisodes());
+
             if (recent.isEmpty()) {
                 Log.d("Widget", "recent list is empty");
-                RemoteViews item = new RemoteViews(context.getPackageName(), noItemLayout);
+                final RemoteViews item = new RemoteViews(context.getPackageName(), noItemLayout);
                 item.setTextViewText(R.id.itemName, context.getString(R.string.up_to_date));
                 views.addView(R.id.innerLinearLayout, item);
             } else {
                 Log.d("Widget", "recent list is not empty");
-    
+
                 int viewsToAdd = limit;
-                Iterator<Episode> it = recent.iterator();
-    
-                while (it.hasNext() && viewsToAdd > 0) {
-                    Episode e = it.next();
-                    Series series = seriesProvider.getSeries(e.getSeriesId());
-                    Season season = series.getSeasons().getSeason(e.getSeasonNumber());
-    
-                    RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
+                final Iterator<Episode> it = recent.iterator();
+
+                while (it.hasNext() && (viewsToAdd > 0)) {
+                    final Episode e = it.next();
+                    final Series series = seriesProvider.getSeries(e.getSeriesId());
+                    final Season season = series.getSeasons().getSeason(e.getSeasonNumber());
+
+                    final RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
                     if (series.hasPoster()) {
-                        Bitmap poster = series.getPoster().getImage();
+                        final Bitmap poster = series.getPoster().getImage();
                         item.setImageViewBitmap(R.id.widgetPoster, poster);
                     }
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.getName());
-                    String pre = String
-                            .format("S%02d" + "E%02d", season.getNumber(), e.getNumber());
-                    item.setTextViewText(R.id.widgetEpisodeNameTextView, pre + " - " + e.getName());
+                    final String pre = String.format(
+                            this.getString(R.string.season_and_episode_format_short),
+                            season.getNumber(), e.getNumber());
+                    item.setTextViewText(R.id.widgetEpisodeNameTextView, String.format(
+                            pre + this.getString(R.string.separator) + e.getName()));
                     item.setTextViewText(R.id.widgetEpisodeDateTextView, e.getFirstAiredAsString());
-    
+
                     views.addView(R.id.innerLinearLayout, item);
                     viewsToAdd--;
                 }
             }
-    
-            Intent intent = new Intent(context, RecentAndUpcomingEpisodesActivity.class);
+
+            final Intent intent = new Intent(context, RecentAndUpcomingEpisodesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             views.setOnClickPendingIntent(R.id.innerLinearLayout, pendingIntent);
-    
+
             updateIntent.setAction(REFRESH);
-            PendingIntent pi = PendingIntent.getBroadcast(context, 0, updateIntent, 0);
+            final PendingIntent pi = PendingIntent.getBroadcast(context, 0, updateIntent, 0);
             views.setOnClickPendingIntent(R.id.ImageButtonWidget, pi);
-    
+
             return views;
         }
-    
+
         private SortedSet<Episode> sortedSetBy(List<Episode> list) {
-            SortedSet<Episode> sorted = new TreeSet<Episode>(this.comparator());
+            final SortedSet<Episode> sorted = new TreeSet<Episode>(this.comparator());
             sorted.addAll(list);
             return sorted;
         }
-    
+
         private Comparator<Episode> comparator() {
             return new Comparator<Episode>() {
                 @Override
                 public int compare(Episode episodeA, Episode episodeB) {
-                    int byDate = episodeB.compareByDateTo(episodeA);
+                    final int byDate = episodeB.compareByDateTo(episodeA);
                     return (byDate == 0) ? episodeB.compareByNumberTo(episodeA) : byDate;
                 }
             };
         }
-        
-        protected int getLayout() {
+
+        protected int layout() {
             return layout;
         }
 
-        protected int getItemLayout() {
+        protected int itemLayout() {
             return itemLayout;
         }
 
-        public int getNoItemLayout() {
+        public int noItemLayout() {
             return noItemLayout;
         }
     }
@@ -136,7 +139,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (REFRESH.equals(intent.getAction())) {
-            context.startService(createUpdateIntent(context));
+            context.startService(this.createUpdateIntent(context));
         } else {
             super.onReceive(context, intent);
         }
@@ -144,7 +147,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        context.startService(createUpdateIntent(context));
+        context.startService(this.createUpdateIntent(context));
     }
 
     protected Intent createUpdateIntent(Context context) {
