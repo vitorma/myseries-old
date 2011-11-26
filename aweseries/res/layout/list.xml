@@ -1,48 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/toolBar"
         style="@style/aweseries_style.toolbar"
-        android:background="@color/aweseries_style.toolbar_background"
-        >
+        android:background="@color/aweseries_style.toolbar_background" >
 
         <TextView
             android:id="@+id/listTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="List Activity View"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" />
-            
+            android:layout_centerVertical="true"
+            android:text="@string/listing_title" />
+
         <ImageButton
-            android:layout_width="40dp"
             android:id="@+id/recentAndUpcomingEpisodesButton"
+            style="@style/aweseries_style.toolbar_button"
+            android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/upcoming"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            style="@style/aweseries_style.toolbar_button"
-            android:layout_marginLeft="36dp"></ImageButton>
-
+            android:layout_marginLeft="36dp"
+            android:src="@drawable/upcoming" >
+        </ImageButton>
     </RelativeLayout>
-
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:drawSelectorOnTop="false"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:drawSelectorOnTop="false" />
 
     <TextView
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="No items to list" />
+        android:text="@string/no_items_to_list" />
 
 </LinearLayout>

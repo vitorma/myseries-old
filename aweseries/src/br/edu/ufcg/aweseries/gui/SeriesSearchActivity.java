@@ -145,9 +145,9 @@ public class SeriesSearchActivity extends ListActivity {
                 final boolean userFollowsSeries = seriesProvider.follows(this.selectedItem);
 
                 if (userFollowsSeries) {
-                    followButton.setText(R.string.unfollowSeries);
+                    followButton.setText(R.string.unfollow);
                 } else {
-                    followButton.setText(R.string.followSeries);
+                    followButton.setText(R.string.follow);
                 }
 
                 followButton.setOnClickListener(new OnClickListener() {

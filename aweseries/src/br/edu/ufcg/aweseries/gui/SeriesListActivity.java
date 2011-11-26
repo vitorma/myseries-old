@@ -125,27 +125,27 @@ public class SeriesListActivity extends ListActivity {
             if (nextEpisodeToSee != null) {
                 nextToSee.setText(nextEpisodeToSee.toString());
             } else {
-                nextToSee.setText(R.string.upToDate);
+                nextToSee.setText(R.string.up_to_date);
             }
 
             // latest episode to air
             if (item.isContinuing()) {
-                latestToAirLabel.setText(R.string.nextEpisodeToAir);
+                latestToAirLabel.setText(R.string.next_episode_to_air);
                 final Episode nextEpisodeToAir = item.getSeasons().getNextEpisodeToAir();
                 if (nextEpisodeToAir != null) {
                     latestToAir.setText(nextEpisodeToAir.toString());
                 } else {
-                    latestToAir.setText(R.string.upToDate);
+                    latestToAir.setText(R.string.up_to_date);
                 }
             }
 
             if (item.isEnded()) {
-                latestToAirLabel.setText(R.string.lastEpisodeAired);
+                latestToAirLabel.setText(R.string.last_episode_aired);
                 final Episode e = item.getSeasons().getLastAiredEpisode();
                 if (e != null) {
                     latestToAir.setText(e.toString());
                 } else {
-                    latestToAir.setText(R.string.noEpisodeAired);
+                    latestToAir.setText(R.string.no_episode_aired);
                 }
             }
 
@@ -291,7 +291,7 @@ public class SeriesListActivity extends ListActivity {
 
         new AlertDialog.Builder(this)
                 .setMessage(
-                        String.format(getString(R.string.doYouWantToStopFollowing),
+                        String.format(getString(R.string.do_you_want_to_stop_following),
                                 series.getName()))
                 .setPositiveButton(R.string.yes, dialogClickListener)
                 .setNegativeButton(R.string.no, dialogClickListener).show();

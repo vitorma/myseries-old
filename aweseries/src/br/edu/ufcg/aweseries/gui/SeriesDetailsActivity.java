@@ -81,7 +81,7 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
         
         // Show the contents we already know.
         this.seriesName = (TextView) findViewById(R.id.seriesNameTextView);
-        this.seriesName.setText(R.string.unknownSeries);
+        this.seriesName.setText(R.string.unknown_series);
         this.seriesOverview = (TextView) findViewById(R.id.seriesOverviewTextView);
         this.seriesStatus = (TextView) findViewById(R.id.statusTextView);
         this.seriesAirTime = (TextView) findViewById(R.id.airTimeTextView);
@@ -137,7 +137,7 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
         
         new AlertDialog.Builder(this)
         .setMessage(
-                String.format(getString(R.string.doYouWantToStopFollowing),
+                String.format(getString(R.string.do_you_want_to_stop_following),
                         series.getName()))
         .setPositiveButton(R.string.yes, dialogClickListener)
         .setNegativeButton(R.string.no, dialogClickListener).show();
@@ -243,18 +243,18 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
                 if (nextToAir != null) {
                     this.nextToAir.setText(series.getSeasons().getNextEpisodeToAir().getName());
                 } else {
-                    this.nextToAir.setText(R.string.upToDate);
+                    this.nextToAir.setText(R.string.up_to_date);
 
                 }
             }
 
             if (series.isEnded()) {
-                this.nextToAirLabel.setText(R.string.lastEpisodeAired);
+                this.nextToAirLabel.setText(R.string.last_episode_aired);
                 final Episode e = series.getSeasons().getLastAiredEpisode();
                 if (e != null) {
                     this.nextToAir.setText(e.toString());
                 } else {
-                    this.nextToAir.setText(R.string.noEpisodeAired);
+                    this.nextToAir.setText(R.string.no_episode_aired);
                 }
 
             }
@@ -263,7 +263,7 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
             if (nextToSee != null) {
                 this.nextToSee.setText(series.getSeasons().getNextEpisodeToSee().getName());
             } else {
-                this.nextToSee.setText(R.string.upToDate);
+                this.nextToSee.setText(R.string.up_to_date);
             }
             
             Bitmap bmp = seriesProvider().getPosterOf(series);
@@ -279,7 +279,7 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
             }
             
         } catch (Exception e) {
-            this.seriesOverview.setText(R.string.reviewNotAvailable);
+            this.seriesOverview.setText(R.string.review_not_available);
         }
     }
 

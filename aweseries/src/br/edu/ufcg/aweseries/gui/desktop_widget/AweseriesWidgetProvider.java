@@ -63,7 +63,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
             if (recent.isEmpty()) {
                 Log.d("Widget", "recent list is empty");
                 RemoteViews item = new RemoteViews(context.getPackageName(), noItemLayout);
-                item.setTextViewText(R.id.itemName, context.getString(R.string.upToDate));
+                item.setTextViewText(R.id.itemName, context.getString(R.string.up_to_date));
                 views.addView(R.id.innerLinearLayout, item);
             } else {
                 Log.d("Widget", "recent list is not empty");

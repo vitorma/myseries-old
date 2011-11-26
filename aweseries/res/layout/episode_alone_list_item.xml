@@ -30,7 +30,7 @@
             android:lines="1"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            android:text="@string/loading_label"
+            android:text="@string/loading"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_above="@+id/episodeSeasonEpisodeTextView"
-            android:text="@string/loading_label" />
+            android:text="@string/loading" />
 
         <TextView
             android:id="@+id/episodeSeasonEpisodeTextView"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:text="@string/loading_label" />
+            android:text="@string/loading" />
 
         <TextView
             android:id="@+id/episodeDateTextView"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:text="@string/loading_label"
+            android:text="@string/loading"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
