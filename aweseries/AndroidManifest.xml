@@ -65,8 +65,9 @@
             android:theme="@android:style/Theme.Black.NoTitleBar">
         </activity>
 
-
-        <receiver android:name=".gui.desktop_widget.AweseriesWidgetProvider">
+        <receiver
+            android:name=".gui.desktop_widget.AweseriesWidgetProvider"
+            android:label="@string/large_widget_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -75,7 +76,9 @@
                 android:resource="@xml/recent_episodes_appwidget_info_4x4" />
         </receiver>
 
-        <receiver android:name=".gui.desktop_widget.AweseriesWidgetProvider">
+        <receiver
+            android:name=".gui.desktop_widget.AweseriesMedWidgetProvider"
+            android:label="@string/med_widget_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -84,7 +87,9 @@
                 android:resource="@xml/recent_episodes_appwidget_info_4x2" />
         </receiver>
 
-        <receiver android:name=".gui.desktop_widget.AweseriesWidgetProvider">
+        <receiver
+            android:name=".gui.desktop_widget.AweseriesSmallWidgetProvider"
+            android:label="@string/small_widget_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -93,13 +98,16 @@
                 android:resource="@xml/recent_episodes_appwidget_info_4x1" />
         </receiver>
 
-
         <service
             android:name="br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService">
         </service>
 
         <service
-            android:name="br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService">
+            android:name="br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesSmallWidgetProvider$UpdateServiceSmall">
+        </service>
+
+        <service
+            android:name="br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesMedWidgetProvider$UpdateServiceMed">
         </service>
 
     </application>
