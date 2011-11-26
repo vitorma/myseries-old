@@ -7,8 +7,8 @@
         android:checked="false"
         android:enabled="true"
         android:icon="@drawable/ic_menu_add"
-        android:title="Add series"
-        android:titleCondensed="Add series"
+        android:title="@string/add_series"
+        android:titleCondensed="@string/add_series"
         android:visible="true"></item>
 
 </menu>
