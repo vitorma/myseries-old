@@ -14,7 +14,7 @@ public class AweseriesSmallWidgetProvider extends AweseriesWidgetProvider {
     
     @Override
     protected Intent createUpdateIntent(Context context) {
-        Intent intent = new Intent(context, AweseriesSmallWidgetProvider.class);
+        Intent intent = new Intent(context, UpdateServiceSmall.class);
         return intent;
     }
 

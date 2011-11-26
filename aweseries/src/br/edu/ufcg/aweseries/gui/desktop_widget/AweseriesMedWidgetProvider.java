@@ -14,7 +14,7 @@ public class AweseriesMedWidgetProvider extends AweseriesWidgetProvider {
     
     @Override
     protected Intent createUpdateIntent(Context context) {
-        Intent intent = new Intent(context, AweseriesMedWidgetProvider.class);
+        Intent intent = new Intent(context, UpdateServiceMed.class);
         return intent;
     }
     
