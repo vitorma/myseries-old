@@ -54,7 +54,8 @@
     <string name="stop_following">Dejar de seguir</string>
     <string name="unknown_series">Serie desconocida</string>
     <string name="unnamed_episode">Episodio sin nombre</string>
-    <string name="up_to_date">actualizado</string>
+    <string name="up_to_date">al dia</string>
+    <string name="update">Actualizar</string>
     <string name="upcoming_episodes">Próximos episodios</string>
     <string name="writer">Autor: </string>
     <string name="yes">Sí</string>

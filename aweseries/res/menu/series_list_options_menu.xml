@@ -10,5 +10,15 @@
         android:title="@string/add_series"
         android:titleCondensed="@string/add_series"
         android:visible="true"></item>
-
+    
+    <item
+        android:id="@+id/updateMenuItem"
+        android:checkable="false"
+        android:checked="false"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_refresh"
+        android:title="@string/update"
+        android:titleCondensed="@string/update"
+        android:visible="true"></item>
+        
 </menu>
