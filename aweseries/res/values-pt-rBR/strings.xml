@@ -22,9 +22,9 @@
     <string name="last_episode_aired">último exibido:</string>
     <string name="listing_title">Título da lista</string>
     <string name="loading">Carregando...</string>
-    <string name="loading_dialog_text">Carreagando...</string>
+    <string name="loading_dialog_text">Carregando...</string>
     <string name="med_widget_name">AweSeries (4x2)</string>
-    <string formatted="false" name="runtime_minutes_format">%d minutes</string>
+    <string formatted="false" name="runtime_minutes_format">%s minutes</string>
     <string name="my_series">Minhas Séries</string>
     <string name="network">Canal: </string>
     <string name="next_episode_to_air">Próxima estréia: </string>

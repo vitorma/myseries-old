@@ -24,7 +24,7 @@
     <string name="loading">Loading...</string>
     <string name="loading_dialog_text">Downloading...</string>
     <string name="med_widget_name">AweSeries (4x2)</string>
-    <string formatted="false" name="runtime_minutes_format">%d minutes</string>
+    <string formatted="false" name="runtime_minutes_format">%s minutes</string>
     <string name="my_series">My Series</string>
     <string name="network">Network: </string>
     <string name="next_episode_to_air">Next to air: </string>

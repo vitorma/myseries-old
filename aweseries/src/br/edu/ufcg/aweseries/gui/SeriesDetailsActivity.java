@@ -284,7 +284,7 @@ public class SeriesDetailsActivity extends Activity implements DomainEntityListe
      */
     private void showProgressDialog() {
         this.dialog = ProgressDialog.show(SeriesDetailsActivity.this, "",
-                this.getString(R.string.loading_dialog_text), true);
+                this.getString(R.string.loading), true);
 
     }
 
