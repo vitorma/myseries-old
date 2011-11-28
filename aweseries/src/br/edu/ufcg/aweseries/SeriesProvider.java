@@ -31,9 +31,14 @@ package br.edu.ufcg.aweseries;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,6 +48,7 @@ import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.repository.SeriesRepository;
 import br.edu.ufcg.aweseries.repository.SeriesRepositoryFactory;
+import br.edu.ufcg.aweseries.thetvdb.NonExistentSeriesException;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
@@ -58,7 +64,8 @@ public class SeriesProvider {
     private SeriesRepository seriesRepository;
     private Set<FollowingSeriesListener> followingSeriesListeners;
 
-    public static SeriesProvider newInstance(TheTVDB theTVDB, SeriesRepositoryFactory seriesRepositoryFactory) {
+    public static SeriesProvider newInstance(TheTVDB theTVDB,
+            SeriesRepositoryFactory seriesRepositoryFactory) {
         return new SeriesProvider(theTVDB, seriesRepositoryFactory);
     }
 
@@ -74,20 +81,53 @@ public class SeriesProvider {
         this.seriesRepository = seriesRepositoryFactory.newSeriesCachedRepository();
         this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
     }
-    
+
     public Collection<Series> followedSeries() {
         return this.seriesRepository.getAll();
     }
-    
+
     public Series[] searchSeries(String seriesName) {
         final List<Series> searchResult = this.theTVDB.search(seriesName);
-        
+
         if (searchResult == null) {
             throw new RuntimeException("no results found for criteria " + seriesName);
         }
-        
+
         //TODO: Implement util.Arrays#toArray
         return searchResult.toArray(new Series[] {});
+    }
+
+    public void updateAll() {
+        new UpdateSeriesTask().execute();
+    }
+
+    private class UpdateSeriesTask extends AsyncTask<Series, Void, Void> {
+        private List<Series> seriesToUpdate;
+
+        public UpdateSeriesTask() {
+            this.seriesToUpdate = new ArrayList<Series>(seriesRepository.getAll());
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //TODO: Implement me
+        }
+
+        @Override
+        protected Void doInBackground(Series... params) {
+            for (Series s : this.seriesToUpdate) {
+                seriesRepository.delete(s);
+                seriesRepository.insert(s);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            //TODO: Implement me        
+        }
+
     }
 
     public void follow(Series series) {
@@ -149,24 +189,24 @@ public class SeriesProvider {
     public Series getSeries(String seriesId) {
         return this.seriesRepository.get(seriesId);
     }
-    
+
     public List<Episode> recentNotSeenEpisodes() {
         List<Episode> recent = new ArrayList<Episode>();
-        
+
         for (Series s : this.followedSeries()) {
             recent.addAll(s.getSeasons().getLastAiredNotSeenEpisodes());
         }
-        
+
         return recent;
     }
-    
+
     public List<Episode> nextEpisodesToAir() {
         List<Episode> upcoming = new ArrayList<Episode>();
-        
+
         for (Series s : this.followedSeries()) {
             upcoming.addAll(s.getSeasons().getNextEpisodesToAir());
         }
-        
+
         return upcoming;
     }
 
@@ -195,17 +235,17 @@ public class SeriesProvider {
         season.markAllAsSeen();
         this.seriesRepository.update(this.getSeries(season.getSeriesId()));
     }
-    
+
     public void markSeasonAsNotSeen(Season season) {
         season.markAllAsNotSeen();
         this.seriesRepository.update(this.getSeries(season.getSeriesId()));
     }
-    
+
     public void markEpisodeAsSeen(Episode episode) {
         episode.markAsSeen();
         this.seriesRepository.update(this.getSeries(episode.getSeriesId()));
     }
-    
+
     public void markEpisodeAsNotSeen(Episode episode) {
         episode.markAsNotSeen();
         this.seriesRepository.update(this.getSeries(episode.getSeriesId()));
