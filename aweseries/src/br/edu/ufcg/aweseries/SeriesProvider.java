@@ -32,6 +32,7 @@ package br.edu.ufcg.aweseries;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -63,6 +64,7 @@ public class SeriesProvider {
     private TheTVDB theTVDB;
     private SeriesRepository seriesRepository;
     private Set<FollowingSeriesListener> followingSeriesListeners;
+    private long lastUpdate;
 
     public static SeriesProvider newInstance(TheTVDB theTVDB,
             SeriesRepositoryFactory seriesRepositoryFactory) {
@@ -97,35 +99,70 @@ public class SeriesProvider {
         return searchResult.toArray(new Series[] {});
     }
 
-    public void updateAll() {
+    public void updateData() {
         new UpdateSeriesTask().execute();
     }
 
-    private class UpdateSeriesTask extends AsyncTask<Series, Void, Void> {
+    private class UpdateSeriesTask extends AsyncTask<Void, Series, Void> {
         private List<Series> seriesToUpdate;
 
         public UpdateSeriesTask() {
+            //TODO: getUpdatedSeries
             this.seriesToUpdate = new ArrayList<Series>(seriesRepository.getAll());
         }
 
         @Override
         protected void onPreExecute() {
-            //TODO: Implement me
+            //TODO: Notify listeners of update start
         }
 
         @Override
-        protected Void doInBackground(Series... params) {
-            for (Series s : this.seriesToUpdate) {
-                seriesRepository.delete(s);
-                seriesRepository.insert(s);
+        protected Void doInBackground(Void... params) {
+            Series theirSeries;
+
+            for (Series ourSeries : this.seriesToUpdate) {
+                theirSeries = theTVDB.getSeries(ourSeries.getId());
+                
+                if (theirSeries != null) {
+                    mergeSeriesData(theirSeries, ourSeries);
+                }
+                
+                onProgressUpdate(theirSeries);
             }
 
             return null;
         }
 
+        private void mergeSeriesData(Series theirs, Series ours) {
+            for (Season ourSeason : ours.getSeasons()) {
+                Season theirSeason = theirs.getSeasons().getSeason(ourSeason.getNumber());
+                if (theirSeason != null) {
+                    mergeSeason(theirSeason, ourSeason);
+                }
+            }
+        }
+
+        private void mergeSeason(Season theirs, Season ours) {
+            for (Episode ourEpisode : ours.getEpisodes()) {
+                if (theirs.has(ourEpisode)) {
+                    mergeEpisode(theirs.get(ourEpisode.getNumber()), ourEpisode);
+                }
+            }
+        }
+
+        private void mergeEpisode(Episode theirs, Episode ours) {
+            theirs.markWetherSeen(ours.wasSeen());
+        }
+
         @Override
         protected void onPostExecute(Void result) {
-            //TODO: Implement me        
+            lastUpdate = (new Date()).getTime();
+            //Notify listeners of update end
+        }
+        
+        @Override
+        protected void onProgressUpdate(Series... values) {
+            //Notify listener of Series update
         }
 
     }

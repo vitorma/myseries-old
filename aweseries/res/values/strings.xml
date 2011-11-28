@@ -54,6 +54,8 @@
     <string name="stop_following">Stop following</string>
     <string name="unknown_series">Unknown Series</string>
     <string name="unnamed_episode">Unnamed Episode</string>
+    <string name="updating_series_notification_title">AweSeries data update</string>
+    <string name="updating_series_data">Updating series data...</string>
     <string name="up_to_date">up to date</string>
     <string name="update">Update</string>
     <string name="upcoming_episodes">Upcoming episodes</string>
