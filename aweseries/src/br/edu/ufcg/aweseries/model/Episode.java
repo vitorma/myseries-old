@@ -29,7 +29,6 @@
 
 package br.edu.ufcg.aweseries.model;
 
-import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -318,7 +317,7 @@ public class Episode {
     
     public void mergeWith(Episode other) {
         if (other == null) {
-            throw new InvalidParameterException(); //TODO: use a user exception 
+            throw new IllegalArgumentException(); //TODO: use a user exception 
         }
         
         this.name = other.name;
@@ -328,5 +327,7 @@ public class Episode {
         this.writer = other.writer;
         this.guestStars = other.guestStars;
         this.poster = other.poster;
+        
+        this.notifyListeners();
     }
 }

@@ -264,6 +264,29 @@ public class Series implements DomainEntityListener<SeasonSet> {
     public boolean removeListener(DomainEntityListener<Series> listener) {
         return this.listeners.remove(listener);
     }
+    
+    //TODO: Test me
+    public void mergeWith(Series other) {
+        if (other == null) {
+            throw new IllegalArgumentException(); //TODO: create a custom Exception
+        }
+        
+        for (Season season : this.seasons) {
+            Season otherSeason = other.seasons.getSeason(season.getNumber());
+            if (otherSeason != null) {
+                season.mergeWith(otherSeason);
+            }
+        }
+        
+        for (Season otherSeason : other.seasons) {
+            if (this.seasons.getSeason(otherSeason.getNumber()) == null) {
+                this.seasons.addAllEpisodes(otherSeason.getEpisodes());
+            }
+        }
+        
+        this.notifyListeners();
+        
+    }
 
     private void notifyListeners() {
         for (DomainEntityListener<Series> listener : this.listeners) {

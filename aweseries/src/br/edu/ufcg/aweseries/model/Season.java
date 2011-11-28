@@ -227,6 +227,8 @@ public class Season implements Iterable<Episode>, DomainEntityListener<Episode> 
                 this.addEpisode(theirEpisode);
             }
         }
+        
+        this.notifyListeners();
     }
 
     @Override
