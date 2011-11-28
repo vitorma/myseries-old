@@ -35,6 +35,9 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -64,6 +67,7 @@ public class SeriesListActivity extends ListActivity {
     private static final SeriesComparator comparator = new SeriesComparator();
 
     private SeriesItemViewAdapter dataAdapter;
+    private UpdateNotificationLauncher nLauncher;
 
     //Series comparator-------------------------------------------------------------------------------------------------
 
@@ -199,6 +203,8 @@ public class SeriesListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.nLauncher = new UpdateNotificationLauncher();
+        
         seriesProvider.addFollowingSeriesListener(new FollowingSeriesToaster());
 
         this.setContentView(R.layout.list);
@@ -208,6 +214,7 @@ public class SeriesListActivity extends ListActivity {
         this.setupItemClickListener();
         this.setupItemLongClickListener();
         this.dataAdapter.sort(comparator);
+        
     }
 
     @Override
@@ -318,4 +325,37 @@ public class SeriesListActivity extends ListActivity {
         final Intent intent = new Intent(this, RecentAndUpcomingEpisodesActivity.class);
         this.startActivity(intent);
     }
+    
+    
+    private class UpdateNotificationLauncher {
+        private final int id = 0;
+        private final int contentText = R.string.updating_series_data;
+        private final int contentTitle = R.string.updating_series_notification_title;
+        private final int icon = R.drawable.stat_sys_upload;
+        private NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        public void launchNotification() {
+            final long when = System.currentTimeMillis();
+
+            Notification notification = new Notification(icon, getString(contentText), when);
+            Context context = getApplicationContext();
+
+            Intent notificationIntent = new Intent(SeriesListActivity.this,
+                    SeriesListActivity.class);
+            PendingIntent contentIntent = PendingIntent.getActivity(SeriesListActivity.this, 0,
+                    notificationIntent, 0);
+
+            notification.setLatestEventInfo(context, getString(contentTitle),
+                    getString(contentText), contentIntent);
+
+            nm.notify(id, notification);
+
+        }
+
+        public void clearNotification() {
+            nm.cancelAll();
+        }
+        
+    }
+    
 }
