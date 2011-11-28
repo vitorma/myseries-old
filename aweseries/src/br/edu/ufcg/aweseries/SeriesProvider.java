@@ -145,13 +145,9 @@ public class SeriesProvider {
         private void mergeSeason(Season theirs, Season ours) {
             for (Episode ourEpisode : ours.getEpisodes()) {
                 if (theirs.has(ourEpisode)) {
-                    mergeEpisode(theirs.get(ourEpisode.getNumber()), ourEpisode);
+                    ourEpisode.mergeWith(theirs.get(ourEpisode.getNumber()));
                 }
             }
-        }
-
-        private void mergeEpisode(Episode theirs, Episode ours) {
-            theirs.markWetherSeen(ours.wasSeen());
         }
 
         @Override
