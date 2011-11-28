@@ -137,21 +137,9 @@ public class SeriesProvider {
             for (Season ourSeason : ours.getSeasons()) {
                 Season theirSeason = theirs.getSeasons().getSeason(ourSeason.getNumber());
                 if (theirSeason != null) {
-                    mergeSeason(theirSeason, ourSeason);
+                    ourSeason.mergeWith(theirSeason);
                 }
             }
-        }
-
-        private void mergeSeason(Season theirs, Season ours) {
-            for (Episode ourEpisode : ours.getEpisodes()) {
-                if (theirs.has(ourEpisode)) {
-                    mergeEpisode(theirs.get(ourEpisode.getNumber()), ourEpisode);
-                }
-            }
-        }
-
-        private void mergeEpisode(Episode theirs, Episode ours) {
-            theirs.markWetherSeen(ours.wasSeen());
         }
 
         @Override

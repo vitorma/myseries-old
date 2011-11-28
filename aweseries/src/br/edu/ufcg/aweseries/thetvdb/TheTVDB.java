@@ -29,6 +29,7 @@
 
 package br.edu.ufcg.aweseries.thetvdb;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.ufcg.aweseries.model.Series;
@@ -68,5 +69,18 @@ public class TheTVDB {
             //TODO A better exception handling
             return null;
         }
+    }
+
+    public List<Series> getAllSeries(List<String> seriesIds) {
+        List<Series> result = new ArrayList<Series>();
+        for (String seriesId : seriesIds) {
+            Series series = this.getSeries(seriesId);
+            //TODO Return an appropriated exception
+            if (series == null) {
+                return null;
+            }
+            result.add(series);
+        }
+        return result;
     }
 }

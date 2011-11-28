@@ -55,8 +55,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.edu.ufcg.aweseries.App;
-import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.FollowingSeriesListener;
+import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.DomainEntityListener;
 import br.edu.ufcg.aweseries.model.Episode;
@@ -228,6 +228,9 @@ public class SeriesListActivity extends ListActivity {
         switch (item.getItemId()) {
             case R.id.addSeriesMenuItem:
                 this.showSearchActivity();
+                return true;
+            case R.id.updateMenuItem:
+                seriesProvider.updateData();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
