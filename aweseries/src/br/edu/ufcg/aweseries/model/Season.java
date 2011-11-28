@@ -29,6 +29,7 @@
 
 package br.edu.ufcg.aweseries.model;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -207,6 +208,24 @@ public class Season implements Iterable<Episode>, DomainEntityListener<Episode> 
     public void markAllAsNotSeen() {
         for (final Episode e : this) {
             e.markAsNotSeen();
+        }
+    }
+    
+    public void mergeWith(Season other) {
+        if (other == null) {
+            throw new InvalidParameterException(); //TODO: create a user exception.
+        }
+        
+        for (Episode ourEpisode : getEpisodes()) {
+            if (other.has(ourEpisode)) {
+                ourEpisode.mergeWith(other.get(ourEpisode.getNumber()));
+            }
+        }
+        
+        for (Episode theirEpisode : other.getEpisodes()) {
+            if (!this.has(theirEpisode)) {
+                this.addEpisode(theirEpisode);
+            }
         }
     }
 

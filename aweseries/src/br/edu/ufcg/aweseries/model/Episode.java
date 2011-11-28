@@ -316,17 +316,17 @@ public class Episode {
         return this.listeners.remove(listener);
     }
     
-    public void mergeWith(Episode episode) {
-        if (episode == null) {
+    public void mergeWith(Episode other) {
+        if (other == null) {
             throw new InvalidParameterException(); //TODO: use a user exception 
         }
         
-        this.name = episode.name;
-        this.firstAired = episode.firstAired;
-        this.overview = episode.overview;
-        this.director = episode.director;
-        this.writer = episode.writer;
-        this.guestStars = episode.guestStars;
-        this.poster = episode.poster;
+        this.name = other.name;
+        this.firstAired = other.firstAired;
+        this.overview = other.overview;
+        this.director = other.director;
+        this.writer = other.writer;
+        this.guestStars = other.guestStars;
+        this.poster = other.poster;
     }
 }

@@ -29,6 +29,7 @@
 
 package br.edu.ufcg.aweseries.test.unit.model;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -377,6 +378,54 @@ public class SeasonTest {
         nextEpisodes.add(episode8);
         this.season.addEpisode(episode5);
         Assert.assertEquals(nextEpisodes, this.season.getNextEpisodesToAir());
+    }
+    
+    @Test
+    public final void testMergeWith() {
+        //this.episode1 = new Episode("1", "1", 1, 1);
+        //this.episode2 = new Episode("2", "1", 2, 1);
+        //this.episode3 = new Episode("3", "1", 3, 1);
+        //this.episode4 = new Episode("4", "1", 4, 1);
+        Episode episode5 = new Episode("5", "1", 5, 1);
+        
+        Season newSeason = new Season(this.episode1.getSeriesId(), this.episode1.getSeasonNumber());
+        newSeason.addEpisode(this.episode1);
+        newSeason.addEpisode(this.episode2);
+        newSeason.addEpisode(this.episode4);
+        newSeason.addEpisode(episode5);
+        
+        Assert.assertFalse(this.season.has(episode5));
+        this.season.mergeWith(newSeason);
+        Assert.assertTrue(this.season.has(episode5));
+        Assert.assertFalse(newSeason.has(episode3));
+
+        Episode episode6 = Mockito.mock(Episode.class);
+        Mockito.when(episode6.getId()).thenReturn("6");
+        Mockito.when(episode6.getSeriesId()).thenReturn("1");
+        Mockito.when(episode6.getNumber()).thenReturn(6);
+        Mockito.when(episode6.getSeasonNumber()).thenReturn(1);
+
+        Episode episode6Copy = Mockito.mock(Episode.class);
+        Mockito.when(episode6Copy.getId()).thenReturn("6");
+        Mockito.when(episode6Copy.getSeriesId()).thenReturn("1");
+        Mockito.when(episode6Copy.getNumber()).thenReturn(6);
+        Mockito.when(episode6Copy.getSeasonNumber()).thenReturn(1);
+        
+        this.season.addEpisode(episode6);
+        newSeason.addEpisode(episode6Copy);
+        
+        
+        //TODO: Fix this
+        //Assert.assertEquals(episode6, episode6Copy);
+        
+        //Mockito.verify(episode6, Mockito.times(1)).mergeWith(episode6Copy);
+        this.season.mergeWith(newSeason);
+        
+    }
+
+    @Test(expected = InvalidParameterException.class)
+    public final void testMergeWithNull() {
+        this.season.mergeWith(null);
     }
     
     @Test
