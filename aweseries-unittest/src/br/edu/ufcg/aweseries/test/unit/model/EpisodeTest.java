@@ -32,6 +32,7 @@ package br.edu.ufcg.aweseries.test.unit.model;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+import java.security.InvalidParameterException;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -57,7 +58,19 @@ public class EpisodeTest {
     private static final int anotherValidEpisodeNumber = 2;
     private static final int validSeasonNumber = 3;
     private static final int anotherValidSeasonNumber = 4;
-
+    private static final String validEpisodeName = "Owl Stretching Time";
+    private static final Date validDate = new Date();
+    private static final String validOverview =
+            "BBC-1 began colour broadcasting officially on 15 November 1969. Since September " +
+            "1969, however, they had been broadcasting colour programmes \"unofficially\", so " +
+            "while the whole of the first series was broadcast in colour, this episode was the " +
+            "first to be advertised as being in colour (source: Notes taken from BBC videotape " +
+            "operators and transmission managers made at the time).";
+    private static final String validDirector = "Graham Chapman";
+    private static final String validWriter = "John Cleese";
+    private static final String validGuestStars = "Douglas Adams";
+    private static final String validPoster = "someposter.png";
+    
     @Before
     public void setUp() throws Exception {
         this.episode1 = new Episode(validEpisodeId, validSeriesId, validEpisodeNumber,
@@ -193,6 +206,38 @@ public class EpisodeTest {
         this.episode1.markAsSeen();
         verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         Assert.assertTrue(this.episode1.wasSeen());
+    }
+
+    public final void testMergeWith() {
+        this.episode1.markAsSeen();
+        this.episode1.setName(validEpisodeName);
+        this.episode1.setFirstAired(validDate);
+        this.episode1.setOverview(validOverview);
+        this.episode1.setDirector(validDirector);
+        this.episode1.setWriter(validWriter);
+        this.episode1.setGuestStars(validGuestStars);
+        this.episode1.setPoster(validPoster);
+        
+        Episode newEpisode =
+                new Episode(validEpisodeId, validSeriesId, validEpisodeNumber, validSeasonNumber);
+        
+        newEpisode.mergeWith(this.episode1);
+        
+        
+        Assert.assertEquals(validEpisodeName, newEpisode.getName());
+        Assert.assertEquals(validDate, newEpisode.getFirstAired());
+        Assert.assertEquals(validOverview, newEpisode.getOverview());
+        Assert.assertEquals(validDirector, newEpisode.getDirector());
+        Assert.assertEquals(validWriter, newEpisode.getWriter());
+        Assert.assertEquals(validGuestStars, newEpisode.getGuestStars());
+        Assert.assertEquals(validPoster, newEpisode.getPoster());
+        Assert.assertEquals(true, newEpisode.wasSeen());
+
+    }
+
+    @Test(expected = InvalidParameterException.class)
+    public final void testMergeWithNull() {
+        this.episode1.mergeWith(null);
     }
 
     @Test
