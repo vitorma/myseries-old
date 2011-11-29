@@ -210,25 +210,33 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
             e.markAsNotSeen();
         }
     }
-    
+
+    //TODO: Test whether other has different seriesId or number than mine (its)
     public void mergeWith(Season other) {
         if (other == null) {
             throw new InvalidParameterException(); //TODO: create a user exception.
         }
-        
+
+        this.mergeAlreadyExistentEpisodesFrom(other);
+        this.addNonexistentYetEpisodesFrom(other);
+
+        this.notifyListeners();
+    }
+
+    private void mergeAlreadyExistentEpisodesFrom(Season other) {
         for (Episode ourEpisode : getEpisodes()) {
             if (other.has(ourEpisode)) {
                 ourEpisode.mergeWith(other.get(ourEpisode.getNumber()));
             }
         }
-        
+    }
+
+    private void addNonexistentYetEpisodesFrom(Season other) {        
         for (Episode theirEpisode : other.getEpisodes()) {
             if (!this.has(theirEpisode)) {
                 this.addEpisode(theirEpisode);
             }
         }
-        
-        this.notifyListeners();
     }
 
     @Override

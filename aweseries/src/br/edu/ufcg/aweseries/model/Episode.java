@@ -314,7 +314,8 @@ public class Episode {
     public boolean removeListener(DomainObjectListener<Episode> listener) {
         return this.listeners.remove(listener);
     }
-    
+
+    //TODO: Test whether other has different seriesId, seasonNumber or number than mine (its)
     public void mergeWith(Episode other) {
         if (other == null) {
             throw new IllegalArgumentException(); //TODO: use a user exception 
