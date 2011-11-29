@@ -56,6 +56,10 @@
     <string name="unnamed_episode">Episósio sem nome</string>
     <string name="up_to_date">atualizado</string>
     <string name="update">Atualizar</string>
+    <string name="updating_series_failure_notification_title">A atualização falhou</string>
+    <string name="updating_series_notification_title">Atualizando dados das séries</string>
+    <string name="update_failure_notification_message">A atualização falhou. Verifique a sua conexão e tente novamente.</string>
+    <string name="updating_series_data">Baixando dados das séries...</string>
     <string name="upcoming_episodes">Episódios por vir</string>
     <string name="writer">Autor: </string>
     <string name="yes">Sim</string>

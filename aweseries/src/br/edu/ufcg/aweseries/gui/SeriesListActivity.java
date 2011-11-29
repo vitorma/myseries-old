@@ -69,11 +69,12 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
     private SeriesItemViewAdapter dataAdapter;
     private UpdateNotificationLauncher nLauncher;
+    private MenuItem updateMenuItem;
 
     public SeriesListActivity() {
         seriesProvider.addListener(this);
     }
-    
+
     //Series comparator-------------------------------------------------------------------------------------------------
 
     private static class SeriesComparator implements Comparator<Series> {
@@ -222,12 +223,12 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         this.setupItemClickListener();
         this.setupItemLongClickListener();
         this.dataAdapter.sort(comparator);
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.series_list_options_menu, menu);
+        this.updateMenuItem = (MenuItem) menu.findItem(R.id.updateMenuItem);
         return true;
     }
 
@@ -383,16 +384,19 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     @Override
     public void onUpdateStart() {
         this.nLauncher.launchUpdatingNotification();
+        this.updateMenuItem.setEnabled(false);
     }
 
     @Override
     public void onUpdateFailure() {
         this.nLauncher.clearNotification();
         this.nLauncher.launchUpdatingFailureNotification();
+        this.updateMenuItem.setEnabled(true);
     }
 
     @Override
     public void onUpdateSuccess() {
         this.nLauncher.clearNotification();
+        this.updateMenuItem.setEnabled(true);
     }
 }
