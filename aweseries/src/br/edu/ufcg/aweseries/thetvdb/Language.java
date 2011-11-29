@@ -25,8 +25,12 @@ public enum Language {
     SV,
     NO;
 
-    public static Language from(String language) {
-        return valueOf(language.toUpperCase());
+    public static Language from(String abbreviation) {
+        if (abbreviation == null) {
+            throw new IllegalArgumentException("abbreviation should not be null");
+        }
+
+        return valueOf(abbreviation.toUpperCase());
     }
 
     public String abbreviation() {
