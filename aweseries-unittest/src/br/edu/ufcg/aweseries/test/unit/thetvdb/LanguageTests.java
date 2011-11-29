@@ -21,4 +21,11 @@ public class LanguageTests {
         assertThat(Language.from("PT"), equalTo(Language.PT));
         assertThat(Language.from("ES"), equalTo(Language.ES));
     }
+
+    @Test
+    public void languageAbbreviationIsLowerCase() {
+        assertThat(Language.EN.abbreviation(), equalTo("en"));
+        assertThat(Language.PT.abbreviation(), equalTo("pt"));
+        assertThat(Language.ES.abbreviation(), equalTo("es"));
+    }
 }

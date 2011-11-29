@@ -28,5 +28,9 @@ public enum Language {
     public static Language from(String language) {
         return valueOf(language.toUpperCase());
     }
+
+    public String abbreviation() {
+        return this.toString().toLowerCase();
+    }
 }
 
