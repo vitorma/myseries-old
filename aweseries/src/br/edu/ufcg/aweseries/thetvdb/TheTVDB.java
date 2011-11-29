@@ -55,7 +55,16 @@ public class TheTVDB {
 
     public List<Series> search(String seriesName) {
         try {
-            return new SeriesSearchParser(this.streamFactory).parse(seriesName);
+            return new SeriesSearchParser(this.streamFactory).parse(seriesName, "en");
+        } catch (Exception e) {
+            //TODO A better exception handling
+            return null;
+        }
+    }
+
+    public List<Series> search(String seriesName, String language) {
+        try {
+            return new SeriesSearchParser(this.streamFactory).parse(seriesName, language);
         } catch (Exception e) {
             //TODO A better exception handling
             return null;
@@ -64,7 +73,16 @@ public class TheTVDB {
 
     public Series getSeries(String seriesId) {
         try {
-            return new SeriesParser(this.streamFactory).parse(seriesId);
+            return new SeriesParser(this.streamFactory).parse(seriesId, "en");
+        } catch (Exception e) {
+            //TODO A better exception handling
+            return null;
+        }
+    }
+
+    public Series getSeries(String seriesId, String language) {
+        try {
+            return new SeriesParser(this.streamFactory).parse(seriesId, language);
         } catch (Exception e) {
             //TODO A better exception handling
             return null;
@@ -75,6 +93,19 @@ public class TheTVDB {
         List<Series> result = new ArrayList<Series>();
         for (String seriesId : seriesIds) {
             Series series = this.getSeries(seriesId);
+            //TODO Return an appropriated exception
+            if (series == null) {
+                return null;
+            }
+            result.add(series);
+        }
+        return result;
+    }
+
+    public List<Series> getAllSeries(List<String> seriesIds, String language) {
+        List<Series> result = new ArrayList<Series>();
+        for (String seriesId : seriesIds) {
+            Series series = this.getSeries(seriesId, language);
             //TODO Return an appropriated exception
             if (series == null) {
                 return null;

@@ -145,7 +145,7 @@ public abstract class SampleSeries {
 			}
         });
 
-        return seriesParser.parse(this.id());
+        return seriesParser.parse(this.id(), "en");
     }
 
     private static Resources resources;

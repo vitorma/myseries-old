@@ -221,20 +221,20 @@ public class SeriesParserTest extends TestCase {
     }
 
 	public void failing_testSeriesWithoutPoster() {
-		Series seriesWithoutPoster = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80248");
+		Series seriesWithoutPoster = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80248", "en");
 
 		assertThat(seriesWithoutPoster.getPoster(), nullValue());
 	}
 
 	public void testSeriesWithPoster() {
-        Series seriesWithPoster = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80348");
+        Series seriesWithPoster = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80348", "en");
 
         assertThat(seriesWithPoster.getPoster(), notNullValue());
         assertThat(seriesWithPoster.getPoster(), equalTo(seriesPoster));
     }
 
 	public void testSeriesOverview() {
-		Series series = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80348");
+		Series series = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80348", "en");
 		
 		assertThat(series.getOverview(), notNullValue());
 		assertThat(series.getOverview(), equalTo("Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen government secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7."));
