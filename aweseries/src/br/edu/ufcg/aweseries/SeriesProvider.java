@@ -31,25 +31,20 @@ package br.edu.ufcg.aweseries;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.repository.SeriesRepository;
 import br.edu.ufcg.aweseries.repository.SeriesRepositoryFactory;
-import br.edu.ufcg.aweseries.thetvdb.NonExistentSeriesException;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
@@ -61,9 +56,10 @@ import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
-    private TheTVDB theTVDB;
-    private SeriesRepository seriesRepository;
-    private Set<FollowingSeriesListener> followingSeriesListeners;
+    private final TheTVDB theTVDB;
+    private final SeriesRepository seriesRepository;
+    private final Set<FollowingSeriesListener> followingSeriesListeners;
+    private final Set<UpdateListener> updateListeners;
     private long lastUpdate;
 
     public static SeriesProvider newInstance(TheTVDB theTVDB,
@@ -82,6 +78,7 @@ public class SeriesProvider {
         this.theTVDB = theTVDB;
         this.seriesRepository = seriesRepositoryFactory.newSeriesCachedRepository();
         this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
+        this.updateListeners = new HashSet<UpdateListener>();
     }
 
     public Collection<Series> followedSeries() {
@@ -103,45 +100,50 @@ public class SeriesProvider {
         new UpdateSeriesTask().execute();
     }
 
-    private class UpdateSeriesTask extends AsyncTask<Void, Void, Boolean> {
+    private class UpdateSeriesTask extends AsyncTask<Void, Void, Void> {
         private List<String> seriesToUpdate;
+        private List<Series> upToDateSeries;
 
         public UpdateSeriesTask() {
-            
-            for (Series series : seriesRepository.getAll()) {
+            this.seriesToUpdate = new ArrayList<String>();
+
+            for (final Series series : SeriesProvider.this.seriesRepository.getAll()) {
                 this.seriesToUpdate.add(series.getId());
             }
         }
 
         @Override
         protected void onPreExecute() {
-            //TODO: Notify listeners of update start
+            Log.d("Update", "Update started...");
+            SeriesProvider.this.notifyListenersOfUpdateStart();
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            
-            List<Series> upToDateSeries = theTVDB.getAllSeries(this.seriesToUpdate);
-            
-            for (Series theirSeries : upToDateSeries) {
-                
-                if (theirSeries == null) {
-                    return false;
-                }
-                
-                Series ourSeries = getSeries(theirSeries.getId());
-                
-                ourSeries.mergeWith(theirSeries);
-                seriesRepository.update(ourSeries);
+        protected Void doInBackground(Void... params) {
+            this.upToDateSeries = SeriesProvider.this.theTVDB.getAllSeries(this.seriesToUpdate);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (this.upToDateSeries == null) {
+                SeriesProvider.this.notifyListenersOfUpdateFailure();
+                Log.d("Update", "Update failed");
+                return;
             }
 
-            return true;
-        }
+            for (final Series theirSeries : upToDateSeries) {
+                final Series ourSeries = SeriesProvider.this.getSeries(theirSeries.getId());
+                ourSeries.mergeWith(theirSeries);
+            }
+            
+            SeriesProvider.this.seriesRepository.updateAll(upToDateSeries);
 
-        @Override
-        protected void onPostExecute(Boolean result) {
-            lastUpdate = (new Date()).getTime();
-            //Notify listeners of update end
+            SeriesProvider.this.lastUpdate = (new Date()).getTime();
+            SeriesProvider.this.notifyListenersOfUpdateSuccess();
+            Log.d("Update", "Update successful.");
+
         }
     }
 
@@ -154,7 +156,7 @@ public class SeriesProvider {
 
         @Override
         protected Void doInBackground(Series... params) {
-            Series seriesToFollow = params[0];
+            final Series seriesToFollow = params[0];
 
             this.followedSeries = SeriesProvider.this.theTVDB.getSeries(seriesToFollow.getId());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
@@ -164,7 +166,7 @@ public class SeriesProvider {
 
         @Override
         protected void onPostExecute(Void result) {
-            SeriesProvider.this.notifyListenersOfFollowedSeries(followedSeries);
+            SeriesProvider.this.notifyListenersOfFollowedSeries(this.followedSeries);
         }
     };
 
@@ -186,13 +188,13 @@ public class SeriesProvider {
     }
 
     private void notifyListenersOfFollowedSeries(Series followedSeries) {
-        for (FollowingSeriesListener listener : this.followingSeriesListeners) {
+        for (final FollowingSeriesListener listener : this.followingSeriesListeners) {
             listener.onFollowing(followedSeries);
         }
     }
 
     private void notifyListenersOfUnfollowedSeries(Series unfollowedSeries) {
-        for (FollowingSeriesListener listener : this.followingSeriesListeners) {
+        for (final FollowingSeriesListener listener : this.followingSeriesListeners) {
             listener.onUnfollowing(unfollowedSeries);
         }
     }
@@ -206,9 +208,9 @@ public class SeriesProvider {
     }
 
     public List<Episode> recentNotSeenEpisodes() {
-        List<Episode> recent = new ArrayList<Episode>();
+        final List<Episode> recent = new ArrayList<Episode>();
 
-        for (Series s : this.followedSeries()) {
+        for (final Series s : this.followedSeries()) {
             recent.addAll(s.getSeasons().getLastAiredNotSeenEpisodes());
         }
 
@@ -216,9 +218,9 @@ public class SeriesProvider {
     }
 
     public List<Episode> nextEpisodesToAir() {
-        List<Episode> upcoming = new ArrayList<Episode>();
+        final List<Episode> upcoming = new ArrayList<Episode>();
 
-        for (Series s : this.followedSeries()) {
+        for (final Series s : this.followedSeries()) {
             upcoming.addAll(s.getSeasons().getNextEpisodesToAir());
         }
 
@@ -265,4 +267,31 @@ public class SeriesProvider {
         episode.markAsNotSeen();
         this.seriesRepository.update(this.getSeries(episode.getSeriesId()));
     }
+
+    public boolean addListener(UpdateListener listener) {
+        return this.updateListeners.add(listener);
+    }
+
+    public boolean removeListener(UpdateListener listener) {
+        return this.updateListeners.remove(listener);
+    }
+
+    public void notifyListenersOfUpdateStart() {
+        for (final UpdateListener listener : this.updateListeners) {
+            listener.onUpdateStart();
+        }
+    }
+
+    public void notifyListenersOfUpdateSuccess() {
+        for (final UpdateListener listener : this.updateListeners) {
+            listener.onUpdateSuccess();
+        }
+    }
+
+    public void notifyListenersOfUpdateFailure() {
+        for (final UpdateListener listener : this.updateListeners) {
+            listener.onUpdateFailure();
+        }
+    }
+
 }

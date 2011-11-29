@@ -58,17 +58,22 @@ import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.FollowingSeriesListener;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
+import br.edu.ufcg.aweseries.UpdateListener;
 import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 
-public class SeriesListActivity extends ListActivity {
+public class SeriesListActivity extends ListActivity implements UpdateListener {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final SeriesComparator comparator = new SeriesComparator();
 
     private SeriesItemViewAdapter dataAdapter;
     private UpdateNotificationLauncher nLauncher;
 
+    public SeriesListActivity() {
+        seriesProvider.addListener(this);
+    }
+    
     //Series comparator-------------------------------------------------------------------------------------------------
 
     private static class SeriesComparator implements Comparator<Series> {
@@ -88,7 +93,7 @@ public class SeriesListActivity extends ListActivity {
 
             seriesProvider.addFollowingSeriesListener(this);
 
-            for (Series series : objects) {
+            for (final Series series : objects) {
                 series.addListener(this);
             }
         }
@@ -177,22 +182,25 @@ public class SeriesListActivity extends ListActivity {
 
         @Override
         public void onFollowing(Series followedSeries) {
-            String message = String.format(App.environment().context().getString(R.string.now_you_follow_series),
-                                           followedSeries.getName());
+            final String message = String.format(
+                    App.environment().context().getString(R.string.now_you_follow_series),
+                    followedSeries.getName());
 
             this.showToastWith(message);
         }
 
         @Override
         public void onUnfollowing(Series unfollowedSeries) {
-            String message = String.format(App.environment().context().getString(R.string.you_no_longer_follow),
-                                           unfollowedSeries.getName());
+            final String message = String.format(
+                    App.environment().context().getString(R.string.you_no_longer_follow),
+                    unfollowedSeries.getName());
 
             this.showToastWith(message);
         }
 
         private void showToastWith(String message) {
-            Toast toast = Toast.makeText(App.environment().context(), message, Toast.LENGTH_LONG);
+            final Toast toast = Toast.makeText(App.environment().context(), message,
+                    Toast.LENGTH_LONG);
             toast.show();
         }
     }
@@ -204,7 +212,7 @@ public class SeriesListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
 
         this.nLauncher = new UpdateNotificationLauncher();
-        
+
         seriesProvider.addFollowingSeriesListener(new FollowingSeriesToaster());
 
         this.setContentView(R.layout.list);
@@ -214,7 +222,7 @@ public class SeriesListActivity extends ListActivity {
         this.setupItemClickListener();
         this.setupItemLongClickListener();
         this.dataAdapter.sort(comparator);
-        
+
     }
 
     @Override
@@ -242,7 +250,6 @@ public class SeriesListActivity extends ListActivity {
         this.showSearchActivity();
         return true;
     }
-    
 
     //Private-----------------------------------------------------------------------------------------------------------
 
@@ -277,7 +284,8 @@ public class SeriesListActivity extends ListActivity {
         this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                SeriesListActivity.this.showUnfollowingDialog((Series) parent.getItemAtPosition(position));
+                SeriesListActivity.this.showUnfollowingDialog((Series) parent
+                        .getItemAtPosition(position));
                 return true;
             }
         });
@@ -301,7 +309,7 @@ public class SeriesListActivity extends ListActivity {
 
         new AlertDialog.Builder(this)
                 .setMessage(
-                        String.format(getString(R.string.do_you_want_to_stop_following),
+                        String.format(this.getString(R.string.do_you_want_to_stop_following),
                                 series.getName()))
                 .setPositiveButton(R.string.yes, dialogClickListener)
                 .setNegativeButton(R.string.no, dialogClickListener).show();
@@ -313,8 +321,8 @@ public class SeriesListActivity extends ListActivity {
     }
 
     private void setUpRecentAndUpcomingButtonClickListener() {
-        ImageButton recentAndUpcomingEpisodesButton
-                = (ImageButton) this.findViewById(R.id.recentAndUpcomingEpisodesButton);
+        final ImageButton recentAndUpcomingEpisodesButton = (ImageButton) this
+                .findViewById(R.id.recentAndUpcomingEpisodesButton);
 
         recentAndUpcomingEpisodesButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -328,37 +336,63 @@ public class SeriesListActivity extends ListActivity {
         final Intent intent = new Intent(this, RecentAndUpcomingEpisodesActivity.class);
         this.startActivity(intent);
     }
-    
-    
+
     private class UpdateNotificationLauncher {
         private final int id = 0;
-        private final int contentText = R.string.updating_series_data;
-        private final int contentTitle = R.string.updating_series_notification_title;
+        private final int updateNotificationText = R.string.updating_series_data;
+        private final int updateNotificationTitle = R.string.updating_series_notification_title;
+        private final int updateFailureText = R.string.update_failure_notification_message;
+        private final int updateFailureTitle = R.string.updating_series_failure_notification_title;
         private final int icon = R.drawable.stat_sys_upload;
-        private NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        private final NotificationManager nm = (NotificationManager) SeriesListActivity.this
+                .getSystemService(Context.NOTIFICATION_SERVICE);
 
-        public void launchNotification() {
+        private void launchNotification(String title, String text) {
             final long when = System.currentTimeMillis();
 
-            Notification notification = new Notification(icon, getString(contentText), when);
-            Context context = getApplicationContext();
+            final Notification notification = new Notification(this.icon,
+                    SeriesListActivity.this.getString(this.updateNotificationText), when);
+            final Context context = SeriesListActivity.this.getApplicationContext();
 
-            Intent notificationIntent = new Intent(SeriesListActivity.this,
+            final Intent notificationIntent = new Intent(SeriesListActivity.this,
                     SeriesListActivity.class);
-            PendingIntent contentIntent = PendingIntent.getActivity(SeriesListActivity.this, 0,
-                    notificationIntent, 0);
+            final PendingIntent contentIntent = PendingIntent.getActivity(SeriesListActivity.this,
+                    0, notificationIntent, 0);
 
-            notification.setLatestEventInfo(context, getString(contentTitle),
-                    getString(contentText), contentIntent);
+            notification.setLatestEventInfo(context, title, text, contentIntent);
 
-            nm.notify(id, notification);
+            this.nm.notify(this.id, notification);
+        }
 
+        public void launchUpdatingNotification() {
+            this.launchNotification(
+                    SeriesListActivity.this.getString(this.updateNotificationTitle),
+                    SeriesListActivity.this.getString(this.updateNotificationText));
+        }
+
+        public void launchUpdatingFailureNotification() {
+            this.launchNotification(SeriesListActivity.this.getString(this.updateFailureTitle),
+                    SeriesListActivity.this.getString(this.updateFailureText));
         }
 
         public void clearNotification() {
-            nm.cancelAll();
+            this.nm.cancelAll();
         }
-        
     }
-    
+
+    @Override
+    public void onUpdateStart() {
+        this.nLauncher.launchUpdatingNotification();
+    }
+
+    @Override
+    public void onUpdateFailure() {
+        this.nLauncher.clearNotification();
+        this.nLauncher.launchUpdatingFailureNotification();
+    }
+
+    @Override
+    public void onUpdateSuccess() {
+        this.nLauncher.clearNotification();
+    }
 }

@@ -279,12 +279,18 @@ public class Series implements DomainObjectListener<SeasonSet> {
     }
 
     private void mergeAlreadyExistentSeasonsFrom(Series other) {
-        for (Season season : this.seasons) {
-            Season otherSeason = other.seasons.getSeason(season.getNumber());
-            if (otherSeason != null) {
-                season.mergeWith(otherSeason);
-            }
-        }
+        this.name = other.name;
+        this.status = other.status;
+        this.airsDay = other.airsDay;
+        this.airsTime = other.airsTime;
+        this.firstAired = other.firstAired;
+        this.runtime = other.runtime;
+        this.network = other.network;
+        this.overview = other.overview;
+        this.genres = other.genres;
+        this.actors = other.actors;
+        this.poster = other.poster;
+        this.seasons = other.seasons;
     }
 
     private void addNonexistentYetSeasonsFrom(Series other) {
