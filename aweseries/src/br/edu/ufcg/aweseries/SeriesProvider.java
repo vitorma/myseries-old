@@ -86,7 +86,7 @@ public class SeriesProvider {
     }
 
     public Series[] searchSeries(String seriesName) {
-        final List<Series> searchResult = this.theTVDB.search(seriesName);
+        final List<Series> searchResult = this.theTVDB.search(seriesName, App.environment().localization().language());
 
         if (searchResult == null) {
             throw new RuntimeException("no results found for criteria " + seriesName);
@@ -120,7 +120,7 @@ public class SeriesProvider {
 
         @Override
         protected Void doInBackground(Void... params) {
-            this.upToDateSeries = SeriesProvider.this.theTVDB.getAllSeries(this.seriesToUpdate);
+            this.upToDateSeries = SeriesProvider.this.theTVDB.getAllSeries(this.seriesToUpdate, App.environment().localization().language());
 
             return null;
         }
@@ -158,7 +158,7 @@ public class SeriesProvider {
         protected Void doInBackground(Series... params) {
             final Series seriesToFollow = params[0];
 
-            this.followedSeries = SeriesProvider.this.theTVDB.getSeries(seriesToFollow.getId());
+            this.followedSeries = SeriesProvider.this.theTVDB.getSeries(seriesToFollow.getId(), App.environment().localization().language());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 
             return null;
