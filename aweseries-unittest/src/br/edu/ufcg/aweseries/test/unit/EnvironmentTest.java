@@ -42,6 +42,7 @@ import org.junit.Test;
 
 import android.content.Context;
 import br.edu.ufcg.aweseries.Environment;
+import br.edu.ufcg.aweseries.LocalizationProvider;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
@@ -137,6 +138,39 @@ public class EnvironmentTest {
 
         assertThat(this.environment.theTVDB(), notNullValue());
         assertThat(this.environment.theTVDB(), not(sameInstance(oldDB)));
+    }
+
+
+    // Localization -----------------------------------------------------------------
+    @Test
+    public void setLocalization() {
+        final LocalizationProvider db = mock(LocalizationProvider.class);
+
+        this.environment.setLocalizationTo(db);
+        assertThat(this.environment.localization(), sameInstance(db));
+    }
+
+    @Test
+    public void firstLocalizationNotNull() {
+        assertThat(this.environment.localization(), notNullValue());
+    }
+
+    @Test
+    public void testReturnsSameLocalizationEachCall() {
+        final LocalizationProvider db1 = this.environment.localization();
+        final LocalizationProvider db2 = this.environment.localization();
+
+        assertThat(db1, sameInstance(db2));
+    }
+
+    @Test
+    public void testSettingLocalizationToNullMustInstantiateANewLocalization() {
+        final LocalizationProvider oldDB = this.environment.localization();
+
+        this.environment.setLocalizationTo(null);
+
+        assertThat(this.environment.localization(), notNullValue());
+        assertThat(this.environment.localization(), not(sameInstance(oldDB)));
     }
 
     // LocalSeriesRepository ---------------------------------------------------

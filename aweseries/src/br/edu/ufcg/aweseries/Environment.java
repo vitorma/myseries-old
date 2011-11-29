@@ -46,6 +46,7 @@ public class Environment {
     private TheTVDB theTVDB;
     private SeriesProvider seriesProvider;
     private SeriesDatabase localSeriesRepository;
+    private LocalizationProvider localization;
 
     private final String apiKey = "6F2B5A871C96FB05";
 
@@ -139,6 +140,31 @@ public class Environment {
 
     public void setSeriesRepositoryFactoryTo(SeriesRepositoryFactory newSeriesRepositoryFactory) {
         this.seriesRepositoryFactory = newSeriesRepositoryFactory;
+    }
+
+    /**
+     * @return the thetvdb interface for the app.
+     */
+    public LocalizationProvider localization() {
+        if (this.localization == null) {
+            this.localization = this.defaultLocalization();
+        }
+        return this.localization;
+    }
+
+    /**
+     * @return a default thetvdb interface for the production environment
+     */
+    private LocalizationProvider defaultLocalization() {
+        return new LocalizationProvider();
+    }
+
+    /**
+     * Set the environment's thetvdb interface to newLocalization.
+     * If null, a new default thetvdb interface will be instantiated.
+     */
+    public void setLocalizationTo(LocalizationProvider newLocalization) {
+        this.localization = newLocalization;
     }
 
     //TODO: Remove methods below ASAP-----------------------------------------------------------------------------------
