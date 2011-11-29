@@ -63,11 +63,20 @@ public class TheTVDB {
     }
 
     public List<Series> search(String seriesName, String language) {
+
         try {
-            return new SeriesSearchParser(this.streamFactory).parse(seriesName, language);
+            return new SeriesSearchParser(this.streamFactory).parse(seriesName, this.getSupported(language));
         } catch (Exception e) {
             //TODO A better exception handling
             return null;
+        }
+    }
+
+    private String getSupported(String language) {
+        try {
+            return Language.from(language).abbreviation();
+        } catch (Exception e) {
+            return "en";
         }
     }
 
@@ -82,7 +91,7 @@ public class TheTVDB {
 
     public Series getSeries(String seriesId, String language) {
         try {
-            return new SeriesParser(this.streamFactory).parse(seriesId, language);
+            return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
         } catch (Exception e) {
             //TODO A better exception handling
             return null;
@@ -105,7 +114,7 @@ public class TheTVDB {
     public List<Series> getAllSeries(List<String> seriesIds, String language) {
         List<Series> result = new ArrayList<Series>();
         for (String seriesId : seriesIds) {
-            Series series = this.getSeries(seriesId, language);
+            Series series = this.getSeries(seriesId, this.getSupported(language));
             //TODO Return an appropriated exception
             if (series == null) {
                 return null;

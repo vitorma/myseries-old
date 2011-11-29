@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 public class AweseriesSmallWidgetProvider extends AweseriesWidgetProvider {
-    private static int LIMIT = 2;
+    private static int LIMIT = 1;
 
     public AweseriesSmallWidgetProvider() {
         super();
