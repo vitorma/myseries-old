@@ -129,7 +129,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         this.status = status;
-        this.notifyListeners();
     }
 
     public void setAirsDay(String airsDay) {
@@ -138,7 +137,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         this.airsDay = airsDay;
-        this.notifyListeners();
     }
 
     public void setAirsTime(String airsTime) {
@@ -147,7 +145,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         this.airsTime = airsTime;
-        this.notifyListeners();
     }
 
     public void setFirstAired(String firstAired) {
@@ -156,7 +153,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         this.firstAired = firstAired;
-        this.notifyListeners();
     }
 
     public void setRuntime(String runtime) {
@@ -165,7 +161,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         this.runtime = runtime;
-        this.notifyListeners();
     }
 
     public void setNetwork(String network) {
@@ -174,7 +169,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         this.network = network;
-        this.notifyListeners();
     }
 
     public void setOverview(String overview) {
@@ -183,7 +177,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         this.overview = overview;
-        this.notifyListeners();
     }
 
     public void setGenres(String genres) {
@@ -192,7 +185,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         this.genres = genres;
-        this.notifyListeners();
     }
 
     public void setActors(String actors) {
@@ -201,12 +193,10 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         this.actors = actors;
-        this.notifyListeners();
     }
 
     public void setPoster(Poster poster) {
         this.poster = poster;
-        this.notifyListeners();
     }
 
     public void setSeasons(SeasonSet seasons) {
@@ -216,7 +206,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
         seasons.addListener(this);
         this.seasons = seasons;
-        this.notifyListeners();
     }
 
     @Override

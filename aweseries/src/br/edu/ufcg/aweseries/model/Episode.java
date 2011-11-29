@@ -208,14 +208,10 @@ public class Episode {
         }
         
         this.name = name;
-        
-        this.notifyListeners();
     }
 
     public void setFirstAired(Date firstAired) {
         this.firstAired = firstAired;
-        
-        this.notifyListeners();
     }
 
     public void setOverview(String overview) {
@@ -224,8 +220,6 @@ public class Episode {
         }
 
         this.overview = overview;
-        
-        this.notifyListeners();
     }
 
     public void setDirector(String director) {
@@ -234,8 +228,6 @@ public class Episode {
         }
 
         this.director = director;
-        
-        this.notifyListeners();
     }
 
     public void setWriter(String writer) {
@@ -244,8 +236,6 @@ public class Episode {
         }
 
         this.writer = writer;
-        
-        this.notifyListeners();
     }
 
     public void setGuestStars(String guestStars) {
@@ -254,7 +244,6 @@ public class Episode {
         }
 
         this.guestStars = guestStars;
-        this.notifyListeners();
     }
 
     public void setPoster(String poster) {
@@ -263,8 +252,6 @@ public class Episode {
         }
 
         this.poster = poster;
-        
-        this.notifyListeners();
     }
 
     public void markWetherSeen(boolean seen) {
