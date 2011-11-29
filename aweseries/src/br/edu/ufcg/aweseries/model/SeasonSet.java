@@ -116,7 +116,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     public List<Episode> getAllEpisodes() {
         List<Episode> episodes = new ArrayList<Episode>();
 
-        for (Season s : this) {
+        for (Season s : this.map.values()) {
             episodes.addAll(s.getEpisodes());
         }
 
@@ -126,7 +126,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     public List<Season> toList() {
         final List<Season> list = new ArrayList<Season>();
 
-        for (Season season : this) {
+        for (Season season : this.map.values()) {
             list.add(season);
         }
 
@@ -146,7 +146,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     }
 
     public Episode getNextEpisodeToSee() {
-        for (final Season s : this) {
+        for (final Season s : this.map.values()) {
             final Episode next = s.getNextEpisodeToSee();
             if (next != null) return next;
         }
@@ -155,7 +155,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     }
 
     public Episode getNextEpisodeToAir() {
-        for (final Season s : this) {
+        for (final Season s : this.map.values()) {
             final Episode next = s.getNextEpisodeToAir();
             if (next != null) return next;
         }
@@ -269,5 +269,23 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         for (DomainObjectListener<SeasonSet> listener : this.listeners) {
             listener.onUpdate(this);            
         }        
+    }
+
+    public void mergeWith(SeasonSet other) {
+        if (other == null) {
+            throw new IllegalArgumentException("other seasonSet to merge should not be null");
+        }
+
+        for (Season s : this.map.values()) {
+            if (other.hasSeason(s.getNumber())) {
+                s.mergeWith(other.getSeason(s.getNumber()));
+            }
+        }
+
+        for (Season s : other.map.values()) {
+            if (!this.hasSeason(s.getNumber())) {
+                this.addAllEpisodes(s.getEpisodes());
+            }
+        }
     }
 }

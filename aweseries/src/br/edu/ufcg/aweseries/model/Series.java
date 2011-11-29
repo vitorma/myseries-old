@@ -272,13 +272,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
             throw new IllegalArgumentException(); //TODO: create a custom Exception
         }
 
-        this.mergeAlreadyExistentSeasonsFrom(other);
-        this.addNonexistentYetSeasonsFrom(other);
-
-        this.notifyListeners();
-    }
-
-    private void mergeAlreadyExistentSeasonsFrom(Series other) {
         this.name = other.name;
         this.status = other.status;
         this.airsDay = other.airsDay;
@@ -290,15 +283,9 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.genres = other.genres;
         this.actors = other.actors;
         this.poster = other.poster;
-        this.seasons = other.seasons;
-    }
+        this.seasons.mergeWith(other.seasons);
 
-    private void addNonexistentYetSeasonsFrom(Series other) {
-        for (Season otherSeason : other.seasons) {
-            if (this.seasons.getSeason(otherSeason.getNumber()) == null) {
-                this.seasons.addAllEpisodes(otherSeason.getEpisodes());
-            }
-        }
+        this.notifyListeners();
     }
 
     private void notifyListeners() {
