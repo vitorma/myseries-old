@@ -58,7 +58,7 @@ public class SeriesParser {
     }
 
     //TODO Refactoring: extract definition of listeners, maybe creating inner types
-    public Series parse(String seriesId) {
+    public Series parse(String seriesId, String language) {
         if (seriesId == null) {
             throw new IllegalArgumentException("seriesId should not be null");
         }
