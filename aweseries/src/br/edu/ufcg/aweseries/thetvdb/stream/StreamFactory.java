@@ -36,8 +36,12 @@ public interface StreamFactory {
     public InputStream streamForBaseSeries(String seriesId);
 
     public InputStream streamForFullSeries(String seriesId);
+    
+    public InputStream streamForFullSeries(String seriesId, String language);
 
     public InputStream streamForSeriesPosterAt(String resourcePath);
 
     public InputStream streamForSeriesSearch(String seriesName);
+
+    public InputStream streamForSeriesSearch(String seriesName, String language);
 }
