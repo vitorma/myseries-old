@@ -54,7 +54,7 @@ public class Episode {
 
     private boolean seen;
 
-    private Set<DomainEntityListener<Episode>> listeners;
+    private Set<DomainObjectListener<Episode>> listeners;
 
     public Episode(String id, String seriesId, int number, int seasonNumber) {
         if (id == null || Strings.isBlank(id)) {
@@ -73,7 +73,7 @@ public class Episode {
             throw new IllegalArgumentException("invalid season number for episode");
         }
 
-        this.listeners = new HashSet<DomainEntityListener<Episode>>();
+        this.listeners = new HashSet<DomainObjectListener<Episode>>();
 
         this.id = id;
         this.seriesId = seriesId;
@@ -302,16 +302,16 @@ public class Episode {
     }
     
     private void notifyListeners() {
-        for (final DomainEntityListener<Episode> listener : this.listeners) {
+        for (final DomainObjectListener<Episode> listener : this.listeners) {
             listener.onUpdate(this);            
         }
     }
 
-    public boolean addListener(DomainEntityListener<Episode> listener) {
+    public boolean addListener(DomainObjectListener<Episode> listener) {
         return this.listeners.add(listener);
     }
     
-    public boolean removeListener(DomainEntityListener<Episode> listener) {
+    public boolean removeListener(DomainObjectListener<Episode> listener) {
         return this.listeners.remove(listener);
     }
     

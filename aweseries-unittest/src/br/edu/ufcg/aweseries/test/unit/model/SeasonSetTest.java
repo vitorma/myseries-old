@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 import org.mockito.Mockito;
 
-import br.edu.ufcg.aweseries.model.DomainEntityListener;
+import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.SeasonSet;
@@ -108,8 +108,8 @@ public class SeasonSetTest {
     public void testAddListener() {
         SeasonSet seasonSet = new SeasonSet("1");
         
-        DomainEntityListener<SeasonSet> listener1 = Mockito.mock(DomainEntityListener.class);
-        DomainEntityListener<SeasonSet> listener2 = Mockito.mock(DomainEntityListener.class);
+        DomainObjectListener<SeasonSet> listener1 = Mockito.mock(DomainObjectListener.class);
+        DomainObjectListener<SeasonSet> listener2 = Mockito.mock(DomainObjectListener.class);
 
         Mockito.verify(listener1, Mockito.times(0)).onUpdate(this.seasons);
         Mockito.verify(listener2, Mockito.times(0)).onUpdate(this.seasons);       
@@ -146,8 +146,8 @@ public class SeasonSetTest {
     public void testRemoveListener() {
         SeasonSet seasonSet = new SeasonSet("1");
         
-        DomainEntityListener<SeasonSet> listener1 = Mockito.mock(DomainEntityListener.class);
-        DomainEntityListener<SeasonSet> listener2 = Mockito.mock(DomainEntityListener.class);
+        DomainObjectListener<SeasonSet> listener1 = Mockito.mock(DomainObjectListener.class);
+        DomainObjectListener<SeasonSet> listener2 = Mockito.mock(DomainObjectListener.class);
 
         Mockito.verify(listener1, Mockito.times(0)).onUpdate(this.seasons);
         Mockito.verify(listener2, Mockito.times(0)).onUpdate(this.seasons);       

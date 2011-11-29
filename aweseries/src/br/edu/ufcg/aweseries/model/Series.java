@@ -34,7 +34,7 @@ import java.util.Set;
 
 import br.edu.ufcg.aweseries.util.Strings;
 
-public class Series implements DomainEntityListener<SeasonSet> {
+public class Series implements DomainObjectListener<SeasonSet> {
     private String id;
     private String name;
     private String status;
@@ -48,7 +48,7 @@ public class Series implements DomainEntityListener<SeasonSet> {
     private String actors;
     private Poster poster;
     private SeasonSet seasons;
-    private Set<DomainEntityListener<Series>> listeners;
+    private Set<DomainObjectListener<Series>> listeners;
 
     public Series(String id, String name) {
         if (id == null || Strings.isBlank(id)) {
@@ -62,7 +62,7 @@ public class Series implements DomainEntityListener<SeasonSet> {
         this.id = id;
         this.name = name;
         
-        this.listeners = new HashSet<DomainEntityListener<Series>>();
+        this.listeners = new HashSet<DomainObjectListener<Series>>();
     }
 
     public String getId() {
@@ -256,12 +256,12 @@ public class Series implements DomainEntityListener<SeasonSet> {
     }
 
     //TODO Test
-    public boolean addListener(DomainEntityListener<Series> listener) {
+    public boolean addListener(DomainObjectListener<Series> listener) {
         return this.listeners.add(listener);
     }
 
     //TODO Test
-    public boolean removeListener(DomainEntityListener<Series> listener) {
+    public boolean removeListener(DomainObjectListener<Series> listener) {
         return this.listeners.remove(listener);
     }
     
@@ -289,7 +289,7 @@ public class Series implements DomainEntityListener<SeasonSet> {
     }
 
     private void notifyListeners() {
-        for (DomainEntityListener<Series> listener : this.listeners) {
+        for (DomainObjectListener<Series> listener : this.listeners) {
             listener.onUpdate(this);            
         }        
     }

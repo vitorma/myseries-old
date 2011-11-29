@@ -41,12 +41,12 @@ import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.util.Strings;
 
-public class Season implements Iterable<Episode>, DomainEntityListener<Episode> {
+public class Season implements Iterable<Episode>, DomainObjectListener<Episode> {
 
     private int number;
     private String seriesId;
     private TreeMap<Integer, Episode> map;
-    private Set<DomainEntityListener<Season>> listeners;
+    private Set<DomainObjectListener<Season>> listeners;
     private Episode nextEpisodeToSee;
     
 
@@ -62,7 +62,7 @@ public class Season implements Iterable<Episode>, DomainEntityListener<Episode> 
         this.seriesId = seriesId;
         this.number = number;
         this.map = new TreeMap<Integer, Episode>();
-        this.listeners = new HashSet<DomainEntityListener<Season>>();
+        this.listeners = new HashSet<DomainObjectListener<Season>>();
     }
 
     public String getSeriesId() {
@@ -295,16 +295,16 @@ public class Season implements Iterable<Episode>, DomainEntityListener<Episode> 
         this.nextEpisodeToSee = nextEpisodeToSee;
     }
 
-    public boolean addListener(DomainEntityListener<Season> listener) {
+    public boolean addListener(DomainObjectListener<Season> listener) {
         return this.listeners.add(listener);        
     }
 
-    public boolean removeListener(DomainEntityListener<Season> listener) {
+    public boolean removeListener(DomainObjectListener<Season> listener) {
         return this.listeners.remove(listener);        
     }
     
     private void notifyListeners() {
-        for (final DomainEntityListener<Season> listener : this.listeners) {
+        for (final DomainObjectListener<Season> listener : this.listeners) {
             listener.onUpdate(this);
         }
     }

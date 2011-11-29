@@ -48,14 +48,14 @@ import android.widget.Toast;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainEntityListener;
+import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 
 /**
  * Displays a series short review.
  */
-public class SeriesDetailsActivity extends Activity implements DomainEntityListener<Series> {
+public class SeriesDetailsActivity extends Activity implements DomainObjectListener<Series> {
     private String seriesId;
     private boolean loaded = false;
     private ProgressDialog dialog;

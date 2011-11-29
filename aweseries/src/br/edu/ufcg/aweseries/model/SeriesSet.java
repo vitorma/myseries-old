@@ -32,14 +32,18 @@ package br.edu.ufcg.aweseries.model;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class SeriesSet implements Iterable<Series> {
+    private Set<DomainObjectListener<SeriesSet>> listeners;
     private Map<String, Series> map;
 
     public SeriesSet() {
         this.map = new HashMap<String, Series>();
+        this.listeners = new HashSet<DomainObjectListener<SeriesSet>>(); 
     }
 
     public int size() {
@@ -106,4 +110,19 @@ public class SeriesSet implements Iterable<Series> {
     public Iterator<Series> iterator() {
         return this.map.values().iterator();
     }
+    
+    public boolean addListener(DomainObjectListener<SeriesSet> listener) {
+        return this.listeners.add(listener);
+    }
+    
+    public boolean removeListener(DomainObjectListener<SeriesSet> listener) {
+        return this.listeners.remove(listener);
+    }
+    
+    public void notifyListeners() {
+        for (DomainObjectListener<SeriesSet> listener : this.listeners) {
+            listener.onUpdate(this);            
+        }
+    }
+
 }

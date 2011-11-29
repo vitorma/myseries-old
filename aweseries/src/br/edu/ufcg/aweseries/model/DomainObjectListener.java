@@ -29,7 +29,7 @@
 
 package br.edu.ufcg.aweseries.model;
 
-public interface DomainEntityListener<T> {
+public interface DomainObjectListener<T> {
 
     void onUpdate(T entity);
 }

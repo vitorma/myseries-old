@@ -32,7 +32,6 @@ package br.edu.ufcg.aweseries.test.unit.model;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-import java.security.InvalidParameterException;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -41,14 +40,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import br.edu.ufcg.aweseries.model.DomainEntityListener;
+import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 
 public class EpisodeTest {
 
     private Episode episode1;
     private Episode episode2;
-    private DomainEntityListener<Episode> episode1Listener;
+    private DomainObjectListener<Episode> episode1Listener;
     private Episode episode1Copy;
     private static final String validEpisodeId = "1234";
     private static final String anotherValidEpisodeId = "1235";
@@ -79,7 +78,7 @@ public class EpisodeTest {
                 validSeasonNumber);
         this.episode2 = new Episode(anotherValidEpisodeId, validSeriesId, validEpisodeNumber,
                 validSeasonNumber);
-        this.episode1Listener = Mockito.mock(DomainEntityListener.class);
+        this.episode1Listener = Mockito.mock(DomainObjectListener.class);
         this.episode1.addListener(this.episode1Listener);
     }
 
@@ -235,7 +234,7 @@ public class EpisodeTest {
 
     }
 
-    @Test(expected = InvalidParameterException.class)
+    @Test(expected = IllegalArgumentException.class)
     public final void testMergeWithNull() {
         this.episode1.mergeWith(null);
     }

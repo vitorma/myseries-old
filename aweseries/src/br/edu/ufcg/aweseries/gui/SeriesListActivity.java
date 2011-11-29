@@ -58,7 +58,7 @@ import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.FollowingSeriesListener;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainEntityListener;
+import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 
@@ -81,7 +81,7 @@ public class SeriesListActivity extends ListActivity {
     //Series item view adapter------------------------------------------------------------------------------------------
 
     private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements
-            DomainEntityListener<Series>, FollowingSeriesListener {
+            DomainObjectListener<Series>, FollowingSeriesListener {
 
         public SeriesItemViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);

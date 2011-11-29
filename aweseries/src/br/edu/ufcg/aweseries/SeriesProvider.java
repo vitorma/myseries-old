@@ -103,12 +103,14 @@ public class SeriesProvider {
         new UpdateSeriesTask().execute();
     }
 
-    private class UpdateSeriesTask extends AsyncTask<Void, Series, Void> {
-        private List<Series> seriesToUpdate;
+    private class UpdateSeriesTask extends AsyncTask<Void, Void, Boolean> {
+        private List<String> seriesToUpdate;
 
         public UpdateSeriesTask() {
-            //TODO: getUpdatedSeries
-            this.seriesToUpdate = new ArrayList<Series>(seriesRepository.getAll());
+            
+            for (Series series : seriesRepository.getAll()) {
+                this.seriesToUpdate.add(series.getId());
+            }
         }
 
         @Override
@@ -117,42 +119,30 @@ public class SeriesProvider {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            Series theirSeries;
-
-            for (Series ourSeries : this.seriesToUpdate) {
-                theirSeries = theTVDB.getSeries(ourSeries.getId());
+        protected Boolean doInBackground(Void... params) {
+            
+            List<Series> upToDateSeries = theTVDB.getAllSeries(this.seriesToUpdate);
+            
+            for (Series theirSeries : upToDateSeries) {
                 
-                if (theirSeries != null) {
-                    mergeSeriesData(theirSeries, ourSeries);
+                if (theirSeries == null) {
+                    return false;
                 }
                 
-                onProgressUpdate(theirSeries);
+                Series ourSeries = getSeries(theirSeries.getId());
+                
+                ourSeries.mergeWith(theirSeries);
+                seriesRepository.update(ourSeries);
             }
 
-            return null;
-        }
-
-        private void mergeSeriesData(Series theirs, Series ours) {
-            for (Season ourSeason : ours.getSeasons()) {
-                Season theirSeason = theirs.getSeasons().getSeason(ourSeason.getNumber());
-                if (theirSeason != null) {
-                    ourSeason.mergeWith(theirSeason);
-                }
-            }
+            return true;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Boolean result) {
             lastUpdate = (new Date()).getTime();
             //Notify listeners of update end
         }
-        
-        @Override
-        protected void onProgressUpdate(Series... values) {
-            //Notify listener of Series update
-        }
-
     }
 
     public void follow(Series series) {

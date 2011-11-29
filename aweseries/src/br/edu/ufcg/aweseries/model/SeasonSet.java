@@ -40,10 +40,10 @@ import java.util.TreeMap;
 import android.util.Log;
 import br.edu.ufcg.aweseries.util.Strings;
 
-public class SeasonSet implements Iterable<Season>, DomainEntityListener<Season> {
+public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season> {
     private TreeMap<Integer, Season> map;
     private String seriesId;
-    private Set<DomainEntityListener<SeasonSet>> listeners;
+    private Set<DomainObjectListener<SeasonSet>> listeners;
 
     public SeasonSet(String seriesId) {
         if ((seriesId == null) || Strings.isBlank(seriesId)) {
@@ -52,7 +52,7 @@ public class SeasonSet implements Iterable<Season>, DomainEntityListener<Season>
 
         this.seriesId = seriesId;
         this.map = new TreeMap<Integer, Season>();
-        this.listeners = new HashSet<DomainEntityListener<SeasonSet>>();
+        this.listeners = new HashSet<DomainObjectListener<SeasonSet>>();
     }
 
     public String getSeriesId() {
@@ -257,16 +257,16 @@ public class SeasonSet implements Iterable<Season>, DomainEntityListener<Season>
         this.notifyListeners();
     }
     
-    public boolean addListener(DomainEntityListener<SeasonSet> listener) {
+    public boolean addListener(DomainObjectListener<SeasonSet> listener) {
         return this.listeners.add(listener);
     }
     
-    public boolean removeListener(DomainEntityListener<SeasonSet> listener) {
+    public boolean removeListener(DomainObjectListener<SeasonSet> listener) {
         return this.listeners.remove(listener);
     }
     
     private void notifyListeners() {
-        for (DomainEntityListener<SeasonSet> listener : this.listeners) {
+        for (DomainObjectListener<SeasonSet> listener : this.listeners) {
             listener.onUpdate(this);            
         }        
     }

@@ -47,7 +47,7 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainEntityListener;
+import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 
@@ -117,7 +117,7 @@ public class SeasonListActivity extends ListActivity {
 
     //XXX: Use TextViewAdapter instead.
     private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements
-            DomainEntityListener<Season> {
+            DomainObjectListener<Season> {
         public SeasonItemViewAdapter(Context context, int seasonsItemResourceId,
                 List<Season> objects) {
             super(context, seasonsItemResourceId, objects);

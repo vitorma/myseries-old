@@ -40,7 +40,7 @@ import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 import org.mockito.Mockito;
 
-import br.edu.ufcg.aweseries.model.DomainEntityListener;
+import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 
@@ -144,48 +144,48 @@ public class SeasonTest {
     
     @Test
     public final void testNotifyListeners() {
-        java.util.List<DomainEntityListener<Season>> listeners =
-                new ArrayList<DomainEntityListener<Season>>();
+        java.util.List<DomainObjectListener<Season>> listeners =
+                new ArrayList<DomainObjectListener<Season>>();
 
         for (int i = 0; i < 10; ++i) {
-            DomainEntityListener<Season> listener = Mockito.mock(DomainEntityListener.class);
+            DomainObjectListener<Season> listener = Mockito.mock(DomainObjectListener.class);
             listeners.add(listener);
             this.season.addListener(listener);
         }
         
         this.episode1.markAsSeen();
         
-        for (DomainEntityListener<Season> listener : listeners) {
+        for (DomainObjectListener<Season> listener : listeners) {
             Mockito.verify(listener, Mockito.times(1)).onUpdate(this.season);
         }
         
         this.episode2.markAsSeen();
 
-        for (DomainEntityListener<Season> listener : listeners) {
+        for (DomainObjectListener<Season> listener : listeners) {
             Mockito.verify(listener, Mockito.times(2)).onUpdate(this.season);
         }
 
         this.episode1.markAsNotSeen();
         
-        for (DomainEntityListener<Season> listener : listeners) {
+        for (DomainObjectListener<Season> listener : listeners) {
             Mockito.verify(listener, Mockito.times(3)).onUpdate(this.season);
         }
         
         this.episode2.markAsNotSeen();
 
-        for (DomainEntityListener<Season> listener : listeners) {
+        for (DomainObjectListener<Season> listener : listeners) {
             Mockito.verify(listener, Mockito.times(3)).onUpdate(this.season);
         }
         
         this.season.markAllAsSeen();
         
-        for (DomainEntityListener<Season> listener : listeners) {
+        for (DomainObjectListener<Season> listener : listeners) {
             Mockito.verify(listener, Mockito.times(7)).onUpdate(this.season);
         }
 
         this.season.markAllAsNotSeen();
         
-        for (DomainEntityListener<Season> listener : listeners) {
+        for (DomainObjectListener<Season> listener : listeners) {
             Mockito.verify(listener, Mockito.times(8)).onUpdate(this.season);
         }
     }
@@ -430,8 +430,8 @@ public class SeasonTest {
     
     @Test
     public final void testAddListener() {
-        DomainEntityListener<Season> listener1 = Mockito.mock(DomainEntityListener.class);
-        DomainEntityListener<Season> listener2 = Mockito.mock(DomainEntityListener.class);
+        DomainObjectListener<Season> listener1 = Mockito.mock(DomainObjectListener.class);
+        DomainObjectListener<Season> listener2 = Mockito.mock(DomainObjectListener.class);
         
         this.season.addListener(listener1);
         
@@ -455,8 +455,8 @@ public class SeasonTest {
     
     @Test
     public final void testRemoveListener() {
-        DomainEntityListener<Season> listener1 = Mockito.mock(DomainEntityListener.class);
-        DomainEntityListener<Season> listener2 = Mockito.mock(DomainEntityListener.class);
+        DomainObjectListener<Season> listener1 = Mockito.mock(DomainObjectListener.class);
+        DomainObjectListener<Season> listener2 = Mockito.mock(DomainObjectListener.class);
         
         Assert.assertTrue(this.season.addListener(listener1));
         Assert.assertTrue(this.season.addListener(listener2));

@@ -47,7 +47,7 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainEntityListener;
+import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
@@ -103,7 +103,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
     //Episode item view adapter-----------------------------------------------------------------------------------------
 
     private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements
-            DomainEntityListener<Episode> {
+            DomainObjectListener<Episode> {
 
         private static final int EPISODE_ITEM_RESOURCE_ID = R.layout.episode_alone_list_item;
 

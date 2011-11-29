@@ -47,7 +47,7 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainEntityListener;
+import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
@@ -72,7 +72,7 @@ public class EpisodeListActivity extends ListActivity {
     //Episode item view adapter-----------------------------------------------------------------------------------------
 
     private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements
-            DomainEntityListener<Episode> {
+            DomainObjectListener<Episode> {
         public EpisodeItemViewAdapter(Context context, int episodeItemResourceId,
                 List<Episode> objects) {
             super(context, episodeItemResourceId, objects);
@@ -226,7 +226,7 @@ public class EpisodeListActivity extends ListActivity {
     }
 
     private void setUpListenerForSeason() {
-        this.season.addListener(new DomainEntityListener<Season>() {
+        this.season.addListener(new DomainObjectListener<Season>() {
             @Override
             public void onUpdate(Season entity) {
                 EpisodeListActivity.this.loadSeasonDataOnView();
