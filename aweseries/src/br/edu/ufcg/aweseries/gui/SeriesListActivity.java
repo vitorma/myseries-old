@@ -70,6 +70,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     private SeriesItemViewAdapter dataAdapter;
     private UpdateNotificationLauncher nLauncher;
     private MenuItem updateMenuItem;
+    private boolean updateMenuItemStatus = true;
 
     public SeriesListActivity() {
         seriesProvider.addListener(this);
@@ -231,6 +232,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.series_list_options_menu, menu);
         this.updateMenuItem = (MenuItem) menu.findItem(R.id.updateMenuItem);
+        this.updateMenuItem.setEnabled(this.updateMenuItemStatus);
         return true;
     }
 
@@ -386,19 +388,33 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     @Override
     public void onUpdateStart() {
         this.nLauncher.launchUpdatingNotification();
-        this.updateMenuItem.setEnabled(false);
+        this.disableUpdateMenuItem();
     }
 
     @Override
     public void onUpdateFailure() {
         this.nLauncher.clearNotification();
         this.nLauncher.launchUpdatingFailureNotification();
-        this.updateMenuItem.setEnabled(true);
+        this.enableUpdateMenuItem();
     }
 
     @Override
     public void onUpdateSuccess() {
         this.nLauncher.clearNotification();
-        this.updateMenuItem.setEnabled(true);
+        this.enableUpdateMenuItem();
+    }
+
+    private void disableUpdateMenuItem() {
+        if (this.updateMenuItem != null) {
+            this.updateMenuItem.setEnabled(false);
+        }
+        this.updateMenuItemStatus  = false;
+    }
+
+    private void enableUpdateMenuItem() {
+        if (this.updateMenuItem != null) {
+            this.updateMenuItem.setEnabled(true);
+        }
+        this.updateMenuItemStatus  = true;
     }
 }

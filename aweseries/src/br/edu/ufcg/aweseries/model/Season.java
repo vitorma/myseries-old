@@ -112,7 +112,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
 
         return null;
     }
-    
+
     public Episode getNextEpisodeToSee() {
         return this.nextEpisodeToSee;
     }
@@ -292,15 +292,11 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
     public void onUpdate(Episode episode) {
         Episode nextEpisodeToSee = findNextEpisodeToSee();
         
-        if (nextEpisodeToSee == this.nextEpisodeToSee) {
-            return;
-        }
-        
         if (nextEpisodeToSee == null || !nextEpisodeToSee.equals(this.nextEpisodeToSee)) {
-            this.notifyListeners();
+            this.nextEpisodeToSee = nextEpisodeToSee;
         }
-                
-        this.nextEpisodeToSee = nextEpisodeToSee;
+
+        this.notifyListeners();
     }
 
     public boolean addListener(DomainObjectListener<Season> listener) {
