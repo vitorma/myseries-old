@@ -33,6 +33,7 @@
     <string name="no_episode_aired">Ningún episodio liberado</string>
     <string name="no_episodes">Ningún episodio</string>
     <string name="no_items_to_list">La lista está vacía.</string>
+    <string name="no_results_found_for_criteria">No hay resultados para este criterio.</string>
     <string name="no_series_followed">No hay series seguidas.</string>
     <string formatted="false" name="now_you_follow_series">Ahora sigues %s.</string>
     <string name="overview">Descripción</string>

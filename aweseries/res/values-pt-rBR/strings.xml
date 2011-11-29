@@ -33,6 +33,7 @@
     <string name="no_episode_aired">nenhum episódio lançado</string>
     <string name="no_episodes">nenhum episódio</string>
     <string name="no_items_to_list">Nenhum item na lista.</string>
+    <string name="no_results_found_for_criteria">Nenhum resultado para esse critério de busca.</string>
     <string name="no_series_followed">Você ainda não acompanha nenhuma série.</string>
     <string formatted="false" name="now_you_follow_series">Agora você acompanha %s.</string>
     <string name="overview">Visão geral</string>
