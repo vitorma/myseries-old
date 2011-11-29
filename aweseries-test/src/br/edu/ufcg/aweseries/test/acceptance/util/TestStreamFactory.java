@@ -96,4 +96,16 @@ public class TestStreamFactory implements StreamFactory {
             throw new IllegalArgumentException(parameterName + " should not be blank");
         }
     }
+
+	@Override
+	public InputStream streamForFullSeries(String seriesId, String language) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InputStream streamForSeriesSearch(String seriesName, String language) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -198,6 +198,19 @@ public class SeriesParserTest extends TestCase {
         public InputStream streamForSeriesPosterAt(String resourcePath) {
             return new ByteArrayInputStream(SampleBitmap.pixelBytes);
         }
+
+		@Override
+		public InputStream streamForFullSeries(String seriesId, String language) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public InputStream streamForSeriesSearch(String seriesName,
+				String language) {
+			// TODO Auto-generated method stub
+			return null;
+		}
     }
 
     public void testNullStreamFactoryThrowsException() {

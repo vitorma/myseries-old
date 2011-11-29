@@ -131,6 +131,18 @@ public abstract class SampleSeries {
             public InputStream streamForSeriesPosterAt(String resourcePath) {
                 return posterStream();
             }
+
+			@Override
+			public InputStream streamForFullSeries(String seriesId, String language) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public InputStream streamForSeriesSearch(String seriesName, String language) {
+				// TODO Auto-generated method stub
+				return null;
+			}
         });
 
         return seriesParser.parse(this.id());

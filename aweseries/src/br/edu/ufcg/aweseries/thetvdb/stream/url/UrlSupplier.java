@@ -31,8 +31,10 @@ package br.edu.ufcg.aweseries.thetvdb.stream.url;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import br.edu.ufcg.aweseries.thetvdb.parsing.MirrorsParser;
 import br.edu.ufcg.aweseries.util.Strings;
@@ -103,9 +105,24 @@ public class UrlSupplier {
         return getSeriesUrlBuilder(id).append("/all/").toString();
     }
 
+    public String getFullSeriesUrl(String id, String language) {
+        return getSeriesUrlBuilder(id)
+                .append("/all/").append((language != null ? "&language=" + language : "")).toString();
+    }
+
     public String getSeriesSearchUrl(String name) {
         return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" +
                name.trim().replaceAll("\\s+", "%20");
+    }
+
+    public String getSeriesSearchUrl(String name, String language) {
+        try {
+            return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" +
+                    URLEncoder.encode(name, "UTF-8") +
+                    (language != null ? "&language=" + language : "");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
     }
 
     //POSTERS --------------------------------------------------------------------------------------
