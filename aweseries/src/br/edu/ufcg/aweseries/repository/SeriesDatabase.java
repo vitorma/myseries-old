@@ -30,6 +30,7 @@
 package br.edu.ufcg.aweseries.repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -157,6 +158,19 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         db.close();
     }
 
+    public void updateAll(Collection<Series> seriesCollection) {
+        if (seriesCollection == null) {
+            throw new IllegalArgumentException("seriesCollection should not be null");
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (Series s : seriesCollection) {
+            db.update("Series", this.contentValuesBy(s), "id=?", new String[] {s.getId()});
+            this.updateAllEpisodesOf(s, db);
+        }
+        db.close();
+    }
+
     @Override
     public void delete(Series series) {
         if (series == null) {
@@ -250,17 +264,6 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         db.close();
     }
 
-    public void updateAll(List<Episode> episodes) {
-        if (episodes == null) {
-            throw new IllegalArgumentException("episodes should not be null");
-        }
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        for (Episode e : episodes) {
-            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.getId()});
-        }
-        db.close();
-    }
 
     public Episode getEpisode(String episodeId) {
         if (episodeId == null) {
@@ -290,6 +293,12 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         }
         c.close();
         return allEpisodes;
+    }
+
+    private void updateAllEpisodesOf(Series s, SQLiteDatabase db) {
+        for (Episode e : s.getSeasons().getAllEpisodes()) {
+            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.getId()});
+        }
     }
 
     private ContentValues contentValuesBy(Series s) {

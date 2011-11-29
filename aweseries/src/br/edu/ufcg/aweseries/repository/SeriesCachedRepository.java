@@ -86,6 +86,22 @@ public class SeriesCachedRepository implements SeriesRepository {
     }
 
     @Override
+    public void updateAll(Collection<Series> seriesCollection) {
+        this.seriesSet.clear();
+        this.seriesSet.addAll(seriesCollection);
+        this.updateAllSeriesInSourceRepository(seriesCollection);
+    }
+
+    private Runnable updateAllSeriesInSourceRepository(final Collection<Series> seriesCollection) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                SeriesCachedRepository.this.sourceRepository.updateAll(seriesCollection);
+            }
+        };
+    }
+
+    @Override
     public void delete(Series series) {
         this.seriesSet.remove(series);
         this.threadExecutor.execute(this.deleteSeriesFromSourceRepository(series));

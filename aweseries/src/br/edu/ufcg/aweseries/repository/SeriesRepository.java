@@ -35,17 +35,19 @@ import br.edu.ufcg.aweseries.model.Series;
 
 public interface SeriesRepository {
 
-    public abstract void insert(Series series);
+    public void insert(Series series);
 
-    public abstract void update(Series series);
+    public void update(Series series);
 
-    public abstract void delete(Series series);
+    public void updateAll(Collection<Series> seriesCollection); 
 
-    public abstract void clear();
+    public void delete(Series series);
 
-    public abstract boolean contains(Series series);
+    public void clear();
 
-    public abstract Series get(String id);
+    public boolean contains(Series series);
 
-    public abstract Collection<Series> getAll();
+    public Series get(String id);
+
+    public Collection<Series> getAll();
 }
