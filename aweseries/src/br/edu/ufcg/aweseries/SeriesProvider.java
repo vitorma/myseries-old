@@ -132,12 +132,15 @@ public class SeriesProvider {
                 return;
             }
 
+            List<Series> allOurSeries = new ArrayList<Series>();
+
             for (final Series theirSeries : upToDateSeries) {
                 final Series ourSeries = SeriesProvider.this.getSeries(theirSeries.getId());
                 ourSeries.mergeWith(theirSeries);
+                allOurSeries.add(ourSeries);
             }
-            
-            SeriesProvider.this.seriesRepository.updateAll(upToDateSeries);
+
+            SeriesProvider.this.seriesRepository.updateAll(allOurSeries);
 
             SeriesProvider.this.notifyListenersOfUpdateSuccess();
             Log.d("Update", "Update successful.");
