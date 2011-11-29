@@ -121,6 +121,10 @@ public class SeasonListActivity extends ListActivity {
         public SeasonItemViewAdapter(Context context, int seasonsItemResourceId,
                 List<Season> objects) {
             super(context, seasonsItemResourceId, objects);
+
+            for (Season s : objects) {
+                s.addListener(this);
+            }
         }
 
         @Override
@@ -128,7 +132,6 @@ public class SeasonListActivity extends ListActivity {
             View itemView = itemViewFrom(convertView);
 
             Season season = getItem(position);
-            season.addListener(this);
 
             this.showSeasonDataOn(season, itemView);
             this.setUpSeenSeasonCheckBoxListenerFor(season, itemView);

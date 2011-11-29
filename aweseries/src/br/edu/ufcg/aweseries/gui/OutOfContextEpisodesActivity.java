@@ -111,6 +111,10 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
 
         public EpisodeItemViewAdapter(Context context, List<Episode> objects) {
             super(context, EPISODE_ITEM_RESOURCE_ID, objects);
+
+            for (Episode e : objects) {
+                e.addListener(this);
+            }
         }
 
         @Override
@@ -121,9 +125,6 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             final Episode episode = this.getItem(position);
             final Series series = this.SERIES_PROVIDER.getSeries(episode.getSeriesId());
             final Season season = series.getSeasons().getSeason(episode.getSeasonNumber());
-
-            // listening to episode updates
-            episode.addListener(this);
 
             this.showData(episode, season, series, itemView);
             this.setUpSeenEpisodeCheckBoxListener(episode, itemView);

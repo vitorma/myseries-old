@@ -76,6 +76,10 @@ public class EpisodeListActivity extends ListActivity {
         public EpisodeItemViewAdapter(Context context, int episodeItemResourceId,
                 List<Episode> objects) {
             super(context, episodeItemResourceId, objects);
+            
+            for (Episode e : objects) {
+                e.addListener(this);
+            }
         }
 
         @Override
@@ -83,7 +87,6 @@ public class EpisodeListActivity extends ListActivity {
             View itemView = this.itemViewFrom(convertView);
 
             Episode episode = this.getItem(position);
-            episode.addListener(this);
 
             this.showEpisodesDataOn(episode, itemView);
             this.setUpSeenEpisodeCheckBoxFor(episode, itemView);

@@ -169,12 +169,14 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
         @Override
         public void onFollowing(Series followedSeries) {
+            followedSeries.addListener(this);
             this.add(followedSeries);
             this.sort(comparator);
         }
 
         @Override
         public void onUnfollowing(Series unfollowedSeries) {
+            unfollowedSeries.removeListener(this);
             this.remove(unfollowedSeries);
         }
     }
