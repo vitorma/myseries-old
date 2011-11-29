@@ -23,6 +23,10 @@ public enum Language {
     KO,
     EN,
     SV,
-    NO
+    NO;
+
+    public static Language from(String language) {
+        return valueOf(language.toUpperCase());
+    }
 }
 
