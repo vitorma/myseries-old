@@ -89,7 +89,7 @@ public class SeriesCachedRepository implements SeriesRepository {
     public void updateAll(Collection<Series> seriesCollection) {
         this.seriesSet.clear();
         this.seriesSet.addAll(seriesCollection);
-        this.updateAllSeriesInSourceRepository(seriesCollection);
+        this.threadExecutor.execute(this.updateAllSeriesInSourceRepository(seriesCollection));
     }
 
     private Runnable updateAllSeriesInSourceRepository(final Collection<Series> seriesCollection) {

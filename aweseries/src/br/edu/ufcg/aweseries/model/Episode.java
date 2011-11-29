@@ -315,7 +315,7 @@ public class Episode {
         this.writer = other.writer;
         this.guestStars = other.guestStars;
         this.poster = other.poster;
-        
+
         this.notifyListeners();
     }
 }

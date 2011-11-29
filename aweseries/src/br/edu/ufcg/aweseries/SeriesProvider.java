@@ -60,7 +60,6 @@ public class SeriesProvider {
     private final SeriesRepository seriesRepository;
     private final Set<FollowingSeriesListener> followingSeriesListeners;
     private final Set<UpdateListener> updateListeners;
-    private long lastUpdate;
 
     public static SeriesProvider newInstance(TheTVDB theTVDB,
             SeriesRepositoryFactory seriesRepositoryFactory) {
@@ -140,7 +139,6 @@ public class SeriesProvider {
             
             SeriesProvider.this.seriesRepository.updateAll(upToDateSeries);
 
-            SeriesProvider.this.lastUpdate = (new Date()).getTime();
             SeriesProvider.this.notifyListenersOfUpdateSuccess();
             Log.d("Update", "Update successful.");
 
