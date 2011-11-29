@@ -266,26 +266,33 @@ public class Series implements DomainObjectListener<SeasonSet> {
     }
     
     //TODO: Test me
+    //      Test whether other has a different seriesId than mine (its)
     public void mergeWith(Series other) {
         if (other == null) {
             throw new IllegalArgumentException(); //TODO: create a custom Exception
         }
-        
+
+        this.mergeAlreadyExistentSeasonsFrom(other);
+        this.addNonexistentYetSeasonsFrom(other);
+
+        this.notifyListeners();
+    }
+
+    private void mergeAlreadyExistentSeasonsFrom(Series other) {
         for (Season season : this.seasons) {
             Season otherSeason = other.seasons.getSeason(season.getNumber());
             if (otherSeason != null) {
                 season.mergeWith(otherSeason);
             }
         }
-        
+    }
+
+    private void addNonexistentYetSeasonsFrom(Series other) {
         for (Season otherSeason : other.seasons) {
             if (this.seasons.getSeason(otherSeason.getNumber()) == null) {
                 this.seasons.addAllEpisodes(otherSeason.getEpisodes());
             }
         }
-        
-        this.notifyListeners();
-        
     }
 
     private void notifyListeners() {
