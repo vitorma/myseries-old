@@ -48,7 +48,7 @@ public class Environment {
     private SeriesDatabase localSeriesRepository;
     private LocalizationProvider localization;
 
-    private final String apiKey = "6F2B5A871C96FB05";
+    private static final String apiKey = "6F2B5A871C96FB05";
 
     /**
      * If you know what you are doing, use this method to instantiate an

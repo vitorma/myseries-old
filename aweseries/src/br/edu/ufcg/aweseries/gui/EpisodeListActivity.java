@@ -189,7 +189,16 @@ public class EpisodeListActivity extends ListActivity {
         this.isSeasonViewed.setChecked(this.season.areAllSeen());
 
         TextView seasonName = (TextView) this.findViewById(R.id.seasonTextView);
-        seasonName.setText(this.season.toString());
+        
+        if (this.season.getNumber() == 0) {
+            seasonName.setText(getString(R.string.special_episodes));
+        }
+        
+        else {
+            seasonName.setText(String.format(getString(R.string.season_number_format),
+                    this.season.getNumber()));
+        }
+        
     }
 
     private void setUpEpisodeListAdapter() {

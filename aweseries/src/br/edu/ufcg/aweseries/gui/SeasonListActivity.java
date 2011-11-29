@@ -154,7 +154,15 @@ public class SeasonListActivity extends ListActivity {
 
         private void showSeasonDataOn(Season season, View itemView) {
             TextView name = (TextView) itemView.findViewById(R.id.itemName);
-            name.setText(season.toString());
+
+            if (season.getNumber() == 0) {
+                name.setText(getString(R.string.special_episodes));
+            }
+
+            else {
+                name.setText(String.format(getString(R.string.season_number_format),
+                        season.getNumber()));
+            }
 
             CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
             isSeasonViewed.setChecked(season.areAllSeen());
