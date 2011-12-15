@@ -31,7 +31,6 @@ package br.edu.ufcg.aweseries;
 
 import android.content.Context;
 import br.edu.ufcg.aweseries.repository.DefaultSeriesRepositoryFactory;
-import br.edu.ufcg.aweseries.repository.SeriesDatabase;
 import br.edu.ufcg.aweseries.repository.SeriesRepositoryFactory;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
@@ -45,7 +44,6 @@ public class Environment {
     private SeriesRepositoryFactory seriesRepositoryFactory;
     private TheTVDB theTVDB;
     private SeriesProvider seriesProvider;
-    private SeriesDatabase localSeriesRepository;
     private LocalizationProvider localization;
 
     private static final String apiKey = "6F2B5A871C96FB05";
@@ -116,7 +114,7 @@ public class Environment {
      * @return a default thetvdb interface for the production environment
      */
     private TheTVDB defaultTheTVDB() {
-        return new TheTVDB(this.apiKey);
+        return new TheTVDB(apiKey);
     }
 
     /**
@@ -167,30 +165,4 @@ public class Environment {
         this.localization = newLocalization;
     }
 
-    //TODO: Remove methods below ASAP-----------------------------------------------------------------------------------
-
-    /**
-     * @return the local repository of series.
-     */
-    public SeriesDatabase localSeriesRepository() {
-        if (this.localSeriesRepository == null) {
-            this.localSeriesRepository = this.defaultLocalSeriesRepository();
-        }
-        return this.localSeriesRepository;
-    }
-
-    /**
-     * @return a default thetvdb interface for the production environment
-     */
-    private SeriesDatabase defaultLocalSeriesRepository() {
-        return new SeriesDatabase(this.context());
-    }
-
-    /**
-     * Set the environment's series repository to newSeriesRepository.
-     * If null, a new default series repository will be instantiated.
-     */
-    public void setLocalSeriesRepositoryTo(SeriesDatabase newSeriesRepository) {
-        this.localSeriesRepository = newSeriesRepository;
-    }
 }
