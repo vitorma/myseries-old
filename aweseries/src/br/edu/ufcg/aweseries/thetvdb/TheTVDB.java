@@ -53,6 +53,7 @@ public class TheTVDB {
         this.streamFactory = streamFactory;
     }
 
+    @Deprecated
     public List<Series> search(String seriesName) {
         try {
             return new SeriesSearchParser(this.streamFactory).parse(seriesName, "en");
@@ -80,6 +81,7 @@ public class TheTVDB {
         }
     }
 
+    @Deprecated
     public Series getSeries(String seriesId) {
         try {
             return new SeriesParser(this.streamFactory).parse(seriesId, "en");
@@ -98,6 +100,7 @@ public class TheTVDB {
         }
     }
 
+    @Deprecated
     public List<Series> getAllSeries(List<String> seriesIds) {
         List<Series> result = new ArrayList<Series>();
         for (String seriesId : seriesIds) {
