@@ -154,7 +154,7 @@ public class Environment {
      * @return a default thetvdb interface for the production environment
      */
     private LocalizationProvider defaultLocalization() {
-        return new LocalizationProvider();
+        return new AndroidLocalizationProvider();
     }
 
     /**

@@ -1,10 +1,6 @@
 package br.edu.ufcg.aweseries;
 
-import java.util.Locale;
+public interface LocalizationProvider {
 
-public class LocalizationProvider {
-
-    public String language() {
-        return Locale.getDefault().getLanguage();
-    }
+    public String language();
 }
