@@ -28,6 +28,7 @@ public class TheTVDBDoubleTest extends TestCase {
         super.tearDown();
     }
 
+    // Create Series
     public void testCreateSeriesWithName() {
         this.theTVDB.createSeries(Language.EN, "name : Given Name");
 
@@ -36,7 +37,46 @@ public class TheTVDBDoubleTest extends TestCase {
         assertThat(results, hasItem(namedAs("Given Name")));
     }
 
-    // Localization
+    public void testCreateSeriesWithNullLanguageThrowsIllegalArgumentException() {
+        try {
+            this.theTVDB.createSeries(null);
+            fail("Should have thrown an IllegalArgumentException for null language");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testCreateSeriesWithNullAttributesThrowsIllegalArgumentException() {
+        try {
+            this.theTVDB.createSeries(Language.EN, (String) null);
+            fail("Should have thrown an IllegalArgumentException for null attribute");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    // Search
+    public void testNotSimilarResultsAreNotReturned() {
+        this.theTVDB.createSeries(Language.EN, "name : Given Name");
+        this.theTVDB.createSeries(Language.EN, "name : Another Series");
+
+        Collection<Series> results = this.theTVDB.searchFor("Another", Language.EN);
+
+        assertThat(results, hasItem(namedAs("Another Series")));
+        assertThat(results, not(hasItem(namedAs("Given Name"))));
+    }
+
+    public void testWhatShouldHappenInAUsualLocalizedSearch() {
+        this.theTVDB.createSeries(Language.EN, "name : Given Name");
+        this.theTVDB.createSeries(Language.EN, "name : Another Series");
+        this.theTVDB.createSeries(Language.PT, "name : Cavalo Given nao se Olha os Dentes");
+        this.theTVDB.createSeries(Language.ES, "name : Given lo Malo");
+
+        Collection<Series> results = this.theTVDB.searchFor("Given", Language.PT);
+
+        assertThat(results, hasItem(namedAs("Given Name")));
+        assertThat(results, hasItem(namedAs("Cavalo Given nao se Olha os Dentes")));
+        assertThat(results, not(hasItem(namedAs("Another Series"))));
+        assertThat(results, not(hasItem(namedAs("Given lo Malo"))));
+    }
+
+    // Search Localization
     public void testLocalizedSearchReturnsLocalizedResults() {
         this.theTVDB.createSeries(Language.EN, "name : Given Name");
         this.theTVDB.createSeries(Language.PT, "name : Cavalo Given nao se Olha os Dentes");
@@ -74,28 +114,18 @@ public class TheTVDBDoubleTest extends TestCase {
         assertThat(results, hasItem(namedAs("Given Name")));
     }
 
-    // Search
-    public void testNotSimilarResultsAreNotReturned() {
-        this.theTVDB.createSeries(Language.EN, "name : Given Name");
-        this.theTVDB.createSeries(Language.EN, "name : Another Series");
-
-        Collection<Series> results = this.theTVDB.searchFor("Another", Language.EN);
-
-        assertThat(results, hasItem(namedAs("Another Series")));
-        assertThat(results, not(hasItem(namedAs("Given Name"))));
+    // Search Arguments Validation
+    public void testSearchForNullNameThrowsIllegalArgumentException() {
+        try {
+            this.theTVDB.searchFor(null, Language.EN);
+            fail("Should have thrown an IllegalArgumentException for searching for null name");
+        } catch (IllegalArgumentException e) {}
     }
 
-    public void testWhatShouldHappenInAUsualLocalizedSearch() {
-        this.theTVDB.createSeries(Language.EN, "name : Given Name");
-        this.theTVDB.createSeries(Language.EN, "name : Another Series");
-        this.theTVDB.createSeries(Language.PT, "name : Cavalo Given nao se Olha os Dentes");
-        this.theTVDB.createSeries(Language.ES, "name : Given lo Malo");
-
-        Collection<Series> results = this.theTVDB.searchFor("Given", Language.PT);
-
-        assertThat(results, hasItem(namedAs("Given Name")));
-        assertThat(results, hasItem(namedAs("Cavalo Given nao se Olha os Dentes")));
-        assertThat(results, not(hasItem(namedAs("Another Series"))));
-        assertThat(results, not(hasItem(namedAs("Given lo Malo"))));
+    public void testSearchForNullLanguageThrowsIllegalArgumentException() {
+        try {
+            this.theTVDB.searchFor("Series Name", null);
+            fail("Should have thrown an IllegalArgumentException for searching for null language");
+        } catch (IllegalArgumentException e) {}
     }
 }
