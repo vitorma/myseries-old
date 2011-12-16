@@ -22,22 +22,26 @@ public class TheTVDBDouble implements SeriesSource {
         this.languageSeries = new HashMap<Language, Set<Series>>();
     }
 
-    public void createSeries(Language language, String... attributes) {
-        if (language == null) {
+    public void createSeries(String languageAbbreviation, String... attributes) {
+        if (languageAbbreviation == null) {
             throw new IllegalArgumentException("language should not be null");
         }
+
+        Language language = Language.from(languageAbbreviation);
 
         Series newSeries = this.seriesFactory.createSeries(attributes);
         this.saveSeries(language, newSeries);
     }
 
-    public List<Series> searchFor(String seriesName, Language language) {
+    public List<Series> searchFor(String seriesName, String languageAbbreviation) {
         if (seriesName == null) {
             throw new IllegalArgumentException("seriesName should not be null");
         }
-        if (language == null) {
+        if (languageAbbreviation == null) {
             throw new IllegalArgumentException("language should not be null");
         }
+
+        Language language = Language.from(languageAbbreviation);
 
         List<Series> results = new ArrayList<Series>();
 
