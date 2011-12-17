@@ -34,12 +34,16 @@ public class TheTVDBDoubleTest extends TestCase {
 
     // Create Series
     public void testCreateSeriesWithName() {
-        this.theTVDB.createSeries(LANGUAGE_EN, "name : Given Name");
+        this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name");
 
+        // Fetch
+        Series fetchedSeries = this.theTVDB.fetchSeries("123", LANGUAGE_EN);
+        assertThat(fetchedSeries.getId(), equalTo("123"));
+        assertThat(fetchedSeries, namedAs("Given Name"));
+
+        // Search
         Collection<Series> results = this.theTVDB.searchFor("Given", LANGUAGE_EN);
-
         assertThat(results, hasItem(namedAs("Given Name")));
-        assertThat(results.size(), equalTo(1));
     }
 
     public void testCreateSeriesWithNullLanguageThrowsException() {
@@ -64,6 +68,21 @@ public class TheTVDBDoubleTest extends TestCase {
     }
 
     // Search
+    public void testWhenNoResultsAreFoundReturnsAnEmptyCollection() {
+        Collection<Series> results = this.theTVDB.searchFor("Given", LANGUAGE_EN);
+
+        assertTrue(results.isEmpty());
+    }
+
+    public void testEnglishUsualSearchReturnsTheSameResultOnlyOnce() {
+        this.theTVDB.createSeries(LANGUAGE_EN, "name : Given Name");
+
+        Collection<Series> results = this.theTVDB.searchFor("Given", LANGUAGE_EN);
+
+        assertThat(results, hasItem(namedAs("Given Name")));
+        assertThat(results.size(), equalTo(1));
+    }
+
     public void testNotSimilarResultsAreNotReturned() {
         this.theTVDB.createSeries(LANGUAGE_EN, "name : Given Name");
         this.theTVDB.createSeries(LANGUAGE_EN, "name : Another Series");
@@ -149,6 +168,10 @@ public class TheTVDBDoubleTest extends TestCase {
     }
 
     // Fetch Series
+    public void testFetchNonExistentSeries() {
+        assertThat(this.theTVDB.fetchSeries("123", LANGUAGE_EN), nullValue());
+    }
+
     public void testFetchExistentSeriesInEnglish() {
         this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
 
@@ -179,10 +202,6 @@ public class TheTVDBDoubleTest extends TestCase {
         assertThat(fetched.getId(), equalTo("123"));
         assertThat(fetched.getName(), equalTo("Given Name"));
         assertThat(fetched.getOverview(), equalTo("An example of series"));
-    }
-
-    public void testFetchNonExistentSeries() {
-        assertThat(this.theTVDB.fetchSeries("123", LANGUAGE_EN), nullValue());
     }
 
     // Fetch Series Arguments Validation

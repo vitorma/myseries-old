@@ -64,6 +64,7 @@ public class TheTVDB implements SeriesSource {
         }
     }
 
+    @Override
     public List<Series> searchFor(String seriesName, String language) {
 
         try {
@@ -92,6 +93,7 @@ public class TheTVDB implements SeriesSource {
         }
     }
 
+    @Override
     public Series fetchSeries(String seriesId, String language) {
         try {
             return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
