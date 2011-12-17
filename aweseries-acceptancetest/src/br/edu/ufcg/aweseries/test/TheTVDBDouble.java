@@ -19,7 +19,9 @@ public class TheTVDBDouble implements SeriesSource {
 
     public TheTVDBDouble() {
         this.seriesFactory = new DefaultSeriesFactory();
+
         this.languageSeries = new HashMap<Language, Set<Series>>();
+        this.languageSeries.put(Language.EN, new HashSet<Series>());
     }
 
     public void createSeries(String languageAbbreviation, String... attributes) {
@@ -31,6 +33,13 @@ public class TheTVDBDouble implements SeriesSource {
 
         Series newSeries = this.seriesFactory.createSeries(attributes);
         this.saveSeries(language, newSeries);
+    }
+
+    private void saveSeries(Language language, Series series) {
+        if (!this.languageSeries.containsKey(language)) {
+            this.languageSeries.put(language, new HashSet<Series>());
+        }
+        this.languageSeries.get(language).add(series);
     }
 
     public List<Series> searchFor(String seriesName, String languageAbbreviation) {
@@ -46,7 +55,10 @@ public class TheTVDBDouble implements SeriesSource {
         List<Series> results = new ArrayList<Series>();
 
         results.addAll(this.resultsIn(language, seriesName));
-        results.addAll(this.resultsIn(Language.EN, seriesName));
+
+        if (!language.equals(Language.EN)) {
+            results.addAll(this.resultsIn(Language.EN, seriesName));
+        }
 
         return Collections.unmodifiableList(results);
     }
@@ -76,10 +88,19 @@ public class TheTVDBDouble implements SeriesSource {
         return results;
     }
 
-    private void saveSeries(Language language, Series series) {
-        if (!this.languageSeries.containsKey(language)) {
-            this.languageSeries.put(language, new HashSet<Series>());
+    public Series fetchSeries(String seriesId, String languageAbbreviation) {
+        Language language = Language.from(languageAbbreviation);
+
+        Set<Series> source = this.languageSeries.get((this.languageSeries.containsKey(language))
+                                                     ? language 
+                                                     : Language.EN);
+
+        for (Series series : source) {
+            if (series.getId().equals(seriesId)) {
+                return series;
+            }
         }
-        this.languageSeries.get(language).add(series);
+
+        return null;
     }
 }

@@ -38,6 +38,7 @@ public class TheTVDBDoubleTest extends TestCase {
         Collection<Series> results = this.theTVDB.searchFor("Given", LANGUAGE_EN);
 
         assertThat(results, hasItem(namedAs("Given Name")));
+        assertThat(results.size(), equalTo(1));
     }
 
     public void testCreateSeriesWithNullLanguageThrowsIllegalArgumentException() {
@@ -145,4 +146,43 @@ public class TheTVDBDoubleTest extends TestCase {
             fail("Should have thrown an IllegalArgumentException for unavailable language");
         } catch (IllegalArgumentException e) {}
     }
+
+    // Fetch Series
+    public void testFetchExistentSeriesInEnglish() {
+        this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
+
+        Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_EN);
+
+        assertThat(fetched.getId(), equalTo("123"));
+        assertThat(fetched.getName(), equalTo("Given Name"));
+        assertThat(fetched.getOverview(), equalTo("An example of series"));
+    }
+
+    public void testFetchExistentSeriesFromDifferentLocale() {
+        this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
+        this.theTVDB.createSeries(LANGUAGE_PT, "id : 123", "name : Given Name", "overview : Um exemplo de serie");
+
+        Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_PT);
+
+        assertThat(fetched.getId(), equalTo("123"));
+        assertThat(fetched.getName(), equalTo("Given Name"));
+        assertThat(fetched.getOverview(), equalTo("Um exemplo de serie"));
+    }
+
+    public void testFetchExistentSeriesFromLocaleWhereItDoesNotExistReturnsEnglishVersion() {
+        this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
+        this.theTVDB.createSeries(LANGUAGE_PT, "id : 123", "name : Given Name", "overview : Um exemplo de serie");
+
+        Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_ES);
+
+        assertThat(fetched.getId(), equalTo("123"));
+        assertThat(fetched.getName(), equalTo("Given Name"));
+        assertThat(fetched.getOverview(), equalTo("An example of series"));
+    }
+
+    public void testFetchNonExistentSeries() {
+        assertThat(this.theTVDB.fetchSeries("123", LANGUAGE_EN), nullValue());
+    }
+
+    // Fetch Series Arguments Validation
 }

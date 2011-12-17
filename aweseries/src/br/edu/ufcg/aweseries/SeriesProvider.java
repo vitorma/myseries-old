@@ -84,7 +84,7 @@ public class SeriesProvider {
     }
 
     public Series[] searchSeries(String seriesName) {
-        final List<Series> searchResult = this.theTVDB.search(seriesName, App.environment()
+        final List<Series> searchResult = this.theTVDB.searchFor(seriesName, App.environment()
                 .localization().language());
 
         if (searchResult == null) {

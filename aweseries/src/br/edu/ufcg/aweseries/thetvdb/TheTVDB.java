@@ -32,13 +32,14 @@ package br.edu.ufcg.aweseries.thetvdb;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.edu.ufcg.aweseries.SeriesSource;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesSearchParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.stream.TheTVDBStreamFactory;
 
-public class TheTVDB {
+public class TheTVDB implements SeriesSource {
     private final StreamFactory streamFactory;
 
     public TheTVDB(String apiKey) {
@@ -63,7 +64,7 @@ public class TheTVDB {
         }
     }
 
-    public List<Series> search(String seriesName, String language) {
+    public List<Series> searchFor(String seriesName, String language) {
 
         try {
             return new SeriesSearchParser(this.streamFactory).parse(seriesName, this.getSupported(language));
