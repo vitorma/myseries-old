@@ -163,7 +163,7 @@ public class SeriesProvider {
         protected Void doInBackground(Series... params) {
             final Series seriesToFollow = params[0];
 
-            this.followedSeries = SeriesProvider.this.theTVDB.getSeries(seriesToFollow.getId(), App
+            this.followedSeries = SeriesProvider.this.theTVDB.fetchSeries(seriesToFollow.getId(), App
                     .environment().localization().language());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 

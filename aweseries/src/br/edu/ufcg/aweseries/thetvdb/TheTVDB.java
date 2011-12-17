@@ -92,7 +92,7 @@ public class TheTVDB implements SeriesSource {
         }
     }
 
-    public Series getSeries(String seriesId, String language) {
+    public Series fetchSeries(String seriesId, String language) {
         try {
             return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public class TheTVDB implements SeriesSource {
     public List<Series> getAllSeries(List<String> seriesIds, String language) {
         List<Series> result = new ArrayList<Series>();
         for (String seriesId : seriesIds) {
-            Series series = this.getSeries(seriesId, this.getSupported(language));
+            Series series = this.fetchSeries(seriesId, this.getSupported(language));
             //TODO Return an appropriated exception
             if (series == null) {
                 return null;
