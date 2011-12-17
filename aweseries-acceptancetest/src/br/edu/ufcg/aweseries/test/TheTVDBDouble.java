@@ -89,6 +89,9 @@ public class TheTVDBDouble implements SeriesSource {
     }
 
     public Series fetchSeries(String seriesId, String languageAbbreviation) {
+        if (seriesId == null) {
+            throw new IllegalArgumentException("seriesId should not be null");
+        }
         Language language = Language.from(languageAbbreviation);
 
         Set<Series> source = this.languageSeries.get((this.languageSeries.containsKey(language))

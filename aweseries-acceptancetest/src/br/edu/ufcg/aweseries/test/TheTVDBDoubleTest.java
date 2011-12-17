@@ -15,6 +15,7 @@ public class TheTVDBDoubleTest extends TestCase {
     private static final String LANGUAGE_EN = "en";
     private static final String LANGUAGE_PT = "pt";
     private static final String LANGUAGE_ES = "es";
+    private static final String UNAVAILABLE_LANGUAGE = "zz";
 
     private TheTVDBDouble theTVDB;
 
@@ -41,21 +42,21 @@ public class TheTVDBDoubleTest extends TestCase {
         assertThat(results.size(), equalTo(1));
     }
 
-    public void testCreateSeriesWithNullLanguageThrowsIllegalArgumentException() {
+    public void testCreateSeriesWithNullLanguageThrowsException() {
         try {
             this.theTVDB.createSeries(null);
             fail("Should have thrown an IllegalArgumentException for null language");
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testCreateSeriesWithUnavailableLanguageThrowsIllegalArgumentException() {
+    public void testCreateSeriesWithUnavailableLanguageThrowsException() {
         try {
-            this.theTVDB.createSeries("zz");
+            this.theTVDB.createSeries(UNAVAILABLE_LANGUAGE);
             fail("Should have thrown an IllegalArgumentException for unavailable language");
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testCreateSeriesWithNullAttributesThrowsIllegalArgumentException() {
+    public void testCreateSeriesWithNullAttributesThrowsException() {
         try {
             this.theTVDB.createSeries(LANGUAGE_EN, (String) null);
             fail("Should have thrown an IllegalArgumentException for null attribute");
@@ -126,23 +127,23 @@ public class TheTVDBDoubleTest extends TestCase {
     }
 
     // Search Arguments Validation
-    public void testSearchForNullNameThrowsIllegalArgumentException() {
+    public void testSearchForNullNameThrowsException() {
         try {
             this.theTVDB.searchFor(null, LANGUAGE_EN);
             fail("Should have thrown an IllegalArgumentException for searching for null name");
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testSearchForNullLanguageThrowsIllegalArgumentException() {
+    public void testSearchForNullLanguageThrowsException() {
         try {
             this.theTVDB.searchFor("Series Name", null);
             fail("Should have thrown an IllegalArgumentException for searching for null language");
         } catch (IllegalArgumentException e) {}
     }
     
-    public void testSearchForUnavailableLanguageThrowsIllegalArgumentException() {
+    public void testSearchForUnavailableLanguageThrowsException() {
         try {
-            this.theTVDB.searchFor("Series Name", "zz");
+            this.theTVDB.searchFor("Series Name", UNAVAILABLE_LANGUAGE);
             fail("Should have thrown an IllegalArgumentException for unavailable language");
         } catch (IllegalArgumentException e) {}
     }
@@ -185,4 +186,27 @@ public class TheTVDBDoubleTest extends TestCase {
     }
 
     // Fetch Series Arguments Validation
+    public void testFetchNullSeriesIdThrowsException() {
+        try {
+            this.theTVDB.fetchSeries(null, LANGUAGE_EN);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testFetchNullLanguageThrowsException() {
+        try {
+            this.theTVDB.fetchSeries("123", null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testFetchUnavailableLanguageThrowsException() {
+        try {
+            this.theTVDB.fetchSeries("123", UNAVAILABLE_LANGUAGE);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    // TODO
+    // Deal with Episodes
 }
