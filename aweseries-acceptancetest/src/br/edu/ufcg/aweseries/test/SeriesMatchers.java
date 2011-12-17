@@ -1,7 +1,7 @@
 package br.edu.ufcg.aweseries.test;
 
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 
 import br.edu.ufcg.aweseries.model.Series;
 
@@ -11,7 +11,7 @@ public class SeriesMatchers {
         return new SeriesNameMatcher(seriesName);
     }
 
-    private static class SeriesNameMatcher extends BaseMatcher<Series> {
+    private static class SeriesNameMatcher extends TypeSafeMatcher<Series> {
 
         private String seriesName;
 
@@ -20,13 +20,8 @@ public class SeriesMatchers {
         }
 
         @Override
-        public boolean matches(Object item) {
-            if (!(item instanceof Series)) {
-                return false;
-            }
-
-            Series series = (Series) item;            
-            return (series.getName().equals(this.seriesName));
+        protected boolean matchesSafely(Series item) {
+            return (item.getName().equals(this.seriesName));
         }
 
         @Override
