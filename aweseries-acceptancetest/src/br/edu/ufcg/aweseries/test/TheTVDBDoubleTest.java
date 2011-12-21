@@ -37,9 +37,9 @@ public class TheTVDBDoubleTest extends TestCase {
         this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name");
 
         // Fetch
-        Series fetchedSeries = this.theTVDB.fetchSeries("123", LANGUAGE_EN);
-        assertThat(fetchedSeries.getId(), equalTo("123"));
-        assertThat(fetchedSeries, namedAs("Given Name"));
+        Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_EN);
+        assertThat(fetched, hasId("123"));
+        assertThat(fetched, namedAs("Given Name"));
 
         // Search
         Collection<Series> results = this.theTVDB.searchFor("Given", LANGUAGE_EN);
@@ -177,9 +177,9 @@ public class TheTVDBDoubleTest extends TestCase {
 
         Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_EN);
 
-        assertThat(fetched.getId(), equalTo("123"));
-        assertThat(fetched.getName(), equalTo("Given Name"));
-        assertThat(fetched.getOverview(), equalTo("An example of series"));
+        assertThat(fetched, hasId("123"));
+        assertThat(fetched, namedAs("Given Name"));
+        assertThat(fetched, overviewedAs("An example of series"));
     }
 
     public void testFetchExistentSeriesFromDifferentLocale() {
@@ -188,9 +188,9 @@ public class TheTVDBDoubleTest extends TestCase {
 
         Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_PT);
 
-        assertThat(fetched.getId(), equalTo("123"));
-        assertThat(fetched.getName(), equalTo("Given Name"));
-        assertThat(fetched.getOverview(), equalTo("Um exemplo de serie"));
+        assertThat(fetched, hasId("123"));
+        assertThat(fetched, namedAs("Given Name"));
+        assertThat(fetched, overviewedAs("Um exemplo de serie"));
     }
 
     public void testFetchExistentSeriesFromLocaleWhereItDoesNotExistReturnsEnglishVersion() {
@@ -199,9 +199,9 @@ public class TheTVDBDoubleTest extends TestCase {
 
         Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_ES);
 
-        assertThat(fetched.getId(), equalTo("123"));
-        assertThat(fetched.getName(), equalTo("Given Name"));
-        assertThat(fetched.getOverview(), equalTo("An example of series"));
+        assertThat(fetched, hasId("123"));
+        assertThat(fetched, namedAs("Given Name"));
+        assertThat(fetched, overviewedAs("An example of series"));
     }
 
     // Fetch Series Arguments Validation
