@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import br.edu.ufcg.aweseries.SeriesNotFoundException;
 import br.edu.ufcg.aweseries.SeriesSource;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.Language;
@@ -24,14 +25,14 @@ public class TheTVDBDouble implements SeriesSource {
         this.languageSeries.put(Language.EN, new HashSet<Series>());
     }
 
+    // Create Series
     public void createSeries(String languageAbbreviation, String... attributes) {
-        if (languageAbbreviation == null) {
-            throw new IllegalArgumentException("language should not be null");
-        }
+        this.createSeries(Language.from(languageAbbreviation), attributes);
+    }
 
-        Language language = Language.from(languageAbbreviation);
-
+    private void createSeries(Language language, String... attributes) {
         Series newSeries = this.seriesFactory.createSeries(attributes);
+
         this.saveSeries(language, newSeries);
     }
 
@@ -42,15 +43,15 @@ public class TheTVDBDouble implements SeriesSource {
         this.languageSeries.get(language).add(series);
     }
 
+    // Search for Series
     public List<Series> searchFor(String seriesName, String languageAbbreviation) {
+        return this.searchFor(seriesName, Language.from(languageAbbreviation));
+    }
+
+    private List<Series> searchFor(String seriesName, Language language) {
         if (seriesName == null) {
             throw new IllegalArgumentException("seriesName should not be null");
         }
-        if (languageAbbreviation == null) {
-            throw new IllegalArgumentException("language should not be null");
-        }
-
-        Language language = Language.from(languageAbbreviation);
 
         List<Series> results = new ArrayList<Series>();
 
@@ -88,11 +89,15 @@ public class TheTVDBDouble implements SeriesSource {
         return results;
     }
 
+    // Fetch Series
     public Series fetchSeries(String seriesId, String languageAbbreviation) {
+        return this.fetchSeries(seriesId, Language.from(languageAbbreviation));
+    }
+
+    private Series fetchSeries(String seriesId, Language language) {
         if (seriesId == null) {
             throw new IllegalArgumentException("seriesId should not be null");
         }
-        Language language = Language.from(languageAbbreviation);
 
         Set<Series> source = this.languageSeries.get((this.languageSeries.containsKey(language))
                                                      ? language 
@@ -104,6 +109,6 @@ public class TheTVDBDouble implements SeriesSource {
             }
         }
 
-        return null;
+        throw new SeriesNotFoundException();
     }
 }

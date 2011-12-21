@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
 import static br.edu.ufcg.aweseries.test.matchers.SeriesMatchers.*;
 
+import br.edu.ufcg.aweseries.SeriesNotFoundException;
 import br.edu.ufcg.aweseries.model.Series;
 
 import junit.framework.TestCase;
@@ -168,8 +169,11 @@ public class TheTVDBDoubleTest extends TestCase {
     }
 
     // Fetch Series
-    public void testFetchNonExistentSeries() {
-        assertThat(this.theTVDB.fetchSeries("123", LANGUAGE_EN), nullValue());
+    public void testFetchNonExistentSeriesThrowsException() {
+        try {
+            assertThat(this.theTVDB.fetchSeries("123", LANGUAGE_EN), nullValue());
+            fail("Should have thrown an SeriesNotFoundException for nonexistent series");
+        } catch (SeriesNotFoundException e) {}
     }
 
     public void testFetchExistentSeriesInEnglish() {
