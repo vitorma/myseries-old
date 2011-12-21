@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries.test;
+package br.edu.ufcg.aweseries.test.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;

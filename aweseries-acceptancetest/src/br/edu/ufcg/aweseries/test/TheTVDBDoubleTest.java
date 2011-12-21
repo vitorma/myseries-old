@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
-import static br.edu.ufcg.aweseries.test.SeriesMatchers.*;
+import static br.edu.ufcg.aweseries.test.matchers.SeriesMatchers.*;
 
 import br.edu.ufcg.aweseries.model.Series;
 

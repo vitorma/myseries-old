@@ -1,10 +1,11 @@
-package br.edu.ufcg.aweseries.test;
+package br.edu.ufcg.aweseries.test.matchers;
 
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.test.DefaultSeriesFactory;
 
 import junit.framework.TestCase;
 
-import static br.edu.ufcg.aweseries.test.SeriesMatchers.*;
+import static br.edu.ufcg.aweseries.test.matchers.SeriesMatchers.*;
 
 public class SeriesMatchersTest extends TestCase {
 
