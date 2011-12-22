@@ -55,16 +55,6 @@ public class TheTVDB implements SeriesSource {
         this.streamFactory = streamFactory;
     }
 
-    @Deprecated
-    public List<Series> search(String seriesName) {
-        try {
-            return new SeriesSearchParser(this.streamFactory).parse(seriesName, "en");
-        } catch (Exception e) {
-            //TODO A better exception handling
-            return null;
-        }
-    }
-
     @Override
     public List<Series> searchFor(String seriesName, String language) {
 
@@ -84,16 +74,6 @@ public class TheTVDB implements SeriesSource {
         }
     }
 
-    @Deprecated
-    public Series getSeries(String seriesId) {
-        try {
-            return new SeriesParser(this.streamFactory).parse(seriesId, "en");
-        } catch (Exception e) {
-            //TODO A better exception handling
-            return null;
-        }
-    }
-
     @Override
     public Series fetchSeries(String seriesId, String language) {
         try {
@@ -102,20 +82,6 @@ public class TheTVDB implements SeriesSource {
             //TODO A better exception handling
             throw new SeriesNotFoundException(e);
         }
-    }
-
-    @Deprecated
-    public List<Series> getAllSeries(List<String> seriesIds) {
-        List<Series> result = new ArrayList<Series>();
-        for (String seriesId : seriesIds) {
-            Series series = this.getSeries(seriesId);
-            //TODO Return an appropriated exception
-            if (series == null) {
-                return null;
-            }
-            result.add(series);
-        }
-        return result;
     }
 
     @Override
