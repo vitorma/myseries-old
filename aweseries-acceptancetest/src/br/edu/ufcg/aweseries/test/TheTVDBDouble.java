@@ -111,4 +111,23 @@ public class TheTVDBDouble implements SeriesSource {
 
         throw new SeriesNotFoundException();
     }
+
+    // Fetch All Series
+    public List<Series> fetchAllSeries(List<String> seriesIds, String languageAbbreviation) {
+        return this.fetchAllSeries(seriesIds, Language.from(languageAbbreviation));
+    }
+
+    private List<Series> fetchAllSeries(List<String> seriesIds, Language language) {
+        if (seriesIds == null) {
+            throw new IllegalArgumentException("seriesIds should not be null");
+        }
+
+        List<Series> results = new ArrayList<Series>();
+
+        for (String id : seriesIds) {
+            results.add(this.fetchSeries(id, language));
+        }
+
+        return results;
+    }
 }

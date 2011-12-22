@@ -34,7 +34,7 @@ public class SeriesMatchers {
 
         @Override
         public void describeTo(Description description) {
-            description.appendText("a Series with this id ");
+            description.appendText("a Series with id ");
             description.appendValue(this.seriesId);
         }
     }
