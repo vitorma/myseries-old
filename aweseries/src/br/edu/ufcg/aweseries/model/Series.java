@@ -242,7 +242,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return this.seasons;
     }
 
-    public void setStatus(String status) {
+    private void setStatus(String status) {
         if (status == null) {
             throw new IllegalArgumentException("invalid status for series");
         }
@@ -250,7 +250,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.status = status;
     }
 
-    public void setAirsDay(String airsDay) {
+    private void setAirsDay(String airsDay) {
         if (airsDay == null) {
             throw new IllegalArgumentException("invalid airs day for series");
         }
@@ -258,7 +258,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.airsDay = airsDay;
     }
 
-    public void setAirsTime(String airsTime) {
+    private void setAirsTime(String airsTime) {
         if (airsTime == null) {
             throw new IllegalArgumentException("invalid airs time for series");
         }
@@ -266,7 +266,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.airsTime = airsTime;
     }
 
-    public void setFirstAired(String firstAired) {
+    private void setFirstAired(String firstAired) {
         if (firstAired == null) {
             throw new IllegalArgumentException("invalid first aired for series");
         }
@@ -274,7 +274,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.firstAired = firstAired;
     }
 
-    public void setRuntime(String runtime) {
+    private void setRuntime(String runtime) {
         if (runtime == null) {
             throw new IllegalArgumentException("invalid runtime for series");
         }
@@ -282,7 +282,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.runtime = runtime;
     }
 
-    public void setNetwork(String network) {
+    private void setNetwork(String network) {
         if (network == null) {
             throw new IllegalArgumentException("invalid network for series");
         }
@@ -290,7 +290,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.network = network;
     }
 
-    public void setOverview(String overview) {
+    private void setOverview(String overview) {
         if (overview == null) {
             throw new IllegalArgumentException("invalid overview for series");
         }
@@ -298,7 +298,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.overview = overview;
     }
 
-    public void setGenres(String genres) {
+    private void setGenres(String genres) {
         if (genres == null) {
             throw new IllegalArgumentException("invalid genres for series");
         }
@@ -306,7 +306,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.genres = genres;
     }
 
-    public void setActors(String actors) {
+    private void setActors(String actors) {
         if (actors == null) {
             throw new IllegalArgumentException("invalid actors for series");
         }
@@ -314,11 +314,11 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.actors = actors;
     }
 
-    public void setPoster(Poster poster) {
+    private void setPoster(Poster poster) {
         this.poster = poster;
     }
 
-    public void setSeasons(SeasonSet seasons) {
+    private void setSeasons(SeasonSet seasons) {
         if ((seasons == null) || !seasons.getSeriesId().equals(this.id)) {
             throw new IllegalArgumentException("invalid seasons for series");
         }
