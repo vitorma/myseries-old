@@ -12,7 +12,12 @@ public interface SeriesSource {
     public List<Series> searchFor(String seriesName, String languageAbbreviation);
 
     /**
-     * If there is no series with the given seriesId, returns null.
+     * If there is no series with the given seriesId, throws SeriesNotFoundException.
      */
     public Series fetchSeries(String seriesId, String languageAbbreviation);
+
+    /**
+     * If there is no series with any of the given seriesId, throws SeriesNotFoundException.
+     */
+    public List<Series> fetchAllSeries(List<String> seriesIds, String languageAbbreviation);
 }

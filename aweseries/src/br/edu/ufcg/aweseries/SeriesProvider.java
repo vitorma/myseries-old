@@ -122,8 +122,14 @@ public class SeriesProvider {
 
         @Override
         protected Void doInBackground(Void... params) {
-            this.upToDateSeries = SeriesProvider.this.theTVDB.getAllSeries(this.seriesToUpdate, App
-                    .environment().localization().language());
+            try {
+                this.upToDateSeries = SeriesProvider.this.theTVDB.fetchAllSeries(
+                        this.seriesToUpdate,
+                        App.environment().localization().language());
+            } catch (SeriesNotFoundException e) {
+                // TODO: find a better way to tell that a problem happened when fetching the series
+                this.upToDateSeries = null;
+            }
 
             return null;
         }
@@ -163,6 +169,8 @@ public class SeriesProvider {
         protected Void doInBackground(Series... params) {
             final Series seriesToFollow = params[0];
 
+            // TODO is there anything to do about any SeriesNotFoundException that may be thrown
+            // here?
             this.followedSeries = SeriesProvider.this.theTVDB.fetchSeries(seriesToFollow.getId(), App
                     .environment().localization().language());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);

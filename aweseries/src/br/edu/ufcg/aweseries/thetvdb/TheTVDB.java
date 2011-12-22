@@ -32,6 +32,7 @@ package br.edu.ufcg.aweseries.thetvdb;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.edu.ufcg.aweseries.SeriesNotFoundException;
 import br.edu.ufcg.aweseries.SeriesSource;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
@@ -99,7 +100,7 @@ public class TheTVDB implements SeriesSource {
             return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
         } catch (Exception e) {
             //TODO A better exception handling
-            return null;
+            throw new SeriesNotFoundException(e);
         }
     }
 
@@ -117,14 +118,11 @@ public class TheTVDB implements SeriesSource {
         return result;
     }
 
-    public List<Series> getAllSeries(List<String> seriesIds, String language) {
+    @Override
+    public List<Series> fetchAllSeries(List<String> seriesIds, String language) {
         List<Series> result = new ArrayList<Series>();
         for (String seriesId : seriesIds) {
             Series series = this.fetchSeries(seriesId, this.getSupported(language));
-            //TODO Return an appropriated exception
-            if (series == null) {
-                return null;
-            }
             result.add(series);
         }
         return result;
