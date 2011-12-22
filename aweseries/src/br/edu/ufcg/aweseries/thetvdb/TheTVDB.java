@@ -76,6 +76,10 @@ public class TheTVDB implements SeriesSource {
 
     @Override
     public Series fetchSeries(String seriesId, String language) {
+        if (seriesId == null) {
+            throw new IllegalArgumentException("seriesId should not be null");
+        }
+
         try {
             return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
         } catch (Exception e) {
