@@ -89,7 +89,8 @@ public class Environment {
      * @return a default series provider for the production environment
      */
     private SeriesProvider defaultSeriesProvider() {
-        return SeriesProvider.newInstance(this.theTVDB(), this.seriesRepositoryFactory());
+        return SeriesProvider.newInstance(this.theTVDB(),
+                this.seriesRepositoryFactory().newSeriesCachedRepository());
     }
 
     /**

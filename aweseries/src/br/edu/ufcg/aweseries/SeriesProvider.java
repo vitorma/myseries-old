@@ -43,7 +43,6 @@ import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.repository.SeriesRepository;
-import br.edu.ufcg.aweseries.repository.SeriesRepositoryFactory;
 
 /**
  * Supply series information to the system.
@@ -61,20 +60,20 @@ public class SeriesProvider {
     private final Set<UpdateListener> updateListeners;
 
     public static SeriesProvider newInstance(SeriesSource seriesSource,
-            SeriesRepositoryFactory seriesRepositoryFactory) {
-        return new SeriesProvider(seriesSource, seriesRepositoryFactory);
+                                             SeriesRepository seriesRepository) {
+        return new SeriesProvider(seriesSource, seriesRepository);
     }
 
-    private SeriesProvider(SeriesSource seriesSource, SeriesRepositoryFactory seriesRepositoryFactory) {
+    private SeriesProvider(SeriesSource seriesSource, SeriesRepository seriesRepository) {
         if (seriesSource == null) {
             throw new IllegalArgumentException("seriesSource should not be null");
         }
-        if (seriesRepositoryFactory == null) {
-            throw new IllegalArgumentException("seriesRepositoryFactory should not be null");
+        if (seriesRepository == null) {
+            throw new IllegalArgumentException("seriesRepository should not be null");
         }
 
         this.seriesSource = seriesSource;
-        this.seriesRepository = seriesRepositoryFactory.newSeriesCachedRepository();
+        this.seriesRepository = seriesRepository;
         this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
         this.updateListeners = new HashSet<UpdateListener>();
     }
