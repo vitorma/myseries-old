@@ -44,36 +44,36 @@ import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.repository.SeriesRepository;
 import br.edu.ufcg.aweseries.repository.SeriesRepositoryFactory;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
- * Supply series information to the system. It is a cache proxy for series
- * data. All followed series are cached.
+ * Supply series information to the system.
+ *
  * The private constructor avoids instantiation of the SeriesProvider.
  * Most times, it should be gotten from Environment.seriesProvider().
- * 
+ *
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
-    private final TheTVDB theTVDB;
+    private final SeriesSource seriesSource;
     private final SeriesRepository seriesRepository;
+
     private final Set<FollowingSeriesListener> followingSeriesListeners;
     private final Set<UpdateListener> updateListeners;
 
-    public static SeriesProvider newInstance(TheTVDB theTVDB,
+    public static SeriesProvider newInstance(SeriesSource seriesSource,
             SeriesRepositoryFactory seriesRepositoryFactory) {
-        return new SeriesProvider(theTVDB, seriesRepositoryFactory);
+        return new SeriesProvider(seriesSource, seriesRepositoryFactory);
     }
 
-    private SeriesProvider(TheTVDB theTVDB, SeriesRepositoryFactory seriesRepositoryFactory) {
-        if (theTVDB == null) {
-            throw new IllegalArgumentException("theTVDB should not be null");
+    private SeriesProvider(SeriesSource seriesSource, SeriesRepositoryFactory seriesRepositoryFactory) {
+        if (seriesSource == null) {
+            throw new IllegalArgumentException("seriesSource should not be null");
         }
         if (seriesRepositoryFactory == null) {
             throw new IllegalArgumentException("seriesRepositoryFactory should not be null");
         }
 
-        this.theTVDB = theTVDB;
+        this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepositoryFactory.newSeriesCachedRepository();
         this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
         this.updateListeners = new HashSet<UpdateListener>();
@@ -84,7 +84,7 @@ public class SeriesProvider {
     }
 
     public Series[] searchSeries(String seriesName) {
-        final List<Series> searchResult = this.theTVDB.searchFor(seriesName, App.environment()
+        final List<Series> searchResult = this.seriesSource.searchFor(seriesName, App.environment()
                 .localization().language());
 
         if (searchResult == null) {
@@ -123,7 +123,7 @@ public class SeriesProvider {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                this.upToDateSeries = SeriesProvider.this.theTVDB.fetchAllSeries(
+                this.upToDateSeries = SeriesProvider.this.seriesSource.fetchAllSeries(
                         this.seriesToUpdate,
                         App.environment().localization().language());
             } catch (SeriesNotFoundException e) {
@@ -171,7 +171,7 @@ public class SeriesProvider {
 
             // TODO is there anything to do about any SeriesNotFoundException that may be thrown
             // here?
-            this.followedSeries = SeriesProvider.this.theTVDB.fetchSeries(seriesToFollow.getId(), App
+            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(seriesToFollow.getId(), App
                     .environment().localization().language());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 
