@@ -36,38 +36,37 @@ import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.repository.SeriesRepository;
-import br.edu.ufcg.aweseries.repository.SeriesRepositoryFactory;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
- * Supply series information to the system. It is a cache proxy for series
- * data. All followed series are cached.
+ * Supply series information to the system.
+ *
  * The private constructor avoids instantiation of the SeriesProvider.
  * Most times, it should be gotten from Environment.seriesProvider().
- * 
+ *
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
-    private final TheTVDB theTVDB;
+    private final SeriesSource seriesSource;
     private final SeriesRepository seriesRepository;
+
     private final Set<FollowingSeriesListener> followingSeriesListeners;
     private final Set<UpdateListener> updateListeners;
 
-    public static SeriesProvider newInstance(TheTVDB theTVDB,
-            SeriesRepositoryFactory seriesRepositoryFactory) {
-        return new SeriesProvider(theTVDB, seriesRepositoryFactory);
+    public static SeriesProvider newInstance(SeriesSource seriesSource,
+                                             SeriesRepository seriesRepository) {
+        return new SeriesProvider(seriesSource, seriesRepository);
     }
 
-    private SeriesProvider(TheTVDB theTVDB, SeriesRepositoryFactory seriesRepositoryFactory) {
-        if (theTVDB == null) {
-            throw new IllegalArgumentException("theTVDB should not be null");
+    private SeriesProvider(SeriesSource seriesSource, SeriesRepository seriesRepository) {
+        if (seriesSource == null) {
+            throw new IllegalArgumentException("seriesSource should not be null");
         }
-        if (seriesRepositoryFactory == null) {
-            throw new IllegalArgumentException("seriesRepositoryFactory should not be null");
+        if (seriesRepository == null) {
+            throw new IllegalArgumentException("seriesRepository should not be null");
         }
 
-        this.theTVDB = theTVDB;
-        this.seriesRepository = seriesRepositoryFactory.newSeriesCachedRepository();
+        this.seriesSource = seriesSource;
+        this.seriesRepository = seriesRepository;
         this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
         this.updateListeners = new HashSet<UpdateListener>();
     }
@@ -77,7 +76,7 @@ public class SeriesProvider {
     }
 
     public Series[] searchSeries(String seriesName) {
-        final List<Series> searchResult = this.theTVDB.search(seriesName, App.environment()
+        final List<Series> searchResult = this.seriesSource.searchFor(seriesName, App.environment()
                 .localization().language());
 
         if (searchResult == null) {
@@ -115,8 +114,14 @@ public class SeriesProvider {
 
         @Override
         protected Void doInBackground(Void... params) {
-            this.upToDateSeries = SeriesProvider.this.theTVDB.getAllSeries(this.seriesToUpdate, App
-                    .environment().localization().language());
+            try {
+                this.upToDateSeries = SeriesProvider.this.seriesSource.fetchAllSeries(
+                        this.seriesToUpdate,
+                        App.environment().localization().language());
+            } catch (SeriesNotFoundException e) {
+                // TODO: find a better way to tell that a problem happened when fetching the series
+                this.upToDateSeries = null;
+            }
 
             return null;
         }
@@ -156,7 +161,9 @@ public class SeriesProvider {
         protected Void doInBackground(Series... params) {
             final Series seriesToFollow = params[0];
 
-            this.followedSeries = SeriesProvider.this.theTVDB.getSeries(seriesToFollow.getId(), App
+            // TODO is there anything to do about any SeriesNotFoundException that may be thrown
+            // here?
+            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(seriesToFollow.getId(), App
                     .environment().localization().language());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 

@@ -25,13 +25,15 @@ package br.edu.ufcg.aweseries.thetvdb;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.edu.ufcg.aweseries.SeriesNotFoundException;
+import br.edu.ufcg.aweseries.SeriesSource;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesSearchParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.stream.TheTVDBStreamFactory;
 
-public class TheTVDB {
+public class TheTVDB implements SeriesSource {
     private final StreamFactory streamFactory;
 
     public TheTVDB(String apiKey) {
@@ -46,17 +48,8 @@ public class TheTVDB {
         this.streamFactory = streamFactory;
     }
 
-    @Deprecated
-    public List<Series> search(String seriesName) {
-        try {
-            return new SeriesSearchParser(this.streamFactory).parse(seriesName, "en");
-        } catch (Exception e) {
-            //TODO A better exception handling
-            return null;
-        }
-    }
-
-    public List<Series> search(String seriesName, String language) {
+    @Override
+    public List<Series> searchFor(String seriesName, String language) {
 
         try {
             return new SeriesSearchParser(this.streamFactory).parse(seriesName, this.getSupported(language));
@@ -74,47 +67,25 @@ public class TheTVDB {
         }
     }
 
-    @Deprecated
-    public Series getSeries(String seriesId) {
-        try {
-            return new SeriesParser(this.streamFactory).parse(seriesId, "en");
-        } catch (Exception e) {
-            //TODO A better exception handling
-            return null;
+    @Override
+    public Series fetchSeries(String seriesId, String language) {
+        if (seriesId == null) {
+            throw new IllegalArgumentException("seriesId should not be null");
         }
-    }
 
-    public Series getSeries(String seriesId, String language) {
         try {
             return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
         } catch (Exception e) {
             //TODO A better exception handling
-            return null;
+            throw new SeriesNotFoundException(e);
         }
     }
 
-    @Deprecated
-    public List<Series> getAllSeries(List<String> seriesIds) {
+    @Override
+    public List<Series> fetchAllSeries(List<String> seriesIds, String language) {
         List<Series> result = new ArrayList<Series>();
         for (String seriesId : seriesIds) {
-            Series series = this.getSeries(seriesId);
-            //TODO Return an appropriated exception
-            if (series == null) {
-                return null;
-            }
-            result.add(series);
-        }
-        return result;
-    }
-
-    public List<Series> getAllSeries(List<String> seriesIds, String language) {
-        List<Series> result = new ArrayList<Series>();
-        for (String seriesId : seriesIds) {
-            Series series = this.getSeries(seriesId, this.getSupported(language));
-            //TODO Return an appropriated exception
-            if (series == null) {
-                return null;
-            }
+            Series series = this.fetchSeries(seriesId, this.getSupported(language));
             result.add(series);
         }
         return result;

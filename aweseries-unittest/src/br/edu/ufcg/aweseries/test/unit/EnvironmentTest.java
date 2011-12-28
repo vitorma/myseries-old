@@ -66,7 +66,8 @@ public class EnvironmentTest {
     @Test
     public void testChangeSeriesProvider() {
         final SeriesProvider sp = SeriesProvider.newInstance(
-        		this.environment.theTVDB(), this.environment.seriesRepositoryFactory());
+        		this.environment.theTVDB(),
+        		this.environment.seriesRepositoryFactory().newSeriesCachedRepository());
 
         this.environment.setSeriesProvider(sp);
 

@@ -27,6 +27,9 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import android.test.ActivityInstrumentationTestCase2;
 import br.edu.ufcg.aweseries.App;
+import br.edu.ufcg.aweseries.gui.EpisodeListActivity;
+import br.edu.ufcg.aweseries.gui.SeasonListActivity;
+import br.edu.ufcg.aweseries.gui.SeriesDetailsActivity;
 import br.edu.ufcg.aweseries.gui.SeriesListActivity;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
@@ -71,6 +74,7 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<SeriesListAc
     }
 
     private void setUpTestTools() {
+        this.solo = new Solo(getInstrumentation());
         this.driver = new AppDriver(this.solo);
     }
 
@@ -121,7 +125,7 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<SeriesListAc
     public void testViewMyFollowedSeries() {
         this.driver().viewMyFollowedSeries();
 
-//        assertThat(this.solo().getCurrentActivity(), instanceOf(MySeries.class));
+        assertThat(this.solo().getCurrentActivity(), instanceOf(SeriesListActivity.class));
     }
 
     public void testViewMyFollowedSeriesAfterViewingItsSeasons() {
@@ -129,7 +133,7 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<SeriesListAc
         this.driver().viewSeasonsOf(testSeriesName);
         this.driver().viewMyFollowedSeries();
 
-//        assertThat(this.solo().getCurrentActivity(), instanceOf(MySeries.class));
+        assertThat(this.solo().getCurrentActivity(), instanceOf(SeriesListActivity.class));
     }
 
     public void testViewDetailsOfNullSeries() {
@@ -150,7 +154,7 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<SeriesListAc
         this.driver().follow(testSeriesName);
         this.driver().viewDetailsOf(testSeriesName);
 
-//        assertThat(this.solo().getCurrentActivity(), instanceOf(SeriesView.class));
+        assertThat(this.solo().getCurrentActivity(), instanceOf(SeriesDetailsActivity.class));
     }
 
     public void testViewSeasonsOfNullSeries() {
@@ -171,7 +175,7 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<SeriesListAc
         this.driver().follow(testSeriesName);
         this.driver().viewSeasonsOf(testSeriesName);
 
-//        assertThat(this.solo().getCurrentActivity(), instanceOf(SeasonsView.class));
+        assertThat(this.solo().getCurrentActivity(), instanceOf(SeasonListActivity.class));
     }
 
     public void testViewEpisodesOfANullSeries() {
@@ -205,7 +209,7 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<SeriesListAc
         this.driver().follow(testSeriesName);
         this.driver().viewEpisodesOf(testSeriesName, testSeasonName);
 
-//        assertThat(this.solo().getCurrentActivity(), instanceOf(EpisodesView.class));
+        assertThat(this.solo().getCurrentActivity(), instanceOf(EpisodeListActivity.class));
     }
 
     public void testViewDetailsOfSeriesAfterViewingItsSeasons() {
@@ -213,7 +217,7 @@ public class AppDriverTest extends ActivityInstrumentationTestCase2<SeriesListAc
         this.driver().viewSeasonsOf(testSeriesName);
         this.driver().viewDetailsOf(testSeriesName);
 
-//        assertThat(this.solo().getCurrentActivity(), instanceOf(SeriesView.class));
+        assertThat(this.solo().getCurrentActivity(), instanceOf(SeriesDetailsActivity.class));
     }
 
     // Verification ------------------------------------------------------------

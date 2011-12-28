@@ -35,7 +35,6 @@ import android.util.Log;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.EpisodeBuilder;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.model.SeriesBuilder;
 
 public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository {
 
@@ -329,7 +328,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     private Series seriesByCurrentPositionOf(Cursor c) {
-        return new SeriesBuilder()
+        return new Series.Builder()
         .withId(c.getString(c.getColumnIndex("id")))
         .withName(c.getString(c.getColumnIndex("name")))
         .withStatus(c.getString(c.getColumnIndex("status")))

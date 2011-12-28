@@ -99,8 +99,8 @@ public class AppDriver {
 
     // Navigation --------------------------------------------------------------
     public void viewMyFollowedSeries() {
-        if (!"MySeries".equals(this.solo.getCurrentActivity().getClass().getSimpleName())) {
-            this.solo.goBackToActivity("MySeries");
+        if (!"SeriesListActivity".equals(this.solo.getCurrentActivity().getClass().getSimpleName())) {
+            this.solo.goBackToActivity("SeriesListActivity");
         }
     }
     public void viewDetailsOf(String seriesName) {

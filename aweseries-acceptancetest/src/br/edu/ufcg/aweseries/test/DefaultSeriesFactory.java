@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Random;
 
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.model.SeriesBuilder;
 import br.edu.ufcg.aweseries.test.KeyValueParser.KeyValuePair;
 
 public class DefaultSeriesFactory {
@@ -47,18 +46,18 @@ public class DefaultSeriesFactory {
             values.put(attributePair.key, attributePair.value);
         }
 
-        return new SeriesBuilder().withId(values.get("id"))
-                                  .withName(values.get("name"))
-                                  .withStatus(values.get("status"))
-                                  .withAirsDay(values.get("airsOn"))
-                                  .withAirsTime(values.get("airsAt"))
-                                  .withFirstAired(values.get("firstAired"))
-                                  .withRuntime(values.get("runtime"))
-                                  .withNetwork(values.get("network"))
-                                  .withOverview(values.get("overview"))
-                                  .withGenres(values.get("genres"))
-                                  .withActors(values.get("actors"))
-                                  .build();
+        return new Series.Builder().withId(values.get("id"))
+                                   .withName(values.get("name"))
+                                   .withStatus(values.get("status"))
+                                   .withAirsDay(values.get("airsOn"))
+                                   .withAirsTime(values.get("airsAt"))
+                                   .withFirstAired(values.get("firstAired"))
+                                   .withRuntime(values.get("runtime"))
+                                   .withNetwork(values.get("network"))
+                                   .withOverview(values.get("overview"))
+                                   .withGenres(values.get("genres"))
+                                   .withActors(values.get("actors"))
+                                   .build();
     }
 
     private Map<String, String> defaultValues() {

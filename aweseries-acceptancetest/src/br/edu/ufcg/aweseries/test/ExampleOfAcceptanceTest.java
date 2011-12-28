@@ -25,7 +25,6 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.LocalizationProvider;
-import br.edu.ufcg.aweseries.thetvdb.Language;
 
 public class ExampleOfAcceptanceTest extends TestCase {
 
@@ -43,7 +42,7 @@ public class ExampleOfAcceptanceTest extends TestCase {
         SearchUI searchUI = new SearchUI();
 
         // Given
-        this.theTVDB.createSeries(Language.EN, "name : A Great Series");
+        this.theTVDB.createSeries("en", "name : A Great Series");
 
         // When
         searchUI.fillSearchFieldWith("Great");
@@ -70,14 +69,17 @@ public class ExampleOfAcceptanceTest extends TestCase {
 
     private class SearchUI {
 
+        private String searchField;
+
         public void fillSearchFieldWith(String string) {
             // TODO Auto-generated method stub
-            
+            this.searchField = string;
         }
 
         public String firtResult() {
             // TODO Auto-generated method stub
-            return null;
+            return App.environment().seriesProvider().searchSeries(this.searchField)[0].getName();
+            //return null;
         }
 
         public void search() {

@@ -25,9 +25,128 @@ package br.edu.ufcg.aweseries.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class Series implements DomainObjectListener<SeasonSet> {
+
+    public static class Builder {
+        private static final String DEFAULT_STRING = "";
+
+        private String id;
+        private String name;
+        private String status;
+        private String airsDay;
+        private String airsTime;
+        private String firstAired;
+        private String runtime;
+        private String network;
+        private String overview;
+        private String genres;
+        private String actors;
+        private Bitmap posterBitmap;
+        private SeasonSet seasons;
+
+        public Builder withId(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder withStatus(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder withAirsDay(String airsDay) {
+            this.airsDay = airsDay;
+            return this;
+        }
+
+        public Builder withAirsTime(String airsTime) {
+            this.airsTime = airsTime;
+            return this;
+        }
+
+        public Builder withFirstAired(String firstAired) {
+            this.firstAired = firstAired;
+            return this;
+        }
+
+        public Builder withRuntime(String runtime) {
+            this.runtime = runtime;
+            return this;
+        }
+
+        public Builder withNetwork(String network) {
+            this.network = network;
+            return this;
+        }
+
+        public Builder withOverview(String overview) {
+            this.overview = overview;
+            return this;
+        }
+
+        public Builder withGenres(String genres) {
+            this.genres = genres;
+            return this;
+        }
+
+        public Builder withActors(String actors) {
+            this.actors = actors;
+            return this;
+        }
+
+        public Builder withPoster(Bitmap posterBitmap) {
+            this.posterBitmap = posterBitmap;
+            return this;
+        }
+
+        public Builder withPoster(byte[] posterBitmap) {
+            if (posterBitmap != null) {
+                this.posterBitmap = BitmapFactory.decodeByteArray(posterBitmap, 0, posterBitmap.length);
+            }
+            return this;
+        }
+
+        public Builder withEpisode(Episode episode) {
+            if (episode == null) {
+                return this;
+            }
+
+            if (this.seasons == null) {
+                this.seasons = new SeasonSet(episode.getSeriesId());
+            }
+
+            this.seasons.addEpisode(episode);
+            return this;
+        }
+
+        public Series build() {
+            final Series series = new Series(this.id, this.name);
+
+            series.setStatus(this.status != null ? this.status : DEFAULT_STRING);
+            series.setAirsDay(this.airsDay != null ? this.airsDay : DEFAULT_STRING);
+            series.setAirsTime(this.airsTime != null ? this.airsTime : DEFAULT_STRING);
+            series.setFirstAired(this.firstAired != null ? this.firstAired : DEFAULT_STRING);
+            series.setRuntime(this.runtime != null ? this.runtime : DEFAULT_STRING);
+            series.setNetwork(this.network != null ? this.network : DEFAULT_STRING);
+            series.setOverview(this.overview != null ? this.overview : DEFAULT_STRING);
+            series.setGenres(this.genres != null ? this.genres : DEFAULT_STRING);
+            series.setActors(this.actors != null ? this.actors : DEFAULT_STRING);
+            series.setPoster(this.posterBitmap != null ? new Poster(this.posterBitmap) : null);
+            series.setSeasons(this.seasons != null ? this.seasons : new SeasonSet(this.id));
+
+            return series;
+        }
+    }
+
     private String id;
     private String name;
     private String status;
@@ -116,7 +235,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return this.seasons;
     }
 
-    public void setStatus(String status) {
+    private void setStatus(String status) {
         if (status == null) {
             throw new IllegalArgumentException("invalid status for series");
         }
@@ -124,7 +243,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.status = status;
     }
 
-    public void setAirsDay(String airsDay) {
+    private void setAirsDay(String airsDay) {
         if (airsDay == null) {
             throw new IllegalArgumentException("invalid airs day for series");
         }
@@ -132,7 +251,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.airsDay = airsDay;
     }
 
-    public void setAirsTime(String airsTime) {
+    private void setAirsTime(String airsTime) {
         if (airsTime == null) {
             throw new IllegalArgumentException("invalid airs time for series");
         }
@@ -140,7 +259,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.airsTime = airsTime;
     }
 
-    public void setFirstAired(String firstAired) {
+    private void setFirstAired(String firstAired) {
         if (firstAired == null) {
             throw new IllegalArgumentException("invalid first aired for series");
         }
@@ -148,7 +267,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.firstAired = firstAired;
     }
 
-    public void setRuntime(String runtime) {
+    private void setRuntime(String runtime) {
         if (runtime == null) {
             throw new IllegalArgumentException("invalid runtime for series");
         }
@@ -156,7 +275,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.runtime = runtime;
     }
 
-    public void setNetwork(String network) {
+    private void setNetwork(String network) {
         if (network == null) {
             throw new IllegalArgumentException("invalid network for series");
         }
@@ -164,7 +283,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.network = network;
     }
 
-    public void setOverview(String overview) {
+    private void setOverview(String overview) {
         if (overview == null) {
             throw new IllegalArgumentException("invalid overview for series");
         }
@@ -172,7 +291,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.overview = overview;
     }
 
-    public void setGenres(String genres) {
+    private void setGenres(String genres) {
         if (genres == null) {
             throw new IllegalArgumentException("invalid genres for series");
         }
@@ -180,7 +299,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.genres = genres;
     }
 
-    public void setActors(String actors) {
+    private void setActors(String actors) {
         if (actors == null) {
             throw new IllegalArgumentException("invalid actors for series");
         }
@@ -188,11 +307,11 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.actors = actors;
     }
 
-    public void setPoster(Poster poster) {
+    private void setPoster(Poster poster) {
         this.poster = poster;
     }
 
-    public void setSeasons(SeasonSet seasons) {
+    private void setSeasons(SeasonSet seasons) {
         if ((seasons == null) || !seasons.getSeriesId().equals(this.id)) {
             throw new IllegalArgumentException("invalid seasons for series");
         }

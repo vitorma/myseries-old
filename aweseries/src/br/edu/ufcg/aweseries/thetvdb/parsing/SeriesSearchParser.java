@@ -35,7 +35,6 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.model.SeriesBuilder;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.util.Strings;
 
@@ -60,7 +59,7 @@ public class SeriesSearchParser {
         }
 
         final List<Series> searchResult = new ArrayList<Series>();
-        final SeriesBuilder builder = new SeriesBuilder();
+        final Series.Builder builder = new Series.Builder();
 
         final RootElement root = new RootElement("Data");
         final Element element = root.getChild("Series");
