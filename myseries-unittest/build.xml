@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MySeriesUnitTest" default="run-tests">
+    <property name="tested.project.dir" value="../myseries" />
+    <property name="tested.project.classes.dir" value="${tested.project.dir}/bin/classes"/>
+    <property name="src.dir" value="src"/>
+    <property name="lib.dir" value="lib"/>
+
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="reports.dir" value="${build.dir}/reports"/>
+
+    <path id="testedproject.classpath">
+        <pathelement location="${tested.project.classes.dir}"/>
+    </path>
+
+    <path id="classpath">
+        <!-- test tools -->
+        <fileset dir="${lib.dir}" includes="junit4.jar"/>
+        <fileset dir="${lib.dir}" includes="mockito*.jar"/>
+
+        <!-- coverage tool -->
+        <fileset dir="${lib.dir}" includes="emma*.jar"/>
+
+        <!-- android stubs : must be after JUnit -->
+        <fileset dir="${lib.dir}" includes="android*.jar"/>
+
+        <!-- tested project -->
+        <path refid="testedproject.classpath"/>
+    </path>
+
+    <path id="run.classpath">
+        <path refid="classpath"/>
+        <pathelement location="${classes.dir}"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="-compile-tested-project">
+        <subant target="debug" buildpath="${tested.project.dir}"/>
+    </target>
+
+    <target name="compile" depends="-compile-tested-project">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${reports.dir}"/>
+
+        <javac debug="true" destdir="${classes.dir}">
+            <src path="${src.dir}"/>
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="run-tests" depends="compile">
+        <junit printsummary="yes" failureproperty="test.failure" fork="yes">
+            <!-- intrumentated code for coverage analysis-->
+            <classpath>
+                <pathelement location="${instrumentation.output.dir}"/>
+            </classpath>
+            <classpath refid="run.classpath"/>
+
+            <formatter type="xml"/>
+
+            <!-- settings for coverage analysis-->
+            <jvmarg value="-Demma.coverage.out.file=${coverage.output.dir}/coverage.emma" />
+            <jvmarg value="-Demma.coverage.out.merge=true" />
+
+            <batchtest todir="${reports.dir}">
+                <fileset dir="${src.dir}" includes="**/*.java"/>
+            </batchtest>
+        </junit>
+
+        <fail message="One or more test cases failed" if="test.failure"/>
+
+    </target>
+
+    <!-- code coverage section -->
+
+    <property name="emma.dir" value="${lib.dir}"/>
+
+    <path id="emma.lib">
+        <pathelement location="${emma.dir}/emma.jar" />
+        <pathelement location="${emma.dir}/emma_ant.jar" />
+    </path>
+
+    <taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+
+    <target name="coverage" depends="compile" >
+        <property name="emma.enabled" value="true" />
+
+        <!-- EMMA output directories: -->
+        <property name="instrumentation.output.dir" value="${build.dir}/instrumentation" />
+        <mkdir dir="${instrumentation.output.dir}" />
+
+        <property name="coverage.output.dir" value="${reports.dir}/coverage" />
+        <mkdir dir="${coverage.output.dir}" />
+
+        <!-- EMMA instr -->
+        <emma enabled="${emma.enabled}">
+            <instr instrpathref="testedproject.classpath"
+                   destdir="${instrumentation.output.dir}"
+                   metadatafile="${coverage.output.dir}/metadata.emma"
+                   merge="true">
+
+               <filter excludes="mobi.myseries.gui.*" />
+               <filter excludes="mobi.myseries.R" />
+               <filter excludes="mobi.myseries.R$*" />
+           </instr>
+
+        </emma>
+
+        <!-- run tests -->
+        <antcall target="run-tests"/>
+
+        <!-- EMMA report -->
+        <emma enabled="${emma.enabled}">
+            <report>
+                <fileset dir="${coverage.output.dir}" >
+                    <include name="*.emma" />
+                </fileset>
+
+                <html outfile="${coverage.output.dir}/coverage.html" />
+                <xml outfile="${coverage.output.dir}/coverage.xml" />
+            </report>
+        </emma>
+    </target>
+
+</project>
