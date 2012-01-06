@@ -121,7 +121,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
             }
 
             if (this.seasons == null) {
-                this.seasons = new SeasonSet(episode.getSeriesId());
+                this.seasons = new SeasonSet(episode.seriesId());
             }
 
             this.seasons.addEpisode(episode);

@@ -145,7 +145,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         SQLiteDatabase db = this.getWritableDatabase();
         db.update("Series", this.contentValuesBy(series), "id=?", new String[] {series.getId()});
         for (Episode e : series.getSeasons().getAllEpisodes()) {
-            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.getId()});
+            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.id()});
         }
         db.close();
     }
@@ -252,7 +252,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.update("Episode", this.contentValuesBy(episode), "id=?", new String[] {episode.getId()});
+        db.update("Episode", this.contentValuesBy(episode), "id=?", new String[] {episode.id()});
         db.close();
     }
 
@@ -289,7 +289,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private void updateAllEpisodesOf(Series s, SQLiteDatabase db) {
         for (Episode e : s.getSeasons().getAllEpisodes()) {
-            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.getId()});
+            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.id()});
         }
     }
 
@@ -312,17 +312,17 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private ContentValues contentValuesBy(Episode e) {
         final ContentValues cv = new ContentValues();
-        cv.put("id", e.getId());
-        cv.put("seriesId", e.getSeriesId());
-        cv.put("number", e.getNumber());
-        cv.put("seasonNumber", e.getSeasonNumber());
-        cv.put("name", e.getName());
-        cv.put("firstAired", e.getFirstAiredAsString());
-        cv.put("overview", e.getOverview());
-        cv.put("director", e.getDirector());
-        cv.put("writer", e.getWriter());
-        cv.put("guestStars", e.getGuestStars());
-        cv.put("poster", e.getPoster());
+        cv.put("id", e.id());
+        cv.put("seriesId", e.seriesId());
+        cv.put("number", e.number());
+        cv.put("seasonNumber", e.seasonNumber());
+        cv.put("name", e.name());
+        cv.put("firstAired", e.firstAiredAsString());
+        cv.put("overview", e.overview());
+        cv.put("director", e.directors());
+        cv.put("writer", e.writers());
+        cv.put("guestStars", e.guestStars());
+        cv.put("poster", e.poster());
         cv.put("viewed", String.valueOf(e.wasSeen()));
         return cv;
     }

@@ -163,11 +163,11 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
             throw new IllegalArgumentException("episode should not be null");
         }
 
-        if (!episode.getSeriesId().equals(this.seriesId)) {
+        if (!episode.seriesId().equals(this.seriesId)) {
             throw new IllegalArgumentException("episode belongs to another series");
         }
 
-        if (episode.getSeasonNumber() != this.number) {
+        if (episode.seasonNumber() != this.number) {
             throw new IllegalArgumentException("episode belongs to another series");
         }
 
@@ -177,7 +177,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
 
         episode.addListener(this);
         
-        this.map.put(episode.getNumber(), episode);
+        this.map.put(episode.number(), episode);
         
         this.onUpdate(episode);
     }
@@ -219,7 +219,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
     private void mergeAlreadyExistentEpisodesFrom(Season other) {
         for (Episode ourEpisode : getEpisodes()) {
             if (other.has(ourEpisode)) {
-                ourEpisode.mergeWith(other.get(ourEpisode.getNumber()));
+                ourEpisode.mergeWith(other.get(ourEpisode.number()));
             }
         }
     }

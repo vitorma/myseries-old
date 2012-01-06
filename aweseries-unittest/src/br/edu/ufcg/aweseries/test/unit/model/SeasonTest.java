@@ -384,7 +384,7 @@ public class SeasonTest {
         //this.episode4 = new Episode("4", "1", 4, 1);
         Episode episode5 = new Episode("5", "1", 5, 1);
         
-        Season newSeason = new Season(this.episode1.getSeriesId(), this.episode1.getSeasonNumber());
+        Season newSeason = new Season(this.episode1.seriesId(), this.episode1.seasonNumber());
         newSeason.addEpisode(this.episode1);
         newSeason.addEpisode(this.episode2);
         newSeason.addEpisode(this.episode4);
@@ -396,16 +396,16 @@ public class SeasonTest {
         Assert.assertFalse(newSeason.has(episode3));
 
         Episode episode6 = Mockito.mock(Episode.class);
-        Mockito.when(episode6.getId()).thenReturn("6");
-        Mockito.when(episode6.getSeriesId()).thenReturn("1");
-        Mockito.when(episode6.getNumber()).thenReturn(6);
-        Mockito.when(episode6.getSeasonNumber()).thenReturn(1);
+        Mockito.when(episode6.id()).thenReturn("6");
+        Mockito.when(episode6.seriesId()).thenReturn("1");
+        Mockito.when(episode6.number()).thenReturn(6);
+        Mockito.when(episode6.seasonNumber()).thenReturn(1);
 
         Episode episode6Copy = Mockito.mock(Episode.class);
-        Mockito.when(episode6Copy.getId()).thenReturn("6");
-        Mockito.when(episode6Copy.getSeriesId()).thenReturn("1");
-        Mockito.when(episode6Copy.getNumber()).thenReturn(6);
-        Mockito.when(episode6Copy.getSeasonNumber()).thenReturn(1);
+        Mockito.when(episode6Copy.id()).thenReturn("6");
+        Mockito.when(episode6Copy.seriesId()).thenReturn("1");
+        Mockito.when(episode6Copy.number()).thenReturn(6);
+        Mockito.when(episode6Copy.seasonNumber()).thenReturn(1);
         
         this.season.addEpisode(episode6);
         newSeason.addEpisode(episode6Copy);

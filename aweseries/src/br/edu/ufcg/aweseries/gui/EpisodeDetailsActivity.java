@@ -61,12 +61,12 @@ public class EpisodeDetailsActivity extends Activity {
         this.setUpLocalReferencesToViewFields();
         this.loadEpisode();
 
-        this.episodeName.setText(this.episode.getName());
-        this.episodeFirstAired.setText(this.episode.getFirstAiredAsString());
-        this.episodeDirector.setText(this.episode.getDirector());
-        this.episodeWriter.setText(this.episode.getWriter());
-        this.episodeGuestStars.setText(this.episode.getGuestStars());
-        this.episodeOverview.setText(this.episode.getOverview());
+        this.episodeName.setText(this.episode.name());
+        this.episodeFirstAired.setText(this.episode.firstAiredAsString());
+        this.episodeDirector.setText(this.episode.directors());
+        this.episodeWriter.setText(this.episode.writers());
+        this.episodeGuestStars.setText(this.episode.guestStars());
+        this.episodeOverview.setText(this.episode.overview());
         this.isViewed.setChecked(this.episode.wasSeen());
     }
 

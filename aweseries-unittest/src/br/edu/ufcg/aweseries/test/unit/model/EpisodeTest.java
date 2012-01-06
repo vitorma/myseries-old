@@ -78,17 +78,17 @@ public class EpisodeTest {
 
     @Test
     public final void testEpisode() {
-        Assert.assertEquals(validEpisodeId, this.episode1.getId());
-        Assert.assertEquals(validSeriesId, this.episode1.getSeriesId());
-        Assert.assertEquals(validEpisodeNumber, this.episode1.getNumber());
-        Assert.assertEquals(validSeasonNumber, this.episode1.getSeasonNumber());
-        Assert.assertEquals("", this.episode1.getDirector());
-        Assert.assertEquals(null, this.episode1.getFirstAired());
-        Assert.assertEquals("", this.episode1.getGuestStars());
-        Assert.assertEquals("", this.episode1.getName());
-        Assert.assertEquals("", this.episode1.getOverview());
-        Assert.assertEquals("", this.episode1.getWriter());
-        Assert.assertEquals("", this.episode1.getPoster());
+        Assert.assertEquals(validEpisodeId, this.episode1.id());
+        Assert.assertEquals(validSeriesId, this.episode1.seriesId());
+        Assert.assertEquals(validEpisodeNumber, this.episode1.number());
+        Assert.assertEquals(validSeasonNumber, this.episode1.seasonNumber());
+        Assert.assertEquals("", this.episode1.directors());
+        Assert.assertEquals(null, this.episode1.firstAired());
+        Assert.assertEquals("", this.episode1.guestStars());
+        Assert.assertEquals("", this.episode1.name());
+        Assert.assertEquals("", this.episode1.overview());
+        Assert.assertEquals("", this.episode1.writers());
+        Assert.assertEquals("", this.episode1.poster());
         Assert.assertEquals(false, this.episode1.wasSeen());
     }
 
@@ -150,7 +150,7 @@ public class EpisodeTest {
         Assert.assertEquals(this.episode1, this.episode1);
 
         // symmetric
-        final Episode newEpisode = new Episode(this.episode1.getId(), anotherValidSeriesId,
+        final Episode newEpisode = new Episode(this.episode1.id(), anotherValidSeriesId,
                 anotherValidEpisodeNumber, anotherValidSeasonNumber);
 
         Assert.assertNotSame(this.episode1, this.episode1Copy);
@@ -175,7 +175,7 @@ public class EpisodeTest {
     public final void testHashCode() {
         Assert.assertEquals(this.episode1.hashCode(), this.episode1.hashCode());
 
-        final Episode newEpisode = new Episode(this.episode1.getId(), anotherValidSeriesId,
+        final Episode newEpisode = new Episode(this.episode1.id(), anotherValidSeriesId,
                 anotherValidEpisodeNumber, anotherValidSeasonNumber);
 
         Assert.assertEquals(this.episode1.hashCode(), this.episode1Copy.hashCode());
@@ -187,14 +187,14 @@ public class EpisodeTest {
 
     @Test
     public final void testMarkAsNotViewed() {
-        this.episode1.markWetherSeen(true);
+        this.episode1.markSeenAs(true);
         this.episode1.markAsNotSeen();
         Assert.assertFalse(this.episode1.wasSeen());
     }
 
     @Test
     public final void testMarkAsViewed() {
-        this.episode1.markWetherSeen(false);
+        this.episode1.markSeenAs(false);
         verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
         this.episode1.markAsSeen();
         verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
@@ -217,13 +217,13 @@ public class EpisodeTest {
         newEpisode.mergeWith(this.episode1);
         
         
-        Assert.assertEquals(validEpisodeName, newEpisode.getName());
-        Assert.assertEquals(validDate, newEpisode.getFirstAired());
-        Assert.assertEquals(validOverview, newEpisode.getOverview());
-        Assert.assertEquals(validDirector, newEpisode.getDirector());
-        Assert.assertEquals(validWriter, newEpisode.getWriter());
-        Assert.assertEquals(validGuestStars, newEpisode.getGuestStars());
-        Assert.assertEquals(validPoster, newEpisode.getPoster());
+        Assert.assertEquals(validEpisodeName, newEpisode.name());
+        Assert.assertEquals(validDate, newEpisode.firstAired());
+        Assert.assertEquals(validOverview, newEpisode.overview());
+        Assert.assertEquals(validDirector, newEpisode.directors());
+        Assert.assertEquals(validWriter, newEpisode.writers());
+        Assert.assertEquals(validGuestStars, newEpisode.guestStars());
+        Assert.assertEquals(validPoster, newEpisode.poster());
         Assert.assertEquals(true, newEpisode.wasSeen());
 
     }
@@ -237,9 +237,9 @@ public class EpisodeTest {
     public final void testSetDirector() {
         final String director = "Michael Palin";
         this.episode1.setDirector(director);
-        assertEquals(director, this.episode1.getDirector());
+        assertEquals(director, this.episode1.directors());
         this.episode1.setDirector("");
-        assertEquals("", this.episode1.getDirector());
+        assertEquals("", this.episode1.directors());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -252,18 +252,18 @@ public class EpisodeTest {
         final Date today = new Date();
         final Date aDay = new Date(Long.MAX_VALUE);
         this.episode1.setFirstAired(today);
-        assertEquals(today, this.episode1.getFirstAired());
+        assertEquals(today, this.episode1.firstAired());
         this.episode1.setFirstAired(aDay);
-        assertEquals(aDay, this.episode1.getFirstAired());
+        assertEquals(aDay, this.episode1.firstAired());
     }
 
     @Test
     public final void testSetGuestStars() {
         final String guestStars = "Fred Tomlinson Singers";
         this.episode1.setGuestStars(guestStars);
-        assertEquals(guestStars, this.episode1.getGuestStars());
+        assertEquals(guestStars, this.episode1.guestStars());
         this.episode1.setGuestStars("");
-        assertEquals("", this.episode1.getGuestStars());
+        assertEquals("", this.episode1.guestStars());
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -275,9 +275,9 @@ public class EpisodeTest {
     public final void testSetName() {
         final String name = "The Lumberjack Song";
         this.episode1.setName(name);
-        assertEquals(name, this.episode1.getName());
+        assertEquals(name, this.episode1.name());
         this.episode1.setName("");
-        assertEquals("", this.episode1.getName());
+        assertEquals("", this.episode1.name());
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -302,9 +302,9 @@ public class EpisodeTest {
                 + "members of an actual singing troupe, such as the Fred Tomlinson Singers "
                 + "in the TV version).";
         this.episode1.setOverview(overview);
-        assertEquals(overview, this.episode1.getOverview());
+        assertEquals(overview, this.episode1.overview());
         this.episode1.setOverview("");
-        assertEquals("", this.episode1.getOverview());
+        assertEquals("", this.episode1.overview());
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -316,9 +316,9 @@ public class EpisodeTest {
     public final void testSetPoster() {
         String poster = "SomePoster";
         this.episode1.setPoster(poster);
-        assertEquals(poster, episode1.getPoster());
+        assertEquals(poster, episode1.poster());
         this.episode1.setPoster("");
-        assertEquals("", episode1.getPoster());
+        assertEquals("", episode1.poster());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -328,12 +328,12 @@ public class EpisodeTest {
 
     @Test
     public final void testSetViewed() {
-        this.episode1.markWetherSeen(false);
+        this.episode1.markSeenAs(false);
         Assert.assertFalse(this.episode1.wasSeen());
-        this.episode1.markWetherSeen(true);
+        this.episode1.markSeenAs(true);
         verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
         Assert.assertTrue(this.episode1.wasSeen());
-        this.episode1.markWetherSeen(false);
+        this.episode1.markSeenAs(false);
         verify(this.episode1Listener, times(3)).onUpdate(this.episode1);
         Assert.assertFalse(this.episode1.wasSeen());
     }
@@ -342,9 +342,9 @@ public class EpisodeTest {
     public final void testSetWriter() {
         final String writer = "Terry Jones";
         this.episode1.setWriter(writer);
-        Assert.assertEquals(writer, this.episode1.getWriter());
+        Assert.assertEquals(writer, this.episode1.writers());
         this.episode1.setWriter("");
-        Assert.assertEquals("", this.episode1.getWriter());
+        Assert.assertEquals("", this.episode1.writers());
     }
 
     @Test(expected = IllegalArgumentException.class)

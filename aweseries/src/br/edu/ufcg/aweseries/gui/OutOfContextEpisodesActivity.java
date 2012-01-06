@@ -85,9 +85,9 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
                 final Episode episode = (Episode) parent.getItemAtPosition(position);
-                intent.putExtra("series id", episode.getSeriesId());
-                intent.putExtra("season number", episode.getSeasonNumber());
-                intent.putExtra("episode number", episode.getNumber());
+                intent.putExtra("series id", episode.seriesId());
+                intent.putExtra("season number", episode.seasonNumber());
+                intent.putExtra("episode number", episode.number());
                 OutOfContextEpisodesActivity.this.startActivity(intent);
             }
         });
@@ -116,8 +116,8 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
 
             // load episode data
             final Episode episode = this.getItem(position);
-            final Series series = this.SERIES_PROVIDER.getSeries(episode.getSeriesId());
-            final Season season = series.getSeasons().getSeason(episode.getSeasonNumber());
+            final Series series = this.SERIES_PROVIDER.getSeries(episode.seriesId());
+            final Season season = series.getSeasons().getSeason(episode.seasonNumber());
 
             this.showData(episode, season, series, itemView);
             this.setUpSeenEpisodeCheckBoxListener(episode, itemView);
@@ -150,13 +150,13 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             final CheckBox isViewedCheckBox = (CheckBox) itemView
                     .findViewById(R.id.episodeIsViewedCheckBox);
 
-            nameTextView.setText(episode.getName());
+            nameTextView.setText(episode.name());
             seriesTextView.setText(series.getName());
             seasonEpisodeTextView
                     .setText(String.format(OutOfContextEpisodesActivity.this
                             .getString(R.string.season_and_episode_format), season.getNumber(),
-                            episode.getNumber()));
-            dateTextView.setText(episode.getFirstAiredAsString());
+                            episode.number()));
+            dateTextView.setText(episode.firstAiredAsString());
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 

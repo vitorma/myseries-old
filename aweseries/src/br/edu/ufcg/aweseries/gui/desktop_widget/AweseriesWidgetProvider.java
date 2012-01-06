@@ -95,8 +95,8 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
 
                 while (it.hasNext() && (viewsToAdd > 0)) {
                     final Episode e = it.next();
-                    final Series series = seriesProvider.getSeries(e.getSeriesId());
-                    final Season season = series.getSeasons().getSeason(e.getSeasonNumber());
+                    final Series series = seriesProvider.getSeries(e.seriesId());
+                    final Season season = series.getSeasons().getSeason(e.seasonNumber());
 
                     final RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
                     if (series.hasPoster()) {
@@ -106,10 +106,10 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.getName());
                     final String pre = String.format(
                             this.getString(R.string.season_and_episode_format_short),
-                            season.getNumber(), e.getNumber());
+                            season.getNumber(), e.number());
                     item.setTextViewText(R.id.widgetEpisodeNameTextView, String.format(
-                            pre + this.getString(R.string.separator) + e.getName()));
-                    item.setTextViewText(R.id.widgetEpisodeDateTextView, e.getFirstAiredAsString());
+                            pre + this.getString(R.string.separator) + e.name()));
+                    item.setTextViewText(R.id.widgetEpisodeDateTextView, e.firstAiredAsString());
 
                     views.addView(R.id.innerLinearLayout, item);
                     viewsToAdd--;

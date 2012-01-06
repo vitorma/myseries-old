@@ -69,15 +69,15 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
             throw new IllegalArgumentException("episode should not be null");
         }
 
-        if (!episode.getSeriesId().equals(this.seriesId)) {
+        if (!episode.seriesId().equals(this.seriesId)) {
             throw new IllegalArgumentException("episode belongs to another series");
         }
 
-        if (!this.hasSeason(episode.getSeasonNumber())) {
-            this.addSeason(episode.getSeasonNumber());
+        if (!this.hasSeason(episode.seasonNumber())) {
+            this.addSeason(episode.seasonNumber());
         }
 
-        this.map.get(episode.getSeasonNumber()).addEpisode(episode);
+        this.map.get(episode.seasonNumber()).addEpisode(episode);
     }
 
     public void addAllEpisodes(List<Episode> episodes) {

@@ -68,7 +68,7 @@ public class EpisodeBuilder {
         try {
             this.number = Integer.valueOf(number);
         } catch (NumberFormatException e) {
-            //Do nothing - number already is -1;
+            //Do nothing - number is already -1;
         }
         return this;
     }
@@ -82,7 +82,7 @@ public class EpisodeBuilder {
         try {
             this.seasonNumber = Integer.valueOf(seasonNumber);
         } catch (NumberFormatException e) {
-            //Do nothing - seasonNumber already is -1
+            //Do nothing - seasonNumber is already -1
         }
         return this;
     }
@@ -96,7 +96,7 @@ public class EpisodeBuilder {
         try {
             this.firstAired = dateFormat.parse(firstAired);
         } catch (Exception e) {
-            //Do nothing - firstAired already is null
+            //Do nothing - firstAired is already null
         }
         return this;
     }
@@ -146,7 +146,7 @@ public class EpisodeBuilder {
         episode.setWriter(this.writer != null ? this.writer : DEFAULT_STRING);
         episode.setGuestStars(this.guestStars != null ? this.guestStars : DEFAULT_STRING);
         episode.setPoster(this.poster != null ? this.poster : DEFAULT_STRING);
-        episode.markWetherSeen(this.viewed);
+        episode.markSeenAs(this.viewed);
 
         return episode;
     }

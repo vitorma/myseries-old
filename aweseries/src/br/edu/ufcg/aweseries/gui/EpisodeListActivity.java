@@ -58,7 +58,7 @@ public class EpisodeListActivity extends ListActivity {
     private static class EpisodeComparator implements Comparator<Episode> {
         @Override
         public int compare(Episode episodeA, Episode episodeB) {
-            return episodeA.getNumber() - episodeB.getNumber();
+            return episodeA.number() - episodeB.number();
         }
     };
 
@@ -107,10 +107,10 @@ public class EpisodeListActivity extends ListActivity {
             CheckBox isViewedCheckBox = (CheckBox) itemView
                     .findViewById(R.id.episodeIsViewedCheckBox);
 
-            nameTextView.setText(episode.getName());
+            nameTextView.setText(episode.name());
             numberTextView.setText(String.format(getString(R.string.episode_number_format),
-                    episode.getNumber()));
-            dateTextView.setText(episode.getFirstAiredAsString());
+                    episode.number()));
+            dateTextView.setText(episode.firstAiredAsString());
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 
@@ -208,9 +208,9 @@ public class EpisodeListActivity extends ListActivity {
                 Episode episode = (Episode) parent.getItemAtPosition(position);
 
                 Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
-                intent.putExtra("series id", episode.getSeriesId());
-                intent.putExtra("season number", episode.getSeasonNumber());
-                intent.putExtra("episode number", episode.getNumber());
+                intent.putExtra("series id", episode.seriesId());
+                intent.putExtra("season number", episode.seasonNumber());
+                intent.putExtra("episode number", episode.number());
 
                 EpisodeListActivity.this.startActivity(intent);
             }

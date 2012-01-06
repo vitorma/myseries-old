@@ -231,7 +231,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
                 final Episode nextToAir = series.getSeasons().getNextEpisodeToAir();
 
                 if (nextToAir != null) {
-                    this.nextToAir.setText(series.getSeasons().getNextEpisodeToAir().getName());
+                    this.nextToAir.setText(series.getSeasons().getNextEpisodeToAir().name());
                 } else {
                     this.nextToAir.setText(R.string.up_to_date);
 
@@ -251,7 +251,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
 
             final Episode nextToSee = series.getSeasons().getNextEpisodeToSee();
             if (nextToSee != null) {
-                this.nextToSee.setText(series.getSeasons().getNextEpisodeToSee().getName());
+                this.nextToSee.setText(series.getSeasons().getNextEpisodeToSee().name());
             } else {
                 this.nextToSee.setText(R.string.up_to_date);
             }

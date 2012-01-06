@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.model;
 
 import java.text.DateFormat;
@@ -31,7 +30,6 @@ import java.util.Set;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class Episode {
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private String id;
     private String seriesId;
@@ -40,8 +38,8 @@ public class Episode {
     private String name;
     private Date firstAired;
     private String overview;
-    private String director;
-    private String writer;
+    private String directors;
+    private String writers;
     private String guestStars;
     private String poster;
 
@@ -78,51 +76,146 @@ public class Episode {
         this.setOverview("");
         this.setPoster("");
         this.setWriter("");
-        this.markWetherSeen(false);
+        this.markSeenAs(false);
     }
 
-    public String getId() {
+    public String id() {
         return this.id;
     }
 
-    public String getSeriesId() {
+    public String seriesId() {
         return this.seriesId;
     }
 
-    public int getNumber() {
+    public int number() {
         return this.number;
     }
 
-    public int getSeasonNumber() {
+    public int seasonNumber() {
         return this.seasonNumber;
     }
 
     public boolean isSpecial() {
-        return this.getSeasonNumber() == 0;
+        return this.seasonNumber() == 0;
     }
 
-    public String getName() {
+    public String name() {
         return this.name;
     }
 
-    public Date getFirstAired() {
+    public Date firstAired() {
         return this.firstAired;
     }
 
-    public boolean hasFirstAired() {
+    public boolean wasAired() {
         return this.firstAired != null;
     }
 
-    public String getFirstAiredAsString() {
-        return (this.hasFirstAired()) ? dateFormat.format(this.getFirstAired()) : "";
+    public String overview() {
+        return this.overview;
     }
+
+    public String directors() {
+        return this.directors;
+    }
+
+    public String writers() {
+        return this.writers;
+    }
+
+    public String guestStars() {
+        return this.guestStars;
+    }
+
+    public String poster() {
+        return this.poster;
+    }
+
+    public boolean wasSeen() {
+        return this.seen;
+    }
+
+    public void markSeenAs(boolean seen) {
+        this.seen = seen;
+        
+        this.notifyListeners();
+    }
+
+    public void markAsSeen() {
+        this.seen = true;
+        
+        this.notifyListeners();
+    }
+
+    public void markAsNotSeen() {
+        this.seen = false;
+        
+        this.notifyListeners();
+    }
+
+    @Override
+    public int hashCode() {
+        return  this.id().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Episode) &&
+               ((Episode) obj).id().equals(this.id());
+    }
+
+    @Override
+    public String toString() {
+        return this.name();
+    }
+    
+    private void notifyListeners() {
+        for (final DomainObjectListener<Episode> listener : this.listeners) {
+            listener.onUpdate(this);            
+        }
+    }
+
+    public boolean addListener(DomainObjectListener<Episode> listener) {
+        return this.listeners.add(listener);
+    }
+    
+    public boolean removeListener(DomainObjectListener<Episode> listener) {
+        return this.listeners.remove(listener);
+    }
+
+    //TODO: Test whether other has same id -----------------------------------------------------------------------------
+
+    public void mergeWith(Episode other) {
+        if (other == null) {
+            throw new IllegalArgumentException("other should not be null");
+        }
+        
+        this.name = other.name;
+        this.firstAired = other.firstAired;
+        this.overview = other.overview;
+        this.directors = other.directors;
+        this.writers = other.writers;
+        this.guestStars = other.guestStars;
+        this.poster = other.poster;
+
+        this.notifyListeners();
+    }
+
+    //TODO: Move this method to an utility class of myseries.gui--------------------------------------------------------
+
+    public String firstAiredAsString() {
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return (this.wasAired()) ? dateFormat.format(this.firstAired()) : "";
+    }
+
+    //TODO: Move these methods to a comparator--------------------------------------------------------------------------
 
     public boolean airedBefore(Date date) {
         if (date == null) {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) < 0) : false;
+        return this.wasAired() ? (this.firstAired().compareTo(date) < 0) : false;
     }
 
     public boolean airedUntil(Date date) {
@@ -130,7 +223,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) <= 0) : false;
+        return this.wasAired() ? (this.firstAired().compareTo(date) <= 0) : false;
     }
 
     public boolean airedAt(Date date) {
@@ -138,7 +231,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) == 0) : false;
+        return this.wasAired() ? (this.firstAired().compareTo(date) == 0) : false;
     }
 
     public boolean airedFrom(Date date) {
@@ -146,7 +239,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) >= 0) : false;
+        return this.wasAired() ? (this.firstAired().compareTo(date) >= 0) : false;
     }
 
     public boolean airedAfter(Date date) {
@@ -154,46 +247,24 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.hasFirstAired() ? (this.getFirstAired().compareTo(date) > 0) : false;
+        return this.wasAired() ? (this.firstAired().compareTo(date) > 0) : false;
     }
 
     public int compareByDateTo(Episode other) {
-        if (!this.hasFirstAired()) {
-            return other.hasFirstAired() ? 1 : this.compareByNumberTo(other);
+        if (!this.wasAired()) {
+            return other.wasAired() ? 1 : this.compareByNumberTo(other);
         }
 
-        return other.hasFirstAired() ? this.getFirstAired().compareTo(other.getFirstAired()) : -1;
+        return other.wasAired() ? this.firstAired().compareTo(other.firstAired()) : -1;
     }
 
     public int compareByNumberTo(Episode other) {
-        return (this.getSeasonNumber() != other.getSeasonNumber())
-               ? (this.getSeasonNumber() - other.getSeasonNumber())
-               : (this.getNumber() - other.getNumber());
+        return (this.seasonNumber() != other.seasonNumber())
+               ? (this.seasonNumber() - other.seasonNumber())
+               : (this.number() - other.number());
     }
 
-    public String getOverview() {
-        return this.overview;
-    }
-
-    public String getDirector() {
-        return this.director;
-    }
-
-    public String getWriter() {
-        return this.writer;
-    }
-
-    public String getGuestStars() {
-        return this.guestStars;
-    }
-
-    public String getPoster() {
-        return this.poster;
-    }
-
-    public boolean wasSeen() {
-        return this.seen;
-    }
+    //TODO: Remove or turn private these methods------------------------------------------------------------------------
 
     public void setName(String name) {
         if (name == null) {
@@ -220,7 +291,7 @@ public class Episode {
             throw new IllegalArgumentException("Director should not be null");
         }
 
-        this.director = director;
+        this.directors = director;
     }
 
     public void setWriter(String writer) {
@@ -228,7 +299,7 @@ public class Episode {
             throw new IllegalArgumentException("Writer should not be null");
         }
 
-        this.writer = writer;
+        this.writers = writer;
     }
 
     public void setGuestStars(String guestStars) {
@@ -245,70 +316,5 @@ public class Episode {
         }
 
         this.poster = poster;
-    }
-
-    public void markWetherSeen(boolean seen) {
-        this.seen = seen;
-        
-        this.notifyListeners();
-    }
-
-    public void markAsSeen() {
-        this.seen = true;
-        
-        this.notifyListeners();
-    }
-
-    public void markAsNotSeen() {
-        this.seen = false;
-        
-        this.notifyListeners();
-    }
-
-    @Override
-    public int hashCode() {
-        return  this.getId().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof Episode) &&
-               ((Episode) obj).getId().equals(this.getId());
-    }
-
-    @Override
-    public String toString() {
-        return this.getName();
-    }
-    
-    private void notifyListeners() {
-        for (final DomainObjectListener<Episode> listener : this.listeners) {
-            listener.onUpdate(this);            
-        }
-    }
-
-    public boolean addListener(DomainObjectListener<Episode> listener) {
-        return this.listeners.add(listener);
-    }
-    
-    public boolean removeListener(DomainObjectListener<Episode> listener) {
-        return this.listeners.remove(listener);
-    }
-
-    //TODO: Test whether other has different seriesId, seasonNumber or number than mine (its)
-    public void mergeWith(Episode other) {
-        if (other == null) {
-            throw new IllegalArgumentException(); //TODO: use a user exception 
-        }
-        
-        this.name = other.name;
-        this.firstAired = other.firstAired;
-        this.overview = other.overview;
-        this.director = other.director;
-        this.writer = other.writer;
-        this.guestStars = other.guestStars;
-        this.poster = other.poster;
-
-        this.notifyListeners();
     }
 }
