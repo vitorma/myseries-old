@@ -76,18 +76,14 @@ public class SeriesProvider {
     }
 
     public Series[] searchSeries(String seriesName) {
-        final List<Series> searchResult = this.seriesSource.searchFor(seriesName, App.environment()
-                .localization().language());
-
-        if (searchResult == null) {
-
-            throw new RuntimeException(App.environment().context()
-                    .getString(R.string.no_results_found_for_criteria)
-                    + seriesName);
+        try {
+            return this.seriesSource.searchFor(seriesName, App.environment().localization().language())
+                                    .toArray(new Series[] {}); //TODO: return a list
+        } catch (SeriesNotFoundException e) {
+            //TODO a better exception handling
+            throw new RuntimeException(
+                    App.environment().context().getString(R.string.no_results_found_for_criteria) + seriesName);
         }
-
-        //TODO: Implement util.Arrays#toArray
-        return searchResult.toArray(new Series[] {});
     }
 
     public void updateData() {
@@ -233,7 +229,7 @@ public class SeriesProvider {
         return upcoming;
     }
 
-    //TODO: Encapsulate it in Series or SeriesBuilder-------------------------------------------------------------------
+    //TODO: Move this method to an utilitary class----------------------------------------------------------------------
 
     public Bitmap getPosterOf(Series series) {
         if (series == null) {
@@ -299,5 +295,4 @@ public class SeriesProvider {
             listener.onUpdateFailure();
         }
     }
-
 }

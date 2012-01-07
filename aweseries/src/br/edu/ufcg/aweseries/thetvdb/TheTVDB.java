@@ -48,22 +48,23 @@ public class TheTVDB implements SeriesSource {
         this.streamFactory = streamFactory;
     }
 
+    //SeriesSource methods----------------------------------------------------------------------------------------------
+
     @Override
     public List<Series> searchFor(String seriesName, String language) {
+        if (seriesName == null) {
+            throw new IllegalArgumentException("seriesName should not be null");
+        }
+
+        if (language == null) {
+            throw new IllegalArgumentException("language should not be null");
+        }
 
         try {
             return new SeriesSearchParser(this.streamFactory).parse(seriesName, this.getSupported(language));
         } catch (Exception e) {
             //TODO A better exception handling
-            return null;
-        }
-    }
-
-    private String getSupported(String language) {
-        try {
-            return Language.from(language).abbreviation();
-        } catch (Exception e) {
-            return "en";
+            throw new SeriesNotFoundException(e);
         }
     }
 
@@ -71,6 +72,10 @@ public class TheTVDB implements SeriesSource {
     public Series fetchSeries(String seriesId, String language) {
         if (seriesId == null) {
             throw new IllegalArgumentException("seriesId should not be null");
+        }
+
+        if (language == null) {
+            throw new IllegalArgumentException("language should not be null");
         }
 
         try {
@@ -83,11 +88,28 @@ public class TheTVDB implements SeriesSource {
 
     @Override
     public List<Series> fetchAllSeries(List<String> seriesIds, String language) {
+        if (seriesIds == null) {
+            throw new IllegalArgumentException("seriesIds should not be null");
+        }
+
         List<Series> result = new ArrayList<Series>();
+
         for (String seriesId : seriesIds) {
-            Series series = this.fetchSeries(seriesId, this.getSupported(language));
+            //TODO Check the language only once
+            Series series = this.fetchSeries(seriesId, language);
             result.add(series);
         }
+
         return result;
+    }
+
+    //Auxiliar methods--------------------------------------------------------------------------------------------------
+
+    private String getSupported(String language) {
+        try {
+            return Language.from(language).abbreviation();
+        } catch (Exception e) {
+            return "en";
+        }
     }
 }
