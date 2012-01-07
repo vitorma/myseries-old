@@ -33,7 +33,7 @@ import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
-import br.edu.ufcg.aweseries.model.EpisodeBuilder;
+import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.util.Strings;
@@ -61,7 +61,7 @@ public class SeriesParser {
         //Builders------------------------------------------------------------------------------------------------------
 
         final Series.Builder seriesBuilder = new Series.Builder();
-        final EpisodeBuilder episodeBuilder = new EpisodeBuilder();
+        final Episode.Builder episodeBuilder = new Episode.Builder();
 
         //Root element--------------------------------------------------------------------------------------------------
 
