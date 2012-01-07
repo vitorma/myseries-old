@@ -28,23 +28,20 @@ import br.edu.ufcg.aweseries.model.Series;
 public interface SeriesSource {
 
     /**
-     * This method never returns null.
-     *
      * @throws IllegalArgumentException when either seriesName or languageAbbreviation are null
+     * @throws SeriesNotFoundException if there is no series that satisfies the given seriesName criteria
      */
     public List<Series> searchFor(String seriesName, String languageAbbreviation);
 
     /**
-     * If there is no series with the given seriesId, throws SeriesNotFoundException.
-     *
      * @throws IllegalArgumentException when either seriesId or languageAbbreviation are null
+     * @throws SeriesNotFoundException if there is no series with the given seriesId
      */
     public Series fetchSeries(String seriesId, String languageAbbreviation);
 
     /**
-     * If there is no series with any of the given seriesId, throws SeriesNotFoundException.
-     *
      * @throws IllegalArgumentException when either seriesIds or languageAbbreviation are null
+     * @throws SeriesNotFoundException if there is no series with any of the given seriesId
      */
     public List<Series> fetchAllSeries(List<String> seriesIds, String languageAbbreviation);
 }
