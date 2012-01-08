@@ -19,346 +19,445 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.test.unit.model;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 
 public class EpisodeTest {
 
-    private Episode episode1;
-    private Episode episode2;
-    private DomainObjectListener<Episode> episode1Listener;
-    private Episode episode1Copy;
-    private static final String validEpisodeId = "1234";
-    private static final String anotherValidEpisodeId = "1235";
-    private static final String validSeriesId = "1237";
-    private static final String anotherValidSeriesId = "1236";
-    private static final int validEpisodeNumber = 1;
-    private static final int anotherValidEpisodeNumber = 2;
-    private static final int validSeasonNumber = 3;
-    private static final int anotherValidSeasonNumber = 4;
-    private static final String validEpisodeName = "Owl Stretching Time";
-    private static final Date validDate = new Date();
-    private static final String validOverview =
-            "BBC-1 began colour broadcasting officially on 15 November 1969. Since September " +
-            "1969, however, they had been broadcasting colour programmes \"unofficially\", so " +
-            "while the whole of the first series was broadcast in colour, this episode was the " +
-            "first to be advertised as being in colour (source: Notes taken from BBC videotape " +
-            "operators and transmission managers made at the time).";
-    private static final String validDirector = "Graham Chapman";
-    private static final String validWriter = "John Cleese";
-    private static final String validGuestStars = "Douglas Adams";
-    private static final String validPoster = "someposter.png";
-    
-    @Before
-    public void setUp() throws Exception {
-        this.episode1 = new Episode(validEpisodeId, validSeriesId, validEpisodeNumber,
-                validSeasonNumber);
-        this.episode1Copy = new Episode(validEpisodeId, validSeriesId, validEpisodeNumber,
-                validSeasonNumber);
-        this.episode2 = new Episode(anotherValidEpisodeId, validSeriesId, validEpisodeNumber,
-                validSeasonNumber);
-        this.episode1Listener = Mockito.mock(DomainObjectListener.class);
-        this.episode1.addListener(this.episode1Listener);
+    private static final String ID1 = "1";
+    private static final String ID2 = "2";
+    private static final String SERIES_ID1 = "1";
+    private static final String SERIES_ID2 = "2";
+    private static final int NUMBER1 = 1;
+    private static final int NUMBER2 = 2;
+    private static final int SEASON_NUMBER1 = 1;
+    private static final int SEASON_NUMBER2 = 2;
+    private static final String NAME = "name";
+    private static final Date FIRST_AIRED = new Date();
+    private static final String OVERVIEW = "overview";
+    private static final String DIRECTORS = "directors";
+    private static final String WRITERS = "writers";
+    private static final String GUEST_STARS = "guest stars";
+    private static final String POSTER = "poster";
+
+    //Building----------------------------------------------------------------------------------------------------------
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testBuildAnEpisodeWithoutId() {
+    	Episode.builder()
+        	.withSeriesId(SERIES_ID1)
+        	.withNumber(NUMBER1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.build();
     }
 
-    @Test
-    public final void testEpisode() {
-        Assert.assertEquals(validEpisodeId, this.episode1.id());
-        Assert.assertEquals(validSeriesId, this.episode1.seriesId());
-        Assert.assertEquals(validEpisodeNumber, this.episode1.number());
-        Assert.assertEquals(validSeasonNumber, this.episode1.seasonNumber());
-        Assert.assertEquals("", this.episode1.directors());
-        Assert.assertEquals(null, this.episode1.firstAired());
-        Assert.assertEquals("", this.episode1.guestStars());
-        Assert.assertEquals("", this.episode1.name());
-        Assert.assertEquals("", this.episode1.overview());
-        Assert.assertEquals("", this.episode1.writers());
-        Assert.assertEquals("", this.episode1.poster());
-        Assert.assertEquals(false, this.episode1.wasSeen());
+    @Test(expected=IllegalArgumentException.class)
+    public void testBuildAnEpisodeWithNullId() {
+    	Episode.builder()
+        	.withId(null)
+        	.withSeriesId(SERIES_ID1)
+        	.withNumber(NUMBER1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.build();
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testBuildAnEpisodeWithBlankId() {
+    	Episode.builder()
+        	.withId("")
+        	.withSeriesId(SERIES_ID1)
+        	.withNumber(NUMBER1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public final void testEpisodeEpisodeIdNull() {
-        final String notNullNotEmpty = "123124";
-        final int positiveInteger = 2;
-
-        new Episode(null, notNullNotEmpty, positiveInteger, positiveInteger);
+    public void testBuildAnEpisodeWithoutSeriesId() {
+    	Episode.builder()
+        	.withId(ID1)
+        	.withNumber(NUMBER1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public final void testEpisodeEpisodeIdEmpty() {
-        final String notNullNotEmpty = "123124";
-        final int positiveInteger = 2;
-
-        new Episode("", notNullNotEmpty, positiveInteger, positiveInteger);
+    public void testBuildAnEpisodeWithNullSeriesId() {
+    	Episode.builder()
+        	.withId(ID1)
+        	.withSeriesId(null)
+        	.withNumber(NUMBER1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public final void testEpisodeSeriesIdNull() {
-        final String notNullNotEmpty = "123124";
-        final int positiveInteger = 2;
-
-        new Episode(notNullNotEmpty, null, positiveInteger, positiveInteger);
+    public void testBuildAnEpisodeWithBlankSeriesId() {
+    	Episode.builder()
+        	.withId(ID1)
+        	.withSeriesId("  ")
+        	.withNumber(NUMBER1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public final void testEpisodeSeriesIdEmpty() {
-        final String notNullNotEmpty = "123124";
-        final int positiveInteger = 2;
-
-        new Episode(notNullNotEmpty, null, positiveInteger, positiveInteger);
+    public void testBuildAnEpisodeWithoutNumber() {
+    	Episode.builder()
+        	.withId(ID1)
+        	.withSeriesId(SERIES_ID1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public final void testEpisodeNegativeNumber() {
-        final String notNullNotEmpty = "123124";
-        final int positiveInteger = 2;
-
-        new Episode(notNullNotEmpty, notNullNotEmpty, -1, positiveInteger);
+    public void testBuildAnEpisodeWithNegativeNumber() {
+    	Episode.builder()
+        	.withId(ID1)
+        	.withSeriesId(SERIES_ID1)
+        	.withNumber(-1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public final void testEpisodeNegativeSeasonNumber() {
-        final String notNullNotEmpty = "123124";
-        final int positiveInteger = 2;
-
-        new Episode(notNullNotEmpty, notNullNotEmpty, positiveInteger, -1);
-    }
-
-    @Test
-    public final void testEqualsObject() {
-        // basics
-        Assert.assertFalse(this.episode1.equals(null));
-        Assert.assertFalse(this.episode1.equals("randomString"));
-
-        // reflexive
-        Assert.assertEquals(this.episode1, this.episode1);
-
-        // symmetric
-        final Episode newEpisode = new Episode(this.episode1.id(), anotherValidSeriesId,
-                anotherValidEpisodeNumber, anotherValidSeasonNumber);
-
-        Assert.assertNotSame(this.episode1, this.episode1Copy);
-        Assert.assertEquals(this.episode1, this.episode1Copy);
-        Assert.assertEquals(this.episode1Copy, this.episode1);
-
-        Assert.assertEquals(this.episode1, newEpisode);
-        Assert.assertEquals(newEpisode, this.episode1);
-
-        Assert.assertFalse(this.episode1.equals(this.episode2));
-        Assert.assertFalse(this.episode2.equals(this.episode1));
-        Assert.assertFalse(this.episode2.equals(newEpisode));
-        Assert.assertFalse(newEpisode.equals(this.episode2));
-
-        // transitive
-        Assert.assertEquals(this.episode1, this.episode1Copy);
-        Assert.assertEquals(this.episode1Copy, newEpisode);
-        Assert.assertEquals(this.episode1, newEpisode);
-    }
-
-    @Test
-    public final void testHashCode() {
-        Assert.assertEquals(this.episode1.hashCode(), this.episode1.hashCode());
-
-        final Episode newEpisode = new Episode(this.episode1.id(), anotherValidSeriesId,
-                anotherValidEpisodeNumber, anotherValidSeasonNumber);
-
-        Assert.assertEquals(this.episode1.hashCode(), this.episode1Copy.hashCode());
-        Assert.assertEquals(this.episode1.hashCode(), newEpisode.hashCode());
-
-        Assert.assertFalse(this.episode1.hashCode() == this.episode2.hashCode());
-        Assert.assertFalse(this.episode2.hashCode() == newEpisode.hashCode());
-    }
-
-    @Test
-    public final void testMarkAsNotViewed() {
-        this.episode1.markSeenAs(true);
-        this.episode1.markAsNotSeen();
-        Assert.assertFalse(this.episode1.wasSeen());
-    }
-
-    @Test
-    public final void testMarkAsViewed() {
-        this.episode1.markSeenAs(false);
-        verify(this.episode1Listener, times(1)).onUpdate(this.episode1);
-        this.episode1.markAsSeen();
-        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
-        Assert.assertTrue(this.episode1.wasSeen());
-    }
-
-    public final void testMergeWith() {
-        this.episode1.markAsSeen();
-        this.episode1.setName(validEpisodeName);
-        this.episode1.setFirstAired(validDate);
-        this.episode1.setOverview(validOverview);
-        this.episode1.setDirector(validDirector);
-        this.episode1.setWriter(validWriter);
-        this.episode1.setGuestStars(validGuestStars);
-        this.episode1.setPoster(validPoster);
-        
-        Episode newEpisode =
-                new Episode(validEpisodeId, validSeriesId, validEpisodeNumber, validSeasonNumber);
-        
-        newEpisode.mergeWith(this.episode1);
-        
-        
-        Assert.assertEquals(validEpisodeName, newEpisode.name());
-        Assert.assertEquals(validDate, newEpisode.firstAired());
-        Assert.assertEquals(validOverview, newEpisode.overview());
-        Assert.assertEquals(validDirector, newEpisode.directors());
-        Assert.assertEquals(validWriter, newEpisode.writers());
-        Assert.assertEquals(validGuestStars, newEpisode.guestStars());
-        Assert.assertEquals(validPoster, newEpisode.poster());
-        Assert.assertEquals(true, newEpisode.wasSeen());
-
+    public void testBuildAnEpisodeWithoutSeasonNumber() {
+    	Episode.builder()
+        	.withId(ID1)
+        	.withSeriesId(SERIES_ID1)
+        	.withNumber(NUMBER1)
+        	.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public final void testMergeWithNull() {
-        this.episode1.mergeWith(null);
-    }
-
-    @Test
-    public final void testSetDirector() {
-        final String director = "Michael Palin";
-        this.episode1.setDirector(director);
-        assertEquals(director, this.episode1.directors());
-        this.episode1.setDirector("");
-        assertEquals("", this.episode1.directors());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public final void testSetDirectorNull() {
-        this.episode1.setDirector(null);
-    }
-
-    @Test
-    public final void testSetFirstAired() {
-        final Date today = new Date();
-        final Date aDay = new Date(Long.MAX_VALUE);
-        this.episode1.setFirstAired(today);
-        assertEquals(today, this.episode1.firstAired());
-        this.episode1.setFirstAired(aDay);
-        assertEquals(aDay, this.episode1.firstAired());
-    }
-
-    @Test
-    public final void testSetGuestStars() {
-        final String guestStars = "Fred Tomlinson Singers";
-        this.episode1.setGuestStars(guestStars);
-        assertEquals(guestStars, this.episode1.guestStars());
-        this.episode1.setGuestStars("");
-        assertEquals("", this.episode1.guestStars());
+    public void testBuildAnEpisodeWithNegativeSeasonNumber() {
+    	Episode.builder()
+        	.withId(ID1)
+        	.withSeriesId(SERIES_ID1)
+        	.withNumber(NUMBER1)
+        	.withSeasonNumber(-1)
+        	.build();
     }
     
-    @Test(expected = IllegalArgumentException.class)
-    public final void testSetGuestStarsNull() {
-        this.episode1.setGuestStars(null);
+    @Test
+    public void testBuildAnEpisode() {
+    	Episode e1 = Episode.builder()
+        	.withId(ID1)
+            .withSeriesId(SERIES_ID1)
+            .withNumber(NUMBER1)
+            .withSeasonNumber(SEASON_NUMBER1)
+            .withName(NAME)
+            .withFirstAired(FIRST_AIRED)
+            .withOverview(OVERVIEW)
+            .withDirector(DIRECTORS)
+            .withWriter(WRITERS)
+            .withGuestStars(GUEST_STARS)
+            .withPoster(POSTER)
+            .withSeen(true)
+            .build();
+
+    	Assert.assertEquals(ID1, e1.id());
+    	Assert.assertEquals(SERIES_ID1, e1.seriesId());
+    	Assert.assertEquals(NUMBER1, e1.number());
+    	Assert.assertEquals(SEASON_NUMBER1, e1.seasonNumber());
+    	Assert.assertEquals(NAME, e1.name());
+    	Assert.assertEquals(FIRST_AIRED, e1.firstAired());
+    	Assert.assertEquals(OVERVIEW, e1.overview());
+    	Assert.assertEquals(DIRECTORS, e1.directors());
+    	Assert.assertEquals(WRITERS, e1.writers());
+    	Assert.assertEquals(GUEST_STARS, e1.guestStars());
+    	Assert.assertEquals(POSTER, e1.poster());
+    	Assert.assertEquals(true, e1.wasSeen());
+    	
+    	Episode e2 = Episode.builder()
+        	.withId(ID2)
+            .withSeriesId(SERIES_ID1)
+            .withNumber(NUMBER2)
+            .withSeasonNumber(SEASON_NUMBER1)
+            .build();
+
+    	Assert.assertEquals(ID2, e2.id());
+    	Assert.assertEquals(SERIES_ID1, e2.seriesId());
+    	Assert.assertEquals(NUMBER2, e2.number());
+    	Assert.assertEquals(SEASON_NUMBER1, e2.seasonNumber());
+    	Assert.assertEquals("", e2.name());
+    	Assert.assertEquals(null, e2.firstAired());
+    	Assert.assertEquals("", e2.overview());
+    	Assert.assertEquals("", e2.directors());
+    	Assert.assertEquals("", e2.writers());
+    	Assert.assertEquals("", e2.guestStars());
+    	Assert.assertEquals("", e2.poster());
+    	Assert.assertEquals(false, e2.wasSeen());
+    }
+
+    //Seen--------------------------------------------------------------------------------------------------------------
+    
+    @Test
+    public void testMarkSeenAs() {
+    	Episode e = Episode.builder()
+        	.withId(ID1)
+        	.withSeriesId(SERIES_ID1)
+        	.withNumber(NUMBER1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.withSeen(false)
+        	.build();
+
+    	e.markSeenAs(true);
+    	Assert.assertTrue(e.wasSeen());
+    	e.markSeenAs(false);
+    	Assert.assertFalse(e.wasSeen());
     }
 
     @Test
-    public final void testSetName() {
-        final String name = "The Lumberjack Song";
-        this.episode1.setName(name);
-        assertEquals(name, this.episode1.name());
-        this.episode1.setName("");
-        assertEquals("", this.episode1.name());
+    public void testMarkAsSeen() {
+    	Episode e = Episode.builder()
+    	    .withId(ID1)
+    	    .withSeriesId(SERIES_ID1)
+    	    .withNumber(NUMBER1)
+    	    .withSeasonNumber(SEASON_NUMBER1)
+    	    .withSeen(false)
+    	    .build();
+
+    	e.markAsSeen();
+    	Assert.assertTrue(e.wasSeen());
     }
+
+    @Test
+    public void testMarkAsNotSeen() {
+    	Episode e = Episode.builder()
+	    	.withId(ID1)
+	    	.withSeriesId(SERIES_ID1)
+	    	.withNumber(NUMBER1)
+	    	.withSeasonNumber(SEASON_NUMBER1)
+	    	.withSeen(true)
+	    	.build();
+
+    	e.markAsNotSeen();
+        Assert.assertFalse(e.wasSeen());
+    }
+
+    //Merge-------------------------------------------------------------------------------------------------------------
     
     @Test(expected = IllegalArgumentException.class)
-    public final void testSetNameNull() {
-        this.episode1.setName(null);
+    public void testMergeWithNull() {
+    	Episode.builder()
+    		.withId(ID1)
+    		.withSeriesId(SERIES_ID1)
+    		.withNumber(NUMBER1)
+    		.withSeasonNumber(SEASON_NUMBER1)
+    		.build()
+    		.mergeWith(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMergeWithOtherHavingNotSameId() {
+    	Episode e1 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	Episode e2 = Episode.builder()
+			.withId(ID2)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	e1.mergeWith(e2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMergeWithOtherHavingNotSameSeriesId() {
+    	Episode e1 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	Episode e2 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID2)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	e1.mergeWith(e2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMergeWithOtherHavingNotSameNumber() {
+    	Episode e1 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	Episode e2 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER2)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	e1.mergeWith(e2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMergeWithOtherHavingNotSameSeasonNumber() {
+    	Episode e1 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	Episode e2 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER2)
+			.build();
+
+    	e1.mergeWith(e2);
     }
 
     @Test
-    public final void testSetOverview() {
-        final String overview = "The common theme was of an average man (played by Michael Palin "
-                + "in the original television version, but in later live versions by Eric "
-                + "Idle) who expresses dissatisfaction with his current job (as a barber, "
-                + "weatherman, pet shop owner, etc.) and then announces, \"I didn't want to "
-                + "be [the given profession]. I wanted to be... a lumberjack!\" He proceeds "
-                + "to talk about the life of a lumberjack (\"Leaping from tree to tree\"), "
-                + "and lists various trees (e.g. fir, larch, Scots pine). Ripping off his "
-                + "coat to reveal a red flannel shirt, he walks over to a stage with a "
-                + "coniferous forest backdrop, and he begins to sing about the wonders of "
-                + "being a lumberjack in British Columbia. Then, he is unexpectedly backed "
-                + "up by a small choir of male singers, all dressed as Canadian Mounties "
-                + "(several were regular Python performers, while the rest were generally "
-                + "members of an actual singing troupe, such as the Fred Tomlinson Singers "
-                + "in the TV version).";
-        this.episode1.setOverview(overview);
-        assertEquals(overview, this.episode1.overview());
-        this.episode1.setOverview("");
-        assertEquals("", this.episode1.overview());
+    public void testMergeWith() {
+    	Episode e1 = Episode.builder()
+        	.withId(ID1)
+        	.withSeriesId(SERIES_ID1)
+        	.withNumber(NUMBER1)
+        	.withSeasonNumber(SEASON_NUMBER1)
+        	.withName(NAME)
+        	.withFirstAired(FIRST_AIRED)
+        	.withOverview(OVERVIEW)
+        	.withDirector(DIRECTORS)
+        	.withWriter(WRITERS)
+        	.withGuestStars(GUEST_STARS)
+        	.withPoster(POSTER)
+        	.withSeen(true)
+        	.build();
+
+    	Episode e2 = Episode.builder()
+    		.withId(ID1)
+    		.withSeriesId(SERIES_ID1)
+    		.withNumber(NUMBER1)
+    		.withSeasonNumber(SEASON_NUMBER1)
+    		.withSeen(false)
+    		.build();
+
+    	e2.mergeWith(e1);
+
+        Assert.assertEquals(NAME, e2.name());
+        Assert.assertEquals(FIRST_AIRED, e2.firstAired());
+        Assert.assertEquals(OVERVIEW, e2.overview());
+        Assert.assertEquals(DIRECTORS, e2.directors());
+        Assert.assertEquals(WRITERS, e2.writers());
+        Assert.assertEquals(GUEST_STARS, e2.guestStars());
+        Assert.assertEquals(POSTER, e2.poster());
+        Assert.assertEquals(false, e2.wasSeen());
+    }
+
+    //Equals and hashCode-----------------------------------------------------------------------------------------------
+
+    @Test
+    public void testEquals() {
+    	Episode e1 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	Episode e2 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID2)
+			.withNumber(NUMBER2)
+			.withSeasonNumber(SEASON_NUMBER2)
+			.build();
+
+    	Episode e3 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID2)
+			.withNumber(NUMBER2)
+			.withSeasonNumber(SEASON_NUMBER2)
+			.build();
+
+    	Episode e4 = Episode.builder()
+			.withId(ID2)
+			.withSeriesId(SERIES_ID2)
+			.withNumber(NUMBER2)
+			.withSeasonNumber(SEASON_NUMBER2)
+			.build();
+
+    	//equals is consistent
+    	for (int i=1; i<=1000; i++) {
+
+    		//equals returns false to null objects
+    		Assert.assertFalse(e1.equals(null));
+    		
+    		//equals is reflexive
+    		Assert.assertEquals(e1, e1);
+    		
+    		//equals is symmetric
+    		Assert.assertNotSame(e1, e2);
+    		Assert.assertEquals(e1, e2);
+    		Assert.assertEquals(e2, e1);
+    		
+    		//equals is transitive
+    		Assert.assertEquals(e1, e2);
+    		Assert.assertEquals(e2, e3);
+    		Assert.assertEquals(e1, e3);
+
+    		//episodes are equal if and only if they have the same id
+    		Assert.assertFalse(e2.equals(e4));
+    	}
     }
     
-    @Test(expected = IllegalArgumentException.class)
-    public final void testSetOverviewNull() {
-        this.episode1.setOverview(null);
-    }
-
     @Test
-    public final void testSetPoster() {
-        String poster = "SomePoster";
-        this.episode1.setPoster(poster);
-        assertEquals(poster, episode1.poster());
-        this.episode1.setPoster("");
-        assertEquals("", episode1.poster());
-    }
+    public void testHashCode() {
+    	Episode e1 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
 
-    @Test(expected = IllegalArgumentException.class)
-    public final void testSetPosterNull() {
-        this.episode1.setPoster(null);
-    }
+    	Episode e2 = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID2)
+			.withNumber(NUMBER2)
+			.withSeasonNumber(SEASON_NUMBER2)
+			.build();
 
-    @Test
-    public final void testSetViewed() {
-        this.episode1.markSeenAs(false);
-        Assert.assertFalse(this.episode1.wasSeen());
-        this.episode1.markSeenAs(true);
-        verify(this.episode1Listener, times(2)).onUpdate(this.episode1);
-        Assert.assertTrue(this.episode1.wasSeen());
-        this.episode1.markSeenAs(false);
-        verify(this.episode1Listener, times(3)).onUpdate(this.episode1);
-        Assert.assertFalse(this.episode1.wasSeen());
-    }
+    	Episode e3 = Episode.builder()
+			.withId(ID2)
+			.withSeriesId(SERIES_ID2)
+			.withNumber(NUMBER2)
+			.withSeasonNumber(SEASON_NUMBER2)
+			.build();
 
-    @Test
-    public final void testSetWriter() {
-        final String writer = "Terry Jones";
-        this.episode1.setWriter(writer);
-        Assert.assertEquals(writer, this.episode1.writers());
-        this.episode1.setWriter("");
-        Assert.assertEquals("", this.episode1.writers());
-    }
+    	//hashCode is consistent
+    	for (int i=1; i<=1000; i++) {
 
-    @Test(expected = IllegalArgumentException.class)
-    public final void testSetWriterNull() {
-        this.episode1.setWriter(null);
-    }
+    		//equal objects have same hashCode
+    		Assert.assertEquals(e1.hashCode(), e2.hashCode());
 
-    @Test
-    public final void testToString() {
-        final String name = "The Lumberjack Song";
-        this.episode1.setName(name);
-        Assert.assertEquals(name, this.episode1.toString());
-        
-        this.episode1.setName("");
-        Assert.assertEquals("", this.episode1.toString());
+    		//non equal episodes have distinct hashCodes
+    		Assert.assertTrue(e1.hashCode() != e3.hashCode());
+    		Assert.assertTrue(e2.hashCode() != e3.hashCode());
+    	}
     }
+    
+    //TODO Listeners----------------------------------------------------------------------------------------------------
 }

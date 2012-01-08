@@ -44,10 +44,9 @@ public class Episode {
     private String poster;
 
     private boolean seen;
-
     private Set<DomainObjectListener<Episode>> listeners;
 
-    public Episode(String id, String seriesId, int number, int seasonNumber) {
+    private Episode(String id, String seriesId, int number, int seasonNumber) {
         if (id == null || Strings.isBlank(id)) {
             throw new IllegalArgumentException("invalid id for episode");
         }
@@ -70,14 +69,15 @@ public class Episode {
         this.seriesId = seriesId;
         this.number = number;
         this.seasonNumber = seasonNumber;
-        this.setDirector("");
-        this.setGuestStars("");
-        this.setName("");
-        this.setOverview("");
-        this.setPoster("");
-        this.setWriter("");
-        this.markSeenAs(false);
     }
+
+    //Builder factory---------------------------------------------------------------------------------------------------
+
+    public static Episode.Builder builder() {
+        return new Episode.Builder();
+    }
+
+    //Interface---------------------------------------------------------------------------------------------------------
 
     public String id() {
         return this.id;
@@ -96,7 +96,7 @@ public class Episode {
     }
 
     public boolean isSpecial() {
-        return this.seasonNumber() == 0;
+        return this.seasonNumber == 0;
     }
 
     public String name() {
@@ -137,38 +137,82 @@ public class Episode {
 
     public void markSeenAs(boolean seen) {
         this.seen = seen;
-        
         this.notifyListeners();
     }
 
     public void markAsSeen() {
         this.seen = true;
-        
         this.notifyListeners();
     }
 
     public void markAsNotSeen() {
         this.seen = false;
+        this.notifyListeners();
+    }
+
+    public void mergeWith(Episode other) {
+        if (other == null) {
+            throw new IllegalArgumentException("other should not be null");
+        }
+        
+        if (!other.id.equals(this.id)) {
+            throw new IllegalArgumentException("other should have the same id as this");
+        }
+
+        if (!other.seriesId.equals(this.seriesId)) {
+            throw new IllegalArgumentException("other should have the same seriesId as this");
+        }
+
+        if (other.number != this.number) {
+            throw new IllegalArgumentException("other should have the same number as this");
+        }
+
+        if (other.seasonNumber != this.seasonNumber) {
+            throw new IllegalArgumentException("other should have the same seasonNumber as this");
+        }
+
+        this.name = other.name;
+        this.firstAired = other.firstAired;
+        this.overview = other.overview;
+        this.directors = other.directors;
+        this.writers = other.writers;
+        this.guestStars = other.guestStars;
+        this.poster = other.poster;
         
         this.notifyListeners();
     }
 
+    //Object------------------------------------------------------------------------------------------------------------
+
     @Override
     public int hashCode() {
-        return  this.id().hashCode();
+        return this.id.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Episode) &&
-               ((Episode) obj).id().equals(this.id());
+               ((Episode) obj).id.equals(this.id);
     }
 
     @Override
     public String toString() {
-        return this.name();
+        return this.name;
     }
-    
+
+    //Listeners---------------------------------------------------------------------------------------------------------
+
+    //TODO It's better to have an EpisodeListener interface with methods like:
+    //          onMarkedAsSeen(Episode)
+    //          onMarkedAsNotSeen(Episode)
+    //          onMerged(Episode)
+    //
+    //     For example, a season can maintain a field for counting how many episodes were seen. This field could be
+    //     increased, decreased or not changed, depending on which of the methods above was called.
+    //
+    //     This approach will provide efficiency to Season#wasSeen, once there will be no need to check all episodes of
+    //     a season each time the state of an episode changes.
+
     private void notifyListeners() {
         for (final DomainObjectListener<Episode> listener : this.listeners) {
             listener.onUpdate(this);            
@@ -183,25 +227,7 @@ public class Episode {
         return this.listeners.remove(listener);
     }
 
-    //TODO: Test whether other has same id -----------------------------------------------------------------------------
-
-    public void mergeWith(Episode other) {
-        if (other == null) {
-            throw new IllegalArgumentException("other should not be null");
-        }
-        
-        this.name = other.name;
-        this.firstAired = other.firstAired;
-        this.overview = other.overview;
-        this.directors = other.directors;
-        this.writers = other.writers;
-        this.guestStars = other.guestStars;
-        this.poster = other.poster;
-
-        this.notifyListeners();
-    }
-
-    //TODO: Move this method to an utility class of myseries.gui--------------------------------------------------------
+    //TODO: Move this method to an utility class------------------------------------------------------------------------
 
     public String firstAiredAsString() {
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -264,65 +290,11 @@ public class Episode {
                : (this.number() - other.number());
     }
 
-    //TODO: Remove or turn private these methods------------------------------------------------------------------------
-
-    public void setName(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("Name should not be null");
-        }
-        
-        this.name = name;
-    }
-
-    public void setFirstAired(Date firstAired) {
-        this.firstAired = firstAired;
-    }
-
-    public void setOverview(String overview) {
-        if (overview == null) {
-            throw new IllegalArgumentException("Overview should not be null");
-        }
-
-        this.overview = overview;
-    }
-
-    public void setDirector(String director) {
-        if (director == null) {
-            throw new IllegalArgumentException("Director should not be null");
-        }
-
-        this.directors = director;
-    }
-
-    public void setWriter(String writer) {
-        if (writer == null) {
-            throw new IllegalArgumentException("Writer should not be null");
-        }
-
-        this.writers = writer;
-    }
-
-    public void setGuestStars(String guestStars) {
-        if (guestStars == null) {
-            throw new IllegalArgumentException("Guest stars should not be null");
-        }
-
-        this.guestStars = guestStars;
-    }
-
-    public void setPoster(String poster) {
-        if (poster == null) {
-            throw new IllegalArgumentException("Poster should not be null");
-        }
-
-        this.poster = poster;
-    }
-
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder {
+        //TODO Move the functionality of these constants to an utility class
         private static final String DEFAULT_STRING = "";
-        private static final String DEFAULT_NAME = "Unnamed Episode";
         private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         private String id;
@@ -332,13 +304,13 @@ public class Episode {
         private String name;
         private Date firstAired;
         private String overview;
-        private String director;
-        private String writer;
+        private String directors;
+        private String writers;
         private String guestStars;
         private String poster;
-        private boolean viewed;
+        private boolean seen;
 
-        public Builder() {
+        private Builder() {
             this.number = -1;
             this.seasonNumber = -1;
         }
@@ -358,26 +330,8 @@ public class Episode {
             return this;
         }
 
-        public Builder withNumber(String number) {
-            try {
-                this.number = Integer.valueOf(number);
-            } catch (NumberFormatException e) {
-                //Do nothing - number is already -1;
-            }
-            return this;
-        }
-
         public Builder withSeasonNumber(int seasonNumber) {
             this.seasonNumber = seasonNumber;
-            return this;
-        }
-
-        public Builder withSeasonNumber(String seasonNumber) {
-            try {
-                this.seasonNumber = Integer.valueOf(seasonNumber);
-            } catch (NumberFormatException e) {
-                //Do nothing - seasonNumber is already -1
-            }
             return this;
         }
 
@@ -386,19 +340,10 @@ public class Episode {
             return this;
         }
 
-        public Builder withFirstAired(String firstAired) {
-            try {
-                this.firstAired = dateFormat.parse(firstAired);
-            } catch (Exception e) {
-                //Do nothing - firstAired is already null
-            }
+        public Builder withFirstAired(Date firstAired) {
+            this.firstAired = firstAired;
             return this;
         }
-
-//        public EpisodeBuilder withFirstAired(long firstAired) {
-//            this.firstAired = new Date(firstAired);
-//            return this;
-//        }
 
         public Builder withOverview(String overview) {
             this.overview = overview;
@@ -406,12 +351,12 @@ public class Episode {
         }
 
         public Builder withDirector(String director) {
-            this.director = director;
+            this.directors = director;
             return this;
         }
 
         public Builder withWriter(String writer) {
-            this.writer = writer;
+            this.writers = writer;
             return this;
         }
 
@@ -425,24 +370,54 @@ public class Episode {
             return this;
         }
 
-        public Builder withViewed(boolean viewed) {
-            this.viewed = viewed;
+        public Builder withSeen(boolean seen) {
+            this.seen = seen;
             return this;
         }
 
         public Episode build() {
             Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
 
-            episode.setName(this.name != null ? this.name : DEFAULT_NAME);
-            episode.setFirstAired(this.firstAired);
-            episode.setOverview(this.overview != null ? this.overview : DEFAULT_STRING);
-            episode.setDirector(this.director != null ? this.director : DEFAULT_STRING);
-            episode.setWriter(this.writer != null ? this.writer : DEFAULT_STRING);
-            episode.setGuestStars(this.guestStars != null ? this.guestStars : DEFAULT_STRING);
-            episode.setPoster(this.poster != null ? this.poster : DEFAULT_STRING);
-            episode.markSeenAs(this.viewed);
+            //TODO Let the attributes be null
+            episode.name = this.name != null ? this.name : DEFAULT_STRING;
+            episode.firstAired = this.firstAired;
+            episode.overview = this.overview != null ? this.overview : DEFAULT_STRING;
+            episode.directors = this.directors != null ? this.directors : DEFAULT_STRING;
+            episode.writers = this.writers != null ? this.writers : DEFAULT_STRING;
+            episode.guestStars = this.guestStars != null ? this.guestStars : DEFAULT_STRING;
+            episode.poster = this.poster != null ? this.poster : DEFAULT_STRING;
+            episode.seen = this.seen;
 
             return episode;
+        }
+
+        //TODO Remove the methods below ASAP----------------------------------------------------------------------------
+
+        public Builder withNumber(String number) {
+            try {
+                this.number = Integer.valueOf(number);
+            } catch (NumberFormatException e) {
+                //Do nothing - number is already -1;
+            }
+            return this;
+        }
+        
+        public Builder withSeasonNumber(String seasonNumber) {
+            try {
+                this.seasonNumber = Integer.valueOf(seasonNumber);
+            } catch (NumberFormatException e) {
+                //Do nothing - seasonNumber is already -1
+            }
+            return this;
+        }
+
+        public Builder withFirstAired(String firstAired) {
+            try {
+                this.firstAired = dateFormat.parse(firstAired);
+            } catch (Exception e) {
+                //Do nothing - firstAired is already null
+            }
+            return this;
         }
     }
 }

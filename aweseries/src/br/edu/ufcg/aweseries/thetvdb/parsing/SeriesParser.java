@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.thetvdb.parsing;
 
 import java.io.IOException;
@@ -61,7 +60,7 @@ public class SeriesParser {
         //Builders------------------------------------------------------------------------------------------------------
 
         final Series.Builder seriesBuilder = new Series.Builder();
-        final Episode.Builder episodeBuilder = new Episode.Builder();
+        final Episode.Builder episodeBuilder = Episode.builder();
 
         //Root element--------------------------------------------------------------------------------------------------
 

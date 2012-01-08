@@ -344,7 +344,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     private Episode episodeByCurrentPositionOf(Cursor c) {
-        return new Episode.Builder()
+        return Episode.builder()
             .withId(c.getString(c.getColumnIndex("id")))
             .withSeriesId(c.getString(c.getColumnIndex("seriesId")))
             .withNumber(c.getInt(c.getColumnIndex("number")))
@@ -356,7 +356,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withWriter(c.getString(c.getColumnIndex("writer")))
             .withGuestStars(c.getString(c.getColumnIndex("guestStars")))
             .withPoster(c.getString(c.getColumnIndex("poster")))
-            .withViewed(Boolean.valueOf(c.getString(c.getColumnIndex("viewed"))))
+            .withSeen(Boolean.valueOf(c.getString(c.getColumnIndex("viewed"))))
             .build();
     }
 }
