@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.test.unit.util;
 
 import org.junit.Assert;
@@ -28,6 +27,18 @@ import org.junit.Test;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class StringsTest {
+
+	@Test(expected = IllegalArgumentException.class)
+    public void testIsNullEmpty() {
+        Strings.isEmpty(null);
+    }
+
+    @Test
+    public void testIsEmpty() {
+        Assert.assertTrue(Strings.isEmpty(""));
+        Assert.assertFalse(Strings.isEmpty("                  "));
+        Assert.assertFalse(Strings.isEmpty("0"));
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIsNullBlank() {
@@ -129,5 +140,27 @@ public class StringsTest {
                 Strings.normalizePipeSeparated("       pipe|separated|string     "));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("    pipe  |     separated  |  string   "));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testReplaceNullStringWithNullSurrogate() {
+    	Strings.replaceIfNull(null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testReplaceNonNullStringWithNullSurrogate() {
+    	Strings.replaceIfNull("non null string", null);
+    }
+
+    @Test
+    public void testReplaceNullStringWithNonNullSurrogate() {
+    	final String surrogate = "non null string";
+    	Assert.assertEquals(surrogate, Strings.replaceIfNull(null, surrogate));
+    }
+
+    @Test
+    public void testReplaceNonNullStringWithNonNullSurrogate() {
+    	final String string = "non null string"; 
+    	Assert.assertEquals(string, Strings.replaceIfNull(string, "surrogate"));
     }
 }

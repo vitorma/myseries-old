@@ -19,10 +19,18 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.util;
 
 public abstract class Strings {
+    
+    public static boolean isEmpty(String string) {
+        if (string == null) {
+            throw new IllegalArgumentException("string should not be null");
+        }
+        
+        return string.equals("");
+    }
+
     public static boolean isBlank(String string) {
         if (string == null) {
             throw new IllegalArgumentException("string should not be null");
@@ -51,11 +59,11 @@ public abstract class Strings {
         return builder.toString();
     }
 
-    public static boolean isEmpty(String string) {
-        if (string == null) {
-            throw new IllegalArgumentException("string should not be null");
+    public static String replaceIfNull(String string, String surrogate) {
+        if (surrogate == null) {
+            throw new IllegalArgumentException("surrogate should not be null");
         }
 
-        return string.equals("");
+        return string != null ? string : surrogate;
     }
 }
