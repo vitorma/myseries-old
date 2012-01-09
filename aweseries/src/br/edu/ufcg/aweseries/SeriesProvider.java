@@ -76,14 +76,16 @@ public class SeriesProvider {
     }
 
     public Series[] searchSeries(String seriesName) {
-        try {
-            return this.seriesSource.searchFor(seriesName, App.environment().localization().language())
-                                    .toArray(new Series[] {}); //TODO: return a list
-        } catch (SeriesNotFoundException e) {
-            //TODO a better exception handling
+        List<Series> result = this.seriesSource.searchFor(seriesName, App.environment().localization().language());
+
+        //TODO This check should not throw an exception. Move it to the appropriate presenter, where a toast with the
+        //     message below should be shown.
+        if (result.isEmpty()) {
             throw new RuntimeException(
                     App.environment().context().getString(R.string.no_results_found_for_criteria) + seriesName);
         }
+
+        return result.toArray(new Series[]{}); //TODO Return a List<Series>
     }
 
     public void updateData() {

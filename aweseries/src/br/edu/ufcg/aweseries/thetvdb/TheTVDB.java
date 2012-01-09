@@ -23,6 +23,7 @@
 package br.edu.ufcg.aweseries.thetvdb;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import br.edu.ufcg.aweseries.SeriesNotFoundException;
@@ -64,7 +65,7 @@ public class TheTVDB implements SeriesSource {
             return new SeriesSearchParser(this.streamFactory).parse(seriesName, this.getSupported(language));
         } catch (Exception e) {
             //TODO A better exception handling
-            throw new SeriesNotFoundException(e);
+            return Collections.emptyList();
         }
     }
 
