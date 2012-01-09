@@ -65,6 +65,7 @@ public class TheTVDBDouble implements SeriesSource {
     }
 
     // Search for Series
+    @Override
     public List<Series> searchFor(String seriesName, String languageAbbreviation) {
         return this.searchFor(seriesName, Language.from(languageAbbreviation));
     }
@@ -111,6 +112,7 @@ public class TheTVDBDouble implements SeriesSource {
     }
 
     // Fetch Series
+    @Override
     public Series fetchSeries(String seriesId, String languageAbbreviation) {
         return this.fetchSeries(seriesId, Language.from(languageAbbreviation));
     }
@@ -134,6 +136,7 @@ public class TheTVDBDouble implements SeriesSource {
     }
 
     // Fetch All Series
+    @Override
     public List<Series> fetchAllSeries(List<String> seriesIds, String languageAbbreviation) {
         return this.fetchAllSeries(seriesIds, Language.from(languageAbbreviation));
     }
