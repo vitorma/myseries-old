@@ -29,7 +29,6 @@ public interface SeriesSource {
 
     /**
      * @throws IllegalArgumentException when either seriesName or languageAbbreviation are null
-     * @throws SeriesNotFoundException if there is no series that satisfies the given seriesName criteria
      */
     public List<Series> searchFor(String seriesName, String languageAbbreviation);
 
