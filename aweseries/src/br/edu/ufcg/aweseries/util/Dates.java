@@ -40,4 +40,12 @@ public class Dates {
             return alternative;
         }
     }
+
+    public static String toString(Date date, DateFormat format, String alternative) {
+        if (format == null) {
+            throw new IllegalArgumentException("format should not be null");
+        }
+
+        return date != null ? format.format(date) : alternative;
+    }
 }

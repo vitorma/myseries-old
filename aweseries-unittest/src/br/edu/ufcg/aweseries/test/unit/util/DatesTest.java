@@ -38,20 +38,34 @@ public class DatesTest {
 		FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 		FORMAT.setLenient(false);
 	}
-	private static final String DATE = "01/01/2011";
-	private static final Date ALTERNATIVE = new Date();
+	private static final String STRING_DATE = "01/01/2011";
+	private static final Date DATE = new Date();
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testParseDateWithNullFormat() {
-		Dates.parseDate(DATE, null, ALTERNATIVE);
+		Dates.parseDate(STRING_DATE, null, DATE);
 	}
 
 	@Test
 	public void testParseDate() throws ParseException {
-		Assert.assertEquals(FORMAT.parse(DATE), Dates.parseDate(DATE, FORMAT, ALTERNATIVE));
-		Assert.assertEquals(ALTERNATIVE, Dates.parseDate(null, FORMAT, ALTERNATIVE));
-		Assert.assertEquals(ALTERNATIVE, Dates.parseDate("invalid date", FORMAT, ALTERNATIVE));
-		Assert.assertEquals(ALTERNATIVE, Dates.parseDate("2011/01/01", FORMAT, ALTERNATIVE));
+		Assert.assertEquals(FORMAT.parse(STRING_DATE), Dates.parseDate(STRING_DATE, FORMAT, DATE));
+		Assert.assertEquals(DATE, Dates.parseDate(null, FORMAT, DATE));
+		Assert.assertEquals(DATE, Dates.parseDate("invalid date", FORMAT, DATE));
+		Assert.assertEquals(DATE, Dates.parseDate("2011/01/01", FORMAT, DATE));
 		Assert.assertEquals(null, Dates.parseDate("invalid date", FORMAT, null));
+		Assert.assertEquals(null, Dates.parseDate(null, FORMAT, null));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testToStringWithNullFormat() {
+		Dates.toString(DATE, null, STRING_DATE);
+	}
+
+	@Test
+	public void testToString() throws ParseException {
+		Date date = Dates.parseDate("05/01/2012", FORMAT, DATE);
+		Assert.assertEquals(FORMAT.format(date), Dates.toString(date, FORMAT, STRING_DATE));
+		Assert.assertEquals(STRING_DATE, Dates.toString(null, FORMAT, STRING_DATE));
+		Assert.assertEquals(null, Dates.toString(null, FORMAT, null));
 	}
 }
