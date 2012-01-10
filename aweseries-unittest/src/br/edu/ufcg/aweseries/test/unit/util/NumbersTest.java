@@ -21,6 +21,8 @@
 
 package br.edu.ufcg.aweseries.test.unit.util;
 
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -43,5 +45,14 @@ public class NumbersTest {
 		Assert.assertEquals(-2147483648, Numbers.parseInt("-2147483648", alternative));
 		Assert.assertEquals(2147483647, Numbers.parseInt("2147483647", alternative));
 		Assert.assertEquals(-1, Numbers.parseInt("-0000000000000000000000000001", alternative));
+	}
+
+	@Test
+	public void testParseLong() {
+		final Long alternative = -2L;
+		final Date today = new Date();
+
+		Assert.assertEquals(alternative, Numbers.parseLong(null, alternative));
+		Assert.assertEquals(Long.valueOf(today.getTime()), Numbers.parseLong(today, alternative));
 	}
 }

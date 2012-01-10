@@ -21,13 +21,19 @@
 
 package br.edu.ufcg.aweseries.util;
 
+import java.util.Date;
+
 public class Numbers {
 
-    public static int parseInt(String integer, int alternative) {
+    public static int parseInt(String string, int alternative) {
         try {
-            return Integer.valueOf(integer);
+            return Integer.valueOf(string);
         } catch (NumberFormatException e) {
             return alternative;
         }
+    }
+
+    public static Long parseLong(Date date, Long alternative) {
+        return date != null ? date.getTime() : alternative;
     }
 }
