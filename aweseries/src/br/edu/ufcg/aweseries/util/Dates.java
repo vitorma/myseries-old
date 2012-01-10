@@ -26,10 +26,11 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class Dates {
+    private static final nullFormatMessage = "format should not be null";
 
     public static Date parseDate(String date, DateFormat format, Date alternative) {
         if (format == null) {
-            throw new IllegalArgumentException("format should not be null");
+            throw new IllegalArgumentException(nullFormatMessage);
         }
 
         try {
@@ -47,7 +48,7 @@ public class Dates {
 
     public static String toString(Date date, DateFormat format, String alternative) {
         if (format == null) {
-            throw new IllegalArgumentException("format should not be null");
+            throw new IllegalArgumentException(nullFormatMessage);
         }
 
         return date != null ? format.format(date) : alternative;
