@@ -288,7 +288,6 @@ public class Episode {
     public static class Builder {
         //TODO Move the functionality of these constants to an utility class
         private static final String DEFAULT_STRING = "";
-        private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         private String id;
         private String seriesId;
