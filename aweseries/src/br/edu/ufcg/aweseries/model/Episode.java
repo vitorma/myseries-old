@@ -227,13 +227,6 @@ public class Episode {
         return this.listeners.remove(listener);
     }
 
-    //TODO: Move this method to an utility class------------------------------------------------------------------------
-
-    public String firstAiredAsString() {
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return (this.wasAired()) ? dateFormat.format(this.firstAired()) : "";
-    }
-
     //TODO: Move these methods to a comparator--------------------------------------------------------------------------
 
     public boolean airedBefore(Date date) {

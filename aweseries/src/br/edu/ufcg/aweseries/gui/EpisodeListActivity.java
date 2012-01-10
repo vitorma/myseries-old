@@ -22,6 +22,8 @@
 
 package br.edu.ufcg.aweseries.gui;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -44,10 +46,14 @@ import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.util.Dates;
 
 public class EpisodeListActivity extends ListActivity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final EpisodeComparator EPISODE_COMPARATOR = new EpisodeComparator();
+
+    //TODO This is not the best place for this constant
+    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private Series series;
     private Season season;
@@ -110,7 +116,7 @@ public class EpisodeListActivity extends ListActivity {
             nameTextView.setText(episode.name());
             numberTextView.setText(String.format(getString(R.string.episode_number_format),
                     episode.number()));
-            dateTextView.setText(episode.firstAiredAsString());
+            dateTextView.setText(Dates.toString(episode.firstAired(), FORMAT, ""));
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 
