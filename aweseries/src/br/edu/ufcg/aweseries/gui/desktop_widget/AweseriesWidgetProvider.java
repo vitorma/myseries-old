@@ -21,6 +21,8 @@
 
 package br.edu.ufcg.aweseries.gui.desktop_widget;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -44,6 +46,7 @@ import br.edu.ufcg.aweseries.gui.RecentAndUpcomingEpisodesActivity;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.util.Dates;
 
 public class AweseriesWidgetProvider extends AppWidgetProvider {
 
@@ -56,6 +59,9 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
     protected static final int LIMIT = 9;
 
     public static class UpdateService extends IntentService {
+
+        //TODO This is not the best place for this constant
+        private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
         public UpdateService() {
             super("br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService");
@@ -109,7 +115,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                             season.getNumber(), e.number());
                     item.setTextViewText(R.id.widgetEpisodeNameTextView, String.format(
                             pre + this.getString(R.string.separator) + e.name()));
-                    item.setTextViewText(R.id.widgetEpisodeDateTextView, e.firstAiredAsString());
+                    item.setTextViewText(R.id.widgetEpisodeDateTextView, Dates.toString(e.firstAired(), FORMAT, ""));
 
                     views.addView(R.id.innerLinearLayout, item);
                     viewsToAdd--;

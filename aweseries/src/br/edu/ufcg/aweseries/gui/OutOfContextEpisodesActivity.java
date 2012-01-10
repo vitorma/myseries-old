@@ -22,6 +22,8 @@
 
 package br.edu.ufcg.aweseries.gui;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -44,6 +46,7 @@ import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.util.Dates;
 
 /**
  * An abstract activity for showing a list of episodes out of their series context, as happens
@@ -56,6 +59,9 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
     protected abstract Comparator<Episode> episodesComparator();
 
     private static final int LIST_VIEW_RESOURCE_ID = R.layout.list_without_toolbar;
+
+    //TODO This is not the best place for this constant
+    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +162,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
                     .setText(String.format(OutOfContextEpisodesActivity.this
                             .getString(R.string.season_and_episode_format), season.getNumber(),
                             episode.number()));
-            dateTextView.setText(episode.firstAiredAsString());
+            dateTextView.setText(Dates.toString(episode.firstAired(), FORMAT, ""));
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 

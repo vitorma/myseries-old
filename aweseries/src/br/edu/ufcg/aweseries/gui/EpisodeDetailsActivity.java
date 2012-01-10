@@ -22,6 +22,9 @@
 
 package br.edu.ufcg.aweseries.gui;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -32,9 +35,13 @@ import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.util.Dates;
 
 public class EpisodeDetailsActivity extends Activity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
+
+    //TODO This is not the best place for this constant
+    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private Episode episode;
     private TextView episodeName;
@@ -62,7 +69,7 @@ public class EpisodeDetailsActivity extends Activity {
         this.loadEpisode();
 
         this.episodeName.setText(this.episode.name());
-        this.episodeFirstAired.setText(this.episode.firstAiredAsString());
+        this.episodeFirstAired.setText(Dates.toString(this.episode.firstAired(), FORMAT, ""));
         this.episodeDirector.setText(this.episode.directors());
         this.episodeWriter.setText(this.episode.writers());
         this.episodeGuestStars.setText(this.episode.guestStars());

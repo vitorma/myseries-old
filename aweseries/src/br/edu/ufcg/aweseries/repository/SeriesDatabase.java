@@ -34,6 +34,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.util.Dates;
+import br.edu.ufcg.aweseries.util.Numbers;
 
 public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository {
 
@@ -63,7 +65,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         "number INTEGER NOT NULL, " +
         "seasonNumber INTEGER NOT NULL, " +
         "name TEXT, " +
-        "firstAired TEXT, " +
+        "firstAired INTEGER, " +
         "overview TEXT, " +
         "director TEXT, " +
         "writer TEXT, " +
@@ -316,7 +318,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put("number", e.number());
         cv.put("seasonNumber", e.seasonNumber());
         cv.put("name", e.name());
-        cv.put("firstAired", e.firstAiredAsString());
+        cv.put("firstAired", Numbers.parseLong(e.firstAired(), null));
         cv.put("overview", e.overview());
         cv.put("director", e.directors());
         cv.put("writer", e.writers());
@@ -350,7 +352,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withNumber(c.getInt(c.getColumnIndex("number")))
             .withSeasonNumber(c.getInt(c.getColumnIndex("seasonNumber")))
             .withName(c.getString(c.getColumnIndex("name")))
-            .withFirstAired(c.getString(c.getColumnIndex("firstAired")))
+            .withFirstAired(Dates.parseDate(c.getLong(c.getColumnIndex("firstAired")), null))
             .withOverview(c.getString(c.getColumnIndex("overview")))
             .withDirector(c.getString(c.getColumnIndex("director")))
             .withWriter(c.getString(c.getColumnIndex("writer")))
