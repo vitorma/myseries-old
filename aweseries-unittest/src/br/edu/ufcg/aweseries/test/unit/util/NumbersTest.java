@@ -39,7 +39,6 @@ public class NumbersTest {
 		Assert.assertEquals(alternative, Numbers.parseInt("", alternative));
 		Assert.assertEquals(alternative, Numbers.parseInt("a", alternative));
 		Assert.assertEquals(alternative, Numbers.parseInt("-1.0", alternative));
-		Assert.assertEquals(alternative, Numbers.parseInt("+1", alternative));
 		Assert.assertEquals(alternative, Numbers.parseInt("-2147483649", alternative));
 		Assert.assertEquals(alternative, Numbers.parseInt("2147483648", alternative));
 
