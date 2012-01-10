@@ -21,8 +21,6 @@
 
 package br.edu.ufcg.aweseries.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -286,9 +284,6 @@ public class Episode {
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder {
-        //TODO Move the functionality of these constants to an utility class
-        private static final String DEFAULT_STRING = "";
-        private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         private String id;
         private String seriesId;
@@ -371,46 +366,16 @@ public class Episode {
         public Episode build() {
             Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
 
-            //TODO Let the attributes be null
-            episode.name = this.name != null ? this.name : DEFAULT_STRING;
+            episode.name = this.name;
             episode.firstAired = this.firstAired;
-            episode.overview = this.overview != null ? this.overview : DEFAULT_STRING;
-            episode.directors = this.directors != null ? this.directors : DEFAULT_STRING;
-            episode.writers = this.writers != null ? this.writers : DEFAULT_STRING;
-            episode.guestStars = this.guestStars != null ? this.guestStars : DEFAULT_STRING;
-            episode.poster = this.poster != null ? this.poster : DEFAULT_STRING;
+            episode.overview = this.overview;
+            episode.directors = this.directors;
+            episode.writers = this.writers;
+            episode.guestStars = this.guestStars;
+            episode.poster = this.poster;
             episode.seen = this.seen;
 
             return episode;
-        }
-
-        //TODO Remove the methods below ASAP----------------------------------------------------------------------------
-
-        public Builder withNumber(String number) {
-            try {
-                this.number = Integer.valueOf(number);
-            } catch (NumberFormatException e) {
-                //Do nothing - number is already -1;
-            }
-            return this;
-        }
-        
-        public Builder withSeasonNumber(String seasonNumber) {
-            try {
-                this.seasonNumber = Integer.valueOf(seasonNumber);
-            } catch (NumberFormatException e) {
-                //Do nothing - seasonNumber is already -1
-            }
-            return this;
-        }
-
-        public Builder withFirstAired(String firstAired) {
-            try {
-                this.firstAired = dateFormat.parse(firstAired);
-            } catch (Exception e) {
-                //Do nothing - firstAired is already null
-            }
-            return this;
         }
     }
 }

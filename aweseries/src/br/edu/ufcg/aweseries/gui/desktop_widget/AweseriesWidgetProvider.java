@@ -47,6 +47,7 @@ import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Dates;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class AweseriesWidgetProvider extends AppWidgetProvider {
 
@@ -114,7 +115,9 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                             this.getString(R.string.season_and_episode_format_short),
                             season.getNumber(), e.number());
                     item.setTextViewText(R.id.widgetEpisodeNameTextView, String.format(
-                            pre + this.getString(R.string.separator) + e.name()));
+                            pre +
+                            this.getString(R.string.separator) +
+                            Strings.replaceIfNull(e.name(), this.getString(R.string.unnamed_episode))));
                     item.setTextViewText(R.id.widgetEpisodeDateTextView, Dates.toString(e.firstAired(), FORMAT, ""));
 
                     views.addView(R.id.innerLinearLayout, item);
