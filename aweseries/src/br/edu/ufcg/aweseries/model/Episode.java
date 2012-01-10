@@ -383,34 +383,5 @@ public class Episode {
 
             return episode;
         }
-
-        //TODO Remove the methods below ASAP----------------------------------------------------------------------------
-
-        public Builder withNumber(String number) {
-            try {
-                this.number = Integer.valueOf(number);
-            } catch (NumberFormatException e) {
-                //Do nothing - number is already -1;
-            }
-            return this;
-        }
-        
-        public Builder withSeasonNumber(String seasonNumber) {
-            try {
-                this.seasonNumber = Integer.valueOf(seasonNumber);
-            } catch (NumberFormatException e) {
-                //Do nothing - seasonNumber is already -1
-            }
-            return this;
-        }
-
-        public Builder withFirstAired(String firstAired) {
-            try {
-                this.firstAired = dateFormat.parse(firstAired);
-            } catch (Exception e) {
-                //Do nothing - firstAired is already null
-            }
-            return this;
-        }
     }
 }

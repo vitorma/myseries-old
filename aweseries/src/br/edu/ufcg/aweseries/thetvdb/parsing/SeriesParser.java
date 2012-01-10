@@ -22,6 +22,8 @@
 package br.edu.ufcg.aweseries.thetvdb.parsing;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.xml.sax.SAXException;
 
@@ -35,9 +37,15 @@ import android.util.Xml;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
+import br.edu.ufcg.aweseries.util.Dates;
+import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class SeriesParser {
+    private static final int INVALID_EPISODE_NUMBER = -1;
+    private static final int INVALID_SEASON_NUMBER = -1;
+    protected static final DateFormat THETVDB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     private StreamFactory streamFactory;
 
     public SeriesParser(StreamFactory streamFactory) {
@@ -198,7 +206,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withNumber(body);
+                        episodeBuilder.withNumber(Numbers.parseInt(body, INVALID_EPISODE_NUMBER));
                     }
                 });
 
@@ -206,7 +214,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withSeasonNumber(body);
+                        episodeBuilder.withSeasonNumber(Numbers.parseInt(body, INVALID_SEASON_NUMBER));
                     }
                 });
 
@@ -222,7 +230,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withFirstAired(body);
+                        episodeBuilder.withFirstAired(Dates.parseDate(body, THETVDB_DATE_FORMAT, null));
                     }
                 });
 
