@@ -41,6 +41,10 @@ public class Dates {
         }
     }
 
+    public static Date parseDate(Long date, Date alternative) {
+        return date != null ? new Date(date) : alternative;
+    }
+
     public static String toString(Date date, DateFormat format, String alternative) {
         if (format == null) {
             throw new IllegalArgumentException("format should not be null");

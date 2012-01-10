@@ -39,31 +39,37 @@ public class DatesTest {
 		FORMAT.setLenient(false);
 	}
 	private static final String STRING_DATE = "01/01/2011";
-	private static final Date DATE = new Date();
+	private static final Date TODAY = new Date();
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testParseDateWithNullFormat() {
-		Dates.parseDate(STRING_DATE, null, DATE);
+	public void testParseDateFromStringWithNullFormat() {
+		Dates.parseDate(STRING_DATE, null, TODAY);
 	}
 
 	@Test
-	public void testParseDate() throws ParseException {
-		Assert.assertEquals(FORMAT.parse(STRING_DATE), Dates.parseDate(STRING_DATE, FORMAT, DATE));
-		Assert.assertEquals(DATE, Dates.parseDate(null, FORMAT, DATE));
-		Assert.assertEquals(DATE, Dates.parseDate("invalid date", FORMAT, DATE));
-		Assert.assertEquals(DATE, Dates.parseDate("2011/01/01", FORMAT, DATE));
+	public void testParseDateFromString() throws ParseException {
+		Assert.assertEquals(FORMAT.parse(STRING_DATE), Dates.parseDate(STRING_DATE, FORMAT, TODAY));
+		Assert.assertEquals(TODAY, Dates.parseDate(null, FORMAT, TODAY));
+		Assert.assertEquals(TODAY, Dates.parseDate("invalid date", FORMAT, TODAY));
+		Assert.assertEquals(TODAY, Dates.parseDate("2011/01/01", FORMAT, TODAY));
 		Assert.assertEquals(null, Dates.parseDate("invalid date", FORMAT, null));
 		Assert.assertEquals(null, Dates.parseDate(null, FORMAT, null));
 	}
 
+	@Test
+	public void testParseDateFromLong() {
+		Assert.assertEquals(TODAY, Dates.parseDate(null, TODAY));
+		Assert.assertEquals(new Date(0L), Dates.parseDate(0L, TODAY));
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testToStringWithNullFormat() {
-		Dates.toString(DATE, null, STRING_DATE);
+		Dates.toString(TODAY, null, STRING_DATE);
 	}
 
 	@Test
 	public void testToString() throws ParseException {
-		Date date = Dates.parseDate("05/01/2012", FORMAT, DATE);
+		Date date = Dates.parseDate("05/01/2012", FORMAT, TODAY);
 		Assert.assertEquals(FORMAT.format(date), Dates.toString(date, FORMAT, STRING_DATE));
 		Assert.assertEquals(STRING_DATE, Dates.toString(null, FORMAT, STRING_DATE));
 		Assert.assertEquals(null, Dates.toString(null, FORMAT, null));
