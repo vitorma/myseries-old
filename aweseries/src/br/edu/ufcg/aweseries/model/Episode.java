@@ -21,8 +21,6 @@
 
 package br.edu.ufcg.aweseries.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -286,8 +284,6 @@ public class Episode {
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder {
-        //TODO Move the functionality of these constants to an utility class
-        private static final String DEFAULT_STRING = "";
 
         private String id;
         private String seriesId;
@@ -370,14 +366,13 @@ public class Episode {
         public Episode build() {
             Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
 
-            //TODO Let the attributes be null
-            episode.name = this.name != null ? this.name : DEFAULT_STRING;
+            episode.name = this.name;
             episode.firstAired = this.firstAired;
-            episode.overview = this.overview != null ? this.overview : DEFAULT_STRING;
-            episode.directors = this.directors != null ? this.directors : DEFAULT_STRING;
-            episode.writers = this.writers != null ? this.writers : DEFAULT_STRING;
-            episode.guestStars = this.guestStars != null ? this.guestStars : DEFAULT_STRING;
-            episode.poster = this.poster != null ? this.poster : DEFAULT_STRING;
+            episode.overview = this.overview;
+            episode.directors = this.directors;
+            episode.writers = this.writers;
+            episode.guestStars = this.guestStars;
+            episode.poster = this.poster;
             episode.seen = this.seen;
 
             return episode;

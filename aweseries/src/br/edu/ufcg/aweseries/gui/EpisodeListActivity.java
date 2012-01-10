@@ -47,6 +47,7 @@ import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Dates;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class EpisodeListActivity extends ListActivity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
@@ -113,7 +114,9 @@ public class EpisodeListActivity extends ListActivity {
             CheckBox isViewedCheckBox = (CheckBox) itemView
                     .findViewById(R.id.episodeIsViewedCheckBox);
 
-            nameTextView.setText(episode.name());
+            nameTextView.setText(Strings.replaceIfNull(
+                    episode.name(),
+                    this.getContext().getResources().getString(R.string.unnamed_episode)));
             numberTextView.setText(String.format(getString(R.string.episode_number_format),
                     episode.number()));
             dateTextView.setText(Dates.toString(episode.firstAired(), FORMAT, ""));

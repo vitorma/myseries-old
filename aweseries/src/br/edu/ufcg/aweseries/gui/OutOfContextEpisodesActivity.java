@@ -47,6 +47,7 @@ import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Dates;
+import br.edu.ufcg.aweseries.util.Strings;
 
 /**
  * An abstract activity for showing a list of episodes out of their series context, as happens
@@ -156,7 +157,9 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             final CheckBox isViewedCheckBox = (CheckBox) itemView
                     .findViewById(R.id.episodeIsViewedCheckBox);
 
-            nameTextView.setText(episode.name());
+            nameTextView.setText(Strings.replaceIfNull(
+                    episode.name(),
+                    this.getContext().getResources().getString(R.string.unnamed_episode)));
             seriesTextView.setText(series.getName());
             seasonEpisodeTextView
                     .setText(String.format(OutOfContextEpisodesActivity.this

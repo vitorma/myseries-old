@@ -36,6 +36,7 @@ import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.util.Dates;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class EpisodeDetailsActivity extends Activity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
@@ -68,7 +69,9 @@ public class EpisodeDetailsActivity extends Activity {
         this.setUpLocalReferencesToViewFields();
         this.loadEpisode();
 
-        this.episodeName.setText(this.episode.name());
+        this.episodeName.setText(Strings.replaceIfNull(
+                this.episode.name(),
+                this.getResources().getString(R.string.unnamed_episode)));
         this.episodeFirstAired.setText(Dates.toString(this.episode.firstAired(), FORMAT, ""));
         this.episodeDirector.setText(this.episode.directors());
         this.episodeWriter.setText(this.episode.writers());

@@ -186,13 +186,13 @@ public class EpisodeTest {
     	Assert.assertEquals(SERIES_ID1, e2.seriesId());
     	Assert.assertEquals(NUMBER2, e2.number());
     	Assert.assertEquals(SEASON_NUMBER1, e2.seasonNumber());
-    	Assert.assertEquals("", e2.name());
+    	Assert.assertEquals(null, e2.name());
     	Assert.assertEquals(null, e2.firstAired());
-    	Assert.assertEquals("", e2.overview());
-    	Assert.assertEquals("", e2.directors());
-    	Assert.assertEquals("", e2.writers());
-    	Assert.assertEquals("", e2.guestStars());
-    	Assert.assertEquals("", e2.poster());
+    	Assert.assertEquals(null, e2.overview());
+    	Assert.assertEquals(null, e2.directors());
+    	Assert.assertEquals(null, e2.writers());
+    	Assert.assertEquals(null, e2.guestStars());
+    	Assert.assertEquals(null, e2.poster());
     	Assert.assertEquals(false, e2.wasSeen());
     }
 

@@ -55,6 +55,7 @@ import br.edu.ufcg.aweseries.UpdateListener;
 import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.util.Strings;
 
 public class SeriesListActivity extends ListActivity implements UpdateListener {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
@@ -127,7 +128,10 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             // next episode to see
             final Episode nextEpisodeToSee = item.getSeasons().getNextEpisodeToSee();
             if (nextEpisodeToSee != null) {
-                nextToSee.setText(nextEpisodeToSee.toString());
+                //TODO Extract a method to get a string resource by its id
+                nextToSee.setText(Strings.replaceIfNull(
+                        nextEpisodeToSee.name(),
+                        this.getContext().getResources().getString(R.string.unnamed_episode)));
             } else {
                 nextToSee.setText(R.string.up_to_date);
             }
@@ -137,7 +141,10 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
                 latestToAirLabel.setText(R.string.next_episode_to_air);
                 final Episode nextEpisodeToAir = item.getSeasons().getNextEpisodeToAir();
                 if (nextEpisodeToAir != null) {
-                    latestToAir.setText(nextEpisodeToAir.toString());
+                    //TODO Extract a method to get a string resource by its id
+                    latestToAir.setText(Strings.replaceIfNull(
+                            nextEpisodeToAir.name(),
+                            this.getContext().getResources().getString(R.string.unnamed_episode)));
                 } else {
                     latestToAir.setText(R.string.up_to_date);
                 }
@@ -145,9 +152,12 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
             if (item.isEnded()) {
                 latestToAirLabel.setText(R.string.last_episode_aired);
-                final Episode e = item.getSeasons().getLastAiredEpisode();
-                if (e != null) {
-                    latestToAir.setText(e.toString());
+                final Episode latestEpisodeToAir = item.getSeasons().getLastAiredEpisode();
+                if (latestEpisodeToAir != null) {
+                    //TODO Extract a method to get a string resource by its id
+                    latestToAir.setText(Strings.replaceIfNull(
+                            latestEpisodeToAir.name(),
+                            this.getContext().getResources().getString(R.string.unnamed_episode)));
                 } else {
                     latestToAir.setText(R.string.no_episode_aired);
                 }
