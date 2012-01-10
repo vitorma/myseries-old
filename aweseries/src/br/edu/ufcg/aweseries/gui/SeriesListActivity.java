@@ -55,7 +55,7 @@ import br.edu.ufcg.aweseries.UpdateListener;
 import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.util.Strings;
+import br.edu.ufcg.aweseries.util.Objects;
 
 public class SeriesListActivity extends ListActivity implements UpdateListener {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
@@ -129,7 +129,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             final Episode nextEpisodeToSee = item.getSeasons().getNextEpisodeToSee();
             if (nextEpisodeToSee != null) {
                 //TODO Extract a method to get a string resource by its id
-                nextToSee.setText(Strings.replaceIfNull(
+                nextToSee.setText(Objects.nullSafe(
                         nextEpisodeToSee.name(),
                         this.getContext().getResources().getString(R.string.unnamed_episode)));
             } else {
@@ -142,7 +142,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
                 final Episode nextEpisodeToAir = item.getSeasons().getNextEpisodeToAir();
                 if (nextEpisodeToAir != null) {
                     //TODO Extract a method to get a string resource by its id
-                    latestToAir.setText(Strings.replaceIfNull(
+                    latestToAir.setText(Objects.nullSafe(
                             nextEpisodeToAir.name(),
                             this.getContext().getResources().getString(R.string.unnamed_episode)));
                 } else {
@@ -155,7 +155,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
                 final Episode latestEpisodeToAir = item.getSeasons().getLastAiredEpisode();
                 if (latestEpisodeToAir != null) {
                     //TODO Extract a method to get a string resource by its id
-                    latestToAir.setText(Strings.replaceIfNull(
+                    latestToAir.setText(Objects.nullSafe(
                             latestEpisodeToAir.name(),
                             this.getContext().getResources().getString(R.string.unnamed_episode)));
                 } else {

@@ -141,26 +141,4 @@ public class StringsTest {
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("    pipe  |     separated  |  string   "));
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testReplaceNullStringWithNullSurrogate() {
-    	Strings.replaceIfNull(null, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testReplaceNonNullStringWithNullSurrogate() {
-    	Strings.replaceIfNull("non null string", null);
-    }
-
-    @Test
-    public void testReplaceNullStringWithNonNullSurrogate() {
-    	final String surrogate = "non null string";
-    	Assert.assertEquals(surrogate, Strings.replaceIfNull(null, surrogate));
-    }
-
-    @Test
-    public void testReplaceNonNullStringWithNonNullSurrogate() {
-    	final String string = "non null string"; 
-    	Assert.assertEquals(string, Strings.replaceIfNull(string, "surrogate"));
-    }
 }
