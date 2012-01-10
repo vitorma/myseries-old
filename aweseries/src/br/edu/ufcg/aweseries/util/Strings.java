@@ -22,13 +22,13 @@
 package br.edu.ufcg.aweseries.util;
 
 public abstract class Strings {
-    private static final String separator = "\\|";
-    private static final String nullStringMessage = "string should not be null";
-    private static final String nullSurrogateMessage = "surrogate should not be null";
+    private static final String SEPARATOR = "\\|";
+    private static final String NULL_STRING_MESSAGE = "string should not be null";
+    private static final String NULL_SURROGATE_MESSAGE = "surrogate should not be null";
 
     public static boolean isEmpty(String string) {
         if (string == null) {
-            throw new IllegalArgumentException(nullStringMessage);
+            throw new IllegalArgumentException(NULL_STRING_MESSAGE);
         }
 
         return string.equals("");
@@ -36,7 +36,7 @@ public abstract class Strings {
 
     public static boolean isBlank(String string) {
         if (string == null) {
-            throw new IllegalArgumentException(nullStringMessage);
+            throw new IllegalArgumentException(NULL_STRING_MESSAGE);
         }
 
         return Strings.isEmpty(string.trim());
@@ -44,10 +44,10 @@ public abstract class Strings {
 
     public static String normalizePipeSeparated(String string) {
         if (string == null) {
-            throw new IllegalArgumentException(nullStringMessage);
+            throw new IllegalArgumentException(NULL_STRING_MESSAGE);
         }
 
-        final String[] items = string.trim().split(separator);
+        final String[] items = string.trim().split(SEPARATOR);
         final StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < items.length; i++) {
@@ -64,7 +64,7 @@ public abstract class Strings {
 
     public static String replaceIfNull(String string, String surrogate) {
         if (surrogate == null) {
-            throw new IllegalArgumentException(nullSurrogateMessage);
+            throw new IllegalArgumentException(NULL_SURROGATE_MESSAGE);
         }
 
         return string != null ? string : surrogate;
