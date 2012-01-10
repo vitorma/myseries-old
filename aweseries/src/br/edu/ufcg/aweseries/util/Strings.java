@@ -22,18 +22,21 @@
 package br.edu.ufcg.aweseries.util;
 
 public abstract class Strings {
-    
+    private static final String separator = "\\|";
+    private static final String nullStringMessage = "string should not be null";
+    private static final String nullSurrogateMessage = "surrogate should not be null";
+
     public static boolean isEmpty(String string) {
         if (string == null) {
-            throw new IllegalArgumentException("string should not be null");
+            throw new IllegalArgumentException(nullStringMessage);
         }
-        
+
         return string.equals("");
     }
 
     public static boolean isBlank(String string) {
         if (string == null) {
-            throw new IllegalArgumentException("string should not be null");
+            throw new IllegalArgumentException(nullStringMessage);
         }
 
         return Strings.isEmpty(string.trim());
@@ -41,10 +44,10 @@ public abstract class Strings {
 
     public static String normalizePipeSeparated(String string) {
         if (string == null) {
-            throw new IllegalArgumentException("string should not be null");
+            throw new IllegalArgumentException(nullStringMessage);
         }
 
-        final String[] items = string.trim().split("\\|");
+        final String[] items = string.trim().split(separator);
         final StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < items.length; i++) {
@@ -61,7 +64,7 @@ public abstract class Strings {
 
     public static String replaceIfNull(String string, String surrogate) {
         if (surrogate == null) {
-            throw new IllegalArgumentException("surrogate should not be null");
+            throw new IllegalArgumentException(nullSurrogateMessage);
         }
 
         return string != null ? string : surrogate;
