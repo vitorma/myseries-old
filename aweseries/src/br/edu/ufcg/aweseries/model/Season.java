@@ -32,6 +32,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 
+import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class Season implements Iterable<Episode>, DomainObjectListener<Episode> {
@@ -112,9 +113,15 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
 
     public Episode getNextEpisodeToAir() {
         final Date today = new Date();
-
+        
         for (final Episode e : this) {
-            if (e.airedFrom(today)) return e;
+            if (e.airdate() == null) {
+                continue;
+            }
+            
+            if (Dates.compare(e.airdate(), today) >= 0) {
+                return e;
+            }
         }
 
         return null;
@@ -126,7 +133,9 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
 
         while (it.hasNext()) {
             final Episode e = it.next();
-            if (e.airedUntil(today)) return e;
+            if (Dates.compare(e.airdate(), today) <=0) {
+             return e; 
+            }
         }
 
         return null;
@@ -137,7 +146,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         final List<Episode> list = new ArrayList<Episode>();
 
         for (final Episode e : this) {
-            if (e.airedBefore(today) && !e.wasSeen()) {
+            if (Dates.compare(e.airdate(), today) < 0 && !e.wasSeen()) {
                 list.add(e);
             }
         }
@@ -150,7 +159,11 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         final List<Episode> list = new ArrayList<Episode>();
 
         for (Episode e : this) {
-            if (e.airedFrom(today)) {
+            if (e.airdate() == null) {
+                continue;
+            }
+            
+            if (Dates.compare(e.airdate(), today) >=0) {
                 list.add(e);
             }
         }
@@ -239,12 +252,13 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
 
     public Iterator<Episode> reversedIterator() {
         return new Iterator<Episode>() {
-            private int episodeNumber =
-                (getNumberOfEpisodes() > 0) ? Season.this.getLastEpisodeNumber() : Integer.MIN_VALUE;
+            private int episodeNumber = (getNumberOfEpisodes() > 0) ? Season.this
+                    .getLastEpisodeNumber() : Integer.MIN_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (getNumberOfEpisodes() > 0) && (this.episodeNumber >= Season.this.getFirstEpisodeNumber());
+                return (getNumberOfEpisodes() > 0)
+                        && (this.episodeNumber >= Season.this.getFirstEpisodeNumber());
             }
 
             @Override
@@ -285,9 +299,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
     public void onUpdate(Episode episode) {
         Episode nextEpisodeToSee = findNextEpisodeToSee();
         
-        if (nextEpisodeToSee == null || !nextEpisodeToSee.equals(this.nextEpisodeToSee)) {
-            this.nextEpisodeToSee = nextEpisodeToSee;
-        }
+        this.nextEpisodeToSee = nextEpisodeToSee;
 
         this.notifyListeners();
     }
