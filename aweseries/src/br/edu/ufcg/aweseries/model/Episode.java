@@ -105,10 +105,6 @@ public class Episode {
         return this.airdate;
     }
 
-    public boolean wasAired() {
-        return this.airdate != null;
-    }
-
     public String overview() {
         return this.overview;
     }
@@ -223,62 +219,6 @@ public class Episode {
     
     public boolean removeListener(DomainObjectListener<Episode> listener) {
         return this.listeners.remove(listener);
-    }
-
-    //TODO: Remove these methods ASAP-----------------------------------------------------------------------------------
-
-    public boolean airedBefore(Date date) {
-        if (date == null) {
-            throw new IllegalArgumentException("date should not be null");
-        }
-
-        return this.wasAired() ? (this.airdate().compareTo(date) < 0) : false;
-    }
-
-    public boolean airedUntil(Date date) {
-        if (date == null) {
-            throw new IllegalArgumentException("date should not be null");
-        }
-
-        return this.wasAired() ? (this.airdate().compareTo(date) <= 0) : false;
-    }
-
-    public boolean airedAt(Date date) {
-        if (date == null) {
-            throw new IllegalArgumentException("date should not be null");
-        }
-
-        return this.wasAired() ? (this.airdate().compareTo(date) == 0) : false;
-    }
-
-    public boolean airedFrom(Date date) {
-        if (date == null) {
-            throw new IllegalArgumentException("date should not be null");
-        }
-
-        return this.wasAired() ? (this.airdate().compareTo(date) >= 0) : false;
-    }
-
-    public boolean airedAfter(Date date) {
-        if (date == null) {
-            throw new IllegalArgumentException("date should not be null");
-        }
-
-        return this.wasAired() ? (this.airdate().compareTo(date) > 0) : false;
-    }
-
-    public int compareByDateTo(Episode other) {
-        if (!this.wasAired()) {
-            return other.wasAired() ? 1 : this.compareByNumberTo(other);
-        }
-
-        return other.wasAired() ? this.airdate().compareTo(other.airdate()) : -1;
-    }
-
-    public int compareByNumberTo(Episode other) {
-        return (this.seasonNumber() != other.seasonNumber())
-               ? (this.seasonNumber() - other.seasonNumber())
-               : (this.number() - other.number());
     }
 
     //Builder-----------------------------------------------------------------------------------------------------------
