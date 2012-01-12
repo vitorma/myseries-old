@@ -74,4 +74,18 @@ public class DatesTest {
 		Assert.assertEquals(STRING_DATE, Dates.toString(null, FORMAT, STRING_DATE));
 		Assert.assertEquals(null, Dates.toString(null, FORMAT, null));
 	}
+
+	@Test
+	public void testCompare() {
+		Date d1 = new Date(1L);
+		Date d2 = new Date(2L);
+
+		Assert.assertEquals(-1, Dates.compare(d1, null));
+		Assert.assertEquals(0, Dates.compare(null, null));
+		Assert.assertEquals(1, Dates.compare(null, d1));
+
+		Assert.assertEquals(-1, Dates.compare(d1, d2));
+		Assert.assertEquals(0, Dates.compare(d1, d1));
+		Assert.assertEquals(1, Dates.compare(d2, d1));
+	}
 }

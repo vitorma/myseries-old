@@ -22,13 +22,10 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.Comparator;
-import java.util.Date;
 
-import br.edu.ufcg.aweseries.util.Objects;
+import br.edu.ufcg.aweseries.util.Dates;
 
 public class EpisodeComparator {
-    private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
-
     public static Comparator<Episode> byNumber() {
         return new Comparator<Episode>() {
             @Override
@@ -86,7 +83,6 @@ public class EpisodeComparator {
     }
 
     private static int compareByAirdate(Episode episode1, Episode episode2) {
-        return Objects.nullSafe(episode1.airdate(), MAX_DATE).compareTo(
-               Objects.nullSafe(episode2.airdate(), MAX_DATE));
+        return Dates.compare(episode1.airdate(), episode2.airdate());
     }
 }

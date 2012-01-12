@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class Dates {
+    private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
     private static final String NULL_FORMAT_MESSAGE = "format should not be null";
 
     public static Date parseDate(String date, DateFormat format, Date alternative) {
@@ -52,5 +53,10 @@ public class Dates {
         }
 
         return date != null ? format.format(date) : alternative;
+    }
+
+    public static int compare(Date date1, Date date2) {
+        return Objects.nullSafe(date1, MAX_DATE).compareTo(
+               Objects.nullSafe(date2, MAX_DATE));
     }
 }
