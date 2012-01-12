@@ -246,7 +246,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withDirector(Strings.normalizePipeSeparated(body));
+                        episodeBuilder.withDirectors(Strings.normalizePipeSeparated(body));
                     }
                 });
 
@@ -254,7 +254,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withWriter(Strings.normalizePipeSeparated(body));
+                        episodeBuilder.withWriters(Strings.normalizePipeSeparated(body));
                     }
                 });
 

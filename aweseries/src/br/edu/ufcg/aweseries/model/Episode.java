@@ -42,7 +42,7 @@ public class Episode {
     private String poster;
 
     private boolean seen;
-    private Set<DomainObjectListener<Episode>> listeners;
+    private Set<DomainObjectListener<Episode>> listeners; //TODO A List<EpisodeListener>
 
     private Episode(String id, String seriesId, int number, int seasonNumber) {
         if (id == null || Strings.isBlank(id)) {
@@ -278,13 +278,13 @@ public class Episode {
             return this;
         }
 
-        public Builder withDirector(String director) {
-            this.directors = director;
+        public Builder withDirectors(String directors) {
+            this.directors = directors;
             return this;
         }
 
-        public Builder withWriter(String writer) {
-            this.writers = writer;
+        public Builder withWriters(String writers) {
+            this.writers = writers;
             return this;
         }
 
