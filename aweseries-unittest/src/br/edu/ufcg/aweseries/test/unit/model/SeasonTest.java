@@ -56,27 +56,30 @@ public class SeasonTest {
         return episode;
     }
 
-    private void makeAllLookSeen() {
-        Mockito.when(this.episode1.wasSeen()).thenReturn(true);
-        Mockito.when(this.episode2.wasSeen()).thenReturn(true);
-        Mockito.when(this.episode3.wasSeen()).thenReturn(true);
-        Mockito.when(this.episode4.wasSeen()).thenReturn(true);
+    private void makeAllLookNotSeen(Episode... episodes) {
+        for (Episode episode : episodes) {
+            Mockito.when(episode.wasSeen()).thenReturn(false);
+        }
+    }
+    
+    private void makeAllLookSeen(Episode... episodes) {
+        for (Episode episode : episodes) {
+            Mockito.when(episode.wasSeen()).thenReturn(true);
+        }
     }
 
-    private void makeAllLookNotSeen() {
-        Mockito.when(this.episode1.wasSeen()).thenReturn(false);
-        Mockito.when(this.episode2.wasSeen()).thenReturn(false);
-        Mockito.when(this.episode3.wasSeen()).thenReturn(false);
-        Mockito.when(this.episode4.wasSeen()).thenReturn(false);
+    private void callOnMarkAsSeenForAll(Episode... episodes) {
+        for (Episode episode : episodes) {
+            this.season.onMarkedAsSeen(episode);
+        }
     }
-
-    private void callOnUpdateForAll() {
-        this.season.onUpdate(episode1);
-        this.season.onUpdate(episode2);
-        this.season.onUpdate(episode3);
-        this.season.onUpdate(episode4);
+    
+    private void callOnMarkAsNotSeenForAll(Episode... episodes) {
+        for (Episode episode : episodes) {
+            this.season.onMarkedAsNotSeen(episode);
+        }
     }
-
+    
     //Tests-------------------------------------------------------------------------------------------------------------
 
     @Before
@@ -132,17 +135,15 @@ public class SeasonTest {
     @Test
     public final void testMarkAllAsSeen() {                
         this.season.markAllAsSeen();
-        this.makeAllLookSeen();
         
-        this.callOnUpdateForAll();
+        this.makeAllLookSeen(episode1, episode2, episode3, episode4);
+        this.callOnMarkAsSeenForAll(episode1, episode2, episode3, episode4);
         
         Mockito.verify(this.episode1).markAsSeen();
         Mockito.verify(this.episode2).markAsSeen();
         Mockito.verify(this.episode3).markAsSeen();
         Mockito.verify(this.episode4).markAsSeen();
-        
-        this.callOnUpdateForAll();
-        
+                
         Assert.assertTrue(this.season.areAllSeen());
         Assert.assertEquals(null, this.season.nextEpisodeToSee());
     }
@@ -150,9 +151,9 @@ public class SeasonTest {
     @Test
     public final void testMarkAllAsNotSeen() {
         this.season.markAllAsNotSeen();
-        this.makeAllLookNotSeen();
+        this.makeAllLookNotSeen(episode1, episode2, episode3, episode4);
         
-        this.callOnUpdateForAll();
+        this.callOnMarkAsNotSeenForAll(episode1, episode2, episode3, episode4);
         
         Mockito.verify(this.episode1).markAsNotSeen();
         Mockito.verify(this.episode2).markAsNotSeen();
@@ -167,55 +168,55 @@ public class SeasonTest {
     public final void testGetNextEpisodeToSee() {
         Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
-        this.makeAllLookSeen();
+        this.makeAllLookSeen(episode1, episode2, episode3, episode4);
         
-        callOnUpdateForAll();
+        callOnMarkAsSeenForAll(episode1, episode2, episode3, episode4);
 
         Assert.assertEquals(null, this.season.nextEpisodeToSee());
           
         
-        this.makeAllLookNotSeen();
+        this.makeAllLookNotSeen(episode1, episode2, episode3, episode4);
         
-        callOnUpdateForAll();
+        callOnMarkAsNotSeenForAll(episode1, episode2, episode3, episode4);
         
         Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
-        this.makeAllLookSeen();
+        this.makeAllLookSeen(episode1, episode2, episode3, episode4);
         
         Mockito.when(this.episode1.wasSeen()).thenReturn(false);
-        this.season.onUpdate(episode1);
+        this.season.onMarkedAsNotSeen(episode1);
         Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode1.wasSeen()).thenReturn(true);
-        this.season.onUpdate(episode1);
+        this.season.onMarkedAsSeen(episode1);
         Assert.assertEquals(null, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode3.wasSeen()).thenReturn(false);
-        this.season.onUpdate(episode3);
+        this.season.onMarkedAsNotSeen(episode3);
         Assert.assertEquals(this.episode3, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode3.wasSeen()).thenReturn(true);
-        this.season.onUpdate(episode3);
+        this.season.onMarkedAsSeen(episode3);
         Assert.assertEquals(null, this.season.nextEpisodeToSee());
 
         Mockito.when(this.episode2.wasSeen()).thenReturn(false);
-        this.season.onUpdate(episode2);
+        this.season.onMarkedAsNotSeen(episode2);
         Assert.assertEquals(this.episode2, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode4.wasSeen()).thenReturn(false);
-        this.season.onUpdate(episode4);
+        this.season.onMarkedAsNotSeen(episode4);
         Assert.assertEquals(this.episode2, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode1.wasSeen()).thenReturn(false);
-        this.season.onUpdate(episode1);
+        this.season.onMarkedAsNotSeen(episode1);
         Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode2.wasSeen()).thenReturn(true);
-        this.season.onUpdate(episode2);
+        this.season.onMarkedAsSeen(episode2);
         Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode1.wasSeen()).thenReturn(true);
-        this.season.onUpdate(episode1);
+        this.season.onMarkedAsSeen(episode1);
         Assert.assertEquals(this.episode4, this.season.nextEpisodeToSee());
         }
     

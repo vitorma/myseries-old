@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import br.edu.ufcg.aweseries.gui.EpisodeListActivity;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class Episode {
@@ -42,7 +43,8 @@ public class Episode {
     private String poster;
 
     private boolean seen;
-    private Set<DomainObjectListener<Episode>> listeners; //TODO A List<EpisodeListener>
+    private Set<DomainObjectListener<Episode>> domainEntityListeners; //TODO A List<EpisodeListener>
+    private Set<EpisodeListener> listeners; 
 
     private Episode(String id, String seriesId, int number, int seasonNumber) {
         if (id == null || Strings.isBlank(id)) {
@@ -61,8 +63,11 @@ public class Episode {
             throw new IllegalArgumentException("invalid season number for episode");
         }
 
-        this.listeners = new HashSet<DomainObjectListener<Episode>>();
+        //TODO: remove
+        this.domainEntityListeners = new HashSet<DomainObjectListener<Episode>>();
 
+        this.listeners = new HashSet<EpisodeListener>();
+        
         this.id = id;
         this.seriesId = seriesId;
         this.number = number;
@@ -208,17 +213,30 @@ public class Episode {
     //     a season each time the state of an episode changes.
 
     private void notifyListeners() {
-        for (final DomainObjectListener<Episode> listener : this.listeners) {
-            listener.onUpdate(this);            
+        //TODO: Remove ASAP
+        for (final DomainObjectListener<Episode> listener : this.domainEntityListeners) {
+            listener.onUpdate(this);
         }
     }
 
-    public boolean addListener(DomainObjectListener<Episode> listener) {
+    public boolean addListener(EpisodeListener listener) {
         return this.listeners.add(listener);
     }
     
-    public boolean removeListener(DomainObjectListener<Episode> listener) {
+    public boolean removeListener(EpisodeListener listener) {
         return this.listeners.remove(listener);
+    }
+    
+    //TODO: Remove
+    @Deprecated
+    public boolean addListener(DomainObjectListener<Episode> listener) {
+        return this.domainEntityListeners.add(listener);
+    }
+    
+    //TODO: Remove
+    @Deprecated
+    public boolean removeListener(DomainObjectListener<Episode> listener) {
+        return this.domainEntityListeners.remove(listener);
     }
 
     //Builder-----------------------------------------------------------------------------------------------------------

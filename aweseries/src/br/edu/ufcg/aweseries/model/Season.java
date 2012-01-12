@@ -35,7 +35,7 @@ import java.util.TreeMap;
 import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Strings;
 
-public class Season implements Iterable<Episode>, DomainObjectListener<Episode> {
+public class Season implements Iterable<Episode>, EpisodeListener {
 
     private int number;
     private String seriesId;
@@ -192,7 +192,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         
         this.map.put(episode.number(), episode);
         
-        this.onUpdate(episode);
+        this.updateNextToSee();
     }
     
     public boolean areAllSeen() {
@@ -295,14 +295,13 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         return (this.number() == 0) ? "Special Episodes" : "Season " + this.number();
     }
 
-    @Override
-    public void onUpdate(Episode episode) {
+    private void updateNextToSee() {
         Episode nextEpisodeToSee = findNextEpisodeToSee();
         
         this.nextEpisodeToSee = nextEpisodeToSee;
 
-        this.notifyListeners();
     }
+
 
     public boolean addListener(DomainObjectListener<Season> listener) {
         return this.listeners.add(listener);        
@@ -316,5 +315,22 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         for (final DomainObjectListener<Season> listener : this.listeners) {
             listener.onUpdate(this);
         }
+    }
+
+    @Override
+    public void onMarkedAsSeen(Episode e) {
+        this.updateNextToSee();
+        this.notifyListeners();
+    }
+
+    @Override
+    public void onMarkedAsNotSeen(Episode e) {
+        this.updateNextToSee();
+        this.notifyListeners();
+    }
+
+    @Override
+    public void onMerged(Episode e) {
+        this.notifyListeners();
     }
 }
