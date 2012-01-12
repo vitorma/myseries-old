@@ -78,6 +78,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         }
 
         this.map.get(episode.seasonNumber()).addEpisode(episode);
+        this.notifyListeners();
     }
 
     public void addAllEpisodes(List<Episode> episodes) {
