@@ -44,6 +44,7 @@ import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.gui.RecentAndUpcomingEpisodesActivity;
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.EpisodeComparator;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Dates;
@@ -63,6 +64,9 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
 
         //TODO This is not the best place for this constant
         private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+        private static final Comparator<Episode> COMPARATOR =
+            EpisodeComparator.reversedByAirdateThenBySeasonThenByNumber();
 
         public UpdateService() {
             super("br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesWidgetProvider$UpdateService");
@@ -118,7 +122,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                             pre +
                             this.getString(R.string.separator) +
                             Objects.nullSafe(e.name(), this.getString(R.string.unnamed_episode))));
-                    item.setTextViewText(R.id.widgetEpisodeDateTextView, Dates.toString(e.firstAired(), FORMAT, ""));
+                    item.setTextViewText(R.id.widgetEpisodeDateTextView, Dates.toString(e.airdate(), FORMAT, ""));
 
                     views.addView(R.id.innerLinearLayout, item);
                     viewsToAdd--;
@@ -138,19 +142,9 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
         }
 
         private SortedSet<Episode> sortedSetBy(List<Episode> list) {
-            final SortedSet<Episode> sorted = new TreeSet<Episode>(this.comparator());
+            final SortedSet<Episode> sorted = new TreeSet<Episode>(COMPARATOR);
             sorted.addAll(list);
             return sorted;
-        }
-
-        private Comparator<Episode> comparator() {
-            return new Comparator<Episode>() {
-                @Override
-                public int compare(Episode episodeA, Episode episodeB) {
-                    final int byDate = episodeB.compareByDateTo(episodeA);
-                    return (byDate == 0) ? episodeB.compareByNumberTo(episodeA) : byDate;
-                }
-            };
         }
 
         protected int layout() {

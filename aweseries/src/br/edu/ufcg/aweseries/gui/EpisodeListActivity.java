@@ -44,6 +44,7 @@ import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.EpisodeComparator;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Dates;
@@ -51,7 +52,7 @@ import br.edu.ufcg.aweseries.util.Objects;
 
 public class EpisodeListActivity extends ListActivity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
-    private static final EpisodeComparator EPISODE_COMPARATOR = new EpisodeComparator();
+    private static final Comparator<Episode> EPISODE_COMPARATOR = EpisodeComparator.byNumber();
 
     //TODO This is not the best place for this constant
     private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -59,15 +60,6 @@ public class EpisodeListActivity extends ListActivity {
     private Series series;
     private Season season;
     private CheckBox isSeasonViewed;
-
-    //Episode comparator------------------------------------------------------------------------------------------------
-
-    private static class EpisodeComparator implements Comparator<Episode> {
-        @Override
-        public int compare(Episode episodeA, Episode episodeB) {
-            return episodeA.number() - episodeB.number();
-        }
-    };
 
     //Episode item view adapter-----------------------------------------------------------------------------------------
 
@@ -119,7 +111,7 @@ public class EpisodeListActivity extends ListActivity {
                     this.getContext().getResources().getString(R.string.unnamed_episode)));
             numberTextView.setText(String.format(getString(R.string.episode_number_format),
                     episode.number()));
-            dateTextView.setText(Dates.toString(episode.firstAired(), FORMAT, ""));
+            dateTextView.setText(Dates.toString(episode.airdate(), FORMAT, ""));
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 

@@ -27,10 +27,9 @@ import java.util.List;
 
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.EpisodeComparator;
 
 public class RecentEpisodesActivity extends OutOfContextEpisodesActivity {
-
-    private static final EpisodeComparator comparator = new EpisodeComparator();
 
     @Override
     protected List<Episode> episodes() {
@@ -39,15 +38,6 @@ public class RecentEpisodesActivity extends OutOfContextEpisodesActivity {
 
     @Override
     protected Comparator<Episode> episodesComparator() {
-        return comparator;
+        return EpisodeComparator.reversedByAirdateThenBySeasonThenByNumber();
     }
-
-    //Episode comparator------------------------------------------------------------------------------------------------
-    private static class EpisodeComparator implements Comparator<Episode> {
-        @Override
-        public int compare(Episode episodeA, Episode episodeB) {
-            int byDate = episodeB.compareByDateTo(episodeA);
-            return byDate == 0 ? episodeB.compareByNumberTo(episodeA) : byDate;
-        }
-    };
 }

@@ -230,7 +230,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withFirstAired(Dates.parseDate(body, THETVDB_DATE_FORMAT, null));
+                        episodeBuilder.withAirdate(Dates.parseDate(body, THETVDB_DATE_FORMAT, null));
                     }
                 });
 

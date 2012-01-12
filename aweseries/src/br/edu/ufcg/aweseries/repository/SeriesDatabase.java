@@ -318,7 +318,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put("number", e.number());
         cv.put("seasonNumber", e.seasonNumber());
         cv.put("name", e.name());
-        cv.put("firstAired", Numbers.parseLong(e.firstAired(), null));
+        cv.put("firstAired", Numbers.parseLong(e.airdate(), null));
         cv.put("overview", e.overview());
         cv.put("director", e.directors());
         cv.put("writer", e.writers());
@@ -352,7 +352,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withNumber(c.getInt(c.getColumnIndex("number")))
             .withSeasonNumber(c.getInt(c.getColumnIndex("seasonNumber")))
             .withName(c.getString(c.getColumnIndex("name")))
-            .withFirstAired(Dates.parseDate(c.getLong(c.getColumnIndex("firstAired")), null))
+            .withAirdate(Dates.parseDate(c.getLong(c.getColumnIndex("firstAired")), null))
             .withOverview(c.getString(c.getColumnIndex("overview")))
             .withDirector(c.getString(c.getColumnIndex("director")))
             .withWriter(c.getString(c.getColumnIndex("writer")))

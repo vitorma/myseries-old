@@ -34,7 +34,7 @@ public class Episode {
     private int number;
     private int seasonNumber;
     private String name;
-    private Date firstAired;
+    private Date airdate;
     private String overview;
     private String directors;
     private String writers;
@@ -101,12 +101,12 @@ public class Episode {
         return this.name;
     }
 
-    public Date firstAired() {
-        return this.firstAired;
+    public Date airdate() {
+        return this.airdate;
     }
 
     public boolean wasAired() {
-        return this.firstAired != null;
+        return this.airdate != null;
     }
 
     public String overview() {
@@ -170,7 +170,7 @@ public class Episode {
         }
 
         this.name = other.name;
-        this.firstAired = other.firstAired;
+        this.airdate = other.airdate;
         this.overview = other.overview;
         this.directors = other.directors;
         this.writers = other.writers;
@@ -225,14 +225,14 @@ public class Episode {
         return this.listeners.remove(listener);
     }
 
-    //TODO: Move these methods to a comparator--------------------------------------------------------------------------
+    //TODO: Remove these methods ASAP-----------------------------------------------------------------------------------
 
     public boolean airedBefore(Date date) {
         if (date == null) {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.wasAired() ? (this.firstAired().compareTo(date) < 0) : false;
+        return this.wasAired() ? (this.airdate().compareTo(date) < 0) : false;
     }
 
     public boolean airedUntil(Date date) {
@@ -240,7 +240,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.wasAired() ? (this.firstAired().compareTo(date) <= 0) : false;
+        return this.wasAired() ? (this.airdate().compareTo(date) <= 0) : false;
     }
 
     public boolean airedAt(Date date) {
@@ -248,7 +248,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.wasAired() ? (this.firstAired().compareTo(date) == 0) : false;
+        return this.wasAired() ? (this.airdate().compareTo(date) == 0) : false;
     }
 
     public boolean airedFrom(Date date) {
@@ -256,7 +256,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.wasAired() ? (this.firstAired().compareTo(date) >= 0) : false;
+        return this.wasAired() ? (this.airdate().compareTo(date) >= 0) : false;
     }
 
     public boolean airedAfter(Date date) {
@@ -264,7 +264,7 @@ public class Episode {
             throw new IllegalArgumentException("date should not be null");
         }
 
-        return this.wasAired() ? (this.firstAired().compareTo(date) > 0) : false;
+        return this.wasAired() ? (this.airdate().compareTo(date) > 0) : false;
     }
 
     public int compareByDateTo(Episode other) {
@@ -272,7 +272,7 @@ public class Episode {
             return other.wasAired() ? 1 : this.compareByNumberTo(other);
         }
 
-        return other.wasAired() ? this.firstAired().compareTo(other.firstAired()) : -1;
+        return other.wasAired() ? this.airdate().compareTo(other.airdate()) : -1;
     }
 
     public int compareByNumberTo(Episode other) {
@@ -290,7 +290,7 @@ public class Episode {
         private int number;
         private int seasonNumber;
         private String name;
-        private Date firstAired;
+        private Date airdate;
         private String overview;
         private String directors;
         private String writers;
@@ -328,8 +328,8 @@ public class Episode {
             return this;
         }
 
-        public Builder withFirstAired(Date firstAired) {
-            this.firstAired = firstAired;
+        public Builder withAirdate(Date airdate) {
+            this.airdate = airdate;
             return this;
         }
 
@@ -367,7 +367,7 @@ public class Episode {
             Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
 
             episode.name = this.name;
-            episode.firstAired = this.firstAired;
+            episode.airdate = this.airdate;
             episode.overview = this.overview;
             episode.directors = this.directors;
             episode.writers = this.writers;

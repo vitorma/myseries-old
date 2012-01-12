@@ -153,7 +153,7 @@ public class EpisodeTest {
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
             .withName(NAME)
-            .withFirstAired(FIRST_AIRED)
+            .withAirdate(FIRST_AIRED)
             .withOverview(OVERVIEW)
             .withDirector(DIRECTORS)
             .withWriter(WRITERS)
@@ -167,7 +167,7 @@ public class EpisodeTest {
     	Assert.assertEquals(NUMBER1, e1.number());
     	Assert.assertEquals(SEASON_NUMBER1, e1.seasonNumber());
     	Assert.assertEquals(NAME, e1.name());
-    	Assert.assertEquals(FIRST_AIRED, e1.firstAired());
+    	Assert.assertEquals(FIRST_AIRED, e1.airdate());
     	Assert.assertEquals(OVERVIEW, e1.overview());
     	Assert.assertEquals(DIRECTORS, e1.directors());
     	Assert.assertEquals(WRITERS, e1.writers());
@@ -187,7 +187,7 @@ public class EpisodeTest {
     	Assert.assertEquals(NUMBER2, e2.number());
     	Assert.assertEquals(SEASON_NUMBER1, e2.seasonNumber());
     	Assert.assertEquals(null, e2.name());
-    	Assert.assertEquals(null, e2.firstAired());
+    	Assert.assertEquals(null, e2.airdate());
     	Assert.assertEquals(null, e2.overview());
     	Assert.assertEquals(null, e2.directors());
     	Assert.assertEquals(null, e2.writers());
@@ -339,7 +339,7 @@ public class EpisodeTest {
         	.withNumber(NUMBER1)
         	.withSeasonNumber(SEASON_NUMBER1)
         	.withName(NAME)
-        	.withFirstAired(FIRST_AIRED)
+        	.withAirdate(FIRST_AIRED)
         	.withOverview(OVERVIEW)
         	.withDirector(DIRECTORS)
         	.withWriter(WRITERS)
@@ -359,7 +359,7 @@ public class EpisodeTest {
     	e2.mergeWith(e1);
 
         Assert.assertEquals(NAME, e2.name());
-        Assert.assertEquals(FIRST_AIRED, e2.firstAired());
+        Assert.assertEquals(FIRST_AIRED, e2.airdate());
         Assert.assertEquals(OVERVIEW, e2.overview());
         Assert.assertEquals(DIRECTORS, e2.directors());
         Assert.assertEquals(WRITERS, e2.writers());
