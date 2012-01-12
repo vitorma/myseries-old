@@ -76,12 +76,12 @@ public class SeasonSetTest {
         this.seasons.addEpisode(this.episode3);
 
         for (final Season season : this.seasons.toArray()) {
-            if (season.getNumber() == 1) {
-                Assert.assertThat(season.getEpisodes(), JUnitMatchers.hasItems(this.episode1, this.episode2));
-                Assert.assertEquals(2, season.getEpisodes().size());
-            } else if (season.getNumber() == 2) {
-                Assert.assertThat(season.getEpisodes(), JUnitMatchers.hasItem(this.episode3));
-                Assert.assertEquals(1, season.getEpisodes().size());
+            if (season.number() == 1) {
+                Assert.assertThat(season.episodes(), JUnitMatchers.hasItems(this.episode1, this.episode2));
+                Assert.assertEquals(2, season.episodes().size());
+            } else if (season.number() == 2) {
+                Assert.assertThat(season.episodes(), JUnitMatchers.hasItem(this.episode3));
+                Assert.assertEquals(1, season.episodes().size());
             }
         }
     }

@@ -117,7 +117,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.getName());
                     final String pre = String.format(
                             this.getString(R.string.season_and_episode_format_short),
-                            season.getNumber(), e.number());
+                            season.number(), e.number());
                     item.setTextViewText(R.id.widgetEpisodeNameTextView, String.format(
                             pre +
                             this.getString(R.string.separator) +

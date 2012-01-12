@@ -59,36 +59,36 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         this.listeners = new HashSet<DomainObjectListener<Season>>();
     }
 
-    public String getSeriesId() {
+    public String seriesId() {
         return this.seriesId;
     }
 
-    public int getNumber() {
+    public int number() {
         return this.number;
     }
     
-    public int getNumberOfEpisodes() {
+    public int numberOfEpisodes() {
         return this.map.size();
     }
 
-    public List<Episode> getEpisodes() {
+    public List<Episode> episodes() {
         return new ArrayList<Episode>(this.map.values());
     }
 
-    private int getFirstEpisodeNumber() {
+    private int firstEpisodeNumber() {
         return this.map.firstKey();
     }
 
-    private int getLastEpisodeNumber() {
+    private int lastEpisodeNumber() {
         return this.map.lastKey();
     }
 
-    public Episode getFirst() {
-        return this.map.get(this.getFirstEpisodeNumber());
+    public Episode first() {
+        return this.map.get(this.firstEpisodeNumber());
     }
 
-    public Episode getLast() {
-        return this.map.get(this.getLastEpisodeNumber());
+    public Episode last() {
+        return this.map.get(this.lastEpisodeNumber());
     }
 
     public Episode get(int episodeNumber) {
@@ -107,11 +107,11 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         return null;
     }
 
-    public Episode getNextEpisodeToSee() {
+    public Episode nextEpisodeToSee() {
         return this.nextEpisodeToSee;
     }
 
-    public Episode getNextEpisodeToAir() {
+    public Episode nextEpisodeToAir() {
         final Date today = new Date();
         
         for (final Episode e : this) {
@@ -127,7 +127,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         return null;
     }
 
-    public Episode getLastAiredEpisode() {
+    public Episode lastAiredEpisode() {
         final Date today = new Date();
         final Iterator<Episode> it = this.reversedIterator();
 
@@ -141,7 +141,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         return null;
     }
 
-    public List<Episode> getLastAiredNotSeenEpisodes() {
+    public List<Episode> lastAiredNotSeenEpisodes() {
         final Date today = new Date();
         final List<Episode> list = new ArrayList<Episode>();
 
@@ -154,7 +154,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
         return list;
     }
 
-    public List<Episode> getNextEpisodesToAir() {
+    public List<Episode> nextEpisodesToAir() {
         final Date today = new Date();
         final List<Episode> list = new ArrayList<Episode>();
 
@@ -230,7 +230,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
     }
 
     private void mergeAlreadyExistentEpisodesFrom(Season other) {
-        for (Episode ourEpisode : getEpisodes()) {
+        for (Episode ourEpisode : episodes()) {
             if (other.has(ourEpisode)) {
                 ourEpisode.mergeWith(other.get(ourEpisode.number()));
             }
@@ -238,7 +238,7 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
     }
 
     private void addNonexistentYetEpisodesFrom(Season other) {        
-        for (Episode theirEpisode : other.getEpisodes()) {
+        for (Episode theirEpisode : other.episodes()) {
             if (!this.has(theirEpisode)) {
                 this.addEpisode(theirEpisode);
             }
@@ -252,13 +252,13 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
 
     public Iterator<Episode> reversedIterator() {
         return new Iterator<Episode>() {
-            private int episodeNumber = (getNumberOfEpisodes() > 0) ? Season.this
-                    .getLastEpisodeNumber() : Integer.MIN_VALUE;
+            private int episodeNumber = (numberOfEpisodes() > 0) ? Season.this
+                    .lastEpisodeNumber() : Integer.MIN_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (getNumberOfEpisodes() > 0)
-                        && (this.episodeNumber >= Season.this.getFirstEpisodeNumber());
+                return (numberOfEpisodes() > 0)
+                        && (this.episodeNumber >= Season.this.firstEpisodeNumber());
             }
 
             @Override
@@ -281,18 +281,18 @@ public class Season implements Iterable<Episode>, DomainObjectListener<Episode> 
 
     @Override
     public int hashCode() {
-        return this.getNumber();
+        return this.number();
     }
 
     @Override
     public boolean equals(Object o) {
         return (o instanceof Season) &&
-        (((Season) o).getNumber() == this.getNumber());
+        (((Season) o).number() == this.number());
     }
 
     @Override
     public String toString() {
-        return (this.getNumber() == 0) ? "Special Episodes" : "Season " + this.getNumber();
+        return (this.number() == 0) ? "Special Episodes" : "Season " + this.number();
     }
 
     @Override

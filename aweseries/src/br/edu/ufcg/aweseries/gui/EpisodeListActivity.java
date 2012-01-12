@@ -184,20 +184,20 @@ public class EpisodeListActivity extends ListActivity {
 
         TextView seasonName = (TextView) this.findViewById(R.id.seasonTextView);
         
-        if (this.season.getNumber() == 0) {
+        if (this.season.number() == 0) {
             seasonName.setText(getString(R.string.special_episodes));
         }
         
         else {
             seasonName.setText(String.format(getString(R.string.season_number_format),
-                    this.season.getNumber()));
+                    this.season.number()));
         }
         
     }
 
     private void setUpEpisodeListAdapter() {
         EpisodeItemViewAdapter dataAdapter = new EpisodeItemViewAdapter(this,
-                R.layout.episode_list_item, this.season.getEpisodes());
+                R.layout.episode_list_item, this.season.episodes());
         this.setListAdapter(dataAdapter);
         dataAdapter.sort(EPISODE_COMPARATOR);
     }

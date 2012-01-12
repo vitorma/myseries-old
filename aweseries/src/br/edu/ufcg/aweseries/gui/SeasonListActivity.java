@@ -56,15 +56,15 @@ public class SeasonListActivity extends ListActivity {
     private static final class SeasonComparator implements Comparator<Season> {
         @Override
         public int compare(Season seasonA, Season seasonB) {
-            if (seasonA.getNumber() == 0) {
-                return -seasonB.getNumber();
+            if (seasonA.number() == 0) {
+                return -seasonB.number();
             }
 
-            if (seasonB.getNumber() == 0) {
-                return seasonA.getNumber();
+            if (seasonB.number() == 0) {
+                return seasonA.number();
             }
 
-            return seasonB.getNumber() - seasonA.getNumber();
+            return seasonB.number() - seasonA.number();
         }
     }
 
@@ -100,7 +100,7 @@ public class SeasonListActivity extends ListActivity {
 
                 Intent intent = new Intent(view.getContext(), EpisodeListActivity.class);
                 final Season season = (Season) parent.getItemAtPosition(position);
-                intent.putExtra("season number", season.getNumber());
+                intent.putExtra("season number", season.number());
                 intent.putExtra("series id", series.getId());
                 SeasonListActivity.this.startActivity(intent);
             }
@@ -148,13 +148,13 @@ public class SeasonListActivity extends ListActivity {
         private void showSeasonDataOn(Season season, View itemView) {
             TextView name = (TextView) itemView.findViewById(R.id.itemName);
 
-            if (season.getNumber() == 0) {
+            if (season.number() == 0) {
                 name.setText(getString(R.string.special_episodes));
             }
 
             else {
                 name.setText(String.format(getString(R.string.season_number_format),
-                        season.getNumber()));
+                        season.number()));
             }
 
             CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);

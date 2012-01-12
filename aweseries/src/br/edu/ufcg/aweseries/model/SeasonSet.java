@@ -110,7 +110,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         List<Episode> episodes = new ArrayList<Episode>();
 
         for (Season s : this.map.values()) {
-            episodes.addAll(s.getEpisodes());
+            episodes.addAll(s.episodes());
         }
 
         return episodes;
@@ -140,7 +140,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
 
     public Episode getNextEpisodeToSee() {
         for (final Season s : this.map.values()) {
-            final Episode next = s.getNextEpisodeToSee();
+            final Episode next = s.nextEpisodeToSee();
             if (next != null) return next;
         }
 
@@ -149,7 +149,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
 
     public Episode getNextEpisodeToAir() {
         for (final Season s : this.map.values()) {
-            final Episode next = s.getNextEpisodeToAir();
+            final Episode next = s.nextEpisodeToAir();
             if (next != null) return next;
         }
 
@@ -160,7 +160,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         final Iterator<Season> it = this.reversedIterator();
 
         while (it.hasNext()) {
-            final Episode last = it.next().getLastAiredEpisode();
+            final Episode last = it.next().lastAiredEpisode();
             if (last != null) return last;
         }
 
@@ -172,7 +172,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         List<Episode> list = new ArrayList<Episode>();
 
         for (Season s : this) {
-            list.addAll(s.getLastAiredNotSeenEpisodes());
+            list.addAll(s.lastAiredNotSeenEpisodes());
         }
 
         return list;
@@ -182,7 +182,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         List<Episode> list = new ArrayList<Episode>();
 
         for (Season s : this) {
-            list.addAll(s.getNextEpisodesToAir());
+            list.addAll(s.nextEpisodesToAir());
         }
 
         return list;
@@ -270,14 +270,14 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         }
 
         for (Season s : this.map.values()) {
-            if (other.hasSeason(s.getNumber())) {
-                s.mergeWith(other.getSeason(s.getNumber()));
+            if (other.hasSeason(s.number())) {
+                s.mergeWith(other.getSeason(s.number()));
             }
         }
 
         for (Season s : other.map.values()) {
-            if (!this.hasSeason(s.getNumber())) {
-                this.addAllEpisodes(s.getEpisodes());
+            if (!this.hasSeason(s.number())) {
+                this.addAllEpisodes(s.episodes());
             }
         }
     }

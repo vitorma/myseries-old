@@ -119,14 +119,14 @@ public class SeasonTest {
 
     @Test
     public final void testAddEpisode() {
-        Assert.assertThat(this.season.getEpisodes(),
+        Assert.assertThat(this.season.episodes(),
                 JUnitMatchers.hasItems(this.episode1, this.episode2));
-        Assert.assertEquals(this.season.getNumberOfEpisodes(), 4);
+        Assert.assertEquals(this.season.numberOfEpisodes(), 4);
 
         final Episode episode5 = mockEpisode("5", "1", 5, 1);
         this.season.addEpisode(episode5);
-        Assert.assertEquals(this.season.getNumberOfEpisodes(), 5);
-        Assert.assertThat(this.season.getEpisodes(), JUnitMatchers.hasItem(episode5));
+        Assert.assertEquals(this.season.numberOfEpisodes(), 5);
+        Assert.assertThat(this.season.episodes(), JUnitMatchers.hasItem(episode5));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class SeasonTest {
         this.callOnUpdateForAll();
         
         Assert.assertTrue(this.season.areAllSeen());
-        Assert.assertEquals(null, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(null, this.season.nextEpisodeToSee());
     }
 
     @Test
@@ -160,68 +160,68 @@ public class SeasonTest {
         Mockito.verify(this.episode4).markAsNotSeen();
         
         Assert.assertFalse(this.season.areAllSeen());
-        Assert.assertEquals(this.episode1, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
     }
 
     @Test
     public final void testGetNextEpisodeToSee() {
-        Assert.assertEquals(this.episode1, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
         this.makeAllLookSeen();
         
         callOnUpdateForAll();
 
-        Assert.assertEquals(null, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(null, this.season.nextEpisodeToSee());
           
         
         this.makeAllLookNotSeen();
         
         callOnUpdateForAll();
         
-        Assert.assertEquals(this.episode1, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
         this.makeAllLookSeen();
         
         Mockito.when(this.episode1.wasSeen()).thenReturn(false);
         this.season.onUpdate(episode1);
-        Assert.assertEquals(this.episode1, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode1.wasSeen()).thenReturn(true);
         this.season.onUpdate(episode1);
-        Assert.assertEquals(null, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(null, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode3.wasSeen()).thenReturn(false);
         this.season.onUpdate(episode3);
-        Assert.assertEquals(this.episode3, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode3, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode3.wasSeen()).thenReturn(true);
         this.season.onUpdate(episode3);
-        Assert.assertEquals(null, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(null, this.season.nextEpisodeToSee());
 
         Mockito.when(this.episode2.wasSeen()).thenReturn(false);
         this.season.onUpdate(episode2);
-        Assert.assertEquals(this.episode2, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode2, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode4.wasSeen()).thenReturn(false);
         this.season.onUpdate(episode4);
-        Assert.assertEquals(this.episode2, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode2, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode1.wasSeen()).thenReturn(false);
         this.season.onUpdate(episode1);
-        Assert.assertEquals(this.episode1, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode2.wasSeen()).thenReturn(true);
         this.season.onUpdate(episode2);
-        Assert.assertEquals(this.episode1, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
         
         Mockito.when(this.episode1.wasSeen()).thenReturn(true);
         this.season.onUpdate(episode1);
-        Assert.assertEquals(this.episode4, this.season.getNextEpisodeToSee());
+        Assert.assertEquals(this.episode4, this.season.nextEpisodeToSee());
         }
     
     @Test
     public final void testGetNextEpisodeToAir() {
-        Assert.assertEquals(null, this.season.getNextEpisodeToAir());
+        Assert.assertEquals(null, this.season.nextEpisodeToAir());
         final Date today = new Date();
         final long oneDayMilis = 1000 * 60 * 60 * 24;
 
@@ -243,21 +243,21 @@ public class SeasonTest {
         Mockito.when(episode8.airdate()).thenReturn(weekAfterNextWeek);
         
         this.season.addEpisode(episode7);
-        Assert.assertEquals(episode7, this.season.getNextEpisodeToAir());
+        Assert.assertEquals(episode7, this.season.nextEpisodeToAir());
 
         this.season.addEpisode(episode6);
-        Assert.assertEquals(episode6, this.season.getNextEpisodeToAir());
+        Assert.assertEquals(episode6, this.season.nextEpisodeToAir());
 
         this.season.addEpisode(episode8);
-        Assert.assertEquals(episode6, this.season.getNextEpisodeToAir());
+        Assert.assertEquals(episode6, this.season.nextEpisodeToAir());
 
         this.season.addEpisode(episode5);
-        Assert.assertEquals(episode5, this.season.getNextEpisodeToAir());
+        Assert.assertEquals(episode5, this.season.nextEpisodeToAir());
     }
    
     @Test
     public final void testGetLastAiredEpisode() {
-        Assert.assertEquals(null , this.season.getLastAiredEpisode());
+        Assert.assertEquals(null , this.season.lastAiredEpisode());
         
         final Date today = new Date();
         final long oneDayMilis = 1000 * 60 * 60 * 24;
@@ -280,26 +280,26 @@ public class SeasonTest {
         Mockito.when(episode9.airdate()).thenReturn(tenSecondsAgo);
         
         this.season.addEpisode(episode6);
-        Assert.assertEquals(episode6, this.season.getLastAiredEpisode());
+        Assert.assertEquals(episode6, this.season.lastAiredEpisode());
 
         this.season.addEpisode(episode5);
-        Assert.assertEquals(episode6, this.season.getLastAiredEpisode());
+        Assert.assertEquals(episode6, this.season.lastAiredEpisode());
         
         this.season.addEpisode(episode7);
-        Assert.assertEquals(episode7, this.season.getLastAiredEpisode());
+        Assert.assertEquals(episode7, this.season.lastAiredEpisode());
 
         this.season.addEpisode(episode9);
-        Assert.assertEquals(episode9, this.season.getLastAiredEpisode());
+        Assert.assertEquals(episode9, this.season.lastAiredEpisode());
 
         this.season.addEpisode(episode8);
-        Assert.assertEquals(episode9, this.season.getLastAiredEpisode());
+        Assert.assertEquals(episode9, this.season.lastAiredEpisode());
     }
 
     @Test
     public final void testGetLastAiredNotSeenEpisode() {
         final List<Episode> lastNotSeenEpisodes = new ArrayList<Episode>();
 
-        Assert.assertEquals(lastNotSeenEpisodes , this.season.getLastAiredNotSeenEpisodes());
+        Assert.assertEquals(lastNotSeenEpisodes , this.season.lastAiredNotSeenEpisodes());
         
         final Date today = new Date();
         final long oneDayMilis = 1000 * 60 * 60 * 24;
@@ -333,43 +333,43 @@ public class SeasonTest {
         lastNotSeenEpisodes.add(episode8);
         lastNotSeenEpisodes.add(episode9);
         
-        Assert.assertEquals(lastNotSeenEpisodes, this.season.getLastAiredNotSeenEpisodes());
+        Assert.assertEquals(lastNotSeenEpisodes, this.season.lastAiredNotSeenEpisodes());
         
         Mockito.when(episode9.wasSeen()).thenReturn(true);
         lastNotSeenEpisodes.remove(episode9);
-        Assert.assertEquals(lastNotSeenEpisodes, this.season.getLastAiredNotSeenEpisodes());
+        Assert.assertEquals(lastNotSeenEpisodes, this.season.lastAiredNotSeenEpisodes());
         
         Mockito.when(episode7.wasSeen()).thenReturn(true);
         lastNotSeenEpisodes.remove(episode7);
-        Assert.assertEquals(lastNotSeenEpisodes, this.season.getLastAiredNotSeenEpisodes());
+        Assert.assertEquals(lastNotSeenEpisodes, this.season.lastAiredNotSeenEpisodes());
         
         Mockito.when(episode8.wasSeen()).thenReturn(true);
         Mockito.when(episode6.wasSeen()).thenReturn(true);
         Mockito.when(episode5.wasSeen()).thenReturn(true);
         lastNotSeenEpisodes.clear();
-        Assert.assertEquals(lastNotSeenEpisodes, this.season.getLastAiredNotSeenEpisodes());
+        Assert.assertEquals(lastNotSeenEpisodes, this.season.lastAiredNotSeenEpisodes());
         
         Mockito.when(episode8.wasSeen()).thenReturn(false);
         lastNotSeenEpisodes.add(episode8);
-        Assert.assertEquals(lastNotSeenEpisodes, this.season.getLastAiredNotSeenEpisodes());
+        Assert.assertEquals(lastNotSeenEpisodes, this.season.lastAiredNotSeenEpisodes());
 
         lastNotSeenEpisodes.clear();
         Mockito.when(episode5.wasSeen()).thenReturn(false);
 
         lastNotSeenEpisodes.add(episode5);
         lastNotSeenEpisodes.add(episode8);
-        Assert.assertEquals(lastNotSeenEpisodes, this.season.getLastAiredNotSeenEpisodes());
+        Assert.assertEquals(lastNotSeenEpisodes, this.season.lastAiredNotSeenEpisodes());
         
         Mockito.when(episode9.wasSeen()).thenReturn(false);
         lastNotSeenEpisodes.add(episode9);
-        Assert.assertEquals(lastNotSeenEpisodes, this.season.getLastAiredNotSeenEpisodes());
+        Assert.assertEquals(lastNotSeenEpisodes, this.season.lastAiredNotSeenEpisodes());
     }
     
     @Test
     public final void testGetNextEpisodesToAir() {
         final List<Episode> nextEpisodes = new ArrayList<Episode>();
         
-        Assert.assertEquals(nextEpisodes, this.season.getNextEpisodesToAir());
+        Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
         
         final Date today = new Date();
         final long oneDayMilis = 1000 * 60 * 60 * 24;
@@ -391,17 +391,17 @@ public class SeasonTest {
 
         nextEpisodes.add(episode7);
         this.season.addEpisode(episode7);
-        Assert.assertEquals(nextEpisodes, this.season.getNextEpisodesToAir());
+        Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
         
         nextEpisodes.clear();
         nextEpisodes.add(episode6);
         nextEpisodes.add(episode7);
         this.season.addEpisode(episode6);
-        Assert.assertEquals(nextEpisodes, this.season.getNextEpisodesToAir());
+        Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
 
         nextEpisodes.add(episode8);
         this.season.addEpisode(episode8);
-        Assert.assertEquals(nextEpisodes, this.season.getNextEpisodesToAir());
+        Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
         
         nextEpisodes.clear();
         nextEpisodes.add(episode5);
@@ -409,7 +409,7 @@ public class SeasonTest {
         nextEpisodes.add(episode7);
         nextEpisodes.add(episode8);
         this.season.addEpisode(episode5);
-        Assert.assertEquals(nextEpisodes, this.season.getNextEpisodesToAir());
+        Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
     }
     
     @Test(expected = InvalidParameterException.class)

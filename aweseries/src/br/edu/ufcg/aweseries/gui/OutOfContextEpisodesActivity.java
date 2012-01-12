@@ -163,7 +163,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             seriesTextView.setText(series.getName());
             seasonEpisodeTextView
                     .setText(String.format(OutOfContextEpisodesActivity.this
-                            .getString(R.string.season_and_episode_format), season.getNumber(),
+                            .getString(R.string.season_and_episode_format), season.number(),
                             episode.number()));
             dateTextView.setText(Dates.toString(episode.airdate(), FORMAT, ""));
             isViewedCheckBox.setChecked(episode.wasSeen());
