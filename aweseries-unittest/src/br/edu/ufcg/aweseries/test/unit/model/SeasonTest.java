@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.test.unit.model;
 
 import java.security.InvalidParameterException;
@@ -29,29 +28,61 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 
-import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 
 public class SeasonTest {
-
-    //TODO Implement tests for all methods but using mocks for episodes-------------------------------------------------
 
     private Season season;
     private Episode episode2;
     private Episode episode1;
     private Episode episode3;
     private Episode episode4;
-    
+
+    //Auxiliar----------------------------------------------------------------------------------------------------------
+
+    private Episode mockEpisode(String id, String seriesId, int number, int seasonNumber) {
+        Episode episode = Mockito.mock(Episode.class);
+
+        Mockito.when(episode.id()).thenReturn(id);
+        Mockito.when(episode.seriesId()).thenReturn(seriesId);
+        Mockito.when(episode.number()).thenReturn(number);
+        Mockito.when(episode.seasonNumber()).thenReturn(seasonNumber);
+        
+        return episode;
+    }
+
+    private void makeAllLookSeen() {
+        Mockito.when(this.episode1.wasSeen()).thenReturn(true);
+        Mockito.when(this.episode2.wasSeen()).thenReturn(true);
+        Mockito.when(this.episode3.wasSeen()).thenReturn(true);
+        Mockito.when(this.episode4.wasSeen()).thenReturn(true);
+    }
+
+    private void makeAllLookNotSeen() {
+        Mockito.when(this.episode1.wasSeen()).thenReturn(false);
+        Mockito.when(this.episode2.wasSeen()).thenReturn(false);
+        Mockito.when(this.episode3.wasSeen()).thenReturn(false);
+        Mockito.when(this.episode4.wasSeen()).thenReturn(false);
+    }
+
+    private void callOnUpdateForAll() {
+        this.season.onUpdate(episode1);
+        this.season.onUpdate(episode2);
+        this.season.onUpdate(episode3);
+        this.season.onUpdate(episode4);
+    }
+
+    //Tests-------------------------------------------------------------------------------------------------------------
+
     @Before
     public void setUp() throws Exception {
         this.season = new Season("1", 1);
+
         this.episode1 = mockEpisode("1", "1", 1, 1);
         this.episode2 = mockEpisode("2", "1", 2, 1);
         this.episode3 = mockEpisode("3", "1", 3, 1);
@@ -62,26 +93,22 @@ public class SeasonTest {
         this.season.addEpisode(this.episode3);
         this.season.addEpisode(this.episode4);
     }
-        
-    @Ignore
+
     @Test(expected=IllegalArgumentException.class)
     public final void testAddNullEpisode() {
         this.season.addEpisode(null);
     }
 
-    @Ignore
     @Test(expected=IllegalArgumentException.class)
     public final void testAddEpisodeWithAnotherSeriesId() {
         this.season.addEpisode(mockEpisode("3", "3", 3, 1));
     }
 
-    @Ignore
     @Test(expected=IllegalArgumentException.class)
     public final void testAddEpisodeWithAnotherSeasonNumber() {
         this.season.addEpisode(mockEpisode("3", "1", 3, 2));
     }
 
-    @Ignore
     @Test(expected=IllegalArgumentException.class)
     public final void testAddAlreadyExistentEpisode() {
         Episode episode2Copy = mockEpisode("2", "1", 2, 1);
@@ -101,7 +128,7 @@ public class SeasonTest {
         Assert.assertEquals(this.season.getNumberOfEpisodes(), 5);
         Assert.assertThat(this.season.getEpisodes(), JUnitMatchers.hasItem(episode5));
     }
-    
+
     @Test
     public final void testMarkAllAsSeen() {                
         this.season.markAllAsSeen();
@@ -119,7 +146,7 @@ public class SeasonTest {
         Assert.assertTrue(this.season.areAllSeen());
         Assert.assertEquals(null, this.season.getNextEpisodeToSee());
     }
-    
+
     @Test
     public final void testMarkAllAsNotSeen() {
         this.season.markAllAsNotSeen();
@@ -135,7 +162,7 @@ public class SeasonTest {
         Assert.assertFalse(this.season.areAllSeen());
         Assert.assertEquals(this.episode1, this.season.getNextEpisodeToSee());
     }
-    
+
     @Test
     public final void testGetNextEpisodeToSee() {
         Assert.assertEquals(this.episode1, this.season.getNextEpisodeToSee());
@@ -385,6 +412,11 @@ public class SeasonTest {
         Assert.assertEquals(nextEpisodes, this.season.getNextEpisodesToAir());
     }
     
+    @Test(expected = InvalidParameterException.class)
+    public final void testMergeWithNull() {
+    	this.season.mergeWith(null);
+    }
+    
     @Test
     public final void testMergeWith() {
         Episode episode5 = mockEpisode("5", "1", 5, 1);
@@ -407,41 +439,4 @@ public class SeasonTest {
         this.season.addEpisode(episode6);
         newSeason.addEpisode(episode6Copy);        
     }
-
-    @Test(expected = InvalidParameterException.class)
-    public final void testMergeWithNull() {
-        this.season.mergeWith(null);
-    }
-        
-    private Episode mockEpisode(String id, String seriesId, int number, int seasonNumber) {
-        Episode episode = Mockito.mock(Episode.class);
-        Mockito.when(episode.id()).thenReturn(id);
-        Mockito.when(episode.seriesId()).thenReturn(seriesId);
-        Mockito.when(episode.number()).thenReturn(number);
-        Mockito.when(episode.seasonNumber()).thenReturn(seasonNumber);
-        
-        return episode;
-    }
-    
-    private void makeAllLookSeen() {
-        Mockito.when(this.episode1.wasSeen()).thenReturn(true);
-        Mockito.when(this.episode2.wasSeen()).thenReturn(true);
-        Mockito.when(this.episode3.wasSeen()).thenReturn(true);
-        Mockito.when(this.episode4.wasSeen()).thenReturn(true);
-    }
-    
-    private void makeAllLookNotSeen() {
-        Mockito.when(this.episode1.wasSeen()).thenReturn(false);
-        Mockito.when(this.episode2.wasSeen()).thenReturn(false);
-        Mockito.when(this.episode3.wasSeen()).thenReturn(false);
-        Mockito.when(this.episode4.wasSeen()).thenReturn(false);
-    }
-    
-    private void callOnUpdateForAll() {
-        this.season.onUpdate(episode1);
-        this.season.onUpdate(episode2);
-        this.season.onUpdate(episode3);
-        this.season.onUpdate(episode4);
-    }    
-
 }
