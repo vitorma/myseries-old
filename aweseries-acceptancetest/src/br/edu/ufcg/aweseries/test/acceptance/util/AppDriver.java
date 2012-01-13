@@ -174,7 +174,7 @@ public class AppDriver {
         }
 
         public TextAsserter name() {
-            return asserterTo(this.numberToName(this.season.getNumber()));
+            return asserterTo(this.numberToName(this.season.number()));
         }
 
         private Integer nameToNumber(String seasonName) {
@@ -196,7 +196,7 @@ public class AppDriver {
 
         private String numberToName(int seasonNumber) {
             return seasonNumber == 0 ? "Special Episodes"
-                                     : "Season " + this.season.getNumber() ;
+                                     : "Season " + this.season.number() ;
         }
     }
 
