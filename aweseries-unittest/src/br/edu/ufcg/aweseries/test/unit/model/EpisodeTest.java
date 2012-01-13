@@ -26,8 +26,10 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.EpisodeListener;
 
 public class EpisodeTest {
 
@@ -40,12 +42,18 @@ public class EpisodeTest {
     private static final int SEASON_NUMBER1 = 1;
     private static final int SEASON_NUMBER2 = 2;
     private static final String NAME = "name";
-    private static final Date FIRST_AIRED = new Date();
+    private static final Date AIR_DATE = new Date();
     private static final String OVERVIEW = "overview";
     private static final String DIRECTORS = "directors";
     private static final String WRITERS = "writers";
     private static final String GUEST_STARS = "guest stars";
     private static final String POSTER = "poster";
+
+    //EpisodeListener mock----------------------------------------------------------------------------------------------
+
+    private EpisodeListener mockListener() {
+    	return Mockito.mock(EpisodeListener.class);
+    }
 
     //Building----------------------------------------------------------------------------------------------------------
 
@@ -153,7 +161,7 @@ public class EpisodeTest {
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
             .withName(NAME)
-            .withAirdate(FIRST_AIRED)
+            .withAirdate(AIR_DATE)
             .withOverview(OVERVIEW)
             .withDirectors(DIRECTORS)
             .withWriters(WRITERS)
@@ -167,7 +175,7 @@ public class EpisodeTest {
     	Assert.assertEquals(NUMBER1, e1.number());
     	Assert.assertEquals(SEASON_NUMBER1, e1.seasonNumber());
     	Assert.assertEquals(NAME, e1.name());
-    	Assert.assertEquals(FIRST_AIRED, e1.airdate());
+    	Assert.assertEquals(AIR_DATE, e1.airdate());
     	Assert.assertEquals(OVERVIEW, e1.overview());
     	Assert.assertEquals(DIRECTORS, e1.directors());
     	Assert.assertEquals(WRITERS, e1.writers());
@@ -208,8 +216,25 @@ public class EpisodeTest {
     	    .withSeen(false)
     	    .build();
 
-    	e.markAsSeen();
-    	Assert.assertTrue(e.wasSeen());
+    	EpisodeListener l1 = this.mockListener();
+    	EpisodeListener l2 = this.mockListener();
+
+    	e.addListener(l1);
+    	e.addListener(l2);    	
+
+    	for (int i=1;i<=1000;i++) {
+    		e.markAsSeen();
+    		Assert.assertTrue(e.wasSeen());
+    	}
+
+    	Mockito.verify(l1, Mockito.times(1000)).onMarkedAsSeen(e);
+    	Mockito.verify(l2, Mockito.times(1000)).onMarkedAsSeen(e);
+
+    	Mockito.verify(l1, Mockito.times(0)).onMarkedAsNotSeen(e);
+    	Mockito.verify(l2, Mockito.times(0)).onMarkedAsNotSeen(e);
+
+    	Mockito.verify(l1, Mockito.times(0)).onMerged(e);
+    	Mockito.verify(l2, Mockito.times(0)).onMerged(e);
     }
 
     @Test
@@ -222,8 +247,25 @@ public class EpisodeTest {
 	    	.withSeen(true)
 	    	.build();
 
-    	e.markAsNotSeen();
-        Assert.assertFalse(e.wasSeen());
+    	EpisodeListener l1 = this.mockListener();
+    	EpisodeListener l2 = this.mockListener();
+
+    	e.addListener(l1);
+    	e.addListener(l2);    	
+
+    	for (int i=1;i<=1000;i++) {
+    		e.markAsNotSeen();
+    		Assert.assertFalse(e.wasSeen());
+    	}
+
+    	Mockito.verify(l1, Mockito.times(0)).onMarkedAsSeen(e);
+    	Mockito.verify(l2, Mockito.times(0)).onMarkedAsSeen(e);
+
+    	Mockito.verify(l1, Mockito.times(1000)).onMarkedAsNotSeen(e);
+    	Mockito.verify(l2, Mockito.times(1000)).onMarkedAsNotSeen(e);
+
+    	Mockito.verify(l1, Mockito.times(0)).onMerged(e);
+    	Mockito.verify(l2, Mockito.times(0)).onMerged(e);
     }
 
     //Merge-------------------------------------------------------------------------------------------------------------
@@ -318,12 +360,20 @@ public class EpisodeTest {
     @Test
     public void testMergeWith() {
     	Episode e1 = Episode.builder()
+    		.withId(ID1)
+    		.withSeriesId(SERIES_ID1)
+    		.withNumber(NUMBER1)
+    		.withSeasonNumber(SEASON_NUMBER1)
+    		.withSeen(false)
+    		.build();
+
+    	Episode e2 = Episode.builder()
         	.withId(ID1)
         	.withSeriesId(SERIES_ID1)
         	.withNumber(NUMBER1)
         	.withSeasonNumber(SEASON_NUMBER1)
         	.withName(NAME)
-        	.withAirdate(FIRST_AIRED)
+        	.withAirdate(AIR_DATE)
         	.withOverview(OVERVIEW)
         	.withDirectors(DIRECTORS)
         	.withWriters(WRITERS)
@@ -332,24 +382,33 @@ public class EpisodeTest {
         	.withSeen(true)
         	.build();
 
-    	Episode e2 = Episode.builder()
-    		.withId(ID1)
-    		.withSeriesId(SERIES_ID1)
-    		.withNumber(NUMBER1)
-    		.withSeasonNumber(SEASON_NUMBER1)
-    		.withSeen(false)
-    		.build();
+    	EpisodeListener l1 = this.mockListener();
+    	EpisodeListener l2 = this.mockListener();
 
-    	e2.mergeWith(e1);
+    	e1.addListener(l1);
+    	e1.addListener(l2);    	
 
-        Assert.assertEquals(NAME, e2.name());
-        Assert.assertEquals(FIRST_AIRED, e2.airdate());
-        Assert.assertEquals(OVERVIEW, e2.overview());
-        Assert.assertEquals(DIRECTORS, e2.directors());
-        Assert.assertEquals(WRITERS, e2.writers());
-        Assert.assertEquals(GUEST_STARS, e2.guestStars());
-        Assert.assertEquals(POSTER, e2.poster());
-        Assert.assertEquals(false, e2.wasSeen());
+    	for (int i=1;i<=1000;i++) {
+    		e1.mergeWith(e2);
+
+    		Assert.assertEquals(NAME, e1.name());
+    		Assert.assertEquals(AIR_DATE, e1.airdate());
+    		Assert.assertEquals(OVERVIEW, e1.overview());
+    		Assert.assertEquals(DIRECTORS, e1.directors());
+    		Assert.assertEquals(WRITERS, e1.writers());
+    		Assert.assertEquals(GUEST_STARS, e1.guestStars());
+    		Assert.assertEquals(POSTER, e1.poster());
+    		Assert.assertEquals(false, e1.wasSeen());
+    	}
+
+    	Mockito.verify(l1, Mockito.times(0)).onMarkedAsSeen(e1);
+    	Mockito.verify(l2, Mockito.times(0)).onMarkedAsSeen(e1);
+
+    	Mockito.verify(l1, Mockito.times(0)).onMarkedAsNotSeen(e1);
+    	Mockito.verify(l2, Mockito.times(0)).onMarkedAsNotSeen(e1);
+
+    	Mockito.verify(l1, Mockito.times(1000)).onMerged(e1);
+    	Mockito.verify(l2, Mockito.times(1000)).onMerged(e1);
     }
 
     //Equals and hashCode-----------------------------------------------------------------------------------------------
@@ -442,6 +501,4 @@ public class EpisodeTest {
     		Assert.assertTrue(e2.hashCode() != e3.hashCode());
     	}
     }
-    
-    //TODO Listeners----------------------------------------------------------------------------------------------------
 }

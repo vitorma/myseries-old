@@ -221,7 +221,7 @@ public class Episode {
 
     private void notifyOfMerge() {
         for (EpisodeListener listener : this.listeners) {
-            listener.onMarkedAsNotSeen(this);
+            listener.onMerged(this);
         }
     }
 
