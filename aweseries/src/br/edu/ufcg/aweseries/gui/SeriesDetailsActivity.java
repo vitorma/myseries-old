@@ -130,7 +130,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
         new AlertDialog.Builder(this)
                 .setMessage(
                         String.format(getString(R.string.do_you_want_to_stop_following),
-                                series.getName()))
+                                series.name()))
                 .setPositiveButton(R.string.yes, dialogClickListener)
                 .setNegativeButton(R.string.no, dialogClickListener).show();
     }
@@ -215,23 +215,23 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
             Series series = seriesProvider().getSeries(seriesId);
             series.addListener(this);
 
-            this.seriesName.setText(series.getName());
-            this.seriesOverview.setText(series.getOverview());
-            this.seriesStatus.setText(series.getStatus());
-            this.seriesAirTime.setText(series.getAirsTime());
-            this.seriesAirDays.setText(series.getAirsDay());
-            this.seriesActors.setText(series.getActors());
-            this.seriesFirsAirDay.setText(series.getFirstAired());
-            this.seriesNetwork.setText(series.getNetwork());
-            this.seriesGenre.setText(series.getGenres());
+            this.seriesName.setText(series.name());
+            this.seriesOverview.setText(series.overview());
+            this.seriesStatus.setText(series.status());
+            this.seriesAirTime.setText(series.airsTime());
+            this.seriesAirDays.setText(series.airsDay());
+            this.seriesActors.setText(series.actors());
+            this.seriesFirsAirDay.setText(series.firstAired());
+            this.seriesNetwork.setText(series.network());
+            this.seriesGenre.setText(series.genres());
             this.seriesRuntime.setText(String.format(
-                    this.getString(R.string.runtime_minutes_format), series.getRuntime()));
+                    this.getString(R.string.runtime_minutes_format), series.runtime()));
 
             if (series.isContinuing()) {
-                final Episode nextToAir = series.getSeasons().getNextEpisodeToAir();
+                final Episode nextToAir = series.seasons().getNextEpisodeToAir();
 
                 if (nextToAir != null) {
-                    this.nextToAir.setText(series.getSeasons().getNextEpisodeToAir().name());
+                    this.nextToAir.setText(series.seasons().getNextEpisodeToAir().name());
                 } else {
                     this.nextToAir.setText(R.string.up_to_date);
 
@@ -240,7 +240,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
 
             if (series.isEnded()) {
                 this.nextToAirLabel.setText(R.string.last_episode_aired);
-                final Episode e = series.getSeasons().getLastAiredEpisode();
+                final Episode e = series.seasons().getLastAiredEpisode();
                 if (e != null) {
                     this.nextToAir.setText(e.toString());
                 } else {
@@ -249,9 +249,9 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
 
             }
 
-            final Episode nextToSee = series.getSeasons().getNextEpisodeToSee();
+            final Episode nextToSee = series.seasons().getNextEpisodeToSee();
             if (nextToSee != null) {
-                this.nextToSee.setText(series.getSeasons().getNextEpisodeToSee().name());
+                this.nextToSee.setText(series.seasons().getNextEpisodeToSee().name());
             } else {
                 this.nextToSee.setText(R.string.up_to_date);
             }

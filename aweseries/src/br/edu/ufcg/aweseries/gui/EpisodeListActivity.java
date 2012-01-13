@@ -167,12 +167,12 @@ public class EpisodeListActivity extends ListActivity {
         final Bundle extras = this.getIntent().getExtras();
 
         this.series = seriesProvider.getSeries(extras.getString("series id"));
-        this.season = this.series.getSeasons().getSeason(extras.getInt("season number"));
+        this.season = this.series.seasons().getSeason(extras.getInt("season number"));
     }
 
     private void setUpListActivityParameters() {
         TextView title = (TextView) this.findViewById(R.id.listTitleTextView);
-        title.setText(this.series.getName());
+        title.setText(this.series.name());
 
         TextView empty = (TextView) this.findViewById(android.R.id.empty);
         empty.setText(R.string.no_episodes);

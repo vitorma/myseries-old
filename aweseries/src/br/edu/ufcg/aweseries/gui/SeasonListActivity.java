@@ -78,7 +78,7 @@ public class SeasonListActivity extends ListActivity {
         //set view title
         TextView listingTitle = (TextView) findViewById(R.id.listingTitleTextView);
         listingTitle.setText(String.format(this.getString(R.string.seasons_of_series),
-                this.series.getName()));
+                this.series.name()));
 
         populateSeasonsList();
         setUpSeasonItemClickListener();
@@ -101,7 +101,7 @@ public class SeasonListActivity extends ListActivity {
                 Intent intent = new Intent(view.getContext(), EpisodeListActivity.class);
                 final Season season = (Season) parent.getItemAtPosition(position);
                 intent.putExtra("season number", season.number());
-                intent.putExtra("series id", series.getId());
+                intent.putExtra("series id", series.id());
                 SeasonListActivity.this.startActivity(intent);
             }
         });
@@ -185,7 +185,7 @@ public class SeasonListActivity extends ListActivity {
 
     private void populateSeasonsList() {
         SeasonItemViewAdapter dataAdapter = new SeasonItemViewAdapter(this,
-                R.layout.season_list_item, this.series.getSeasons().toList());
+                R.layout.season_list_item, this.series.seasons().toList());
         this.setListAdapter(dataAdapter);
         dataAdapter.sort(SEASON_COMPARATOR);
     }

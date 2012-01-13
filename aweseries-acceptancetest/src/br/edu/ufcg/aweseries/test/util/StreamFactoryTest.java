@@ -68,8 +68,8 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
     public void setUp() {
         SampleSeries.injectInstrumentation(getInstrumentation());
 
-        this.testSeriesId = SampleSeries.CHUCK.series().getId();
-        this.testSeriesName = SampleSeries.CHUCK.series().getName();
+        this.testSeriesId = SampleSeries.CHUCK.series().id();
+        this.testSeriesName = SampleSeries.CHUCK.series().name();
         this.testSeriesPoster = SampleSeries.CHUCK.posterResourcePath();
 
         this.baseSeriesContent = Arrays.asList(

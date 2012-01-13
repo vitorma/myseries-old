@@ -42,8 +42,8 @@ public class AppDriver {
     // TODO: it should iterate all over the SeriesSample samples, storing their data
     private Map<String, String> seriesNameToId = new HashMap<String, String>();
     {
-        seriesNameToId.put(SampleSeries.CHUCK.series().getName(),
-                           SampleSeries.CHUCK.series().getId()); 
+        seriesNameToId.put(SampleSeries.CHUCK.series().name(),
+                           SampleSeries.CHUCK.series().id()); 
     }
 
     private Solo solo;
@@ -107,7 +107,7 @@ public class AppDriver {
         this.validateInputName(seriesName, "seriesName");
 
         this.viewMyFollowedSeries();
-        this.solo.clickOnText(seriesReferencedAs(seriesName).getName());
+        this.solo.clickOnText(seriesReferencedAs(seriesName).name());
     }
 
     public void viewSeasonsOf(String seriesName) {
@@ -151,11 +151,11 @@ public class AppDriver {
         }
 
         public TextAsserter name() {
-            return asserterTo(this.series.getName()); 
+            return asserterTo(this.series.name()); 
         }
 
         public TextAsserter status() {
-            return asserterTo(this.series.getStatus()); 
+            return asserterTo(this.series.status()); 
         }
 
         public SeasonAccessor season(String seasonName) {
@@ -170,7 +170,7 @@ public class AppDriver {
         public SeasonAccessor(String seasonName, Series series) {
             validateInputName(seasonName, "seasonName");
             
-            this.season = series.getSeasons().getSeason(this.nameToNumber(seasonName));
+            this.season = series.seasons().getSeason(this.nameToNumber(seasonName));
         }
 
         public TextAsserter name() {

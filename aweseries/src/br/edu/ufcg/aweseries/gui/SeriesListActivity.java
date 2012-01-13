@@ -75,7 +75,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     private static class SeriesComparator implements Comparator<Series> {
         @Override
         public int compare(Series seriesA, Series seriesB) {
-            return seriesA.getName().compareTo(seriesB.getName());
+            return seriesA.name().compareTo(seriesB.name());
         }
     }
 
@@ -119,14 +119,14 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             // load series data
             final Series item = this.getItem(position);
             image.setImageBitmap(seriesProvider.getPosterOf(item));
-            name.setText(item.getName());
+            name.setText(item.name());
 
-            status.setText(item.getStatus());
-            network.setText(item.getNetwork());
-            airTime.setText(item.getAirsDayAndTime());
+            status.setText(item.status());
+            network.setText(item.network());
+            airTime.setText(item.airsDayAndTime());
 
             // next episode to see
-            final Episode nextEpisodeToSee = item.getSeasons().getNextEpisodeToSee();
+            final Episode nextEpisodeToSee = item.seasons().getNextEpisodeToSee();
             if (nextEpisodeToSee != null) {
                 //TODO Extract a method to get a string resource by its id
                 nextToSee.setText(Objects.nullSafe(
@@ -139,7 +139,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             // latest episode to air
             if (item.isContinuing()) {
                 latestToAirLabel.setText(R.string.next_episode_to_air);
-                final Episode nextEpisodeToAir = item.getSeasons().getNextEpisodeToAir();
+                final Episode nextEpisodeToAir = item.seasons().getNextEpisodeToAir();
                 if (nextEpisodeToAir != null) {
                     //TODO Extract a method to get a string resource by its id
                     latestToAir.setText(Objects.nullSafe(
@@ -152,7 +152,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
             if (item.isEnded()) {
                 latestToAirLabel.setText(R.string.last_episode_aired);
-                final Episode latestEpisodeToAir = item.getSeasons().getLastAiredEpisode();
+                final Episode latestEpisodeToAir = item.seasons().getLastAiredEpisode();
                 if (latestEpisodeToAir != null) {
                     //TODO Extract a method to get a string resource by its id
                     latestToAir.setText(Objects.nullSafe(
@@ -191,7 +191,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         public void onFollowing(Series followedSeries) {
             final String message = String.format(
                     App.environment().context().getString(R.string.now_you_follow_series),
-                    followedSeries.getName());
+                    followedSeries.name());
 
             this.showToastWith(message);
         }
@@ -200,7 +200,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         public void onUnfollowing(Series unfollowedSeries) {
             final String message = String.format(
                     App.environment().context().getString(R.string.you_no_longer_follow),
-                    unfollowedSeries.getName());
+                    unfollowedSeries.name());
 
             this.showToastWith(message);
         }
@@ -281,8 +281,8 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(view.getContext(), SeriesDetailsActivity.class);
                 final Series series = (Series) parent.getItemAtPosition(position);
-                intent.putExtra("series id", series.getId());
-                intent.putExtra("series name", series.getName());
+                intent.putExtra("series id", series.id());
+                intent.putExtra("series name", series.name());
                 SeriesListActivity.this.startActivity(intent);
             }
         });
@@ -318,7 +318,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         new AlertDialog.Builder(this)
                 .setMessage(
                         String.format(this.getString(R.string.do_you_want_to_stop_following),
-                                series.getName()))
+                                series.name()))
                 .setPositiveButton(R.string.yes, dialogClickListener)
                 .setNegativeButton(R.string.no, dialogClickListener).show();
     }

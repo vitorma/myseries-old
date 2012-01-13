@@ -78,75 +78,75 @@ public class SeriesTest {
 
     @Test
     public final void testSeries() {
-        Assert.assertNotNull(this.series1.getId());
-        Assert.assertNotNull(this.series1.getName());
+        Assert.assertNotNull(this.series1.id());
+        Assert.assertNotNull(this.series1.name());
     }
 
     @Test
     public final void testGetId() {
-        Assert.assertEquals("id 1", this.series1.getId());
+        Assert.assertEquals("id 1", this.series1.id());
     }
 
     @Test
     public final void testGetName() {
-        Assert.assertEquals("series 1", this.series1.getName());
+        Assert.assertEquals("series 1", this.series1.name());
     }
 
     @Test
     public final void testGetStatus() {
-        Assert.assertEquals("status 1", this.series1.getStatus());
+        Assert.assertEquals("status 1", this.series1.status());
     }
 
     @Test
     public final void testGetAirsDay() {
-        Assert.assertEquals("airs day 1", this.series1.getAirsDay());
+        Assert.assertEquals("airs day 1", this.series1.airsDay());
     }
 
     @Test
     public final void testGetAirsTime() {
-        Assert.assertEquals("airs time 1", this.series1.getAirsTime());
+        Assert.assertEquals("airs time 1", this.series1.airsTime());
     }
 
     @Test
     public final void testGetFirstAired() {
-        Assert.assertEquals("first aired 1", this.series1.getFirstAired());
+        Assert.assertEquals("first aired 1", this.series1.firstAired());
     }
 
     @Test
     public final void testGetRuntime() {
-        Assert.assertEquals("runtime 1", this.series1.getRuntime());
+        Assert.assertEquals("runtime 1", this.series1.runtime());
     }
 
     @Test
     public final void testGetNetwork() {
-        Assert.assertEquals("network 1", this.series1.getNetwork());
+        Assert.assertEquals("network 1", this.series1.network());
     }
 
     @Test
     public final void testGetOverview() {
-        Assert.assertEquals("overview 1", this.series1.getOverview());
+        Assert.assertEquals("overview 1", this.series1.overview());
     }
 
     @Test
     public final void testGetGenres() {
-        Assert.assertEquals("genres 1", this.series1.getGenres());
+        Assert.assertEquals("genres 1", this.series1.genres());
     }
 
     @Test
     public final void testGetActors() {
-        Assert.assertEquals("actors 1", this.series1.getActors());
+        Assert.assertEquals("actors 1", this.series1.actors());
     }
 
 // TODO This test should be migrated to work with the builder
     @Ignore
     @Test
     public final void testGetPoster() {
-        Assert.assertNotNull(this.series1.getPoster());
+        Assert.assertNotNull(this.series1.poster());
     }
 
     @Test
     public final void testGetSeasons() {
-        Assert.assertNotNull(this.series1.getSeasons());
+        Assert.assertNotNull(this.series1.seasons());
     }
 
 // TODO All these commented tests should be migrated to work with the builder
@@ -316,9 +316,9 @@ public class SeriesTest {
 
     @Test
     public final void testToString() {
-        Assert.assertEquals(this.series1.getName(), this.series1.toString());
-        Assert.assertEquals(this.series2.getName(), this.series2.toString());
-        Assert.assertEquals(this.series3.getName(), this.series3.toString());
-        Assert.assertEquals(this.series4.getName(), this.series4.toString());
+        Assert.assertEquals(this.series1.name(), this.series1.toString());
+        Assert.assertEquals(this.series2.name(), this.series2.toString());
+        Assert.assertEquals(this.series3.name(), this.series3.toString());
+        Assert.assertEquals(this.series4.name(), this.series4.toString());
     }
 }

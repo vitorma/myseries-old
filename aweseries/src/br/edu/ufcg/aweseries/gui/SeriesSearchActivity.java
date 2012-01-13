@@ -153,7 +153,7 @@ public class SeriesSearchActivity extends ListActivity {
 
                             String message = String.format(SeriesSearchActivity.this
                                     .getString(R.string.series_will_be_added), selectedItem
-                                    .getName());
+                                    .name());
 
                             this.showToastWith(message);
                         }
@@ -176,8 +176,8 @@ public class SeriesSearchActivity extends ListActivity {
                 TextView seriesOverview = (TextView) this.dialog
                         .findViewById(R.id.overviewTextView);
 
-                this.dialog.setTitle(this.selectedItem.getName());
-                seriesOverview.setText(this.selectedItem.getOverview());
+                this.dialog.setTitle(this.selectedItem.name());
+                seriesOverview.setText(this.selectedItem.overview());
             }
         });
     }

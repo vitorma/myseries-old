@@ -124,7 +124,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             // load episode data
             final Episode episode = this.getItem(position);
             final Series series = this.SERIES_PROVIDER.getSeries(episode.seriesId());
-            final Season season = series.getSeasons().getSeason(episode.seasonNumber());
+            final Season season = series.seasons().getSeason(episode.seasonNumber());
 
             this.showData(episode, season, series, itemView);
             this.setUpSeenEpisodeCheckBoxListener(episode, itemView);
@@ -160,7 +160,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             nameTextView.setText(Objects.nullSafe(
                     episode.name(),
                     this.getContext().getResources().getString(R.string.unnamed_episode)));
-            seriesTextView.setText(series.getName());
+            seriesTextView.setText(series.name());
             seasonEpisodeTextView
                     .setText(String.format(OutOfContextEpisodesActivity.this
                             .getString(R.string.season_and_episode_format), season.number(),

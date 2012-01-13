@@ -131,7 +131,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("Series", null, this.contentValuesBy(series));
-        for (Episode e : series.getSeasons().getAllEpisodes()) {
+        for (Episode e : series.seasons().getAllEpisodes()) {
             db.insert("Episode", null, this.contentValuesBy(e));
         }
         db.close();
@@ -144,8 +144,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.update("Series", this.contentValuesBy(series), "id=?", new String[] {series.getId()});
-        for (Episode e : series.getSeasons().getAllEpisodes()) {
+        db.update("Series", this.contentValuesBy(series), "id=?", new String[] {series.id()});
+        for (Episode e : series.seasons().getAllEpisodes()) {
             db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.id()});
         }
         db.close();
@@ -158,7 +158,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
         SQLiteDatabase db = this.getWritableDatabase();
         for (Series s : seriesCollection) {
-            db.update("Series", this.contentValuesBy(s), "id=?", new String[] {s.getId()});
+            db.update("Series", this.contentValuesBy(s), "id=?", new String[] {s.id()});
             this.updateAllEpisodesOf(s, db);
         }
         db.close();
@@ -171,7 +171,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("Series", "id=?", new String[] {series.getId()});
+        db.delete("Series", "id=?", new String[] {series.id()});
         db.close();
     }
 
@@ -189,7 +189,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         }
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {series.getId()});
+        Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {series.id()});
         boolean contains = c.getCount() > 0;
         c.close();
         db.close();
@@ -211,7 +211,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             return null;
         }
         Series s = this.seriesByCurrentPositionOf(c);
-        s.getSeasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
+        s.seasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
         c.close();
         db.close();
         return s;
@@ -224,7 +224,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         List<Series> allSeries = new ArrayList<Series>();
         while (c.moveToNext()) {
             Series s = this.seriesByCurrentPositionOf(c);
-            s.getSeasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
+            s.seasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
             allSeries.add(s);
         }
         c.close();
@@ -279,7 +279,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     //Private ----------------------------------------------------------------------------------------------------------
 
     private List<Episode> getAllEpisodesOf(Series s, SQLiteDatabase db) {
-        final Cursor c = db.rawQuery(SELECT_ALL_EPISODES_OF_A_SERIES, new String[] {s.getId()});
+        final Cursor c = db.rawQuery(SELECT_ALL_EPISODES_OF_A_SERIES, new String[] {s.id()});
         final List<Episode> allEpisodes = new ArrayList<Episode>();
         while(c.moveToNext()) {
             allEpisodes.add(this.episodeByCurrentPositionOf(c));
@@ -289,25 +289,25 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     private void updateAllEpisodesOf(Series s, SQLiteDatabase db) {
-        for (Episode e : s.getSeasons().getAllEpisodes()) {
+        for (Episode e : s.seasons().getAllEpisodes()) {
             db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.id()});
         }
     }
 
     private ContentValues contentValuesBy(Series s) {
         final ContentValues cv = new ContentValues();
-        cv.put("id", s.getId());
-        cv.put("name", s.getName());
-        cv.put("status", s.getStatus());
-        cv.put("airsDay", s.getAirsDay());
-        cv.put("airsTime", s.getAirsTime());
-        cv.put("firstAired", s.getFirstAired());
-        cv.put("runtime", s.getRuntime());
-        cv.put("network", s.getNetwork());
-        cv.put("overview", s.getOverview());
-        cv.put("genres", s.getGenres());
-        cv.put("actors", s.getActors());
-        cv.put("poster", (s.getPoster() != null) ? s.getPoster().toByteArray(): null);
+        cv.put("id", s.id());
+        cv.put("name", s.name());
+        cv.put("status", s.status());
+        cv.put("airsDay", s.airsDay());
+        cv.put("airsTime", s.airsTime());
+        cv.put("firstAired", s.firstAired());
+        cv.put("runtime", s.runtime());
+        cv.put("network", s.network());
+        cv.put("overview", s.overview());
+        cv.put("genres", s.genres());
+        cv.put("actors", s.actors());
+        cv.put("poster", (s.poster() != null) ? s.poster().toByteArray(): null);
         return cv;
     }
 

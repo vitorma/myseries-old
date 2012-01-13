@@ -52,7 +52,7 @@ public class SeriesSet implements Iterable<Series> {
             throw new IllegalArgumentException("series shouldn't be null");
         }
 
-        return this.map.containsKey(series.getId());
+        return this.map.containsKey(series.id());
     }
 
     public Series get(String seriesId) {
@@ -74,7 +74,7 @@ public class SeriesSet implements Iterable<Series> {
             throw new IllegalArgumentException("series " + series + " already belongs to this set");
         }
 
-        this.map.put(series.getId(), series);
+        this.map.put(series.id(), series);
     }
 
     public void addAll(Collection<Series> collection) {
@@ -92,7 +92,7 @@ public class SeriesSet implements Iterable<Series> {
             throw new IllegalArgumentException("series " + series + " doesn't belong to this set");
         }
 
-        this.map.remove(series.getId());
+        this.map.remove(series.id());
     }
 
     public void clear() {
