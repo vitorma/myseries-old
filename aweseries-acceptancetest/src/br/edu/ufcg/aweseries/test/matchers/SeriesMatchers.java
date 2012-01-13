@@ -29,7 +29,7 @@ public class SeriesMatchers {
 
         @Override
         protected boolean matchesSafely(Series item) {
-            return (item.getId().equals(this.seriesId));
+            return (item.id().equals(this.seriesId));
         }
 
         @Override
@@ -49,7 +49,7 @@ public class SeriesMatchers {
 
         @Override
         protected boolean matchesSafely(Series item) {
-            return (item.getName().equals(this.seriesName));
+            return (item.name().equals(this.seriesName));
         }
 
         @Override
@@ -69,7 +69,7 @@ public class SeriesMatchers {
 
         @Override
         protected boolean matchesSafely(Series item) {
-            return (item.getOverview().equals(this.seriesOverview));
+            return (item.overview().equals(this.seriesOverview));
         }
 
         @Override

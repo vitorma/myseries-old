@@ -100,7 +100,7 @@ public class SeriesProvider {
             this.seriesToUpdate = new ArrayList<String>();
 
             for (final Series series : SeriesProvider.this.seriesRepository.getAll()) {
-                this.seriesToUpdate.add(series.getId());
+                this.seriesToUpdate.add(series.id());
             }
         }
 
@@ -135,7 +135,7 @@ public class SeriesProvider {
             List<Series> allOurSeries = new ArrayList<Series>();
 
             for (final Series theirSeries : upToDateSeries) {
-                final Series ourSeries = SeriesProvider.this.getSeries(theirSeries.getId());
+                final Series ourSeries = SeriesProvider.this.getSeries(theirSeries.id());
                 ourSeries.mergeWith(theirSeries);
                 allOurSeries.add(ourSeries);
             }
@@ -161,7 +161,7 @@ public class SeriesProvider {
 
             // TODO is there anything to do about any SeriesNotFoundException that may be thrown
             // here?
-            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(seriesToFollow.getId(), App
+            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(seriesToFollow.id(), App
                     .environment().localization().language());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 
@@ -215,7 +215,7 @@ public class SeriesProvider {
         final List<Episode> recent = new ArrayList<Episode>();
 
         for (final Series s : this.followedSeries()) {
-            recent.addAll(s.getSeasons().getLastAiredNotSeenEpisodes());
+            recent.addAll(s.seasons().getLastAiredNotSeenEpisodes());
         }
 
         return recent;
@@ -225,7 +225,7 @@ public class SeriesProvider {
         final List<Episode> upcoming = new ArrayList<Episode>();
 
         for (final Series s : this.followedSeries()) {
-            upcoming.addAll(s.getSeasons().getNextEpisodesToAir());
+            upcoming.addAll(s.seasons().getNextEpisodesToAir());
         }
 
         return upcoming;
@@ -242,7 +242,7 @@ public class SeriesProvider {
             return this.genericPosterImage();
         }
 
-        return series.getPoster().getImage();
+        return series.poster().getImage();
     }
 
     private Bitmap genericPosterImage() {

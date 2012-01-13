@@ -103,7 +103,7 @@ public class TheTVDBDouble implements SeriesSource {
         Set<Series> results = new HashSet<Series>();
 
         for (Series series : seriesSet) {
-            if (series.getName().toLowerCase().contains(searchedName.toLowerCase())) {
+            if (series.name().toLowerCase().contains(searchedName.toLowerCase())) {
                 results.add(series);
             }
         }
@@ -127,7 +127,7 @@ public class TheTVDBDouble implements SeriesSource {
                                                      : Language.EN);
 
         for (Series series : source) {
-            if (series.getId().equals(seriesId)) {
+            if (series.id().equals(seriesId)) {
                 return series;
             }
         }

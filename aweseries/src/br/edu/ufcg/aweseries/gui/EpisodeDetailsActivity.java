@@ -97,7 +97,7 @@ public class EpisodeDetailsActivity extends Activity {
         int seasonNumber = extras.getInt("season number");
         int episodeNumber = extras.getInt("episode number");
 
-        this.episode = seriesProvider.getSeries(seriesId).getSeasons().getSeason(seasonNumber).get(episodeNumber);
+        this.episode = seriesProvider.getSeries(seriesId).seasons().getSeason(seasonNumber).get(episodeNumber);
     }
 
     private void setUpSeenEpisodeCheckBox() {

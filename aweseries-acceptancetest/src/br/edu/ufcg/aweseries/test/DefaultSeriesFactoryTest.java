@@ -50,17 +50,17 @@ public class DefaultSeriesFactoryTest extends TestCase {
         Series defaultSeries = this.factory.createSeries();
 
         // Series ID should be randomized - assertThat(defaultSeries.getId(), equalTo("0"));
-        assertThat(defaultSeries.getName(), equalTo("Default Series"));
-        assertThat(defaultSeries.getStatus(), equalTo("Continuing"));
-        assertThat(defaultSeries.getAirsDay(), equalTo("Monday"));
-        assertThat(defaultSeries.getAirsTime(), equalTo("8:00 PM"));
-        assertThat(defaultSeries.getFirstAired(), equalTo("1996-01-01"));
-        assertThat(defaultSeries.getRuntime(), equalTo("60"));
-        assertThat(defaultSeries.getNetwork(), equalTo("BBC"));
-        assertThat(defaultSeries.getOverview(), equalTo("A default series that has been created"));
-        assertThat(defaultSeries.getGenres(), equalTo("Action"));
-        assertThat(defaultSeries.getActors(), equalTo("Wile E. Coyote, Road Runner"));
-        assertThat(defaultSeries.getPoster(), nullValue());
+        assertThat(defaultSeries.name(), equalTo("Default Series"));
+        assertThat(defaultSeries.status(), equalTo("Continuing"));
+        assertThat(defaultSeries.airsDay(), equalTo("Monday"));
+        assertThat(defaultSeries.airsTime(), equalTo("8:00 PM"));
+        assertThat(defaultSeries.firstAired(), equalTo("1996-01-01"));
+        assertThat(defaultSeries.runtime(), equalTo("60"));
+        assertThat(defaultSeries.network(), equalTo("BBC"));
+        assertThat(defaultSeries.overview(), equalTo("A default series that has been created"));
+        assertThat(defaultSeries.genres(), equalTo("Action"));
+        assertThat(defaultSeries.actors(), equalTo("Wile E. Coyote, Road Runner"));
+        assertThat(defaultSeries.poster(), nullValue());
     }
 
     public void testSeriesIdIsRandomizedSoDifferentSeriesAreCreatedEachTime() {
@@ -68,7 +68,7 @@ public class DefaultSeriesFactoryTest extends TestCase {
         Series secondSeries = this.factory.createSeries();
 
         assertThat(firstSeries, not(equalTo(secondSeries)));
-        assertThat(firstSeries.getId(), not(equalTo(secondSeries.getId())));
+        assertThat(firstSeries.id(), not(equalTo(secondSeries.id())));
     }
 
     public void testWhenEqualSeriesIdsAreChoosenThenEqualSeriesAreCreated() {
@@ -76,20 +76,20 @@ public class DefaultSeriesFactoryTest extends TestCase {
         Series secondSeries = this.factory.createSeries("id : 0");
 
         assertThat(firstSeries, equalTo(secondSeries));
-        assertThat(firstSeries.getId(), equalTo(secondSeries.getId()));
+        assertThat(firstSeries.id(), equalTo(secondSeries.id()));
     }
 
     public void testDefaultSeriesWithCustomId() {
         Series defaultSeries = this.factory.createSeries("id : 123");
 
-        assertThat(defaultSeries.getId(), equalTo("123"));
+        assertThat(defaultSeries.id(), equalTo("123"));
     }
 
     public void testDefaultSeriesWithCustomIdAndName() {
         Series defaultSeries = this.factory.createSeries("id : 123", "name : Series Name");
 
-        assertThat(defaultSeries.getId(), equalTo("123"));
-        assertThat(defaultSeries.getName(), equalTo("Series Name"));
+        assertThat(defaultSeries.id(), equalTo("123"));
+        assertThat(defaultSeries.name(), equalTo("Series Name"));
     }
 
     public void testAllParameters() {
@@ -117,17 +117,17 @@ public class DefaultSeriesFactoryTest extends TestCase {
                                                          "genres : " + genres,
                                                          "actors : " + actors);
 
-        assertThat(defaultSeries.getId(), equalTo(id));
-        assertThat(defaultSeries.getName(), equalTo(name));
-        assertThat(defaultSeries.getStatus(), equalTo(status));
-        assertThat(defaultSeries.getAirsDay(), equalTo(airsOn));
-        assertThat(defaultSeries.getAirsTime(), equalTo(airsAt));
-        assertThat(defaultSeries.getFirstAired(), equalTo(firstAired));
-        assertThat(defaultSeries.getRuntime(), equalTo(runtime));
-        assertThat(defaultSeries.getNetwork(), equalTo(network));
-        assertThat(defaultSeries.getOverview(), equalTo(overview));
-        assertThat(defaultSeries.getGenres(), equalTo(genres));
-        assertThat(defaultSeries.getActors(), equalTo(actors));
-        assertThat(defaultSeries.getPoster(), nullValue());
+        assertThat(defaultSeries.id(), equalTo(id));
+        assertThat(defaultSeries.name(), equalTo(name));
+        assertThat(defaultSeries.status(), equalTo(status));
+        assertThat(defaultSeries.airsDay(), equalTo(airsOn));
+        assertThat(defaultSeries.airsTime(), equalTo(airsAt));
+        assertThat(defaultSeries.firstAired(), equalTo(firstAired));
+        assertThat(defaultSeries.runtime(), equalTo(runtime));
+        assertThat(defaultSeries.network(), equalTo(network));
+        assertThat(defaultSeries.overview(), equalTo(overview));
+        assertThat(defaultSeries.genres(), equalTo(genres));
+        assertThat(defaultSeries.actors(), equalTo(actors));
+        assertThat(defaultSeries.poster(), nullValue());
     }
 }

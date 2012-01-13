@@ -41,7 +41,7 @@ public class SeriesSetTest {
 
     private Series mockSeries(String id) {
         Series s = Mockito.mock(Series.class);
-        Mockito.when(s.getId()).thenReturn(id);
+        Mockito.when(s.id()).thenReturn(id);
         return s;
     }
 

@@ -57,7 +57,7 @@ public final class TextOnlyViewAdapter extends ArrayAdapter<Series> {
         // load series data
         final Series item = this.getItem(position);
 
-        name.setText(item.getName());
+        name.setText(item.name());
 
         return itemView;
     }
