@@ -199,22 +199,6 @@ public class EpisodeTest {
     //Seen--------------------------------------------------------------------------------------------------------------
     
     @Test
-    public void testMarkSeenAs() {
-    	Episode e = Episode.builder()
-        	.withId(ID1)
-        	.withSeriesId(SERIES_ID1)
-        	.withNumber(NUMBER1)
-        	.withSeasonNumber(SEASON_NUMBER1)
-        	.withSeen(false)
-        	.build();
-
-    	e.markSeenAs(true);
-    	Assert.assertTrue(e.wasSeen());
-    	e.markSeenAs(false);
-    	Assert.assertFalse(e.wasSeen());
-    }
-
-    @Test
     public void testMarkAsSeen() {
     	Episode e = Episode.builder()
     	    .withId(ID1)

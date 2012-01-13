@@ -23,9 +23,10 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
-import br.edu.ufcg.aweseries.gui.EpisodeListActivity;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class Episode {
@@ -43,8 +44,7 @@ public class Episode {
     private String poster;
 
     private boolean seen;
-    private Set<DomainObjectListener<Episode>> domainEntityListeners; //TODO A List<EpisodeListener>
-    private Set<EpisodeListener> listeners; 
+    private List<EpisodeListener> listeners; 
 
     private Episode(String id, String seriesId, int number, int seasonNumber) {
         if (id == null || Strings.isBlank(id)) {
@@ -63,15 +63,13 @@ public class Episode {
             throw new IllegalArgumentException("invalid season number for episode");
         }
 
-        //TODO: remove
-        this.domainEntityListeners = new HashSet<DomainObjectListener<Episode>>();
-
-        this.listeners = new HashSet<EpisodeListener>();
-        
         this.id = id;
         this.seriesId = seriesId;
         this.number = number;
         this.seasonNumber = seasonNumber;
+
+        this.listeners = new LinkedList<EpisodeListener>();
+        this.domainEntityListeners = new HashSet<DomainObjectListener<Episode>>();
     }
 
     //Builder factory---------------------------------------------------------------------------------------------------
@@ -134,18 +132,15 @@ public class Episode {
         return this.seen;
     }
 
-    public void markSeenAs(boolean seen) {
-        this.seen = seen;
-        this.notifyListeners();
-    }
-
     public void markAsSeen() {
         this.seen = true;
+        this.notifyOfMarkAsSeen();
         this.notifyListeners();
     }
 
     public void markAsNotSeen() {
         this.seen = false;
+        this.notifyOfMarkAsNotSeen();
         this.notifyListeners();
     }
 
@@ -177,7 +172,8 @@ public class Episode {
         this.writers = other.writers;
         this.guestStars = other.guestStars;
         this.poster = other.poster;
-        
+
+        this.notifyOfMerge();
         this.notifyListeners();
     }
 
@@ -200,43 +196,61 @@ public class Episode {
     }
 
     //Listeners---------------------------------------------------------------------------------------------------------
-
-    //TODO It's better to have an EpisodeListener interface with methods like:
-    //          onMarkedAsSeen(Episode)
-    //          onMarkedAsNotSeen(Episode)
-    //          onMerged(Episode)
-    //
-    //     For example, a season can maintain a field for counting how many episodes were seen. This field could be
-    //     increased, decreased or not changed, depending on which of the methods above was called.
-    //
-    //     This approach will provide efficiency to Season#wasSeen, once there will be no need to check all episodes of
-    //     a season each time the state of an episode changes.
-
-    private void notifyListeners() {
-        //TODO: Remove ASAP
-        for (final DomainObjectListener<Episode> listener : this.domainEntityListeners) {
-            listener.onUpdate(this);
-        }
-    }
-
+    
     public boolean addListener(EpisodeListener listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("listener should not be null");
+        }
+
         return this.listeners.add(listener);
     }
     
     public boolean removeListener(EpisodeListener listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("listener should not be null");
+        }
+
         return this.listeners.remove(listener);
     }
-    
-    //TODO: Remove
+
+    private void notifyOfMarkAsSeen() {
+        for (EpisodeListener listener : this.listeners) {
+            listener.onMarkedAsSeen(this);
+        }
+    }
+
+    private void notifyOfMarkAsNotSeen() {
+        for (EpisodeListener listener : this.listeners) {
+            listener.onMarkedAsNotSeen(this);
+        }
+    }
+
+    private void notifyOfMerge() {
+        for (EpisodeListener listener : this.listeners) {
+            listener.onMarkedAsNotSeen(this);
+        }
+    }
+
+    //TODO Remove it ASAP-----------------------------------------------------------------------------------------------
+
+    @Deprecated
+    private Set<DomainObjectListener<Episode>> domainEntityListeners;
+
     @Deprecated
     public boolean addListener(DomainObjectListener<Episode> listener) {
         return this.domainEntityListeners.add(listener);
     }
-    
-    //TODO: Remove
+
     @Deprecated
     public boolean removeListener(DomainObjectListener<Episode> listener) {
         return this.domainEntityListeners.remove(listener);
+    }
+    
+    @Deprecated
+    private void notifyListeners() {
+        for (final DomainObjectListener<Episode> listener : this.domainEntityListeners) {
+            listener.onUpdate(this);
+        }
     }
 
     //Builder-----------------------------------------------------------------------------------------------------------
