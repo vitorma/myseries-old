@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.gui;
 
 import java.text.DateFormat;
@@ -42,8 +41,8 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.EpisodeListener;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Dates;
@@ -102,8 +101,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
 
     //Episode item view adapter-----------------------------------------------------------------------------------------
 
-    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements
-            DomainObjectListener<Episode> {
+    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements EpisodeListener {
 
         private static final int EPISODE_ITEM_RESOURCE_ID = R.layout.episode_alone_list_item;
 
@@ -186,13 +184,19 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
         }
 
         @Override
-        public void onUpdate(Episode episode) {
-            if (episode.wasSeen()) {
-                this.remove(episode);
-            } else {
-                this.add(episode);
-                this.sort(OutOfContextEpisodesActivity.this.episodesComparator());
-            }
+        public void onMarkedAsSeen(Episode e) {
+            e.removeListener(this);
+            this.remove(e);
+        }
+
+        @Override
+        public void onMarkedAsNotSeen(Episode e) {
+            //All episodes here are already marked as not seen
+        }
+
+        @Override
+        public void onMerged(Episode e) {
+            this.notifyDataSetChanged();
         }
     }
 }
