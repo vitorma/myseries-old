@@ -22,10 +22,8 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import br.edu.ufcg.aweseries.util.Strings;
 
@@ -69,7 +67,6 @@ public class Episode {
         this.seasonNumber = seasonNumber;
 
         this.listeners = new LinkedList<EpisodeListener>();
-        this.domainEntityListeners = new HashSet<DomainObjectListener<Episode>>();
     }
 
     //Builder factory---------------------------------------------------------------------------------------------------
@@ -135,13 +132,11 @@ public class Episode {
     public void markAsSeen() {
         this.seen = true;
         this.notifyOfMarkAsSeen();
-        this.notifyListeners();
     }
 
     public void markAsNotSeen() {
         this.seen = false;
         this.notifyOfMarkAsNotSeen();
-        this.notifyListeners();
     }
 
     public void mergeWith(Episode other) {
@@ -174,7 +169,6 @@ public class Episode {
         this.poster = other.poster;
 
         this.notifyOfMerge();
-        this.notifyListeners();
     }
 
     //Object------------------------------------------------------------------------------------------------------------
@@ -228,28 +222,6 @@ public class Episode {
     private void notifyOfMerge() {
         for (EpisodeListener listener : this.listeners) {
             listener.onMarkedAsNotSeen(this);
-        }
-    }
-
-    //TODO Remove it ASAP-----------------------------------------------------------------------------------------------
-
-    @Deprecated
-    private Set<DomainObjectListener<Episode>> domainEntityListeners;
-
-    @Deprecated
-    public boolean addListener(DomainObjectListener<Episode> listener) {
-        return this.domainEntityListeners.add(listener);
-    }
-
-    @Deprecated
-    public boolean removeListener(DomainObjectListener<Episode> listener) {
-        return this.domainEntityListeners.remove(listener);
-    }
-    
-    @Deprecated
-    private void notifyListeners() {
-        for (final DomainObjectListener<Episode> listener : this.domainEntityListeners) {
-            listener.onUpdate(this);
         }
     }
 
