@@ -93,10 +93,6 @@ public class Episode {
         return this.seasonNumber;
     }
 
-    public boolean isSpecial() {
-        return this.seasonNumber == 0;
-    }
-
     public String name() {
         return this.name;
     }
