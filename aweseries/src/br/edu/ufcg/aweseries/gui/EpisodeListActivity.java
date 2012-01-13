@@ -45,6 +45,7 @@ import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.EpisodeComparator;
+import br.edu.ufcg.aweseries.model.EpisodeListener;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Dates;
@@ -63,10 +64,9 @@ public class EpisodeListActivity extends ListActivity {
 
     //Episode item view adapter-----------------------------------------------------------------------------------------
 
-    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements
-            DomainObjectListener<Episode> {
-        public EpisodeItemViewAdapter(Context context, int episodeItemResourceId,
-                List<Episode> objects) {
+    private class EpisodeItemViewAdapter extends ArrayAdapter<Episode> implements EpisodeListener {
+
+        public EpisodeItemViewAdapter(Context context, int episodeItemResourceId, List<Episode> objects) {
             super(context, episodeItemResourceId, objects);
             
             for (Episode e : objects) {
@@ -132,7 +132,19 @@ public class EpisodeListActivity extends ListActivity {
         }
 
         @Override
-        public void onUpdate(Episode episode) {
+        public void onMarkedAsSeen(Episode e) {
+            this.notifyDataSetChanged();
+            
+        }
+
+        @Override
+        public void onMarkedAsNotSeen(Episode e) {
+            this.notifyDataSetChanged();
+            
+        }
+
+        @Override
+        public void onMerged(Episode e) {
             this.notifyDataSetChanged();
         };
     }
