@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import br.edu.ufcg.aweseries.util.Validate;
+
 public class Episode {
     private int id;
     private int seriesId;
@@ -42,21 +44,10 @@ public class Episode {
     private List<EpisodeListener> listeners; 
 
     private Episode(int id, int seriesId, int number, int seasonNumber) {
-        if (id < 0) {
-            throw new IllegalArgumentException("id should be non-negative");
-        }
-
-        if (seriesId < 0) {
-            throw new IllegalArgumentException("seriesId should be non-negative");
-        }
-
-        if (number < 0) {
-            throw new IllegalArgumentException("number should be non-negative");
-        }
-
-        if (seasonNumber < 0) {
-            throw new IllegalArgumentException("seasonNumber should be non-negative");
-        }
+        Validate.isTrue(id >= 0, "id should be non-negative");
+        Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
+        Validate.isTrue(number >= 0, "number should be non-negative");
+        Validate.isTrue(seasonNumber >= 0, "id should be non-negative");
 
         this.id = id;
         this.seriesId = seriesId;
@@ -133,25 +124,11 @@ public class Episode {
     }
 
     public void mergeWith(Episode other) {
-        if (other == null) {
-            throw new IllegalArgumentException("other should be non-null");
-        }
-        
-        if (other.id != this.id) {
-            throw new IllegalArgumentException("other should have the same id as this");
-        }
-
-        if (other.seriesId != this.seriesId) {
-            throw new IllegalArgumentException("other should have the same seriesId as this");
-        }
-
-        if (other.number != this.number) {
-            throw new IllegalArgumentException("other should have the same number as this");
-        }
-
-        if (other.seasonNumber != this.seasonNumber) {
-            throw new IllegalArgumentException("other should have the same seasonNumber as this");
-        }
+        Validate.isNonNull(other, "other should be non-null");
+        Validate.isTrue(other.id == this.id, "other should have the same id as this");
+        Validate.isTrue(other.seriesId == this.seriesId, "other should have the same seriesId as this");
+        Validate.isTrue(other.number == this.number, "other should have the same number as this");
+        Validate.isTrue(other.seasonNumber == this.seasonNumber, "other should have the same seasonNumber as this");
 
         this.name = other.name;
         this.airdate = other.airdate;
@@ -193,9 +170,7 @@ public class Episode {
     }
 
     private boolean isRegistered(EpisodeListener listener) {
-        if (listener == null) {
-            throw new IllegalArgumentException("listener should be non-null");
-        }
+        Validate.isNonNull(listener, "listener should be non-null");
 
         for (EpisodeListener l : this.listeners) {
             if (l == listener) return true;
