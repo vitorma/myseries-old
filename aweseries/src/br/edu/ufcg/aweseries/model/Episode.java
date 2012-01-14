@@ -47,7 +47,7 @@ public class Episode {
         Validate.isTrue(id >= 0, "id should be non-negative");
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
         Validate.isTrue(number >= 0, "number should be non-negative");
-        Validate.isTrue(seasonNumber >= 0, "id should be non-negative");
+        Validate.isTrue(seasonNumber >= 0, "seasonNumber should be non-negative");
 
         this.id = id;
         this.seriesId = seriesId;
