@@ -111,7 +111,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             super(context, EPISODE_ITEM_RESOURCE_ID, objects);
 
             for (Episode e : objects) {
-                e.addListener(this);
+                e.register(this);
             }
         }
 
@@ -185,7 +185,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
 
         @Override
         public void onMarkedAsSeen(Episode e) {
-            e.removeListener(this);
+            e.deregister(this);
             this.remove(e);
         }
 

@@ -188,7 +188,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
             throw new IllegalArgumentException("episode already exists");
         }
 
-        episode.addListener(this);
+        episode.register(this);
         
         this.map.put(episode.number(), episode);
         

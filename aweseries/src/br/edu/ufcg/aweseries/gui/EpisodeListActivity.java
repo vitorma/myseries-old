@@ -70,7 +70,7 @@ public class EpisodeListActivity extends ListActivity {
             super(context, episodeItemResourceId, objects);
             
             for (Episode e : objects) {
-                e.addListener(this);
+                e.register(this);
             }
         }
 

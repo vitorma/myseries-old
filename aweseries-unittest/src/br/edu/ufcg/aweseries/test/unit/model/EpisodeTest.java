@@ -219,8 +219,8 @@ public class EpisodeTest {
     	EpisodeListener l1 = this.mockListener();
     	EpisodeListener l2 = this.mockListener();
 
-    	e.addListener(l1);
-    	e.addListener(l2);    	
+    	e.register(l1);
+    	e.register(l2);    	
 
     	for (int i=1;i<=1000;i++) {
     		e.markAsSeen();
@@ -250,8 +250,8 @@ public class EpisodeTest {
     	EpisodeListener l1 = this.mockListener();
     	EpisodeListener l2 = this.mockListener();
 
-    	e.addListener(l1);
-    	e.addListener(l2);    	
+    	e.register(l1);
+    	e.register(l2);    	
 
     	for (int i=1;i<=1000;i++) {
     		e.markAsNotSeen();
@@ -385,8 +385,8 @@ public class EpisodeTest {
     	EpisodeListener l1 = this.mockListener();
     	EpisodeListener l2 = this.mockListener();
 
-    	e1.addListener(l1);
-    	e1.addListener(l2);    	
+    	e1.register(l1);
+    	e1.register(l2);    	
 
     	for (int i=1;i<=1000;i++) {
     		e1.mergeWith(e2);
@@ -409,6 +409,75 @@ public class EpisodeTest {
 
     	Mockito.verify(l1, Mockito.times(1000)).onMerged(e1);
     	Mockito.verify(l2, Mockito.times(1000)).onMerged(e1);
+    }
+
+    //Registration and deregistration of listeners----------------------------------------------------------------------
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testRegisterNullListener() {
+    	Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build()
+			.register(null);
+    }
+
+    @Test
+    public void testRegisterListener() {
+    	Episode e = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	EpisodeListener l1 = this.mockListener();
+    	EpisodeListener l2 = this.mockListener();
+
+    	Assert.assertTrue(e.register(l1));
+    	Assert.assertTrue(e.register(l2));
+
+    	for (int i=1; i<=1000; i++) {
+    		Assert.assertFalse(e.register(l1));
+        	Assert.assertFalse(e.register(l2));
+    	}
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testDeregisterNullListener() {
+    	Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build()
+			.deregister(null);
+    }
+
+    @Test
+    public void testDeregisterListener() {
+    	Episode e = Episode.builder()
+			.withId(ID1)
+			.withSeriesId(SERIES_ID1)
+			.withNumber(NUMBER1)
+			.withSeasonNumber(SEASON_NUMBER1)
+			.build();
+
+    	EpisodeListener l1 = this.mockListener();
+    	EpisodeListener l2 = this.mockListener();
+
+    	e.register(l1);
+    	e.register(l2);
+    	
+    	Assert.assertTrue(e.deregister(l1));
+    	Assert.assertTrue(e.deregister(l2));
+
+    	for (int i=1; i<=1000; i++) {
+    		Assert.assertFalse(e.deregister(l1));
+        	Assert.assertFalse(e.deregister(l2));
+    	}
     }
 
     //Equals and hashCode-----------------------------------------------------------------------------------------------

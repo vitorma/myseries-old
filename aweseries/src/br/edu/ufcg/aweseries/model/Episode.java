@@ -187,20 +187,28 @@ public class Episode {
 
     //Listeners---------------------------------------------------------------------------------------------------------
     
-    public boolean addListener(EpisodeListener listener) {
+    public boolean register(EpisodeListener listener) {
         if (listener == null) {
             throw new IllegalArgumentException("listener should not be null");
         }
 
-        return this.listeners.add(listener);
+        return !this.isRegistered(listener) && this.listeners.add(listener);
     }
-    
-    public boolean removeListener(EpisodeListener listener) {
+
+    public boolean deregister(EpisodeListener listener) {
         if (listener == null) {
             throw new IllegalArgumentException("listener should not be null");
         }
 
-        return this.listeners.remove(listener);
+        return this.isRegistered(listener) && this.listeners.remove(listener);
+    }
+
+    private boolean isRegistered(EpisodeListener listener) {
+        for (EpisodeListener l : this.listeners) {
+            if (l == listener) return true;
+        }
+        
+        return false;
     }
 
     private void notifyOfMarkAsSeen() {
