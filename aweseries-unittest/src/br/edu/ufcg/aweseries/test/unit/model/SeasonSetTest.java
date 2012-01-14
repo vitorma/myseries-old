@@ -46,17 +46,17 @@ public class SeasonSetTest {
         this.episode2 = Mockito.mock(Episode.class);
         this.episode3 = Mockito.mock(Episode.class);
         
-        Mockito.when(this.episode1.id()).thenReturn("123811");
+        Mockito.when(this.episode1.id()).thenReturn(123811);
         Mockito.when(this.episode1.seriesId()).thenReturn("1");
         Mockito.when(this.episode1.number()).thenReturn(1);
         Mockito.when(this.episode1.seasonNumber()).thenReturn(1);
 
-        Mockito.when(this.episode2.id()).thenReturn("141231");
+        Mockito.when(this.episode2.id()).thenReturn(141231);
         Mockito.when(this.episode2.seriesId()).thenReturn("1");
         Mockito.when(this.episode2.number()).thenReturn(2);
         Mockito.when(this.episode2.seasonNumber()).thenReturn(1);
 
-        Mockito.when(this.episode3.id()).thenReturn("948241");
+        Mockito.when(this.episode3.id()).thenReturn(948241);
         Mockito.when(this.episode3.seriesId()).thenReturn("1");
         Mockito.when(this.episode3.number()).thenReturn(1);
         Mockito.when(this.episode3.seasonNumber()).thenReturn(2);
@@ -111,7 +111,7 @@ public class SeasonSetTest {
         Assert.assertFalse(seasonSet.addListener(listener1));
 
         Episode episode2 = Mockito.mock(Episode.class);
-        Mockito.when(episode2.id()).thenReturn("123814");
+        Mockito.when(episode2.id()).thenReturn(123814);
         Mockito.when(episode2.seriesId()).thenReturn("1");
         Mockito.when(episode2.number()).thenReturn(2);
         Mockito.when(episode2.seasonNumber()).thenReturn(1);        
@@ -123,7 +123,7 @@ public class SeasonSetTest {
         Assert.assertTrue(seasonSet.addListener(listener2));
         
         Episode episode1 = Mockito.mock(Episode.class);
-        Mockito.when(episode1.id()).thenReturn("123810");
+        Mockito.when(episode1.id()).thenReturn(123810);
         Mockito.when(episode1.seriesId()).thenReturn("1");
         Mockito.when(episode1.number()).thenReturn(1);
         Mockito.when(episode1.seasonNumber()).thenReturn(1);        
@@ -150,7 +150,7 @@ public class SeasonSetTest {
         Assert.assertTrue(seasonSet.removeListener(listener2));
         
         Episode episode2 = Mockito.mock(Episode.class);
-        Mockito.when(episode2.id()).thenReturn("123814");
+        Mockito.when(episode2.id()).thenReturn(123814);
         Mockito.when(episode2.seriesId()).thenReturn("1");
         Mockito.when(episode2.number()).thenReturn(2);
         Mockito.when(episode2.seasonNumber()).thenReturn(1);        
@@ -163,7 +163,7 @@ public class SeasonSetTest {
         Assert.assertFalse(seasonSet.removeListener(listener1));
         
         Episode episode1 = Mockito.mock(Episode.class);
-        Mockito.when(episode1.id()).thenReturn("123810");
+        Mockito.when(episode1.id()).thenReturn(123810);
         Mockito.when(episode1.seriesId()).thenReturn("1");
         Mockito.when(episode1.number()).thenReturn(1);
         Mockito.when(episode1.seasonNumber()).thenReturn(1);        

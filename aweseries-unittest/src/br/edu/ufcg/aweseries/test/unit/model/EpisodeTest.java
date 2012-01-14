@@ -33,8 +33,8 @@ import br.edu.ufcg.aweseries.model.EpisodeListener;
 
 public class EpisodeTest {
 
-    private static final String ID1 = "1";
-    private static final String ID2 = "2";
+    private static final int ID1 = 1;
+    private static final int ID2 = 2;
     private static final String SERIES_ID1 = "1";
     private static final String SERIES_ID2 = "2";
     private static final int NUMBER1 = 1;
@@ -67,19 +67,9 @@ public class EpisodeTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void testBuildAnEpisodeWithNullId() {
+    public void testBuildAnEpisodeWithNegativeId() {
     	Episode.builder()
-        	.withId(null)
-        	.withSeriesId(SERIES_ID1)
-        	.withNumber(NUMBER1)
-        	.withSeasonNumber(SEASON_NUMBER1)
-        	.build();
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testBuildAnEpisodeWithBlankId() {
-    	Episode.builder()
-        	.withId("")
+    	    .withId(-1)
         	.withSeriesId(SERIES_ID1)
         	.withNumber(NUMBER1)
         	.withSeasonNumber(SEASON_NUMBER1)

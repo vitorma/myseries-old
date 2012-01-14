@@ -29,7 +29,7 @@ import br.edu.ufcg.aweseries.util.Strings;
 
 public class Episode {
 
-    private String id;
+    private int id;
     private String seriesId;
     private int number;
     private int seasonNumber;
@@ -44,8 +44,8 @@ public class Episode {
     private boolean seen;
     private List<EpisodeListener> listeners; 
 
-    private Episode(String id, String seriesId, int number, int seasonNumber) {
-        if (id == null || Strings.isBlank(id)) {
+    private Episode(int id, String seriesId, int number, int seasonNumber) {
+        if (id < 0) {
             throw new IllegalArgumentException("invalid id for episode");
         }
 
@@ -77,7 +77,7 @@ public class Episode {
 
     //Interface---------------------------------------------------------------------------------------------------------
 
-    public String id() {
+    public int id() {
         return this.id;
     }
 
@@ -140,7 +140,7 @@ public class Episode {
             throw new IllegalArgumentException("other should not be null");
         }
         
-        if (!other.id.equals(this.id)) {
+        if (other.id != this.id) {
             throw new IllegalArgumentException("other should have the same id as this");
         }
 
@@ -171,13 +171,13 @@ public class Episode {
 
     @Override
     public int hashCode() {
-        return this.id.hashCode();
+        return this.id;
     }
 
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Episode) &&
-               ((Episode) obj).id.equals(this.id);
+               ((Episode) obj).id == this.id;
     }
 
     @Override
@@ -233,7 +233,7 @@ public class Episode {
 
     public static class Builder {
 
-        private String id;
+        private int id;
         private String seriesId;
         private int number;
         private int seasonNumber;
@@ -247,11 +247,12 @@ public class Episode {
         private boolean seen;
 
         private Builder() {
+            this.id = -1;
             this.number = -1;
             this.seasonNumber = -1;
         }
 
-        public Builder withId(String id) {
+        public Builder withId(int id) {
             this.id = id;
             return this;
         }

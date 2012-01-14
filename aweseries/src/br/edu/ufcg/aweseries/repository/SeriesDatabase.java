@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.repository;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private static final String CREATE_TABLE_EPISODES =
         "CREATE TABLE Episode (" +
-        "id TEXT PRIMARY KEY, " +
+        "id INTEGER PRIMARY KEY, " +
         "seriesId TEXT NOT NULL, " +
         "number INTEGER NOT NULL, " +
         "seasonNumber INTEGER NOT NULL, " +
@@ -146,7 +145,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         SQLiteDatabase db = this.getWritableDatabase();
         db.update("Series", this.contentValuesBy(series), "id=?", new String[] {series.id()});
         for (Episode e : series.seasons().getAllEpisodes()) {
-            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.id()});
+            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {String.valueOf(e.id())});
         }
         db.close();
     }
@@ -253,7 +252,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.update("Episode", this.contentValuesBy(episode), "id=?", new String[] {episode.id()});
+        db.update("Episode", this.contentValuesBy(episode), "id=?", new String[] {String.valueOf(episode.id())});
         db.close();
     }
 
@@ -290,7 +289,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private void updateAllEpisodesOf(Series s, SQLiteDatabase db) {
         for (Episode e : s.seasons().getAllEpisodes()) {
-            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {e.id()});
+            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {String.valueOf(e.id())});
         }
     }
 
@@ -347,7 +346,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private Episode episodeByCurrentPositionOf(Cursor c) {
         return Episode.builder()
-            .withId(c.getString(c.getColumnIndex("id")))
+            .withId(c.getInt(c.getColumnIndex("id")))
             .withSeriesId(c.getString(c.getColumnIndex("seriesId")))
             .withNumber(c.getInt(c.getColumnIndex("number")))
             .withSeasonNumber(c.getInt(c.getColumnIndex("seasonNumber")))
