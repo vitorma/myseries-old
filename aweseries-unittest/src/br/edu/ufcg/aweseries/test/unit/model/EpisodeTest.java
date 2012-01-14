@@ -35,8 +35,8 @@ public class EpisodeTest {
 
     private static final int ID1 = 1;
     private static final int ID2 = 2;
-    private static final String SERIES_ID1 = "1";
-    private static final String SERIES_ID2 = "2";
+    private static final int SERIES_ID1 = 1;
+    private static final int SERIES_ID2 = 2;
     private static final int NUMBER1 = 1;
     private static final int NUMBER2 = 2;
     private static final int SEASON_NUMBER1 = 1;
@@ -86,20 +86,10 @@ public class EpisodeTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testBuildAnEpisodeWithNullSeriesId() {
+    public void testBuildAnEpisodeWithNegativeSeriesId() {
     	Episode.builder()
         	.withId(ID1)
-        	.withSeriesId(null)
-        	.withNumber(NUMBER1)
-        	.withSeasonNumber(SEASON_NUMBER1)
-        	.build();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testBuildAnEpisodeWithBlankSeriesId() {
-    	Episode.builder()
-        	.withId(ID1)
-        	.withSeriesId("  ")
+        	.withSeriesId(-1)
         	.withNumber(NUMBER1)
         	.withSeasonNumber(SEASON_NUMBER1)
         	.build();

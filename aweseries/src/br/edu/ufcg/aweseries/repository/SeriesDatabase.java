@@ -60,7 +60,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     private static final String CREATE_TABLE_EPISODES =
         "CREATE TABLE Episode (" +
         "id INTEGER PRIMARY KEY, " +
-        "seriesId TEXT NOT NULL, " +
+        "seriesId INTEGER NOT NULL, " +
         "number INTEGER NOT NULL, " +
         "seasonNumber INTEGER NOT NULL, " +
         "name TEXT, " +
@@ -347,7 +347,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     private Episode episodeByCurrentPositionOf(Cursor c) {
         return Episode.builder()
             .withId(c.getInt(c.getColumnIndex("id")))
-            .withSeriesId(c.getString(c.getColumnIndex("seriesId")))
+            .withSeriesId(c.getInt(c.getColumnIndex("seriesId")))
             .withNumber(c.getInt(c.getColumnIndex("number")))
             .withSeasonNumber(c.getInt(c.getColumnIndex("seasonNumber")))
             .withName(c.getString(c.getColumnIndex("name")))

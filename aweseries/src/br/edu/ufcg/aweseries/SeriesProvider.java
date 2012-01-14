@@ -264,12 +264,12 @@ public class SeriesProvider {
 
     public void markEpisodeAsSeen(Episode episode) {
         episode.markAsSeen();
-        this.seriesRepository.update(this.getSeries(episode.seriesId()));
+        this.seriesRepository.update(this.getSeries(String.valueOf(episode.seriesId())));
     }
 
     public void markEpisodeAsNotSeen(Episode episode) {
         episode.markAsNotSeen();
-        this.seriesRepository.update(this.getSeries(episode.seriesId()));
+        this.seriesRepository.update(this.getSeries(String.valueOf(episode.seriesId())));
     }
 
     public boolean addListener(UpdateListener listener) {

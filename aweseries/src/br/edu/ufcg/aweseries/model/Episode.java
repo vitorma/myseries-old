@@ -25,12 +25,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import br.edu.ufcg.aweseries.util.Strings;
-
 public class Episode {
-
     private int id;
-    private String seriesId;
+    private int seriesId;
     private int number;
     private int seasonNumber;
     private String name;
@@ -44,21 +41,21 @@ public class Episode {
     private boolean seen;
     private List<EpisodeListener> listeners; 
 
-    private Episode(int id, String seriesId, int number, int seasonNumber) {
+    private Episode(int id, int seriesId, int number, int seasonNumber) {
         if (id < 0) {
-            throw new IllegalArgumentException("invalid id for episode");
+            throw new IllegalArgumentException("id should be non-negative");
         }
 
-        if (seriesId == null || Strings.isBlank(seriesId)) {
-            throw new IllegalArgumentException("invalid series id for episode");
+        if (seriesId < 0) {
+            throw new IllegalArgumentException("seriesId should be non-negative");
         }
 
         if (number < 0) {
-            throw new IllegalArgumentException("invalid number for episode");
+            throw new IllegalArgumentException("number should be non-negative");
         }
 
         if (seasonNumber < 0) {
-            throw new IllegalArgumentException("invalid season number for episode");
+            throw new IllegalArgumentException("seasonNumber should be non-negative");
         }
 
         this.id = id;
@@ -81,7 +78,7 @@ public class Episode {
         return this.id;
     }
 
-    public String seriesId() {
+    public int seriesId() {
         return this.seriesId;
     }
 
@@ -137,14 +134,14 @@ public class Episode {
 
     public void mergeWith(Episode other) {
         if (other == null) {
-            throw new IllegalArgumentException("other should not be null");
+            throw new IllegalArgumentException("other should be non-null");
         }
         
         if (other.id != this.id) {
             throw new IllegalArgumentException("other should have the same id as this");
         }
 
-        if (!other.seriesId.equals(this.seriesId)) {
+        if (other.seriesId != this.seriesId) {
             throw new IllegalArgumentException("other should have the same seriesId as this");
         }
 
@@ -189,7 +186,7 @@ public class Episode {
     
     public boolean register(EpisodeListener listener) {
         if (listener == null) {
-            throw new IllegalArgumentException("listener should not be null");
+            throw new IllegalArgumentException("listener should be non-null");
         }
 
         return !this.isRegistered(listener) && this.listeners.add(listener);
@@ -197,7 +194,7 @@ public class Episode {
 
     public boolean deregister(EpisodeListener listener) {
         if (listener == null) {
-            throw new IllegalArgumentException("listener should not be null");
+            throw new IllegalArgumentException("listener should be non-null");
         }
 
         return this.isRegistered(listener) && this.listeners.remove(listener);
@@ -232,9 +229,13 @@ public class Episode {
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder {
+        private static final int INVALID_ID = -1;
+        private static final int INVALID_SERIES_ID = -1;
+        private static final int INVALID_NUMBER = -1;
+        private static final int INVALID_SEASON_NUMBER = -1;
 
         private int id;
-        private String seriesId;
+        private int seriesId;
         private int number;
         private int seasonNumber;
         private String name;
@@ -247,9 +248,10 @@ public class Episode {
         private boolean seen;
 
         private Builder() {
-            this.id = -1;
-            this.number = -1;
-            this.seasonNumber = -1;
+            this.id = INVALID_ID;
+            this.seriesId = INVALID_SERIES_ID;
+            this.number = INVALID_NUMBER;
+            this.seasonNumber = INVALID_SEASON_NUMBER;
         }
 
         public Builder withId(int id) {
@@ -257,7 +259,7 @@ public class Episode {
             return this;
         }
 
-        public Builder withSeriesId(String seriesId) {
+        public Builder withSeriesId(int seriesId) {
             this.seriesId = seriesId;
             return this;
         }

@@ -221,7 +221,7 @@ public class EpisodeListActivity extends ListActivity {
                 Episode episode = (Episode) parent.getItemAtPosition(position);
 
                 Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
-                intent.putExtra("series id", episode.seriesId());
+                intent.putExtra("series id", String.valueOf(episode.seriesId()));
                 intent.putExtra("season number", episode.seasonNumber());
                 intent.putExtra("episode number", episode.number());
 

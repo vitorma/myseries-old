@@ -69,7 +69,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
             throw new IllegalArgumentException("episode should not be null");
         }
 
-        if (!episode.seriesId().equals(this.seriesId)) {
+        if (!String.valueOf(episode.seriesId()).equals(this.seriesId)) {
             throw new IllegalArgumentException("episode belongs to another series");
         }
 

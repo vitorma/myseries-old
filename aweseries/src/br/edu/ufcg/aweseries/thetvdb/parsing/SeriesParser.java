@@ -45,6 +45,7 @@ public class SeriesParser {
     private static final int INVALID_EPISODE_ID = -1;
     private static final int INVALID_EPISODE_NUMBER = -1;
     private static final int INVALID_SEASON_NUMBER = -1;
+    private static final int INVALID_SERIES_ID = -1;
     private static final DateFormat THETVDB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private StreamFactory streamFactory;
@@ -199,7 +200,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withSeriesId(body);
+                        episodeBuilder.withSeriesId(Numbers.parseInt(body, INVALID_SERIES_ID));
                     }
                 });
 

@@ -91,7 +91,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
                 final Episode episode = (Episode) parent.getItemAtPosition(position);
-                intent.putExtra("series id", episode.seriesId());
+                intent.putExtra("series id", String.valueOf(episode.seriesId()));
                 intent.putExtra("season number", episode.seasonNumber());
                 intent.putExtra("episode number", episode.number());
                 OutOfContextEpisodesActivity.this.startActivity(intent);
@@ -121,7 +121,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
 
             // load episode data
             final Episode episode = this.getItem(position);
-            final Series series = this.SERIES_PROVIDER.getSeries(episode.seriesId());
+            final Series series = this.SERIES_PROVIDER.getSeries(String.valueOf(episode.seriesId()));
             final Season season = series.seasons().getSeason(episode.seasonNumber());
 
             this.showData(episode, season, series, itemView);

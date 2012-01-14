@@ -45,7 +45,7 @@ public class SeasonTest {
 
     //Auxiliar----------------------------------------------------------------------------------------------------------
 
-    private Episode mockEpisode(int id, String seriesId, int number, int seasonNumber) {
+    private Episode mockEpisode(int id, int seriesId, int number, int seasonNumber) {
         Episode episode = Mockito.mock(Episode.class);
 
         Mockito.when(episode.id()).thenReturn(id);
@@ -86,10 +86,10 @@ public class SeasonTest {
     public void setUp() throws Exception {
         this.season = new Season("1", 1);
 
-        this.episode1 = mockEpisode(1, "1", 1, 1);
-        this.episode2 = mockEpisode(2, "1", 2, 1);
-        this.episode3 = mockEpisode(3, "1", 3, 1);
-        this.episode4 = mockEpisode(4, "1", 4, 1);
+        this.episode1 = mockEpisode(1, 1, 1, 1);
+        this.episode2 = mockEpisode(2, 1, 2, 1);
+        this.episode3 = mockEpisode(3, 1, 3, 1);
+        this.episode4 = mockEpisode(4, 1, 4, 1);
         
         this.season.addEpisode(this.episode1);
         this.season.addEpisode(this.episode2);
@@ -104,17 +104,17 @@ public class SeasonTest {
 
     @Test(expected=IllegalArgumentException.class)
     public final void testAddEpisodeWithAnotherSeriesId() {
-        this.season.addEpisode(mockEpisode(3, "3", 3, 1));
+        this.season.addEpisode(mockEpisode(3, 3, 3, 1));
     }
 
     @Test(expected=IllegalArgumentException.class)
     public final void testAddEpisodeWithAnotherSeasonNumber() {
-        this.season.addEpisode(mockEpisode(3, "1", 3, 2));
+        this.season.addEpisode(mockEpisode(3, 1, 3, 2));
     }
 
     @Test(expected=IllegalArgumentException.class)
     public final void testAddAlreadyExistentEpisode() {
-        Episode episode2Copy = mockEpisode(2, "1", 2, 1);
+        Episode episode2Copy = mockEpisode(2, 1, 2, 1);
         
         this.season.addEpisode(episode2);
         this.season.addEpisode(episode2Copy);
@@ -126,7 +126,7 @@ public class SeasonTest {
                 JUnitMatchers.hasItems(this.episode1, this.episode2));
         Assert.assertEquals(this.season.numberOfEpisodes(), 4);
 
-        final Episode episode5 = mockEpisode(5, "1", 5, 1);
+        final Episode episode5 = mockEpisode(5, 1, 5, 1);
         this.season.addEpisode(episode5);
         Assert.assertEquals(this.season.numberOfEpisodes(), 5);
         Assert.assertThat(this.season.episodes(), JUnitMatchers.hasItem(episode5));
@@ -231,16 +231,16 @@ public class SeasonTest {
         final Date nextWeek = new Date(today.getTime() + 7 * oneDayMilis);
         final Date weekAfterNextWeek = new Date(today.getTime() + 14 * oneDayMilis);
         
-        Episode episode5 = mockEpisode(5, "1", 5, 1);
+        Episode episode5 = mockEpisode(5, 1, 5, 1);
         Mockito.when(episode5.airdate()).thenReturn(tomorrow);
         
-        Episode episode6 = mockEpisode(6, "1", 6, 1);
+        Episode episode6 = mockEpisode(6, 1, 6, 1);
         Mockito.when(episode6.airdate()).thenReturn(dayAfterTomorrow);
         
-        Episode episode7 = mockEpisode(7, "1", 7, 1);
+        Episode episode7 = mockEpisode(7, 1, 7, 1);
         Mockito.when(episode7.airdate()).thenReturn(nextWeek);
         
-        Episode episode8 = mockEpisode(8, "1", 8, 1);
+        Episode episode8 = mockEpisode(8, 1, 8, 1);
         Mockito.when(episode8.airdate()).thenReturn(weekAfterNextWeek);
         
         this.season.addEpisode(episode7);
@@ -269,15 +269,15 @@ public class SeasonTest {
         final Date lastWeek =  new Date(today.getTime() - 7 * oneDayMilis);
         final Date weekBeforeLast =  new Date(today.getTime() - 14 * oneDayMilis);
 
-        Episode episode5 = mockEpisode(5, "1", 5, 1);
+        Episode episode5 = mockEpisode(5, 1, 5, 1);
         Mockito.when(episode5.airdate()).thenReturn(weekBeforeLast);
-        Episode episode6 = mockEpisode(6, "1", 6, 1);
+        Episode episode6 = mockEpisode(6, 1, 6, 1);
         Mockito.when(episode6.airdate()).thenReturn(lastWeek);
-        Episode episode7 = mockEpisode(7, "1", 7, 1);
+        Episode episode7 = mockEpisode(7, 1, 7, 1);
         Mockito.when(episode7.airdate()).thenReturn(dayBeforeYesterday);
-        Episode episode8 = mockEpisode(8, "1", 8, 1);
+        Episode episode8 = mockEpisode(8, 1, 8, 1);
         Mockito.when(episode8.airdate()).thenReturn(yesterday);
-        Episode episode9 = mockEpisode(9, "1", 9, 1);
+        Episode episode9 = mockEpisode(9, 1, 9, 1);
         Mockito.when(episode9.airdate()).thenReturn(tenSecondsAgo);
         
         this.season.addEpisode(episode6);
@@ -311,15 +311,15 @@ public class SeasonTest {
         final Date lastWeek =  new Date(today.getTime() - 7 * oneDayMilis);
         final Date weekBeforeLast =  new Date(today.getTime() - 14 * oneDayMilis);
 
-        Episode episode5 = mockEpisode(5, "1", 5, 1);
+        Episode episode5 = mockEpisode(5, 1, 5, 1);
         Mockito.when(episode5.airdate()).thenReturn(weekBeforeLast);
-        Episode episode6 = mockEpisode(6, "1", 6, 1);
+        Episode episode6 = mockEpisode(6, 1, 6, 1);
         Mockito.when(episode6.airdate()).thenReturn(lastWeek);
-        Episode episode7 = mockEpisode(7, "1", 7, 1);
+        Episode episode7 = mockEpisode(7, 1, 7, 1);
         Mockito.when(episode7.airdate()).thenReturn(dayBeforeYesterday);
-        Episode episode8 = mockEpisode(8, "1", 8, 1);
+        Episode episode8 = mockEpisode(8, 1, 8, 1);
         Mockito.when(episode8.airdate()).thenReturn(yesterday);
-        Episode episode9 = mockEpisode(9, "1", 9, 1);
+        Episode episode9 = mockEpisode(9, 1, 9, 1);
         Mockito.when(episode9.airdate()).thenReturn(tenSecondsAgo);
         
         this.season.addEpisode(episode6);
@@ -380,13 +380,13 @@ public class SeasonTest {
         final Date nextWeek = new Date(today.getTime() + 7 * oneDayMilis );
         final Date weekAfterNextWeek = new Date(today.getTime() + 14 * oneDayMilis );
         
-        Episode episode5 = mockEpisode(5, "1", 5, 1);
+        Episode episode5 = mockEpisode(5, 1, 5, 1);
         Mockito.when(episode5.airdate()).thenReturn(tomorrow);
-        Episode episode6 = mockEpisode(6, "1", 6, 1);
+        Episode episode6 = mockEpisode(6, 1, 6, 1);
         Mockito.when(episode6.airdate()).thenReturn(dayAfterTomorrow);
-        Episode episode7 = mockEpisode(7, "1", 7, 1);
+        Episode episode7 = mockEpisode(7, 1, 7, 1);
         Mockito.when(episode7.airdate()).thenReturn(nextWeek);
-        Episode episode8 = mockEpisode(8, "1", 8, 1);
+        Episode episode8 = mockEpisode(8, 1, 8, 1);
         Mockito.when(episode8.airdate()).thenReturn(weekAfterNextWeek);
         
 
@@ -420,9 +420,9 @@ public class SeasonTest {
     
     @Test
     public final void testMergeWith() {
-        Episode episode5 = mockEpisode(5, "1", 5, 1);
+        Episode episode5 = mockEpisode(5, 1, 5, 1);
         
-        Season newSeason = new Season(this.episode1.seriesId(), this.episode1.seasonNumber());
+        Season newSeason = new Season(String.valueOf(this.episode1.seriesId()), this.episode1.seasonNumber());
         newSeason.addEpisode(this.episode1);
         newSeason.addEpisode(this.episode2);
         newSeason.addEpisode(this.episode4);
@@ -433,9 +433,9 @@ public class SeasonTest {
         Assert.assertTrue(this.season.has(episode5));
         Assert.assertFalse(newSeason.has(episode3));
 
-        Episode episode6 = mockEpisode(6, "1", 6, 1);
+        Episode episode6 = mockEpisode(6, 1, 6, 1);
 
-        Episode episode6Copy = mockEpisode(6, "1", 6, 1);
+        Episode episode6Copy = mockEpisode(6, 1, 6, 1);
         
         this.season.addEpisode(episode6);
         newSeason.addEpisode(episode6Copy);        

@@ -373,7 +373,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
             }
 
             if (this.seasons == null) {
-                this.seasons = new SeasonSet(episode.seriesId());
+                this.seasons = new SeasonSet(String.valueOf(episode.seriesId()));
             }
 
             this.seasons.addEpisode(episode);
