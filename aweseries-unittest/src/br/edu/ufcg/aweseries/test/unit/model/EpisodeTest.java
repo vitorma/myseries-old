@@ -502,7 +502,6 @@ public class EpisodeTest {
     		Assert.assertEquals(e1, e1);
     		
     		//equals is symmetric
-    		Assert.assertNotSame(e1, e2);
     		Assert.assertEquals(e1, e2);
     		Assert.assertEquals(e2, e1);
     		
@@ -542,7 +541,7 @@ public class EpisodeTest {
     	//hashCode is consistent
     	for (int i=1; i<=1000; i++) {
 
-    		//equal objects have same hashCode
+    		//equal objects have the same hashCode
     		Assert.assertEquals(e1.hashCode(), e2.hashCode());
 
     		//non equal episodes have distinct hashCodes

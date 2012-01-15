@@ -34,11 +34,12 @@ import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class Season implements Iterable<Episode>, EpisodeListener {
-    private int number;
     private int seriesId;
+    private int number;
     private TreeMap<Integer, Episode> episodes;
-    private Set<DomainObjectListener<Season>> listeners;//TODO List<SeasonListener>
+
     private Episode nextEpisodeToSee;
+    private Set<DomainObjectListener<Season>> listeners;//TODO List<SeasonListener>
 
     public Season(int seriesId, int number) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
@@ -311,12 +312,15 @@ public class Season implements Iterable<Episode>, EpisodeListener {
 
     @Override
     public int hashCode() {
-        return this.number;
+        final int prime = 31;
+        return prime * (prime + this.seriesId) + this.number;
     }
-
+    
     @Override
-    public boolean equals(Object o) {
-        return o instanceof Season && ((Season) o).number == this.number;
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Season)) return false;
+        Season other = (Season) obj;
+        return other.seriesId == this.seriesId && other.number == this.number;
     }
 
     @Override

@@ -141,24 +141,6 @@ public class Episode {
         this.notifyOfMerge();
     }
 
-    //Object------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public int hashCode() {
-        return this.id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof Episode) &&
-               ((Episode) obj).id == this.id;
-    }
-
-    @Override
-    public String toString() {
-        return this.name;
-    }
-
     //Listeners---------------------------------------------------------------------------------------------------------
     
     public boolean register(EpisodeListener listener) {
@@ -195,6 +177,23 @@ public class Episode {
         for (EpisodeListener listener : this.listeners) {
             listener.onMerged(this);
         }
+    }
+    
+    //Object------------------------------------------------------------------------------------------------------------
+    
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Episode) && ((Episode) obj).id == this.id;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 
     //Builder-----------------------------------------------------------------------------------------------------------

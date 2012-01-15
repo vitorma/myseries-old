@@ -439,4 +439,51 @@ public class SeasonTest {
         this.season.addEpisode(episode6);
         newSeason.addEpisode(episode6Copy);        
     }
+
+    //Equals and HashCode-----------------------------------------------------------------------------------------------
+
+    @Test
+    public void testEquals() {
+    	Season s1 = new Season(1,1);
+    	Season s2 = new Season(1,1);
+    	Season s3 = new Season(1,1);
+    	Season s4 = new Season(1,2);
+    	Season s5 = new Season(2,1);
+
+    	//equals is consistent
+    	for (int i=1; i<=1000; i++) {
+
+    		//equals returns false to null objects
+    		Assert.assertFalse(s1.equals(null));
+    		
+    		//equals is reflexive
+    		Assert.assertEquals(s1, s1);
+    		
+    		//equals is symmetric
+    		Assert.assertEquals(s1, s2);
+    		Assert.assertEquals(s2, s1);
+    		
+    		//equals is transitive
+    		Assert.assertEquals(s1, s2);
+    		Assert.assertEquals(s2, s3);
+    		Assert.assertEquals(s1, s3);
+
+    		//seasons are equal if and only if they have the same seriesId and the same number
+    		Assert.assertFalse(s1.equals(s4));
+    		Assert.assertFalse(s1.equals(s5));
+    	}
+    }
+
+    @Test
+    public void testHashCode() {
+    	Season s1 = new Season(1,1);
+    	Season s2 = new Season(1,1);
+
+    	//hashCode is consistent
+    	for (int i=1; i<=1000; i++) {
+
+    		//equal objects have the same hashCode
+    		Assert.assertEquals(s1.hashCode(), s2.hashCode());
+    	}
+    }
 }
