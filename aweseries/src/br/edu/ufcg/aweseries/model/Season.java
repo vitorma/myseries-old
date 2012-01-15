@@ -95,17 +95,17 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     public Episode nextEpisodeToAir() {
         //TODO today should be given as a parameter
         final Date today = new Date();
-        
+
         for (final Episode e : this) {
             if (e.airdate() == null) {
                 continue;
             }
-            
+
             if (Dates.compare(e.airdate(), today) >= 0) {
                 return e;
             }
         }
-        
+
         return null;
     }
 
@@ -193,15 +193,15 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     }
 
     private void mergeAlreadyExistentEpisodesFrom(Season other) {
-        for (Episode ourEpisode : episodes()) {
+        for (Episode ourEpisode : this.episodes.values()) {
             if (other.has(ourEpisode)) {
                 ourEpisode.mergeWith(other.get(ourEpisode.number()));
             }
         }
     }
-    
+
     private void addNonexistentYetEpisodesFrom(Season other) {        
-        for (Episode theirEpisode : other.episodes()) {
+        for (Episode theirEpisode : other.episodes.values()) {
             if (!this.has(theirEpisode)) {
                 this.addEpisode(theirEpisode);
             }
@@ -306,24 +306,21 @@ public class Season implements Iterable<Episode>, EpisodeListener {
 
         return null;
     }
-    
+
     //Object------------------------------------------------------------------------------------------------------------
-    //TODO Performance - access the field instead of call the accessor
 
     @Override
     public int hashCode() {
-        return this.number();
+        return this.number;
     }
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof Season) &&
-        (((Season) o).number() == this.number());
+        return o instanceof Season && ((Season) o).number == this.number;
     }
 
     @Override
     public String toString() {
-        //TODO Internationalization - remove these strings
-        return (this.number() == 0) ? "Special Episodes" : "Season " + this.number();
+        return String.valueOf(this.number);
     }
 }
