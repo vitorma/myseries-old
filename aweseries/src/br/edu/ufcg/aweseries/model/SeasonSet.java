@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
@@ -31,6 +30,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import android.util.Log;
+import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season> {
@@ -93,7 +93,8 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     }
 
     private void addSeason(int seasonNumber) {
-        Season newSeason = new Season(this.seriesId, seasonNumber);
+        final int invalidSeriesId = -1;
+        Season newSeason = new Season(Numbers.parseInt(this.seriesId, invalidSeriesId),  seasonNumber);
         newSeason.addListener(this);
         
         this.map.put(seasonNumber, newSeason);

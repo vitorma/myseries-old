@@ -254,12 +254,12 @@ public class SeriesProvider {
 
     public void markSeasonAsSeen(Season season) {
         season.markAllAsSeen();
-        this.seriesRepository.update(this.getSeries(season.seriesId()));
+        this.seriesRepository.update(this.getSeries(String.valueOf(season.seriesId())));
     }
 
     public void markSeasonAsNotSeen(Season season) {
         season.markAllAsNotSeen();
-        this.seriesRepository.update(this.getSeries(season.seriesId()));
+        this.seriesRepository.update(this.getSeries(String.valueOf(season.seriesId())));
     }
 
     public void markEpisodeAsSeen(Episode episode) {

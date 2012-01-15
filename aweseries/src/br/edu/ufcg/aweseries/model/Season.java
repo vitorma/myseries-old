@@ -32,17 +32,16 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.util.Dates;
-import br.edu.ufcg.aweseries.util.Strings;
 
 public class Season implements Iterable<Episode>, EpisodeListener {
     private int number;
-    private String seriesId;//TODO Change type to int
+    private int seriesId;
     private TreeMap<Integer, Episode> episodes;
     private Set<DomainObjectListener<Season>> listeners;//TODO List<SeasonListener>
     private Episode nextEpisodeToSee;
 
-    public Season(String seriesId, int number) {
-        if ((seriesId == null) || Strings.isBlank(seriesId)) {
+    public Season(int seriesId, int number) {
+        if (seriesId < 0) {
             throw new IllegalArgumentException("invalid series id for season");
         }
 
@@ -58,7 +57,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
 
     //Fields------------------------------------------------------------------------------------------------------------
 
-    public String seriesId() {
+    public int seriesId() {
         return this.seriesId;
     }
 
@@ -169,7 +168,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
             throw new IllegalArgumentException("episode should not be null");
         }
 
-        if (!String.valueOf(episode.seriesId()).equals(this.seriesId)) {
+        if (episode.seriesId() != this.seriesId) {
             throw new IllegalArgumentException("episode belongs to another series");
         }
 

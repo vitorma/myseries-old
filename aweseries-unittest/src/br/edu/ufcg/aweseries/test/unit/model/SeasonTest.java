@@ -84,7 +84,7 @@ public class SeasonTest {
 
     @Before
     public void setUp() throws Exception {
-        this.season = new Season("1", 1);
+        this.season = new Season(1, 1);
 
         this.episode1 = mockEpisode(1, 1, 1, 1);
         this.episode2 = mockEpisode(2, 1, 2, 1);
@@ -422,7 +422,7 @@ public class SeasonTest {
     public final void testMergeWith() {
         Episode episode5 = mockEpisode(5, 1, 5, 1);
         
-        Season newSeason = new Season(String.valueOf(this.episode1.seriesId()), this.episode1.seasonNumber());
+        Season newSeason = new Season(this.episode1.seriesId(), this.episode1.seasonNumber());
         newSeason.addEpisode(this.episode1);
         newSeason.addEpisode(this.episode2);
         newSeason.addEpisode(this.episode4);
