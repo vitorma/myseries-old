@@ -191,11 +191,6 @@ public class Episode {
         return (obj instanceof Episode) && ((Episode) obj).id == this.id;
     }
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
-
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder {

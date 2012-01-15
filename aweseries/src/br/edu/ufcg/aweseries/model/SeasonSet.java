@@ -29,7 +29,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 
-import android.util.Log;
 import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 
@@ -87,7 +86,6 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         }
 
         for (Episode e : episodes) {
-            Log.d("Seasons", "adding episode " + e);
             this.addEpisode(e);
         }
     }

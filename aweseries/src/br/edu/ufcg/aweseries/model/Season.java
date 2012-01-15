@@ -322,9 +322,4 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         Season other = (Season) obj;
         return other.seriesId == this.seriesId && other.number == this.number;
     }
-
-    @Override
-    public String toString() {
-        return String.valueOf(this.number);
-    }
 }
