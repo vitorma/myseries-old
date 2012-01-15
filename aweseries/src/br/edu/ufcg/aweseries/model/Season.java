@@ -21,7 +21,6 @@
 
 package br.edu.ufcg.aweseries.model;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -32,6 +31,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.util.Dates;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class Season implements Iterable<Episode>, EpisodeListener {
     private int number;
@@ -41,13 +41,8 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     private Episode nextEpisodeToSee;
 
     public Season(int seriesId, int number) {
-        if (seriesId < 0) {
-            throw new IllegalArgumentException("invalid series id for season");
-        }
-
-        if (number < 0) {
-            throw new IllegalArgumentException("invalid number for season");
-        }
+        Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
+        Validate.isTrue(number >= 0, "number should be non-negative");
 
         this.seriesId = seriesId;
         this.number = number;
@@ -164,26 +159,13 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     //Changes-----------------------------------------------------------------------------------------------------------
 
     public void addEpisode(final Episode episode) {
-        if (episode == null) {
-            throw new IllegalArgumentException("episode should not be null");
-        }
-
-        if (episode.seriesId() != this.seriesId) {
-            throw new IllegalArgumentException("episode belongs to another series");
-        }
-
-        if (episode.seasonNumber() != this.number) {
-            throw new IllegalArgumentException("episode belongs to another series");
-        }
-
-        if (this.has(episode)) {
-            throw new IllegalArgumentException("episode already exists");
-        }
+        Validate.isNonNull(episode, "episode should be non-null");
+        Validate.isTrue(episode.seriesId() == this.seriesId, "episode should have the same seriesId as this");
+        Validate.isTrue(episode.seasonNumber() == this.number, "episode should have the same seasonNumber as this");
+        Validate.isTrue(!this.has(episode), "episode should be not already included in this");
 
         episode.register(this);
-        
         this.episodes.put(episode.number(), episode);
-        
         this.updateNextToSee();
     }
 
@@ -200,10 +182,9 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     }
 
     public void mergeWith(Season other) {
-        //TODO: Test whether other has different seriesId or number than mine (its)
-        if (other == null) {
-            throw new InvalidParameterException(); //TODO: throw IllegalArgumentException
-        }
+        Validate.isNonNull(other, "other should be non-null");
+        Validate.isTrue(other.seriesId == this.seriesId, "other should have the same seriesId as this");
+        Validate.isTrue(other.number == this.number, "other should have the same number as this");
 
         this.mergeAlreadyExistentEpisodesFrom(other);
         this.addNonexistentYetEpisodesFrom(other);

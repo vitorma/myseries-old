@@ -21,7 +21,6 @@
 
 package br.edu.ufcg.aweseries.test.unit.model;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -413,7 +412,7 @@ public class SeasonTest {
         Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
     }
     
-    @Test(expected = InvalidParameterException.class)
+    @Test(expected = IllegalArgumentException.class)
     public final void testMergeWithNull() {
     	this.season.mergeWith(null);
     }
