@@ -192,7 +192,7 @@ public class EpisodeListActivity extends ListActivity {
 
     private void loadSeasonDataOnView() {
         this.isSeasonViewed = (CheckBox) this.findViewById(R.id.isSeasonViewedCheckBox);
-        this.isSeasonViewed.setChecked(this.season.areAllSeen());
+        this.isSeasonViewed.setChecked(this.season.wasSeen());
 
         TextView seasonName = (TextView) this.findViewById(R.id.seasonTextView);
         

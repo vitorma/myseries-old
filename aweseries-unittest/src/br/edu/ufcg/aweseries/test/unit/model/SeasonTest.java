@@ -28,7 +28,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.matchers.JUnitMatchers;
 import org.mockito.Mockito;
 
 import br.edu.ufcg.aweseries.model.Episode;
@@ -64,6 +63,18 @@ public class SeasonTest {
     private void makeAllLookSeen(Episode... episodes) {
         for (Episode episode : episodes) {
             Mockito.when(episode.wasSeen()).thenReturn(true);
+        }
+    }
+
+    private void callOnMarkAsSeenForAll(Season season, Episode... episodes) {
+        for (Episode episode : episodes) {
+            season.onMarkedAsSeen(episode);
+        }
+    }
+    
+    private void callOnMarkAsNotSeenForAll(Season season, Episode... episodes) {
+        for (Episode episode : episodes) {
+            season.onMarkedAsNotSeen(episode);
         }
     }
 
@@ -121,14 +132,27 @@ public class SeasonTest {
 
     @Test
     public final void testAddEpisode() {
-        Assert.assertThat(this.season.episodes(),
-                JUnitMatchers.hasItems(this.episode1, this.episode2));
-        Assert.assertEquals(this.season.numberOfEpisodes(), 4);
+    	Season s1 = new Season(1, 1);
+    	Episode e1 = mockEpisode(1, 1, 1, 1);
+    	Episode e2 = mockEpisode(2, 1, 2, 1);
+    	this.makeAllLookNotSeen(e1, e2);
+    	s1.addEpisode(e1);
+    	s1.addEpisode(e2);
 
-        final Episode episode5 = mockEpisode(5, 1, 5, 1);
-        this.season.addEpisode(episode5);
-        Assert.assertEquals(this.season.numberOfEpisodes(), 5);
-        Assert.assertThat(this.season.episodes(), JUnitMatchers.hasItem(episode5));
+    	Assert.assertTrue(s1.has(e1));
+    	Assert.assertTrue(s1.has(e2));
+    	Assert.assertFalse(s1.wasSeen());
+
+    	Season s2 = new Season(1, 2);
+    	Episode e3 = mockEpisode(1, 1, 1, 2);
+    	Episode e4 = mockEpisode(2, 1, 2, 2);
+    	this.makeAllLookSeen(e3, e4);
+    	s2.addEpisode(e3);
+    	s2.addEpisode(e4);
+
+    	Assert.assertTrue(s2.has(e3));
+    	Assert.assertTrue(s2.has(e4));
+    	Assert.assertTrue(s2.wasSeen());
     }
 
     @Test
@@ -143,7 +167,7 @@ public class SeasonTest {
         Mockito.verify(this.episode3).markAsSeen();
         Mockito.verify(this.episode4).markAsSeen();
                 
-        Assert.assertTrue(this.season.areAllSeen());
+        Assert.assertTrue(this.season.wasSeen());
         Assert.assertEquals(null, this.season.nextEpisodeToSee());
     }
 
@@ -159,7 +183,7 @@ public class SeasonTest {
         Mockito.verify(this.episode3).markAsNotSeen();
         Mockito.verify(this.episode4).markAsNotSeen();
         
-        Assert.assertFalse(this.season.areAllSeen());
+        Assert.assertFalse(this.season.wasSeen());
         Assert.assertEquals(this.episode1, this.season.nextEpisodeToSee());
     }
 
@@ -438,6 +462,52 @@ public class SeasonTest {
         
         this.season.addEpisode(episode6);
         newSeason.addEpisode(episode6Copy);        
+    }
+
+    //EpisodeListener---------------------------------------------------------------------------------------------------
+
+    @Test
+    public final void testOnMarkedAsSeen() {
+    	Season s1 = new Season(1, 1);
+    	Episode e1 = mockEpisode(1, 1, 1, 1);
+    	Episode e2 = mockEpisode(2, 1, 2, 1);
+    	this.makeAllLookNotSeen(e1, e2);
+    	s1.addEpisode(e1);
+    	s1.addEpisode(e2);
+
+    	Assert.assertFalse(s1.wasSeen());
+
+    	this.makeAllLookSeen(e1);
+    	this.callOnMarkAsSeenForAll(s1, e1);
+    	
+    	Assert.assertFalse(s1.wasSeen());
+
+    	this.makeAllLookSeen(e2);
+    	this.callOnMarkAsSeenForAll(s1, e2);
+    	
+    	Assert.assertTrue(s1.wasSeen());
+    }
+
+    @Test
+    public final void testOnMarkedAsNotSeen() {
+    	Season s1 = new Season(1, 1);
+    	Episode e1 = mockEpisode(1, 1, 1, 1);
+    	Episode e2 = mockEpisode(2, 1, 2, 1);
+    	this.makeAllLookSeen(e1, e2);
+    	s1.addEpisode(e1);
+    	s1.addEpisode(e2);
+
+    	Assert.assertTrue(s1.wasSeen());
+
+    	this.makeAllLookNotSeen(e1);
+    	this.callOnMarkAsNotSeenForAll(s1, e1);
+    	
+    	Assert.assertFalse(s1.wasSeen());
+
+    	this.makeAllLookNotSeen(e2);
+    	this.callOnMarkAsNotSeenForAll(s1, e2);
+    	
+    	Assert.assertFalse(s1.wasSeen());
     }
 
     //Equals and HashCode-----------------------------------------------------------------------------------------------

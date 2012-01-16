@@ -38,6 +38,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     private int number;
     private TreeMap<Integer, Episode> episodes;
 
+    private int numberOfSeenEpisodes;
     private Episode nextEpisodeToSee;
     private Set<DomainObjectListener<Season>> listeners;//TODO List<SeasonListener>
 
@@ -77,16 +78,8 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         return this.episodes.get(episodeNumber);
     }
 
-    public boolean areAllSeen() {
-        //TODO Rename as wasSeen
-        //TODO Cost can be constant
-        for (final Episode e : this) {
-            if (!e.wasSeen()) {
-                return false;
-            }
-        }
-        
-        return true;
+    public boolean wasSeen() {
+        return this.numberOfSeenEpisodes == this.episodes.size();
     }
 
     public Episode nextEpisodeToSee() {
@@ -165,8 +158,9 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         Validate.isTrue(episode.seasonNumber() == this.number, "episode should have the same seasonNumber as this");
         Validate.isTrue(!this.has(episode), "episode should be not already included in this");
 
-        episode.register(this);
         this.episodes.put(episode.number(), episode);
+        if (episode.wasSeen()) this.numberOfSeenEpisodes++;
+        episode.register(this);
         this.updateNextToSee();
     }
 
@@ -280,12 +274,18 @@ public class Season implements Iterable<Episode>, EpisodeListener {
 
     @Override
     public void onMarkedAsSeen(Episode e) {
+        //TODO Test behavior of nextToSee
+        //TODO Notify only if wasSeen() changed
+        this.numberOfSeenEpisodes++;
         this.updateNextToSee();
         this.notifyListeners();
     }
 
     @Override
     public void onMarkedAsNotSeen(Episode e) {
+        //TODO Test behavior of nextToSee
+        //TODO Notify only if wasSeen() changed
+        this.numberOfSeenEpisodes--;
         this.updateNextToSee();
         this.notifyListeners();
     }

@@ -158,7 +158,7 @@ public class SeasonListActivity extends ListActivity {
             }
 
             CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
-            isSeasonViewed.setChecked(season.areAllSeen());
+            isSeasonViewed.setChecked(season.wasSeen());
         }
 
         private void setUpSeenSeasonCheckBoxListenerFor(final Season season, View itemView) {
