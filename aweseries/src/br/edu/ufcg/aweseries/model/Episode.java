@@ -114,13 +114,17 @@ public class Episode {
     }
 
     public void markAsSeen() {
-        this.seen = true;
-        this.notifyOfMarkAsSeen();
+        if (!seen) {
+            this.seen = true;
+            this.notifyOfMarkAsSeen();
+        }
     }
 
     public void markAsNotSeen() {
-        this.seen = false;
-        this.notifyOfMarkAsNotSeen();
+        if (seen) {
+            this.seen = false;
+            this.notifyOfMarkAsNotSeen();
+        }
     }
 
     public void mergeWith(Episode other) {

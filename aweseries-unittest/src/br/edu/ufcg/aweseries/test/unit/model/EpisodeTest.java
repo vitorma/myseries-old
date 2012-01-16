@@ -207,8 +207,8 @@ public class EpisodeTest {
     		Assert.assertTrue(e.wasSeen());
     	}
 
-    	Mockito.verify(l1, Mockito.times(1000)).onMarkedAsSeen(e);
-    	Mockito.verify(l2, Mockito.times(1000)).onMarkedAsSeen(e);
+    	Mockito.verify(l1, Mockito.times(1)).onMarkedAsSeen(e);
+    	Mockito.verify(l2, Mockito.times(1)).onMarkedAsSeen(e);
 
     	Mockito.verify(l1, Mockito.times(0)).onMarkedAsNotSeen(e);
     	Mockito.verify(l2, Mockito.times(0)).onMarkedAsNotSeen(e);
@@ -241,8 +241,8 @@ public class EpisodeTest {
     	Mockito.verify(l1, Mockito.times(0)).onMarkedAsSeen(e);
     	Mockito.verify(l2, Mockito.times(0)).onMarkedAsSeen(e);
 
-    	Mockito.verify(l1, Mockito.times(1000)).onMarkedAsNotSeen(e);
-    	Mockito.verify(l2, Mockito.times(1000)).onMarkedAsNotSeen(e);
+    	Mockito.verify(l1, Mockito.times(1)).onMarkedAsNotSeen(e);
+    	Mockito.verify(l2, Mockito.times(1)).onMarkedAsNotSeen(e);
 
     	Mockito.verify(l1, Mockito.times(0)).onMerged(e);
     	Mockito.verify(l2, Mockito.times(0)).onMerged(e);
