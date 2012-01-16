@@ -159,9 +159,15 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         Validate.isTrue(!this.has(episode), "episode should be not already included in this");
 
         this.episodes.put(episode.number(), episode);
-        if (episode.wasSeen()) this.numberOfSeenEpisodes++;
+
+        if (episode.wasSeen()) {
+            this.numberOfSeenEpisodes++;
+        }
+        else if (this.nextEpisodeToSee == null || this.nextEpisodeToSee.number() > episode.number()) {
+            this.nextEpisodeToSee = episode;
+        }
+
         episode.register(this);
-        this.updateNextToSee();
     }
 
     public void markAllAsSeen() {
@@ -182,7 +188,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         Validate.isTrue(other.number == this.number, "other should have the same number as this");
 
         this.mergeAlreadyExistentEpisodesFrom(other);
-        this.addNonexistentYetEpisodesFrom(other);
+        this.addNonExistentYetEpisodesFrom(other);
 
         this.notifyListeners();
     }
@@ -195,7 +201,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         }
     }
 
-    private void addNonexistentYetEpisodesFrom(Season other) {        
+    private void addNonExistentYetEpisodesFrom(Season other) {        
         for (Episode theirEpisode : other.episodes.values()) {
             if (!this.has(theirEpisode)) {
                 this.addEpisode(theirEpisode);
@@ -274,38 +280,42 @@ public class Season implements Iterable<Episode>, EpisodeListener {
 
     @Override
     public void onMarkedAsSeen(Episode e) {
-        //TODO Test behavior of nextToSee
-        //TODO Notify only if wasSeen() changed
         this.numberOfSeenEpisodes++;
-        this.updateNextToSee();
-        this.notifyListeners();
+
+        if (this.wasSeen()) {
+            this.nextEpisodeToSee = null;
+            this.notifyListeners();//TODO notifyThatWasSeen(Season) and notifyThatNextEpisodeToSeeChanged(Season)
+        }
+        else if (e.equals(this.nextEpisodeToSee)) {
+            this.nextEpisodeToSee = this.findNextEpisodeToSee();
+            this.notifyListeners();//TODO notifyThatNextEpisodeToSeeChanged(Season)
+        }
     }
 
     @Override
     public void onMarkedAsNotSeen(Episode e) {
-        //TODO Test behavior of nextToSee
-        //TODO Notify only if wasSeen() changed
+        if (this.wasSeen()) {
+            this.notifyListeners();//TODO notifyThatWasNotSeen(Season)
+        }
+        if (this.nextEpisodeToSee == null || e.number() < this.nextEpisodeToSee.number()) {
+            this.nextEpisodeToSee = e;
+            this.notifyListeners();//TODO notifyThatNextEpisodeToSeeChanged(Season)
+        }
+
         this.numberOfSeenEpisodes--;
-        this.updateNextToSee();
-        this.notifyListeners();
+    }
+    
+    private Episode findNextEpisodeToSee() {
+        for (final Episode e : this) {
+            if (!e.wasSeen()) return e;
+        }
+        
+        return null;
     }
 
     @Override
     public void onMerged(Episode e) {
         this.notifyListeners();
-    }
-
-    private void updateNextToSee() {
-        Episode nextEpisodeToSee = findNextEpisodeToSee();
-        this.nextEpisodeToSee = nextEpisodeToSee;
-    }
-
-    private Episode findNextEpisodeToSee() {
-        for (final Episode e : this) {
-            if (!e.wasSeen()) return e;
-        }
-
-        return null;
     }
 
     //Object------------------------------------------------------------------------------------------------------------
