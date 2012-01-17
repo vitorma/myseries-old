@@ -40,8 +40,8 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Season;
+import br.edu.ufcg.aweseries.model.SeasonListener;
 import br.edu.ufcg.aweseries.model.Series;
 
 /**
@@ -109,14 +109,12 @@ public class SeasonListActivity extends ListActivity {
     }
 
     //XXX: Use TextViewAdapter instead.
-    private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements
-            DomainObjectListener<Season> {
-        public SeasonItemViewAdapter(Context context, int seasonsItemResourceId,
-                List<Season> objects) {
+    private class SeasonItemViewAdapter extends ArrayAdapter<Season> implements SeasonListener {
+        public SeasonItemViewAdapter(Context context, int seasonsItemResourceId, List<Season> objects) {
             super(context, seasonsItemResourceId, objects);
 
             for (Season s : objects) {
-                s.addListener(this);
+                s.register(this);
             }
         }
 
@@ -178,7 +176,26 @@ public class SeasonListActivity extends ListActivity {
         }
 
         @Override
-        public void onUpdate(Season season) {
+        public void onMarkAsSeen(Season season) {
+            //TODO A better implementation
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onMarkAsNotSeen(Season season) {
+            //TODO A better implementation
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onChangeNextEpisodeToSee(Season season) {
+            //TODO A better implementation
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onMerge(Season season) {
+            //TODO A better implementation
             this.notifyDataSetChanged();
         }
     }
