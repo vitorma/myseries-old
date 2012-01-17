@@ -179,7 +179,7 @@ public class EpisodeListActivity extends ListActivity {
         final Bundle extras = this.getIntent().getExtras();
 
         this.series = seriesProvider.getSeries(extras.getString("series id"));
-        this.season = this.series.seasons().getSeason(extras.getInt("season number"));
+        this.season = this.series.seasons().season(extras.getInt("season number"));
     }
 
     private void setUpListActivityParameters() {

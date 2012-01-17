@@ -198,7 +198,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
     }
 
     private void setSeasons(SeasonSet seasons) {
-        if ((seasons == null) || !(String.valueOf(seasons.getSeriesId())).equals(this.id)) {
+        if ((seasons == null) || !(String.valueOf(seasons.seriesId())).equals(this.id)) {
             throw new IllegalArgumentException("invalid seasons for series");
         }
 

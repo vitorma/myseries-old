@@ -228,10 +228,10 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
                     this.getString(R.string.runtime_minutes_format), series.runtime()));
 
             if (series.isContinuing()) {
-                final Episode nextToAir = series.seasons().getNextEpisodeToAir();
+                final Episode nextToAir = series.seasons().nextEpisodeToAir();
 
                 if (nextToAir != null) {
-                    this.nextToAir.setText(series.seasons().getNextEpisodeToAir().name());
+                    this.nextToAir.setText(series.seasons().nextEpisodeToAir().name());
                 } else {
                     this.nextToAir.setText(R.string.up_to_date);
 
@@ -240,7 +240,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
 
             if (series.isEnded()) {
                 this.nextToAirLabel.setText(R.string.last_episode_aired);
-                final Episode e = series.seasons().getLastAiredEpisode();
+                final Episode e = series.seasons().lastAiredEpisode();
                 if (e != null) {
                     this.nextToAir.setText(e.toString());
                 } else {
@@ -249,9 +249,9 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
 
             }
 
-            final Episode nextToSee = series.seasons().getNextEpisodeToSee();
+            final Episode nextToSee = series.seasons().nextEpisodeToSee();
             if (nextToSee != null) {
-                this.nextToSee.setText(series.seasons().getNextEpisodeToSee().name());
+                this.nextToSee.setText(series.seasons().nextEpisodeToSee().name());
             } else {
                 this.nextToSee.setText(R.string.up_to_date);
             }

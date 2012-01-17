@@ -107,7 +107,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                 while (it.hasNext() && (viewsToAdd > 0)) {
                     final Episode e = it.next();
                     final Series series = seriesProvider.getSeries(String.valueOf(e.seriesId()));
-                    final Season season = series.seasons().getSeason(e.seasonNumber());
+                    final Season season = series.seasons().season(e.seasonNumber());
 
                     final RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
                     if (series.hasPoster()) {

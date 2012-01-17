@@ -122,7 +122,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             // load episode data
             final Episode episode = this.getItem(position);
             final Series series = this.SERIES_PROVIDER.getSeries(String.valueOf(episode.seriesId()));
-            final Season season = series.seasons().getSeason(episode.seasonNumber());
+            final Season season = series.seasons().season(episode.seasonNumber());
 
             this.showData(episode, season, series, itemView);
             this.setUpSeenEpisodeCheckBoxListener(episode, itemView);

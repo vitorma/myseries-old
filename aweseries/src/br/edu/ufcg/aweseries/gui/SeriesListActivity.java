@@ -126,7 +126,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             airTime.setText(item.airsDayAndTime());
 
             // next episode to see
-            final Episode nextEpisodeToSee = item.seasons().getNextEpisodeToSee();
+            final Episode nextEpisodeToSee = item.seasons().nextEpisodeToSee();
             if (nextEpisodeToSee != null) {
                 //TODO Extract a method to get a string resource by its id
                 nextToSee.setText(Objects.nullSafe(
@@ -139,7 +139,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             // latest episode to air
             if (item.isContinuing()) {
                 latestToAirLabel.setText(R.string.next_episode_to_air);
-                final Episode nextEpisodeToAir = item.seasons().getNextEpisodeToAir();
+                final Episode nextEpisodeToAir = item.seasons().nextEpisodeToAir();
                 if (nextEpisodeToAir != null) {
                     //TODO Extract a method to get a string resource by its id
                     latestToAir.setText(Objects.nullSafe(
@@ -152,7 +152,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
             if (item.isEnded()) {
                 latestToAirLabel.setText(R.string.last_episode_aired);
-                final Episode latestEpisodeToAir = item.seasons().getLastAiredEpisode();
+                final Episode latestEpisodeToAir = item.seasons().lastAiredEpisode();
                 if (latestEpisodeToAir != null) {
                     //TODO Extract a method to get a string resource by its id
                     latestToAir.setText(Objects.nullSafe(

@@ -130,7 +130,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("Series", null, this.contentValuesBy(series));
-        for (Episode e : series.seasons().getAllEpisodes()) {
+        for (Episode e : series.seasons().allEpisodes()) {
             db.insert("Episode", null, this.contentValuesBy(e));
         }
         db.close();
@@ -144,7 +144,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.update("Series", this.contentValuesBy(series), "id=?", new String[] {series.id()});
-        for (Episode e : series.seasons().getAllEpisodes()) {
+        for (Episode e : series.seasons().allEpisodes()) {
             db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {String.valueOf(e.id())});
         }
         db.close();
@@ -288,7 +288,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     private void updateAllEpisodesOf(Series s, SQLiteDatabase db) {
-        for (Episode e : s.seasons().getAllEpisodes()) {
+        for (Episode e : s.seasons().allEpisodes()) {
             db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {String.valueOf(e.id())});
         }
     }

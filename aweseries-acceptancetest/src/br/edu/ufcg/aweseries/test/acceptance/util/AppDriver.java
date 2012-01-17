@@ -170,7 +170,7 @@ public class AppDriver {
         public SeasonAccessor(String seasonName, Series series) {
             validateInputName(seasonName, "seasonName");
             
-            this.season = series.seasons().getSeason(this.nameToNumber(seasonName));
+            this.season = series.seasons().season(this.nameToNumber(seasonName));
         }
 
         public TextAsserter name() {

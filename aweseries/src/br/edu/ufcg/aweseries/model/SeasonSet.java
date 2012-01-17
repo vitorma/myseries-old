@@ -44,19 +44,19 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         this.listeners = new HashSet<DomainObjectListener<SeasonSet>>();
     }
 
-    public int getSeriesId() {
+    public int seriesId() {
         return this.seriesId;
     }
 
-    private int getFirstSeasonNumber() {
+    private int firstSeasonNumber() {
         return this.map.firstKey();
     }
 
-    public int getLastSeasonNumber() {
+    public int lastSeasonNumber() {
         return this.map.lastKey();
     }
 
-    public int getNumberOfSeasons() {
+    public int numberOfSeasons() {
         return this.map.size();
     }
 
@@ -98,11 +98,11 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         return this.map.containsKey(seasonNumber);
     }
 
-    public Season getSeason(int seasonNumber) {
+    public Season season(int seasonNumber) {
         return this.map.get(seasonNumber);
     }
 
-    public List<Episode> getAllEpisodes() {
+    public List<Episode> allEpisodes() {
         List<Episode> episodes = new ArrayList<Episode>();
 
         for (Season s : this.map.values()) {
@@ -123,7 +123,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     }
 
     public Season[] toArray() {
-        final Season[] array = new Season[this.getNumberOfSeasons()];
+        final Season[] array = new Season[this.numberOfSeasons()];
 
         int i = 0;
         for (Season s : this) {
@@ -134,7 +134,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         return array;
     }
 
-    public Episode getNextEpisodeToSee() {
+    public Episode nextEpisodeToSee() {
         for (final Season s : this.map.values()) {
             final Episode next = s.nextEpisodeToSee();
             if (next != null) return next;
@@ -143,7 +143,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         return null;
     }
 
-    public Episode getNextEpisodeToAir() {
+    public Episode nextEpisodeToAir() {
         for (final Season s : this.map.values()) {
             final Episode next = s.nextEpisodeToAir();
             if (next != null) return next;
@@ -152,7 +152,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         return null;
     }
 
-    public Episode getLastAiredEpisode() {
+    public Episode lastAiredEpisode() {
         final Iterator<Season> it = this.reversedIterator();
 
         while (it.hasNext()) {
@@ -164,7 +164,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     }
 
 
-    public List<Episode> getLastAiredNotSeenEpisodes() {
+    public List<Episode> lastAiredNotSeenEpisodes() {
         List<Episode> list = new ArrayList<Episode>();
 
         for (Season s : this) {
@@ -174,7 +174,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         return list;
     }
 
-    public List<Episode> getNextEpisodesToAir() {
+    public List<Episode> nextEpisodesToAir() {
         List<Episode> list = new ArrayList<Episode>();
 
         for (Season s : this) {
@@ -187,13 +187,13 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     @Override
     public Iterator<Season> iterator() {
         return new Iterator<Season>() {
-            private int seasonNumber = (getNumberOfSeasons() > 0) ? SeasonSet.this
-                    .getFirstSeasonNumber() : Integer.MAX_VALUE;
+            private int seasonNumber = (numberOfSeasons() > 0) ? SeasonSet.this
+                    .firstSeasonNumber() : Integer.MAX_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (getNumberOfSeasons() > 0)
-                        && (this.seasonNumber <= SeasonSet.this.getLastSeasonNumber());
+                return (numberOfSeasons() > 0)
+                        && (this.seasonNumber <= SeasonSet.this.lastSeasonNumber());
             }
 
             @Override
@@ -202,7 +202,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
                     throw new NoSuchElementException();
                 }
 
-                Season next = SeasonSet.this.getSeason(this.seasonNumber);
+                Season next = SeasonSet.this.season(this.seasonNumber);
                 this.seasonNumber++;
                 return next;
             }
@@ -217,12 +217,12 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     public Iterator<Season> reversedIterator() {
         return new Iterator<Season>() {
             private int seasonNumber =
-                (getNumberOfSeasons() > 0) ? SeasonSet.this.getLastSeasonNumber() : Integer.MIN_VALUE;
+                (numberOfSeasons() > 0) ? SeasonSet.this.lastSeasonNumber() : Integer.MIN_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (getNumberOfSeasons() > 0)
-                        && (this.seasonNumber >= SeasonSet.this.getFirstSeasonNumber());
+                return (numberOfSeasons() > 0)
+                        && (this.seasonNumber >= SeasonSet.this.firstSeasonNumber());
             }
 
             @Override
@@ -231,7 +231,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
                     throw new NoSuchElementException();
                 }
 
-                Season next = SeasonSet.this.getSeason(this.seasonNumber);
+                Season next = SeasonSet.this.season(this.seasonNumber);
                 this.seasonNumber--;
                 return next;
             }
@@ -248,10 +248,12 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
         this.notifyListeners();
     }
     
+    @Deprecated
     public boolean addListener(DomainObjectListener<SeasonSet> listener) {
         return this.listeners.add(listener);
     }
     
+    @Deprecated
     public boolean removeListener(DomainObjectListener<SeasonSet> listener) {
         return this.listeners.remove(listener);
     }
@@ -269,7 +271,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
 
         for (Season s : this.map.values()) {
             if (other.hasSeason(s.number())) {
-                s.mergeWith(other.getSeason(s.number()));
+                s.mergeWith(other.season(s.number()));
             }
         }
 

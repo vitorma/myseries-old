@@ -215,7 +215,7 @@ public class SeriesProvider {
         final List<Episode> recent = new ArrayList<Episode>();
 
         for (final Series s : this.followedSeries()) {
-            recent.addAll(s.seasons().getLastAiredNotSeenEpisodes());
+            recent.addAll(s.seasons().lastAiredNotSeenEpisodes());
         }
 
         return recent;
@@ -225,7 +225,7 @@ public class SeriesProvider {
         final List<Episode> upcoming = new ArrayList<Episode>();
 
         for (final Series s : this.followedSeries()) {
-            upcoming.addAll(s.seasons().getNextEpisodesToAir());
+            upcoming.addAll(s.seasons().nextEpisodesToAir());
         }
 
         return upcoming;
