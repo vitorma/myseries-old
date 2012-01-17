@@ -132,19 +132,19 @@ public class EpisodeListActivity extends ListActivity {
         }
 
         @Override
-        public void onMarkedAsSeen(Episode e) {
+        public void onMarkAsSeen(Episode e) {
             this.notifyDataSetChanged();
             
         }
 
         @Override
-        public void onMarkedAsNotSeen(Episode e) {
+        public void onMarkAsNotSeen(Episode e) {
             this.notifyDataSetChanged();
             
         }
 
         @Override
-        public void onMerged(Episode e) {
+        public void onMerge(Episode e) {
             this.notifyDataSetChanged();
         };
     }

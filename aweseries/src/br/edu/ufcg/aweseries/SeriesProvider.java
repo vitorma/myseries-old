@@ -253,12 +253,12 @@ public class SeriesProvider {
     //TODO: Remove it ASAP----------------------------------------------------------------------------------------------
 
     public void markSeasonAsSeen(Season season) {
-        season.markAllAsSeen();
+        season.markAsSeen();
         this.seriesRepository.update(this.getSeries(String.valueOf(season.seriesId())));
     }
 
     public void markSeasonAsNotSeen(Season season) {
-        season.markAllAsNotSeen();
+        season.markAsNotSeen();
         this.seriesRepository.update(this.getSeries(String.valueOf(season.seriesId())));
     }
 

@@ -167,19 +167,19 @@ public class Episode {
 
     private void notifyOfMarkAsSeen() {
         for (EpisodeListener listener : this.listeners) {
-            listener.onMarkedAsSeen(this);
+            listener.onMarkAsSeen(this);
         }
     }
 
     private void notifyOfMarkAsNotSeen() {
         for (EpisodeListener listener : this.listeners) {
-            listener.onMarkedAsNotSeen(this);
+            listener.onMarkAsNotSeen(this);
         }
     }
 
     private void notifyOfMerge() {
         for (EpisodeListener listener : this.listeners) {
-            listener.onMerged(this);
+            listener.onMerge(this);
         }
     }
     

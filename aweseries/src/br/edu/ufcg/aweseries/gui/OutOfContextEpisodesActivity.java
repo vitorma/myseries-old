@@ -184,18 +184,18 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
         }
 
         @Override
-        public void onMarkedAsSeen(Episode e) {
+        public void onMarkAsSeen(Episode e) {
             e.deregister(this);
             this.remove(e);
         }
 
         @Override
-        public void onMarkedAsNotSeen(Episode e) {
+        public void onMarkAsNotSeen(Episode e) {
             //All episodes here are already marked as not seen
         }
 
         @Override
-        public void onMerged(Episode e) {
+        public void onMerge(Episode e) {
             this.notifyDataSetChanged();
         }
     }
