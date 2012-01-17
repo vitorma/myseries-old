@@ -23,12 +23,10 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.util.Dates;
@@ -42,7 +40,6 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     private int numberOfSeenEpisodes;
     private Episode nextEpisodeToSee;
     private List<SeasonListener> listeners;
-    private Set<DomainObjectListener<Season>> domainObjectListeners;//TODO Remove
 
     public Season(int seriesId, int number) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
@@ -52,8 +49,6 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         this.number = number;
         this.episodes = new TreeMap<Integer, Episode>();
         this.listeners = new LinkedList<SeasonListener>();
-
-        this.domainObjectListeners = new HashSet<DomainObjectListener<Season>>();
     }
 
     //Fields------------------------------------------------------------------------------------------------------------
@@ -196,7 +191,6 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         this.addNonExistentYetEpisodesFrom(other);
 
         this.notifyThatWasMerged();
-        this.notifyListeners();//TODO Remove it ASAP
     }
 
     private void mergeAlreadyExistentEpisodesFrom(Season other) {
@@ -317,13 +311,11 @@ public class Season implements Iterable<Episode>, EpisodeListener {
             this.notifyThatWasMarkedAsSeen();
             this.nextEpisodeToSee = null;
             this.notifyThatNextToSeeChanged();
-            this.notifyListeners();//TODO Remove it ASAP
         }
 
         if (!this.wasSeen() && e.equals(this.nextEpisodeToSee)) {
             this.nextEpisodeToSee = this.findNextEpisodeToSee();
             this.notifyThatNextToSeeChanged();
-            this.notifyListeners();//TODO Remove it ASAP
         }
     }
 
@@ -331,13 +323,11 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     public void onMarkAsNotSeen(Episode e) {
         if (this.wasSeen()) {
             this.notifyThatWasMarkedAsNotSeen();
-            this.notifyListeners();//TODO Remove it ASAP
         }
 
         if (this.nextToSeeShouldBe(e)) {
             this.nextEpisodeToSee = e;
             this.notifyThatNextToSeeChanged();
-            this.notifyListeners();//TODO Remove it ASAP
         }
 
         this.numberOfSeenEpisodes--;
@@ -369,22 +359,5 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         if (!(obj instanceof Season)) return false;
         Season other = (Season) obj;
         return other.seriesId == this.seriesId && other.number == this.number;
-    }
-
-    //DomainObjectListeners---------------------------------------------------------------------------------------------
-    //TODO Remove it ASAP
-    
-    public boolean addListener(DomainObjectListener<Season> listener) {
-        return this.domainObjectListeners.add(listener);        
-    }
-    
-    public boolean removeListener(DomainObjectListener<Season> listener) {
-        return this.domainObjectListeners.remove(listener);        
-    }
-    
-    private void notifyListeners() {
-        for (final DomainObjectListener<Season> listener : this.domainObjectListeners) {
-            listener.onUpdate(this);
-        }
     }
 }

@@ -33,8 +33,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -42,11 +42,11 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.EpisodeComparator;
 import br.edu.ufcg.aweseries.model.EpisodeListener;
 import br.edu.ufcg.aweseries.model.Season;
+import br.edu.ufcg.aweseries.model.SeasonListener;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Objects;
@@ -244,9 +244,29 @@ public class EpisodeListActivity extends ListActivity {
     }
 
     private void setUpListenerForSeason() {
-        this.season.addListener(new DomainObjectListener<Season>() {
+        this.season.register(new SeasonListener() {
+
             @Override
-            public void onUpdate(Season entity) {
+            public void onChangeNextEpisodeToSee(Season season) {
+                //TODO A better implementation
+                EpisodeListActivity.this.loadSeasonDataOnView();
+            }
+
+            @Override
+            public void onMarkAsNotSeen(Season season) {
+                //TODO A better implementation
+                EpisodeListActivity.this.loadSeasonDataOnView();
+            }
+
+            @Override
+            public void onMarkAsSeen(Season season) {
+                //TODO A better implementation
+                EpisodeListActivity.this.loadSeasonDataOnView();
+            }
+
+            @Override
+            public void onMerge(Season season) {
+                //TODO A better implementation
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }
         });
