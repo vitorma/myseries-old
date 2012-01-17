@@ -24,6 +24,7 @@ package br.edu.ufcg.aweseries.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -34,14 +35,16 @@ import br.edu.ufcg.aweseries.util.Validate;
 public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season> {
     private TreeMap<Integer, Season> map;
     private int seriesId;
-    private Set<DomainObjectListener<SeasonSet>> listeners;
+    private Set<DomainObjectListener<SeasonSet>> domainObjectListeners;
+    private List<SeasonSetListener> listeners;
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
 
         this.seriesId = seriesId;
         this.map = new TreeMap<Integer, Season>();
-        this.listeners = new HashSet<DomainObjectListener<SeasonSet>>();
+        this.domainObjectListeners = new HashSet<DomainObjectListener<SeasonSet>>();
+        this.listeners = new LinkedList<SeasonSetListener>();
     }
 
     public int seriesId() {
@@ -61,13 +64,9 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     }
 
     public void addEpisode(Episode episode) {
-        if (episode == null) {
-            throw new IllegalArgumentException("episode should not be null");
-        }
-
-        if (episode.seriesId() != this.seriesId) {
-            throw new IllegalArgumentException("episode belongs to another series");
-        }
+        Validate.isNonNull(episode, "episode should not be null");
+        
+        Validate.isTrue(episode.seriesId() == this.seriesId, "episode belongs to another series");
 
         if (!this.hasSeason(episode.seasonNumber())) {
             this.addSeason(episode.seasonNumber());
@@ -78,10 +77,8 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     }
 
     public void addAllEpisodes(List<Episode> episodes) {
-        if (episodes == null) {
-            throw new IllegalArgumentException("episodes should not be null");
-        }
-
+        Validate.isNonNull(episodes, "episodes should not be null");
+        
         for (Episode e : episodes) {
             this.addEpisode(e);
         }
@@ -250,25 +247,33 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     
     @Deprecated
     public boolean addListener(DomainObjectListener<SeasonSet> listener) {
-        return this.listeners.add(listener);
+        return this.domainObjectListeners.add(listener);
     }
     
     @Deprecated
     public boolean removeListener(DomainObjectListener<SeasonSet> listener) {
-        return this.listeners.remove(listener);
+        return this.domainObjectListeners.remove(listener);
     }
     
+    public boolean addListener(SeasonSetListener listener) {
+        Validate.isNonNull(listener, "listener must not be null.");
+        return this.listeners.add(listener);
+    }
+    
+    public boolean removeListener(SeasonSetListener listener) {
+        return this.listeners.remove(listener);
+    }
+
+    @Deprecated
     private void notifyListeners() {
-        for (DomainObjectListener<SeasonSet> listener : this.listeners) {
+        for (DomainObjectListener<SeasonSet> listener : this.domainObjectListeners) {
             listener.onUpdate(this);            
         }        
     }
 
     public void mergeWith(SeasonSet other) {
-        if (other == null) {
-            throw new IllegalArgumentException("other seasonSet to merge should not be null");
-        }
-
+        Validate.isNonNull(other, "other seasonSet to merge should not be null");
+        
         for (Season s : this.map.values()) {
             if (other.hasSeason(s.number())) {
                 s.mergeWith(other.season(s.number()));
