@@ -32,7 +32,7 @@ import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.util.Validate;
 
-public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season> {
+public class SeasonSet implements Iterable<Season>, SeasonListener {
     private TreeMap<Integer, Season> map;
     private int seriesId;
     private Set<DomainObjectListener<SeasonSet>> domainObjectListeners;
@@ -86,7 +86,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
 
     private void addSeason(int seasonNumber) {
         Season newSeason = new Season(this.seriesId,  seasonNumber);
-        newSeason.addListener(this);
+        newSeason.register(this);
         
         this.map.put(seasonNumber, newSeason);
     }
@@ -239,11 +239,6 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
             }
         };
     }
-
-    @Override
-    public void onUpdate(Season entity) {
-        this.notifyListeners();
-    }
     
     @Deprecated
     public boolean addListener(DomainObjectListener<SeasonSet> listener) {
@@ -285,5 +280,29 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
                 this.addAllEpisodes(s.episodes());
             }
         }
+    }
+
+    @Override
+    public void onChangeNextEpisodeToSee(Season season) {
+        //TODO A better implementation
+        this.notifyListeners();
+    }
+
+    @Override
+    public void onMarkAsNotSeen(Season season) {
+        //TODO A better implementation
+        this.notifyListeners();
+    }
+
+    @Override
+    public void onMarkAsSeen(Season season) {
+        //TODO A better implementation
+        this.notifyListeners();
+    }
+
+    @Override
+    public void onMerge(Season season) {
+        //TODO A better implementation
+        this.notifyListeners();
     }
 }
