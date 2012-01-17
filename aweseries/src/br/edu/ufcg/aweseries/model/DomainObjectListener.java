@@ -22,6 +22,7 @@
 
 package br.edu.ufcg.aweseries.model;
 
+@Deprecated
 public interface DomainObjectListener<T> {
 
     void onUpdate(T entity);
