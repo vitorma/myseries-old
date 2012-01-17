@@ -207,14 +207,14 @@ public class EpisodeTest {
     		Assert.assertTrue(e.wasSeen());
     	}
 
-    	Mockito.verify(l1, Mockito.times(1)).onMarkedAsSeen(e);
-    	Mockito.verify(l2, Mockito.times(1)).onMarkedAsSeen(e);
+    	Mockito.verify(l1, Mockito.times(1)).onMarkAsSeen(e);
+    	Mockito.verify(l2, Mockito.times(1)).onMarkAsSeen(e);
 
-    	Mockito.verify(l1, Mockito.times(0)).onMarkedAsNotSeen(e);
-    	Mockito.verify(l2, Mockito.times(0)).onMarkedAsNotSeen(e);
+    	Mockito.verify(l1, Mockito.times(0)).onMarkAsNotSeen(e);
+    	Mockito.verify(l2, Mockito.times(0)).onMarkAsNotSeen(e);
 
-    	Mockito.verify(l1, Mockito.times(0)).onMerged(e);
-    	Mockito.verify(l2, Mockito.times(0)).onMerged(e);
+    	Mockito.verify(l1, Mockito.times(0)).onMerge(e);
+    	Mockito.verify(l2, Mockito.times(0)).onMerge(e);
     }
 
     @Test
@@ -238,14 +238,14 @@ public class EpisodeTest {
     		Assert.assertFalse(e.wasSeen());
     	}
 
-    	Mockito.verify(l1, Mockito.times(0)).onMarkedAsSeen(e);
-    	Mockito.verify(l2, Mockito.times(0)).onMarkedAsSeen(e);
+    	Mockito.verify(l1, Mockito.times(0)).onMarkAsSeen(e);
+    	Mockito.verify(l2, Mockito.times(0)).onMarkAsSeen(e);
 
-    	Mockito.verify(l1, Mockito.times(1)).onMarkedAsNotSeen(e);
-    	Mockito.verify(l2, Mockito.times(1)).onMarkedAsNotSeen(e);
+    	Mockito.verify(l1, Mockito.times(1)).onMarkAsNotSeen(e);
+    	Mockito.verify(l2, Mockito.times(1)).onMarkAsNotSeen(e);
 
-    	Mockito.verify(l1, Mockito.times(0)).onMerged(e);
-    	Mockito.verify(l2, Mockito.times(0)).onMerged(e);
+    	Mockito.verify(l1, Mockito.times(0)).onMerge(e);
+    	Mockito.verify(l2, Mockito.times(0)).onMerge(e);
     }
 
     //Merge-------------------------------------------------------------------------------------------------------------
@@ -381,14 +381,14 @@ public class EpisodeTest {
     		Assert.assertEquals(false, e1.wasSeen());
     	}
 
-    	Mockito.verify(l1, Mockito.times(0)).onMarkedAsSeen(e1);
-    	Mockito.verify(l2, Mockito.times(0)).onMarkedAsSeen(e1);
+    	Mockito.verify(l1, Mockito.times(0)).onMarkAsSeen(e1);
+    	Mockito.verify(l2, Mockito.times(0)).onMarkAsSeen(e1);
 
-    	Mockito.verify(l1, Mockito.times(0)).onMarkedAsNotSeen(e1);
-    	Mockito.verify(l2, Mockito.times(0)).onMarkedAsNotSeen(e1);
+    	Mockito.verify(l1, Mockito.times(0)).onMarkAsNotSeen(e1);
+    	Mockito.verify(l2, Mockito.times(0)).onMarkAsNotSeen(e1);
 
-    	Mockito.verify(l1, Mockito.times(1000)).onMerged(e1);
-    	Mockito.verify(l2, Mockito.times(1000)).onMerged(e1);
+    	Mockito.verify(l1, Mockito.times(1000)).onMerge(e1);
+    	Mockito.verify(l2, Mockito.times(1000)).onMerge(e1);
     }
 
     //Registration and deregistration of listeners----------------------------------------------------------------------
