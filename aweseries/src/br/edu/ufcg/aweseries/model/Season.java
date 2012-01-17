@@ -91,10 +91,9 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     }
 
     public Episode nextEpisodeToAir() {
-        //TODO today should be given as a parameter
-        final Date today = new Date();
+        Date today = new Date(); //TODO should be a parameter
 
-        for (final Episode e : this) {
+        for (Episode e : this) {
             if (e.airdate() == null) {
                 continue;
             }
@@ -108,12 +107,11 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     }
 
     public Episode lastAiredEpisode() {
-        //TODO today should be given as a parameter
-        final Date today = new Date();
-        final Iterator<Episode> it = this.reversedIterator();
+        Date today = new Date(); //TODO should be a parameter
 
+        Iterator<Episode> it = this.reversedIterator();
         while (it.hasNext()) {
-            final Episode e = it.next();
+            Episode e = it.next();
             if (Dates.compare(e.airdate(), today) <=0) {
              return e; 
             }
@@ -123,11 +121,10 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     }
 
     public List<Episode> lastAiredNotSeenEpisodes() {
-        //TODO today should be given as a parameter
-        final Date today = new Date();
-        final List<Episode> list = new ArrayList<Episode>();
+        Date today = new Date(); //TODO should be a parameter
+        List<Episode> list = new ArrayList<Episode>();
 
-        for (final Episode e : this) {
+        for (Episode e : this) {
             if (Dates.compare(e.airdate(), today) < 0 && !e.wasSeen()) {
                 list.add(e);
             }
@@ -137,9 +134,8 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     }
 
     public List<Episode> nextEpisodesToAir() {
-        //TODO today should be given as a parameter
-        final Date today = new Date();
-        final List<Episode> list = new ArrayList<Episode>();
+        Date today = new Date(); //TODO should be a parameter
+        List<Episode> list = new ArrayList<Episode>();
 
         for (Episode e : this) {
             if (e.airdate() == null) {
@@ -204,17 +200,17 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     }
 
     private void mergeAlreadyExistentEpisodesFrom(Season other) {
-        for (Episode ourEpisode : this.episodes.values()) {
-            if (other.has(ourEpisode)) {
-                ourEpisode.mergeWith(other.get(ourEpisode.number()));
+        for (Episode e : this.episodes.values()) {
+            if (other.has(e)) {
+                e.mergeWith(other.get(e.number()));
             }
         }
     }
 
     private void addNonExistentYetEpisodesFrom(Season other) {        
-        for (Episode theirEpisode : other.episodes.values()) {
-            if (!this.has(theirEpisode)) {
-                this.addEpisode(theirEpisode);
+        for (Episode e : other.episodes.values()) {
+            if (!this.has(e)) {
+                this.addEpisode(e);
             }
         }
     }
@@ -229,13 +225,12 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     public Iterator<Episode> reversedIterator() {
         //TODO Check whether this iterator is really needed, otherwise remove it
         return new Iterator<Episode>() {
-            private int episodeNumber = (numberOfEpisodes() > 0) ? Season.this
-                    .lastEpisodeNumber() : Integer.MIN_VALUE;
+            private int episodeNumber =
+                numberOfEpisodes() > 0 ? Season.this.lastEpisodeNumber() : Integer.MIN_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (numberOfEpisodes() > 0)
-                        && (this.episodeNumber >= Season.this.firstEpisodeNumber());
+                return numberOfEpisodes() > 0 && this.episodeNumber >= Season.this.firstEpisodeNumber();
             }
 
             @Override
@@ -257,7 +252,6 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     }
 
     public int numberOfEpisodes() {
-        //TODO Turn private
         return this.episodes.size();
     }
     
@@ -376,7 +370,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         Season other = (Season) obj;
         return other.seriesId == this.seriesId && other.number == this.number;
     }
-    
+
     //DomainObjectListeners---------------------------------------------------------------------------------------------
     //TODO Remove it ASAP
     
