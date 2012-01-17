@@ -29,25 +29,22 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 
-import br.edu.ufcg.aweseries.util.Numbers;
-import br.edu.ufcg.aweseries.util.Strings;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season> {
     private TreeMap<Integer, Season> map;
-    private String seriesId;
+    private int seriesId;
     private Set<DomainObjectListener<SeasonSet>> listeners;
 
-    public SeasonSet(String seriesId) {
-        if ((seriesId == null) || Strings.isBlank(seriesId)) {
-            throw new IllegalArgumentException("invalid series id for season set");
-        }
+    public SeasonSet(int seriesId) {
+        Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
 
         this.seriesId = seriesId;
         this.map = new TreeMap<Integer, Season>();
         this.listeners = new HashSet<DomainObjectListener<SeasonSet>>();
     }
 
-    public String getSeriesId() {
+    public int getSeriesId() {
         return this.seriesId;
     }
 
@@ -68,7 +65,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
             throw new IllegalArgumentException("episode should not be null");
         }
 
-        if (!String.valueOf(episode.seriesId()).equals(this.seriesId)) {
+        if (episode.seriesId() != this.seriesId) {
             throw new IllegalArgumentException("episode belongs to another series");
         }
 
@@ -91,8 +88,7 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     }
 
     private void addSeason(int seasonNumber) {
-        final int invalidSeriesId = -1;
-        Season newSeason = new Season(Numbers.parseInt(this.seriesId, invalidSeriesId),  seasonNumber);
+        Season newSeason = new Season(this.seriesId,  seasonNumber);
         newSeason.addListener(this);
         
         this.map.put(seasonNumber, newSeason);
@@ -191,12 +187,13 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
     @Override
     public Iterator<Season> iterator() {
         return new Iterator<Season>() {
-            private int seasonNumber =
-                (getNumberOfSeasons() > 0) ? SeasonSet.this.getFirstSeasonNumber() : Integer.MAX_VALUE;
+            private int seasonNumber = (getNumberOfSeasons() > 0) ? SeasonSet.this
+                    .getFirstSeasonNumber() : Integer.MAX_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (getNumberOfSeasons() > 0) && (this.seasonNumber <= SeasonSet.this.getLastSeasonNumber());
+                return (getNumberOfSeasons() > 0)
+                        && (this.seasonNumber <= SeasonSet.this.getLastSeasonNumber());
             }
 
             @Override
@@ -224,7 +221,8 @@ public class SeasonSet implements Iterable<Season>, DomainObjectListener<Season>
 
             @Override
             public boolean hasNext() {
-                return (getNumberOfSeasons() > 0) && (this.seasonNumber >= SeasonSet.this.getFirstSeasonNumber());
+                return (getNumberOfSeasons() > 0)
+                        && (this.seasonNumber >= SeasonSet.this.getFirstSeasonNumber());
             }
 
             @Override

@@ -198,7 +198,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
     }
 
     private void setSeasons(SeasonSet seasons) {
-        if ((seasons == null) || !seasons.getSeriesId().equals(this.id)) {
+        if ((seasons == null) || !(String.valueOf(seasons.getSeriesId())).equals(this.id)) {
             throw new IllegalArgumentException("invalid seasons for series");
         }
 
@@ -362,7 +362,8 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
         public Builder withPoster(byte[] posterBitmap) {
             if (posterBitmap != null) {
-                this.posterBitmap = BitmapFactory.decodeByteArray(posterBitmap, 0, posterBitmap.length);
+                this.posterBitmap = BitmapFactory.decodeByteArray(posterBitmap, 0,
+                        posterBitmap.length);
             }
             return this;
         }
@@ -373,7 +374,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
             }
 
             if (this.seasons == null) {
-                this.seasons = new SeasonSet(String.valueOf(episode.seriesId()));
+                this.seasons = new SeasonSet(episode.seriesId());
             }
 
             this.seasons.addEpisode(episode);
@@ -393,7 +394,8 @@ public class Series implements DomainObjectListener<SeasonSet> {
             series.setGenres(this.genres != null ? this.genres : DEFAULT_STRING);
             series.setActors(this.actors != null ? this.actors : DEFAULT_STRING);
             series.setPoster(this.posterBitmap != null ? new Poster(this.posterBitmap) : null);
-            series.setSeasons(this.seasons != null ? this.seasons : new SeasonSet(this.id));
+            series.setSeasons(this.seasons != null ? this.seasons : new SeasonSet(Integer
+                    .parseInt(this.id)));
 
             return series;
         }

@@ -38,7 +38,7 @@ public class SeriesTest {
 
     @Before
     public final void setUp() {
-        this.series1 = new Series.Builder().withId("id 1")
+        this.series1 = new Series.Builder().withId("1")
                                            .withName("series 1")
                                            .withStatus("status 1")
                                            .withAirsDay("airs day 1")
@@ -51,9 +51,9 @@ public class SeriesTest {
                                            .withActors("actors 1")
                                            .build();
 
-        this.series2 = new Series("id 1", "series 2");
-        this.series3 = new Series("id 1", "series");
-        this.series4 = new Series("id 4", "series");
+        this.series2 = new Series("1", "series 2");
+        this.series3 = new Series("1", "series");
+        this.series4 = new Series("4", "series");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -84,7 +84,7 @@ public class SeriesTest {
 
     @Test
     public final void testGetId() {
-        Assert.assertEquals("id 1", this.series1.id());
+        Assert.assertEquals("1", this.series1.id());
     }
 
     @Test
