@@ -41,7 +41,7 @@ public class SeasonSetTest {
 
     @Before
     public void setUp() throws Exception {
-        this.seasons = new SeasonSet("1");
+        this.seasons = new SeasonSet(1);
         this.episode1 = Mockito.mock(Episode.class);
         this.episode2 = Mockito.mock(Episode.class);
         this.episode3 = Mockito.mock(Episode.class);
@@ -61,7 +61,6 @@ public class SeasonSetTest {
         Mockito.when(this.episode3.number()).thenReturn(1);
         Mockito.when(this.episode3.seasonNumber()).thenReturn(2);
     }
-
     
     @Test(expected = IllegalArgumentException.class)
     public final void testAddDuplicatedEpisode() {
@@ -99,7 +98,7 @@ public class SeasonSetTest {
         
     @Test
     public void testAddListener() {
-        SeasonSet seasonSet = new SeasonSet("1");
+        SeasonSet seasonSet = new SeasonSet(1);
         
         DomainObjectListener<SeasonSet> listener1 = Mockito.mock(DomainObjectListener.class);
         DomainObjectListener<SeasonSet> listener2 = Mockito.mock(DomainObjectListener.class);
@@ -137,7 +136,7 @@ public class SeasonSetTest {
     
     @Test
     public void testRemoveListener() {
-        SeasonSet seasonSet = new SeasonSet("1");
+        SeasonSet seasonSet = new SeasonSet(1);
         
         DomainObjectListener<SeasonSet> listener1 = Mockito.mock(DomainObjectListener.class);
         DomainObjectListener<SeasonSet> listener2 = Mockito.mock(DomainObjectListener.class);
