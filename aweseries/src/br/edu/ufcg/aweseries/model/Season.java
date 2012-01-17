@@ -161,6 +161,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
 
         if (nextToSeeShouldBe(episode)) {
             this.nextEpisodeToSee = episode;
+            this.notifyThatNextToSeeChanged();
         }
 
         episode.register(this);

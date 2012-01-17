@@ -345,6 +345,7 @@ public class SeasonTest {
 
     @Test
     public final void testAddEpisode() {
+    	//TODO Verify notification when nextToSeeChange
     	Season s1 = new Season(1, 1);
 
     	Episode e1 = this.mockEpisode(1, 1, 1, 1);
