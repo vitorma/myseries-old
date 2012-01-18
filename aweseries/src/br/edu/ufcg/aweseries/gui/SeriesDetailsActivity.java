@@ -62,9 +62,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
     private TextView seriesGenre;
     private TextView seriesNetwork;
     private Button seasonsButton;
-    private TextView nextToAir;
     private TextView nextToSee;
-    private TextView nextToAirLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +82,6 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
         this.seriesGenre = (TextView) findViewById(R.id.genreTextView);
         this.seriesRuntime = (TextView) findViewById(R.id.runtimeTextView);
         this.seasonsButton = (Button) findViewById(R.id.seasonsButton);
-        this.nextToAir = (TextView) findViewById(R.id.nextToAirTextView);
-        this.nextToAirLabel = (TextView) findViewById(R.id.nextToAirLabel);
         this.nextToSee = (TextView) findViewById(R.id.nextToSeeTextView);
 
         populateView();
@@ -227,28 +223,6 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
             this.seriesRuntime.setText(String.format(
                     this.getString(R.string.runtime_minutes_format), series.runtime()));
 
-            if (series.isContinuing()) {
-                final Episode nextToAir = series.seasons().nextEpisodeToAir();
-
-                if (nextToAir != null) {
-                    this.nextToAir.setText(series.seasons().nextEpisodeToAir().name());
-                } else {
-                    this.nextToAir.setText(R.string.up_to_date);
-
-                }
-            }
-
-            if (series.isEnded()) {
-                this.nextToAirLabel.setText(R.string.last_episode_aired);
-                final Episode e = series.seasons().lastAiredEpisode();
-                if (e != null) {
-                    this.nextToAir.setText(e.toString());
-                } else {
-                    this.nextToAir.setText(R.string.no_episode_aired);
-                }
-
-            }
-
             final Episode nextToSee = series.seasons().nextEpisodeToSee();
             if (nextToSee != null) {
                 this.nextToSee.setText(series.seasons().nextEpisodeToSee().name());
@@ -275,8 +249,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
      * Shows progress dialog.
      */
     private void showProgressDialog() {
-        this.dialog = ProgressDialog.show(SeriesDetailsActivity.this, "",
-                this.getString(R.string.loading), true);
+        this.dialog = ProgressDialog.show(SeriesDetailsActivity.this, "", this.getString(R.string.loading), true);
 
     }
 
