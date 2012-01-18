@@ -94,10 +94,10 @@ public class SeasonTest {
         this.episode3 = mockEpisode(3, 1, 3, 1);
         this.episode4 = mockEpisode(4, 1, 4, 1);
         
-        this.season.addEpisode(this.episode1);
-        this.season.addEpisode(this.episode2);
-        this.season.addEpisode(this.episode3);
-        this.season.addEpisode(this.episode4);
+        this.season.include(this.episode1);
+        this.season.include(this.episode2);
+        this.season.include(this.episode3);
+        this.season.include(this.episode4);
     }
 
     //Construction------------------------------------------------------------------------------------------------------
@@ -151,11 +151,11 @@ public class SeasonTest {
         Episode episode9 = mockEpisode(9, 1, 9, 1);
         Mockito.when(episode9.airdate()).thenReturn(tenSecondsAgo);
         
-        this.season.addEpisode(episode6);
-        this.season.addEpisode(episode5);
-        this.season.addEpisode(episode7);
-        this.season.addEpisode(episode9);
-        this.season.addEpisode(episode8);
+        this.season.include(episode6);
+        this.season.include(episode5);
+        this.season.include(episode7);
+        this.season.include(episode9);
+        this.season.include(episode8);
         
         lastNotSeenEpisodes.add(episode5);
         lastNotSeenEpisodes.add(episode6);
@@ -220,17 +220,17 @@ public class SeasonTest {
         
 
         nextEpisodes.add(episode7);
-        this.season.addEpisode(episode7);
+        this.season.include(episode7);
         Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
         
         nextEpisodes.clear();
         nextEpisodes.add(episode6);
         nextEpisodes.add(episode7);
-        this.season.addEpisode(episode6);
+        this.season.include(episode6);
         Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
 
         nextEpisodes.add(episode8);
-        this.season.addEpisode(episode8);
+        this.season.include(episode8);
         Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
         
         nextEpisodes.clear();
@@ -238,7 +238,7 @@ public class SeasonTest {
         nextEpisodes.add(episode6);
         nextEpisodes.add(episode7);
         nextEpisodes.add(episode8);
-        this.season.addEpisode(episode5);
+        this.season.include(episode5);
         Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
     }
 
@@ -246,25 +246,25 @@ public class SeasonTest {
 
     @Test(expected=IllegalArgumentException.class)
     public final void testAddNullEpisode() {
-    	new Season(1, 1).addEpisode(null);
+    	new Season(1, 1).include(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public final void testAddEpisodeWithAnotherSeriesId() {
-    	new Season(1, 1).addEpisode(this.mockEpisode(1, 2, 1, 1));
+    	new Season(1, 1).include(this.mockEpisode(1, 2, 1, 1));
     }
 
     @Test(expected=IllegalArgumentException.class)
     public final void testAddEpisodeWithAnotherSeasonNumber() {
-    	new Season(1, 1).addEpisode(this.mockEpisode(1, 1, 1, 2));
+    	new Season(1, 1).include(this.mockEpisode(1, 1, 1, 2));
     }
 
     @Test(expected=IllegalArgumentException.class)
     public final void testAddAlreadyExistentEpisode() {
     	Season s = new Season(1, 1);
     	Episode e = this.mockEpisode(1, 1, 1, 1);
-    	s.addEpisode(e);
-    	s.addEpisode(e);
+    	s.include(e);
+    	s.include(e);
     }
 
     @Test
@@ -276,11 +276,11 @@ public class SeasonTest {
     	Episode e2 = this.mockEpisode(2, 1, 2, 1);
     	this.markAsNotSeen(e1, e2);
 
-    	s1.addEpisode(e1);
-    	s1.addEpisode(e2);
+    	s1.include(e1);
+    	s1.include(e2);
 
-    	Assert.assertTrue(s1.has(e1));
-    	Assert.assertTrue(s1.has(e2));
+    	Assert.assertTrue(s1.includes(e1));
+    	Assert.assertTrue(s1.includes(e2));
     	Assert.assertFalse(s1.wasSeen());
     	Assert.assertEquals(e1, s1.nextEpisodeToSee());
 
@@ -290,11 +290,11 @@ public class SeasonTest {
     	Episode e4 = this.mockEpisode(2, 1, 2, 2);
     	this.markAsSeen(e3, e4);
 
-    	s2.addEpisode(e3);
-    	s2.addEpisode(e4);
+    	s2.include(e3);
+    	s2.include(e4);
 
-    	Assert.assertTrue(s2.has(e3));
-    	Assert.assertTrue(s2.has(e4));
+    	Assert.assertTrue(s2.includes(e3));
+    	Assert.assertTrue(s2.includes(e4));
     	Assert.assertTrue(s2.wasSeen());
     	Assert.assertNull(s2.nextEpisodeToSee());
     }
@@ -308,8 +308,8 @@ public class SeasonTest {
     	Episode e1 = this.mockEpisode(1, 1, 1, 1);
     	Episode e2  = this.mockEpisode(2, 1, 2, 1);
 
-    	s.addEpisode(e1);
-    	s.addEpisode(e2);
+    	s.include(e1);
+    	s.include(e2);
 
     	SeasonListener l1 = this.mockListener();
     	SeasonListener l2 = this.mockListener();
@@ -339,8 +339,8 @@ public class SeasonTest {
     	Episode e2  = this.mockEpisode(2, 1, 2, 1);
     	this.markAsSeen(e1, e2);
 
-    	s.addEpisode(e1);
-    	s.addEpisode(e2);
+    	s.include(e1);
+    	s.include(e2);
 
     	SeasonListener l1 = this.mockListener();
     	SeasonListener l2 = this.mockListener();
@@ -387,8 +387,8 @@ public class SeasonTest {
     	Episode e1 = this.mockEpisode(1, 1, 1, 1);
     	Episode e2 = this.mockEpisode(2, 1, 2, 1);
 
-    	s1.addEpisode(e1);
-    	s2.addEpisode(e2);
+    	s1.include(e1);
+    	s2.include(e2);
 
     	SeasonListener l1 = this.mockListener();
     	SeasonListener l2 = this.mockListener();
@@ -397,18 +397,18 @@ public class SeasonTest {
     	s2.register(l2);
 
     	s1.mergeWith(s2);
-    	Assert.assertTrue(s1.has(e1));
-    	Assert.assertTrue(s1.has(e2));
-    	Assert.assertTrue(s2.has(e2));
-    	Assert.assertFalse(s2.has(e1));
+    	Assert.assertTrue(s1.includes(e1));
+    	Assert.assertTrue(s1.includes(e2));
+    	Assert.assertTrue(s2.includes(e2));
+    	Assert.assertFalse(s2.includes(e1));
 
     	Mockito.verify(l1).onMerge(s1);
 
     	s2.mergeWith(s1);
-    	Assert.assertTrue(s1.has(e1));
-    	Assert.assertTrue(s1.has(e2));
-    	Assert.assertTrue(s2.has(e2));
-    	Assert.assertTrue(s2.has(e1));
+    	Assert.assertTrue(s1.includes(e1));
+    	Assert.assertTrue(s1.includes(e2));
+    	Assert.assertTrue(s2.includes(e2));
+    	Assert.assertTrue(s2.includes(e1));
 
     	Mockito.verify(l2).onMerge(s2);
     }
@@ -423,8 +423,8 @@ public class SeasonTest {
     	Episode e2 = this.mockEpisode(2, 1, 2, 1);
     	this.markAsNotSeen(e1, e2);
 
-    	s.addEpisode(e1);
-    	s.addEpisode(e2);
+    	s.include(e1);
+    	s.include(e2);
 
     	SeasonListener l1 = this.mockListener();
     	SeasonListener l2 = this.mockListener();
@@ -466,8 +466,8 @@ public class SeasonTest {
     	Episode e2 = this.mockEpisode(2, 1, 2, 1);
     	this.markAsSeen(e1, e2);
 
-    	s.addEpisode(e1);
-    	s.addEpisode(e2);
+    	s.include(e1);
+    	s.include(e2);
 
     	SeasonListener l1 = this.mockListener();
     	SeasonListener l2 = this.mockListener();

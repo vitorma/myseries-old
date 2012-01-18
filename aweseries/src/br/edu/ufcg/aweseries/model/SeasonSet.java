@@ -65,7 +65,7 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
             this.addSeason(episode.seasonNumber());
         }
 
-        this.map.get(episode.seasonNumber()).addEpisode(episode);
+        this.map.get(episode.seasonNumber()).include(episode);
     }
 
     private void addSeason(int seasonNumber) {

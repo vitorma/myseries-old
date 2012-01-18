@@ -23,16 +23,14 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Validate;
 
-public class Season implements Iterable<Episode>, EpisodeListener {
+public class Season implements EpisodeListener {
     private int seriesId;
     private int number;
     private TreeMap<Integer, Episode> episodes;
@@ -51,7 +49,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         this.listeners = new LinkedList<SeasonListener>();
     }
 
-    //Fields------------------------------------------------------------------------------------------------------------
+    //Mandatory attributes----------------------------------------------------------------------------------------------
 
     public int seriesId() {
         return this.seriesId;
@@ -61,35 +59,51 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         return this.number;
     }
 
-    public List<Episode> episodes() {
-        return new ArrayList<Episode>(this.episodes.values());
+    //Episodes----------------------------------------------------------------------------------------------------------
+    
+    public int numberOfEpisodes() {
+        return this.episodes.size();
     }
-
-    //Queries-----------------------------------------------------------------------------------------------------------
-    //TODO Once the new user interface is defined and it changed the application requirements with respect to query
-    //     episodes, some of these methods will be removed and others will be added.
-
-    public boolean has(Episode episode) {
+    
+    public boolean includes(Episode episode) {
         return this.episodes.containsValue(episode);
     }
     
-    public Episode get(int episodeNumber) {
-        return this.episodes.get(episodeNumber);
+    public Episode episode(int number) {
+        return this.episodes.get(number);
+    }
+    
+    public List<Episode> episodes() {
+        return new ArrayList<Episode>(this.episodes.values());
+    }
+    
+    public void include(Episode episode) {
+        Validate.isNonNull(episode, "episode should be non-null");
+        Validate.isTrue(episode.seriesId() == this.seriesId, "episode should have the same seriesId as this");
+        Validate.isTrue(episode.seasonNumber() == this.number, "episode should have the same seasonNumber as this");
+        Validate.isTrue(!this.includes(episode), "episode should be not already included in this");
+        
+        this.episodes.put(episode.number(), episode);
+        
+        if (episode.wasSeen()) {
+            this.numberOfSeenEpisodes++;
+        }
+
+        if (nextToSeeShouldBe(episode)) {
+            this.nextEpisodeToSee = episode;
+            this.notifyThatNextToSeeChanged();
+        }
+        
+        episode.register(this);
     }
 
-    public boolean wasSeen() {
-        return this.numberOfSeenEpisodes == this.episodes.size();
-    }
-
-    public Episode nextEpisodeToSee() {
-        return this.nextEpisodeToSee;
-    }
+    //TODO Remove these methods ASAP : use episodesBy(Specification<Episode>)-------------------------------------------
 
     public List<Episode> lastAiredNotSeenEpisodes() {
-        Date today = new Date(); //TODO should be a parameter
+        Date today = new Date();
         List<Episode> list = new ArrayList<Episode>();
 
-        for (Episode e : this) {
+        for (Episode e : this.episodes.values()) {
             if (Dates.compare(e.airdate(), today) < 0 && !e.wasSeen()) {
                 list.add(e);
             }
@@ -99,10 +113,10 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     }
 
     public List<Episode> nextEpisodesToAir() {
-        Date today = new Date(); //TODO should be a parameter
+        Date today = new Date();
         List<Episode> list = new ArrayList<Episode>();
 
-        for (Episode e : this) {
+        for (Episode e : this.episodes.values()) {
             if (e.airdate() == null) {
                 continue;
             }
@@ -115,43 +129,33 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         return list;
     }
 
-    //Changes-----------------------------------------------------------------------------------------------------------
-
-    public void addEpisode(Episode episode) {
-        Validate.isNonNull(episode, "episode should be non-null");
-        Validate.isTrue(episode.seriesId() == this.seriesId, "episode should have the same seriesId as this");
-        Validate.isTrue(episode.seasonNumber() == this.number, "episode should have the same seasonNumber as this");
-        Validate.isTrue(!this.has(episode), "episode should be not already included in this");
-
-        this.episodes.put(episode.number(), episode);
-
-        if (episode.wasSeen()) {
-            this.numberOfSeenEpisodes++;
-        }
-
-        if (nextToSeeShouldBe(episode)) {
-            this.nextEpisodeToSee = episode;
-            this.notifyThatNextToSeeChanged();
-        }
-
-        episode.register(this);
+    //Seen--------------------------------------------------------------------------------------------------------------
+    
+    public int numberOfSeenEpisodes() {
+        return this.numberOfSeenEpisodes;
     }
 
-    private boolean nextToSeeShouldBe(Episode e) {
-        return !e.wasSeen() && (this.nextEpisodeToSee == null || this.nextEpisodeToSee.number() > e.number());
+    public boolean wasSeen() {
+        return this.numberOfSeenEpisodes == this.episodes.size();
     }
 
+    public Episode nextEpisodeToSee() {
+        return this.nextEpisodeToSee;
+    }
+    
     public void markAsSeen() {
-        for (Episode e : this) {
+        for (Episode e : this.episodes.values()) {
             e.markAsSeen();
         }
     }
-
+    
     public void markAsNotSeen() {
-        for (Episode e : this) {
+        for (Episode e : this.episodes.values()) {
             e.markAsNotSeen();
         }
     }
+
+    //Merge-------------------------------------------------------------------------------------------------------------
 
     public void mergeWith(Season other) {
         Validate.isNonNull(other, "other should be non-null");
@@ -164,71 +168,7 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         this.notifyThatWasMerged();
     }
 
-    private void mergeAlreadyExistentEpisodesFrom(Season other) {
-        for (Episode e : this.episodes.values()) {
-            if (other.has(e)) {
-                e.mergeWith(other.get(e.number()));
-            }
-        }
-    }
-
-    private void addNonExistentYetEpisodesFrom(Season other) {        
-        for (Episode e : other.episodes.values()) {
-            if (!this.has(e)) {
-                this.addEpisode(e);
-            }
-        }
-    }
-
-    //Iteration---------------------------------------------------------------------------------------------------------
-
-    @Override
-    public Iterator<Episode> iterator() {
-        return this.episodes.values().iterator();
-    }
-
-    public Iterator<Episode> reversedIterator() {
-        //TODO Check whether this iterator is really needed, otherwise remove it
-        return new Iterator<Episode>() {
-            private int episodeNumber =
-                numberOfEpisodes() > 0 ? Season.this.lastEpisodeNumber() : Integer.MIN_VALUE;
-
-            @Override
-            public boolean hasNext() {
-                return numberOfEpisodes() > 0 && this.episodeNumber >= Season.this.firstEpisodeNumber();
-            }
-
-            @Override
-            public Episode next() {
-                if (!this.hasNext()) {
-                    throw new NoSuchElementException();
-                }
-
-                Episode next = Season.this.get(this.episodeNumber);
-                this.episodeNumber--;
-                return next;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    public int numberOfEpisodes() {
-        return this.episodes.size();
-    }
-    
-    private int firstEpisodeNumber() {
-        return this.episodes.firstKey();
-    }
-
-    private int lastEpisodeNumber() {
-        return this.episodes.lastKey();
-    }
-
-    //Listeners---------------------------------------------------------------------------------------------------------
+    //SeasonListener----------------------------------------------------------------------------------------------------
     
     public boolean register(SeasonListener listener) {
         return !this.isRegistered(listener) && this.listeners.add(listener);
@@ -236,40 +176,6 @@ public class Season implements Iterable<Episode>, EpisodeListener {
     
     public boolean deregister(SeasonListener listener) {
         return this.isRegistered(listener) && this.listeners.remove(listener);
-    }
-    
-    private boolean isRegistered(SeasonListener listener) {
-        Validate.isNonNull(listener, "listener should be non-null");
-        
-        for (SeasonListener l : this.listeners) {
-            if (l == listener) return true;
-        }
-        
-        return false;
-    }
-    
-    private void notifyThatWasMarkedAsSeen() {
-        for (SeasonListener l : this.listeners) {
-            l.onMarkAsSeen(this);
-        }
-    }
-    
-    private void notifyThatWasMarkedAsNotSeen() {
-        for (SeasonListener l : this.listeners) {
-            l.onMarkAsNotSeen(this);
-        }
-    }
-
-    private void notifyThatNextToSeeChanged() {
-        for (SeasonListener l : this.listeners) {
-            l.onChangeNextEpisodeToSee(this);
-        }
-    }
-
-    private void notifyThatWasMerged() {
-        for (SeasonListener l : this.listeners) {
-            l.onMerge(this);
-        }
     }
 
     //EpisodeListener---------------------------------------------------------------------------------------------------
@@ -303,14 +209,6 @@ public class Season implements Iterable<Episode>, EpisodeListener {
 
         this.numberOfSeenEpisodes--;
     }
-    
-    private Episode findNextEpisodeToSee() {
-        for (Episode e : this) {
-            if (!e.wasSeen()) return e;
-        }
-        
-        return null;
-    }
 
     @Override
     public void onMerge(Episode e) {
@@ -330,5 +228,69 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         if (!(obj instanceof Season)) return false;
         Season other = (Season) obj;
         return other.seriesId == this.seriesId && other.number == this.number;
+    }
+
+    //Auxiliary---------------------------------------------------------------------------------------------------------
+    
+    private boolean nextToSeeShouldBe(Episode e) {
+        return !e.wasSeen() && (this.nextEpisodeToSee == null || this.nextEpisodeToSee.number() > e.number());
+    }
+    
+    private Episode findNextEpisodeToSee() {
+        for (Episode e : this.episodes.values()) {
+            if (!e.wasSeen()) return e;
+        }
+        
+        return null;
+    }
+
+    private void mergeAlreadyExistentEpisodesFrom(Season other) {
+        for (Episode e : this.episodes.values()) {
+            if (other.includes(e)) {
+                e.mergeWith(other.episode(e.number()));
+            }
+        }
+    }
+
+    private void addNonExistentYetEpisodesFrom(Season other) {        
+        for (Episode e : other.episodes.values()) {
+            if (!this.includes(e)) {
+                this.include(e);
+            }
+        }
+    }
+
+    private boolean isRegistered(SeasonListener listener) {
+        Validate.isNonNull(listener, "listener should be non-null");
+        
+        for (SeasonListener l : this.listeners) {
+            if (l == listener) return true;
+        }
+        
+        return false;
+    }
+    
+    private void notifyThatWasMarkedAsSeen() {
+        for (SeasonListener l : this.listeners) {
+            l.onMarkAsSeen(this);
+        }
+    }
+    
+    private void notifyThatWasMarkedAsNotSeen() {
+        for (SeasonListener l : this.listeners) {
+            l.onMarkAsNotSeen(this);
+        }
+    }
+
+    private void notifyThatNextToSeeChanged() {
+        for (SeasonListener l : this.listeners) {
+            l.onChangeNextEpisodeToSee(this);
+        }
+    }
+
+    private void notifyThatWasMerged() {
+        for (SeasonListener l : this.listeners) {
+            l.onMerge(this);
+        }
     }
 }
