@@ -85,36 +85,6 @@ public class Season implements Iterable<Episode>, EpisodeListener {
         return this.nextEpisodeToSee;
     }
 
-    public Episode nextEpisodeToAir() {
-        Date today = new Date(); //TODO should be a parameter
-
-        for (Episode e : this) {
-            if (e.airdate() == null) {
-                continue;
-            }
-
-            if (Dates.compare(e.airdate(), today) >= 0) {
-                return e;
-            }
-        }
-
-        return null;
-    }
-
-    public Episode lastAiredEpisode() {
-        Date today = new Date(); //TODO should be a parameter
-
-        Iterator<Episode> it = this.reversedIterator();
-        while (it.hasNext()) {
-            Episode e = it.next();
-            if (Dates.compare(e.airdate(), today) <=0) {
-             return e; 
-            }
-        }
-
-        return null;
-    }
-
     public List<Episode> lastAiredNotSeenEpisodes() {
         Date today = new Date(); //TODO should be a parameter
         List<Episode> list = new ArrayList<Episode>();
