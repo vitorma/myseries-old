@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.gui;
 
 import java.util.ArrayList;
@@ -102,65 +101,27 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             if (itemView == null) {
                 final LayoutInflater li = (LayoutInflater) SeriesListActivity.this
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = li.inflate(R.layout.my_series_list_item, null);
+                itemView = li.inflate(R.layout.series_list_item, null);
             }
 
             // get views for the series fields
             final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
             final TextView name = (TextView) itemView.findViewById(R.id.nameTextView);
-            final TextView status = (TextView) itemView.findViewById(R.id.statusTextView);
-            final TextView network = (TextView) itemView.findViewById(R.id.networkTextView);
-            final TextView airTime = (TextView) itemView.findViewById(R.id.airTimeTextView);
             final TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
-            final TextView latestToAir = (TextView) itemView.findViewById(R.id.latestToAirTextView);
-            final TextView latestToAirLabel = (TextView) itemView
-                    .findViewById(R.id.latestToAirLabelTextView);
 
             // load series data
             final Series item = this.getItem(position);
             image.setImageBitmap(seriesProvider.getPosterOf(item));
             name.setText(item.name());
 
-            status.setText(item.status());
-            network.setText(item.network());
-            airTime.setText(item.airsDayAndTime());
-
             // next episode to see
             final Episode nextEpisodeToSee = item.seasons().nextEpisodeToSee();
             if (nextEpisodeToSee != null) {
-                //TODO Extract a method to get a string resource by its id
                 nextToSee.setText(Objects.nullSafe(
                         nextEpisodeToSee.name(),
-                        this.getContext().getResources().getString(R.string.unnamed_episode)));
+                        this.getContext().getString(R.string.unnamed_episode)));
             } else {
                 nextToSee.setText(R.string.up_to_date);
-            }
-
-            // latest episode to air
-            if (item.isContinuing()) {
-                latestToAirLabel.setText(R.string.next_episode_to_air);
-                final Episode nextEpisodeToAir = item.seasons().nextEpisodeToAir();
-                if (nextEpisodeToAir != null) {
-                    //TODO Extract a method to get a string resource by its id
-                    latestToAir.setText(Objects.nullSafe(
-                            nextEpisodeToAir.name(),
-                            this.getContext().getResources().getString(R.string.unnamed_episode)));
-                } else {
-                    latestToAir.setText(R.string.up_to_date);
-                }
-            }
-
-            if (item.isEnded()) {
-                latestToAirLabel.setText(R.string.last_episode_aired);
-                final Episode latestEpisodeToAir = item.seasons().lastAiredEpisode();
-                if (latestEpisodeToAir != null) {
-                    //TODO Extract a method to get a string resource by its id
-                    latestToAir.setText(Objects.nullSafe(
-                            latestEpisodeToAir.name(),
-                            this.getContext().getResources().getString(R.string.unnamed_episode)));
-                } else {
-                    latestToAir.setText(R.string.no_episode_aired);
-                }
             }
 
             return itemView;
@@ -270,7 +231,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     }
 
     private void setAdapter() {
-        this.dataAdapter = new SeriesItemViewAdapter(this, R.layout.my_series_list_item,
+        this.dataAdapter = new SeriesItemViewAdapter(this, R.layout.series_list_item,
                 new ArrayList<Series>(seriesProvider.followedSeries()));
         this.setListAdapter(this.dataAdapter);
     }

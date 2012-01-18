@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:orientation="horizontal"
+    android:baselineAligned="true">
+
+    <ImageView android:id="@+id/seriesImageView"
+        android:src="@drawable/small_poster_clapperboard"
+        android:layout_width="68dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_vertical"
+        android:scaleType="centerInside"/>
+
+    <RelativeLayout android:id="@+id/linearLayout11"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:paddingLeft="5dp"
+        android:layout_weight="1">
+
+        <TextView android:id="@+id/nameTextView"
+            android:text="@string/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="2dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView android:id="@+id/nextToSeeLabelTextView"
+            android:text="@string/next_episode_to_see"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/nameTextView"
+            style="@style/aweseries_style.15sp"/>
+
+        <TextView android:id="@+id/nextToSeeTextView"
+            android:text="@string/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/nextToSeeLabelTextView"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            style="@style/aweseries_style.15sp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
