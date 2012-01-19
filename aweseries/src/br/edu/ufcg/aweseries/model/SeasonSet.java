@@ -85,6 +85,17 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
         return episodes;
     }
 
+    public List<Episode> episodesBy(Specification<Episode> specification) {
+        List<Episode> result = new ArrayList<Episode>();
+
+        for (Season s : this) {
+            result.addAll(s.episodesBy(specification));
+        }
+
+        return result;
+    }
+
+    @Deprecated
     public List<Episode> lastAiredNotSeenEpisodes() {
         List<Episode> list = new ArrayList<Episode>();
 
@@ -113,10 +124,11 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
                 this.addAllEpisodes(s.episodes());
             }
         }
-        
+
         this.notifyMerge();
     }
 
+    @Deprecated
     public List<Episode> nextEpisodesToAir() {
         List<Episode> list = new ArrayList<Episode>();
 
@@ -166,7 +178,7 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     }
 
     //Auxiliary methods ----------------------------------------------------------------------------
-    
+
     private Episode findNextEpisodeToSee() {
         for (final Season s : this.map.values()) {
             final Episode next = s.nextEpisodeToSee();
@@ -186,15 +198,13 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     }
 
     private void updateNextEpisodeToSee() {
-        Episode next = findNextEpisodeToSee();
+        Episode next = this.findNextEpisodeToSee();
 
-        if (this.nextEpisodeToSee == next) {
+        if (this.nextEpisodeToSee == next)
             return;
-        }
 
-        if (this.nextEpisodeToSee != null && this.nextEpisodeToSee.equals(next)) {
+        if (this.nextEpisodeToSee != null && this.nextEpisodeToSee.equals(next))
             return;
-        }
 
         this.nextEpisodeToSee = next;
         this.notifyChangeNextEpisodeToSee();
@@ -206,20 +216,19 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     @Override
     public Iterator<Season> iterator() {
         return new Iterator<Season>() {
-            private int seasonNumber = (numberOfSeasons() > 0) ? SeasonSet.this.firstSeasonNumber()
+            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ? SeasonSet.this.firstSeasonNumber()
                     : Integer.MAX_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (numberOfSeasons() > 0)
-                        && (this.seasonNumber <= SeasonSet.this.lastSeasonNumber());
+                return SeasonSet.this.numberOfSeasons() > 0
+                && this.seasonNumber <= SeasonSet.this.lastSeasonNumber();
             }
 
             @Override
             public Season next() {
-                if (!this.hasNext()) {
+                if (!this.hasNext())
                     throw new NoSuchElementException();
-                }
 
                 Season next = SeasonSet.this.season(this.seasonNumber);
                 this.seasonNumber++;
@@ -235,20 +244,19 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
     public Iterator<Season> reversedIterator() {
         return new Iterator<Season>() {
-            private int seasonNumber = (numberOfSeasons() > 0) ? SeasonSet.this.lastSeasonNumber()
+            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ? SeasonSet.this.lastSeasonNumber()
                     : Integer.MIN_VALUE;
 
             @Override
             public boolean hasNext() {
-                return (numberOfSeasons() > 0)
-                        && (this.seasonNumber >= SeasonSet.this.firstSeasonNumber());
+                return SeasonSet.this.numberOfSeasons() > 0
+                && this.seasonNumber >= SeasonSet.this.firstSeasonNumber();
             }
 
             @Override
             public Season next() {
-                if (!this.hasNext()) {
+                if (!this.hasNext())
                     throw new NoSuchElementException();
-                }
 
                 Season next = SeasonSet.this.season(this.seasonNumber);
                 this.seasonNumber--;
@@ -295,19 +303,19 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
             listener.onChangeNextEpisodeToSee();
         }
     }
-    
+
     private void notifyMerge() {
         for (SeasonSetListener listener : this.listeners) {
             listener.onMerge();
-        }        
+        }
     }
-    
+
 
     //SeasonListener methods -----------------------------------------------------------------------
 
     @Override
     public void onChangeNextEpisodeToSee(Season season) {
-        this.nextEpisodeToSee = findNextEpisodeToSee();
+        this.nextEpisodeToSee = this.findNextEpisodeToSee();
     }
 
     @Override
