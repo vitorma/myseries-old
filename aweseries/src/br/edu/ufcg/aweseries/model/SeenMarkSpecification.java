@@ -1,5 +1,5 @@
 /*
- *   AbstractSpecification.java
+ *   SeenSpecification.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -21,23 +21,26 @@
 
 package br.edu.ufcg.aweseries.model;
 
-public abstract class AbstractSpecification<T> implements Specification<T> {
+import br.edu.ufcg.aweseries.util.Validate;
 
-    @Override
-    public abstract boolean isSatisfiedBy(T t);
+public class SeenMarkSpecification extends AbstractSpecification<Episode> {
+    private boolean seenMark;
 
-    @Override
-    public Specification<T> and(Specification<T> other) {
-        return new AndSpecification<T>(this, other);
+    private SeenMarkSpecification(boolean seenMark) {
+        this.seenMark = seenMark;
+    }
+
+    public static Specification<Episode> asSeen() {
+        return new SeenMarkSpecification(true);
+    }
+
+    public static Specification<Episode> asNotSeen() {
+        return new SeenMarkSpecification(false);
     }
 
     @Override
-    public Specification<T> or(Specification<T> other) {
-        return new OrSpecification<T>(this, other);
-    }
-
-    @Override
-    public Specification<T> not() {
-        return new NotSpecification<T>(this);
+    public boolean isSatisfiedBy(Episode episode) {
+        Validate.isNonNull(episode, "episode should be non-null");
+        return episode.wasSeen() == this.seenMark;
     }
 }
