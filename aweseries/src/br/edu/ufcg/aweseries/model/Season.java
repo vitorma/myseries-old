@@ -60,40 +60,54 @@ public class Season implements EpisodeListener {
     }
 
     //Episodes----------------------------------------------------------------------------------------------------------
-    
+
     public int numberOfEpisodes() {
         return this.episodes.size();
     }
-    
+
     public boolean includes(Episode episode) {
         return this.episodes.containsValue(episode);
     }
-    
+
     public Episode episode(int number) {
         return this.episodes.get(number);
     }
-    
+
     public List<Episode> episodes() {
         return new ArrayList<Episode>(this.episodes.values());
     }
-    
+
+    public List<Episode> episodesBy(Specification<Episode> specification) {
+        Validate.isNonNull(specification, "specification should be non-null");
+
+        List<Episode> result = new ArrayList<Episode>();
+
+        for (Episode e : this.episodes.values()) {
+            if (specification.isSatisfiedBy(e)) {
+                result.add(e);
+            }
+        }
+
+        return result;
+    }
+
     public void include(Episode episode) {
         Validate.isNonNull(episode, "episode should be non-null");
         Validate.isTrue(episode.seriesId() == this.seriesId, "episode should have the same seriesId as this");
         Validate.isTrue(episode.seasonNumber() == this.number, "episode should have the same seasonNumber as this");
         Validate.isTrue(!this.includes(episode), "episode should be not already included in this");
-        
+
         this.episodes.put(episode.number(), episode);
-        
+
         if (episode.wasSeen()) {
             this.numberOfSeenEpisodes++;
         }
 
-        if (nextToSeeShouldBe(episode)) {
+        if (this.nextToSeeShouldBe(episode)) {
             this.nextEpisodeToSee = episode;
             this.notifyThatNextToSeeChanged();
         }
-        
+
         episode.register(this);
     }
 
@@ -120,7 +134,7 @@ public class Season implements EpisodeListener {
             if (e.airdate() == null) {
                 continue;
             }
-            
+
             if (Dates.compare(e.airdate(), today) >=0) {
                 list.add(e);
             }
@@ -130,7 +144,7 @@ public class Season implements EpisodeListener {
     }
 
     //Seen--------------------------------------------------------------------------------------------------------------
-    
+
     public int numberOfSeenEpisodes() {
         return this.numberOfSeenEpisodes;
     }
@@ -142,13 +156,13 @@ public class Season implements EpisodeListener {
     public Episode nextEpisodeToSee() {
         return this.nextEpisodeToSee;
     }
-    
+
     public void markAsSeen() {
         for (Episode e : this.episodes.values()) {
             e.markAsSeen();
         }
     }
-    
+
     public void markAsNotSeen() {
         for (Episode e : this.episodes.values()) {
             e.markAsNotSeen();
@@ -169,11 +183,11 @@ public class Season implements EpisodeListener {
     }
 
     //SeasonListener----------------------------------------------------------------------------------------------------
-    
+
     public boolean register(SeasonListener listener) {
         return !this.isRegistered(listener) && this.listeners.add(listener);
     }
-    
+
     public boolean deregister(SeasonListener listener) {
         return this.isRegistered(listener) && this.listeners.remove(listener);
     }
@@ -222,7 +236,7 @@ public class Season implements EpisodeListener {
         final int prime = 31;
         return prime * (prime + this.seriesId) + this.number;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Season)) return false;
@@ -231,16 +245,16 @@ public class Season implements EpisodeListener {
     }
 
     //Auxiliary---------------------------------------------------------------------------------------------------------
-    
+
     private boolean nextToSeeShouldBe(Episode e) {
         return !e.wasSeen() && (this.nextEpisodeToSee == null || this.nextEpisodeToSee.number() > e.number());
     }
-    
+
     private Episode findNextEpisodeToSee() {
         for (Episode e : this.episodes.values()) {
             if (!e.wasSeen()) return e;
         }
-        
+
         return null;
     }
 
@@ -252,7 +266,7 @@ public class Season implements EpisodeListener {
         }
     }
 
-    private void addNonExistentYetEpisodesFrom(Season other) {        
+    private void addNonExistentYetEpisodesFrom(Season other) {
         for (Episode e : other.episodes.values()) {
             if (!this.includes(e)) {
                 this.include(e);
@@ -262,20 +276,20 @@ public class Season implements EpisodeListener {
 
     private boolean isRegistered(SeasonListener listener) {
         Validate.isNonNull(listener, "listener should be non-null");
-        
+
         for (SeasonListener l : this.listeners) {
             if (l == listener) return true;
         }
-        
+
         return false;
     }
-    
+
     private void notifyThatWasMarkedAsSeen() {
         for (SeasonListener l : this.listeners) {
             l.onMarkAsSeen(this);
         }
     }
-    
+
     private void notifyThatWasMarkedAsNotSeen() {
         for (SeasonListener l : this.listeners) {
             l.onMarkAsNotSeen(this);
