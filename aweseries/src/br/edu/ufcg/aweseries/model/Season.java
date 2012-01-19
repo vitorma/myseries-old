@@ -113,6 +113,7 @@ public class Season implements EpisodeListener {
 
     //TODO Remove these methods ASAP : use episodesBy(Specification<Episode>)-------------------------------------------
 
+    @Deprecated
     public List<Episode> lastAiredNotSeenEpisodes() {
         Date today = new Date();
         List<Episode> list = new ArrayList<Episode>();
@@ -126,6 +127,7 @@ public class Season implements EpisodeListener {
         return list;
     }
 
+    @Deprecated
     public List<Episode> nextEpisodesToAir() {
         Date today = new Date();
         List<Episode> list = new ArrayList<Episode>();
