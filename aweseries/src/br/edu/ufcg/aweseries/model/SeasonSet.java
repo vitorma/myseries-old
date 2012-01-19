@@ -95,17 +95,6 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
         return result;
     }
 
-    @Deprecated
-    public List<Episode> lastAiredNotSeenEpisodes() {
-        List<Episode> list = new ArrayList<Episode>();
-
-        for (Season s : this) {
-            list.addAll(s.lastAiredNotSeenEpisodes());
-        }
-
-        return list;
-    }
-
     public int lastSeasonNumber() {
         return this.map.lastKey();
     }
@@ -126,17 +115,6 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
         }
 
         this.notifyMerge();
-    }
-
-    @Deprecated
-    public List<Episode> nextEpisodesToAir() {
-        List<Episode> list = new ArrayList<Episode>();
-
-        for (Season s : this) {
-            list.addAll(s.nextEpisodesToAir());
-        }
-
-        return list;
     }
 
     public Episode nextEpisodeToSee() {

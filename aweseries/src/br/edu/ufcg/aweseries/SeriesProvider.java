@@ -24,6 +24,7 @@ package br.edu.ufcg.aweseries;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,9 +33,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import br.edu.ufcg.aweseries.model.AirdateSpecification;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
+import br.edu.ufcg.aweseries.model.SeenMarkSpecification;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.model.Specification;
 import br.edu.ufcg.aweseries.repository.SeriesRepository;
 
 /**
@@ -53,17 +57,15 @@ public class SeriesProvider {
     private final Set<UpdateListener> updateListeners;
 
     public static SeriesProvider newInstance(SeriesSource seriesSource,
-                                             SeriesRepository seriesRepository) {
+            SeriesRepository seriesRepository) {
         return new SeriesProvider(seriesSource, seriesRepository);
     }
 
     private SeriesProvider(SeriesSource seriesSource, SeriesRepository seriesRepository) {
-        if (seriesSource == null) {
+        if (seriesSource == null)
             throw new IllegalArgumentException("seriesSource should not be null");
-        }
-        if (seriesRepository == null) {
+        if (seriesRepository == null)
             throw new IllegalArgumentException("seriesRepository should not be null");
-        }
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
@@ -80,10 +82,9 @@ public class SeriesProvider {
 
         //TODO This check should not throw an exception. Move it to the appropriate presenter, where a toast with the
         //     message below should be shown.
-        if (result.isEmpty()) {
+        if (result.isEmpty())
             throw new RuntimeException(
                     App.environment().context().getString(R.string.no_results_found_for_criteria) + seriesName);
-        }
 
         return result.toArray(new Series[]{}); //TODO Return a List<Series>
     }
@@ -134,7 +135,7 @@ public class SeriesProvider {
 
             List<Series> allOurSeries = new ArrayList<Series>();
 
-            for (final Series theirSeries : upToDateSeries) {
+            for (final Series theirSeries : this.upToDateSeries) {
                 final Series ourSeries = SeriesProvider.this.getSeries(theirSeries.id());
                 ourSeries.mergeWith(theirSeries);
                 allOurSeries.add(ourSeries);
@@ -211,21 +212,35 @@ public class SeriesProvider {
         return this.seriesRepository.get(seriesId);
     }
 
-    public List<Episode> recentNotSeenEpisodes() {
+    //Recent and upcoming episodes--------------------------------------------------------------------------------------
+
+    private static Date today() {//TODO Get today from another place
+        return new Date();
+    }
+
+    private Specification<Episode> recentEpisodesSpecification() {
+        return AirdateSpecification.before(today()).and(SeenMarkSpecification.asNotSeen());
+    }
+
+    public List<Episode> recentEpisodes() {
         final List<Episode> recent = new ArrayList<Episode>();
 
         for (final Series s : this.followedSeries()) {
-            recent.addAll(s.seasons().lastAiredNotSeenEpisodes());
+            recent.addAll(s.seasons().episodesBy(this.recentEpisodesSpecification()));
         }
 
         return recent;
     }
 
-    public List<Episode> nextEpisodesToAir() {
+    private Specification<Episode> upcomingEpisodesSpecification() {
+        return AirdateSpecification.before(today()).not().and(SeenMarkSpecification.asNotSeen());
+    }
+
+    public List<Episode> upcomingEpisodes() {
         final List<Episode> upcoming = new ArrayList<Episode>();
 
         for (final Series s : this.followedSeries()) {
-            upcoming.addAll(s.seasons().nextEpisodesToAir());
+            upcoming.addAll(s.seasons().episodesBy(this.upcomingEpisodesSpecification()));
         }
 
         return upcoming;
@@ -234,13 +249,11 @@ public class SeriesProvider {
     //TODO: Move this method to an utilitary class----------------------------------------------------------------------
 
     public Bitmap getPosterOf(Series series) {
-        if (series == null) {
+        if (series == null)
             throw new IllegalArgumentException("series should not be null");
-        }
 
-        if (!series.hasPoster()) {
+        if (!series.hasPoster())
             return this.genericPosterImage();
-        }
 
         return series.poster().getImage();
     }

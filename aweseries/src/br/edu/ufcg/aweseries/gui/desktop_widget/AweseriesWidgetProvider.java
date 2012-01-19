@@ -91,7 +91,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
             views.removeAllViews(R.id.innerLinearLayout);
 
             final SortedSet<Episode> recent = this.sortedSetBy(seriesProvider
-                    .recentNotSeenEpisodes());
+                    .recentEpisodes());
 
             if (recent.isEmpty()) {
                 Log.d("Widget", "recent list is empty");

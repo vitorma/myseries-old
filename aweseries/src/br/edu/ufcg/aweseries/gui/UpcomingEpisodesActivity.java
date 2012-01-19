@@ -33,7 +33,7 @@ public class UpcomingEpisodesActivity extends OutOfContextEpisodesActivity {
 
     @Override
     protected List<Episode> episodes() {
-        return App.environment().seriesProvider().nextEpisodesToAir();
+        return App.environment().seriesProvider().upcomingEpisodes();
     }
 
     @Override

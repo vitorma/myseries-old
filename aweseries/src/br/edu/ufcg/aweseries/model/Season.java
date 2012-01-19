@@ -22,12 +22,10 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
-import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class Season implements EpisodeListener {
@@ -109,40 +107,6 @@ public class Season implements EpisodeListener {
         }
 
         episode.register(this);
-    }
-
-    //TODO Remove these methods ASAP : use episodesBy(Specification<Episode>)-------------------------------------------
-
-    @Deprecated
-    public List<Episode> lastAiredNotSeenEpisodes() {
-        Date today = new Date();
-        List<Episode> list = new ArrayList<Episode>();
-
-        for (Episode e : this.episodes.values()) {
-            if (Dates.compare(e.airdate(), today) < 0 && !e.wasSeen()) {
-                list.add(e);
-            }
-        }
-
-        return list;
-    }
-
-    @Deprecated
-    public List<Episode> nextEpisodesToAir() {
-        Date today = new Date();
-        List<Episode> list = new ArrayList<Episode>();
-
-        for (Episode e : this.episodes.values()) {
-            if (e.airdate() == null) {
-                continue;
-            }
-
-            if (Dates.compare(e.airdate(), today) >=0) {
-                list.add(e);
-            }
-        }
-
-        return list;
     }
 
     //Seen--------------------------------------------------------------------------------------------------------------

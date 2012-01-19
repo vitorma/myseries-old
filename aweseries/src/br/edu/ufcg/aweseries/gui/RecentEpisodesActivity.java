@@ -33,7 +33,7 @@ public class RecentEpisodesActivity extends OutOfContextEpisodesActivity {
 
     @Override
     protected List<Episode> episodes() {
-        return App.environment().seriesProvider().recentNotSeenEpisodes();
+        return App.environment().seriesProvider().recentEpisodes();
     }
 
     @Override
