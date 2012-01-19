@@ -119,7 +119,9 @@ public class SeasonTest {
     	Assert.assertEquals(0, s.seriesId());
     	Assert.assertEquals(0, s.number());
     	Assert.assertTrue(s.episodes().isEmpty());
+    	Assert.assertEquals(0, s.numberOfEpisodes());
     	Assert.assertTrue(s.wasSeen());
+    	Assert.assertEquals(0, s.numberOfSeenEpisodes());
     	Assert.assertNull(s.nextEpisodeToSee());
     }
 
@@ -242,25 +244,25 @@ public class SeasonTest {
         Assert.assertEquals(nextEpisodes, this.season.nextEpisodesToAir());
     }
 
-    //Addition----------------------------------------------------------------------------------------------------------
+    //Inclusion---------------------------------------------------------------------------------------------------------
 
     @Test(expected=IllegalArgumentException.class)
-    public final void testAddNullEpisode() {
+    public final void testIncludeNullEpisode() {
     	new Season(1, 1).include(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public final void testAddEpisodeWithAnotherSeriesId() {
+    public final void testIncludeEpisodeWithAnotherSeriesId() {
     	new Season(1, 1).include(this.mockEpisode(1, 2, 1, 1));
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public final void testAddEpisodeWithAnotherSeasonNumber() {
+    public final void testIncludeEpisodeWithAnotherSeasonNumber() {
     	new Season(1, 1).include(this.mockEpisode(1, 1, 1, 2));
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public final void testAddAlreadyExistentEpisode() {
+    public final void testIncludeAlreadyExistentEpisode() {
     	Season s = new Season(1, 1);
     	Episode e = this.mockEpisode(1, 1, 1, 1);
     	s.include(e);
@@ -268,21 +270,38 @@ public class SeasonTest {
     }
 
     @Test
-    public final void testAddEpisode() {
-    	//TODO Verify notification when nextToSeeChange
+    public final void testIncludeValidEpisodes() {
     	Season s1 = new Season(1, 1);
 
     	Episode e1 = this.mockEpisode(1, 1, 1, 1);
     	Episode e2 = this.mockEpisode(2, 1, 2, 1);
     	this.markAsNotSeen(e1, e2);
 
-    	s1.include(e1);
+    	SeasonListener l1 = this.mockListener();
+    	SeasonListener l2 = this.mockListener();
+
+    	s1.register(l1);
+    	s1.register(l2);
+
     	s1.include(e2);
 
-    	Assert.assertTrue(s1.includes(e1));
     	Assert.assertTrue(s1.includes(e2));
+    	Assert.assertEquals(1, s1.numberOfEpisodes());
     	Assert.assertFalse(s1.wasSeen());
+    	Assert.assertEquals(0, s1.numberOfSeenEpisodes());
+    	Assert.assertEquals(e2, s1.nextEpisodeToSee());
+    	Mockito.verify(l1, Mockito.times(1)).onChangeNextEpisodeToSee(s1);
+    	Mockito.verify(l2, Mockito.times(1)).onChangeNextEpisodeToSee(s1);
+
+    	s1.include(e1);
+
+    	Assert.assertTrue(s1.includes(e1));
+    	Assert.assertEquals(2, s1.numberOfEpisodes());
+    	Assert.assertFalse(s1.wasSeen());
+    	Assert.assertEquals(0, s1.numberOfSeenEpisodes());
     	Assert.assertEquals(e1, s1.nextEpisodeToSee());
+    	Mockito.verify(l1, Mockito.times(2)).onChangeNextEpisodeToSee(s1);
+    	Mockito.verify(l2, Mockito.times(2)).onChangeNextEpisodeToSee(s1);
 
     	Season s2 = new Season(1, 2);
 
@@ -290,13 +309,28 @@ public class SeasonTest {
     	Episode e4 = this.mockEpisode(2, 1, 2, 2);
     	this.markAsSeen(e3, e4);
 
+    	SeasonListener l3 = this.mockListener();
+    	SeasonListener l4 = this.mockListener();
+
+    	s2.register(l3);
+    	s2.register(l4);
+
     	s2.include(e3);
+
+    	Assert.assertTrue(s2.includes(e3));
+    	Assert.assertTrue(s2.wasSeen());
+    	Assert.assertNull(s2.nextEpisodeToSee());
+    	Mockito.verify(l3, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
+    	Mockito.verify(l4, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
+
     	s2.include(e4);
 
     	Assert.assertTrue(s2.includes(e3));
     	Assert.assertTrue(s2.includes(e4));
     	Assert.assertTrue(s2.wasSeen());
     	Assert.assertNull(s2.nextEpisodeToSee());
+    	Mockito.verify(l3, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
+    	Mockito.verify(l4, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
     }
 
     //Mark--------------------------------------------------------------------------------------------------------------
