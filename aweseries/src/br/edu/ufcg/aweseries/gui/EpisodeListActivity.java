@@ -68,7 +68,7 @@ public class EpisodeListActivity extends ListActivity {
 
         public EpisodeItemViewAdapter(Context context, int episodeItemResourceId, List<Episode> objects) {
             super(context, episodeItemResourceId, objects);
-            
+
             for (Episode e : objects) {
                 e.register(this);
             }
@@ -92,7 +92,7 @@ public class EpisodeListActivity extends ListActivity {
             // if no view was passed, create one for the item
             if (itemView == null) {
                 final LayoutInflater li = (LayoutInflater) EpisodeListActivity.this
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.episode_list_item, null);
             }
 
@@ -104,12 +104,12 @@ public class EpisodeListActivity extends ListActivity {
             TextView numberTextView = (TextView) itemView.findViewById(R.id.episodeNumberTextView);
             TextView dateTextView = (TextView) itemView.findViewById(R.id.episodeDateTextView);
             CheckBox isViewedCheckBox = (CheckBox) itemView
-                    .findViewById(R.id.episodeIsViewedCheckBox);
+            .findViewById(R.id.episodeIsViewedCheckBox);
 
             nameTextView.setText(Objects.nullSafe(
                     episode.name(),
                     this.getContext().getResources().getString(R.string.unnamed_episode)));
-            numberTextView.setText(String.format(getString(R.string.episode_number_format),
+            numberTextView.setText(String.format(EpisodeListActivity.this.getString(R.string.episode_number_format),
                     episode.number()));
             dateTextView.setText(Dates.toString(episode.airdate(), FORMAT, ""));
             isViewedCheckBox.setChecked(episode.wasSeen());
@@ -117,7 +117,7 @@ public class EpisodeListActivity extends ListActivity {
 
         private void setUpSeenEpisodeCheckBoxFor(final Episode episode, View itemView) {
             final CheckBox isViewedCheckBox = (CheckBox) itemView
-                    .findViewById(R.id.episodeIsViewedCheckBox);
+            .findViewById(R.id.episodeIsViewedCheckBox);
 
             isViewedCheckBox.setOnClickListener(new OnClickListener() {
                 @Override
@@ -134,13 +134,13 @@ public class EpisodeListActivity extends ListActivity {
         @Override
         public void onMarkAsSeen(Episode e) {
             this.notifyDataSetChanged();
-            
+
         }
 
         @Override
         public void onMarkAsNotSeen(Episode e) {
             this.notifyDataSetChanged();
-            
+
         }
 
         @Override
@@ -195,16 +195,16 @@ public class EpisodeListActivity extends ListActivity {
         this.isSeasonViewed.setChecked(this.season.wasSeen());
 
         TextView seasonName = (TextView) this.findViewById(R.id.seasonTextView);
-        
+
         if (this.season.number() == 0) {
-            seasonName.setText(getString(R.string.special_episodes));
+            seasonName.setText(this.getString(R.string.special_episodes));
         }
-        
+
         else {
-            seasonName.setText(String.format(getString(R.string.season_number_format),
+            seasonName.setText(String.format(this.getString(R.string.season_number_format),
                     this.season.number()));
         }
-        
+
     }
 
     private void setUpEpisodeListAdapter() {
@@ -234,7 +234,7 @@ public class EpisodeListActivity extends ListActivity {
         this.isSeasonViewed.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if (isSeasonViewed.isChecked()) {
+                if (EpisodeListActivity.this.isSeasonViewed.isChecked()) {
                     seriesProvider.markSeasonAsSeen(EpisodeListActivity.this.season);
                 } else {
                     seriesProvider.markSeasonAsNotSeen(EpisodeListActivity.this.season);
@@ -266,6 +266,12 @@ public class EpisodeListActivity extends ListActivity {
 
             @Override
             public void onMerge(Season season) {
+                //TODO A better implementation
+                EpisodeListActivity.this.loadSeasonDataOnView();
+            }
+
+            @Override
+            public void onChangeNumberOfSeenEpisodes(Season season) {
                 //TODO A better implementation
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }

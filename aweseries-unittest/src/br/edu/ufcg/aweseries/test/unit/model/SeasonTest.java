@@ -174,6 +174,8 @@ public class SeasonTest {
 		Assert.assertFalse(s1.wasSeen());
 		Assert.assertEquals(0, s1.numberOfSeenEpisodes());
 		Assert.assertEquals(e2, s1.nextEpisodeToSee());
+		Mockito.verify(l1, Mockito.times(0)).onChangeNumberOfSeenEpisodes(s1);
+		Mockito.verify(l2, Mockito.times(0)).onChangeNumberOfSeenEpisodes(s1);
 		Mockito.verify(l1, Mockito.times(1)).onChangeNextEpisodeToSee(s1);
 		Mockito.verify(l2, Mockito.times(1)).onChangeNextEpisodeToSee(s1);
 
@@ -184,6 +186,8 @@ public class SeasonTest {
 		Assert.assertFalse(s1.wasSeen());
 		Assert.assertEquals(0, s1.numberOfSeenEpisodes());
 		Assert.assertEquals(e1, s1.nextEpisodeToSee());
+		Mockito.verify(l1, Mockito.times(0)).onChangeNumberOfSeenEpisodes(s1);
+		Mockito.verify(l2, Mockito.times(0)).onChangeNumberOfSeenEpisodes(s1);
 		Mockito.verify(l1, Mockito.times(2)).onChangeNextEpisodeToSee(s1);
 		Mockito.verify(l2, Mockito.times(2)).onChangeNextEpisodeToSee(s1);
 
@@ -204,6 +208,8 @@ public class SeasonTest {
 		Assert.assertTrue(s2.includes(e3));
 		Assert.assertTrue(s2.wasSeen());
 		Assert.assertNull(s2.nextEpisodeToSee());
+		Mockito.verify(l3, Mockito.times(1)).onChangeNumberOfSeenEpisodes(s2);
+		Mockito.verify(l4, Mockito.times(1)).onChangeNumberOfSeenEpisodes(s2);
 		Mockito.verify(l3, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
 		Mockito.verify(l4, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
 
@@ -213,6 +219,8 @@ public class SeasonTest {
 		Assert.assertTrue(s2.includes(e4));
 		Assert.assertTrue(s2.wasSeen());
 		Assert.assertNull(s2.nextEpisodeToSee());
+		Mockito.verify(l3, Mockito.times(2)).onChangeNumberOfSeenEpisodes(s2);
+		Mockito.verify(l4, Mockito.times(2)).onChangeNumberOfSeenEpisodes(s2);
 		Mockito.verify(l3, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
 		Mockito.verify(l4, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
 	}
@@ -246,6 +254,7 @@ public class SeasonTest {
 		Mockito.verify(l2).onMarkAsSeen(s);
 
 		Assert.assertTrue(s.wasSeen());
+		Assert.assertEquals(2, s.numberOfSeenEpisodes());
 		Assert.assertNull(s.nextEpisodeToSee());
 	}
 
@@ -277,6 +286,7 @@ public class SeasonTest {
 		Mockito.verify(l2).onMarkAsNotSeen(s);
 
 		Assert.assertFalse(s.wasSeen());
+		Assert.assertEquals(0, s.numberOfSeenEpisodes());
 		Assert.assertEquals(e1, s.nextEpisodeToSee());
 	}
 
@@ -350,17 +360,16 @@ public class SeasonTest {
 		s.register(l1);
 		s.register(l2);
 
-		Assert.assertFalse(s.wasSeen());
-		Assert.assertEquals(e1, s.nextEpisodeToSee());
-
 		this.markAsSeen(e1);
 		this.callOnMarkAsSeenFor(s, e1);
 
 		Assert.assertFalse(s.wasSeen());
+		Assert.assertEquals(1, s.numberOfSeenEpisodes());
 		Assert.assertEquals(e2, s.nextEpisodeToSee());
-
 		Mockito.verify(l1, Mockito.times(0)).onMarkAsSeen(s);
 		Mockito.verify(l2, Mockito.times(0)).onMarkAsSeen(s);
+		Mockito.verify(l1, Mockito.times(1)).onChangeNumberOfSeenEpisodes(s);
+		Mockito.verify(l2, Mockito.times(1)).onChangeNumberOfSeenEpisodes(s);
 		Mockito.verify(l1, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 		Mockito.verify(l2, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 
@@ -368,10 +377,12 @@ public class SeasonTest {
 		this.callOnMarkAsSeenFor(s, e2);
 
 		Assert.assertTrue(s.wasSeen());
+		Assert.assertEquals(2, s.numberOfSeenEpisodes());
 		Assert.assertNull(s.nextEpisodeToSee());
-
 		Mockito.verify(l1, Mockito.times(1)).onMarkAsSeen(s);
 		Mockito.verify(l2, Mockito.times(1)).onMarkAsSeen(s);
+		Mockito.verify(l1, Mockito.times(2)).onChangeNumberOfSeenEpisodes(s);
+		Mockito.verify(l2, Mockito.times(2)).onChangeNumberOfSeenEpisodes(s);
 		Mockito.verify(l1, Mockito.times(2)).onChangeNextEpisodeToSee(s);
 		Mockito.verify(l2, Mockito.times(2)).onChangeNextEpisodeToSee(s);
 	}
@@ -393,17 +404,16 @@ public class SeasonTest {
 		s.register(l1);
 		s.register(l2);
 
-		Assert.assertTrue(s.wasSeen());
-		Assert.assertNull(s.nextEpisodeToSee());
-
 		this.markAsNotSeen(e1);
 		this.callOnMarkAsNotSeenFor(s, e1);
 
 		Assert.assertFalse(s.wasSeen());
+		Assert.assertEquals(1, s.numberOfSeenEpisodes());
 		Assert.assertEquals(e1, s.nextEpisodeToSee());
-
 		Mockito.verify(l1, Mockito.times(1)).onMarkAsNotSeen(s);
 		Mockito.verify(l2, Mockito.times(1)).onMarkAsNotSeen(s);
+		Mockito.verify(l1, Mockito.times(1)).onChangeNumberOfSeenEpisodes(s);
+		Mockito.verify(l2, Mockito.times(1)).onChangeNumberOfSeenEpisodes(s);
 		Mockito.verify(l1, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 		Mockito.verify(l2, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 
@@ -411,10 +421,12 @@ public class SeasonTest {
 		this.callOnMarkAsNotSeenFor(s, e2);
 
 		Assert.assertFalse(s.wasSeen());
+		Assert.assertEquals(0, s.numberOfSeenEpisodes());
 		Assert.assertEquals(e1, s.nextEpisodeToSee());
-
 		Mockito.verify(l1, Mockito.times(1)).onMarkAsNotSeen(s);
 		Mockito.verify(l2, Mockito.times(1)).onMarkAsNotSeen(s);
+		Mockito.verify(l1, Mockito.times(2)).onChangeNumberOfSeenEpisodes(s);
+		Mockito.verify(l2, Mockito.times(2)).onChangeNumberOfSeenEpisodes(s);
 		Mockito.verify(l1, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 		Mockito.verify(l2, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 	}

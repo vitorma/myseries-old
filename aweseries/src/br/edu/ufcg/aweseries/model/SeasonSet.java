@@ -313,4 +313,10 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
         //SeasonSet is not interested in this event
         this.notifyListeners(); //TODO: remove me ASAP
     }
+
+    @Override
+    public void onChangeNumberOfSeenEpisodes(Season season) {
+        // TODO A better implementation
+        this.notifyListeners();
+    }
 }

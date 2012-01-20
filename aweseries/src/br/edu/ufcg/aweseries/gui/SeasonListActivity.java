@@ -31,8 +31,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -56,13 +56,11 @@ public class SeasonListActivity extends ListActivity {
     private static final class SeasonComparator implements Comparator<Season> {
         @Override
         public int compare(Season seasonA, Season seasonB) {
-            if (seasonA.number() == 0) {
+            if (seasonA.number() == 0)
                 return -seasonB.number();
-            }
 
-            if (seasonB.number() == 0) {
+            if (seasonB.number() == 0)
                 return seasonA.number();
-            }
 
             return seasonB.number() - seasonA.number();
         }
@@ -71,21 +69,21 @@ public class SeasonListActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listing);
+        this.setContentView(R.layout.listing);
 
         this.loadSeries();
 
         //set view title
-        TextView listingTitle = (TextView) findViewById(R.id.listingTitleTextView);
+        TextView listingTitle = (TextView) this.findViewById(R.id.listingTitleTextView);
         listingTitle.setText(String.format(this.getString(R.string.seasons_of_series),
                 this.series.name()));
 
-        populateSeasonsList();
-        setUpSeasonItemClickListener();
+        this.populateSeasonsList();
+        this.setUpSeasonItemClickListener();
     }
 
     private void loadSeries() {
-        Bundle extras = getIntent().getExtras();
+        Bundle extras = this.getIntent().getExtras();
         if (extras != null) {
             String seriesId = extras.getString("series id");
             this.series = seriesProvider.getSeries(seriesId);
@@ -101,7 +99,7 @@ public class SeasonListActivity extends ListActivity {
                 Intent intent = new Intent(view.getContext(), EpisodeListActivity.class);
                 final Season season = (Season) parent.getItemAtPosition(position);
                 intent.putExtra("season number", season.number());
-                intent.putExtra("series id", series.id());
+                intent.putExtra("series id", SeasonListActivity.this.series.id());
                 SeasonListActivity.this.startActivity(intent);
             }
         });
@@ -120,9 +118,9 @@ public class SeasonListActivity extends ListActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View itemView = itemViewFrom(convertView);
+            View itemView = this.itemViewFrom(convertView);
 
-            Season season = getItem(position);
+            Season season = this.getItem(position);
 
             this.showSeasonDataOn(season, itemView);
             this.setUpSeenSeasonCheckBoxListenerFor(season, itemView);
@@ -136,7 +134,7 @@ public class SeasonListActivity extends ListActivity {
             // if no view was passed, create one for the item
             if (itemView == null) {
                 final LayoutInflater li = (LayoutInflater) SeasonListActivity.this
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.season_list_item, null);
             }
 
@@ -147,11 +145,11 @@ public class SeasonListActivity extends ListActivity {
             TextView name = (TextView) itemView.findViewById(R.id.itemName);
 
             if (season.number() == 0) {
-                name.setText(getString(R.string.special_episodes));
+                name.setText(SeasonListActivity.this.getString(R.string.special_episodes));
             }
 
             else {
-                name.setText(String.format(getString(R.string.season_number_format),
+                name.setText(String.format(SeasonListActivity.this.getString(R.string.season_number_format),
                         season.number()));
             }
 
@@ -161,7 +159,7 @@ public class SeasonListActivity extends ListActivity {
 
         private void setUpSeenSeasonCheckBoxListenerFor(final Season season, View itemView) {
             final CheckBox isSeasonViewed = (CheckBox) itemView
-                    .findViewById(R.id.isSeasonViewedCheckBox);
+            .findViewById(R.id.isSeasonViewedCheckBox);
 
             isSeasonViewed.setOnClickListener(new OnClickListener() {
                 @Override
@@ -195,6 +193,12 @@ public class SeasonListActivity extends ListActivity {
 
         @Override
         public void onMerge(Season season) {
+            //TODO A better implementation
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onChangeNumberOfSeenEpisodes(Season season) {
             //TODO A better implementation
             this.notifyDataSetChanged();
         }

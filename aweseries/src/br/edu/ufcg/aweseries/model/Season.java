@@ -99,6 +99,7 @@ public class Season implements EpisodeListener {
 
         if (episode.wasSeen()) {
             this.numberOfSeenEpisodes++;
+            this.notifyThatNumberOfSeenEpisodesChanged();
         }
 
         if (this.nextToSeeShouldBe(episode)) {
@@ -163,6 +164,7 @@ public class Season implements EpisodeListener {
     @Override
     public void onMarkAsSeen(Episode e) {
         this.numberOfSeenEpisodes++;
+        this.notifyThatNumberOfSeenEpisodesChanged();
 
         if (this.wasSeen()) {
             this.notifyThatWasMarkedAsSeen();
@@ -188,6 +190,7 @@ public class Season implements EpisodeListener {
         }
 
         this.numberOfSeenEpisodes--;
+        this.notifyThatNumberOfSeenEpisodesChanged();
     }
 
     @Override
@@ -259,6 +262,12 @@ public class Season implements EpisodeListener {
     private void notifyThatWasMarkedAsNotSeen() {
         for (SeasonListener l : this.listeners) {
             l.onMarkAsNotSeen(this);
+        }
+    }
+
+    private void notifyThatNumberOfSeenEpisodesChanged() {
+        for (SeasonListener l : this.listeners) {
+            l.onChangeNumberOfSeenEpisodes(this);
         }
     }
 
