@@ -6,6 +6,10 @@ public class Validate {
         isTrue(assertion, new IllegalArgumentException(message));
     }
 
+    public static void isTrue(boolean assertion, String message, Object... messageArguments) {
+        if (!assertion) throw new IllegalArgumentException(String.format(message, messageArguments));
+    }
+
     public static <E extends Exception> void isTrue(boolean assertion, E exception) throws E {
         if (!assertion) throw exception;
     }
