@@ -67,7 +67,7 @@ public class Season implements EpisodeListener {
     }
 
     public boolean includes(Episode episode) {
-        return this.episodes.containsValue(episode);
+        return episode != null && this.episode(episode.number()) != null;
     }
 
     public Episode episode(int number) {
@@ -92,7 +92,7 @@ public class Season implements EpisodeListener {
         return result;
     }
 
-    public void include(Episode episode) {
+    public Season including(Episode episode) {
         Validate.isNonNull(episode, "episode should be non-null");
         Validate.isTrue(episode.seriesId() == this.seriesId, "episode's seriesId should be %d", this.seriesId);
         Validate.isTrue(episode.seasonNumber() == this.number, "episode's seasonNumber should be %d", this.number);
@@ -111,6 +111,8 @@ public class Season implements EpisodeListener {
         }
 
         episode.register(this);
+
+        return this;
     }
 
     //Seen--------------------------------------------------------------------------------------------------------------
@@ -127,16 +129,20 @@ public class Season implements EpisodeListener {
         return this.nextEpisodeToSee;
     }
 
-    public void markAsSeen() {
+    public Season markAsSeen() {
         for (Episode e : this.episodes.values()) {
             e.markAsSeen();
         }
+
+        return this;
     }
 
-    public void markAsNotSeen() {
+    public Season markAsNotSeen() {
         for (Episode e : this.episodes.values()) {
             e.markAsNotSeen();
         }
+
+        return this;
     }
 
     private boolean nextToSeeShouldBe(Episode e) {
@@ -153,7 +159,7 @@ public class Season implements EpisodeListener {
 
     //Merge-------------------------------------------------------------------------------------------------------------
 
-    public void mergeWith(Season other) {
+    public Season mergeWith(Season other) {
         Validate.isNonNull(other, "other should be non-null");
         Validate.isTrue(other.seriesId == this.seriesId, "other's seriesId should be %d", this.seriesId);
         Validate.isTrue(other.number == this.number, "other's number should be %d", this.number);
@@ -166,11 +172,13 @@ public class Season implements EpisodeListener {
 
         for (Episode e : other.episodes.values()) {
             if (!this.includes(e)) {
-                this.include(e);
+                this.including(e);
             }
         }
 
         this.notifyThatWasMerged();
+
+        return this;
     }
 
     //SeasonListener----------------------------------------------------------------------------------------------------

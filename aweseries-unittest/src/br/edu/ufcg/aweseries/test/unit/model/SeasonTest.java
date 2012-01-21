@@ -22,25 +22,20 @@
 package br.edu.ufcg.aweseries.test.unit.model;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import br.edu.ufcg.aweseries.model.AbstractSpecification;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.SeasonListener;
+import br.edu.ufcg.aweseries.model.Specification;
 
 public class SeasonTest {
 
-	private Season season;
-	private Episode episode2;
-	private Episode episode1;
-	private Episode episode3;
-	private Episode episode4;
+	//Mock--------------------------------------------------------------------------------------------------------------
 
-	//Auxiliar----------------------------------------------------------------------------------------------------------
-
-	private Episode mockEpisode(int id, int seriesId, int number, int seasonNumber) {
+	private static Episode mockEpisode(int id, int seriesId, int number, int seasonNumber) {
 		Episode episode = Mockito.mock(Episode.class);
 
 		Mockito.when(episode.id()).thenReturn(id);
@@ -51,123 +46,175 @@ public class SeasonTest {
 		return episode;
 	}
 
-	private void markAsNotSeen(Episode... episodes) {
-		for (Episode episode : episodes) {
-			Mockito.when(episode.wasSeen()).thenReturn(false);
+	private static void markAsSeen(Episode... episodes) {
+		for (Episode e : episodes) {
+			Mockito.when(e.wasSeen()).thenReturn(true);
 		}
 	}
 
-	private void markAsSeen(Episode... episodes) {
-		for (Episode episode : episodes) {
-			Mockito.when(episode.wasSeen()).thenReturn(true);
+	private static void markAsNotSeen(Episode... episodes) {
+		for (Episode e : episodes) {
+			Mockito.when(e.wasSeen()).thenReturn(false);
 		}
 	}
 
-	private void callOnMarkAsSeenFor(Season season, Episode... episodes) {
-		for (Episode episode : episodes) {
-			season.onMarkAsSeen(episode);
+	private static void callOnMarkAsSeenFor(Season season, Episode... episodes) {
+		for (Episode e : episodes) {
+			season.onMarkAsSeen(e);
 		}
 	}
 
-	private void callOnMarkAsNotSeenFor(Season season, Episode... episodes) {
-		for (Episode episode : episodes) {
-			season.onMarkAsNotSeen(episode);
+	private static void callOnMarkAsNotSeenFor(Season season, Episode... episodes) {
+		for (Episode e : episodes) {
+			season.onMarkAsNotSeen(e);
 		}
 	}
 
-	public SeasonListener mockListener() {
+	public static SeasonListener mockListener() {
 		return Mockito.mock(SeasonListener.class);
-	}
-
-	//SetUp-------------------------------------------------------------------------------------------------------------
-
-	@Before
-	public void setUp() throws Exception {
-		this.season = new Season(1, 1);
-
-		this.episode1 = this.mockEpisode(1, 1, 1, 1);
-		this.episode2 = this.mockEpisode(2, 1, 2, 1);
-		this.episode3 = this.mockEpisode(3, 1, 3, 1);
-		this.episode4 = this.mockEpisode(4, 1, 4, 1);
-
-		this.season.include(this.episode1);
-		this.season.include(this.episode2);
-		this.season.include(this.episode3);
-		this.season.include(this.episode4);
 	}
 
 	//Construction------------------------------------------------------------------------------------------------------
 
 	@Test(expected=IllegalArgumentException.class)
-	public void testConstructASeasonWithNegativeSeriesId() {
+	public void constructingASeasonWithNegativeSeriesIdCausesIllegalArgumentException() {
 		new Season(-1, 0);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
-	public void testConstructASeasonWithNegativeNumber() {
+	public void constructingASeasonWithNegativeNumberCausesIllegalArgumentException() {
 		new Season(0, -1);
 	}
 
 	@Test
-	public void testConstructASeason() {
-		Season s = new Season(0, 0);
+	public void constructedSeasonKeepsTheSameSeriesIdAndTheSameNumberPassedInTheConstructor() {
+		Season season1 = new Season(0, 0);
 
-		Assert.assertEquals(0, s.seriesId());
-		Assert.assertEquals(0, s.number());
-		Assert.assertTrue(s.episodes().isEmpty());
-		Assert.assertEquals(0, s.numberOfEpisodes());
-		Assert.assertTrue(s.wasSeen());
-		Assert.assertEquals(0, s.numberOfSeenEpisodes());
-		Assert.assertNull(s.nextEpisodeToSee());
+		Assert.assertEquals(0, season1.seriesId());
+		Assert.assertEquals(0, season1.number());
+
+		Season season2 = new Season(1, 2);
+
+		Assert.assertEquals(1, season2.seriesId());
+		Assert.assertEquals(2, season2.number());
+
+		Season season3 = new Season(2, 1);
+
+		Assert.assertEquals(2, season3.seriesId());
+		Assert.assertEquals(1, season3.number());
 	}
 
-	//Queries-----------------------------------------------------------------------------------------------------------
+	@Test
+	public void constructedSeasonIncludesNoEpisodes() {
+		Season season = new Season(1, 1);
+
+		Assert.assertTrue(season.episodes().isEmpty());
+		Assert.assertEquals(0, season.numberOfEpisodes());
+	}
+
+	@Test
+	public void constructedSeasonIncludesNoSeenEpisodesButItWasSeen() {
+		Season season = new Season(1, 1);
+
+		Assert.assertEquals(0, season.numberOfSeenEpisodes());
+
+		Assert.assertTrue(season.wasSeen());
+		Assert.assertNull(season.nextEpisodeToSee());
+	}
+
+	//Search------------------------------------------------------------------------------------------------------------
+
+	@Test
+	public void searchingByTheNumberOfANotIncludedEpisodeReturnsNull() {
+		Assert.assertNull(new Season(1, 1).episode(1));
+	}
+
+	@Test
+	public void searchingByTheNumberOfAnIncludedEpisodeReturnsTheOne() {
+		Episode e1 = mockEpisode(1, 1, 1, 1);
+		Episode e2 = mockEpisode(2, 1, 2, 1);
+
+		Season s = new Season(1, 1).including(e1).including(e2);
+
+		Assert.assertEquals(e1, s.episode(1));
+		Assert.assertEquals(e2, s.episode(2));
+	}
 
 	@Test(expected=IllegalArgumentException.class)
-	public void testGettingEpisodesByANullSpecificationThrowIllegalArgumentException() {
-		new Season(1,1).episodesBy(null);
+	public void searchingByANullSpecificationCausesIllegalArgumentException() {
+		new Season(1, 1).episodesBy(null);
+	}
+
+	@Test
+	public void searchingByAGivenSpecificationReturnsAllEpisodesThatSatisfyIt() {
+		Specification<Episode> specification = new AbstractSpecification<Episode>() {
+			@Override
+			public boolean isSatisfiedBy(Episode episode) {
+				return episode.wasSeen();
+			}
+		};
+
+		Episode episode1 = mockEpisode(1, 1, 1, 1);
+		Episode episode2 = mockEpisode(2, 1, 2, 1);
+		Episode episode3 = mockEpisode(3, 1, 3, 1);
+		Episode episode4 = mockEpisode(4, 1, 4, 1);
+
+		markAsSeen(episode1, episode2);
+		markAsNotSeen(episode3, episode4);
+
+		Season season =
+			new Season(1, 1).including(episode1).including(episode2).including(episode3).including(episode4);
+
+		Assert.assertEquals(2, season.episodesBy(specification).size());
+		Assert.assertTrue(season.episodesBy(specification).contains(episode1));
+		Assert.assertTrue(season.episodesBy(specification).contains(episode2));
+
+		Assert.assertEquals(2, season.episodesBy(specification.not()).size());
+		Assert.assertTrue(season.episodesBy(specification.not()).contains(episode3));
+		Assert.assertTrue(season.episodesBy(specification.not()).contains(episode4));
+
+		Assert.assertTrue(season.episodesBy(specification.and(specification.not())).isEmpty());
 	}
 
 	//Inclusion---------------------------------------------------------------------------------------------------------
 
 	@Test(expected=IllegalArgumentException.class)
-	public final void testIncludeNullEpisode() {
-		new Season(1, 1).include(null);
+	public final void includingANullEpisodeCausesIllegalArgumentException() {
+		new Season(1, 1).including(null);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
-	public final void testIncludeEpisodeWithAnotherSeriesId() {
-		new Season(1, 1).include(this.mockEpisode(1, 2, 1, 1));
+	public final void includingAnEpisodeWithAnotherSeriesIdCausesIllegalArgumentException() {
+		new Season(1, 1).including(mockEpisode(1, 2, 1, 1));
 	}
 
 	@Test(expected=IllegalArgumentException.class)
-	public final void testIncludeEpisodeWithAnotherSeasonNumber() {
-		new Season(1, 1).include(this.mockEpisode(1, 1, 1, 2));
+	public final void includingAnEpisodeWithAnotherSeasonNumberCausesIllegalArgumentException() {
+		new Season(1, 1).including(mockEpisode(1, 1, 1, 2));
 	}
 
 	@Test(expected=IllegalArgumentException.class)
-	public final void testIncludeAlreadyExistentEpisode() {
-		Season s = new Season(1, 1);
-		Episode e = this.mockEpisode(1, 1, 1, 1);
-		s.include(e);
-		s.include(e);
+	public final void includingAnAlreadyIncludedEpisodeCausesIllegalArgumentException() {
+		new Season(1, 1).including(mockEpisode(1, 1, 1, 1)).including(mockEpisode(1, 1, 1, 1));
 	}
+
+	//TODO Continue refactoring from here-------------------------------------------------------------------------------
 
 	@Test
 	public final void testIncludeValidEpisodes() {
 		Season s1 = new Season(1, 1);
 
-		Episode e1 = this.mockEpisode(1, 1, 1, 1);
-		Episode e2 = this.mockEpisode(2, 1, 2, 1);
-		this.markAsNotSeen(e1, e2);
+		Episode e1 = mockEpisode(1, 1, 1, 1);
+		Episode e2 = mockEpisode(2, 1, 2, 1);
+		markAsNotSeen(e1, e2);
 
-		SeasonListener l1 = this.mockListener();
-		SeasonListener l2 = this.mockListener();
+		SeasonListener l1 = mockListener();
+		SeasonListener l2 = mockListener();
 
 		s1.register(l1);
 		s1.register(l2);
 
-		s1.include(e2);
+		s1.including(e2);
 
 		Assert.assertTrue(s1.includes(e2));
 		Assert.assertEquals(1, s1.numberOfEpisodes());
@@ -179,7 +226,7 @@ public class SeasonTest {
 		Mockito.verify(l1, Mockito.times(1)).onChangeNextEpisodeToSee(s1);
 		Mockito.verify(l2, Mockito.times(1)).onChangeNextEpisodeToSee(s1);
 
-		s1.include(e1);
+		s1.including(e1);
 
 		Assert.assertTrue(s1.includes(e1));
 		Assert.assertEquals(2, s1.numberOfEpisodes());
@@ -193,17 +240,17 @@ public class SeasonTest {
 
 		Season s2 = new Season(1, 2);
 
-		Episode e3 = this.mockEpisode(1, 1, 1, 2);
-		Episode e4 = this.mockEpisode(2, 1, 2, 2);
-		this.markAsSeen(e3, e4);
+		Episode e3 = mockEpisode(1, 1, 1, 2);
+		Episode e4 = mockEpisode(2, 1, 2, 2);
+		markAsSeen(e3, e4);
 
-		SeasonListener l3 = this.mockListener();
-		SeasonListener l4 = this.mockListener();
+		SeasonListener l3 = mockListener();
+		SeasonListener l4 = mockListener();
 
 		s2.register(l3);
 		s2.register(l4);
 
-		s2.include(e3);
+		s2.including(e3);
 
 		Assert.assertTrue(s2.includes(e3));
 		Assert.assertTrue(s2.wasSeen());
@@ -213,7 +260,7 @@ public class SeasonTest {
 		Mockito.verify(l3, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
 		Mockito.verify(l4, Mockito.times(0)).onChangeNextEpisodeToSee(s2);
 
-		s2.include(e4);
+		s2.including(e4);
 
 		Assert.assertTrue(s2.includes(e3));
 		Assert.assertTrue(s2.includes(e4));
@@ -231,21 +278,21 @@ public class SeasonTest {
 	public final void testMarkAsSeen() {
 		Season s = new Season(1, 1);
 
-		Episode e1 = this.mockEpisode(1, 1, 1, 1);
-		Episode e2  = this.mockEpisode(2, 1, 2, 1);
+		Episode e1 = mockEpisode(1, 1, 1, 1);
+		Episode e2  = mockEpisode(2, 1, 2, 1);
 
-		s.include(e1);
-		s.include(e2);
+		s.including(e1);
+		s.including(e2);
 
-		SeasonListener l1 = this.mockListener();
-		SeasonListener l2 = this.mockListener();
+		SeasonListener l1 = mockListener();
+		SeasonListener l2 = mockListener();
 
 		s.register(l1);
 		s.register(l2);
 
 		s.markAsSeen();
-		this.markAsSeen(e1, e2);
-		this.callOnMarkAsSeenFor(s, e1, e2);
+		markAsSeen(e1, e2);
+		callOnMarkAsSeenFor(s, e1, e2);
 
 		Mockito.verify(e1).markAsSeen();
 		Mockito.verify(e2).markAsSeen();
@@ -262,22 +309,22 @@ public class SeasonTest {
 	public final void testMarkAsNotSeen() {
 		Season s = new Season(1, 1);
 
-		Episode e1 = this.mockEpisode(1, 1, 1, 1);
-		Episode e2  = this.mockEpisode(2, 1, 2, 1);
-		this.markAsSeen(e1, e2);
+		Episode e1 = mockEpisode(1, 1, 1, 1);
+		Episode e2  = mockEpisode(2, 1, 2, 1);
+		markAsSeen(e1, e2);
 
-		s.include(e1);
-		s.include(e2);
+		s.including(e1);
+		s.including(e2);
 
-		SeasonListener l1 = this.mockListener();
-		SeasonListener l2 = this.mockListener();
+		SeasonListener l1 = mockListener();
+		SeasonListener l2 = mockListener();
 
 		s.register(l1);
 		s.register(l2);
 
 		s.markAsNotSeen();
-		this.markAsNotSeen(e1, e2);
-		this.callOnMarkAsNotSeenFor(s, e1, e2);
+		markAsNotSeen(e1, e2);
+		callOnMarkAsNotSeenFor(s, e1, e2);
 
 		Mockito.verify(e1).markAsNotSeen();
 		Mockito.verify(e2).markAsNotSeen();
@@ -312,14 +359,14 @@ public class SeasonTest {
 		Season s1 = new Season(1, 1);
 		Season s2 = new Season(1, 1);
 
-		Episode e1 = this.mockEpisode(1, 1, 1, 1);
-		Episode e2 = this.mockEpisode(2, 1, 2, 1);
+		Episode e1 = mockEpisode(1, 1, 1, 1);
+		Episode e2 = mockEpisode(2, 1, 2, 1);
 
-		s1.include(e1);
-		s2.include(e2);
+		s1.including(e1);
+		s2.including(e2);
 
-		SeasonListener l1 = this.mockListener();
-		SeasonListener l2 = this.mockListener();
+		SeasonListener l1 = mockListener();
+		SeasonListener l2 = mockListener();
 
 		s1.register(l1);
 		s2.register(l2);
@@ -347,21 +394,21 @@ public class SeasonTest {
 	public final void testOnMarkAsSeen() {
 		Season s = new Season(1, 1);
 
-		Episode e1 = this.mockEpisode(1, 1, 1, 1);
-		Episode e2 = this.mockEpisode(2, 1, 2, 1);
-		this.markAsNotSeen(e1, e2);
+		Episode e1 = mockEpisode(1, 1, 1, 1);
+		Episode e2 = mockEpisode(2, 1, 2, 1);
+		markAsNotSeen(e1, e2);
 
-		s.include(e1);
-		s.include(e2);
+		s.including(e1);
+		s.including(e2);
 
-		SeasonListener l1 = this.mockListener();
-		SeasonListener l2 = this.mockListener();
+		SeasonListener l1 = mockListener();
+		SeasonListener l2 = mockListener();
 
 		s.register(l1);
 		s.register(l2);
 
-		this.markAsSeen(e1);
-		this.callOnMarkAsSeenFor(s, e1);
+		markAsSeen(e1);
+		callOnMarkAsSeenFor(s, e1);
 
 		Assert.assertFalse(s.wasSeen());
 		Assert.assertEquals(1, s.numberOfSeenEpisodes());
@@ -373,8 +420,8 @@ public class SeasonTest {
 		Mockito.verify(l1, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 		Mockito.verify(l2, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 
-		this.markAsSeen(e2);
-		this.callOnMarkAsSeenFor(s, e2);
+		markAsSeen(e2);
+		callOnMarkAsSeenFor(s, e2);
 
 		Assert.assertTrue(s.wasSeen());
 		Assert.assertEquals(2, s.numberOfSeenEpisodes());
@@ -391,21 +438,21 @@ public class SeasonTest {
 	public final void testOnMarkAsNotSeen() {
 		Season s = new Season(1, 1);
 
-		Episode e1 = this.mockEpisode(1, 1, 1, 1);
-		Episode e2 = this.mockEpisode(2, 1, 2, 1);
-		this.markAsSeen(e1, e2);
+		Episode e1 = mockEpisode(1, 1, 1, 1);
+		Episode e2 = mockEpisode(2, 1, 2, 1);
+		markAsSeen(e1, e2);
 
-		s.include(e1);
-		s.include(e2);
+		s.including(e1);
+		s.including(e2);
 
-		SeasonListener l1 = this.mockListener();
-		SeasonListener l2 = this.mockListener();
+		SeasonListener l1 = mockListener();
+		SeasonListener l2 = mockListener();
 
 		s.register(l1);
 		s.register(l2);
 
-		this.markAsNotSeen(e1);
-		this.callOnMarkAsNotSeenFor(s, e1);
+		markAsNotSeen(e1);
+		callOnMarkAsNotSeenFor(s, e1);
 
 		Assert.assertFalse(s.wasSeen());
 		Assert.assertEquals(1, s.numberOfSeenEpisodes());
@@ -417,8 +464,8 @@ public class SeasonTest {
 		Mockito.verify(l1, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 		Mockito.verify(l2, Mockito.times(1)).onChangeNextEpisodeToSee(s);
 
-		this.markAsNotSeen(e2);
-		this.callOnMarkAsNotSeenFor(s, e2);
+		markAsNotSeen(e2);
+		callOnMarkAsNotSeenFor(s, e2);
 
 		Assert.assertFalse(s.wasSeen());
 		Assert.assertEquals(0, s.numberOfSeenEpisodes());
