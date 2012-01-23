@@ -98,11 +98,13 @@ public class Season implements EpisodeListener {
         Validate.isTrue(episode.seasonNumber() == this.number, "episode's seasonNumber should be %d", this.number);
         Validate.isTrue(!this.includes(episode), "episode is already included");
 
-        this.episodes.put(episode.number(), episode);
-
         if (episode.wasSeen()) {
             this.numberOfSeenEpisodes++;
             this.notifyThatNumberOfSeenEpisodesChanged();
+        }
+
+        if (!episode.wasSeen() && this.wasSeen()) {
+            this.notifyThatWasMarkedAsNotSeen();
         }
 
         if (this.nextToSeeShouldBe(episode)) {
@@ -110,6 +112,7 @@ public class Season implements EpisodeListener {
             this.notifyThatNextToSeeChanged();
         }
 
+        this.episodes.put(episode.number(), episode);
         episode.register(this);
 
         return this;
@@ -184,18 +187,23 @@ public class Season implements EpisodeListener {
     //SeasonListener----------------------------------------------------------------------------------------------------
 
     public boolean register(SeasonListener listener) {
-        return !this.isRegistered(listener) && this.listeners.add(listener);
+        Validate.isNonNull(listener, "listener to register should be non-null");
+
+        for (SeasonListener l : this.listeners) {
+            if (l == listener) return false;
+        }
+
+        return this.listeners.add(listener);
     }
 
     public boolean deregister(SeasonListener listener) {
-        return this.isRegistered(listener) && this.listeners.remove(listener);
-    }
+        Validate.isNonNull(listener, "listener to deregister should be non-null");
 
-    private boolean isRegistered(SeasonListener listener) {
-        Validate.isNonNull(listener, "listener should be non-null");
-
-        for (SeasonListener l : this.listeners) {
-            if (l == listener) return true;
+        for (int i = 0; i < this.listeners.size(); i++) {
+            if (this.listeners.get(i) == listener) {
+                this.listeners.remove(i);
+                return true;
+            }
         }
 
         return false;
