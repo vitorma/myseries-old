@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.model;
 
 import java.io.ByteArrayOutputStream;
@@ -27,20 +26,18 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import android.graphics.Bitmap;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class Poster {
-
-    private static final int POSTER_WIDTH = 102; //px
-    private static final int POSTER_HEIGHT = 150; //px
+    private static final int POSTER_WIDTH_IN_PIXELS = 102;
+    private static final int POSTER_HEIGHT_IN_PIXELS = 150;
 
     private Bitmap image;
 
     public Poster(Bitmap image) {
-        if (image == null) {
-            throw new IllegalArgumentException("image should not be null");
-        }
+        Validate.isNonNull(image, "image should be non-null");
 
-        this.image = Bitmap.createScaledBitmap(image, POSTER_WIDTH, POSTER_HEIGHT, true);
+        this.image = Bitmap.createScaledBitmap(image, POSTER_WIDTH_IN_PIXELS, POSTER_HEIGHT_IN_PIXELS, true);
     }
 
     public Bitmap getImage() {
@@ -60,9 +57,8 @@ public class Poster {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Poster)) {
+        if (!(o instanceof Poster))
             return false;
-        }
 
         // Why all this stuff?
         // http://stackoverflow.com/questions/6120439/comparing-bitmap-images-in-android
