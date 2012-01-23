@@ -836,7 +836,7 @@ public class SeasonTest {
 		//equals is consistent
 		for (int i=1; i<=1000; i++) {
 
-			//equals returns false to null objects
+			//equals returns false for null objects
 			Assert.assertFalse(s1.equals(null));
 
 			//equals is reflexive

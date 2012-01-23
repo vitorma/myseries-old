@@ -57,8 +57,7 @@ public class Poster {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Poster))
-            return false;
+        if (!(o instanceof Poster)) return false;
 
         Bitmap bitmap1 = this.image();
         Bitmap bitmap2 = ((Poster) o).image();

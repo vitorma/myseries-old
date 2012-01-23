@@ -19,16 +19,15 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.test.unit.model;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.ByteArrayOutputStream;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import android.graphics.Bitmap;
 import br.edu.ufcg.aweseries.model.Poster;
@@ -36,68 +35,70 @@ import br.edu.ufcg.aweseries.test.util.SampleBitmap;
 
 public class PosterTest extends TestCase {
 
-    private static final Bitmap posterImage = SampleBitmap.pixel;
+	private static final Bitmap POSTER_IMAGE = SampleBitmap.pixel;
 
-    private Poster poster;
+	//Auxiliary---------------------------------------------------------------------------------------------------------
 
-    @Override
-    public void setUp() throws Exception {
-        this.poster = new Poster(posterImage);
-    }
+	private static byte[] bytesFrom(Bitmap bmp) {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		bmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+		return outputStream.toByteArray();
+	}
 
-    @Override
-    public void tearDown() throws Exception {
-        this.poster = null;
-    }
+	private static Bitmap scaled(Bitmap bmp) {
+		return Bitmap.createScaledBitmap(bmp, 102, 150, true);
+	}
 
-    public void testConstructingWithNullImageThrowsException() {
-        try {
-            new Poster(null);
-            fail("Should have thrown an IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
-    }
+	//Test--------------------------------------------------------------------------------------------------------------
 
-    public void testGetImage() {
-        assertThat(this.poster.image(), notNullValue());
-    }
+	public void testConstructingAPosterWithNullImageCausesIllegalArgumentException() {
+		try {
+			new Poster(null);
+			fail("Should have thrown an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {}
+	}
 
-    public void testToByteArrayReturnsImagesBytes() {
-        assertThat(this.poster.toByteArray(), equalTo(bytesFrom(scaled(posterImage))));
-    }
+	public void testImageIsNotNull() {
+		assertThat(new Poster(POSTER_IMAGE), notNullValue());
+	}
 
-    private byte[] bytesFrom(Bitmap bmp) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-        return outputStream.toByteArray();
-    }
+	public void testToByteArrayReturnsTheBytesOfTheImage() {
+		assertThat(new Poster(POSTER_IMAGE).toByteArray(), equalTo(bytesFrom(scaled(POSTER_IMAGE))));
+	}
 
-    private Bitmap scaled(Bitmap bmp) {
-        return Bitmap.createScaledBitmap(bmp, 102, 150, true);
-    }
+	public void testEquals() {
+		Poster p1 = new Poster(POSTER_IMAGE);
+		Poster p2 = new Poster(POSTER_IMAGE);
+		Poster p3 = new Poster(POSTER_IMAGE);
 
-    public void testEquals() {
-        Poster p1 = new Poster(posterImage);
-        Poster p2 = new Poster(posterImage);
-        Poster p3 = new Poster(posterImage);
+		//equals is consistent
+		for (int i = 0; i < 10; ++i) {
 
-        for (int i = 0; i < 1000; ++i) {
-            assertThat(p1, equalTo(p1));
-            assertThat(p1, equalTo(p2));
-            assertThat(p1, not(equalTo(null)));
+			//equals returns false for null object
+			Assert.assertFalse(p1.equals(null));
 
-            assertThat(p1, equalTo(p2));
-            assertThat(p2, equalTo(p3));
-            assertThat(p1, equalTo(p3));
-        }
-    }
+			//equals is reflexive
+			Assert.assertTrue(p1.equals(p1));
 
-    public void testHashCode() {
-        Poster p1 = new Poster(posterImage);
-        Poster p2 = new Poster(posterImage);
+			//equals is symmetric
+			Assert.assertTrue(p1.equals(p2));
+			Assert.assertTrue(p2.equals(p1));
 
-        for (int i = 0; i < 1000; ++i) {
-            assertThat(p1.hashCode(), equalTo(p1.hashCode()));
-            assertThat(p1.hashCode(), equalTo(p2.hashCode()));
-        }
-    }
+			//equals is transitive
+			Assert.assertTrue(p2.equals(p3));
+			Assert.assertTrue(p1.equals(p3));
+		}
+	}
+
+	public void testHashCode() {
+		Poster p1 = new Poster(POSTER_IMAGE);
+		Poster p2 = new Poster(POSTER_IMAGE);
+
+		//hashCode is consistent
+		for (int i = 0; i < 10; ++i) {
+
+			//equal objects have the same hashCode
+			Assert.assertEquals(p1.hashCode(), p2.hashCode());
+		}
+	}
 }

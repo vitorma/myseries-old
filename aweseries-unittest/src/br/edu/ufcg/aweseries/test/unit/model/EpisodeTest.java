@@ -497,7 +497,7 @@ public class EpisodeTest {
 		//equals is consistent
 		for (int i=1; i<=1000; i++) {
 
-			//equals returns false to null objects
+			//equals returns false for null objects
 			Assert.assertFalse(e1.equals(null));
 
 			//equals is reflexive
