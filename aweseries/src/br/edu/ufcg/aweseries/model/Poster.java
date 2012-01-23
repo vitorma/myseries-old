@@ -40,19 +40,19 @@ public class Poster {
         this.image = Bitmap.createScaledBitmap(image, POSTER_WIDTH_IN_PIXELS, POSTER_HEIGHT_IN_PIXELS, true);
     }
 
-    public Bitmap getImage() {
+    public Bitmap image() {
         return this.image;
     }
 
     public byte[] toByteArray() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        this.getImage().compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        this.image().compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         return outputStream.toByteArray();
     }
 
     @Override
     public int hashCode() {
-        return this.getImage().getRowBytes();
+        return this.image().getRowBytes();
     }
 
     @Override
@@ -63,8 +63,8 @@ public class Poster {
         // Why all this stuff?
         // http://stackoverflow.com/questions/6120439/comparing-bitmap-images-in-android
 
-        Bitmap bitmap1 = this.getImage();
-        Bitmap bitmap2 = ((Poster) o).getImage();
+        Bitmap bitmap1 = this.image();
+        Bitmap bitmap2 = ((Poster) o).image();
 
         ByteBuffer buffer1 = ByteBuffer.allocate(bitmap1.getHeight() * bitmap1.getRowBytes());
         bitmap1.copyPixelsToBuffer(buffer1);

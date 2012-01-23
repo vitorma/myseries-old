@@ -58,7 +58,7 @@ public class PosterTest extends TestCase {
     }
 
     public void testGetImage() {
-        assertThat(this.poster.getImage(), notNullValue());
+        assertThat(this.poster.image(), notNullValue());
     }
 
     public void testToByteArrayReturnsImagesBytes() {

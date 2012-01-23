@@ -111,7 +111,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
 
                     final RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
                     if (series.hasPoster()) {
-                        final Bitmap poster = series.poster().getImage();
+                        final Bitmap poster = series.poster().image();
                         item.setImageViewBitmap(R.id.widgetPoster, poster);
                     }
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.name());

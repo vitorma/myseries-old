@@ -255,7 +255,7 @@ public class SeriesProvider {
         if (!series.hasPoster())
             return this.genericPosterImage();
 
-        return series.poster().getImage();
+        return series.poster().image();
     }
 
     private Bitmap genericPosterImage() {
