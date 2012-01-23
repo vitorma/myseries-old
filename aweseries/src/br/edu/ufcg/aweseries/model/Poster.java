@@ -60,9 +60,6 @@ public class Poster {
         if (!(o instanceof Poster))
             return false;
 
-        // Why all this stuff?
-        // http://stackoverflow.com/questions/6120439/comparing-bitmap-images-in-android
-
         Bitmap bitmap1 = this.image();
         Bitmap bitmap2 = ((Poster) o).image();
 
