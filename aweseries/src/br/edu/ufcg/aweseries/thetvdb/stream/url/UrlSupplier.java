@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.thetvdb.stream.url;
 
 import java.io.IOException;
@@ -31,12 +30,15 @@ import java.net.URLEncoder;
 
 import br.edu.ufcg.aweseries.thetvdb.parsing.MirrorsParser;
 import br.edu.ufcg.aweseries.util.Strings;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class UrlSupplier {
     private String apiKey;
     private Mirrors mirrors;
 
     public UrlSupplier(String apiKey) {
+        Validate.isNonNull(apiKey, "apiKey should be non-null");
+
         this.apiKey = apiKey;
     }
 
@@ -47,7 +49,7 @@ public class UrlSupplier {
     }
 
     private void loadMirrors() {
-        this.mirrors = new MirrorsParser(streamFor(this.getMirrorUrl())).parse();
+        this.mirrors = new MirrorsParser(this.streamFor(this.getMirrorUrl())).parse();
     }
 
     private InputStream streamFor(String url) {
@@ -69,19 +71,16 @@ public class UrlSupplier {
     }
 
     private StringBuilder getXmlUrl() {
-        return new StringBuilder(this.getMirrorPath(MirrorType.XML))
-                .append("/api/").append(this.apiKey);
+        return new StringBuilder(this.getMirrorPath(MirrorType.XML)).append("/api/").append(this.apiKey);
     }
 
-	private StringBuilder getBannerUrl() {
-        return new StringBuilder(this.getMirrorPath(MirrorType.BANNER))
-                .append("/banners/");
+    private StringBuilder getBannerUrl() {
+        return new StringBuilder(this.getMirrorPath(MirrorType.BANNER)).append("/banners/");
     }
 
     @SuppressWarnings("unused")
     private StringBuilder getZipUrl() {
-        return new StringBuilder(this.getMirrorPath(MirrorType.ZIP))
-                .append("/api/").append(this.apiKey);
+        return new StringBuilder(this.getMirrorPath(MirrorType.ZIP)).append("/api/").append(this.apiKey);
     }
 
     //SERIES ---------------------------------------------------------------------------------------
@@ -95,24 +94,24 @@ public class UrlSupplier {
     }
 
     public String getFullSeriesUrl(String id) {
-        return getSeriesUrlBuilder(id).append("/all/").toString();
+        return this.getSeriesUrlBuilder(id).append("/all/").toString();
     }
 
     public String getFullSeriesUrl(String id, String language) {
-        return getSeriesUrlBuilder(id)
-                .append("/all/").append((language != null ? "&language=" + language : "")).toString();
+        return this.getSeriesUrlBuilder(id)
+        .append("/all/").append((language != null ? "&language=" + language : "")).toString();
     }
 
     public String getSeriesSearchUrl(String name) {
         return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" +
-               name.trim().replaceAll("\\s+", "%20");
+        name.trim().replaceAll("\\s+", "%20");
     }
 
     public String getSeriesSearchUrl(String name, String language) {
         try {
             return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" +
-                    URLEncoder.encode(name, "UTF-8") +
-                    (language != null ? "&language=" + language : "");
+            URLEncoder.encode(name, "UTF-8") +
+            (language != null ? "&language=" + language : "");
         } catch (UnsupportedEncodingException e) {
             return null;
         }
@@ -121,9 +120,8 @@ public class UrlSupplier {
     //POSTERS --------------------------------------------------------------------------------------
 
     public String getSeriesPosterUrl(String filename) {
-        if (filename == null || Strings.isBlank(filename)) {
+        if (filename == null || Strings.isBlank(filename))
             return null;
-        }
 
         return this.getBannerUrl().append(filename).toString();
     }
