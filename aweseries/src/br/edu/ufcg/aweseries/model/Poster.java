@@ -46,13 +46,13 @@ public class Poster {
 
     public byte[] toByteArray() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        this.image().compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        this.image.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         return outputStream.toByteArray();
     }
 
     @Override
     public int hashCode() {
-        return this.image().getRowBytes();
+        return this.image.getRowBytes();
     }
 
     @Override
