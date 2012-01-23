@@ -43,6 +43,8 @@ public class Episode {
     private boolean seen;
     private List<EpisodeListener> listeners; 
 
+    //Private construction----------------------------------------------------------------------------------------------
+
     private Episode(int id, int seriesId, int number, int seasonNumber) {
         Validate.isTrue(id >= 0, "id should be non-negative");
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
@@ -57,13 +59,13 @@ public class Episode {
         this.listeners = new LinkedList<EpisodeListener>();
     }
 
-    //Builder factory---------------------------------------------------------------------------------------------------
+    //Building----------------------------------------------------------------------------------------------------------
 
     public static Episode.Builder builder() {
         return new Episode.Builder();
     }
 
-    //Interface---------------------------------------------------------------------------------------------------------
+    //Immutable---------------------------------------------------------------------------------------------------------
 
     public int id() {
         return this.id;
@@ -80,6 +82,8 @@ public class Episode {
     public int seasonNumber() {
         return this.seasonNumber;
     }
+
+    //Mutable-----------------------------------------------------------------------------------------------------------
 
     public String name() {
         return this.name;
@@ -109,23 +113,27 @@ public class Episode {
         return this.poster;
     }
 
+    //SeenMark----------------------------------------------------------------------------------------------------------
+
     public boolean wasSeen() {
         return this.seen;
     }
 
     public void markAsSeen() {
-        if (!seen) {
+        if (!this.seen) {
             this.seen = true;
-            this.notifyOfMarkAsSeen();
+            this.notifyThatWasMarkedAsSeen();
         }
     }
 
     public void markAsNotSeen() {
-        if (seen) {
+        if (this.seen) {
             this.seen = false;
-            this.notifyOfMarkAsNotSeen();
+            this.notifyThatWasMarkedAsNotSeen();
         }
     }
+
+    //Merge-------------------------------------------------------------------------------------------------------------
 
     public void mergeWith(Episode other) {
         Validate.isNonNull(other, "other should be non-null");
@@ -142,54 +150,59 @@ public class Episode {
         this.guestStars = other.guestStars;
         this.poster = other.poster;
 
-        this.notifyOfMerge();
+        this.notifyThatWasMerged();
     }
 
-    //Listeners---------------------------------------------------------------------------------------------------------
-    
+    //EpisodeListener---------------------------------------------------------------------------------------------------
+
     public boolean register(EpisodeListener listener) {
-        return !this.isRegistered(listener) && this.listeners.add(listener);
+        Validate.isNonNull(listener, "listener to register should be non-null");
+
+        for (EpisodeListener l : this.listeners) {
+            if (l == listener) return false;
+        }
+
+        return this.listeners.add(listener);
     }
 
     public boolean deregister(EpisodeListener listener) {
-        return this.isRegistered(listener) && this.listeners.remove(listener);
-    }
+        Validate.isNonNull(listener, "listener to deregister should be non-null");
 
-    private boolean isRegistered(EpisodeListener listener) {
-        Validate.isNonNull(listener, "listener should be non-null");
-
-        for (EpisodeListener l : this.listeners) {
-            if (l == listener) return true;
+        for (int i = 0; i < this.listeners.size(); i++) {
+            if (this.listeners.get(i) == listener) {
+                this.listeners.remove(i);
+                return true;
+            }
         }
-        
+
         return false;
     }
 
-    private void notifyOfMarkAsSeen() {
+    private void notifyThatWasMarkedAsSeen() {
         for (EpisodeListener listener : this.listeners) {
             listener.onMarkAsSeen(this);
         }
     }
 
-    private void notifyOfMarkAsNotSeen() {
+    private void notifyThatWasMarkedAsNotSeen() {
         for (EpisodeListener listener : this.listeners) {
             listener.onMarkAsNotSeen(this);
         }
     }
 
-    private void notifyOfMerge() {
+    private void notifyThatWasMerged() {
         for (EpisodeListener listener : this.listeners) {
             listener.onMerge(this);
         }
     }
-    
+
     //Object------------------------------------------------------------------------------------------------------------
-    
+
     @Override
     public int hashCode() {
         return this.id;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Episode) && ((Episode) obj).id == this.id;
