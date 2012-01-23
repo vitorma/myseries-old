@@ -146,8 +146,8 @@ public class EpisodeTest {
 		.withDirectors(DIRECTORS)
 		.withWriters(WRITERS)
 		.withGuestStars(GUEST_STARS)
-		.withPoster(POSTER)
-		.withSeen(true)
+		.withImageFileName(POSTER)
+		.withSeenMark(true)
 		.build();
 
 		Assert.assertEquals(ID1, e1.id());
@@ -160,7 +160,7 @@ public class EpisodeTest {
 		Assert.assertEquals(DIRECTORS, e1.directors());
 		Assert.assertEquals(WRITERS, e1.writers());
 		Assert.assertEquals(GUEST_STARS, e1.guestStars());
-		Assert.assertEquals(POSTER, e1.poster());
+		Assert.assertEquals(POSTER, e1.imageFileName());
 		Assert.assertEquals(true, e1.wasSeen());
 
 		Episode e2 = Episode.builder()
@@ -180,7 +180,7 @@ public class EpisodeTest {
 		Assert.assertEquals(null, e2.directors());
 		Assert.assertEquals(null, e2.writers());
 		Assert.assertEquals(null, e2.guestStars());
-		Assert.assertEquals(null, e2.poster());
+		Assert.assertEquals(null, e2.imageFileName());
 		Assert.assertEquals(false, e2.wasSeen());
 	}
 
@@ -193,7 +193,7 @@ public class EpisodeTest {
 		.withSeriesId(SERIES_ID1)
 		.withNumber(NUMBER1)
 		.withSeasonNumber(SEASON_NUMBER1)
-		.withSeen(false)
+		.withSeenMark(false)
 		.build();
 
 		EpisodeListener l1 = mockListener();
@@ -224,7 +224,7 @@ public class EpisodeTest {
 		.withSeriesId(SERIES_ID1)
 		.withNumber(NUMBER1)
 		.withSeasonNumber(SEASON_NUMBER1)
-		.withSeen(true)
+		.withSeenMark(true)
 		.build();
 
 		EpisodeListener l1 = mockListener();
@@ -344,7 +344,7 @@ public class EpisodeTest {
 		.withSeriesId(SERIES_ID1)
 		.withNumber(NUMBER1)
 		.withSeasonNumber(SEASON_NUMBER1)
-		.withSeen(false)
+		.withSeenMark(false)
 		.build();
 
 		Episode e2 = Episode.builder()
@@ -358,8 +358,8 @@ public class EpisodeTest {
 		.withDirectors(DIRECTORS)
 		.withWriters(WRITERS)
 		.withGuestStars(GUEST_STARS)
-		.withPoster(POSTER)
-		.withSeen(true)
+		.withImageFileName(POSTER)
+		.withSeenMark(true)
 		.build();
 
 		EpisodeListener l1 = mockListener();
@@ -377,7 +377,7 @@ public class EpisodeTest {
 			Assert.assertEquals(DIRECTORS, e1.directors());
 			Assert.assertEquals(WRITERS, e1.writers());
 			Assert.assertEquals(GUEST_STARS, e1.guestStars());
-			Assert.assertEquals(POSTER, e1.poster());
+			Assert.assertEquals(POSTER, e1.imageFileName());
 			Assert.assertEquals(false, e1.wasSeen());
 		}
 

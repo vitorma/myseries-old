@@ -272,7 +272,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        episodeBuilder.withPoster(body);
+                        episodeBuilder.withImageFileName(body);
                     }
                 });
 

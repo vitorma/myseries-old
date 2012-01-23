@@ -38,9 +38,9 @@ public class Episode {
     private String directors;
     private String writers;
     private String guestStars;
-    private String poster;
+    private String imageFileName;
 
-    private boolean seen;
+    private boolean seenMark;
     private List<EpisodeListener> listeners; 
 
     //Private construction----------------------------------------------------------------------------------------------
@@ -109,26 +109,26 @@ public class Episode {
         return this.guestStars;
     }
 
-    public String poster() {
-        return this.poster;
+    public String imageFileName() {
+        return this.imageFileName;
     }
 
     //SeenMark----------------------------------------------------------------------------------------------------------
 
     public boolean wasSeen() {
-        return this.seen;
+        return this.seenMark;
     }
 
     public void markAsSeen() {
-        if (!this.seen) {
-            this.seen = true;
+        if (!this.seenMark) {
+            this.seenMark = true;
             this.notifyThatWasMarkedAsSeen();
         }
     }
 
     public void markAsNotSeen() {
-        if (this.seen) {
-            this.seen = false;
+        if (this.seenMark) {
+            this.seenMark = false;
             this.notifyThatWasMarkedAsNotSeen();
         }
     }
@@ -148,7 +148,7 @@ public class Episode {
         this.directors = other.directors;
         this.writers = other.writers;
         this.guestStars = other.guestStars;
-        this.poster = other.poster;
+        this.imageFileName = other.imageFileName;
 
         this.notifyThatWasMerged();
     }
@@ -226,8 +226,8 @@ public class Episode {
         private String directors;
         private String writers;
         private String guestStars;
-        private String poster;
-        private boolean seen;
+        private String imageFileName;
+        private boolean seenMark;
 
         private Builder() {
             this.id = INVALID_ID;
@@ -286,13 +286,13 @@ public class Episode {
             return this;
         }
 
-        public Builder withPoster(String poster) {
-            this.poster = poster;
+        public Builder withImageFileName(String imageFileName) {
+            this.imageFileName = imageFileName;
             return this;
         }
 
-        public Builder withSeen(boolean seen) {
-            this.seen = seen;
+        public Builder withSeenMark(boolean seenMark) {
+            this.seenMark = seenMark;
             return this;
         }
 
@@ -305,8 +305,8 @@ public class Episode {
             episode.directors = this.directors;
             episode.writers = this.writers;
             episode.guestStars = this.guestStars;
-            episode.poster = this.poster;
-            episode.seen = this.seen;
+            episode.imageFileName = this.imageFileName;
+            episode.seenMark = this.seenMark;
 
             return episode;
         }

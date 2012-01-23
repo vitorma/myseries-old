@@ -322,7 +322,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put("director", e.directors());
         cv.put("writer", e.writers());
         cv.put("guestStars", e.guestStars());
-        cv.put("poster", e.poster());
+        cv.put("poster", e.imageFileName());
         cv.put("viewed", String.valueOf(e.wasSeen()));
         return cv;
     }
@@ -356,8 +356,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withDirectors(c.getString(c.getColumnIndex("director")))
             .withWriters(c.getString(c.getColumnIndex("writer")))
             .withGuestStars(c.getString(c.getColumnIndex("guestStars")))
-            .withPoster(c.getString(c.getColumnIndex("poster")))
-            .withSeen(Boolean.valueOf(c.getString(c.getColumnIndex("viewed"))))
+            .withImageFileName(c.getString(c.getColumnIndex("poster")))
+            .withSeenMark(Boolean.valueOf(c.getString(c.getColumnIndex("viewed"))))
             .build();
     }
 }
