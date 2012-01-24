@@ -37,8 +37,8 @@ import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 public abstract class SampleSeries {
 	public static final SampleSeries CHUCK = new SampleSeries() {
 		@Override
-		public String id() {
-			return "80348";
+		public int id() {
+			return 80348;
 		}
 
 		@Override
@@ -64,8 +64,8 @@ public abstract class SampleSeries {
 
 	public static final SampleSeries HOUSE = new SampleSeries() {
 		@Override
-		public String id() {
-			return "73255";
+		public int id() {
+			return 73255;
 		}
 
 		@Override
@@ -92,7 +92,7 @@ public abstract class SampleSeries {
 	public static final Set<SampleSeries> allSamples
 	= new HashSet<SampleSeries>(Arrays.asList(CHUCK, HOUSE));
 
-	public abstract String id();
+	public abstract int id();
 	public abstract String posterResourcePath();
 
 	public abstract InputStream baseSeriesStream();

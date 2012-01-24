@@ -27,6 +27,7 @@ import java.util.Set;
 
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
+import br.edu.ufcg.aweseries.util.Numbers;
 
 public class TestStreamFactory implements StreamFactory {
 
@@ -38,7 +39,7 @@ public class TestStreamFactory implements StreamFactory {
 		this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
 
 		for (SampleSeries s : this.allSampleSeries) {
-			if (s.id().equals(seriesId))
+			if (s.id() == Numbers.parseInt(seriesId, -1))
 				return s.fullSeriesStream();
 		}
 

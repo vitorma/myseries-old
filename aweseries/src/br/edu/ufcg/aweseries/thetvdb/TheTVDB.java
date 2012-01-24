@@ -33,6 +33,7 @@ import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesSearchParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.stream.TheTVDBStreamFactory;
+import br.edu.ufcg.aweseries.util.Numbers;
 
 public class TheTVDB implements SeriesSource {
     private final StreamFactory streamFactory;
@@ -75,7 +76,7 @@ public class TheTVDB implements SeriesSource {
             throw new IllegalArgumentException("language should not be null");
 
         try {
-            return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
+            return new SeriesParser(this.streamFactory).parse(Numbers.parseInt(seriesId, -1), this.getSupported(language));
         } catch (Exception e) {
             //TODO A better exception handling
             throw new SeriesNotFoundException(e);

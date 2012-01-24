@@ -58,11 +58,7 @@ public class SeriesParser {
     }
 
     //TODO Refactoring: extract definition of listeners, maybe creating inner types
-    public Series parse(String seriesId, String language) {
-        if (seriesId == null)
-            throw new IllegalArgumentException("seriesId should not be null");
-        if (Strings.isBlank(seriesId))
-            throw new IllegalArgumentException("seriesId should not be blank");
+    public Series parse(int seriesId, String language) {
 
         //Builders------------------------------------------------------------------------------------------------------
 
@@ -276,7 +272,7 @@ public class SeriesParser {
         //Parse---------------------------------------------------------------------------------------------------------
 
         try {
-            Xml.parse(this.streamFactory.streamForFullSeries(seriesId, language), Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(this.streamFactory.streamForFullSeries(String.valueOf(seriesId), language), Xml.Encoding.UTF_8, root.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
