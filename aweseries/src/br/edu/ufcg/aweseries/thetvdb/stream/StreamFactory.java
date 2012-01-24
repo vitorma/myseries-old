@@ -26,7 +26,7 @@ import java.io.InputStream;
 
 public interface StreamFactory {
 
-    public InputStream streamForFullSeries(String seriesId, String language);
+    public InputStream streamForFullSeries(int seriesId, String language);
 
     public InputStream streamForSeriesPosterAt(String resourcePath);
 

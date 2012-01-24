@@ -29,7 +29,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlSupplier;
-import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class TheTVDBStreamFactory implements StreamFactory {
@@ -43,8 +42,8 @@ public class TheTVDBStreamFactory implements StreamFactory {
     }
 
     @Override
-    public InputStream streamForFullSeries(String seriesId, String language) {
-        String fullSeriesUrl = this.urlSupplier.urlForSeries(Numbers.parseInt(seriesId, -1), language);
+    public InputStream streamForFullSeries(int seriesId, String language) {
+        String fullSeriesUrl = this.urlSupplier.urlForSeries(seriesId, language);
         return this.buffered(this.streamFor(fullSeriesUrl));
     }
 

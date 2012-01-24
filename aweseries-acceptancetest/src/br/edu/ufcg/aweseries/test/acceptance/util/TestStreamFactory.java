@@ -27,19 +27,16 @@ import java.util.Set;
 
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
-import br.edu.ufcg.aweseries.util.Numbers;
 
 public class TestStreamFactory implements StreamFactory {
 
 	private Set<SampleSeries> allSampleSeries = SampleSeries.allSamples;
 
 	@Override
-	public InputStream streamForFullSeries(String seriesId, String language) {
-		//FIXME Use the language
-		this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
-
+	public InputStream streamForFullSeries(int seriesId, String language) {
+		//TODO Use the language (?)
 		for (SampleSeries s : this.allSampleSeries) {
-			if (s.id() == Numbers.parseInt(seriesId, -1))
+			if (s.id() == seriesId)
 				return s.fullSeriesStream();
 		}
 

@@ -177,7 +177,7 @@ public class SeriesParserTest extends TestCase {
 		}
 
 		@Override
-		public InputStream streamForFullSeries(String seriesId, String language) {
+		public InputStream streamForFullSeries(int seriesId, String language) {
 			// TODO Auto-generated method stub
 			return new ByteArrayInputStream(SeriesParserTest.this.fullSeriesWithPosterDescription.getBytes());
 		}

@@ -272,7 +272,7 @@ public class SeriesParser {
         //Parse---------------------------------------------------------------------------------------------------------
 
         try {
-            Xml.parse(this.streamFactory.streamForFullSeries(String.valueOf(seriesId), language), Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(this.streamFactory.streamForFullSeries(seriesId, language), Xml.Encoding.UTF_8, root.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {

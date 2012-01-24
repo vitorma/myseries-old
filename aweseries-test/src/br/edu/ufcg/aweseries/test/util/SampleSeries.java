@@ -110,7 +110,7 @@ public abstract class SampleSeries {
 			}
 
 			@Override
-			public InputStream streamForFullSeries(String seriesId, String language) {
+			public InputStream streamForFullSeries(int seriesId, String language) {
 				// TODO Auto-generated method stub
 				return SampleSeries.this.fullSeriesStream();
 			}

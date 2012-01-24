@@ -45,7 +45,7 @@ import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
 	private static final String NON_EXISTENT_POSTER_RESOURCE_PATH = "nonExistent";
-	private static final String NON_EXISTENT_SERIES_ID = "0";
+	private static final int NON_EXISTENT_SERIES_ID = 0;
 
 	private static final String BLANK_STRING = "   \t  \n \t  ";
 
@@ -96,19 +96,6 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	}
 
 	// Full Series -------------------------------------------------------------
-	public void testGettingNullFullSeriesStreamThrowsException() {
-		try {
-			this.factory().streamForFullSeries(null, "en");
-			fail("Should have thrown an IllegalArgumentException");
-		} catch (IllegalArgumentException e) {}
-	}
-
-	public void testGettingFullSeriesWithBlankSeriesIdThrowsException() {
-		try {
-			this.factory().streamForFullSeries(BLANK_STRING, "en");
-			fail("Should have thrown an IllegalArgumentException");
-		} catch (IllegalArgumentException e) {}
-	}
 
 	public void testGettingFullSeriesWithNonExistentSeriesIdThrowsException() {
 		try {
@@ -120,7 +107,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	}
 
 	public void testGettingFullSeriesReturnsFullData() throws IOException {
-		InputStream testSeriesStream = this.factory().streamForFullSeries(String.valueOf(this.testSeriesId), "en");
+		InputStream testSeriesStream = this.factory().streamForFullSeries(this.testSeriesId, "en");
 
 		String contentOfTestSeriesStream = this.contentOf(testSeriesStream);
 
