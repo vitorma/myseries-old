@@ -52,7 +52,7 @@ public class UrlSupplier {
 
     //Series------------------------------------------------------------------------------------------------------------
 
-    public String urlForSeries(String seriesId, String language) {
+    public String urlForSeries(int seriesId, String language) {
         //TODO Check id and language after Series#id become an int and language become a Language
         //TODO Test after check be implemented
 
