@@ -43,7 +43,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
     @Override
     public InputStream streamForFullSeries(String seriesId, String language) {
-        String fullSeriesUrl = this.urlSupplier.getFullSeriesUrl(seriesId, language);
+        String fullSeriesUrl = this.urlSupplier.urlForSeries(seriesId, language);
         return this.buffered(this.streamFor(fullSeriesUrl));
     }
 
@@ -51,13 +51,13 @@ public class TheTVDBStreamFactory implements StreamFactory {
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
-        String seriesPosterUrl = this.urlSupplier.getSeriesPosterUrl(resourcePath);
+        String seriesPosterUrl = this.urlSupplier.urlForPoster(resourcePath);
         return this.streamFor(seriesPosterUrl);
     }
 
     @Override
     public InputStream streamForSeriesSearch(String seriesName, String language) {
-        String seriesSearchUrl = this.urlSupplier.getSeriesSearchUrl(seriesName, language);
+        String seriesSearchUrl = this.urlSupplier.urlForSeriesSearch(seriesName, language);
         return this.buffered(this.streamFor(seriesSearchUrl));
     }
 

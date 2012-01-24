@@ -52,23 +52,23 @@ public class UrlSupplier {
 
     //Series------------------------------------------------------------------------------------------------------------
 
-    public String getFullSeriesUrl(String id, String language) {
+    public String urlForSeries(String seriesId, String language) {
         //TODO Check id and language after Series#id become an int and language become a Language
         //TODO Test after check be implemented
 
         String lang = language != null ? language + ".xml" : "";//TODO Remove it ASAP
 
-        return mirrorXml().append(this.apiKey).append("/series/").append(id).append("/all/").append(lang).toString();
+        return mirrorXml().append(this.apiKey).append("/series/").append(seriesId).append("/all/").append(lang).toString();
     }
 
-    public String getSeriesSearchUrl(String name, String language) {
+    public String urlForSeriesSearch(String seriesName, String language) {
         //TODO Check language after language become a Language
         //TODO Test after check be implemented
 
         String safeName = null;
 
         try {
-            safeName = URLEncoder.encode(name, "UTF-8");
+            safeName = URLEncoder.encode(seriesName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             // TODO: a better exception handling
             return null;
@@ -79,12 +79,13 @@ public class UrlSupplier {
         return mirrorXml().append("GetSeries.php?seriesname=").append(safeName).append(lang).toString();
     }
 
-    //Images--------------------- --------------------------------------------------------------------------------------
+    //Images------------------------------------------------------------------------------------------------------------
 
-    public String getSeriesPosterUrl(String filename) {
-        if (filename == null || Strings.isBlank(filename))
+    public String urlForPoster(String fileName) {
+        //TODO Check and throw
+        if (fileName == null || Strings.isBlank(fileName))
             return null;
 
-        return mirrorBanners().append(filename).toString();
+        return mirrorBanners().append(fileName).toString();
     }
 }

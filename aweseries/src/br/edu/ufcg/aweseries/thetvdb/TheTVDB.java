@@ -42,9 +42,8 @@ public class TheTVDB implements SeriesSource {
     }
 
     public TheTVDB(StreamFactory streamFactory) {
-        if (streamFactory == null) {
+        if (streamFactory == null)
             throw new IllegalArgumentException("streamFactory should not be null");
-        }
 
         this.streamFactory = streamFactory;
     }
@@ -53,13 +52,11 @@ public class TheTVDB implements SeriesSource {
 
     @Override
     public List<Series> searchFor(String seriesName, String language) {
-        if (seriesName == null) {
+        if (seriesName == null)
             throw new IllegalArgumentException("seriesName should not be null");
-        }
 
-        if (language == null) {
+        if (language == null)
             throw new IllegalArgumentException("language should not be null");
-        }
 
         try {
             return new SeriesSearchParser(this.streamFactory).parse(seriesName, this.getSupported(language));
@@ -71,13 +68,11 @@ public class TheTVDB implements SeriesSource {
 
     @Override
     public Series fetchSeries(String seriesId, String language) {
-        if (seriesId == null) {
+        if (seriesId == null)
             throw new IllegalArgumentException("seriesId should not be null");
-        }
 
-        if (language == null) {
+        if (language == null)
             throw new IllegalArgumentException("language should not be null");
-        }
 
         try {
             return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
@@ -89,9 +84,8 @@ public class TheTVDB implements SeriesSource {
 
     @Override
     public List<Series> fetchAllSeries(List<String> seriesIds, String language) {
-        if (seriesIds == null) {
+        if (seriesIds == null)
             throw new IllegalArgumentException("seriesIds should not be null");
-        }
 
         List<Series> result = new ArrayList<Series>();
 
@@ -104,7 +98,7 @@ public class TheTVDB implements SeriesSource {
         return result;
     }
 
-    //Auxiliar methods--------------------------------------------------------------------------------------------------
+    //Auxiliary---------------------------------------------------------------------------------------------------------
 
     private String getSupported(String language) {
         try {

@@ -40,16 +40,16 @@ public class UrlSupplierTest {
 
 	@Test
 	public void testEmptyPosterFilename() {
-		assertThat(supplier.getSeriesPosterUrl(""), nullValue());
+		assertThat(supplier.urlForPoster(""), nullValue());
 	}
 
 	@Test
 	public void testNullPosterFilename() {
-		assertThat(supplier.getSeriesPosterUrl(null), nullValue());
+		assertThat(supplier.urlForPoster(null), nullValue());
 	}
 
 	@Test
 	public void testWhitespacesOnlyPosterFilename() {
-		assertThat(supplier.getSeriesPosterUrl("   \t"), nullValue());
+		assertThat(supplier.urlForPoster("   \t"), nullValue());
 	}
 }
