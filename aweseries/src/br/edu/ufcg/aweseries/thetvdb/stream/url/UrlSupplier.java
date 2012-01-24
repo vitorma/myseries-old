@@ -42,10 +42,12 @@ public class UrlSupplier {
         return new StringBuilder(MIRROR).append("/api/").append(this.apiKey).append("/series/").append(id);
     }
 
+    @Deprecated
     public String getBaseSeriesUrl(String id) {
         return this.seriesUrlBuilder(id).toString();
     }
 
+    @Deprecated
     public String getFullSeriesUrl(String id) {
         return this.seriesUrlBuilder(id).append("/all/").toString();
     }
@@ -55,6 +57,7 @@ public class UrlSupplier {
         .append("/all/").append((language != null ? "&language=" + language : "")).toString();
     }
 
+    @Deprecated
     public String getSeriesSearchUrl(String name) {
         return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" +
         name.trim().replaceAll("\\s+", "%20");
