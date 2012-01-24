@@ -21,20 +21,16 @@
 
 package br.edu.ufcg.aweseries.thetvdb.stream.url;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 
-import br.edu.ufcg.aweseries.thetvdb.parsing.MirrorsParser;
 import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class UrlSupplier {
+    private static final String MIRROR = "http://thetvdb.com";
+
     private String apiKey;
-    private Mirrors mirrors;
 
     public UrlSupplier(String apiKey) {
         Validate.isNonNull(apiKey, "apiKey should be non-null");
@@ -42,63 +38,20 @@ public class UrlSupplier {
         this.apiKey = apiKey;
     }
 
-    //MIRRORS---------------------------------------------------------------------------------------
-
-    private String getMirrorUrl() {
-        return "http://thetvdb.com/api/" + this.apiKey + "/mirrors.xml";
-    }
-
-    private void loadMirrors() {
-        this.mirrors = new MirrorsParser(this.streamFor(this.getMirrorUrl())).parse();
-    }
-
-    private InputStream streamFor(String url) {
-        try {
-            return new URL(url).openConnection().getInputStream();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String getMirrorPath(MirrorType type) {
-        if (this.mirrors == null) {
-            this.loadMirrors();
-        }
-
-        return this.mirrors.getRandomMirror(type).getPath();
-    }
-
-    private StringBuilder getXmlUrl() {
-        return new StringBuilder(this.getMirrorPath(MirrorType.XML)).append("/api/").append(this.apiKey);
-    }
-
-    private StringBuilder getBannerUrl() {
-        return new StringBuilder(this.getMirrorPath(MirrorType.BANNER)).append("/banners/");
-    }
-
-    @SuppressWarnings("unused")
-    private StringBuilder getZipUrl() {
-        return new StringBuilder(this.getMirrorPath(MirrorType.ZIP)).append("/api/").append(this.apiKey);
-    }
-
-    //SERIES ---------------------------------------------------------------------------------------
-
-    private StringBuilder getSeriesUrlBuilder(String id) {
-        return this.getXmlUrl().append("/series/").append(id);
+    private StringBuilder seriesUrlBuilder(String id) {
+        return new StringBuilder(MIRROR).append("/api/").append(this.apiKey).append("/series/").append(id);
     }
 
     public String getBaseSeriesUrl(String id) {
-        return this.getSeriesUrlBuilder(id).toString();
+        return this.seriesUrlBuilder(id).toString();
     }
 
     public String getFullSeriesUrl(String id) {
-        return this.getSeriesUrlBuilder(id).append("/all/").toString();
+        return this.seriesUrlBuilder(id).append("/all/").toString();
     }
 
     public String getFullSeriesUrl(String id, String language) {
-        return this.getSeriesUrlBuilder(id)
+        return this.seriesUrlBuilder(id)
         .append("/all/").append((language != null ? "&language=" + language : "")).toString();
     }
 
@@ -123,6 +76,6 @@ public class UrlSupplier {
         if (filename == null || Strings.isBlank(filename))
             return null;
 
-        return this.getBannerUrl().append(filename).toString();
+        return new StringBuilder(MIRROR).append("/banners/").append(filename).toString();
     }
 }
