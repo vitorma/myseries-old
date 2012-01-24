@@ -34,6 +34,8 @@ public class Numbers {
     }
 
     public static Long parseLong(Date date, Long alternative) {
-        return date != null ? date.getTime() : alternative;
+        if (date == null) return alternative;
+
+        return date.getTime();
     }
 }
