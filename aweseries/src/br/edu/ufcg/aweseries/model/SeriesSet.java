@@ -31,10 +31,10 @@ import java.util.Set;
 
 public class SeriesSet implements Iterable<Series> {
     private Set<DomainObjectListener<SeriesSet>> listeners;
-    private Map<String, Series> map;
+    private Map<Integer, Series> map;
 
     public SeriesSet() {
-        this.map = new HashMap<String, Series>();
+        this.map = new HashMap<Integer, Series>();
         this.listeners = new HashSet<DomainObjectListener<SeriesSet>>(); 
     }
 
@@ -50,10 +50,10 @@ public class SeriesSet implements Iterable<Series> {
         if (series == null)
             throw new IllegalArgumentException("series shouldn't be null");
 
-        return this.map.containsKey(String.valueOf(series.id()));
+        return this.map.containsKey(series.id());
     }
 
-    public Series get(String seriesId) {
+    public Series get(int seriesId) {
         Series series = this.map.get(seriesId);
 
         if (series == null)
@@ -70,7 +70,7 @@ public class SeriesSet implements Iterable<Series> {
         if (this.contains(series))
             throw new IllegalArgumentException("series " + series.id() + " already belongs to this set");
 
-        this.map.put(String.valueOf(series.id()), series);
+        this.map.put(series.id(), series);
     }
 
     public void addAll(Collection<Series> collection) {
@@ -86,7 +86,7 @@ public class SeriesSet implements Iterable<Series> {
         if (!this.contains(series))
             throw new IllegalArgumentException("series " + series.id() + " doesn't belong to this set");
 
-        this.map.remove(String.valueOf(series.id()));
+        this.map.remove(series.id());
     }
 
     public void clear() {

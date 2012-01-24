@@ -81,7 +81,7 @@ public class AppDriver {
 	}
 
 	private Series retrieveSeriesNamed(String seriesName) {
-		return this.seriesProvider().getSeries(String.valueOf(this.seriesNameToId.get(seriesName)));
+		return this.seriesProvider().getSeries(this.seriesNameToId.get(seriesName));
 	}
 
 	private void saveReferenceTo(Series series, String seriesName) {

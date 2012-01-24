@@ -33,8 +33,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -178,7 +178,7 @@ public class EpisodeListActivity extends ListActivity {
     private void loadSeason() {
         final Bundle extras = this.getIntent().getExtras();
 
-        this.series = seriesProvider.getSeries(extras.getString("series id"));
+        this.series = seriesProvider.getSeries(extras.getInt("series id"));
         this.season = this.series.seasons().season(extras.getInt("season number"));
     }
 
@@ -221,7 +221,7 @@ public class EpisodeListActivity extends ListActivity {
                 Episode episode = (Episode) parent.getItemAtPosition(position);
 
                 Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
-                intent.putExtra("series id", String.valueOf(episode.seriesId()));
+                intent.putExtra("series id", episode.seriesId());
                 intent.putExtra("season number", episode.seasonNumber());
                 intent.putExtra("episode number", episode.number());
 

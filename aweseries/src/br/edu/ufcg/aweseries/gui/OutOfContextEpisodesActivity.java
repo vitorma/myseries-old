@@ -91,7 +91,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
                 final Episode episode = (Episode) parent.getItemAtPosition(position);
-                intent.putExtra("series id", String.valueOf(episode.seriesId()));
+                intent.putExtra("series id", episode.seriesId());
                 intent.putExtra("season number", episode.seasonNumber());
                 intent.putExtra("episode number", episode.number());
                 OutOfContextEpisodesActivity.this.startActivity(intent);
@@ -121,7 +121,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
 
             // load episode data
             final Episode episode = this.getItem(position);
-            final Series series = this.SERIES_PROVIDER.getSeries(String.valueOf(episode.seriesId()));
+            final Series series = this.SERIES_PROVIDER.getSeries(episode.seriesId());
             final Season season = series.seasons().season(episode.seasonNumber());
 
             this.showData(episode, season, series, itemView);
@@ -136,7 +136,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             // if no view was passed, create one for the item
             if (itemView == null) {
                 final LayoutInflater li = (LayoutInflater) OutOfContextEpisodesActivity.this
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(EPISODE_ITEM_RESOURCE_ID, null);
             }
 
@@ -145,31 +145,31 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
 
         private void showData(Episode episode, Season season, Series series, View itemView) {
             final TextView nameTextView = (TextView) itemView
-                    .findViewById(R.id.episodeNameTextView);
+            .findViewById(R.id.episodeNameTextView);
             final TextView seriesTextView = (TextView) itemView
-                    .findViewById(R.id.episodeSeriesTextView);
+            .findViewById(R.id.episodeSeriesTextView);
             final TextView seasonEpisodeTextView = (TextView) itemView
-                    .findViewById(R.id.episodeSeasonEpisodeTextView);
+            .findViewById(R.id.episodeSeasonEpisodeTextView);
             final TextView dateTextView = (TextView) itemView
-                    .findViewById(R.id.episodeDateTextView);
+            .findViewById(R.id.episodeDateTextView);
             final CheckBox isViewedCheckBox = (CheckBox) itemView
-                    .findViewById(R.id.episodeIsViewedCheckBox);
+            .findViewById(R.id.episodeIsViewedCheckBox);
 
             nameTextView.setText(Objects.nullSafe(
                     episode.name(),
                     this.getContext().getResources().getString(R.string.unnamed_episode)));
             seriesTextView.setText(series.name());
             seasonEpisodeTextView
-                    .setText(String.format(OutOfContextEpisodesActivity.this
-                            .getString(R.string.season_and_episode_format), season.number(),
-                            episode.number()));
+            .setText(String.format(OutOfContextEpisodesActivity.this
+                    .getString(R.string.season_and_episode_format), season.number(),
+                    episode.number()));
             dateTextView.setText(Dates.toString(episode.airdate(), FORMAT, ""));
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 
         private void setUpSeenEpisodeCheckBoxListener(final Episode episode, View itemView) {
             final CheckBox isViewedCheckBox = (CheckBox) itemView
-                    .findViewById(R.id.episodeIsViewedCheckBox);
+            .findViewById(R.id.episodeIsViewedCheckBox);
 
             isViewedCheckBox.setOnClickListener(new OnClickListener() {
                 @Override

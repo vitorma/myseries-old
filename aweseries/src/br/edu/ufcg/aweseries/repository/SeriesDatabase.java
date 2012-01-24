@@ -71,7 +71,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         "guestStars TEXT, " +
         "poster TEXT, " +
         "viewed TEXT, " +
-        "FOREIGN KEY(seriesId) REFERENCES Series(id) ON DELETE CASCADE ON UPDATE CASCADE);";
+        "FOREIGN KEY(seriesId) REFERENCES Series(id) ON DELETE CASCADE);";
 
     private static final String DROP_TABLE_SERIES =
         "DROP TABLE IF EXISTS Series";
@@ -87,11 +87,6 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private static final String SELECT_ALL_SERIES =
         "SELECT * FROM Series";
-
-    private static final String SELECT_AN_EPISODE_BY_ID =
-        "SELECT * FROM Episode WHERE id=?";
-
-    //Constructor-------------------------------------------------------------------------------------------------------
 
     public SeriesDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -130,6 +125,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("Series", null, this.contentValuesBy(series));
         for (Episode e : series.seasons().allEpisodes()) {
+            Log.d("SeriesDataBase", "id: " + e.id() + " airdate: " + e.airdate());
             db.insert("Episode", null, this.contentValuesBy(e));
         }
         db.close();
@@ -141,10 +137,14 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             throw new IllegalArgumentException("series should not be null");
 
         SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete("Episode", "seriesId=?", new String[] {String.valueOf(series.id())});
         db.update("Series", this.contentValuesBy(series), "id=?", new String[] {String.valueOf(series.id())});
+
         for (Episode e : series.seasons().allEpisodes()) {
-            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {String.valueOf(e.id())});
+            db.insert("Episode", null, this.contentValuesBy(e));
         }
+
         db.close();
     }
 
@@ -153,12 +153,9 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         if (seriesCollection == null)
             throw new IllegalArgumentException("seriesCollection should not be null");
 
-        SQLiteDatabase db = this.getWritableDatabase();
         for (Series s : seriesCollection) {
-            db.update("Series", this.contentValuesBy(s), "id=?", new String[] {String.valueOf(s.id())});
-            this.updateAllEpisodesOf(s, db);
+            this.update(s);
         }
-        db.close();
     }
 
     @Override
@@ -193,12 +190,9 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     @Override
-    public Series get(String seriesId) {
-        if (seriesId == null)
-            throw new IllegalArgumentException("series id should not be null");
-
+    public Series get(int seriesId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {seriesId});
+        Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {String.valueOf(seriesId)});
         if (!c.moveToFirst()) {
             Log.d("SeriesDatabase", "There is no series with id " + seriesId);
             c.close();
@@ -226,48 +220,6 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         return allSeries;
     }
 
-    //Methods left over from the old interface  ------------------------------------------------------------------------
-
-    public int countSeries() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery(SELECT_ALL_SERIES, null);
-        int count = c.getCount();
-        c.close();
-        db.close();
-        return count;
-    }
-
-    public boolean hasSeries() {
-        return this.countSeries() > 0;
-    }
-
-    public void update(Episode episode) {
-        if (episode == null)
-            throw new IllegalArgumentException("episode should not be null");
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.update("Episode", this.contentValuesBy(episode), "id=?", new String[] {String.valueOf(episode.id())});
-        db.close();
-    }
-
-
-    public Episode getEpisode(String episodeId) {
-        if (episodeId == null)
-            throw new IllegalArgumentException("episode id should not be null");
-
-        final SQLiteDatabase db = this.getReadableDatabase();
-        final Cursor c = db.rawQuery(SELECT_AN_EPISODE_BY_ID, new String[] {episodeId});
-        if (!c.moveToFirst()) {
-            Log.d("DatabaseHelper", "There is no episode with id " + episodeId);
-            c.close();
-            return null;
-        }
-        final Episode e = this.episodeByCurrentPositionOf(c);
-        c.close();
-        db.close();
-        return e;
-    }
-
     //Private ----------------------------------------------------------------------------------------------------------
 
     private List<Episode> getAllEpisodesOf(Series s, SQLiteDatabase db) {
@@ -278,12 +230,6 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         }
         c.close();
         return allEpisodes;
-    }
-
-    private void updateAllEpisodesOf(Series s, SQLiteDatabase db) {
-        for (Episode e : s.seasons().allEpisodes()) {
-            db.update("Episode", this.contentValuesBy(e), "id=?", new String[] {String.valueOf(e.id())});
-        }
     }
 
     private ContentValues contentValuesBy(Series s) {

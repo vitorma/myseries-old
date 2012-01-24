@@ -93,7 +93,7 @@ public class EpisodeDetailsActivity extends Activity {
     private void loadEpisode() {
         final Bundle extras = this.getIntent().getExtras();
 
-        String seriesId = extras.getString("series id");
+        int seriesId = extras.getInt("series id");
         int seasonNumber = extras.getInt("season number");
         int episodeNumber = extras.getInt("episode number");
 

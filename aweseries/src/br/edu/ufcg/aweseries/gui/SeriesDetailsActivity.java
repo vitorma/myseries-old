@@ -48,7 +48,7 @@ import br.edu.ufcg.aweseries.model.Series;
  * Displays a series short review.
  */
 public class SeriesDetailsActivity extends Activity implements DomainObjectListener<Series> {
-    private String seriesId;
+    private int seriesId;
     private boolean loaded = false;
     private ProgressDialog dialog;
     protected TextView seriesOverview;
@@ -67,25 +67,25 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.series_view);
+        this.setContentView(R.layout.series_view);
 
         // Show the contents we already know.
-        this.seriesName = (TextView) findViewById(R.id.seriesNameTextView);
+        this.seriesName = (TextView) this.findViewById(R.id.seriesNameTextView);
         this.seriesName.setText(R.string.unknown_series);
-        this.seriesOverview = (TextView) findViewById(R.id.seriesOverviewTextView);
-        this.seriesStatus = (TextView) findViewById(R.id.statusTextView);
-        this.seriesAirTime = (TextView) findViewById(R.id.airTimeTextView);
-        this.seriesAirDays = (TextView) findViewById(R.id.airDaysTextView);
-        this.seriesActors = (TextView) findViewById(R.id.actorsTextView);
-        this.seriesFirsAirDay = (TextView) findViewById(R.id.firstAiredTextView);
-        this.seriesNetwork = (TextView) findViewById(R.id.networkTextView);
-        this.seriesGenre = (TextView) findViewById(R.id.genreTextView);
-        this.seriesRuntime = (TextView) findViewById(R.id.runtimeTextView);
-        this.seasonsButton = (Button) findViewById(R.id.seasonsButton);
-        this.nextToSee = (TextView) findViewById(R.id.nextToSeeTextView);
+        this.seriesOverview = (TextView) this.findViewById(R.id.seriesOverviewTextView);
+        this.seriesStatus = (TextView) this.findViewById(R.id.statusTextView);
+        this.seriesAirTime = (TextView) this.findViewById(R.id.airTimeTextView);
+        this.seriesAirDays = (TextView) this.findViewById(R.id.airDaysTextView);
+        this.seriesActors = (TextView) this.findViewById(R.id.actorsTextView);
+        this.seriesFirsAirDay = (TextView) this.findViewById(R.id.firstAiredTextView);
+        this.seriesNetwork = (TextView) this.findViewById(R.id.networkTextView);
+        this.seriesGenre = (TextView) this.findViewById(R.id.genreTextView);
+        this.seriesRuntime = (TextView) this.findViewById(R.id.runtimeTextView);
+        this.seasonsButton = (Button) this.findViewById(R.id.seasonsButton);
+        this.nextToSee = (TextView) this.findViewById(R.id.nextToSeeTextView);
 
-        populateView();
-        setupSeasonsButtonListener();
+        this.populateView();
+        this.setupSeasonsButtonListener();
     }
 
     @Override
@@ -106,14 +106,14 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
     }
 
     private void showUnfollowingDialog() {
-        final Series series = seriesProvider().getSeries(this.seriesId);
+        final Series series = this.seriesProvider().getSeries(this.seriesId);
         final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        onBackPressed();
-                        seriesProvider().unfollow(series);
+                        SeriesDetailsActivity.this.onBackPressed();
+                        SeriesDetailsActivity.this.seriesProvider().unfollow(series);
                         dialog.dismiss();
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -124,11 +124,11 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
         };
 
         new AlertDialog.Builder(this)
-                .setMessage(
-                        String.format(getString(R.string.do_you_want_to_stop_following),
-                                series.name()))
-                .setPositiveButton(R.string.yes, dialogClickListener)
-                .setNegativeButton(R.string.no, dialogClickListener).show();
+        .setMessage(
+                String.format(this.getString(R.string.do_you_want_to_stop_following),
+                        series.name()))
+                        .setPositiveButton(R.string.yes, dialogClickListener)
+                        .setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
     private void setupSeasonsButtonListener() {
@@ -140,10 +140,10 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
                 intent.putExtra("series id", SeriesDetailsActivity.this.seriesId);
 
                 try {
-                    startActivity(intent);
+                    SeriesDetailsActivity.this.startActivity(intent);
                 } catch (Exception e) {
                     TextView tv = (TextView) SeriesDetailsActivity.this
-                            .findViewById(R.id.listingTitleTextView);
+                    .findViewById(R.id.listingTitleTextView);
                     tv.setText(e.getClass() + " " + e.getMessage());
                 }
             }
@@ -155,16 +155,16 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        if (!loaded && hasFocus) {
-            showProgressDialog();
+        if (!this.loaded && hasFocus) {
+            this.showProgressDialog();
 
             final Handler mHandler = new Handler();
 
             final Runnable mPopulateView = new Runnable() {
                 @Override
                 public void run() {
-                    downloadDescription();
-                    dismissProgressDialog();
+                    SeriesDetailsActivity.this.downloadDescription();
+                    SeriesDetailsActivity.this.dismissProgressDialog();
                 }
 
             };
@@ -178,13 +178,13 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
 
             t.start();
 
-            loaded = true;
+            this.loaded = true;
         }
     }
 
     @Override
     public void onBackPressed() {
-        Series series = seriesProvider().getSeries(seriesId);
+        Series series = this.seriesProvider().getSeries(this.seriesId);
         series.removeListener(this);
         super.onBackPressed();
 
@@ -195,11 +195,11 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
      * retrieved from TheTVDB database.
      */
     private void populateView() {
-        Bundle extras = getIntent().getExtras();
+        Bundle extras = this.getIntent().getExtras();
 
         if (extras != null) {
-            seriesId = extras.getString("series id");
-            seriesName.setText(extras.getString("series name"));
+            this.seriesId = extras.getInt("series id");
+            this.seriesName.setText(extras.getString("series name"));
         }
     }
 
@@ -208,7 +208,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
      */
     private void downloadDescription() {
         try {
-            Series series = seriesProvider().getSeries(seriesId);
+            Series series = this.seriesProvider().getSeries(this.seriesId);
             series.addListener(this);
 
             this.seriesName.setText(series.name());
@@ -230,7 +230,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
                 this.nextToSee.setText(R.string.up_to_date);
             }
 
-            Bitmap bmp = seriesProvider().getPosterOf(series);
+            Bitmap bmp = this.seriesProvider().getPosterOf(series);
             if (bmp != null) {
                 // WallpaperManager.
                 // View v = this.findViewById(R.layout.series_view);

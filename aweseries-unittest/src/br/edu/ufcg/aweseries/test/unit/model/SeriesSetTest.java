@@ -106,13 +106,8 @@ public class SeriesSetTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testGetSeriesWithNullId() {
-		this.seriesSet.get(null);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
 	public void testGetNonExistentSeries() {
-		this.seriesSet.get("1");
+		this.seriesSet.get(1);
 	}
 
 	@Test
@@ -120,7 +115,7 @@ public class SeriesSetTest {
 		for (int i=1; i<=10; i++) {
 			Series s = this.mockSeries(i);
 			this.seriesSet.add(s);
-			Assert.assertEquals(s, this.seriesSet.get(String.valueOf(i)));
+			Assert.assertEquals(s, this.seriesSet.get(i));
 		}
 	}
 

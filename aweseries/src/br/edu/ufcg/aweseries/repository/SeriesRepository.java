@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.repository;
 
 import java.util.Collection;
@@ -40,7 +39,7 @@ public interface SeriesRepository {
 
     public boolean contains(Series series);
 
-    public Series get(String id);
+    public Series get(int seriesId);
 
     public Collection<Series> getAll();
 }

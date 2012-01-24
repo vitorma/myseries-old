@@ -135,8 +135,8 @@ public class SeriesProvider {
 
             List<Series> allOurSeries = new ArrayList<Series>();
 
-            for (final Series theirSeries : this.upToDateSeries) {
-                final Series ourSeries = SeriesProvider.this.getSeries(String.valueOf(theirSeries.id()));
+            for (Series theirSeries : this.upToDateSeries) {
+                Series ourSeries = SeriesProvider.this.getSeries(theirSeries.id());
                 ourSeries.mergeWith(theirSeries);
                 allOurSeries.add(ourSeries);
             }
@@ -208,7 +208,7 @@ public class SeriesProvider {
         this.followingSeriesListeners.add(listener);
     }
 
-    public Series getSeries(String seriesId) {
+    public Series getSeries(int seriesId) {
         return this.seriesRepository.get(seriesId);
     }
 
@@ -267,22 +267,22 @@ public class SeriesProvider {
 
     public void markSeasonAsSeen(Season season) {
         season.markAsSeen();
-        this.seriesRepository.update(this.getSeries(String.valueOf(season.seriesId())));
+        this.seriesRepository.update(this.getSeries(season.seriesId()));
     }
 
     public void markSeasonAsNotSeen(Season season) {
         season.markAsNotSeen();
-        this.seriesRepository.update(this.getSeries(String.valueOf(season.seriesId())));
+        this.seriesRepository.update(this.getSeries(season.seriesId()));
     }
 
     public void markEpisodeAsSeen(Episode episode) {
         episode.markAsSeen();
-        this.seriesRepository.update(this.getSeries(String.valueOf(episode.seriesId())));
+        this.seriesRepository.update(this.getSeries(episode.seriesId()));
     }
 
     public void markEpisodeAsNotSeen(Episode episode) {
         episode.markAsNotSeen();
-        this.seriesRepository.update(this.getSeries(String.valueOf(episode.seriesId())));
+        this.seriesRepository.update(this.getSeries(episode.seriesId()));
     }
 
     public boolean addListener(UpdateListener listener) {

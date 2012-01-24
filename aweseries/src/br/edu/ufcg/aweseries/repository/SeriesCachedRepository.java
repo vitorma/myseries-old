@@ -35,9 +35,8 @@ public class SeriesCachedRepository implements SeriesRepository {
     private ExecutorService threadExecutor;
 
     public SeriesCachedRepository(SeriesRepository sourceRepository) {
-        if (sourceRepository == null) {
+        if (sourceRepository == null)
             throw new IllegalArgumentException("sourceRepository should not be null");
-        }
 
         this.sourceRepository = sourceRepository;
 
@@ -130,7 +129,7 @@ public class SeriesCachedRepository implements SeriesRepository {
     }
 
     @Override
-    public Series get(String seriesId) {
+    public Series get(int seriesId) {
         return this.seriesSet.get(seriesId);
     }
 
