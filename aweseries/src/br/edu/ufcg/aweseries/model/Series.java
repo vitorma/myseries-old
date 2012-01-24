@@ -28,10 +28,11 @@ import java.util.Set;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.util.Strings;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class Series implements DomainObjectListener<SeasonSet> {
 
-    private String id;
+    private int id;
     private String name;
     private String status;
     private String airsDay;
@@ -47,22 +48,19 @@ public class Series implements DomainObjectListener<SeasonSet> {
     private Set<DomainObjectListener<Series>> listeners;
 
     //TODO turn this private
-    public Series(String id, String name) {
-        if (id == null || Strings.isBlank(id)) {
-            throw new IllegalArgumentException("invalid id for series");
-        }
+    public Series(int id, String name) {
+        Validate.isTrue(id >= 0, "id should be non-negative");
 
-        if (name == null || Strings.isBlank(name)) {
+        if (name == null || Strings.isBlank(name))
             throw new IllegalArgumentException("invalid name for series");
-        }
 
         this.id = id;
         this.name = name;
-        
+
         this.listeners = new HashSet<DomainObjectListener<Series>>();
     }
 
-    public String id() {
+    public int id() {
         return this.id;
     }
 
@@ -85,8 +83,8 @@ public class Series implements DomainObjectListener<SeasonSet> {
     //TODO move this to GUI
     public String airsDayAndTime() {
         return Strings.isBlank(this.airsDay())
-               ? ""
-               : this.airsDay().substring(0, 3) + " " + this.airsTime();
+        ? ""
+                : this.airsDay().substring(0, 3) + " " + this.airsTime();
     }
 
     public String firstAired() {
@@ -120,75 +118,66 @@ public class Series implements DomainObjectListener<SeasonSet> {
     public SeasonSet seasons() {
         return this.seasons;
     }
-//TODO remove this sets------------------------------------------------------------------------------------------------
+    //TODO remove this sets------------------------------------------------------------------------------------------------
     private void setStatus(String status) {
-        if (status == null) {
+        if (status == null)
             throw new IllegalArgumentException("invalid status for series");
-        }
 
         this.status = status;
     }
 
     private void setAirsDay(String airsDay) {
-        if (airsDay == null) {
+        if (airsDay == null)
             throw new IllegalArgumentException("invalid airs day for series");
-        }
 
         this.airsDay = airsDay;
     }
 
     private void setAirsTime(String airsTime) {
-        if (airsTime == null) {
+        if (airsTime == null)
             throw new IllegalArgumentException("invalid airs time for series");
-        }
 
         this.airsTime = airsTime;
     }
 
     private void setFirstAired(String firstAired) {
-        if (firstAired == null) {
+        if (firstAired == null)
             throw new IllegalArgumentException("invalid first aired for series");
-        }
 
         this.firstAired = firstAired;
     }
 
     private void setRuntime(String runtime) {
-        if (runtime == null) {
+        if (runtime == null)
             throw new IllegalArgumentException("invalid runtime for series");
-        }
 
         this.runtime = runtime;
     }
 
     private void setNetwork(String network) {
-        if (network == null) {
+        if (network == null)
             throw new IllegalArgumentException("invalid network for series");
-        }
 
         this.network = network;
     }
 
     private void setOverview(String overview) {
-        if (overview == null) {
+        if (overview == null)
             throw new IllegalArgumentException("invalid overview for series");
-        }
 
         this.overview = overview;
     }
 
     private void setGenres(String genres) {
-        if (genres == null) {
+        if (genres == null)
             throw new IllegalArgumentException("invalid genres for series");
-        }
 
         this.genres = genres;
     }
 
     private void setActors(String actors) {
-        if (actors == null) {
+        if (actors == null)
             throw new IllegalArgumentException("invalid actors for series");
-        }
 
         this.actors = actors;
     }
@@ -198,23 +187,21 @@ public class Series implements DomainObjectListener<SeasonSet> {
     }
 
     private void setSeasons(SeasonSet seasons) {
-        if ((seasons == null) || !(String.valueOf(seasons.seriesId())).equals(this.id)) {
+        if (seasons == null || seasons.seriesId() != this.id)
             throw new IllegalArgumentException("invalid seasons for series");
-        }
 
         seasons.addListener(this);
         this.seasons = seasons;
     }
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     @Override
     public int hashCode() {
-        return this.id().hashCode();
+        return this.id;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Series) &&
-               ((Series) obj).id().equals(this.id());
+        return (obj instanceof Series) && ((Series) obj).id == this.id;
     }
 
     @Override
@@ -252,13 +239,12 @@ public class Series implements DomainObjectListener<SeasonSet> {
     public boolean removeListener(DomainObjectListener<Series> listener) {
         return this.listeners.remove(listener);
     }
-    
+
     //TODO: Test me
     //      Test whether other has a different seriesId than mine (its)
     public void mergeWith(Series other) {
-        if (other == null) {
+        if (other == null)
             throw new IllegalArgumentException(); //TODO: create a custom Exception
-        }
 
         this.name = other.name;
         this.status = other.status;
@@ -281,12 +267,14 @@ public class Series implements DomainObjectListener<SeasonSet> {
             listener.onUpdate(this);            
         }        
     }
-    
+
     public static class Builder {
         //TODO remove all constants
         private static final String DEFAULT_STRING = "";
 
-        private String id;
+        private static final int INVALID_ID = -1;
+
+        private int id;
         private String name;
         private String status;
         private String airsDay;
@@ -300,7 +288,11 @@ public class Series implements DomainObjectListener<SeasonSet> {
         private Bitmap posterBitmap;
         private SeasonSet seasons;
 
-        public Builder withId(String id) {
+        public Builder() {
+            this.id = INVALID_ID;
+        }
+
+        public Builder withId(int id) {
             this.id = id;
             return this;
         }
@@ -369,9 +361,8 @@ public class Series implements DomainObjectListener<SeasonSet> {
         }
 
         public Builder withEpisode(Episode episode) {
-            if (episode == null) {
+            if (episode == null)
                 return this;
-            }
 
             if (this.seasons == null) {
                 this.seasons = new SeasonSet(episode.seriesId());
@@ -383,7 +374,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
         public Series build() {
             final Series series = new Series(this.id, this.name);
-//TODO let fields be null
+            //TODO let fields be null
             series.setStatus(this.status != null ? this.status : DEFAULT_STRING);
             series.setAirsDay(this.airsDay != null ? this.airsDay : DEFAULT_STRING);
             series.setAirsTime(this.airsTime != null ? this.airsTime : DEFAULT_STRING);
@@ -394,8 +385,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
             series.setGenres(this.genres != null ? this.genres : DEFAULT_STRING);
             series.setActors(this.actors != null ? this.actors : DEFAULT_STRING);
             series.setPoster(this.posterBitmap != null ? new Poster(this.posterBitmap) : null);
-            series.setSeasons(this.seasons != null ? this.seasons : new SeasonSet(Integer
-                    .parseInt(this.id)));
+            series.setSeasons(this.seasons != null ? this.seasons : new SeasonSet(this.id));
 
             return series;
         }

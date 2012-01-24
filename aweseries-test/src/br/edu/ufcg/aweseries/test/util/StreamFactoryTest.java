@@ -54,7 +54,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	 */
 	protected abstract StreamFactory factory();
 
-	private String testSeriesId;
+	private int testSeriesId;
 	private String testSeriesName;
 	private String testSeriesPoster;
 
@@ -120,7 +120,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	}
 
 	public void testGettingFullSeriesReturnsFullData() throws IOException {
-		InputStream testSeriesStream = this.factory().streamForFullSeries(this.testSeriesId, "en");
+		InputStream testSeriesStream = this.factory().streamForFullSeries(String.valueOf(this.testSeriesId), "en");
 
 		String contentOfTestSeriesStream = this.contentOf(testSeriesStream);
 

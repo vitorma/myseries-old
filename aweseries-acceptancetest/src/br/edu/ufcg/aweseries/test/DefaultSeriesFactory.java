@@ -27,6 +27,7 @@ import java.util.Random;
 
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.test.KeyValueParser.KeyValuePair;
+import br.edu.ufcg.aweseries.util.Numbers;
 
 public class DefaultSeriesFactory {
 
@@ -46,7 +47,7 @@ public class DefaultSeriesFactory {
             values.put(attributePair.key, attributePair.value);
         }
 
-        return new Series.Builder().withId(values.get("id"))
+        return new Series.Builder().withId(Numbers.parseInt(values.get("id"), -1))
                                    .withName(values.get("name"))
                                    .withStatus(values.get("status"))
                                    .withAirsDay(values.get("airsOn"))

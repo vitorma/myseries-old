@@ -33,6 +33,7 @@ import br.edu.ufcg.aweseries.SeriesNotFoundException;
 import br.edu.ufcg.aweseries.SeriesSource;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.Language;
+import br.edu.ufcg.aweseries.util.Numbers;
 
 public class TheTVDBDouble implements SeriesSource {
 
@@ -127,7 +128,7 @@ public class TheTVDBDouble implements SeriesSource {
                                                      : Language.EN);
 
         for (Series series : source) {
-            if (series.id().equals(seriesId)) {
+            if (series.id() == Numbers.parseInt(seriesId, -1)) {
                 return series;
             }
         }

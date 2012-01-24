@@ -36,27 +36,27 @@ import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
+import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 
 public class SeriesSearchParser {
+    private static final int INVALID_SERIES_ID = -1;
+
     private StreamFactory streamFactory;
 
     public SeriesSearchParser(StreamFactory streamFactory) {
-        if (streamFactory == null) {
+        if (streamFactory == null)
             throw new IllegalArgumentException("streamFactory should not be null");
-        }
 
         this.streamFactory = streamFactory;
     }
 
     //TODO Refactoring: extract definition of listeners, maybe creating an inner type
     public List<Series> parse(String seriesName, String language) {
-        if (seriesName == null) {
+        if (seriesName == null)
             throw new IllegalArgumentException("seriesName should not be null");
-        }
-        if (Strings.isBlank(seriesName)) {
+        if (Strings.isBlank(seriesName))
             throw new IllegalArgumentException("seriesName should not be blank");
-        }
 
         final List<Series> searchResult = new ArrayList<Series>();
         final Series.Builder builder = new Series.Builder();
@@ -76,7 +76,7 @@ public class SeriesSearchParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        builder.withId(body);
+                        builder.withId(Numbers.parseInt(body, INVALID_SERIES_ID));
                     }
                 });
 

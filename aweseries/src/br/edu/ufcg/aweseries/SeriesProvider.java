@@ -101,7 +101,7 @@ public class SeriesProvider {
             this.seriesToUpdate = new ArrayList<String>();
 
             for (final Series series : SeriesProvider.this.seriesRepository.getAll()) {
-                this.seriesToUpdate.add(series.id());
+                this.seriesToUpdate.add(String.valueOf(series.id()));
             }
         }
 
@@ -136,7 +136,7 @@ public class SeriesProvider {
             List<Series> allOurSeries = new ArrayList<Series>();
 
             for (final Series theirSeries : this.upToDateSeries) {
-                final Series ourSeries = SeriesProvider.this.getSeries(theirSeries.id());
+                final Series ourSeries = SeriesProvider.this.getSeries(String.valueOf(theirSeries.id()));
                 ourSeries.mergeWith(theirSeries);
                 allOurSeries.add(ourSeries);
             }
@@ -162,7 +162,7 @@ public class SeriesProvider {
 
             // TODO is there anything to do about any SeriesNotFoundException that may be thrown
             // here?
-            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(seriesToFollow.id(), App
+            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(String.valueOf(seriesToFollow.id()), App
                     .environment().localization().language());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 

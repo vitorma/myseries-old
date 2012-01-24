@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.model;
 
 import java.util.Collection;
@@ -48,19 +47,17 @@ public class SeriesSet implements Iterable<Series> {
     }
 
     public boolean contains(Series series) {
-        if (series == null) {
+        if (series == null)
             throw new IllegalArgumentException("series shouldn't be null");
-        }
 
-        return this.map.containsKey(series.id());
+        return this.map.containsKey(String.valueOf(series.id()));
     }
 
     public Series get(String seriesId) {
         Series series = this.map.get(seriesId);
 
-        if (series == null) {
+        if (series == null)
             throw new IllegalArgumentException("series with id " + seriesId + " doesn't belong to this set");
-        }
 
         return series;
     }
@@ -70,17 +67,15 @@ public class SeriesSet implements Iterable<Series> {
     }
 
     public void add(Series series) {
-        if (this.contains(series)) {
-            throw new IllegalArgumentException("series " + series + " already belongs to this set");
-        }
+        if (this.contains(series))
+            throw new IllegalArgumentException("series " + series.id() + " already belongs to this set");
 
-        this.map.put(series.id(), series);
+        this.map.put(String.valueOf(series.id()), series);
     }
 
     public void addAll(Collection<Series> collection) {
-        if (collection == null) {
+        if (collection == null)
             throw new IllegalArgumentException("collection shouldn't be null");
-        }
 
         for (Series s : collection) {
             this.add(s);
@@ -88,11 +83,10 @@ public class SeriesSet implements Iterable<Series> {
     }
 
     public void remove(Series series) {
-        if (!this.contains(series)) {
-            throw new IllegalArgumentException("series " + series + " doesn't belong to this set");
-        }
+        if (!this.contains(series))
+            throw new IllegalArgumentException("series " + series.id() + " doesn't belong to this set");
 
-        this.map.remove(series.id());
+        this.map.remove(String.valueOf(series.id()));
     }
 
     public void clear() {
@@ -103,15 +97,15 @@ public class SeriesSet implements Iterable<Series> {
     public Iterator<Series> iterator() {
         return this.map.values().iterator();
     }
-    
+
     public boolean addListener(DomainObjectListener<SeriesSet> listener) {
         return this.listeners.add(listener);
     }
-    
+
     public boolean removeListener(DomainObjectListener<SeriesSet> listener) {
         return this.listeners.remove(listener);
     }
-    
+
     public void notifyListeners() {
         for (DomainObjectListener<SeriesSet> listener : this.listeners) {
             listener.onUpdate(this);            

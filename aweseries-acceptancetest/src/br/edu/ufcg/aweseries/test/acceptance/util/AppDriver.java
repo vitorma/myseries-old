@@ -39,194 +39,187 @@ import com.jayway.android.robotium.solo.Solo;
 
 public class AppDriver {
 
-    // TODO: it should iterate all over the SeriesSample samples, storing their data
-    private Map<String, String> seriesNameToId = new HashMap<String, String>();
-    {
-        seriesNameToId.put(SampleSeries.CHUCK.series().name(),
-                           SampleSeries.CHUCK.series().id()); 
-    }
+	// TODO: it should iterate all over the SeriesSample samples, storing their data
+	private Map<String, Integer> seriesNameToId = new HashMap<String, Integer>();
+	{
+		this.seriesNameToId.put(SampleSeries.CHUCK.series().name(),
+				SampleSeries.CHUCK.series().id()); 
+	}
 
-    private Solo solo;
-    private Map<String, Series> series;
+	private Solo solo;
+	private Map<String, Series> series;
 
-    public AppDriver(Solo robotiumSolo) {
-        if (robotiumSolo == null) {
-            throw new IllegalArgumentException("robotiumSolo should not be null");
-        }
-        this.solo = robotiumSolo;
+	public AppDriver(Solo robotiumSolo) {
+		if (robotiumSolo == null)
+			throw new IllegalArgumentException("robotiumSolo should not be null");
+		this.solo = robotiumSolo;
 
-        this.series = new HashMap<String, Series>();
-    }
+		this.series = new HashMap<String, Series>();
+	}
 
-    // Full Actions ------------------------------------------------------------
-    public void follow(String seriesName) {
-        this.validateInputName(seriesName, "seriesName");
+	// Full Actions ------------------------------------------------------------
+	public void follow(String seriesName) {
+		this.validateInputName(seriesName, "seriesName");
 
-        Series series = retrieveSeriesNamed(seriesName);
+		Series series = this.retrieveSeriesNamed(seriesName);
 
-        seriesProvider().follow(series);
-        this.saveReferenceTo(series, seriesName);
+		this.seriesProvider().follow(series);
+		this.saveReferenceTo(series, seriesName);
 
-        // XXX: This is a workarond because there is no way to navigate through the acivities in
-        // order to start following an activity. It should be resolved as soon as there is a way
-        // to do it through user interaction
-        this.restartCurrentActivity();
-    }
+		// XXX: This is a workarond because there is no way to navigate through the acivities in
+		// order to start following an activity. It should be resolved as soon as there is a way
+		// to do it through user interaction
+		this.restartCurrentActivity();
+	}
 
-    private void restartCurrentActivity() {
-        Activity currentActivity = this.solo.getCurrentActivity();
-        Intent currentActivityIntent = currentActivity.getIntent();
+	private void restartCurrentActivity() {
+		Activity currentActivity = this.solo.getCurrentActivity();
+		Intent currentActivityIntent = currentActivity.getIntent();
 
-        currentActivity.finish();
-        currentActivity.startActivity(currentActivityIntent);
-    }
+		currentActivity.finish();
+		currentActivity.startActivity(currentActivityIntent);
+	}
 
-    private Series retrieveSeriesNamed(String seriesName) {
-        return seriesProvider().getSeries(seriesNameToId.get(seriesName));
-    }
+	private Series retrieveSeriesNamed(String seriesName) {
+		return this.seriesProvider().getSeries(String.valueOf(this.seriesNameToId.get(seriesName)));
+	}
 
-    private void saveReferenceTo(Series series, String seriesName) {
-        this.series.put(seriesName, series);
-    }
-    
-    private Series seriesReferencedAs(String seriesName) {
-        if (!this.series.containsKey(seriesName)) {
-            throw new IllegalArgumentException("Series not followed yet");
-        }
+	private void saveReferenceTo(Series series, String seriesName) {
+		this.series.put(seriesName, series);
+	}
 
-        return this.series.get(seriesName);
-    }
+	private Series seriesReferencedAs(String seriesName) {
+		if (!this.series.containsKey(seriesName))
+			throw new IllegalArgumentException("Series not followed yet");
 
-    // Navigation --------------------------------------------------------------
-    public void viewMyFollowedSeries() {
-        if (!"SeriesListActivity".equals(this.solo.getCurrentActivity().getClass().getSimpleName())) {
-            this.solo.goBackToActivity("SeriesListActivity");
-        }
-    }
-    public void viewDetailsOf(String seriesName) {
-        this.validateInputName(seriesName, "seriesName");
+		return this.series.get(seriesName);
+	}
 
-        this.viewMyFollowedSeries();
-        this.solo.clickOnText(seriesReferencedAs(seriesName).name());
-    }
+	// Navigation --------------------------------------------------------------
+	public void viewMyFollowedSeries() {
+		if (!"SeriesListActivity".equals(this.solo.getCurrentActivity().getClass().getSimpleName())) {
+			this.solo.goBackToActivity("SeriesListActivity");
+		}
+	}
+	public void viewDetailsOf(String seriesName) {
+		this.validateInputName(seriesName, "seriesName");
 
-    public void viewSeasonsOf(String seriesName) {
-        this.validateInputName(seriesName, "seriesName");
+		this.viewMyFollowedSeries();
+		this.solo.clickOnText(this.seriesReferencedAs(seriesName).name());
+	}
 
-        this.viewDetailsOf(seriesName);
-        this.solo.clickOnText("Seasons");
-    }
+	public void viewSeasonsOf(String seriesName) {
+		this.validateInputName(seriesName, "seriesName");
 
-    public void viewEpisodesOf(String seriesName, String seasonName) {
-        this.validateInputName(seriesName, "seriesName");
-        this.validateInputName(seasonName, "seasonName");
+		this.viewDetailsOf(seriesName);
+		this.solo.clickOnText("Seasons");
+	}
 
-        this.viewSeasonsOf(seriesName);
-        this.solo.clickOnText(seasonName);
-    }
+	public void viewEpisodesOf(String seriesName, String seasonName) {
+		this.validateInputName(seriesName, "seriesName");
+		this.validateInputName(seasonName, "seasonName");
 
-    // Verification ------------------------------------------------------------
-    public SeriesAccessor assertThatSeries(String seriesName) {
-        this.validateInputName(seriesName, "seriesName");
+		this.viewSeasonsOf(seriesName);
+		this.solo.clickOnText(seasonName);
+	}
 
-        return new SeriesAccessor(this.seriesReferencedAs(seriesName));
-    }
+	// Verification ------------------------------------------------------------
+	public SeriesAccessor assertThatSeries(String seriesName) {
+		this.validateInputName(seriesName, "seriesName");
 
-    private abstract class Accessor {
-        protected TextAsserter asserterTo(String text) {
-            return new TextAsserter(text);
-        }
-    }
+		return new SeriesAccessor(this.seriesReferencedAs(seriesName));
+	}
 
-    public class SeriesAccessor extends Accessor {
+	private abstract class Accessor {
+		protected TextAsserter asserterTo(String text) {
+			return new TextAsserter(text);
+		}
+	}
 
-        private Series series;
+	public class SeriesAccessor extends Accessor {
 
-        public SeriesAccessor(Series series) {
-            if (series == null) {
-                throw new IllegalArgumentException("series should not be null");
-            }
+		private Series series;
 
-            this.series = series;
-        }
+		public SeriesAccessor(Series series) {
+			if (series == null)
+				throw new IllegalArgumentException("series should not be null");
 
-        public TextAsserter name() {
-            return asserterTo(this.series.name()); 
-        }
+			this.series = series;
+		}
 
-        public TextAsserter status() {
-            return asserterTo(this.series.status()); 
-        }
+		public TextAsserter name() {
+			return this.asserterTo(this.series.name()); 
+		}
 
-        public SeasonAccessor season(String seasonName) {
-            return new SeasonAccessor(seasonName, this.series);
-        }
-    }
- 
-    public class SeasonAccessor extends Accessor  {
+		public TextAsserter status() {
+			return this.asserterTo(this.series.status()); 
+		}
 
-        private Season season;
+		public SeasonAccessor season(String seasonName) {
+			return new SeasonAccessor(seasonName, this.series);
+		}
+	}
 
-        public SeasonAccessor(String seasonName, Series series) {
-            validateInputName(seasonName, "seasonName");
-            
-            this.season = series.seasons().season(this.nameToNumber(seasonName));
-        }
+	public class SeasonAccessor extends Accessor  {
 
-        public TextAsserter name() {
-            return asserterTo(this.numberToName(this.season.number()));
-        }
+		private Season season;
 
-        private Integer nameToNumber(String seasonName) {
-            if ("Special Episodes".equals(seasonName)) {
-                return 0;
-            }
-            try {
-                Integer seriesNumber = Integer.parseInt(seasonName);
- 
-                if (seriesNumber == null || seriesNumber < 0) {
-                    throw new IllegalArgumentException("seasonName is not a season name");
-                }
+		public SeasonAccessor(String seasonName, Series series) {
+			AppDriver.this.validateInputName(seasonName, "seasonName");
 
-                return seriesNumber;
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("seasonName is not a season name");
-            }
-        }
+			this.season = series.seasons().season(this.nameToNumber(seasonName));
+		}
 
-        private String numberToName(int seasonNumber) {
-            return seasonNumber == 0 ? "Special Episodes"
-                                     : "Season " + this.season.number() ;
-        }
-    }
+		public TextAsserter name() {
+			return this.asserterTo(this.numberToName(this.season.number()));
+		}
 
-    public class TextAsserter {
-        private String text;
+		private Integer nameToNumber(String seasonName) {
+			if ("Special Episodes".equals(seasonName))
+				return 0;
+			try {
+				Integer seriesNumber = Integer.parseInt(seasonName);
 
-        public TextAsserter(String text) {
-            this.text = text;
-        }
+				if (seriesNumber == null || seriesNumber < 0)
+					throw new IllegalArgumentException("seasonName is not a season name");
 
-        public void isShown() {
-            assertThat(solo.searchText(text), equalTo(true));
-        }
+				return seriesNumber;
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException("seasonName is not a season name");
+			}
+		}
 
-        public String text() {
-            return this.text;
-        }
-    }
+		private String numberToName(int seasonNumber) {
+			return seasonNumber == 0 ? "Special Episodes"
+					: "Season " + this.season.number() ;
+		}
+	}
 
-    // Private tools -----------------------------------------------------------
-    private SeriesProvider seriesProvider() {
-        return App.environment().seriesProvider();
-    }
+	public class TextAsserter {
+		private String text;
 
-    private void validateInputName(String name, String parameterName) {
-        if (name == null) {
-            throw new IllegalArgumentException(parameterName + " should not be null");
-        }
-        if (name.trim().equals("")) {
-            throw new IllegalArgumentException(parameterName + " should not be empty");
-        }
-    }
+		public TextAsserter(String text) {
+			this.text = text;
+		}
+
+		public void isShown() {
+			assertThat(AppDriver.this.solo.searchText(this.text), equalTo(true));
+		}
+
+		public String text() {
+			return this.text;
+		}
+	}
+
+	// Private tools -----------------------------------------------------------
+	private SeriesProvider seriesProvider() {
+		return App.environment().seriesProvider();
+	}
+
+	private void validateInputName(String name, String parameterName) {
+		if (name == null)
+			throw new IllegalArgumentException(parameterName + " should not be null");
+		if (name.trim().equals(""))
+			throw new IllegalArgumentException(parameterName + " should not be empty");
+	}
 }

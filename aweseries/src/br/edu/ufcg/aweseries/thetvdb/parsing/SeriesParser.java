@@ -81,7 +81,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        seriesBuilder.withId(body);
+                        seriesBuilder.withId(Numbers.parseInt(body, INVALID_SERIES_ID));
                     }
                 });
 

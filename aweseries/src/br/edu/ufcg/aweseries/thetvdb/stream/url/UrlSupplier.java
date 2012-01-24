@@ -67,7 +67,7 @@ public class UrlSupplier {
 
         String safeName = null;
 
-        try {
+        try {//TODO Move this block to higher level objects
             safeName = URLEncoder.encode(seriesName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             // TODO: a better exception handling
@@ -79,7 +79,7 @@ public class UrlSupplier {
         return mirrorXml().append("GetSeries.php?seriesname=").append(safeName).append(lang).toString();
     }
 
-    //Images------------------------------------------------------------------------------------------------------------
+    //Image-------------------------------------------------------------------------------------------------------------
 
     public String urlForPoster(String fileName) {
         //TODO Check and throw
