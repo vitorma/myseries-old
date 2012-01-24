@@ -35,33 +35,16 @@ public class TheTVDBStreamFactory implements StreamFactory {
     private UrlSupplier urlSupplier;
 
     public TheTVDBStreamFactory(String apiKey) {
-        if (apiKey == null) {
+        if (apiKey == null)
             throw new IllegalArgumentException("apiKey should not be null");
-        }
 
         this.urlSupplier = new UrlSupplier(apiKey);
     }
 
     @Override
-    public InputStream streamForBaseSeries(String seriesId) {
-        this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
-
-        String baseSeriesUrl = this.urlSupplier.getBaseSeriesUrl(seriesId);
-        return buffered(streamFor(baseSeriesUrl));
-    }
-
-    @Override
-    public InputStream streamForFullSeries(String seriesId) {
-        this.checkIfItIsAValidUrlSuffix(seriesId, "seriesId");
-
-        String fullSeriesUrl = this.urlSupplier.getFullSeriesUrl(seriesId);
-        return buffered(streamFor(fullSeriesUrl));
-    }
-
-    @Override
     public InputStream streamForFullSeries(String seriesId, String language) {
         String fullSeriesUrl = this.urlSupplier.getFullSeriesUrl(seriesId, language);
-        return buffered(streamFor(fullSeriesUrl));
+        return this.buffered(this.streamFor(fullSeriesUrl));
     }
 
     @Override
@@ -69,30 +52,20 @@ public class TheTVDBStreamFactory implements StreamFactory {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
         String seriesPosterUrl = this.urlSupplier.getSeriesPosterUrl(resourcePath);
-        return streamFor(seriesPosterUrl);
-    }
-
-    @Override
-    public InputStream streamForSeriesSearch(String seriesName) {
-        this.checkIfItIsAValidUrlSuffix(seriesName, "seriesName");
-
-        String seriesSearchUrl = this.urlSupplier.getSeriesSearchUrl(seriesName);
-        return buffered(streamFor(seriesSearchUrl));
+        return this.streamFor(seriesPosterUrl);
     }
 
     @Override
     public InputStream streamForSeriesSearch(String seriesName, String language) {
         String seriesSearchUrl = this.urlSupplier.getSeriesSearchUrl(seriesName, language);
-        return buffered(streamFor(seriesSearchUrl));
+        return this.buffered(this.streamFor(seriesSearchUrl));
     }
 
     private void checkIfItIsAValidUrlSuffix(String suffix, String parameterName) {
-        if (suffix == null) {
+        if (suffix == null)
             throw new IllegalArgumentException(parameterName + " should not be null");
-        }
-        if (Strings.isBlank(suffix)) {
+        if (Strings.isBlank(suffix))
             throw new IllegalArgumentException(parameterName + " should not be blank");
-        }
     }
 
     private BufferedInputStream buffered(InputStream stream) {

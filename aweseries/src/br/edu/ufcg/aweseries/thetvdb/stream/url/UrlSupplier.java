@@ -87,22 +87,4 @@ public class UrlSupplier {
 
         return mirrorBanners().append(filename).toString();
     }
-
-    //TODO Remove these methods ASAP------------------------------------------------------------------------------------
-
-    @Deprecated
-    public String getBaseSeriesUrl(String id) {
-        return mirrorXml().append(this.apiKey).append("/series/").append(id).toString();
-    }
-
-    @Deprecated
-    public String getFullSeriesUrl(String id) {
-        return mirrorXml().append(this.apiKey).append("/series/").append(id).append("/all/").toString();
-    }
-
-    @Deprecated
-    public String getSeriesSearchUrl(String name) {
-        return "http://www.thetvdb.com/api/GetSeries.php?seriesname=" +
-        name.trim().replaceAll("\\s+", "%20");
-    }
 }

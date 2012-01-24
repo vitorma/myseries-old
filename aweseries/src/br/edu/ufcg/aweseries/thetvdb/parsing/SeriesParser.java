@@ -51,21 +51,18 @@ public class SeriesParser {
     private StreamFactory streamFactory;
 
     public SeriesParser(StreamFactory streamFactory) {
-        if (streamFactory == null) {
+        if (streamFactory == null)
             throw new IllegalArgumentException("streamFactory should not be null");
-        }
 
         this.streamFactory = streamFactory;
     }
 
     //TODO Refactoring: extract definition of listeners, maybe creating inner types
     public Series parse(String seriesId, String language) {
-        if (seriesId == null) {
+        if (seriesId == null)
             throw new IllegalArgumentException("seriesId should not be null");
-        }
-        if (Strings.isBlank(seriesId)) {
+        if (Strings.isBlank(seriesId))
             throw new IllegalArgumentException("seriesId should not be blank");
-        }
 
         //Builders------------------------------------------------------------------------------------------------------
 
@@ -172,7 +169,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        seriesBuilder.withPoster((Bitmap) SeriesParser.this.scaledBitmapFrom(body));
+                        seriesBuilder.withPoster(SeriesParser.this.scaledBitmapFrom(body));
                     }
                 });
 
@@ -279,7 +276,7 @@ public class SeriesParser {
         //Parse---------------------------------------------------------------------------------------------------------
 
         try {
-            Xml.parse(this.streamFactory.streamForFullSeries(seriesId), Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(this.streamFactory.streamForFullSeries(seriesId, language), Xml.Encoding.UTF_8, root.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
@@ -291,7 +288,7 @@ public class SeriesParser {
 
     private Bitmap scaledBitmapFrom(String resourcePath) {
         return Strings.isBlank(resourcePath)
-               ? null
-               : BitmapFactory.decodeStream(this.streamFactory.streamForSeriesPosterAt(resourcePath));
+        ? null
+                : BitmapFactory.decodeStream(this.streamFactory.streamForSeriesPosterAt(resourcePath));
     }
 }

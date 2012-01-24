@@ -26,18 +26,9 @@ import java.io.InputStream;
 
 public interface StreamFactory {
 
-    @Deprecated
-    public InputStream streamForBaseSeries(String seriesId);
-
-    @Deprecated
-    public InputStream streamForFullSeries(String seriesId);
-    
     public InputStream streamForFullSeries(String seriesId, String language);
 
     public InputStream streamForSeriesPosterAt(String resourcePath);
-
-    @Deprecated
-    public InputStream streamForSeriesSearch(String seriesName);
 
     public InputStream streamForSeriesSearch(String seriesName, String language);
 }

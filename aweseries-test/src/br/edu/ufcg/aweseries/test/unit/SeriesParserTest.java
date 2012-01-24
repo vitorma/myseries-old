@@ -40,7 +40,7 @@ import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 public class SeriesParserTest extends TestCase {
 
 	@SuppressWarnings("unused")
-    private String seriesWithoutPosterDescription =
+	private String seriesWithoutPosterDescription =
 		"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
 		"<Data>" +
 		"  <Series>" +
@@ -72,130 +72,114 @@ public class SeriesParserTest extends TestCase {
 		"  </Series>" +
 		"</Data>";
 
-       private String baseSeriesWithPosterDescription =
-               "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
-               "<Data>" +
-               "  <Series>" +
-               "    <id>80348</id>" +
-               "    <Actors>|Zachary Levi|Yvonne Strahovski|Adam Baldwin|Bonita Friedericy|Julia Ling|Vik Sahay|Ryan McPartlin|Scott Krinsky|Mark Christopher Lawrence|Sarah Lancaster|Joshua Gomez|Mekenna Melvin|Linda Hamilton|Brandon Routh|Matthew Bomer|</Actors>" +
-               "    <Airs_DayOfWeek>Monday</Airs_DayOfWeek>" +
-               "    <Airs_Time>8:00 PM</Airs_Time>" +
-               "    <ContentRating>TV-PG</ContentRating>" +
-               "    <FirstAired>2007-09-24</FirstAired>" +
-               "    <Genre>|Action and Adventure|Comedy|Drama|</Genre>" +
-               "    <IMDB_ID>tt0934814</IMDB_ID>" +
-               "    <Language>en</Language>" +
-               "    <Network>NBC</Network>" +
-               "    <NetworkID></NetworkID>" +
-               "    <Overview>Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen governmeent secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7.</Overview>" +
-               "    <Rating>8.8</Rating>" +
-               "    <RatingCount>655</RatingCount>" +
-               "    <Runtime>60</Runtime>" +
-               "    <SeriesID>68724</SeriesID>" +
-               "    <SeriesName>Chuck</SeriesName>" +
-               "    <Status>Continuing</Status>" +
-               "    <added></added>" +
-               "    <addedBy></addedBy>" +
-               "    <banner>graphical/80348-g21.jpg</banner>" +
-               "    <fanart>fanart/original/80348-18.jpg</fanart>" +
-               "    <lastupdated>1315879458</lastupdated>" +
-               "    <poster>posters/80348-15.jpg</poster>" +
-               "    <zap2it_id>EP00930779</zap2it_id>" +
-               "  </Series>" +
-               "</Data>";
+	private String baseSeriesWithPosterDescription =
+		"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
+		"<Data>" +
+		"  <Series>" +
+		"    <id>80348</id>" +
+		"    <Actors>|Zachary Levi|Yvonne Strahovski|Adam Baldwin|Bonita Friedericy|Julia Ling|Vik Sahay|Ryan McPartlin|Scott Krinsky|Mark Christopher Lawrence|Sarah Lancaster|Joshua Gomez|Mekenna Melvin|Linda Hamilton|Brandon Routh|Matthew Bomer|</Actors>" +
+		"    <Airs_DayOfWeek>Monday</Airs_DayOfWeek>" +
+		"    <Airs_Time>8:00 PM</Airs_Time>" +
+		"    <ContentRating>TV-PG</ContentRating>" +
+		"    <FirstAired>2007-09-24</FirstAired>" +
+		"    <Genre>|Action and Adventure|Comedy|Drama|</Genre>" +
+		"    <IMDB_ID>tt0934814</IMDB_ID>" +
+		"    <Language>en</Language>" +
+		"    <Network>NBC</Network>" +
+		"    <NetworkID></NetworkID>" +
+		"    <Overview>Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen governmeent secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7.</Overview>" +
+		"    <Rating>8.8</Rating>" +
+		"    <RatingCount>655</RatingCount>" +
+		"    <Runtime>60</Runtime>" +
+		"    <SeriesID>68724</SeriesID>" +
+		"    <SeriesName>Chuck</SeriesName>" +
+		"    <Status>Continuing</Status>" +
+		"    <added></added>" +
+		"    <addedBy></addedBy>" +
+		"    <banner>graphical/80348-g21.jpg</banner>" +
+		"    <fanart>fanart/original/80348-18.jpg</fanart>" +
+		"    <lastupdated>1315879458</lastupdated>" +
+		"    <poster>posters/80348-15.jpg</poster>" +
+		"    <zap2it_id>EP00930779</zap2it_id>" +
+		"  </Series>" +
+		"</Data>";
 
-       private String fullSeriesWithPosterDescription =
-               "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
-               "<Data>" +
-               "  <Series>" +
-               "    <id>80348</id>" +
-               "    <Actors>|Zachary Levi|Yvonne Strahovski|Adam Baldwin|Bonita Friedericy|Julia Ling|Vik Sahay|Ryan McPartlin|Scott Krinsky|Mark Christopher Lawrence|Sarah Lancaster|Joshua Gomez|Mekenna Melvin|Linda Hamilton|Brandon Routh|Matthew Bomer|</Actors>" +
-               "    <Airs_DayOfWeek>Monday</Airs_DayOfWeek>" +
-               "    <Airs_Time>8:00 PM</Airs_Time>" +
-               "    <ContentRating>TV-PG</ContentRating>" +
-               "    <FirstAired>2007-09-24</FirstAired>" +
-               "    <Genre>|Action and Adventure|Comedy|Drama|</Genre>" +
-               "    <IMDB_ID>tt0934814</IMDB_ID>" +
-               "    <Language>en</Language>" +
-               "    <Network>NBC</Network>" +
-               "    <NetworkID></NetworkID>" +
-               "    <Overview>Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen government secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7.</Overview>" +
-               "    <Rating>8.8</Rating>" +
-               "    <RatingCount>655</RatingCount>" +
-               "    <Runtime>60</Runtime>" +
-               "    <SeriesID>68724</SeriesID>" +
-               "    <SeriesName>Chuck</SeriesName>" +
-               "    <Status>Continuing</Status>" +
-               "    <added></added>" +
-               "    <addedBy></addedBy>" +
-               "    <banner>graphical/80348-g21.jpg</banner>" +
-               "    <fanart>fanart/original/80348-18.jpg</fanart>" +
-               "    <lastupdated>1315879458</lastupdated>" +
-               "    <poster>posters/80348-15.jpg</poster>" +
-               "    <zap2it_id>EP00930779</zap2it_id>" +
-               "  </Series>" +
-               "  <Episode>" +
-               "   <id>935481</id>" +
-               "   <Combined_episodenumber>1</Combined_episodenumber>" +
-               "   <Combined_season>0</Combined_season>" +
-               "   <DVD_chapter></DVD_chapter>" +
-               "   <DVD_discid></DVD_discid>" +
-               "   <DVD_episodenumber></DVD_episodenumber>" +
-               "   <DVD_season></DVD_season>" +
-               "   <Director>Robert Duncan McNeill</Director>" +
-               "   <EpImgFlag>2</EpImgFlag>" +
-               "   <EpisodeName>Chuck Versus the Third Dimension (2D)</EpisodeName>" +
-               "   <EpisodeNumber>1</EpisodeNumber>" +
-               "   <FirstAired>2009-02-03</FirstAired>" +
-               "   <GuestStars>|Dominic Monaghan|Jerome Bettis|</GuestStars>" +
-               "   <IMDB_ID></IMDB_ID>" +
-               "   <Language>en</Language>" +
-               "   <Overview>Chuck foils a plan to kill Tyler Martin, an international rock star. Chuck's night out with Tyler leads to trouble. Morgan holds a contest among his fellow employees. 2D version of the Episode originally aired in 3D</Overview>" +
-               "   <ProductionCode></ProductionCode>" +
-               "   <Rating>7.0</Rating>" +
-               "   <RatingCount>2</RatingCount>" +
-               "   <SeasonNumber>0</SeasonNumber>" +
-               "   <Writer>Chris Fedak|Josh Schwartz</Writer>" +
-               "   <absolute_number></absolute_number>" +
-               "   <airsafter_season></airsafter_season>" +
-               "   <airsbefore_episode>13</airsbefore_episode>" +
-               "   <airsbefore_season>2</airsbefore_season>" +
-               "   <filename>episodes/80348/935481.jpg</filename>" +
-               "   <lastupdated>1286047969</lastupdated>" +
-               "   <seasonid>27984</seasonid>" +
-               "   <seriesid>80348</seriesid>" +
-               "  </Episode>" +
-               "</Data>";
+	private String fullSeriesWithPosterDescription =
+		"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
+		"<Data>" +
+		"  <Series>" +
+		"    <id>80348</id>" +
+		"    <Actors>|Zachary Levi|Yvonne Strahovski|Adam Baldwin|Bonita Friedericy|Julia Ling|Vik Sahay|Ryan McPartlin|Scott Krinsky|Mark Christopher Lawrence|Sarah Lancaster|Joshua Gomez|Mekenna Melvin|Linda Hamilton|Brandon Routh|Matthew Bomer|</Actors>" +
+		"    <Airs_DayOfWeek>Monday</Airs_DayOfWeek>" +
+		"    <Airs_Time>8:00 PM</Airs_Time>" +
+		"    <ContentRating>TV-PG</ContentRating>" +
+		"    <FirstAired>2007-09-24</FirstAired>" +
+		"    <Genre>|Action and Adventure|Comedy|Drama|</Genre>" +
+		"    <IMDB_ID>tt0934814</IMDB_ID>" +
+		"    <Language>en</Language>" +
+		"    <Network>NBC</Network>" +
+		"    <NetworkID></NetworkID>" +
+		"    <Overview>Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen government secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7.</Overview>" +
+		"    <Rating>8.8</Rating>" +
+		"    <RatingCount>655</RatingCount>" +
+		"    <Runtime>60</Runtime>" +
+		"    <SeriesID>68724</SeriesID>" +
+		"    <SeriesName>Chuck</SeriesName>" +
+		"    <Status>Continuing</Status>" +
+		"    <added></added>" +
+		"    <addedBy></addedBy>" +
+		"    <banner>graphical/80348-g21.jpg</banner>" +
+		"    <fanart>fanart/original/80348-18.jpg</fanart>" +
+		"    <lastupdated>1315879458</lastupdated>" +
+		"    <poster>posters/80348-15.jpg</poster>" +
+		"    <zap2it_id>EP00930779</zap2it_id>" +
+		"  </Series>" +
+		"  <Episode>" +
+		"   <id>935481</id>" +
+		"   <Combined_episodenumber>1</Combined_episodenumber>" +
+		"   <Combined_season>0</Combined_season>" +
+		"   <DVD_chapter></DVD_chapter>" +
+		"   <DVD_discid></DVD_discid>" +
+		"   <DVD_episodenumber></DVD_episodenumber>" +
+		"   <DVD_season></DVD_season>" +
+		"   <Director>Robert Duncan McNeill</Director>" +
+		"   <EpImgFlag>2</EpImgFlag>" +
+		"   <EpisodeName>Chuck Versus the Third Dimension (2D)</EpisodeName>" +
+		"   <EpisodeNumber>1</EpisodeNumber>" +
+		"   <FirstAired>2009-02-03</FirstAired>" +
+		"   <GuestStars>|Dominic Monaghan|Jerome Bettis|</GuestStars>" +
+		"   <IMDB_ID></IMDB_ID>" +
+		"   <Language>en</Language>" +
+		"   <Overview>Chuck foils a plan to kill Tyler Martin, an international rock star. Chuck's night out with Tyler leads to trouble. Morgan holds a contest among his fellow employees. 2D version of the Episode originally aired in 3D</Overview>" +
+		"   <ProductionCode></ProductionCode>" +
+		"   <Rating>7.0</Rating>" +
+		"   <RatingCount>2</RatingCount>" +
+		"   <SeasonNumber>0</SeasonNumber>" +
+		"   <Writer>Chris Fedak|Josh Schwartz</Writer>" +
+		"   <absolute_number></absolute_number>" +
+		"   <airsafter_season></airsafter_season>" +
+		"   <airsbefore_episode>13</airsbefore_episode>" +
+		"   <airsbefore_season>2</airsbefore_season>" +
+		"   <filename>episodes/80348/935481.jpg</filename>" +
+		"   <lastupdated>1286047969</lastupdated>" +
+		"   <seasonid>27984</seasonid>" +
+		"   <seriesid>80348</seriesid>" +
+		"  </Episode>" +
+		"</Data>";
 
-    private Poster seriesPoster = new Poster(SampleBitmap.pixel);
+	private Poster seriesPoster = new Poster(SampleBitmap.pixel);
 
-    private class SeriesParserTestStreamFactory implements StreamFactory {
+	private class SeriesParserTestStreamFactory implements StreamFactory {
 
-        @Override
-        public InputStream streamForBaseSeries(String seriesId) {
-            return new ByteArrayInputStream(baseSeriesWithPosterDescription.getBytes());
-        }
-
-        @Override
-        public InputStream streamForFullSeries(String seriesId) {
-            return new ByteArrayInputStream(fullSeriesWithPosterDescription.getBytes());
-        }
-
-        @Override
-        public InputStream streamForSeriesSearch(String seriesName) {
-            //TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public InputStream streamForSeriesPosterAt(String resourcePath) {
-            return new ByteArrayInputStream(SampleBitmap.pixelBytes);
-        }
+		@Override
+		public InputStream streamForSeriesPosterAt(String resourcePath) {
+			return new ByteArrayInputStream(SampleBitmap.pixelBytes);
+		}
 
 		@Override
 		public InputStream streamForFullSeries(String seriesId, String language) {
 			// TODO Auto-generated method stub
-			return null;
+			return new ByteArrayInputStream(SeriesParserTest.this.fullSeriesWithPosterDescription.getBytes());
 		}
 
 		@Override
@@ -204,14 +188,14 @@ public class SeriesParserTest extends TestCase {
 			// TODO Auto-generated method stub
 			return null;
 		}
-    }
+	}
 
-    public void testNullStreamFactoryThrowsException() {
-        try {
-            new SeriesParser(null);
-            fail("Should have thrown an IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
-    }
+	public void testNullStreamFactoryThrowsException() {
+		try {
+			new SeriesParser(null);
+			fail("Should have thrown an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {}
+	}
 
 	public void failing_testSeriesWithoutPoster() {
 		Series seriesWithoutPoster = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80248", "en");
@@ -220,15 +204,15 @@ public class SeriesParserTest extends TestCase {
 	}
 
 	public void testSeriesWithPoster() {
-        Series seriesWithPoster = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80348", "en");
+		Series seriesWithPoster = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80348", "en");
 
-        assertThat(seriesWithPoster.poster(), notNullValue());
-        assertThat(seriesWithPoster.poster(), equalTo(seriesPoster));
-    }
+		assertThat(seriesWithPoster.poster(), notNullValue());
+		assertThat(seriesWithPoster.poster(), equalTo(this.seriesPoster));
+	}
 
 	public void testSeriesOverview() {
 		Series series = new SeriesParser(new SeriesParserTestStreamFactory()).parse("80348", "en");
-		
+
 		assertThat(series.overview(), notNullValue());
 		assertThat(series.overview(), equalTo("Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen government secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7."));
 	}
