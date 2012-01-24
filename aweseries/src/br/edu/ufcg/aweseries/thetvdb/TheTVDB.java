@@ -33,7 +33,6 @@ import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesSearchParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.stream.TheTVDBStreamFactory;
-import br.edu.ufcg.aweseries.util.Numbers;
 
 public class TheTVDB implements SeriesSource {
     private final StreamFactory streamFactory;
@@ -68,15 +67,13 @@ public class TheTVDB implements SeriesSource {
     }
 
     @Override
-    public Series fetchSeries(String seriesId, String language) {
-        if (seriesId == null)
-            throw new IllegalArgumentException("seriesId should not be null");
+    public Series fetchSeries(int seriesId, String language) {
 
         if (language == null)
             throw new IllegalArgumentException("language should not be null");
 
         try {
-            return new SeriesParser(this.streamFactory).parse(Numbers.parseInt(seriesId, -1), this.getSupported(language));
+            return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
         } catch (Exception e) {
             //TODO A better exception handling
             throw new SeriesNotFoundException(e);
@@ -84,13 +81,13 @@ public class TheTVDB implements SeriesSource {
     }
 
     @Override
-    public List<Series> fetchAllSeries(List<String> seriesIds, String language) {
+    public List<Series> fetchAllSeries(List<Integer> seriesIds, String language) {
         if (seriesIds == null)
             throw new IllegalArgumentException("seriesIds should not be null");
 
         List<Series> result = new ArrayList<Series>();
 
-        for (String seriesId : seriesIds) {
+        for (Integer seriesId : seriesIds) {
             //TODO Check the language only once
             Series series = this.fetchSeries(seriesId, language);
             result.add(series);

@@ -94,14 +94,14 @@ public class SeriesProvider {
     }
 
     private class UpdateSeriesTask extends AsyncTask<Void, Void, Void> {
-        private List<String> seriesToUpdate;
+        private List<Integer> seriesToUpdate;
         private List<Series> upToDateSeries;
 
         public UpdateSeriesTask() {
-            this.seriesToUpdate = new ArrayList<String>();
+            this.seriesToUpdate = new ArrayList<Integer>();
 
             for (final Series series : SeriesProvider.this.seriesRepository.getAll()) {
-                this.seriesToUpdate.add(String.valueOf(series.id()));
+                this.seriesToUpdate.add(series.id());
             }
         }
 
@@ -162,7 +162,7 @@ public class SeriesProvider {
 
             // TODO is there anything to do about any SeriesNotFoundException that may be thrown
             // here?
-            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(String.valueOf(seriesToFollow.id()), App
+            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(seriesToFollow.id(), App
                     .environment().localization().language());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 

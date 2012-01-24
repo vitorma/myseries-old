@@ -33,126 +33,117 @@ import br.edu.ufcg.aweseries.SeriesNotFoundException;
 import br.edu.ufcg.aweseries.SeriesSource;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.thetvdb.Language;
-import br.edu.ufcg.aweseries.util.Numbers;
 
 public class TheTVDBDouble implements SeriesSource {
 
-    private DefaultSeriesFactory seriesFactory;
-    private Map<Language, Set<Series>> languageSeries;
+	private DefaultSeriesFactory seriesFactory;
+	private Map<Language, Set<Series>> languageSeries;
 
-    public TheTVDBDouble() {
-        this.seriesFactory = new DefaultSeriesFactory();
+	public TheTVDBDouble() {
+		this.seriesFactory = new DefaultSeriesFactory();
 
-        this.languageSeries = new HashMap<Language, Set<Series>>();
-        this.languageSeries.put(Language.EN, new HashSet<Series>());
-    }
+		this.languageSeries = new HashMap<Language, Set<Series>>();
+		this.languageSeries.put(Language.EN, new HashSet<Series>());
+	}
 
-    // Create Series
-    public void createSeries(String languageAbbreviation, String... attributes) {
-        this.createSeries(Language.from(languageAbbreviation), attributes);
-    }
+	// Create Series
+	public void createSeries(String languageAbbreviation, String... attributes) {
+		this.createSeries(Language.from(languageAbbreviation), attributes);
+	}
 
-    private void createSeries(Language language, String... attributes) {
-        Series newSeries = this.seriesFactory.createSeries(attributes);
+	private void createSeries(Language language, String... attributes) {
+		Series newSeries = this.seriesFactory.createSeries(attributes);
 
-        this.saveSeries(language, newSeries);
-    }
+		this.saveSeries(language, newSeries);
+	}
 
-    private void saveSeries(Language language, Series series) {
-        if (!this.languageSeries.containsKey(language)) {
-            this.languageSeries.put(language, new HashSet<Series>());
-        }
-        this.languageSeries.get(language).add(series);
-    }
+	private void saveSeries(Language language, Series series) {
+		if (!this.languageSeries.containsKey(language)) {
+			this.languageSeries.put(language, new HashSet<Series>());
+		}
+		this.languageSeries.get(language).add(series);
+	}
 
-    // Search for Series
-    @Override
-    public List<Series> searchFor(String seriesName, String languageAbbreviation) {
-        return this.searchFor(seriesName, Language.from(languageAbbreviation));
-    }
+	// Search for Series
+	@Override
+	public List<Series> searchFor(String seriesName, String languageAbbreviation) {
+		return this.searchFor(seriesName, Language.from(languageAbbreviation));
+	}
 
-    private List<Series> searchFor(String seriesName, Language language) {
-        if (seriesName == null) {
-            throw new IllegalArgumentException("seriesName should not be null");
-        }
+	private List<Series> searchFor(String seriesName, Language language) {
+		if (seriesName == null)
+			throw new IllegalArgumentException("seriesName should not be null");
 
-        List<Series> results = new ArrayList<Series>();
+		List<Series> results = new ArrayList<Series>();
 
-        results.addAll(this.resultsIn(language, seriesName));
+		results.addAll(this.resultsIn(language, seriesName));
 
-        if (!language.equals(Language.EN)) {
-            results.addAll(this.resultsIn(Language.EN, seriesName));
-        }
+		if (!language.equals(Language.EN)) {
+			results.addAll(this.resultsIn(Language.EN, seriesName));
+		}
 
-        return Collections.unmodifiableList(results);
-    }
+		return Collections.unmodifiableList(results);
+	}
 
-    /**
-     * This method never returns null. It either returns the result set or an empty set.
-     */
-    private Set<Series> resultsIn(Language language, String searchedName) {
-        if (!this.languageSeries.containsKey(language)) {
-            return Collections.emptySet();
-        }
-        return this.matchingResultsFrom(this.languageSeries.get(language), searchedName);
-    }
+	/**
+	 * This method never returns null. It either returns the result set or an empty set.
+	 */
+	private Set<Series> resultsIn(Language language, String searchedName) {
+		if (!this.languageSeries.containsKey(language))
+			return Collections.emptySet();
+		return this.matchingResultsFrom(this.languageSeries.get(language), searchedName);
+	}
 
-    /**
-     * This method never returns null. It either returns the result set or an empty set.
-     */
-    private Set<Series> matchingResultsFrom(Set<Series> seriesSet, String searchedName) {
-        Set<Series> results = new HashSet<Series>();
+	/**
+	 * This method never returns null. It either returns the result set or an empty set.
+	 */
+	private Set<Series> matchingResultsFrom(Set<Series> seriesSet, String searchedName) {
+		Set<Series> results = new HashSet<Series>();
 
-        for (Series series : seriesSet) {
-            if (series.name().toLowerCase().contains(searchedName.toLowerCase())) {
-                results.add(series);
-            }
-        }
+		for (Series series : seriesSet) {
+			if (series.name().toLowerCase().contains(searchedName.toLowerCase())) {
+				results.add(series);
+			}
+		}
 
-        return results;
-    }
+		return results;
+	}
 
-    // Fetch Series
-    @Override
-    public Series fetchSeries(String seriesId, String languageAbbreviation) {
-        return this.fetchSeries(seriesId, Language.from(languageAbbreviation));
-    }
+	// Fetch Series
+	@Override
+	public Series fetchSeries(int seriesId, String languageAbbreviation) {
+		return this.fetchSeries(seriesId, Language.from(languageAbbreviation));
+	}
 
-    private Series fetchSeries(String seriesId, Language language) {
-        if (seriesId == null) {
-            throw new IllegalArgumentException("seriesId should not be null");
-        }
+	private Series fetchSeries(int seriesId, Language language) {
+		Set<Series> source = this.languageSeries.get((this.languageSeries.containsKey(language))
+				? language 
+						: Language.EN);
 
-        Set<Series> source = this.languageSeries.get((this.languageSeries.containsKey(language))
-                                                     ? language 
-                                                     : Language.EN);
+		for (Series series : source) {
+			if (series.id() == seriesId)
+				return series;
+		}
 
-        for (Series series : source) {
-            if (series.id() == Numbers.parseInt(seriesId, -1)) {
-                return series;
-            }
-        }
+		throw new SeriesNotFoundException();
+	}
 
-        throw new SeriesNotFoundException();
-    }
+	// Fetch All Series
+	@Override
+	public List<Series> fetchAllSeries(List<Integer> seriesIds, String languageAbbreviation) {
+		return this.fetchAllSeries(seriesIds, Language.from(languageAbbreviation));
+	}
 
-    // Fetch All Series
-    @Override
-    public List<Series> fetchAllSeries(List<String> seriesIds, String languageAbbreviation) {
-        return this.fetchAllSeries(seriesIds, Language.from(languageAbbreviation));
-    }
+	private List<Series> fetchAllSeries(List<Integer> seriesIds, Language language) {
+		if (seriesIds == null)
+			throw new IllegalArgumentException("seriesIds should not be null");
 
-    private List<Series> fetchAllSeries(List<String> seriesIds, Language language) {
-        if (seriesIds == null) {
-            throw new IllegalArgumentException("seriesIds should not be null");
-        }
+		List<Series> results = new ArrayList<Series>();
 
-        List<Series> results = new ArrayList<Series>();
+		for (Integer id : seriesIds) {
+			results.add(this.fetchSeries(id, language));
+		}
 
-        for (String id : seriesIds) {
-            results.add(this.fetchSeries(id, language));
-        }
-
-        return results;
-    }
+		return results;
+	}
 }

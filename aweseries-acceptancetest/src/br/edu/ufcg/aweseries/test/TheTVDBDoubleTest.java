@@ -65,7 +65,7 @@ public class TheTVDBDoubleTest extends TestCase {
 		this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name");
 
 		// Fetch
-		Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_EN);
+		Series fetched = this.theTVDB.fetchSeries(123, LANGUAGE_EN);
 		assertThat(fetched, hasId(123));
 		assertThat(fetched, namedAs("Given Name"));
 
@@ -198,7 +198,7 @@ public class TheTVDBDoubleTest extends TestCase {
 	// Fetch Series
 	public void testFetchNonExistentSeriesThrowsException() {
 		try {
-			this.theTVDB.fetchSeries("123", LANGUAGE_EN);
+			this.theTVDB.fetchSeries(123, LANGUAGE_EN);
 			fail("Should have thrown an SeriesNotFoundException for nonexistent series");
 		} catch (SeriesNotFoundException e) {}
 	}
@@ -206,7 +206,7 @@ public class TheTVDBDoubleTest extends TestCase {
 	public void testFetchExistentSeriesInEnglish() {
 		this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
 
-		Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_EN);
+		Series fetched = this.theTVDB.fetchSeries(123, LANGUAGE_EN);
 
 		assertThat(fetched, hasId(123));
 		assertThat(fetched, namedAs("Given Name"));
@@ -217,7 +217,7 @@ public class TheTVDBDoubleTest extends TestCase {
 		this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
 		this.theTVDB.createSeries(LANGUAGE_PT, "id : 123", "name : Given Name", "overview : Um exemplo de serie");
 
-		Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_PT);
+		Series fetched = this.theTVDB.fetchSeries(123, LANGUAGE_PT);
 
 		assertThat(fetched, hasId(123));
 		assertThat(fetched, namedAs("Given Name"));
@@ -228,7 +228,7 @@ public class TheTVDBDoubleTest extends TestCase {
 		this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
 		this.theTVDB.createSeries(LANGUAGE_PT, "id : 123", "name : Given Name", "overview : Um exemplo de serie");
 
-		Series fetched = this.theTVDB.fetchSeries("123", LANGUAGE_ES);
+		Series fetched = this.theTVDB.fetchSeries(123, LANGUAGE_ES);
 
 		assertThat(fetched, hasId(123));
 		assertThat(fetched, namedAs("Given Name"));
@@ -236,36 +236,29 @@ public class TheTVDBDoubleTest extends TestCase {
 	}
 
 	// Fetch Series Arguments Validation
-	public void testFetchNullSeriesIdThrowsException() {
-		try {
-			this.theTVDB.fetchSeries(null, LANGUAGE_EN);
-			fail("Should have thrown an IllegalArgumentException");
-		} catch (IllegalArgumentException e) {}
-	}
-
 	public void testFetchNullLanguageThrowsException() {
 		try {
-			this.theTVDB.fetchSeries("123", null);
+			this.theTVDB.fetchSeries(123, null);
 			fail("Should have thrown an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {}
 	}
 
 	public void testFetchUnavailableLanguageThrowsException() {
 		try {
-			this.theTVDB.fetchSeries("123", UNAVAILABLE_LANGUAGE);
+			this.theTVDB.fetchSeries(123, UNAVAILABLE_LANGUAGE);
 			fail("Should have thrown an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {}
 	}
 
 	// Fetch All Series
 	public void testFetchAllWithNoSeriesIdsReturnsAnEmptyList() {
-		assertTrue(this.theTVDB.fetchAllSeries(new ArrayList<String>(), LANGUAGE_EN).isEmpty());
+		assertTrue(this.theTVDB.fetchAllSeries(new ArrayList<Integer>(), LANGUAGE_EN).isEmpty());
 	}
 
 	public void testFetchAllWithNonExistentSeriesThrowsException() {
 		this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name");
 		try {
-			this.theTVDB.fetchAllSeries(Arrays.asList("123", "321"), LANGUAGE_EN);
+			this.theTVDB.fetchAllSeries(Arrays.asList(123, 321), LANGUAGE_EN);
 			fail("Should have thrown an SeriesNotFoundException for nonexistent series");
 		} catch (SeriesNotFoundException e) {}
 	}
@@ -274,7 +267,7 @@ public class TheTVDBDoubleTest extends TestCase {
 		this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
 		this.theTVDB.createSeries(LANGUAGE_EN, "id : 321", "name : Another Name", "overview : Another example of series");
 
-		Collection<Series> allFetchedSeries = this.theTVDB.fetchAllSeries(Arrays.asList("123", "321"), LANGUAGE_EN);
+		Collection<Series> allFetchedSeries = this.theTVDB.fetchAllSeries(Arrays.asList(123, 321), LANGUAGE_EN);
 		assertThat(allFetchedSeries.size(), equalTo(2));
 
 		assertThat(allFetchedSeries, hasItem(both(hasId(123))
@@ -290,7 +283,7 @@ public class TheTVDBDoubleTest extends TestCase {
 		this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
 		this.theTVDB.createSeries(LANGUAGE_PT, "id : 123", "name : Given Name", "overview : Um exemplo de serie");
 
-		Collection<Series> allFetchedSeries = this.theTVDB.fetchAllSeries(Arrays.asList("123"), LANGUAGE_PT);
+		Collection<Series> allFetchedSeries = this.theTVDB.fetchAllSeries(Arrays.asList(123), LANGUAGE_PT);
 		assertThat(allFetchedSeries.size(), equalTo(1));
 
 		assertThat(allFetchedSeries, hasItem(both(hasId(123))
@@ -302,7 +295,7 @@ public class TheTVDBDoubleTest extends TestCase {
 		this.theTVDB.createSeries(LANGUAGE_EN, "id : 123", "name : Given Name", "overview : An example of series");
 		this.theTVDB.createSeries(LANGUAGE_PT, "id : 123", "name : Given Name", "overview : Um exemplo de serie");
 
-		Collection<Series> allFetchedSeries = this.theTVDB.fetchAllSeries(Arrays.asList("123"), LANGUAGE_ES);
+		Collection<Series> allFetchedSeries = this.theTVDB.fetchAllSeries(Arrays.asList(123), LANGUAGE_ES);
 		assertThat(allFetchedSeries.size(), equalTo(1));
 
 		assertThat(allFetchedSeries, hasItem(both(hasId(123))
@@ -320,21 +313,21 @@ public class TheTVDBDoubleTest extends TestCase {
 
 	public void testFetchAllWithNullLanguageThrowsException() {
 		try {
-			this.theTVDB.fetchAllSeries(Arrays.asList("123"), null);
+			this.theTVDB.fetchAllSeries(Arrays.asList(123), null);
 			fail("Should have thrown an IllegalArgumentException for null language abbreviation");
 		} catch (IllegalArgumentException e) {}
 	}
 
 	public void testFetchAllUnavailableLanguageThrowsException() {
 		try {
-			this.theTVDB.fetchAllSeries(Arrays.asList("123"), UNAVAILABLE_LANGUAGE);
+			this.theTVDB.fetchAllSeries(Arrays.asList(123), UNAVAILABLE_LANGUAGE);
 			fail("Should have thrown an IllegalArgumentException for unavailable language");
 		} catch (IllegalArgumentException e) {}
 	}
 
 	public void testFetchAllWithNullSeriesIdThrowsException() {
 		try {
-			this.theTVDB.fetchAllSeries(Arrays.asList((String) null), LANGUAGE_EN);
+			this.theTVDB.fetchAllSeries(Arrays.asList((Integer) null), LANGUAGE_EN);
 			fail("Should have thrown an IllegalArgumentException for null series id");
 		} catch (IllegalArgumentException e) {}
 	}

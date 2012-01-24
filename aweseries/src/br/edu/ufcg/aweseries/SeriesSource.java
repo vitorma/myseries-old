@@ -33,14 +33,14 @@ public interface SeriesSource {
     public List<Series> searchFor(String seriesName, String languageAbbreviation);
 
     /**
-     * @throws IllegalArgumentException when either seriesId or languageAbbreviation are null
+     * @throws IllegalArgumentException if languageAbbreviation is null
      * @throws SeriesNotFoundException if there is no series with the given seriesId
      */
-    public Series fetchSeries(String seriesId, String languageAbbreviation);
+    public Series fetchSeries(int seriesId, String languageAbbreviation);
 
     /**
-     * @throws IllegalArgumentException when either seriesIds or languageAbbreviation are null
+     * @throws IllegalArgumentException if languageAbbreviation is null
      * @throws SeriesNotFoundException if there is no series with any of the given seriesId
      */
-    public List<Series> fetchAllSeries(List<String> seriesIds, String languageAbbreviation);
+    public List<Series> fetchAllSeries(List<Integer> seriesIds, String languageAbbreviation);
 }
