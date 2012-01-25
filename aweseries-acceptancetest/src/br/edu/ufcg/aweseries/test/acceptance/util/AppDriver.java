@@ -61,6 +61,7 @@ public class AppDriver {
 	public void follow(String seriesName) {
 		this.validateInputName(seriesName, "seriesName");
 
+		//FIXME How can you get a series from the repository before the insertion?
 		Series series = this.retrieveSeriesNamed(seriesName);
 
 		this.seriesProvider().follow(series);

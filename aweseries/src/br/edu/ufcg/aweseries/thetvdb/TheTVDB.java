@@ -80,7 +80,7 @@ public class TheTVDB implements SeriesSource {
         }
     }
 
-    @Override
+    @Override//TODO Here, int[] is better than List<Integer>, because the subtle NPE thrown when an id is null
     public List<Series> fetchAllSeries(List<Integer> seriesIds, String language) {
         if (seriesIds == null)
             throw new IllegalArgumentException("seriesIds should not be null");

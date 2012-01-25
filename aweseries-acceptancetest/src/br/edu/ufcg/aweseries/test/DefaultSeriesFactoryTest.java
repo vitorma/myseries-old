@@ -82,13 +82,13 @@ public class DefaultSeriesFactoryTest extends TestCase {
 	public void testDefaultSeriesWithCustomId() {
 		Series defaultSeries = this.factory.createSeries("id : 123");
 
-		assertEquals(defaultSeries.id(), equalTo("123"));
+		assertEquals(defaultSeries.id(), 123);
 	}
 
 	public void testDefaultSeriesWithCustomIdAndName() {
 		Series defaultSeries = this.factory.createSeries("id : 123", "name : Series Name");
 
-		assertEquals(defaultSeries.id(), equalTo("123"));
+		assertEquals(defaultSeries.id(), 123);
 		assertThat(defaultSeries.name(), equalTo("Series Name"));
 	}
 
