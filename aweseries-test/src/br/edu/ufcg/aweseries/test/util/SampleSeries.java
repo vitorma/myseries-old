@@ -106,12 +106,12 @@ public abstract class SampleSeries {
 	public Series series() {
 		final SeriesParser seriesParser = new SeriesParser(new StreamFactory() {
 			@Override
-			public InputStream streamForSeriesPosterAt(String resourcePath) {
+			public InputStream streamForSeriesPoster(String resourcePath) {
 				return SampleSeries.this.posterStream();
 			}
 
 			@Override
-			public InputStream streamForFullSeries(int seriesId, Language language) {
+			public InputStream streamForSeries(int seriesId, Language language) {
 				// TODO Auto-generated method stub
 				return SampleSeries.this.fullSeriesStream();
 			}

@@ -173,12 +173,12 @@ public class SeriesParserTest extends TestCase {
 	private class SeriesParserTestStreamFactory implements StreamFactory {
 
 		@Override
-		public InputStream streamForSeriesPosterAt(String resourcePath) {
+		public InputStream streamForSeriesPoster(String resourcePath) {
 			return new ByteArrayInputStream(SampleBitmap.pixelBytes);
 		}
 
 		@Override
-		public InputStream streamForFullSeries(int seriesId, Language language) {
+		public InputStream streamForSeries(int seriesId, Language language) {
 			// TODO Auto-generated method stub
 			return new ByteArrayInputStream(SeriesParserTest.this.fullSeriesWithPosterDescription.getBytes());
 		}

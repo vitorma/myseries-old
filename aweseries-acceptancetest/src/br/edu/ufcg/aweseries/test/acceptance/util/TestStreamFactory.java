@@ -34,7 +34,7 @@ public class TestStreamFactory implements StreamFactory {
 	private Set<SampleSeries> allSampleSeries = SampleSeries.allSamples;
 
 	@Override
-	public InputStream streamForFullSeries(int seriesId, Language language) {
+	public InputStream streamForSeries(int seriesId, Language language) {
 		//TODO Use the language (?)
 		for (SampleSeries s : this.allSampleSeries) {
 			if (s.id() == seriesId)
@@ -52,7 +52,7 @@ public class TestStreamFactory implements StreamFactory {
 	}
 
 	@Override
-	public InputStream streamForSeriesPosterAt(String resourcePath) {
+	public InputStream streamForSeriesPoster(String resourcePath) {
 		this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
 		for (SampleSeries s : this.allSampleSeries) {

@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.thetvdb.stream;
 
 import java.io.InputStream;
@@ -28,9 +27,9 @@ import br.edu.ufcg.aweseries.thetvdb.Language;
 
 public interface StreamFactory {
 
-    public InputStream streamForFullSeries(int seriesId, Language language);
-
-    public InputStream streamForSeriesPosterAt(String resourcePath);
+    public InputStream streamForSeries(int seriesId, Language language);
 
     public InputStream streamForSeriesSearch(String seriesName, Language language);
+
+    public InputStream streamForSeriesPoster(String fileName);
 }

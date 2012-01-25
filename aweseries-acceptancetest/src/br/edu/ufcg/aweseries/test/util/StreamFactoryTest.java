@@ -100,7 +100,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
 	public void testGettingFullSeriesWithNonExistentSeriesIdThrowsException() {
 		try {
-			this.factory().streamForFullSeries(NON_EXISTENT_SERIES_ID, Language.EN);
+			this.factory().streamForSeries(NON_EXISTENT_SERIES_ID, Language.EN);
 			fail("Should have thrown a FileNotFoundException");
 		} catch (RuntimeException e) {
 			assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
@@ -108,7 +108,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	}
 
 	public void testGettingFullSeriesReturnsFullData() throws IOException {
-		InputStream testSeriesStream = this.factory().streamForFullSeries(this.testSeriesId, Language.EN);
+		InputStream testSeriesStream = this.factory().streamForSeries(this.testSeriesId, Language.EN);
 
 		String contentOfTestSeriesStream = this.contentOf(testSeriesStream);
 
@@ -120,21 +120,21 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	// Series Poster -----------------------------------------------------------
 	public void testGettingNullSeriesPosterThrowsException() {
 		try {
-			this.factory().streamForSeriesPosterAt(null);
+			this.factory().streamForSeriesPoster(null);
 			fail("Should have thrown an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {}
 	}
 
 	public void testGettingSeriesPosterWithBlankPathThrowsException() {
 		try {
-			this.factory().streamForSeriesPosterAt(BLANK_STRING);
+			this.factory().streamForSeriesPoster(BLANK_STRING);
 			fail("Should have thrown an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {}
 	}
 
 	public void testGettingSeriesPosterWithNonExistentResourcePathThrowsException() {
 		try {
-			this.factory().streamForSeriesPosterAt(NON_EXISTENT_POSTER_RESOURCE_PATH);
+			this.factory().streamForSeriesPoster(NON_EXISTENT_POSTER_RESOURCE_PATH);
 			fail("Should have thrown a FileNotFoundException");
 		} catch (RuntimeException e) {
 			assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
@@ -143,7 +143,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
 	// FIXME
 	public void failing_testGettingSeriesPosterReturnsAStreamToABitmapableImage() {
-		InputStream posterStream = this.factory().streamForSeriesPosterAt(this.testSeriesPoster);
+		InputStream posterStream = this.factory().streamForSeriesPoster(this.testSeriesPoster);
 		assertThat(posterStream, notNullValue());
 
 		assertThat(BitmapFactory.decodeStream(posterStream), notNullValue());

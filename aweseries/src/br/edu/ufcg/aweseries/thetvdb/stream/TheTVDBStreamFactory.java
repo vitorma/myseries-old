@@ -43,16 +43,16 @@ public class TheTVDBStreamFactory implements StreamFactory {
     }
 
     @Override
-    public InputStream streamForFullSeries(int seriesId, Language language) {
+    public InputStream streamForSeries(int seriesId, Language language) {
         URL fullSeriesUrl = this.urlSupplier.urlForSeries(seriesId, language);
         return this.buffered(this.streamFor(fullSeriesUrl));
     }
 
     @Override
-    public InputStream streamForSeriesPosterAt(String resourcePath) {
+    public InputStream streamForSeriesPoster(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
-        URL seriesPosterUrl = this.urlSupplier.urlForPoster(resourcePath);
+        URL seriesPosterUrl = this.urlSupplier.urlForSeriesPoster(resourcePath);
         return this.streamFor(seriesPosterUrl);
     }
 

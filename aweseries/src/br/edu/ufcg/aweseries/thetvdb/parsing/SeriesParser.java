@@ -273,7 +273,7 @@ public class SeriesParser {
         //Parse---------------------------------------------------------------------------------------------------------
 
         try {
-            Xml.parse(this.streamFactory.streamForFullSeries(seriesId, language), Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(this.streamFactory.streamForSeries(seriesId, language), Xml.Encoding.UTF_8, root.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
@@ -286,6 +286,6 @@ public class SeriesParser {
     private Bitmap scaledBitmapFrom(String resourcePath) {
         return Strings.isBlank(resourcePath)
         ? null
-                : BitmapFactory.decodeStream(this.streamFactory.streamForSeriesPosterAt(resourcePath));
+                : BitmapFactory.decodeStream(this.streamFactory.streamForSeriesPoster(resourcePath));
     }
 }

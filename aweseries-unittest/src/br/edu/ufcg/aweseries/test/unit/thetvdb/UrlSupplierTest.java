@@ -68,11 +68,11 @@ public class UrlSupplierTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForPosterWithNullFileNameCausesIllegalArgumentException() {
-        new UrlSupplier(API_KEY).urlForPoster(null);
+        new UrlSupplier(API_KEY).urlForSeriesPoster(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForPosterWithBlankFileNameCausesIllegalArgumentException() {
-        new UrlSupplier(API_KEY).urlForPoster(BLANK_STRING);
+        new UrlSupplier(API_KEY).urlForSeriesPoster(BLANK_STRING);
     }
 }

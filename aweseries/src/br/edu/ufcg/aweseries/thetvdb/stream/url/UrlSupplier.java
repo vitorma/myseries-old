@@ -93,16 +93,16 @@ public class UrlSupplier {
 
     //Image-------------------------------------------------------------------------------------------------------------
 
-    public URL urlForPoster(String fileName) {
+    public URL urlForSeriesPoster(String fileName) {
         Validate.isNonBlank(fileName, "fileName");
 
-        String url = this.buildUrlForPoster(fileName);
+        String url = this.buildUrlForSeriesPoster(fileName);
 
         return this.urlFrom(url);
     }
 
-    private String buildUrlForPoster(String fileName) {
-        return this.mirrorBanners().append(this.encode(fileName)).toString();
+    private String buildUrlForSeriesPoster(String fileName) {
+        return this.mirrorBanners().append("_cache/").append(this.encode(fileName)).toString();
     }
 
     //URL---------------------------------------------------------------------------------------------------------------
