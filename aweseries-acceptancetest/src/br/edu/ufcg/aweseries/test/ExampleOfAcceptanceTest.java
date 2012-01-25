@@ -49,7 +49,7 @@ public class ExampleOfAcceptanceTest extends TestCase {
         searchUI.search();
 
         // Then
-        Assert.assertEquals("A Great Series", searchUI.firtResult());
+        Assert.assertEquals("A Great Series", searchUI.firstResult());
     }
 
     // Temporary Garbage ------------------------------------------------------------
@@ -76,7 +76,7 @@ public class ExampleOfAcceptanceTest extends TestCase {
             this.searchField = string;
         }
 
-        public String firtResult() {
+        public String firstResult() {
             // TODO Auto-generated method stub
             return App.environment().seriesProvider().searchSeries(this.searchField)[0].name();
             //return null;
