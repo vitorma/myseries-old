@@ -44,7 +44,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
     @Override
     public InputStream streamForFullSeries(int seriesId, Language language) {
-        String fullSeriesUrl = this.urlSupplier.urlForSeries(seriesId, language);
+        URL fullSeriesUrl = this.urlSupplier.urlForSeries(seriesId, language);
         return this.buffered(this.streamFor(fullSeriesUrl));
     }
 
@@ -52,13 +52,13 @@ public class TheTVDBStreamFactory implements StreamFactory {
     public InputStream streamForSeriesPosterAt(String resourcePath) {
         this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
 
-        String seriesPosterUrl = this.urlSupplier.urlForPoster(resourcePath);
+        URL seriesPosterUrl = this.urlSupplier.urlForPoster(resourcePath);
         return this.streamFor(seriesPosterUrl);
     }
 
     @Override
     public InputStream streamForSeriesSearch(String seriesName, Language language) {
-        String seriesSearchUrl = this.urlSupplier.urlForSeriesSearch(seriesName, language);
+        URL seriesSearchUrl = this.urlSupplier.urlForSeriesSearch(seriesName, language);
         return this.buffered(this.streamFor(seriesSearchUrl));
     }
 
@@ -73,9 +73,9 @@ public class TheTVDBStreamFactory implements StreamFactory {
         return new BufferedInputStream(stream);
     }
 
-    private InputStream streamFor(String url) {
-        try {
-            return new URL(url).openConnection().getInputStream();
+    private InputStream streamFor(URL url) {
+        try {//TODO Break into two points (openConnection, getInputStream) and throw the right exception for each one
+            return url.openConnection().getInputStream();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

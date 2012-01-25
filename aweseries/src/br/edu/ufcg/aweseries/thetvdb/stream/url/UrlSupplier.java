@@ -22,6 +22,8 @@
 package br.edu.ufcg.aweseries.thetvdb.stream.url;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 
 import br.edu.ufcg.aweseries.thetvdb.Language;
@@ -37,54 +39,91 @@ public class UrlSupplier {
 
     public UrlSupplier(String apiKey) {
         Validate.isNonNull(apiKey, "apiKey should be non-null");
+        Validate.isTrue(!Strings.isBlank(apiKey), "apiKey should be non-blank");
 
         this.apiKey = apiKey;
     }
 
     //Mirror------------------------------------------------------------------------------------------------------------
 
-    private static StringBuilder mirrorXml() {
+    private StringBuilder mirrorXml() {
         return new StringBuilder(MIRROR).append("/api/");
     }
 
-    private static StringBuilder mirrorBanners() {
+    private StringBuilder mirrorBanners() {
         return new StringBuilder(MIRROR).append("/banners/");
     }
 
     //Series------------------------------------------------------------------------------------------------------------
 
-    public String urlForSeries(int seriesId, Language language) {
-        //TODO Check id and language
-        //TODO Test
+    public URL urlForSeries(int seriesId, Language language) {
+        Validate.isNonNull(language, "language should be non-null");
 
-        return mirrorXml().append(this.apiKey).append("/series/").append(seriesId).append("/all/").append(language.abbreviation()).append(".xml").toString();
+        String url = this.urlForSeries(seriesId, language.abbreviation());
+
+        return this.urlFrom(url);
     }
 
-    public String urlForSeriesSearch(String seriesName, Language language) {
-        //TODO Check language
-        //TODO Test
+    private String urlForSeries(int seriesId, String language) {
+        return this.mirrorXml()
+                   .append(this.apiKey)
+                   .append("/series/")
+                   .append(seriesId)
+                   .append("/all/")
+                   .append(language)
+                   .append(".xml")
+                   .toString();
+    }
 
-        String safeName = null;
+    public URL urlForSeriesSearch(String seriesName, Language language) {
+        Validate.isNonNull(seriesName, "seriesName should be non-null");
+        Validate.isNonNull(language, "language should be non-null");
+        Validate.isTrue(!Strings.isBlank(seriesName), "seriesName should be non-blank");
 
-        try {
-            safeName = URLEncoder.encode(seriesName, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            // TODO: a better exception handling
-            return null;
-        }
+        String url = this.urlForSeriesSearch(seriesName, language.abbreviation());
 
-        return mirrorXml().append("GetSeries.php?seriesname=").append(safeName).append(language.abbreviation()).toString();
+        return this.urlFrom(url);
+    }
+
+    private String urlForSeriesSearch(String seriesName, String language) {
+        return this.mirrorXml()
+                   .append("GetSeries.php?seriesname=")
+                   .append(this.encode(seriesName))
+                   .append("&language=")
+                   .append(language)
+                   .toString();
     }
 
     //Image-------------------------------------------------------------------------------------------------------------
 
-    public String urlForPoster(String fileName) {
-        //TODO Check and throw
-        //TODO Test
+    public URL urlForPoster(String fileName) {
+        Validate.isNonNull(fileName, "fileName should be non-null");
+        Validate.isTrue(!Strings.isBlank(fileName), "fileName should be non-blank");
 
-        if (fileName == null || Strings.isBlank(fileName))
-            return null;
+        String url = this.buildUrlForPoster(fileName);
 
-        return mirrorBanners().append(fileName).toString();
+        return this.urlFrom(url);
+    }
+
+    private String buildUrlForPoster(String fileName) {
+        return this.mirrorBanners().append(this.encode(fileName)).toString();
+    }
+
+    //URL---------------------------------------------------------------------------------------------------------------
+
+    private String encode(String s) {
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UnsupportedEncodingException should never be thrown by UrlSupplier");
+        }
+    }
+
+    private URL urlFrom(String s) {
+        try {
+            return new URL(s);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("MalformedURLException should never be thrown by UrlSupplier");
+        }
     }
 }
