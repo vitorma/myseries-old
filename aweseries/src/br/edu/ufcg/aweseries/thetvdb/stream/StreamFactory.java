@@ -24,11 +24,13 @@ package br.edu.ufcg.aweseries.thetvdb.stream;
 
 import java.io.InputStream;
 
+import br.edu.ufcg.aweseries.thetvdb.Language;
+
 public interface StreamFactory {
 
-    public InputStream streamForFullSeries(int seriesId, String language);
+    public InputStream streamForFullSeries(int seriesId, Language language);
 
     public InputStream streamForSeriesPosterAt(String resourcePath);
 
-    public InputStream streamForSeriesSearch(String seriesName, String language);
+    public InputStream streamForSeriesSearch(String seriesName, Language language);
 }

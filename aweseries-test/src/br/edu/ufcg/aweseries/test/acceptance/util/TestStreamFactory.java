@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.Set;
 
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
+import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public class TestStreamFactory implements StreamFactory {
@@ -33,7 +34,7 @@ public class TestStreamFactory implements StreamFactory {
 	private Set<SampleSeries> allSampleSeries = SampleSeries.allSamples;
 
 	@Override
-	public InputStream streamForFullSeries(int seriesId, String language) {
+	public InputStream streamForFullSeries(int seriesId, Language language) {
 		// TODO Use language (?)
 		for (SampleSeries s : this.allSampleSeries) {
 			if (s.id() == seriesId)
@@ -45,7 +46,7 @@ public class TestStreamFactory implements StreamFactory {
 	}
 
 	@Override
-	public InputStream streamForSeriesSearch(String seriesName, String language) {
+	public InputStream streamForSeriesSearch(String seriesName, Language language) {
 		// TODO Auto-generated method stub
 		return null;
 	}

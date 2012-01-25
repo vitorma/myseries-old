@@ -21,6 +21,8 @@
 
 package br.edu.ufcg.aweseries.thetvdb;
 
+import br.edu.ufcg.aweseries.util.Validate;
+
 public enum Language {
     DA,
     FI,
@@ -47,11 +49,20 @@ public enum Language {
     NO;
 
     public static Language from(String abbreviation) {
-        if (abbreviation == null) {
+        if (abbreviation == null)
             throw new IllegalArgumentException("abbreviation should not be null");
-        }
 
-        return valueOf(abbreviation.toUpperCase());
+        return Language.valueOf(abbreviation.toUpperCase());
+    }
+
+    public static Language from(String abbreviation, Language alternative) {
+        Validate.isNonNull(abbreviation, "abbreviation should be non-null");
+
+        try {
+            return Language.valueOf(abbreviation.toUpperCase());
+        } catch (Exception e) {
+            return alternative;
+        }
     }
 
     public String abbreviation() {

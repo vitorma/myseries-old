@@ -35,6 +35,7 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
@@ -52,7 +53,7 @@ public class SeriesSearchParser {
     }
 
     //TODO Refactoring: extract definition of listeners, maybe creating an inner type
-    public List<Series> parse(String seriesName, String language) {
+    public List<Series> parse(String seriesName, Language language) {
         if (seriesName == null)
             throw new IllegalArgumentException("seriesName should not be null");
         if (Strings.isBlank(seriesName))

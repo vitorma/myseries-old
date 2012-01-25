@@ -24,6 +24,7 @@ package br.edu.ufcg.aweseries.thetvdb.stream.url;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
 
@@ -52,37 +53,35 @@ public class UrlSupplier {
 
     //Series------------------------------------------------------------------------------------------------------------
 
-    public String urlForSeries(int seriesId, String language) {
-        //TODO Check id and language after Series#id become an int and language become a Language
-        //TODO Test after check be implemented
+    public String urlForSeries(int seriesId, Language language) {
+        //TODO Check id and language
+        //TODO Test
 
-        String lang = language != null ? language + ".xml" : "";//TODO Remove it ASAP
-
-        return mirrorXml().append(this.apiKey).append("/series/").append(seriesId).append("/all/").append(lang).toString();
+        return mirrorXml().append(this.apiKey).append("/series/").append(seriesId).append("/all/").append(language.abbreviation()).append(".xml").toString();
     }
 
-    public String urlForSeriesSearch(String seriesName, String language) {
-        //TODO Check language after language become a Language
-        //TODO Test after check be implemented
+    public String urlForSeriesSearch(String seriesName, Language language) {
+        //TODO Check language
+        //TODO Test
 
         String safeName = null;
 
-        try {//TODO Move this block to higher level objects
+        try {
             safeName = URLEncoder.encode(seriesName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             // TODO: a better exception handling
             return null;
         }
 
-        String lang = language != null ? "&language=" + language : "";//TODO Remove it ASAP
-
-        return mirrorXml().append("GetSeries.php?seriesname=").append(safeName).append(lang).toString();
+        return mirrorXml().append("GetSeries.php?seriesname=").append(safeName).append(language.abbreviation()).toString();
     }
 
     //Image-------------------------------------------------------------------------------------------------------------
 
     public String urlForPoster(String fileName) {
         //TODO Check and throw
+        //TODO Test
+
         if (fileName == null || Strings.isBlank(fileName))
             return null;
 

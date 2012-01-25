@@ -37,6 +37,7 @@ import java.util.List;
 
 import android.graphics.BitmapFactory;
 import android.test.InstrumentationTestCase;
+import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 /**
@@ -99,7 +100,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
 	public void testGettingFullSeriesWithNonExistentSeriesIdThrowsException() {
 		try {
-			this.factory().streamForFullSeries(NON_EXISTENT_SERIES_ID, "en");
+			this.factory().streamForFullSeries(NON_EXISTENT_SERIES_ID, Language.EN);
 			fail("Should have thrown a FileNotFoundException");
 		} catch (RuntimeException e) {
 			assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
@@ -107,7 +108,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	}
 
 	public void testGettingFullSeriesReturnsFullData() throws IOException {
-		InputStream testSeriesStream = this.factory().streamForFullSeries(this.testSeriesId, "en");
+		InputStream testSeriesStream = this.factory().streamForFullSeries(this.testSeriesId, Language.EN);
 
 		String contentOfTestSeriesStream = this.contentOf(testSeriesStream);
 
@@ -152,7 +153,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	// XXX
 	public void failing_testSearchingForNullSeriesThrowsAnException() {
 		try {
-			this.factory().streamForSeriesSearch(null, "en");
+			this.factory().streamForSeriesSearch(null, Language.EN);
 			fail("Should have thrown an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {}
 	}
@@ -160,14 +161,14 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	// XXX
 	public void failing_testSearchingForBlankSeriesReturnsNoResults() {
 		try {
-			this.factory().streamForSeriesSearch(BLANK_STRING, "en");
+			this.factory().streamForSeriesSearch(BLANK_STRING, Language.EN);
 			fail("Should have thrown an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {}
 	}
 
 	// XXX
 	public void failing_testSearchingForValidSeriesReturnsValidResultData() throws IOException {
-		InputStream seriesSearchStream = this.factory().streamForSeriesSearch(this.testSeriesName, "en");
+		InputStream seriesSearchStream = this.factory().streamForSeriesSearch(this.testSeriesName, Language.EN);
 
 		String contentOfSeriesSearchStream = this.contentOf(seriesSearchStream);
 

@@ -36,6 +36,7 @@ import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Numbers;
@@ -58,7 +59,7 @@ public class SeriesParser {
     }
 
     //TODO Refactoring: extract definition of listeners, maybe creating inner types
-    public Series parse(int seriesId, String language) {
+    public Series parse(int seriesId, Language language) {
 
         //Builders------------------------------------------------------------------------------------------------------
 

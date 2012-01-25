@@ -33,6 +33,7 @@ import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesSearchParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 import br.edu.ufcg.aweseries.thetvdb.stream.TheTVDBStreamFactory;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class TheTVDB implements SeriesSource {
     private final StreamFactory streamFactory;
@@ -59,7 +60,7 @@ public class TheTVDB implements SeriesSource {
             throw new IllegalArgumentException("language should not be null");
 
         try {
-            return new SeriesSearchParser(this.streamFactory).parse(seriesName, this.getSupported(language));
+            return new SeriesSearchParser(this.streamFactory).parse(seriesName, this.languageFrom(language));
         } catch (Exception e) {
             //TODO A better exception handling
             return Collections.emptyList();
@@ -73,21 +74,23 @@ public class TheTVDB implements SeriesSource {
             throw new IllegalArgumentException("language should not be null");
 
         try {
-            return new SeriesParser(this.streamFactory).parse(seriesId, this.getSupported(language));
+            return new SeriesParser(this.streamFactory).parse(seriesId, this.languageFrom(language));
         } catch (Exception e) {
             //TODO A better exception handling
             throw new SeriesNotFoundException(e);
         }
     }
 
-    @Override//TODO Here, int[] is better than List<Integer>, because the subtle NPE thrown when an id is null
+    @Override
     public List<Series> fetchAllSeries(List<Integer> seriesIds, String language) {
         if (seriesIds == null)
             throw new IllegalArgumentException("seriesIds should not be null");
 
         List<Series> result = new ArrayList<Series>();
 
+        //TODO Here, int[] is better than List<Integer>, because the subtle NPE thrown when an id is null
         for (Integer seriesId : seriesIds) {
+            Validate.isNonNull(seriesId, "seriesId should be non-null");
             //TODO Check the language only once
             Series series = this.fetchSeries(seriesId, language);
             result.add(series);
@@ -98,11 +101,7 @@ public class TheTVDB implements SeriesSource {
 
     //Auxiliary---------------------------------------------------------------------------------------------------------
 
-    private String getSupported(String language) {
-        try {
-            return Language.from(language).abbreviation();
-        } catch (Exception e) {
-            return "en";
-        }
+    private Language languageFrom(String language) {
+        return Language.from(language, Language.EN);
     }
 }

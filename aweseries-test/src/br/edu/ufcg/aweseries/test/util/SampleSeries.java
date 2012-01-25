@@ -31,6 +31,7 @@ import android.app.Instrumentation;
 import android.content.res.Resources;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.test.R;
+import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
 import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
@@ -110,19 +111,19 @@ public abstract class SampleSeries {
 			}
 
 			@Override
-			public InputStream streamForFullSeries(int seriesId, String language) {
+			public InputStream streamForFullSeries(int seriesId, Language language) {
 				// TODO Auto-generated method stub
 				return SampleSeries.this.fullSeriesStream();
 			}
 
 			@Override
-			public InputStream streamForSeriesSearch(String seriesName, String language) {
+			public InputStream streamForSeriesSearch(String seriesName, Language language) {
 				// TODO Auto-generated method stub
 				return null;
 			}
 		});
 
-		return seriesParser.parse(this.id(), "en");
+		return seriesParser.parse(this.id(), Language.EN);
 	}
 
 	private static Resources resources;
