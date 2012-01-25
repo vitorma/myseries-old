@@ -27,9 +27,10 @@ import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlSupplier;
 
 public class UrlSupplierTest {
-
     private static final String API_KEY = "AK1";
     private static final String BLANK_STRING = "    \t \n ";
+
+    //Construction------------------------------------------------------------------------------------------------------
 
     @Test(expected=IllegalArgumentException.class)
     public void constructingAnUrlSupplierWithNullApiKeyCausesIllegalArgumentException() {
@@ -40,6 +41,8 @@ public class UrlSupplierTest {
     public void constructingAnUrlSupplierWithBlankApiKeyCausesIllegalArgumentException() {
         new UrlSupplier(BLANK_STRING);
     }
+
+    //Series------------------------------------------------------------------------------------------------------------
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesWithNullLanguageCausesIllegalArgumentException() {
@@ -53,13 +56,15 @@ public class UrlSupplierTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesSearchWithBlankNameCausesIllegalArgumentException() {
-        new UrlSupplier(API_KEY).urlForSeriesSearch("    \t \n ", Language.EN);
+        new UrlSupplier(API_KEY).urlForSeriesSearch(BLANK_STRING, Language.EN);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesSearchWithNullLanguageCausesIllegalArgumentException() {
         new UrlSupplier(API_KEY).urlForSeriesSearch("a", null);
     }
+
+    //Image-------------------------------------------------------------------------------------------------------------
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForPosterWithNullFileNameCausesIllegalArgumentException() {

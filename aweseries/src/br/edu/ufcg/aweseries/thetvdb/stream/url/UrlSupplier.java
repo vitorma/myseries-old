@@ -27,7 +27,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import br.edu.ufcg.aweseries.thetvdb.Language;
-import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class UrlSupplier {
@@ -38,8 +37,7 @@ public class UrlSupplier {
     //Construction------------------------------------------------------------------------------------------------------
 
     public UrlSupplier(String apiKey) {
-        Validate.isNonNull(apiKey, "apiKey should be non-null");
-        Validate.isTrue(!Strings.isBlank(apiKey), "apiKey should be non-blank");
+        Validate.isNonBlank(apiKey, "apiKey");
 
         this.apiKey = apiKey;
     }
@@ -57,7 +55,7 @@ public class UrlSupplier {
     //Series------------------------------------------------------------------------------------------------------------
 
     public URL urlForSeries(int seriesId, Language language) {
-        Validate.isNonNull(language, "language should be non-null");
+        Validate.isNonNull(language, "language");
 
         String url = this.urlForSeries(seriesId, language.abbreviation());
 
@@ -76,9 +74,8 @@ public class UrlSupplier {
     }
 
     public URL urlForSeriesSearch(String seriesName, Language language) {
-        Validate.isNonNull(seriesName, "seriesName should be non-null");
-        Validate.isNonNull(language, "language should be non-null");
-        Validate.isTrue(!Strings.isBlank(seriesName), "seriesName should be non-blank");
+        Validate.isNonBlank(seriesName, "seriesName");
+        Validate.isNonNull(language, "language");
 
         String url = this.urlForSeriesSearch(seriesName, language.abbreviation());
 
@@ -97,8 +94,7 @@ public class UrlSupplier {
     //Image-------------------------------------------------------------------------------------------------------------
 
     public URL urlForPoster(String fileName) {
-        Validate.isNonNull(fileName, "fileName should be non-null");
-        Validate.isTrue(!Strings.isBlank(fileName), "fileName should be non-blank");
+        Validate.isNonBlank(fileName, "fileName");
 
         String url = this.buildUrlForPoster(fileName);
 
