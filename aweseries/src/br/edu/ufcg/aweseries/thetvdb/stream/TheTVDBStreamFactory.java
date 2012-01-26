@@ -19,26 +19,21 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.thetvdb.stream;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlSupplier;
-import br.edu.ufcg.aweseries.util.Strings;
 
 public class TheTVDBStreamFactory implements StreamFactory {
     private UrlSupplier urlSupplier;
 
     public TheTVDBStreamFactory(String apiKey) {
-        if (apiKey == null)
-            throw new IllegalArgumentException("apiKey should not be null");
-
         this.urlSupplier = new UrlSupplier(apiKey);
     }
 
@@ -49,10 +44,8 @@ public class TheTVDBStreamFactory implements StreamFactory {
     }
 
     @Override
-    public InputStream streamForSeriesPoster(String resourcePath) {
-        this.checkIfItIsAValidUrlSuffix(resourcePath, "resourcePath");
-
-        URL seriesPosterUrl = this.urlSupplier.urlForSeriesPoster(resourcePath);
+    public InputStream streamForSeriesPoster(String fileName) {
+        URL seriesPosterUrl = this.urlSupplier.urlForSeriesPoster(fileName);
         return this.streamFor(seriesPosterUrl);
     }
 
@@ -62,24 +55,29 @@ public class TheTVDBStreamFactory implements StreamFactory {
         return this.buffered(this.streamFor(seriesSearchUrl));
     }
 
-    private void checkIfItIsAValidUrlSuffix(String suffix, String parameterName) {
-        if (suffix == null)
-            throw new IllegalArgumentException(parameterName + " should not be null");
-        if (Strings.isBlank(suffix))
-            throw new IllegalArgumentException(parameterName + " should not be blank");
-    }
-
     private BufferedInputStream buffered(InputStream stream) {
         return new BufferedInputStream(stream);
     }
 
     private InputStream streamFor(URL url) {
-        try {//TODO Break into two points (openConnection, getInputStream) and throw the right exception for each one
-            return url.openConnection().getInputStream();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+        URLConnection connection = null;
+
+        try {
+            connection = url.openConnection();
         } catch (IOException e) {
+            //TODO Create an exception
             throw new RuntimeException(e);
         }
+
+        InputStream stream = null;
+
+        try {
+            stream = connection.getInputStream();
+        } catch (IOException e) {
+            //TODO Create an exception 
+            throw new RuntimeException(e);
+        }
+
+        return stream;
     }
 }
