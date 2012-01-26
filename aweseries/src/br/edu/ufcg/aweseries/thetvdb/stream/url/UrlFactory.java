@@ -1,5 +1,5 @@
 /*
- *   UrlSupplier.java
+ *   UrlFactory.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -29,14 +29,14 @@ import java.net.URLEncoder;
 import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.util.Validate;
 
-public class UrlSupplier {
+public class UrlFactory {
     private static final String MIRROR = "http://thetvdb.com";
 
     private String apiKey;
 
     //Construction------------------------------------------------------------------------------------------------------
 
-    public UrlSupplier(String apiKey) {
+    public UrlFactory(String apiKey) {
         Validate.isNonBlank(apiKey, "apiKey");
 
         this.apiKey = apiKey;

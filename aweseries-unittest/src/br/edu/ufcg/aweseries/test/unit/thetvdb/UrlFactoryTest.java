@@ -1,5 +1,5 @@
 /*
- *   UrlSupplierTest.java
+ *   UrlFactoryTest.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -24,9 +24,9 @@ package br.edu.ufcg.aweseries.test.unit.thetvdb;
 import org.junit.Test;
 
 import br.edu.ufcg.aweseries.thetvdb.Language;
-import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlSupplier;
+import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlFactory;
 
-public class UrlSupplierTest {
+public class UrlFactoryTest {
     private static final String API_KEY = "AK1";
     private static final String BLANK_STRING = "    \t \n ";
 
@@ -34,45 +34,45 @@ public class UrlSupplierTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void constructingAnUrlSupplierWithNullApiKeyCausesIllegalArgumentException() {
-        new UrlSupplier(null);
+        new UrlFactory(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void constructingAnUrlSupplierWithBlankApiKeyCausesIllegalArgumentException() {
-        new UrlSupplier(BLANK_STRING);
+        new UrlFactory(BLANK_STRING);
     }
 
     //Series------------------------------------------------------------------------------------------------------------
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesWithNullLanguageCausesIllegalArgumentException() {
-        new UrlSupplier(API_KEY).urlForSeries(1, null);
+        new UrlFactory(API_KEY).urlForSeries(1, null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesSearchWithNullNameCausesIllegalArgumentException() {
-        new UrlSupplier(API_KEY).urlForSeriesSearch(null, Language.EN);
+        new UrlFactory(API_KEY).urlForSeriesSearch(null, Language.EN);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesSearchWithBlankNameCausesIllegalArgumentException() {
-        new UrlSupplier(API_KEY).urlForSeriesSearch(BLANK_STRING, Language.EN);
+        new UrlFactory(API_KEY).urlForSeriesSearch(BLANK_STRING, Language.EN);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesSearchWithNullLanguageCausesIllegalArgumentException() {
-        new UrlSupplier(API_KEY).urlForSeriesSearch("a", null);
+        new UrlFactory(API_KEY).urlForSeriesSearch("a", null);
     }
 
     //Image-------------------------------------------------------------------------------------------------------------
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForPosterWithNullFileNameCausesIllegalArgumentException() {
-        new UrlSupplier(API_KEY).urlForSeriesPoster(null);
+        new UrlFactory(API_KEY).urlForSeriesPoster(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForPosterWithBlankFileNameCausesIllegalArgumentException() {
-        new UrlSupplier(API_KEY).urlForSeriesPoster(BLANK_STRING);
+        new UrlFactory(API_KEY).urlForSeriesPoster(BLANK_STRING);
     }
 }

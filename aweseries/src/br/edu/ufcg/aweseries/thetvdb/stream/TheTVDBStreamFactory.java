@@ -28,13 +28,13 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import br.edu.ufcg.aweseries.thetvdb.Language;
-import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlSupplier;
+import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlFactory;
 
 public class TheTVDBStreamFactory implements StreamFactory {
-    private UrlSupplier urlSupplier;
+    private UrlFactory urlSupplier;
 
     public TheTVDBStreamFactory(String apiKey) {
-        this.urlSupplier = new UrlSupplier(apiKey);
+        this.urlSupplier = new UrlFactory(apiKey);
     }
 
     @Override
