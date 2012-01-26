@@ -22,6 +22,7 @@
 package br.edu.ufcg.aweseries.series_source;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -271,7 +272,8 @@ public class SeriesParser {
         //Parse---------------------------------------------------------------------------------------------------------
 
         try {
-            Xml.parse(this.streamFactory.streamForSeries(seriesId, language), Xml.Encoding.UTF_8, root.getContentHandler());
+            InputStream stream = this.streamFactory.streamForSeries(seriesId, language);
+            Xml.parse(stream, Xml.Encoding.UTF_8, root.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
@@ -283,7 +285,7 @@ public class SeriesParser {
 
     private Bitmap scaledBitmapFrom(String resourcePath) {
         return Strings.isBlank(resourcePath)
-        ? null
-                : BitmapFactory.decodeStream(this.streamFactory.streamForSeriesPoster(resourcePath));
+               ? null
+               : BitmapFactory.decodeStream(this.streamFactory.streamForSeriesPoster(resourcePath));
     }
 }

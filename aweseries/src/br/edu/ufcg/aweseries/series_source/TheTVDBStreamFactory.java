@@ -27,30 +27,29 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-
 public class TheTVDBStreamFactory implements StreamFactory {
-    private UrlFactory urlSupplier;
+    private UrlFactory urlFactory;
 
     public TheTVDBStreamFactory(String apiKey) {
-        this.urlSupplier = new UrlFactory(apiKey);
+        this.urlFactory = new UrlFactory(apiKey);
     }
 
     @Override
     public InputStream streamForSeries(int seriesId, Language language) {
-        URL fullSeriesUrl = this.urlSupplier.urlForSeries(seriesId, language);
-        return this.buffered(this.streamFor(fullSeriesUrl));
-    }
-
-    @Override
-    public InputStream streamForSeriesPoster(String fileName) {
-        URL seriesPosterUrl = this.urlSupplier.urlForSeriesPoster(fileName);
-        return this.streamFor(seriesPosterUrl);
+        URL seriesUrl = this.urlFactory.urlForSeries(seriesId, language);
+        return this.buffered(this.streamFor(seriesUrl));
     }
 
     @Override
     public InputStream streamForSeriesSearch(String seriesName, Language language) {
-        URL seriesSearchUrl = this.urlSupplier.urlForSeriesSearch(seriesName, language);
+        URL seriesSearchUrl = this.urlFactory.urlForSeriesSearch(seriesName, language);
         return this.buffered(this.streamFor(seriesSearchUrl));
+    }
+
+    @Override
+    public InputStream streamForSeriesPoster(String fileName) {
+        URL seriesPosterUrl = this.urlFactory.urlForSeriesPoster(fileName);
+        return this.streamFor(seriesPosterUrl);
     }
 
     private BufferedInputStream buffered(InputStream stream) {
@@ -63,8 +62,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
         try {
             connection = url.openConnection();
         } catch (IOException e) {
-            //TODO Create an exception
-            throw new RuntimeException(e);
+            throw new ConnectionFailedException(e);
         }
 
         InputStream stream = null;
