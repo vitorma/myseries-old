@@ -28,7 +28,7 @@ import br.edu.ufcg.aweseries.series_source.UrlFactory;
 
 public class UrlFactoryTest {
     private static final String API_KEY = "AK1";
-    private static final String BLANK_STRING = "    \t \n ";
+    private static final String BLANK_STRING = "  \n         \t  \n ";
 
     //Construction------------------------------------------------------------------------------------------------------
 

@@ -27,7 +27,7 @@ import br.edu.ufcg.aweseries.series_source.Language;
 import br.edu.ufcg.aweseries.series_source.TheTVDBStreamFactory;
 
 public class TheTVDBStreamFactoryTest {
-    private static final String BLANK_STRING = "  \n   \t  \n ";
+    private static final String BLANK_STRING = "  \n         \t  \n ";
     private static final String API_KEY = "AK1";
 
     //Construction------------------------------------------------------------------------------------------------------

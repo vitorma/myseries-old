@@ -106,19 +106,19 @@ public class UrlFactory {
 
     //URL---------------------------------------------------------------------------------------------------------------
 
-    private String encode(String s) {
+    private String encode(String string) {
         try {
-            return URLEncoder.encode(s, "UTF-8");
+            return URLEncoder.encode(string, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("UnsupportedEncodingException should never be thrown by UrlSupplier");
+            throw new RuntimeException("UnsupportedEncodingException should never be thrown by UrlFactory", e);
         }
     }
 
-    private URL urlFrom(String s) {
+    private URL urlFrom(String string) {
         try {
-            return new URL(s);
+            return new URL(string);
         } catch (MalformedURLException e) {
-            throw new RuntimeException("MalformedURLException should never be thrown by UrlSupplier");
+            throw new RuntimeException("MalformedURLException should never be thrown by UrlFactory", e);
         }
     }
 }

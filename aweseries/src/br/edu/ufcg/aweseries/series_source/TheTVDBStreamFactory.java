@@ -30,9 +30,13 @@ import java.net.URLConnection;
 public class TheTVDBStreamFactory implements StreamFactory {
     private UrlFactory urlFactory;
 
+    //Construction------------------------------------------------------------------------------------------------------
+
     public TheTVDBStreamFactory(String apiKey) {
         this.urlFactory = new UrlFactory(apiKey);
     }
+
+    //Series------------------------------------------------------------------------------------------------------------
 
     @Override
     public InputStream streamForSeries(int seriesId, Language language) {
@@ -46,11 +50,15 @@ public class TheTVDBStreamFactory implements StreamFactory {
         return this.buffered(this.streamFor(seriesSearchUrl));
     }
 
+    //Image-------------------------------------------------------------------------------------------------------------
+
     @Override
     public InputStream streamForSeriesPoster(String fileName) {
         URL seriesPosterUrl = this.urlFactory.urlForSeriesPoster(fileName);
         return this.streamFor(seriesPosterUrl);
     }
+
+    //Stream------------------------------------------------------------------------------------------------------------
 
     private BufferedInputStream buffered(InputStream stream) {
         return new BufferedInputStream(stream);
