@@ -70,8 +70,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
         try {
             stream = connection.getInputStream();
         } catch (IOException e) {
-            //TODO Create an exception 
-            throw new RuntimeException(e);
+            throw new StreamCreationFailedException(e);
         }
 
         return stream;
