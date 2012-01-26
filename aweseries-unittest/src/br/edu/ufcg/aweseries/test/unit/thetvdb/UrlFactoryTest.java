@@ -23,8 +23,8 @@ package br.edu.ufcg.aweseries.test.unit.thetvdb;
 
 import org.junit.Test;
 
-import br.edu.ufcg.aweseries.thetvdb.Language;
-import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlFactory;
+import br.edu.ufcg.aweseries.series_source.Language;
+import br.edu.ufcg.aweseries.series_source.UrlFactory;
 
 public class UrlFactoryTest {
     private static final String API_KEY = "AK1";

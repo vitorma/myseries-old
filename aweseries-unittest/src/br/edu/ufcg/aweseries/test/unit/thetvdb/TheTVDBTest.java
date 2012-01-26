@@ -24,8 +24,8 @@ package br.edu.ufcg.aweseries.test.unit.thetvdb;
 
 import org.junit.Test;
 
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
-import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
+import br.edu.ufcg.aweseries.series_source.StreamFactory;
+import br.edu.ufcg.aweseries.series_source.TheTVDB;
 
 public class TheTVDBTest {
 

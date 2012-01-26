@@ -23,9 +23,9 @@
 package br.edu.ufcg.aweseries;
 
 import android.content.Context;
-import br.edu.ufcg.aweseries.repository.DefaultSeriesRepositoryFactory;
-import br.edu.ufcg.aweseries.repository.SeriesRepositoryFactory;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
+import br.edu.ufcg.aweseries.series_repository.DefaultSeriesRepositoryFactory;
+import br.edu.ufcg.aweseries.series_repository.SeriesRepositoryFactory;
+import br.edu.ufcg.aweseries.series_source.TheTVDB;
 
 /**
  * Singleton repository. Stores all singleton objects. Allow dependency

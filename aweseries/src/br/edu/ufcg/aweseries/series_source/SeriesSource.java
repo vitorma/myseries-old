@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.edu.ufcg.aweseries;
+package br.edu.ufcg.aweseries.series_source;
 
 import java.util.List;
 

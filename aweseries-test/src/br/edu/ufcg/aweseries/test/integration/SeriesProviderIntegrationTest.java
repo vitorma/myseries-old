@@ -28,9 +28,9 @@ import android.test.InstrumentationTestCase;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.series_source.TheTVDB;
 import br.edu.ufcg.aweseries.test.acceptance.util.TestStreamFactory;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 /**
  * Test SeriesProvider API.

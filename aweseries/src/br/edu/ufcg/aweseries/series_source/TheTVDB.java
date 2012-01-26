@@ -20,19 +20,13 @@
  */
 
 
-package br.edu.ufcg.aweseries.thetvdb;
+package br.edu.ufcg.aweseries.series_source;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import br.edu.ufcg.aweseries.SeriesNotFoundException;
-import br.edu.ufcg.aweseries.SeriesSource;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
-import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesSearchParser;
-import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
-import br.edu.ufcg.aweseries.thetvdb.stream.TheTVDBStreamFactory;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class TheTVDB implements SeriesSource {

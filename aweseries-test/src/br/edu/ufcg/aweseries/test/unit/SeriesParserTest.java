@@ -33,10 +33,10 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 import br.edu.ufcg.aweseries.model.Poster;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.series_source.Language;
+import br.edu.ufcg.aweseries.series_source.SeriesParser;
+import br.edu.ufcg.aweseries.series_source.StreamFactory;
 import br.edu.ufcg.aweseries.test.util.SampleBitmap;
-import br.edu.ufcg.aweseries.thetvdb.Language;
-import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
-import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public class SeriesParserTest extends TestCase {
 

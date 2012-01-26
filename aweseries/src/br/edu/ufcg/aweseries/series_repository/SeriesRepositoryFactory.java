@@ -20,7 +20,7 @@
  */
 
 
-package br.edu.ufcg.aweseries.repository;
+package br.edu.ufcg.aweseries.series_repository;
 
 public interface SeriesRepositoryFactory {
 

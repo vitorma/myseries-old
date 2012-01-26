@@ -107,7 +107,7 @@
         </service>
 
         <service
-            android:name="br.edu.ufcg.aweseries.gui.desktop_widget.AweseriesMedWidgetProvider$UpdateServiceMed">
+            android:name=".gui.desktop_widget.AweseriesMedWidgetProvider$UpdateServiceMed">
         </service>
 
     </application>

@@ -1,5 +1,5 @@
 /*
- *   NonExistentSeriesException.java
+ *   SeriesRepository.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,27 +19,27 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package br.edu.ufcg.aweseries.series_repository;
 
-package br.edu.ufcg.aweseries.thetvdb;
+import java.util.Collection;
 
-public class NonExistentSeriesException extends RuntimeException {
+import br.edu.ufcg.aweseries.model.Series;
 
-    private static final long serialVersionUID = 1L;
+public interface SeriesRepository {
 
-    public NonExistentSeriesException() {
-        super("There is no such series");
-    }
+    public void insert(Series series);
 
-    public NonExistentSeriesException(String detailMessage, Throwable throwable) {
-        super(detailMessage, throwable);
-    }
+    public void update(Series series);
 
-    public NonExistentSeriesException(String detailMessage) {
-        super(detailMessage);
-    }
+    public void updateAll(Collection<Series> seriesCollection); 
 
-    public NonExistentSeriesException(Throwable throwable) {
-        super("There is no such series", throwable);
-    }
+    public void delete(Series series);
 
+    public void clear();
+
+    public boolean contains(Series series);
+
+    public Series get(int seriesId);
+
+    public Collection<Series> getAll();
 }

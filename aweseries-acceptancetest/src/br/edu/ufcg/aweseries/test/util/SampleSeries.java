@@ -30,10 +30,10 @@ import java.util.Set;
 import android.app.Instrumentation;
 import android.content.res.Resources;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.series_source.Language;
+import br.edu.ufcg.aweseries.series_source.SeriesParser;
+import br.edu.ufcg.aweseries.series_source.StreamFactory;
 import br.edu.ufcg.aweseries.test.R;
-import br.edu.ufcg.aweseries.thetvdb.Language;
-import br.edu.ufcg.aweseries.thetvdb.parsing.SeriesParser;
-import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public abstract class SampleSeries {
 	public static final SampleSeries CHUCK = new SampleSeries() {

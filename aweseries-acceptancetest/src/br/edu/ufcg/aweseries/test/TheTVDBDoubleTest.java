@@ -35,8 +35,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import junit.framework.TestCase;
-import br.edu.ufcg.aweseries.SeriesNotFoundException;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.series_source.SeriesNotFoundException;
 
 public class TheTVDBDoubleTest extends TestCase {
 

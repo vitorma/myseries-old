@@ -19,14 +19,13 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.edu.ufcg.aweseries.thetvdb.stream.url;
+package br.edu.ufcg.aweseries.series_source;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import br.edu.ufcg.aweseries.thetvdb.Language;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class UrlFactory {

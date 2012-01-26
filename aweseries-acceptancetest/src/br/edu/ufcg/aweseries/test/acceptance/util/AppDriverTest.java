@@ -31,8 +31,8 @@ import br.edu.ufcg.aweseries.gui.EpisodeListActivity;
 import br.edu.ufcg.aweseries.gui.SeasonListActivity;
 import br.edu.ufcg.aweseries.gui.SeriesDetailsActivity;
 import br.edu.ufcg.aweseries.gui.SeriesListActivity;
+import br.edu.ufcg.aweseries.series_source.TheTVDB;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 import com.jayway.android.robotium.solo.Solo;
 

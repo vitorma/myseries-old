@@ -1,5 +1,5 @@
 /*
- *   SeriesRepository.java
+ *   StreamFactory.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,27 +19,16 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.edu.ufcg.aweseries.repository;
+package br.edu.ufcg.aweseries.series_source;
 
-import java.util.Collection;
+import java.io.InputStream;
 
-import br.edu.ufcg.aweseries.model.Series;
 
-public interface SeriesRepository {
+public interface StreamFactory {
 
-    public void insert(Series series);
+    public InputStream streamForSeries(int seriesId, Language language);
 
-    public void update(Series series);
+    public InputStream streamForSeriesSearch(String seriesName, Language language);
 
-    public void updateAll(Collection<Series> seriesCollection); 
-
-    public void delete(Series series);
-
-    public void clear();
-
-    public boolean contains(Series series);
-
-    public Series get(int seriesId);
-
-    public Collection<Series> getAll();
+    public InputStream streamForSeriesPoster(String fileName);
 }

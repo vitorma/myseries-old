@@ -1,4 +1,4 @@
-package br.edu.ufcg.aweseries;
+package br.edu.ufcg.aweseries.series_source;
 
 /**
  * This exception is thrown when the SeriesSource cannot find any series with the given id.

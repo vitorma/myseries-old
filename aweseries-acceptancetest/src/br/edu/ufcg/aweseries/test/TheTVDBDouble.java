@@ -29,10 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import br.edu.ufcg.aweseries.SeriesNotFoundException;
-import br.edu.ufcg.aweseries.SeriesSource;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.thetvdb.Language;
+import br.edu.ufcg.aweseries.series_source.Language;
+import br.edu.ufcg.aweseries.series_source.SeriesNotFoundException;
+import br.edu.ufcg.aweseries.series_source.SeriesSource;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class TheTVDBDouble implements SeriesSource {

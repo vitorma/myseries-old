@@ -27,10 +27,10 @@ import junit.framework.AssertionFailedError;
 import android.test.ActivityInstrumentationTestCase2;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.gui.SeriesListActivity;
+import br.edu.ufcg.aweseries.series_source.TheTVDB;
 import br.edu.ufcg.aweseries.test.acceptance.util.AppDriver;
 import br.edu.ufcg.aweseries.test.acceptance.util.TestStreamFactory;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 import com.jayway.android.robotium.solo.Solo;
 

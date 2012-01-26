@@ -23,7 +23,7 @@ package br.edu.ufcg.aweseries.test.unit.thetvdb;
 
 import org.junit.Test;
 
-import br.edu.ufcg.aweseries.thetvdb.Language;
+import br.edu.ufcg.aweseries.series_source.Language;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 

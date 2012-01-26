@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.edu.ufcg.aweseries.thetvdb.stream;
+package br.edu.ufcg.aweseries.series_source;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -27,8 +27,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import br.edu.ufcg.aweseries.thetvdb.Language;
-import br.edu.ufcg.aweseries.thetvdb.stream.url.UrlFactory;
 
 public class TheTVDBStreamFactory implements StreamFactory {
     private UrlFactory urlSupplier;

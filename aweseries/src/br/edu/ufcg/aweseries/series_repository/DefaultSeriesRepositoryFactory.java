@@ -20,7 +20,7 @@
  */
 
 
-package br.edu.ufcg.aweseries.repository;
+package br.edu.ufcg.aweseries.series_repository;
 
 import android.content.Context;
 

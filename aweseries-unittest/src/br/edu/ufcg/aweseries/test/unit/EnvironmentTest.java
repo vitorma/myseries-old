@@ -37,7 +37,7 @@ import android.content.Context;
 import br.edu.ufcg.aweseries.Environment;
 import br.edu.ufcg.aweseries.LocalizationProvider;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
+import br.edu.ufcg.aweseries.series_source.TheTVDB;
 
 public class EnvironmentTest {
 

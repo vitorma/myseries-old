@@ -25,9 +25,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Set;
 
+import br.edu.ufcg.aweseries.series_source.Language;
+import br.edu.ufcg.aweseries.series_source.StreamFactory;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
-import br.edu.ufcg.aweseries.thetvdb.Language;
-import br.edu.ufcg.aweseries.thetvdb.stream.StreamFactory;
 
 public class TestStreamFactory implements StreamFactory {
 

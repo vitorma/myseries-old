@@ -39,7 +39,9 @@ import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.SeenMarkSpecification;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.model.Specification;
-import br.edu.ufcg.aweseries.repository.SeriesRepository;
+import br.edu.ufcg.aweseries.series_repository.SeriesRepository;
+import br.edu.ufcg.aweseries.series_source.SeriesNotFoundException;
+import br.edu.ufcg.aweseries.series_source.SeriesSource;
 
 /**
  * Supply series information to the system.

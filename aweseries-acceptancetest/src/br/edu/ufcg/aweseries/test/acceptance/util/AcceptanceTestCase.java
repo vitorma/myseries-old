@@ -24,8 +24,8 @@ package br.edu.ufcg.aweseries.test.acceptance.util;
 import android.test.ActivityInstrumentationTestCase2;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.gui.SeriesListActivity;
+import br.edu.ufcg.aweseries.series_source.TheTVDB;
 import br.edu.ufcg.aweseries.test.util.SampleSeries;
-import br.edu.ufcg.aweseries.thetvdb.TheTVDB;
 
 import com.jayway.android.robotium.solo.Solo;
 

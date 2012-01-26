@@ -20,7 +20,7 @@
  */
 
 
-package br.edu.ufcg.aweseries.repository;
+package br.edu.ufcg.aweseries.series_repository;
 
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
