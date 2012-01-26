@@ -96,14 +96,18 @@ public class SeriesProvider {
     }
 
     private class UpdateSeriesTask extends AsyncTask<Void, Void, Void> {
-        private List<Integer> seriesToUpdate;
+        private int[] seriesToUpdate;
         private List<Series> upToDateSeries;
 
         public UpdateSeriesTask() {
-            this.seriesToUpdate = new ArrayList<Integer>();
+            Collection<Series> followedSeries = SeriesProvider.this.followedSeries();
 
-            for (final Series series : SeriesProvider.this.seriesRepository.getAll()) {
-                this.seriesToUpdate.add(series.id());
+            this.seriesToUpdate = new int[followedSeries.size()];
+
+            int i = 0;
+            for (Series series : followedSeries) {
+                this.seriesToUpdate[i] = series.id();
+                i++;
             }
         }
 

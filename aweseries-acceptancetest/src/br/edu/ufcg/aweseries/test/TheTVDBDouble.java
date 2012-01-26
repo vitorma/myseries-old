@@ -33,7 +33,6 @@ import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.series_source.Language;
 import br.edu.ufcg.aweseries.series_source.SeriesNotFoundException;
 import br.edu.ufcg.aweseries.series_source.SeriesSource;
-import br.edu.ufcg.aweseries.util.Validate;
 
 public class TheTVDBDouble implements SeriesSource {
 
@@ -131,19 +130,17 @@ public class TheTVDBDouble implements SeriesSource {
 
 	// Fetch All Series
 	@Override
-	public List<Series> fetchAllSeries(List<Integer> seriesIds, String languageAbbreviation) {
+	public List<Series> fetchAllSeries(int[] seriesIds, String languageAbbreviation) {
 		return this.fetchAllSeries(seriesIds, Language.from(languageAbbreviation));
 	}
 
-	//TODO Here, int[] is better than List<Integer>, because the subtle NPE thrown when an id is null
-	private List<Series> fetchAllSeries(List<Integer> seriesIds, Language language) {
+	private List<Series> fetchAllSeries(int[] seriesIds, Language language) {
 		if (seriesIds == null)
 			throw new IllegalArgumentException("seriesIds should not be null");
 
 		List<Series> results = new ArrayList<Series>();
 
-		for (Integer id : seriesIds) {
-			Validate.isNonNull(id, "seriesId should be non-null");
+		for (int id : seriesIds) {
 			results.add(this.fetchSeries(id, language));
 		}
 

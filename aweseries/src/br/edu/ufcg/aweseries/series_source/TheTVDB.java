@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.util.Validate;
 
 public class TheTVDB implements SeriesSource {
     private final StreamFactory streamFactory;
@@ -76,15 +75,13 @@ public class TheTVDB implements SeriesSource {
     }
 
     @Override
-    public List<Series> fetchAllSeries(List<Integer> seriesIds, String language) {
+    public List<Series> fetchAllSeries(int[] seriesIds, String language) {
         if (seriesIds == null)
             throw new IllegalArgumentException("seriesIds should not be null");
 
         List<Series> result = new ArrayList<Series>();
 
-        //TODO Here, int[] is better than List<Integer>, because the subtle NPE thrown when an id is null
-        for (Integer seriesId : seriesIds) {
-            Validate.isNonNull(seriesId, "seriesId should be non-null");
+        for (int seriesId : seriesIds) {
             //TODO Check the language only once
             Series series = this.fetchSeries(seriesId, language);
             result.add(series);

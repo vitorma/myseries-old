@@ -42,5 +42,5 @@ public interface SeriesSource {
      * @throws IllegalArgumentException if languageAbbreviation is null
      * @throws SeriesNotFoundException if there is no series with any of the given seriesId
      */
-    public List<Series> fetchAllSeries(List<Integer> seriesIds, String languageAbbreviation);
+    public List<Series> fetchAllSeries(int[] seriesIds, String languageAbbreviation);
 }
