@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MySeries" default="commit-stage">
+    <property file="local.properties"/>
+
+    <!-- Clean -->
+
+    <target name="clean-myseries">
+        <ant dir="myseries" target="clean"/>
+    </target>
+
+    <target name="clean-jvm-unittests">
+        <ant dir="myseries-unittest" target="clean"/>
+    </target>
+
+    <target name="clean-android-unittests">
+        <ant dir="myseries-test" target="clean"/>
+    </target>
+
+    <target name="clean-acceptancetests">
+        <echo>TODO: Clean acceptance tests</echo>
+        <!-- TODO -->
+        <!--
+        <ant dir="myseries-acceptancetest" target="clean"/>
+        -->
+    </target>
+
+
+    <!-- Build -->
+
+    <target name="build-myseries">
+        <ant dir="myseries">
+            <target name="release"/>
+            <!--
+            <target name="install"/>
+            -->
+        </ant> 
+        <ant dir="myseries">
+            <target name="debug"/>
+            <target name="install"/>
+        </ant> 
+    </target>
+
+    <target name="build-jvm-unittests">
+        <ant dir="myseries-unittest" target="compile"/>
+    </target>
+
+    <target name="build-android-unittests">
+        <ant dir="myseries-test">
+            <target name="debug"/>
+            <target name="install"/>
+        </ant>
+    </target>
+
+    <target name="build-acceptancetests">
+        <echo>TODO: Build acceptance tests</echo>
+        <!-- TODO -->
+        <!--
+        <ant dir="myseries-acceptancetest" target="clean"/>
+        -->
+    </target>
+
+    <!-- Unit Testing -->
+
+    <target name="run-jvm-unittests">
+        <ant dir="myseries-unittest">
+            <target name="run-tests"/>
+        </ant>
+    </target>
+
+    <target name="run-android-unittests">
+        <ant dir="myseries-test">
+            <target name="test"/>
+            <target name="fetch-test-report"/>
+        </ant>
+    </target>
+
+
+    <!-- Main Targets -->
+
+    <target name="clean" depends="clean-myseries,
+                                  clean-jvm-unittests, clean-android-unittests,
+                                  clean-acceptancetests"/>
+
+    <target name="build" depends="build-myseries,
+                                  build-jvm-unittests, build-android-unittests,
+                                  build-acceptancetests"/>
+
+    <target name="unit-tests">
+        <parallel>
+            <antcall target="run-jvm-unittests"/>
+            <antcall target="run-android-unittests"/>
+        </parallel>
+    </target>
+
+    <target name="acceptance-tests">
+        <!-- TODO -->
+        <echo>TODO: Acceptance testing MySeries</echo>
+    </target>
+
+
+    <!-- Deployment Pipeline Targets -->
+    <target name="commit-stage" depends="clean, build, unit-tests"/>
+    <target name="acceptance-stage" depends="acceptance-tests"/>
+
+</project>
+
