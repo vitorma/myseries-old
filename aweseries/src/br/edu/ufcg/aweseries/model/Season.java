@@ -29,6 +29,8 @@ import java.util.TreeMap;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class Season implements EpisodeListener {
+    public static final int INVALID_NUMBER = -1;
+
     private int seriesId;
     private int number;
 

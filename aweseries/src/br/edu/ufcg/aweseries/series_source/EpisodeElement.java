@@ -7,12 +7,15 @@ import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import br.edu.ufcg.aweseries.model.Episode;
+import br.edu.ufcg.aweseries.model.Season;
+import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class EpisodeElement {
+    private static final String EPISODE = "Episode";
     private static final String ID = "id";
     private static final String SERIES_ID = "seriesid";
     private static final String NUMBER = "EpisodeNumber";
@@ -25,11 +28,6 @@ public class EpisodeElement {
     private static final String GUEST_STARS = "GuestStars";
     private static final String IMAGE_FILE_NAME = "filename";
 
-    private static final int INVALID_EPISODE_ID = -1;
-    private static final int INVALID_SERIES_ID = -1;
-    private static final int INVALID_EPISODE_NUMBER = -1;
-    private static final int INVALID_SEASON_NUMBER = -1;
-
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private Element wrappedElement;
@@ -40,7 +38,7 @@ public class EpisodeElement {
     private EpisodeElement(RootElement root) {
         Validate.isNonNull(root, "root");
 
-        this.wrappedElement = root.requireChild("Episode");
+        this.wrappedElement = root.requireChild(EPISODE);
         this.episodeBuilder = Episode.builder();
     }
 
@@ -62,7 +60,7 @@ public class EpisodeElement {
         this.wrappedElement.getChild(ID).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                int id = Numbers.parseInt(body, INVALID_EPISODE_ID);
+                int id = Numbers.parseInt(body, Episode.INVALID_ID);
                 EpisodeElement.this.episodeBuilder.withId(id);
             }
         });
@@ -74,7 +72,7 @@ public class EpisodeElement {
         this.wrappedElement.getChild(SERIES_ID).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                int seriesId = Numbers.parseInt(body, INVALID_SERIES_ID);
+                int seriesId = Numbers.parseInt(body, Series.INVALID_ID);
                 EpisodeElement.this.episodeBuilder.withSeriesId(seriesId);
             }
         });
@@ -86,7 +84,7 @@ public class EpisodeElement {
         this.wrappedElement.getChild(NUMBER).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                int number = Numbers.parseInt(body, INVALID_EPISODE_NUMBER);
+                int number = Numbers.parseInt(body, Episode.INVALID_NUMBER);
                 EpisodeElement.this.episodeBuilder.withNumber(number);
             }
         });
@@ -98,7 +96,7 @@ public class EpisodeElement {
         this.wrappedElement.getChild(SEASON_NUMBER).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                int seasonNumber = Numbers.parseInt(body, INVALID_SEASON_NUMBER);
+                int seasonNumber = Numbers.parseInt(body, Season.INVALID_NUMBER);
                 EpisodeElement.this.episodeBuilder.withSeasonNumber(seasonNumber);
             }
         });
@@ -128,7 +126,7 @@ public class EpisodeElement {
 
         return this;
     }
-    
+
     public EpisodeElement withOverview() {
         this.wrappedElement.getChild(OVERVIEW).setEndTextElementListener(new EndTextElementListener() {
             @Override
@@ -136,7 +134,7 @@ public class EpisodeElement {
                 EpisodeElement.this.episodeBuilder.withOverview(body);
             }
         });
-        
+
         return this;
     }
 
