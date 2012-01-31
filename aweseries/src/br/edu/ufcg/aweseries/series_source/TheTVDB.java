@@ -43,11 +43,11 @@ public class TheTVDB implements SeriesSource {
         this.streamFactory = streamFactory;
     }
 
-    //SeriesSource methods----------------------------------------------------------------------------------------------
+    //SeriesSource------------------------------------------------------------------------------------------------------
 
     @Override
     public List<Series> searchFor(String seriesName, String languageAbbreviation) {
-        Validate.isNonBlank(seriesName, new RuntimeException("Invalid criteria for search"));//TODO create an exception
+        Validate.isNonBlank(seriesName, new InvalidSearchCriteriaException());
 
         SeriesSearchParser parser = new SeriesSearchParser(this.streamFactory);
         Language language = this.languageFrom(languageAbbreviation);
