@@ -21,14 +21,14 @@
 
 package br.edu.ufcg.aweseries.series_source;
 
-public class ParseFailedException extends RuntimeException {
+public class ParsingFailedException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public ParseFailedException() {
+    public ParsingFailedException() {
         super();
     }
 
-    public ParseFailedException(Throwable cause) {
+    public ParsingFailedException(Throwable cause) {
         super(cause);
     }
 }
