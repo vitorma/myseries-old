@@ -28,6 +28,9 @@ import java.util.List;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class Episode {
+    public static final int INVALID_ID = -1;
+    public static final int INVALID_NUMBER = -1;
+
     private int id;
     private int seriesId;
     private int number;
@@ -41,7 +44,7 @@ public class Episode {
     private String imageFileName;
 
     private boolean seenMark;
-    private List<EpisodeListener> listeners; 
+    private List<EpisodeListener> listeners;
 
     //Private construction----------------------------------------------------------------------------------------------
 
@@ -205,17 +208,12 @@ public class Episode {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Episode) && ((Episode) obj).id == this.id;
+        return obj instanceof Episode && ((Episode) obj).id == this.id;
     }
 
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder {
-        private static final int INVALID_ID = -1;
-        private static final int INVALID_SERIES_ID = -1;
-        private static final int INVALID_NUMBER = -1;
-        private static final int INVALID_SEASON_NUMBER = -1;
-
         private int id;
         private int seriesId;
         private int number;
@@ -230,10 +228,10 @@ public class Episode {
         private boolean seenMark;
 
         private Builder() {
-            this.id = INVALID_ID;
-            this.seriesId = INVALID_SERIES_ID;
-            this.number = INVALID_NUMBER;
-            this.seasonNumber = INVALID_SEASON_NUMBER;
+            this.id = Episode.INVALID_ID;
+            this.seriesId = Series.INVALID_ID;
+            this.number = Episode.INVALID_NUMBER;
+            this.seasonNumber = Season.INVALID_NUMBER;
         }
 
         public Builder withId(int id) {

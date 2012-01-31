@@ -49,14 +49,14 @@ public enum Language {
     NO;
 
     public static Language from(String abbreviation) {
-        if (abbreviation == null)
-            throw new IllegalArgumentException("abbreviation should not be null");
+        Validate.isNonNull(abbreviation, "abbreviation");
 
         return Language.valueOf(abbreviation.toUpperCase());
     }
 
     public static Language from(String abbreviation, Language alternative) {
-        Validate.isNonNull(abbreviation, "abbreviation should be non-null");
+        Validate.isNonNull(abbreviation, "abbreviation");
+        Validate.isNonNull(alternative, "alternative");
 
         try {
             return Language.valueOf(abbreviation.toUpperCase());

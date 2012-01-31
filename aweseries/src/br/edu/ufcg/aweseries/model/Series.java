@@ -30,6 +30,7 @@ import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class Series implements DomainObjectListener<SeasonSet> {
+    public static final int INVALID_ID = -1;
 
     public enum Status {
         CONTINUING, ENDED;
@@ -139,7 +140,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Series) && ((Series) obj).id == this.id;
+        return obj instanceof Series && ((Series) obj).id == this.id;
     }
 
     @Override
