@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.series_source;
 
 import java.util.ArrayList;
@@ -27,17 +26,19 @@ import java.util.Collections;
 import java.util.List;
 
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class TheTVDB implements SeriesSource {
     private final StreamFactory streamFactory;
+
+    //Construction------------------------------------------------------------------------------------------------------
 
     public TheTVDB(String apiKey) {
         this(new TheTVDBStreamFactory(apiKey));
     }
 
     public TheTVDB(StreamFactory streamFactory) {
-        if (streamFactory == null)
-            throw new IllegalArgumentException("streamFactory should not be null");
+        Validate.isNonNull(streamFactory, "streamFactory");
 
         this.streamFactory = streamFactory;
     }
@@ -45,52 +46,52 @@ public class TheTVDB implements SeriesSource {
     //SeriesSource methods----------------------------------------------------------------------------------------------
 
     @Override
-    public List<Series> searchFor(String seriesName, String language) {
-        if (seriesName == null)
-            throw new IllegalArgumentException("seriesName should not be null");
+    public List<Series> searchFor(String seriesName, String languageAbbreviation) {
+        Validate.isNonBlank(seriesName, new RuntimeException("Invalid criteria for search"));//TODO create an exception
 
-        if (language == null)
-            throw new IllegalArgumentException("language should not be null");
+        SeriesSearchParser parser = new SeriesSearchParser(this.streamFactory);
+        Language language = this.languageFrom(languageAbbreviation);
 
         try {
-            return new SeriesSearchParser(this.streamFactory).parse(seriesName, this.languageFrom(language));
-        } catch (Exception e) {
-            //TODO A better exception handling
+            return parser.parse(seriesName, language);
+        } catch (Exception e) {//TODO Catch only StreamCreationFailedException
             return Collections.emptyList();
         }
     }
 
     @Override
-    public Series fetchSeries(int seriesId, String language) {
-
-        if (language == null)
-            throw new IllegalArgumentException("language should not be null");
+    public Series fetchSeries(int seriesId, String languageAbbreviation) {
+        SeriesParser parser = new SeriesParser(this.streamFactory);
+        Language language = this.languageFrom(languageAbbreviation);
 
         try {
-            return new SeriesParser(this.streamFactory).parse(seriesId, this.languageFrom(language));
-        } catch (Exception e) {
-            //TODO A better exception handling
+            return parser.parse(seriesId, language);
+        } catch (Exception e) {//TODO Catch only StreamCreationFailedException
             throw new SeriesNotFoundException(e);
         }
     }
 
     @Override
-    public List<Series> fetchAllSeries(int[] seriesIds, String language) {
-        if (seriesIds == null)
-            throw new IllegalArgumentException("seriesIds should not be null");
+    public List<Series> fetchAllSeries(int[] seriesIds, String languageAbbreviation) {
+        Validate.isNonNull(seriesIds, "seriesIds");
+
+        SeriesParser parser = new SeriesParser(this.streamFactory);
+        Language language = this.languageFrom(languageAbbreviation);
 
         List<Series> result = new ArrayList<Series>();
 
         for (int seriesId : seriesIds) {
-            //TODO Check the language only once
-            Series series = this.fetchSeries(seriesId, language);
-            result.add(series);
+            try {
+                result.add(parser.parse(seriesId, language));
+            } catch (Exception e) {//TODO Catch only StreamCreationFailedException
+                throw new SeriesNotFoundException(e);
+            }
         }
 
         return result;
     }
 
-    //Auxiliary---------------------------------------------------------------------------------------------------------
+    //Language----------------------------------------------------------------------------------------------------------
 
     private Language languageFrom(String language) {
         return Language.from(language, Language.EN);
