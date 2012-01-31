@@ -1,5 +1,5 @@
 /*
- *   ParsingFailedException.java
+ *   InvalidSearchCriteriaException.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -21,14 +21,14 @@
 
 package br.edu.ufcg.aweseries.series_source;
 
-public class ParsingFailedException extends RuntimeException {
+public class InvalidSearchCriteriaException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public ParsingFailedException() {
+    public InvalidSearchCriteriaException() {
         super();
     }
 
-    public ParsingFailedException(Throwable cause) {
+    public InvalidSearchCriteriaException(Throwable cause) {
         super(cause);
     }
 }
