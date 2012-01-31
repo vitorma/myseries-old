@@ -93,7 +93,7 @@ public class SeriesParser {
                 new EndTextElementListener() {
                     @Override
                     public void end(String body) {
-                        seriesBuilder.withStatus(body);
+                        seriesBuilder.withStatus(Series.Status.parse(body, null));
                     }
                 });
 

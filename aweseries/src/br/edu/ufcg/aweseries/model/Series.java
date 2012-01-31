@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.model;
 
 import java.util.HashSet;
@@ -32,9 +31,24 @@ import br.edu.ufcg.aweseries.util.Validate;
 
 public class Series implements DomainObjectListener<SeasonSet> {
 
+    public enum Status {
+        CONTINUING, ENDED;
+
+        public static Status parse(String status, Status alternative) {
+            try {
+                return Status.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return alternative;
+            } catch (NullPointerException e) {
+                return alternative;
+            }
+
+        }
+    }
+
     private int id;
     private String name;
-    private String status;
+    private Status status;
     private String airsDay;
     private String airsTime;
     private String firstAired;
@@ -48,7 +62,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
     private Set<DomainObjectListener<Series>> listeners;
 
     //TODO turn this private
-    public Series(int id, String name) {
+    private Series(int id, String name) {
         Validate.isTrue(id >= 0, "id should be non-negative");
 
         if (name == null || Strings.isBlank(name))
@@ -68,7 +82,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return this.name;
     }
 
-    public String status() {
+    public Status status() {
         return this.status;
     }
 
@@ -82,9 +96,8 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
     //TODO move this to GUI
     public String airsDayAndTime() {
-        return Strings.isBlank(this.airsDay())
-        ? ""
-                : this.airsDay().substring(0, 3) + " " + this.airsTime();
+        return Strings.isBlank(this.airsDay()) ? "" : this.airsDay().substring(0, 3) + " "
+                + this.airsTime();
     }
 
     public String firstAired() {
@@ -118,82 +131,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
     public SeasonSet seasons() {
         return this.seasons;
     }
-    //TODO remove this sets------------------------------------------------------------------------------------------------
-    private void setStatus(String status) {
-        if (status == null)
-            throw new IllegalArgumentException("invalid status for series");
 
-        this.status = status;
-    }
-
-    private void setAirsDay(String airsDay) {
-        if (airsDay == null)
-            throw new IllegalArgumentException("invalid airs day for series");
-
-        this.airsDay = airsDay;
-    }
-
-    private void setAirsTime(String airsTime) {
-        if (airsTime == null)
-            throw new IllegalArgumentException("invalid airs time for series");
-
-        this.airsTime = airsTime;
-    }
-
-    private void setFirstAired(String firstAired) {
-        if (firstAired == null)
-            throw new IllegalArgumentException("invalid first aired for series");
-
-        this.firstAired = firstAired;
-    }
-
-    private void setRuntime(String runtime) {
-        if (runtime == null)
-            throw new IllegalArgumentException("invalid runtime for series");
-
-        this.runtime = runtime;
-    }
-
-    private void setNetwork(String network) {
-        if (network == null)
-            throw new IllegalArgumentException("invalid network for series");
-
-        this.network = network;
-    }
-
-    private void setOverview(String overview) {
-        if (overview == null)
-            throw new IllegalArgumentException("invalid overview for series");
-
-        this.overview = overview;
-    }
-
-    private void setGenres(String genres) {
-        if (genres == null)
-            throw new IllegalArgumentException("invalid genres for series");
-
-        this.genres = genres;
-    }
-
-    private void setActors(String actors) {
-        if (actors == null)
-            throw new IllegalArgumentException("invalid actors for series");
-
-        this.actors = actors;
-    }
-
-    private void setPoster(Poster poster) {
-        this.poster = poster;
-    }
-
-    private void setSeasons(SeasonSet seasons) {
-        if (seasons == null || seasons.seriesId() != this.id)
-            throw new IllegalArgumentException("invalid seasons for series");
-
-        seasons.addListener(this);
-        this.seasons = seasons;
-    }
-    //----------------------------------------------------------------------------------------------------------------------
     @Override
     public int hashCode() {
         return this.id;
@@ -214,15 +152,15 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return this.poster != null;
     }
 
-    //TODO Enum please!
+    
     //TODO Test
     public boolean isContinuing() {
-        return this.status.equals("Continuing");
+        return this.status.equals(Status.CONTINUING);
     }
-    //TODO Enum please!
+
     //TODO Test
     public boolean isEnded() {
-        return this.status.equals("Ended");
+        return this.status.equals(Status.ENDED);
     }
 
     @Override
@@ -264,19 +202,17 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
     private void notifyListeners() {
         for (DomainObjectListener<Series> listener : this.listeners) {
-            listener.onUpdate(this);            
-        }        
+            listener.onUpdate(this);
+        }
     }
 
     public static class Builder {
-        //TODO remove all constants
-        private static final String DEFAULT_STRING = "";
 
         private static final int INVALID_ID = -1;
 
         private int id;
         private String name;
-        private String status;
+        private Status status;
         private String airsDay;
         private String airsTime;
         private String firstAired;
@@ -302,7 +238,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
             return this;
         }
 
-        public Builder withStatus(String status) {
+        public Builder withStatus(Status status) {
             this.status = status;
             return this;
         }
@@ -374,18 +310,17 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
         public Series build() {
             final Series series = new Series(this.id, this.name);
-            //TODO let fields be null
-            series.setStatus(this.status != null ? this.status : DEFAULT_STRING);
-            series.setAirsDay(this.airsDay != null ? this.airsDay : DEFAULT_STRING);
-            series.setAirsTime(this.airsTime != null ? this.airsTime : DEFAULT_STRING);
-            series.setFirstAired(this.firstAired != null ? this.firstAired : DEFAULT_STRING);
-            series.setRuntime(this.runtime != null ? this.runtime : DEFAULT_STRING);
-            series.setNetwork(this.network != null ? this.network : DEFAULT_STRING);
-            series.setOverview(this.overview != null ? this.overview : DEFAULT_STRING);
-            series.setGenres(this.genres != null ? this.genres : DEFAULT_STRING);
-            series.setActors(this.actors != null ? this.actors : DEFAULT_STRING);
-            series.setPoster(this.posterBitmap != null ? new Poster(this.posterBitmap) : null);
-            series.setSeasons(this.seasons != null ? this.seasons : new SeasonSet(this.id));
+            series.status = this.status;
+            series.airsDay = this.airsDay;
+            series.airsTime = this.airsTime;
+            series.firstAired = this.firstAired;
+            series.runtime = this.runtime;
+            series.network = this.network;
+            series.overview = this.overview;
+            series.genres = this.genres;
+            series.actors = this.actors;
+            series.poster = this.posterBitmap != null ? new Poster(this.posterBitmap) : null;
+            series.seasons = this.seasons != null ? this.seasons : new SeasonSet(this.id);
 
             return series;
         }
