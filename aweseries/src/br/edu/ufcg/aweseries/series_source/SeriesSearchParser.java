@@ -19,90 +19,55 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.series_source;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.xml.sax.SAXException;
 
-import android.sax.Element;
-import android.sax.EndElementListener;
-import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.util.Numbers;
-import br.edu.ufcg.aweseries.util.Strings;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class SeriesSearchParser {
-    private static final int INVALID_SERIES_ID = -1;
-
     private StreamFactory streamFactory;
+    private RootElement rootElement;
+
+    //Construction------------------------------------------------------------------------------------------------------
 
     public SeriesSearchParser(StreamFactory streamFactory) {
-        if (streamFactory == null)
-            throw new IllegalArgumentException("streamFactory should not be null");
+        Validate.isNonNull(streamFactory, "streamFactory");
 
         this.streamFactory = streamFactory;
+        this.rootElement = new RootElement("Data");
     }
 
-    //TODO Refactoring: extract definition of listeners, maybe creating an inner type
+    //Parse-------------------------------------------------------------------------------------------------------------
+
     public List<Series> parse(String seriesName, Language language) {
-        if (seriesName == null)
-            throw new IllegalArgumentException("seriesName should not be null");
-        if (Strings.isBlank(seriesName))
-            throw new IllegalArgumentException("seriesName should not be blank");
+        InputStream stream = this.streamFactory.streamForSeriesSearch(seriesName, language);
 
-        final List<Series> searchResult = new ArrayList<Series>();
-        final Series.Builder builder = new Series.Builder();
-
-        final RootElement root = new RootElement("Data");
-        final Element element = root.getChild("Series");
-
-        element.setEndElementListener(
-                new EndElementListener() {
-                    @Override
-                    public void end() {
-                        searchResult.add(builder.build());
-                    }
-                });
-
-        element.getChild("id").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        builder.withId(Numbers.parseInt(body, INVALID_SERIES_ID));
-                    }
-                });
-
-        element.getChild("SeriesName").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        builder.withName(body);
-                    }
-                });
-
-        element.getChild("Overview").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        builder.withOverview(body);
-                    }
-                });
+        List<Series> searchResult = new ArrayList<Series>();
+        this.createSeriesElementFromRoot().addingHandledContentTo(searchResult);
 
         try {
-            Xml.parse(this.streamFactory.streamForSeriesSearch(seriesName, language), Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(stream, Xml.Encoding.UTF_8, this.rootElement.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
             throw new RuntimeException(e);
         }
 
-        return Collections.unmodifiableList(searchResult);
+        return searchResult;
+    }
+
+    //Element-----------------------------------------------------------------------------------------------------------
+
+    private SeriesElement createSeriesElementFromRoot() {
+        return SeriesElement.from(this.rootElement).withId().withName().withOverview();
     }
 }

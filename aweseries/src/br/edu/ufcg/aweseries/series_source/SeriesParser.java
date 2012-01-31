@@ -23,269 +23,76 @@ package br.edu.ufcg.aweseries.series_source;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import org.xml.sax.SAXException;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.sax.Element;
-import android.sax.EndElementListener;
-import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Xml;
-import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.util.Dates;
-import br.edu.ufcg.aweseries.util.Numbers;
-import br.edu.ufcg.aweseries.util.Strings;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class SeriesParser {
-    private static final int INVALID_EPISODE_ID = -1;
-    private static final int INVALID_EPISODE_NUMBER = -1;
-    private static final int INVALID_SEASON_NUMBER = -1;
-    private static final int INVALID_SERIES_ID = -1;
-    private static final DateFormat THETVDB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
     private StreamFactory streamFactory;
+    private RootElement rootElement;
+
+    //Construction------------------------------------------------------------------------------------------------------
 
     public SeriesParser(StreamFactory streamFactory) {
-        if (streamFactory == null)
-            throw new IllegalArgumentException("streamFactory should not be null");
+        Validate.isNonNull(streamFactory, "streamFactory");
 
         this.streamFactory = streamFactory;
+        this.rootElement = new RootElement("Data");
     }
 
-    //TODO Refactoring: extract definition of listeners, maybe creating inner types
+    //Parse-------------------------------------------------------------------------------------------------------------
+
     public Series parse(int seriesId, Language language) {
+        InputStream stream = this.streamFactory.streamForSeries(seriesId, language);
 
-        //Builders------------------------------------------------------------------------------------------------------
-
-        final Series.Builder seriesBuilder = new Series.Builder();
-        final Episode.Builder episodeBuilder = Episode.builder();
-
-        //Root element--------------------------------------------------------------------------------------------------
-
-        final RootElement root = new RootElement("Data");
-
-        //Series element------------------------------------------------------------------------------------------------
-
-        final Element seriesElement = root.getChild("Series");
-
-        seriesElement.getChild("id").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withId(Numbers.parseInt(body, INVALID_SERIES_ID));
-                    }
-                });
-
-        seriesElement.getChild("SeriesName").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withName(body);
-                    }
-                });
-
-        seriesElement.getChild("Status").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withStatus(body);
-                    }
-                });
-
-        seriesElement.getChild("Airs_DayOfWeek").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withAirsDay(body);
-                    }
-                });
-
-        seriesElement.getChild("Airs_Time").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withAirsTime(body);
-                    }
-                });
-
-        seriesElement.getChild("FirstAired").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withFirstAired(body);
-                    }
-                });
-
-        seriesElement.getChild("Runtime").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withRuntime(body);
-                    }
-                });
-
-        seriesElement.getChild("Network").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withNetwork(body);
-                    }
-                });
-
-        seriesElement.getChild("Overview").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withOverview(body);
-                    }
-                });
-
-        seriesElement.getChild("Genre").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withGenres(Strings.normalizePipeSeparated(body));
-                    }
-                });
-
-        seriesElement.getChild("Actors").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withActors(Strings.normalizePipeSeparated(body));
-                    }
-                });
-
-        seriesElement.getChild("poster").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        seriesBuilder.withPoster(SeriesParser.this.scaledBitmapFrom(body));
-                    }
-                });
-
-        //Episode element-----------------------------------------------------------------------------------------------
-
-        final Element episodeElement = root.getChild("Episode");
-
-        episodeElement.setEndElementListener(
-                new EndElementListener() {
-                    @Override
-                    public void end() {
-                        seriesBuilder.withEpisode(episodeBuilder.build());
-                    }
-                });
-
-        episodeElement.getChild("id").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withId(Numbers.parseInt(body, INVALID_EPISODE_ID));
-                    }
-                });
-
-        episodeElement.getChild("seriesid").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withSeriesId(Numbers.parseInt(body, INVALID_SERIES_ID));
-                    }
-                });
-
-        episodeElement.getChild("EpisodeNumber").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withNumber(Numbers.parseInt(body, INVALID_EPISODE_NUMBER));
-                    }
-                });
-
-        episodeElement.getChild("SeasonNumber").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withSeasonNumber(Numbers.parseInt(body, INVALID_SEASON_NUMBER));
-                    }
-                });
-
-        episodeElement.getChild("EpisodeName").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withName(body);
-                    }
-                });
-
-        episodeElement.getChild("FirstAired").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withAirdate(Dates.parseDate(body, THETVDB_DATE_FORMAT, null));
-                    }
-                });
-
-        episodeElement.getChild("Overview").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withOverview(body);
-                    }
-                });
-
-        episodeElement.getChild("Director").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withDirectors(Strings.normalizePipeSeparated(body));
-                    }
-                });
-
-        episodeElement.getChild("Writer").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withWriters(Strings.normalizePipeSeparated(body));
-                    }
-                });
-
-        episodeElement.getChild("GuestStars").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withGuestStars(Strings.normalizePipeSeparated(body));
-                    }
-                });
-
-        episodeElement.getChild("filename").setEndTextElementListener(
-                new EndTextElementListener() {
-                    @Override
-                    public void end(String body) {
-                        episodeBuilder.withImageFileName(body);
-                    }
-                });
-
-        //Parse---------------------------------------------------------------------------------------------------------
+        SeriesElement seriesElement = this.createSeriesElementFromRoot();
 
         try {
-            InputStream stream = this.streamFactory.streamForSeries(seriesId, language);
-            Xml.parse(stream, Xml.Encoding.UTF_8, root.getContentHandler());
+            Xml.parse(stream, Xml.Encoding.UTF_8, this.rootElement.getContentHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
             throw new RuntimeException(e);
         }
 
-        return seriesBuilder.build();
+        return seriesElement.handledContent();
     }
 
-    private Bitmap scaledBitmapFrom(String resourcePath) {
-        return Strings.isBlank(resourcePath)
-               ? null
-               : BitmapFactory.decodeStream(this.streamFactory.streamForSeriesPoster(resourcePath));
+    //Element-----------------------------------------------------------------------------------------------------------
+
+    private SeriesElement createSeriesElementFromRoot() {
+        return SeriesElement.from(this.rootElement)
+            .withId()
+            .withName()
+            .withStatus()
+            .withAirDay()
+            .withAirTime()
+            .withAirdate()
+            .withRuntime()
+            .withNetwork()
+            .withOverview()
+            .withGenres()
+            .withActors()
+            .withPoster(this.streamFactory)
+            .withHandledContentOf(this.createEpisodeElementFromRoot());
+    }
+
+    private EpisodeElement createEpisodeElementFromRoot() {
+        return EpisodeElement.from(this.rootElement)
+            .withId()
+            .withSeriesId()
+            .withNumber()
+            .withSeasonNumber()
+            .withName()
+            .withAirdate()
+            .withOverview()
+            .withDirectors()
+            .withWriters()
+            .withGuestStars()
+            .withImageFileName();
     }
 }
