@@ -57,9 +57,9 @@ public class SeriesSearchParser {
         try {
             Xml.parse(stream, Xml.Encoding.UTF_8, this.rootElement.getContentHandler());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ParseFailedException(e);
         } catch (SAXException e) {
-            throw new RuntimeException(e);
+            throw new ParseFailedException(e);
         }
 
         return searchResult;
