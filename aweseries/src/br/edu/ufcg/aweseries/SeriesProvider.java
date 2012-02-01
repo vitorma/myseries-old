@@ -40,6 +40,9 @@ import br.edu.ufcg.aweseries.model.SeenMarkSpecification;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.model.Specification;
 import br.edu.ufcg.aweseries.series_repository.SeriesRepository;
+import br.edu.ufcg.aweseries.series_source.ConnectionFailedException;
+import br.edu.ufcg.aweseries.series_source.InvalidSearchCriteriaException;
+import br.edu.ufcg.aweseries.series_source.ParsingFailedException;
 import br.edu.ufcg.aweseries.series_source.SeriesNotFoundException;
 import br.edu.ufcg.aweseries.series_source.SeriesSource;
 
@@ -80,13 +83,21 @@ public class SeriesProvider {
     }
 
     public Series[] searchSeries(String seriesName) {
-        List<Series> result = this.seriesSource.searchFor(seriesName, App.environment().localization().language());
+        List<Series> result = null;
 
-        //TODO This check should not throw an exception. Move it to the appropriate presenter, where a toast with the
-        //     message below should be shown.
+        try {
+            result = this.seriesSource.searchFor(seriesName, App.environment().localization().language());
+        } catch (InvalidSearchCriteriaException e) {
+            throw new RuntimeException("Invalid search criteria.");//TODO Internationalization
+        } catch (ConnectionFailedException e) {
+            throw new RuntimeException("Connection failed. Please check your connection.");//TODO Internationalization
+        } catch (ParsingFailedException e) {
+            throw new RuntimeException("Parsing failed.");//TODO Internationalization
+        }
+
         if (result.isEmpty())
             throw new RuntimeException(
-                    App.environment().context().getString(R.string.no_results_found_for_criteria) + seriesName);
+                    App.environment().context().getString(R.string.no_results_found_for_criteria) + " " + seriesName);
 
         return result.toArray(new Series[]{}); //TODO Return a List<Series>
     }
@@ -124,6 +135,12 @@ public class SeriesProvider {
                         this.seriesToUpdate,
                         App.environment().localization().language());
             } catch (SeriesNotFoundException e) {
+                // TODO: find a better way to tell that a problem happened when fetching the series
+                this.upToDateSeries = null;
+            } catch (ConnectionFailedException e) {
+                // TODO: find a better way to tell that a problem happened when fetching the series
+                this.upToDateSeries = null;
+            } catch (ParsingFailedException e) {
                 // TODO: find a better way to tell that a problem happened when fetching the series
                 this.upToDateSeries = null;
             }

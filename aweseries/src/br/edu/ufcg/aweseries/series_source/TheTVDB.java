@@ -54,7 +54,7 @@ public class TheTVDB implements SeriesSource {
 
         try {
             return parser.parse(seriesName, language);
-        } catch (Exception e) {//TODO Catch only StreamCreationFailedException
+        } catch (StreamCreationFailedException e) {
             return Collections.emptyList();
         }
     }
@@ -66,7 +66,7 @@ public class TheTVDB implements SeriesSource {
 
         try {
             return parser.parse(seriesId, language);
-        } catch (Exception e) {//TODO Catch only StreamCreationFailedException
+        } catch (StreamCreationFailedException e) {
             throw new SeriesNotFoundException(e);
         }
     }
@@ -83,7 +83,7 @@ public class TheTVDB implements SeriesSource {
         for (int seriesId : seriesIds) {
             try {
                 result.add(parser.parse(seriesId, language));
-            } catch (Exception e) {//TODO Catch only StreamCreationFailedException
+            } catch (StreamCreationFailedException e) {
                 throw new SeriesNotFoundException(e);
             }
         }
