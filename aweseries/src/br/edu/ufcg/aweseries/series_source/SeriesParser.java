@@ -52,9 +52,9 @@ public class SeriesParser {
         try {
             Xml.parse(stream, Xml.Encoding.UTF_8, this.rootElement.getContentHandler());
         } catch (IOException e) {
-            throw new ParseFailedException(e);
+            throw new ParsingFailedException(e);
         } catch (SAXException e) {
-            throw new ParseFailedException(e);
+            throw new ParsingFailedException(e);
         }
 
         return seriesElement.handledContent();
