@@ -11,7 +11,7 @@ public abstract class AirdateSpecification extends AbstractSpecification<Episode
         return new AirdateSpecification() {
             @Override
             protected boolean isSatisfiedByNonNull(Episode episode) {
-                return Dates.compare(episode.airdate(), date) == 0;
+                return Dates.compare(episode.airDate(), date) == 0;
             }
         };
     }
@@ -20,7 +20,7 @@ public abstract class AirdateSpecification extends AbstractSpecification<Episode
         return new AirdateSpecification() {
             @Override
             protected boolean isSatisfiedByNonNull(Episode episode) {
-                return Dates.compare(episode.airdate(), date) < 0;
+                return Dates.compare(episode.airDate(), date) < 0;
             }
         };
     }
@@ -29,7 +29,7 @@ public abstract class AirdateSpecification extends AbstractSpecification<Episode
         return new AirdateSpecification() {
             @Override
             protected boolean isSatisfiedByNonNull(Episode episode) {
-                return Dates.compare(episode.airdate(), date) > 0;
+                return Dates.compare(episode.airDate(), date) > 0;
             }
         };
     }

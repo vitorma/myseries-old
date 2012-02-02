@@ -36,7 +36,7 @@ public class Episode {
     private int number;
     private int seasonNumber;
     private String name;
-    private Date airdate;
+    private Date airDate;
     private String overview;
     private String directors;
     private String writers;
@@ -46,7 +46,7 @@ public class Episode {
     private boolean seenMark;
     private List<EpisodeListener> listeners;
 
-    //Private construction----------------------------------------------------------------------------------------------
+    //Construction------------------------------------------------------------------------------------------------------
 
     private Episode(int id, int seriesId, int number, int seasonNumber) {
         Validate.isTrue(id >= 0, "id should be non-negative");
@@ -92,8 +92,8 @@ public class Episode {
         return this.name;
     }
 
-    public Date airdate() {
-        return this.airdate;
+    public Date airDate() {
+        return this.airDate;
     }
 
     public String overview() {
@@ -139,14 +139,14 @@ public class Episode {
     //Merge-------------------------------------------------------------------------------------------------------------
 
     public void mergeWith(Episode other) {
-        Validate.isNonNull(other, "other should be non-null");
+        Validate.isNonNull(other, "other");
         Validate.isTrue(other.id == this.id, "other should have the same id as this");
         Validate.isTrue(other.seriesId == this.seriesId, "other should have the same seriesId as this");
         Validate.isTrue(other.number == this.number, "other should have the same number as this");
         Validate.isTrue(other.seasonNumber == this.seasonNumber, "other should have the same seasonNumber as this");
 
         this.name = other.name;
-        this.airdate = other.airdate;
+        this.airDate = other.airDate;
         this.overview = other.overview;
         this.directors = other.directors;
         this.writers = other.writers;
@@ -159,7 +159,7 @@ public class Episode {
     //EpisodeListener---------------------------------------------------------------------------------------------------
 
     public boolean register(EpisodeListener listener) {
-        Validate.isNonNull(listener, "listener to register should be non-null");
+        Validate.isNonNull(listener, "listener");
 
         for (EpisodeListener l : this.listeners) {
             if (l == listener) return false;
@@ -169,7 +169,7 @@ public class Episode {
     }
 
     public boolean deregister(EpisodeListener listener) {
-        Validate.isNonNull(listener, "listener to deregister should be non-null");
+        Validate.isNonNull(listener, "listener");
 
         for (int i = 0; i < this.listeners.size(); i++) {
             if (this.listeners.get(i) == listener) {
@@ -219,7 +219,7 @@ public class Episode {
         private int number;
         private int seasonNumber;
         private String name;
-        private Date airdate;
+        private Date airDate;
         private String overview;
         private String directors;
         private String writers;
@@ -259,8 +259,8 @@ public class Episode {
             return this;
         }
 
-        public Builder withAirdate(Date airdate) {
-            this.airdate = airdate;
+        public Builder withAirDate(Date airDate) {
+            this.airDate = airDate;
             return this;
         }
 
@@ -298,7 +298,7 @@ public class Episode {
             Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
 
             episode.name = this.name;
-            episode.airdate = this.airdate;
+            episode.airDate = this.airDate;
             episode.overview = this.overview;
             episode.directors = this.directors;
             episode.writers = this.writers;

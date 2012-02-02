@@ -83,6 +83,6 @@ public class EpisodeComparator {
     }
 
     private static int compareByAirdate(Episode episode1, Episode episode2) {
-        return Dates.compare(episode1.airdate(), episode2.airdate());
+        return Dates.compare(episode1.airDate(), episode2.airDate());
     }
 }

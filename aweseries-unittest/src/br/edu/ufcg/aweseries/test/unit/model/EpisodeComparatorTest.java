@@ -49,7 +49,7 @@ public class EpisodeComparatorTest {
 
 		Mockito.when(e.number()).thenReturn(number);
 		Mockito.when(e.seasonNumber()).thenReturn(seasonNumber);
-		Mockito.when(e.airdate()).thenReturn(airdate);
+		Mockito.when(e.airDate()).thenReturn(airdate);
 
 		return e;
 	}

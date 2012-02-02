@@ -86,7 +86,7 @@ public class SeriesParser {
             .withNumber()
             .withSeasonNumber()
             .withName()
-            .withAirdate()
+            .withAirDate()
             .withOverview()
             .withDirectors()
             .withWriters()

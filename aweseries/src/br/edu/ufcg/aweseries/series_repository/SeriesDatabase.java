@@ -125,7 +125,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("Series", null, this.contentValuesBy(series));
         for (Episode e : series.seasons().allEpisodes()) {
-            Log.d("SeriesDataBase", "id: " + e.id() + " airdate: " + e.airdate());
+            Log.d("SeriesDataBase", "id: " + e.id() + " airdate: " + e.airDate());
             db.insert("Episode", null, this.contentValuesBy(e));
         }
         db.close();
@@ -256,7 +256,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put("number", e.number());
         cv.put("seasonNumber", e.seasonNumber());
         cv.put("name", e.name());
-        cv.put("firstAired", Numbers.parseLong(e.airdate(), null));
+        cv.put("firstAired", Numbers.parseLong(e.airDate(), null));
         cv.put("overview", e.overview());
         cv.put("director", e.directors());
         cv.put("writer", e.writers());
@@ -290,7 +290,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         .withNumber(c.getInt(c.getColumnIndex("number")))
         .withSeasonNumber(c.getInt(c.getColumnIndex("seasonNumber")))
         .withName(c.getString(c.getColumnIndex("name")))
-        .withAirdate(Dates.parseDate(c.getLong(c.getColumnIndex("firstAired")), null))
+        .withAirDate(Dates.parseDate(c.getLong(c.getColumnIndex("firstAired")), null))
         .withOverview(c.getString(c.getColumnIndex("overview")))
         .withDirectors(c.getString(c.getColumnIndex("director")))
         .withWriters(c.getString(c.getColumnIndex("writer")))

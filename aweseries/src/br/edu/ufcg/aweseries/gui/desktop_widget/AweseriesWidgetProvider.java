@@ -122,7 +122,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                             pre +
                             this.getString(R.string.separator) +
                             Objects.nullSafe(e.name(), this.getString(R.string.unnamed_episode))));
-                    item.setTextViewText(R.id.widgetEpisodeDateTextView, Dates.toString(e.airdate(), FORMAT, ""));
+                    item.setTextViewText(R.id.widgetEpisodeDateTextView, Dates.toString(e.airDate(), FORMAT, ""));
 
                     views.addView(R.id.innerLinearLayout, item);
                     viewsToAdd--;

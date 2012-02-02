@@ -42,7 +42,7 @@ public class EpisodeElement {
     private static final String NUMBER = "EpisodeNumber";
     private static final String SEASON_NUMBER = "SeasonNumber";
     private static final String NAME = "EpisodeName";
-    private static final String AIRDATE = "FirstAired";
+    private static final String AIR_DATE = "FirstAired";
     private static final String OVERVIEW = "Overview";
     private static final String DIRECTORS = "Director";
     private static final String WRITERS = "Writer";
@@ -136,12 +136,12 @@ public class EpisodeElement {
         return this;
     }
 
-    public EpisodeElement withAirdate() {
-        this.wrappedElement.getChild(AIRDATE).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElement withAirDate() {
+        this.wrappedElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                Date airdate = Dates.parseDate(body, DATE_FORMAT, null);
-                EpisodeElement.this.episodeBuilder.withAirdate(airdate);
+                Date airDate = Dates.parseDate(body, DATE_FORMAT, null);
+                EpisodeElement.this.episodeBuilder.withAirDate(airDate);
             }
         });
 

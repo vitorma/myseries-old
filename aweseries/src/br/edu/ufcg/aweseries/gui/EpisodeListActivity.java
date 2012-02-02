@@ -111,7 +111,7 @@ public class EpisodeListActivity extends ListActivity {
                     this.getContext().getResources().getString(R.string.unnamed_episode)));
             numberTextView.setText(String.format(EpisodeListActivity.this.getString(R.string.episode_number_format),
                     episode.number()));
-            dateTextView.setText(Dates.toString(episode.airdate(), FORMAT, ""));
+            dateTextView.setText(Dates.toString(episode.airDate(), FORMAT, ""));
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 
