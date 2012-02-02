@@ -38,7 +38,7 @@ public class SeriesTest {
 
 	@Before
 	public final void setUp() {
-		this.series1 = new Series.Builder().withId(1)
+		this.series1 = Series.builder().withId(1)
 		.withName("series 1")
 		.withStatus("status 1")
 		.withAirDay("airs day 1")
@@ -51,7 +51,7 @@ public class SeriesTest {
 		.withActors("actors 1")
 		.build();
 
-		this.series2 = new Series.Builder().withId(1)
+		this.series2 = Series.builder().withId(1)
 				.withName("series 2")
 				.withStatus("status 2")
 				.withAirDay("airs day 2")
@@ -64,7 +64,7 @@ public class SeriesTest {
 				.withActors("actors 2")
 				.build();
 		
-		this.series3 = new Series.Builder().withId(1)
+		this.series3 = Series.builder().withId(1)
 				.withName("series 1")
 				.withStatus("status 1")
 				.withAirDay("airs day 1")
@@ -77,7 +77,7 @@ public class SeriesTest {
 				.withActors("actors 1")
 				.build();
 		
-		this.series4 = new Series.Builder().withId(4)
+		this.series4 = Series.builder().withId(4)
 				.withName("series 4")
 				.withStatus("status 4")
 				.withAirDay("airs day 4")

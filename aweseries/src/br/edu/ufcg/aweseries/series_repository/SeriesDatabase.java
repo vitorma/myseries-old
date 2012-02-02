@@ -245,7 +245,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put("overview", s.overview());
         cv.put("genres", s.genres());
         cv.put("actors", s.actors());
-        cv.put("poster", (s.poster() != null) ? s.poster().toByteArray(): null);
+        cv.put("poster", s.poster() != null ? s.poster().toByteArray(): null);
         return cv;
     }
 
@@ -267,10 +267,10 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     private Series seriesByCurrentPositionOf(Cursor c) {
-        return new Series.Builder()
+        return Series.builder()
         .withId(c.getInt(c.getColumnIndex("id")))
         .withName(c.getString(c.getColumnIndex("name")))
-        .withStatus((c.getString(c.getColumnIndex("status"))))
+        .withStatus(c.getString(c.getColumnIndex("status")))
         .withAirDay(c.getString(c.getColumnIndex("airsDay")))
         .withAirTime(c.getString(c.getColumnIndex("airsTime")))
         .withAirDate(c.getString(c.getColumnIndex("firstAired")))

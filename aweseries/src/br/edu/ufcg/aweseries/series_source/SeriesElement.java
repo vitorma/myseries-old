@@ -59,7 +59,7 @@ public class SeriesElement {
         Validate.isNonNull(root, "root");
 
         this.wrappedElement = root.requireChild(SERIES);
-        this.seriesBuilder = new Series.Builder();
+        this.seriesBuilder = Series.builder();
     }
 
     //Factory-----------------------------------------------------------------------------------------------------------

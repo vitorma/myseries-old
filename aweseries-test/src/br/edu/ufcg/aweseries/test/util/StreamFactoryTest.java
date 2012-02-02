@@ -98,6 +98,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
 	// Full Series -------------------------------------------------------------
 
+
 	public void testGettingFullSeriesWithNonExistentSeriesIdThrowsException() {
 		try {
 			this.factory().streamForSeries(NON_EXISTENT_SERIES_ID, Language.EN);

@@ -62,7 +62,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
     //Building----------------------------------------------------------------------------------------------------------
 
-    public Series.Builder builder() {
+    public static Series.Builder builder() {
         return new Series.Builder();
     }
 
@@ -207,8 +207,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         private Bitmap posterBitmap;//TODO Keep a Poster instead of a Bitmap
         private Set<Episode> episodes;
 
-        //TODO Turn private: create public static Series.Builder Series.builder()
-        public Builder() {
+        private Builder() {
             this.id = Series.INVALID_ID;
             this.episodes = new HashSet<Episode>();
         }
@@ -279,8 +278,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         //TODO Remove
         public Builder withPoster(byte[] posterBitmap) {
             if (posterBitmap != null) {
-                this.posterBitmap = BitmapFactory.decodeByteArray(posterBitmap, 0,
-                        posterBitmap.length);
+                this.posterBitmap = BitmapFactory.decodeByteArray(posterBitmap, 0, posterBitmap.length);
             }
             return this;
         }
