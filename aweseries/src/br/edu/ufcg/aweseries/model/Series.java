@@ -185,11 +185,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return obj instanceof Series && ((Series) obj).id == this.id;
     }
 
-    @Override
-    public String toString() {//TODO Remove
-        return this.name;
-    }
-
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder {
