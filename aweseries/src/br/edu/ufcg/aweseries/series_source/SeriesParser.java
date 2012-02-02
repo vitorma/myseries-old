@@ -69,7 +69,7 @@ public class SeriesParser {
             .withStatus()
             .withAirDay()
             .withAirTime()
-            .withAirdate()
+            .withAirDate()
             .withRuntime()
             .withNetwork()
             .withOverview()

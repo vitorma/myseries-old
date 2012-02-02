@@ -42,7 +42,7 @@ public class SeriesElement {
     private static final String STATUS = "Status";
     private static final String AIR_DAY = "Airs_DayOfWeek";
     private static final String AIR_TIME = "Airs_Time";
-    private static final String AIRDATE = "FirstAired";
+    private static final String AIR_DATE = "FirstAired";
     private static final String RUNTIME = "Runtime";
     private static final String NETWORK = "Network";
     private static final String OVERVIEW = "Overview";
@@ -126,8 +126,8 @@ public class SeriesElement {
         return this;
     }
 
-    public SeriesElement withAirdate() {
-        this.wrappedElement.getChild(AIRDATE).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElement withAirDate() {
+        this.wrappedElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 SeriesElement.this.seriesBuilder.withAirDate(body);
