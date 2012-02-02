@@ -50,9 +50,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
     private Series(int id, String name) {
         Validate.isTrue(id >= 0, "id should be non-negative");
-
-        if (name == null || Strings.isBlank(name))//TODO Use Validate
-            throw new IllegalArgumentException("invalid name for series");
+        Validate.isNonBlank(name, "name");
 
         this.id = id;
         this.name = name;
@@ -155,12 +153,11 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return this.listeners.remove(listener);
     }
 
-    //FIXME Check that other.id == this.id
     public void mergeWith(Series other) {
-        if (other == null)
-            throw new IllegalArgumentException(); //TODO: create a custom Exception
+        Validate.isNonNull(other, "other");
+        Validate.isTrue(other.id == this.id, "other should have the same id as this");
+        Validate.isTrue(other.name.equals(this.name), "other should have the same name as this");
 
-        this.name = other.name;
         this.status = other.status;
         this.airDate = other.airDate;
         this.airDay = other.airDay;
