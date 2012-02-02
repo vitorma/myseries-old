@@ -31,7 +31,6 @@ import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import br.edu.ufcg.aweseries.model.Series;
-import br.edu.ufcg.aweseries.model.Series.Status;
 import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
@@ -98,7 +97,7 @@ public class SeriesElement {
         this.wrappedElement.getChild(STATUS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withStatus(Series.Status.parse(body, null));
+                SeriesElement.this.seriesBuilder.withStatus(body);
             }
         });
 

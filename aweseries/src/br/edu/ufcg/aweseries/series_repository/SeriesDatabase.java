@@ -236,7 +236,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         final ContentValues cv = new ContentValues();
         cv.put("id", s.id());
         cv.put("name", s.name());
-        cv.put("status", s.status().toString());
+        cv.put("status", s.status());
         cv.put("airsDay", s.airsDay());
         cv.put("airsTime", s.airsTime());
         cv.put("firstAired", s.firstAired());
@@ -270,7 +270,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         return new Series.Builder()
         .withId(c.getInt(c.getColumnIndex("id")))
         .withName(c.getString(c.getColumnIndex("name")))
-        .withStatus(Series.Status.valueOf(c.getString(c.getColumnIndex("status"))))
+        .withStatus((c.getString(c.getColumnIndex("status"))))
         .withAirsDay(c.getString(c.getColumnIndex("airsDay")))
         .withAirsTime(c.getString(c.getColumnIndex("airsTime")))
         .withFirstAired(c.getString(c.getColumnIndex("firstAired")))

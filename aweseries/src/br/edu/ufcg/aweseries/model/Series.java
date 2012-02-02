@@ -32,24 +32,9 @@ import br.edu.ufcg.aweseries.util.Validate;
 public class Series implements DomainObjectListener<SeasonSet> {
     public static final int INVALID_ID = -1;
 
-    public enum Status {
-        CONTINUING, ENDED;
-
-        public static Status parse(String status, Status alternative) {
-            try {
-                return Status.valueOf(status.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return alternative;
-            } catch (NullPointerException e) {
-                return alternative;
-            }
-
-        }
-    }
-
     private int id;
     private String name;
-    private Status status;
+    private String status;
     private String airsDay;
     private String airsTime;
     private String firstAired;
@@ -83,7 +68,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return this.name;
     }
 
-    public Status status() {
+    public String status() {
         return this.status;
     }
 
@@ -153,17 +138,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return this.poster != null;
     }
 
-    
-    //TODO Test
-    public boolean isContinuing() {
-        return this.status.equals(Status.CONTINUING);
-    }
-
-    //TODO Test
-    public boolean isEnded() {
-        return this.status.equals(Status.ENDED);
-    }
-
     @Override
     public void onUpdate(SeasonSet entity) {
         this.notifyListeners();
@@ -213,7 +187,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
         private int id;
         private String name;
-        private Status status;
+        private String status;
         private String airsDay;
         private String airsTime;
         private String firstAired;
@@ -239,7 +213,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
             return this;
         }
 
-        public Builder withStatus(Status status) {
+        public Builder withStatus(String status) {
             this.status = status;
             return this;
         }
