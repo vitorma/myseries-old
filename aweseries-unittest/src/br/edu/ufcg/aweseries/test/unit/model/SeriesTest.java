@@ -41,9 +41,9 @@ public class SeriesTest {
 		this.series1 = new Series.Builder().withId(1)
 		.withName("series 1")
 		.withStatus("status 1")
-		.withAirsDay("airs day 1")
-		.withAirsTime("airs time 1")
-		.withFirstAired("first aired 1")
+		.withAirDay("airs day 1")
+		.withAirTime("airs time 1")
+		.withAirDate("first aired 1")
 		.withRuntime("runtime 1")
 		.withNetwork("network 1")
 		.withOverview("overview 1")
@@ -54,9 +54,9 @@ public class SeriesTest {
 		this.series2 = new Series.Builder().withId(1)
 				.withName("series 2")
 				.withStatus("status 2")
-				.withAirsDay("airs day 2")
-				.withAirsTime("airs time 2")
-				.withFirstAired("first aired 2")
+				.withAirDay("airs day 2")
+				.withAirTime("airs time 2")
+				.withAirDate("first aired 2")
 				.withRuntime("runtime 2")
 				.withNetwork("network 2")
 				.withOverview("overview 2")
@@ -67,9 +67,9 @@ public class SeriesTest {
 		this.series3 = new Series.Builder().withId(1)
 				.withName("series 1")
 				.withStatus("status 1")
-				.withAirsDay("airs day 1")
-				.withAirsTime("airs time 1")
-				.withFirstAired("first aired 1")
+				.withAirDay("airs day 1")
+				.withAirTime("airs time 1")
+				.withAirDate("first aired 1")
 				.withRuntime("runtime 1")
 				.withNetwork("network 1")
 				.withOverview("overview 1")
@@ -80,9 +80,9 @@ public class SeriesTest {
 		this.series4 = new Series.Builder().withId(4)
 				.withName("series 4")
 				.withStatus("status 4")
-				.withAirsDay("airs day 4")
-				.withAirsTime("airs time 4")
-				.withFirstAired("first aired 4")
+				.withAirDay("airs day 4")
+				.withAirTime("airs time 4")
+				.withAirDate("first aired 4")
 				.withRuntime("runtime 4")
 				.withNetwork("network 4")
 				.withOverview("overview 4")
@@ -124,17 +124,17 @@ public class SeriesTest {
 
 	@Test
 	public final void testGetAirsDay() {
-		Assert.assertEquals("airs day 1", this.series1.airsDay());
+		Assert.assertEquals("airs day 1", this.series1.airDay());
 	}
 
 	@Test
 	public final void testGetAirsTime() {
-		Assert.assertEquals("airs time 1", this.series1.airsTime());
+		Assert.assertEquals("airs time 1", this.series1.airTime());
 	}
 
 	@Test
 	public final void testGetFirstAired() {
-		Assert.assertEquals("first aired 1", this.series1.firstAired());
+		Assert.assertEquals("first aired 1", this.series1.airDate());
 	}
 
 	@Test

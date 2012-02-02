@@ -237,9 +237,9 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put("id", s.id());
         cv.put("name", s.name());
         cv.put("status", s.status());
-        cv.put("airsDay", s.airsDay());
-        cv.put("airsTime", s.airsTime());
-        cv.put("firstAired", s.firstAired());
+        cv.put("airsDay", s.airDay());
+        cv.put("airsTime", s.airTime());
+        cv.put("firstAired", s.airDate());
         cv.put("runtime", s.runtime());
         cv.put("network", s.network());
         cv.put("overview", s.overview());
@@ -271,9 +271,9 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         .withId(c.getInt(c.getColumnIndex("id")))
         .withName(c.getString(c.getColumnIndex("name")))
         .withStatus((c.getString(c.getColumnIndex("status"))))
-        .withAirsDay(c.getString(c.getColumnIndex("airsDay")))
-        .withAirsTime(c.getString(c.getColumnIndex("airsTime")))
-        .withFirstAired(c.getString(c.getColumnIndex("firstAired")))
+        .withAirDay(c.getString(c.getColumnIndex("airsDay")))
+        .withAirTime(c.getString(c.getColumnIndex("airsTime")))
+        .withAirDate(c.getString(c.getColumnIndex("firstAired")))
         .withRuntime(c.getString(c.getColumnIndex("runtime")))
         .withNetwork(c.getString(c.getColumnIndex("network")))
         .withOverview(c.getString(c.getColumnIndex("overview")))

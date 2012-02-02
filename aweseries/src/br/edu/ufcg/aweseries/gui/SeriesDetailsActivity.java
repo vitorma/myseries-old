@@ -214,10 +214,10 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
             this.seriesName.setText(series.name());
             this.seriesOverview.setText(series.overview());
             this.seriesStatus.setText(series.status().toString());
-            this.seriesAirTime.setText(series.airsTime());
-            this.seriesAirDays.setText(series.airsDay());
+            this.seriesAirTime.setText(series.airTime());
+            this.seriesAirDays.setText(series.airDay());
             this.seriesActors.setText(series.actors());
-            this.seriesFirsAirDay.setText(series.firstAired());
+            this.seriesFirsAirDay.setText(series.airDate());
             this.seriesNetwork.setText(series.network());
             this.seriesGenre.setText(series.genres());
             this.seriesRuntime.setText(String.format(

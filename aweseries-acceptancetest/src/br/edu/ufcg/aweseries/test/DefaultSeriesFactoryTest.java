@@ -52,9 +52,9 @@ public class DefaultSeriesFactoryTest extends TestCase {
 		// Series ID should be randomized - assertThat(defaultSeries.getId(), equalTo("0"));
 		assertThat(defaultSeries.name(), equalTo("Default Series"));
 		assertThat(defaultSeries.status(), equalTo("Continuing"));
-		assertThat(defaultSeries.airsDay(), equalTo("Monday"));
-		assertThat(defaultSeries.airsTime(), equalTo("8:00 PM"));
-		assertThat(defaultSeries.firstAired(), equalTo("1996-01-01"));
+		assertThat(defaultSeries.airDay(), equalTo("Monday"));
+		assertThat(defaultSeries.airTime(), equalTo("8:00 PM"));
+		assertThat(defaultSeries.airDate(), equalTo("1996-01-01"));
 		assertThat(defaultSeries.runtime(), equalTo("60"));
 		assertThat(defaultSeries.network(), equalTo("BBC"));
 		assertThat(defaultSeries.overview(), equalTo("A default series that has been created"));
@@ -120,9 +120,9 @@ public class DefaultSeriesFactoryTest extends TestCase {
 		assertEquals(defaultSeries.id(), id);
 		assertThat(defaultSeries.name(), equalTo(name));
 		assertThat(defaultSeries.status(), equalTo(status));
-		assertThat(defaultSeries.airsDay(), equalTo(airsOn));
-		assertThat(defaultSeries.airsTime(), equalTo(airsAt));
-		assertThat(defaultSeries.firstAired(), equalTo(firstAired));
+		assertThat(defaultSeries.airDay(), equalTo(airsOn));
+		assertThat(defaultSeries.airTime(), equalTo(airsAt));
+		assertThat(defaultSeries.airDate(), equalTo(firstAired));
 		assertThat(defaultSeries.runtime(), equalTo(runtime));
 		assertThat(defaultSeries.network(), equalTo(network));
 		assertThat(defaultSeries.overview(), equalTo(overview));

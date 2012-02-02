@@ -35,9 +35,9 @@ public class Series implements DomainObjectListener<SeasonSet> {
     private int id;
     private String name;
     private String status;
-    private String airsDay;
-    private String airsTime;
-    private String firstAired;
+    private String airDate;
+    private String airDay;
+    private String airTime;
     private String runtime;
     private String network;
     private String overview;
@@ -45,13 +45,13 @@ public class Series implements DomainObjectListener<SeasonSet> {
     private String actors;
     private Poster poster;
     private SeasonSet seasons;
-    private Set<DomainObjectListener<Series>> listeners;
 
-    //TODO turn this private
+    private Set<DomainObjectListener<Series>> listeners;//TODO List<SeriesListener>
+
     private Series(int id, String name) {
         Validate.isTrue(id >= 0, "id should be non-negative");
 
-        if (name == null || Strings.isBlank(name))
+        if (name == null || Strings.isBlank(name))//TODO Use Validate
             throw new IllegalArgumentException("invalid name for series");
 
         this.id = id;
@@ -72,22 +72,22 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return this.status;
     }
 
-    public String airsDay() {
-        return this.airsDay;
+    public String airDate() {
+        return this.airDate;
     }
 
-    public String airsTime() {
-        return this.airsTime;
+    public String airDay() {
+        return this.airDay;
+    }
+
+    public String airTime() {
+        return this.airTime;
     }
 
     //TODO move this to GUI
     public String airsDayAndTime() {
-        return Strings.isBlank(this.airsDay()) ? "" : this.airsDay().substring(0, 3) + " "
-                + this.airsTime();
-    }
-
-    public String firstAired() {
-        return this.firstAired;
+        return Strings.isBlank(this.airDay()) ? "" : this.airDay().substring(0, 3) + " "
+                + this.airTime();
     }
 
     public String runtime() {
@@ -128,42 +128,43 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return obj instanceof Series && ((Series) obj).id == this.id;
     }
 
+    //TODO Remove
     @Override
     public String toString() {
-        return this.name();
+        return this.name;
     }
 
-    //TODO: Test
+    //TODO Remove
     public boolean hasPoster() {
         return this.poster != null;
     }
 
+    //TODO Implement SeasonSetListener
     @Override
     public void onUpdate(SeasonSet entity) {
         this.notifyListeners();
     }
 
-    //TODO Test
+    //TODO Register SeriesListener
     public boolean addListener(DomainObjectListener<Series> listener) {
         return this.listeners.add(listener);
     }
 
-    //TODO Test
+    //TODO Deregister SeriesListener
     public boolean removeListener(DomainObjectListener<Series> listener) {
         return this.listeners.remove(listener);
     }
 
-    //TODO: Test me
-    //      Test whether other has a different seriesId than mine (its)
+    //FIXME Check that other.id == this.id
     public void mergeWith(Series other) {
         if (other == null)
             throw new IllegalArgumentException(); //TODO: create a custom Exception
 
         this.name = other.name;
         this.status = other.status;
-        this.airsDay = other.airsDay;
-        this.airsTime = other.airsTime;
-        this.firstAired = other.firstAired;
+        this.airDate = other.airDate;
+        this.airDay = other.airDay;
+        this.airTime = other.airTime;
         this.runtime = other.runtime;
         this.network = other.network;
         this.overview = other.overview;
@@ -175,6 +176,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.notifyListeners();
     }
 
+    //TODO Specific notifications to SeriesListener
     private void notifyListeners() {
         for (DomainObjectListener<Series> listener : this.listeners) {
             listener.onUpdate(this);
@@ -182,25 +184,23 @@ public class Series implements DomainObjectListener<SeasonSet> {
     }
 
     public static class Builder {
-
-        private static final int INVALID_ID = -1;
-
         private int id;
         private String name;
         private String status;
-        private String airsDay;
-        private String airsTime;
-        private String firstAired;
+        private String airDate;
+        private String airDay;
+        private String airTime;
         private String runtime;
         private String network;
         private String overview;
         private String genres;
         private String actors;
-        private Bitmap posterBitmap;
-        private SeasonSet seasons;
+        private Bitmap posterBitmap;//TODO Keep a Poster instead of a Bitmap
+        private SeasonSet seasons;//TODO Create at the Series' constructor
 
+        //TODO Turn private: create public static Series.Builder Series.builder()
         public Builder() {
-            this.id = INVALID_ID;
+            this.id = Series.INVALID_ID;
         }
 
         public Builder withId(int id) {
@@ -218,18 +218,18 @@ public class Series implements DomainObjectListener<SeasonSet> {
             return this;
         }
 
-        public Builder withAirsDay(String airsDay) {
-            this.airsDay = airsDay;
+        public Builder withAirDate(String airDate) {
+            this.airDate = airDate;
             return this;
         }
 
-        public Builder withAirsTime(String airsTime) {
-            this.airsTime = airsTime;
+        public Builder withAirDay(String airDay) {
+            this.airDay = airDay;
             return this;
         }
 
-        public Builder withFirstAired(String firstAired) {
-            this.firstAired = firstAired;
+        public Builder withAirTime(String airTime) {
+            this.airTime = airTime;
             return this;
         }
 
@@ -258,11 +258,15 @@ public class Series implements DomainObjectListener<SeasonSet> {
             return this;
         }
 
+        //TODO withPoster(Poster)
+
+        //TODO Remove
         public Builder withPoster(Bitmap posterBitmap) {
             this.posterBitmap = posterBitmap;
             return this;
         }
 
+        //TODO Remove
         public Builder withPoster(byte[] posterBitmap) {
             if (posterBitmap != null) {
                 this.posterBitmap = BitmapFactory.decodeByteArray(posterBitmap, 0,
@@ -271,6 +275,9 @@ public class Series implements DomainObjectListener<SeasonSet> {
             return this;
         }
 
+        //FIXME episode.seriesId == this.id (Be careful! withId was already called?)
+        //      It is better keeping a collection of episodes and including all ones in a SeasonSet created at the
+        //      Series' constructor.
         public Builder withEpisode(Episode episode) {
             if (episode == null)
                 return this;
@@ -286,16 +293,16 @@ public class Series implements DomainObjectListener<SeasonSet> {
         public Series build() {
             final Series series = new Series(this.id, this.name);
             series.status = this.status;
-            series.airsDay = this.airsDay;
-            series.airsTime = this.airsTime;
-            series.firstAired = this.firstAired;
+            series.airDay = this.airDay;
+            series.airTime = this.airTime;
+            series.airDate = this.airDate;
             series.runtime = this.runtime;
             series.network = this.network;
             series.overview = this.overview;
             series.genres = this.genres;
             series.actors = this.actors;
-            series.poster = this.posterBitmap != null ? new Poster(this.posterBitmap) : null;
-            series.seasons = this.seasons != null ? this.seasons : new SeasonSet(this.id);
+            series.poster = this.posterBitmap != null ? new Poster(this.posterBitmap) : null;// TODO assign this.poster
+            series.seasons = this.seasons != null ? this.seasons : new SeasonSet(this.id);//TODO series.seasons.includingAll
 
             return series;
         }

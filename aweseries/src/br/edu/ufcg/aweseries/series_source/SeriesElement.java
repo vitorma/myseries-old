@@ -108,7 +108,7 @@ public class SeriesElement {
         this.wrappedElement.getChild(AIR_DAY).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withAirsDay(body);
+                SeriesElement.this.seriesBuilder.withAirDay(body);
             }
         });
 
@@ -119,7 +119,7 @@ public class SeriesElement {
         this.wrappedElement.getChild(AIR_TIME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withAirsTime(body);
+                SeriesElement.this.seriesBuilder.withAirTime(body);
             }
         });
 
@@ -130,7 +130,7 @@ public class SeriesElement {
         this.wrappedElement.getChild(AIRDATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withFirstAired(body);
+                SeriesElement.this.seriesBuilder.withAirDate(body);
             }
         });
 
