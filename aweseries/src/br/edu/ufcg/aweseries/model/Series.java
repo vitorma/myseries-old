@@ -47,6 +47,8 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
     private Set<DomainObjectListener<Series>> listeners;//TODO List<SeriesListener>
 
+    //Construction------------------------------------------------------------------------------------------------------
+
     private Series(int id, String name) {
         Validate.isTrue(id >= 0, "id should be non-negative");
         Validate.isNonBlank(name, "name");
@@ -58,6 +60,14 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.listeners = new HashSet<DomainObjectListener<Series>>();
     }
 
+    //Building----------------------------------------------------------------------------------------------------------
+
+    public Series.Builder builder() {
+        return new Series.Builder();
+    }
+
+    //Immutable---------------------------------------------------------------------------------------------------------
+
     public int id() {
         return this.id;
     }
@@ -65,6 +75,8 @@ public class Series implements DomainObjectListener<SeasonSet> {
     public String name() {
         return this.name;
     }
+
+    //Mutable-----------------------------------------------------------------------------------------------------------
 
     public String status() {
         return this.status;
@@ -106,46 +118,17 @@ public class Series implements DomainObjectListener<SeasonSet> {
         return this.poster;
     }
 
+    public boolean hasPoster() {//TODO Maybe remove
+        return this.poster != null;
+    }
+
+    //Season------------------------------------------------------------------------------------------------------------
+
     public SeasonSet seasons() {
         return this.seasons;
     }
 
-    @Override
-    public int hashCode() {
-        return this.id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Series && ((Series) obj).id == this.id;
-    }
-
-    //TODO Remove
-    @Override
-    public String toString() {
-        return this.name;
-    }
-
-    //TODO Remove
-    public boolean hasPoster() {
-        return this.poster != null;
-    }
-
-    //TODO Implement SeasonSetListener
-    @Override
-    public void onUpdate(SeasonSet entity) {
-        this.notifyListeners();
-    }
-
-    //TODO Register SeriesListener
-    public boolean addListener(DomainObjectListener<Series> listener) {
-        return this.listeners.add(listener);
-    }
-
-    //TODO Deregister SeriesListener
-    public boolean removeListener(DomainObjectListener<Series> listener) {
-        return this.listeners.remove(listener);
-    }
+    //Merge-------------------------------------------------------------------------------------------------------------
 
     public void mergeWith(Series other) {
         Validate.isNonNull(other, "other");
@@ -167,12 +150,47 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.notifyListeners();
     }
 
-    //TODO Specific notifications to SeriesListener
-    private void notifyListeners() {
+    //SeriesListener----------------------------------------------------------------------------------------------------
+
+    public boolean addListener(DomainObjectListener<Series> listener) {//TODO Register SeriesListener
+        return this.listeners.add(listener);
+    }
+
+    public boolean removeListener(DomainObjectListener<Series> listener) {//TODO Deregister SeriesListener
+        return this.listeners.remove(listener);
+    }
+
+    private void notifyListeners() {//TODO Specific notifications to SeriesListener
         for (DomainObjectListener<Series> listener : this.listeners) {
             listener.onUpdate(this);
         }
     }
+
+    //SeasonSetListener-------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onUpdate(SeasonSet entity) {//TODO Implement SeasonSetListener
+        this.notifyListeners();
+    }
+
+    //Object------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Series && ((Series) obj).id == this.id;
+    }
+
+    @Override
+    public String toString() {//TODO Remove
+        return this.name;
+    }
+
+    //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder {
         private int id;
