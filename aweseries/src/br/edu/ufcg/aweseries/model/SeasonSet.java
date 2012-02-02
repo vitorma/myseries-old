@@ -22,6 +22,7 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,12 +49,23 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
         this.listeners = new LinkedList<SeasonSetListener>();
     }
 
+    //TODO Remove
     public void addAllEpisodes(List<Episode> episodes) {
         Validate.isNonNull(episodes, "episodes should not be null");
 
         for (Episode e : episodes) {
             this.addEpisode(e);
         }
+    }
+
+    public SeasonSet includingAll(Collection<Episode> episodes) {
+        Validate.isNonNull(episodes, "episodes");
+
+        for (Episode e : episodes) {
+            this.addEpisode(e);
+        }
+
+        return this;
     }
 
     public void addEpisode(Episode episode) {

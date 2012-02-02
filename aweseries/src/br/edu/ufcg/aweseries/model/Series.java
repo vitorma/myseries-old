@@ -55,6 +55,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.id = id;
         this.name = name;
 
+        this.seasons = new SeasonSet(this.id);
         this.listeners = new HashSet<DomainObjectListener<Series>>();
     }
 
@@ -193,11 +194,12 @@ public class Series implements DomainObjectListener<SeasonSet> {
         private String genres;
         private String actors;
         private Bitmap posterBitmap;//TODO Keep a Poster instead of a Bitmap
-        private SeasonSet seasons;//TODO Create at the Series' constructor
+        private Set<Episode> episodes;
 
         //TODO Turn private: create public static Series.Builder Series.builder()
         public Builder() {
             this.id = Series.INVALID_ID;
+            this.episodes = new HashSet<Episode>();
         }
 
         public Builder withId(int id) {
@@ -272,23 +274,14 @@ public class Series implements DomainObjectListener<SeasonSet> {
             return this;
         }
 
-        //FIXME episode.seriesId == this.id (Be careful! withId was already called?)
-        //      It is better keeping a collection of episodes and including all ones in a SeasonSet created at the
-        //      Series' constructor.
         public Builder withEpisode(Episode episode) {
-            if (episode == null)
-                return this;
-
-            if (this.seasons == null) {
-                this.seasons = new SeasonSet(episode.seriesId());
-            }
-
-            this.seasons.addEpisode(episode);
+            this.episodes.add(episode);
             return this;
         }
 
         public Series build() {
             final Series series = new Series(this.id, this.name);
+
             series.status = this.status;
             series.airDay = this.airDay;
             series.airTime = this.airTime;
@@ -299,7 +292,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
             series.genres = this.genres;
             series.actors = this.actors;
             series.poster = this.posterBitmap != null ? new Poster(this.posterBitmap) : null;// TODO assign this.poster
-            series.seasons = this.seasons != null ? this.seasons : new SeasonSet(this.id);//TODO series.seasons.includingAll
+            series.seasons.includingAll(this.episodes);
 
             return series;
         }
