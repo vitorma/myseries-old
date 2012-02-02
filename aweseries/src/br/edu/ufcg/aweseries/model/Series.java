@@ -26,7 +26,6 @@ import java.util.Set;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class Series implements DomainObjectListener<SeasonSet> {
@@ -81,12 +80,6 @@ public class Series implements DomainObjectListener<SeasonSet> {
 
     public String airTime() {
         return this.airTime;
-    }
-
-    //TODO move this to GUI
-    public String airsDayAndTime() {
-        return Strings.isBlank(this.airDay()) ? "" : this.airDay().substring(0, 3) + " "
-                + this.airTime();
     }
 
     public String runtime() {
