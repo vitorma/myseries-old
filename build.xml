@@ -38,7 +38,18 @@
         </condition>
     </target>
 
-    <target name="build-myseries-release" depends="-check-release-conditions"
+    <target name="-report-when-not-releasing" depends="-check-release-conditions"
+            unless="should.build.a.release">
+            <echo>The release APK won't be built because the necessary properties</echo>
+            <echo>aren't set:</echo>
+            <echo>    key.store,</echo>
+            <echo>    key.alias,</echo>
+            <echo>    key.store.password, and</echo>
+            <echo>    key.alias.password</echo>
+    </target>
+
+    <target name="build-myseries-release" depends="-check-release-conditions,
+                                                   -report-when-not-releasing"
             if="should.build.a.release">
         <ant dir="myseries">
             <target name="release"/>
