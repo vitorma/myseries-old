@@ -27,18 +27,34 @@
 
     <!-- Build -->
 
-    <target name="build-myseries">
+    <target name="-check-release-conditions">
+        <condition property="should.build.a.release">
+            <and>
+                <isset property="key.store"/>
+                <isset property="key.alias"/>
+                <isset property="key.store.password"/>
+                <isset property="key.alias.password"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="build-myseries-release" depends="-check-release-conditions"
+            if="should.build.a.release">
         <ant dir="myseries">
             <target name="release"/>
-            <!--
             <target name="install"/>
-            -->
-        </ant> 
+        </ant>
+    </target>
+
+    <target name="build-myseries-debug">
         <ant dir="myseries">
             <target name="debug"/>
             <target name="install"/>
-        </ant> 
+        </ant>
     </target>
+
+    <target name="build-myseries" depends="build-myseries-release,
+                                           build-myseries-debug"/>
 
     <target name="build-jvm-unittests">
         <ant dir="myseries-unittest" target="compile"/>
