@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="MySeries" default="commit-stage">
+
     <property file="local.properties"/>
 
     <!-- Clean -->
@@ -17,11 +18,7 @@
     </target>
 
     <target name="clean-acceptancetests">
-        <echo>TODO: Clean acceptance tests</echo>
-        <!-- TODO -->
-        <!--
         <ant dir="myseries-acceptancetest" target="clean"/>
-        -->
     </target>
 
 
@@ -81,11 +78,11 @@
     </target>
 
     <target name="build-acceptancetests">
-        <echo>TODO: Build acceptance tests</echo>
         <!-- TODO -->
-        <!--
-        <ant dir="myseries-acceptancetest" target="clean"/>
-        -->
+        <ant dir="myseries-acceptancetest">
+            <target name="debug"/>
+            <target name="install"/>
+        </ant>
     </target>
 
 
@@ -99,6 +96,16 @@
 
     <target name="run-android-unittests">
         <ant dir="myseries-test">
+            <target name="test"/>
+            <target name="fetch-test-report"/>
+        </ant>
+    </target>
+
+
+    <!-- Acceptance Testing -->
+
+    <target name="run-acceptancetests">
+        <ant dir="myseries-acceptancetest">
             <target name="test"/>
             <target name="fetch-test-report"/>
         </ant>
@@ -123,10 +130,7 @@
         </parallel>
     </target>
 
-    <target name="acceptance-tests">
-        <!-- TODO -->
-        <echo>TODO: Acceptance testing MySeries</echo>
-    </target>
+    <target name="acceptance-tests" depends="run-acceptancetests"/>
 
 
     <!-- Deployment Pipeline Targets -->
