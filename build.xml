@@ -2,7 +2,7 @@
 <project name="MySeries" default="commit-stage">
     <property file="local.properties"/>
 
-<!-- Clean -->
+    <!-- Clean -->
 
     <target name="clean-myseries">
         <ant dir="myseries" target="clean"/>
@@ -25,9 +25,8 @@
     </target>
 
 
-<!-- Build -->
+    <!-- Build -->
 
-    <!-- Android release or debug -->
     <target name="-check-release-conditions">
         <condition property="should.build.a.release">
             <and>
@@ -41,59 +40,46 @@
 
     <target name="-report-when-not-releasing" depends="-check-release-conditions"
             unless="should.build.a.release">
-            <echo>The release APK won't be built because the necessary properties aren't set:</echo>
+            <echo>The release APK won't be built because the necessary properties</echo>
+            <echo>aren't set:</echo>
             <echo>    key.store,</echo>
             <echo>    key.alias,</echo>
             <echo>    key.store.password, and</echo>
             <echo>    key.alias.password</echo>
     </target>
 
-    <!-- Build MySeries -->
-    <target name="build-myseries-release" depends="-check-release-conditions"
+    <target name="build-myseries-release" depends="-check-release-conditions,
+                                                   -report-when-not-releasing"
             if="should.build.a.release">
+        <!-- This target creates the release APK and test if it can be succesfully
+             installed. It then uninstalls that APK, so the tests may run with the
+             debug-signed APK -->
+
         <ant dir="myseries">
             <target name="release"/>
             <target name="install"/>
+            <target name="uninstall"/>
         </ant>
     </target>
 
-    <target name="build-myseries-debug" depends="-check-release-conditions"
-            unless="should.build.a.release">
+    <target name="build-myseries-debug">
         <ant dir="myseries">
             <target name="debug"/>
             <target name="install"/>
         </ant>
     </target>
 
-    <target name="build-myseries" depends="build-myseries-release,
-                                           build-myseries-debug"/>
-
-    <!-- Build JVM UnitTests -->
     <target name="build-jvm-unittests">
         <ant dir="myseries-unittest" target="compile"/>
     </target>
 
-    <!-- Build Android UnitTests -->
-    <target name="build-android-unittests-release" depends="-check-release-conditions"
-            if="should.build.a.release">
-        <ant dir="myseries-test">
-            <target name="release"/>
-            <target name="install"/>
-        </ant>
-    </target>
-
-    <target name="build-android-unittests-debug" depends="-check-release-conditions"
-            unless="should.build.a.release">
+    <target name="build-android-unittests">
         <ant dir="myseries-test">
             <target name="debug"/>
             <target name="install"/>
         </ant>
     </target>
 
-    <target name="build-android-unittests" depends="build-android-unittests-release,
-                                                    build-android-unittests-debug"/>
-
-    <!-- Build AcceptanceTests -->
     <target name="build-acceptancetests">
         <echo>TODO: Build acceptance tests</echo>
         <!-- TODO -->
@@ -103,7 +89,7 @@
     </target>
 
 
-<!-- Unit Testing -->
+    <!-- Unit Testing -->
 
     <target name="run-jvm-unittests">
         <ant dir="myseries-unittest">
@@ -119,13 +105,14 @@
     </target>
 
 
-<!-- Main Targets -->
+    <!-- Main Targets -->
 
     <target name="clean" depends="clean-myseries,
                                   clean-jvm-unittests, clean-android-unittests,
                                   clean-acceptancetests"/>
 
-    <target name="build" depends="build-myseries,
+    <target name="build" depends="build-myseries-release,
+                                  build-myseries-debug,
                                   build-jvm-unittests, build-android-unittests,
                                   build-acceptancetests"/>
 
@@ -142,7 +129,8 @@
     </target>
 
 
-<!-- Deployment Pipeline Targets -->
+    <!-- Deployment Pipeline Targets -->
+
     <target name="commit-stage" depends="clean, build, unit-tests"/>
     <target name="acceptance-stage" depends="acceptance-tests"/>
 
