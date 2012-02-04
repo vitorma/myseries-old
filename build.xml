@@ -135,7 +135,7 @@
 
     <!-- Deployment Pipeline Targets -->
 
-    <target name="commit-stage" depends="clean, build, unit-tests"/>
+    <target name="commit-stage" depends="clean, build, unit-tests, acceptance-tests"/>
     <target name="acceptance-stage" depends="acceptance-tests"/>
 
 </project>
