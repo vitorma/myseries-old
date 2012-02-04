@@ -78,7 +78,6 @@
     </target>
 
     <target name="build-acceptancetests">
-        <!-- TODO -->
         <ant dir="myseries-acceptancetest">
             <target name="debug"/>
             <target name="install"/>
