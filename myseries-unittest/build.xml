@@ -38,7 +38,9 @@
     </target>
 
     <target name="-compile-tested-project">
-        <subant target="debug" buildpath="${tested.project.dir}"/>
+        <ant target="-compile" dir="${tested.project.dir}" inheritAll="false">
+            <property name="sdk.dir" value="${sdk.dir}"/>
+        </ant>
     </target>
 
     <target name="compile" depends="-compile-tested-project">
