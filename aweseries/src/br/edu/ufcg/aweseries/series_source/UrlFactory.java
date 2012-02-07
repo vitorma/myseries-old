@@ -56,12 +56,12 @@ public class UrlFactory {
     public URL urlForSeries(int seriesId, Language language) {
         Validate.isNonNull(language, "language");
 
-        String url = this.urlForSeries(seriesId, language.abbreviation());
+        String url = this.buildUrlForSeries(seriesId, language.abbreviation());
 
         return this.urlFrom(url);
     }
 
-    private String urlForSeries(int seriesId, String language) {
+    private String buildUrlForSeries(int seriesId, String language) {
         return this.mirrorXml()
                    .append(this.apiKey)
                    .append("/series/")
@@ -76,12 +76,12 @@ public class UrlFactory {
         Validate.isNonBlank(seriesName, "seriesName");
         Validate.isNonNull(language, "language");
 
-        String url = this.urlForSeriesSearch(seriesName, language.abbreviation());
+        String url = this.buildUrlForSeriesSearch(seriesName, language.abbreviation());
 
         return this.urlFrom(url);
     }
 
-    private String urlForSeriesSearch(String seriesName, String language) {
+    private String buildUrlForSeriesSearch(String seriesName, String language) {
         return this.mirrorXml()
                    .append("GetSeries.php?seriesname=")
                    .append(this.encode(seriesName))
@@ -102,6 +102,18 @@ public class UrlFactory {
 
     private String buildUrlForSeriesPoster(String fileName) {
         return this.mirrorBanners().append("_cache/").append(this.encode(fileName)).toString();
+    }
+
+    public URL urlForEpisodeImage(String fileName) {
+        Validate.isNonBlank(fileName, "fileName");
+
+        String url = this.buildUrlForEpisodeImage(fileName);
+
+        return this.urlFrom(url);
+    }
+
+    private String buildUrlForEpisodeImage(String fileName) {
+        return this.mirrorBanners().append(this.encode(fileName)).toString();
     }
 
     //URL---------------------------------------------------------------------------------------------------------------

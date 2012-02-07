@@ -29,16 +29,17 @@ import br.edu.ufcg.aweseries.series_source.UrlFactory;
 public class UrlFactoryTest {
     private static final String API_KEY = "AK1";
     private static final String BLANK_STRING = "  \n         \t  \n ";
+    private static final String NON_BLANK_STRING = "a";
 
     //Construction------------------------------------------------------------------------------------------------------
 
     @Test(expected=IllegalArgumentException.class)
-    public void constructingAnUrlSupplierWithNullApiKeyCausesIllegalArgumentException() {
+    public void constructingAnUrlFactoryWithNullApiKeyCausesIllegalArgumentException() {
         new UrlFactory(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void constructingAnUrlSupplierWithBlankApiKeyCausesIllegalArgumentException() {
+    public void constructingAnUrlFactoryWithBlankApiKeyCausesIllegalArgumentException() {
         new UrlFactory(BLANK_STRING);
     }
 
@@ -61,18 +62,28 @@ public class UrlFactoryTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesSearchWithNullLanguageCausesIllegalArgumentException() {
-        new UrlFactory(API_KEY).urlForSeriesSearch("a", null);
+        new UrlFactory(API_KEY).urlForSeriesSearch(NON_BLANK_STRING, null);
     }
 
     //Image-------------------------------------------------------------------------------------------------------------
 
     @Test(expected=IllegalArgumentException.class)
-    public void gettingAnUrlForPosterWithNullFileNameCausesIllegalArgumentException() {
+    public void gettingAnUrlForSeriesPosterWithNullFileNameCausesIllegalArgumentException() {
         new UrlFactory(API_KEY).urlForSeriesPoster(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void gettingAnUrlForPosterWithBlankFileNameCausesIllegalArgumentException() {
+    public void gettingAnUrlForSeriesPosterWithBlankFileNameCausesIllegalArgumentException() {
         new UrlFactory(API_KEY).urlForSeriesPoster(BLANK_STRING);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void gettingAnUrlForEpisodeImageWithNullFileNameCausesIllegalArgumentException() {
+        new UrlFactory(API_KEY).urlForEpisodeImage(null);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void gettingAnUrlForEpisodeImageWithBlankFileNameCausesIllegalArgumentException() {
+        new UrlFactory(API_KEY).urlForEpisodeImage(BLANK_STRING);
     }
 }
