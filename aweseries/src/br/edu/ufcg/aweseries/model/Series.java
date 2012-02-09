@@ -42,7 +42,8 @@ public class Series implements SeasonSetListener {
     private String overview;
     private String genres;
     private String actors;
-    private Poster poster;
+    private String posterFileName;
+    private Poster poster;//TODO Remove
     private SeasonSet seasons;
 
     private Set<DomainObjectListener<Series>> listeners;//TODO List<SeriesListener>
@@ -115,11 +116,15 @@ public class Series implements SeasonSetListener {
         return this.actors;
     }
 
-    public Poster poster() {
+    public String posterFileName() {
+        return this.posterFileName;
+    }
+
+    public Poster poster() {//TODO Remove
         return this.poster;
     }
 
-    public boolean hasPoster() {//TODO Maybe remove
+    public boolean hasPoster() {//TODO Remove
         return this.poster != null;
     }
 
@@ -145,7 +150,8 @@ public class Series implements SeasonSetListener {
         this.overview = other.overview;
         this.genres = other.genres;
         this.actors = other.actors;
-        this.poster = other.poster;
+        this.posterFileName = other.posterFileName;
+        this.poster = other.poster;//TODO Remove
         this.seasons.mergeWith(other.seasons);
 
         this.notifyListeners();
@@ -205,7 +211,9 @@ public class Series implements SeasonSetListener {
         private String overview;
         private String genres;
         private String actors;
-        private Bitmap posterBitmap;//TODO Keep a Poster instead of a Bitmap
+        private String posterFileName;
+
+        private Bitmap posterBitmap;//TODO Remove
         private Set<Episode> episodes;
 
         private Builder() {
@@ -268,7 +276,10 @@ public class Series implements SeasonSetListener {
             return this;
         }
 
-        //TODO withPoster(Poster)
+        public Builder withPosterFileName(String posterFileName) {
+            this.posterFileName = posterFileName;
+            return this;
+        }
 
         //TODO Remove
         public Builder withPoster(Bitmap posterBitmap) {
@@ -301,7 +312,8 @@ public class Series implements SeasonSetListener {
             series.overview = this.overview;
             series.genres = this.genres;
             series.actors = this.actors;
-            series.poster = this.posterBitmap != null ? new Poster(this.posterBitmap) : null;// TODO assign this.poster
+            series.posterFileName = this.posterFileName;
+            series.poster = this.posterBitmap != null ? new Poster(this.posterBitmap) : null;// TODO Remove
             series.seasons.includingAll(this.episodes);
 
             return series;
