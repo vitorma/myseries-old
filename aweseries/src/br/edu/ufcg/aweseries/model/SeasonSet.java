@@ -194,7 +194,6 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
         this.nextEpisodeToSee = next;
         this.notifyChangeNextEpisodeToSee();
-
     }
 
     //Iterators ------------------------------------------------------------------------------------
@@ -288,7 +287,7 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
     @Override
     public void onChangeNextEpisodeToSee(Season season) {
-        this.nextEpisodeToSee = this.findNextEpisodeToSee();
+        this.updateNextEpisodeToSee();
     }
 
     @Override
@@ -308,6 +307,6 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Season season) {
-        // TODO A better implementation
+        //SeasonSet is not interested in this event
     }
 }

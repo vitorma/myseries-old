@@ -57,6 +57,7 @@ public class Series implements SeasonSetListener {
         this.name = name;
 
         this.seasons = new SeasonSet(this.id);
+        this.seasons.register(this);
         this.listeners = new HashSet<DomainObjectListener<Series>>();
     }
 
