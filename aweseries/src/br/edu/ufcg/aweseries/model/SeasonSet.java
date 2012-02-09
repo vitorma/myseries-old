@@ -23,12 +23,10 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.util.Validate;
@@ -36,7 +34,6 @@ import br.edu.ufcg.aweseries.util.Validate;
 public class SeasonSet implements Iterable<Season>, SeasonListener {
     private TreeMap<Integer, Season> map;
     private int seriesId;
-    private Set<DomainObjectListener<SeasonSet>> domainObjectListeners;
     private List<SeasonSetListener> listeners;
     private Episode nextEpisodeToSee;
 
@@ -45,7 +42,6 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
         this.seriesId = seriesId;
         this.map = new TreeMap<Integer, Season>();
-        this.domainObjectListeners = new HashSet<DomainObjectListener<SeasonSet>>();
         this.listeners = new LinkedList<SeasonSetListener>();
     }
 
@@ -261,45 +257,32 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     }
 
     //Listeners ------------------------------------------------------------------------------------
-
-    @Deprecated
-    public boolean addListener(DomainObjectListener<SeasonSet> listener) {
-        return this.domainObjectListeners.add(listener);
-    }
-
-    @Deprecated
-    public boolean removeListener(DomainObjectListener<SeasonSet> listener) {
-        return this.domainObjectListeners.remove(listener);
-    }
-
+    
     public boolean deregister(SeasonSetListener listener) {
         return this.listeners.remove(listener);
     }
-
+    
     public boolean register(SeasonSetListener listener) {
         Validate.isNonNull(listener, "listener must not be null.");
-        return this.listeners.add(listener);
-    }
-
-    @Deprecated
-    private void notifyListeners() {
-        for (DomainObjectListener<SeasonSet> listener : this.domainObjectListeners) {
-            listener.onUpdate(this);
+        
+        if (this.listeners.contains(listener)) {
+            return false;
         }
+        
+        return this.listeners.add(listener);
     }
 
     private void notifyChangeNextEpisodeToSee() {
         for (SeasonSetListener listener : this.listeners) {
-            listener.onChangeNextEpisodeToSee();
+            listener.onChangeNextEpisodeToSee(this);
         }
     }
 
     private void notifyMerge() {
         for (SeasonSetListener listener : this.listeners) {
-            listener.onMerge();
+            listener.onMerge(this);
         }
     }
-
 
     //SeasonListener methods -----------------------------------------------------------------------
 
@@ -311,24 +294,20 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     @Override
     public void onMarkAsNotSeen(Season season) {
         this.updateNextEpisodeToSee();
-        this.notifyListeners(); //TODO: remove me ASAP
     }
 
     @Override
     public void onMarkAsSeen(Season season) {
         this.updateNextEpisodeToSee();
-        this.notifyListeners(); //TODO: remove me ASAP
     }
 
     @Override
     public void onMerge(Season season) {
         //SeasonSet is not interested in this event
-        this.notifyListeners(); //TODO: remove me ASAP
     }
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Season season) {
         // TODO A better implementation
-        this.notifyListeners();
     }
 }

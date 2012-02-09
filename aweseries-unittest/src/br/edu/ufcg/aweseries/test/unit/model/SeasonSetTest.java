@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.test.unit.model;
 
 import org.junit.Assert;
@@ -28,20 +27,20 @@ import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 import org.mockito.Mockito;
 
-import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.SeasonSet;
+import br.edu.ufcg.aweseries.model.SeasonSetListener;
 
 public class SeasonSetTest {
-    private SeasonSet seasons;
+    private SeasonSet seasonSet;
     private Episode episode1;
     private Episode episode2;
     private Episode episode3;
 
     @Before
     public void setUp() throws Exception {
-        this.seasons = new SeasonSet(1);
+        this.seasonSet = new SeasonSet(1);
         this.episode1 = Mockito.mock(Episode.class);
         this.episode2 = Mockito.mock(Episode.class);
         this.episode3 = Mockito.mock(Episode.class);
@@ -64,17 +63,17 @@ public class SeasonSetTest {
     
     @Test(expected = IllegalArgumentException.class)
     public final void testAddDuplicatedEpisode() {
-        this.seasons.addEpisode(this.episode1);
-        this.seasons.addEpisode(this.episode1);
+        this.seasonSet.addEpisode(this.episode1);
+        this.seasonSet.addEpisode(this.episode1);
     }
 
     @Test
     public final void testAddEpisode() {
-        this.seasons.addEpisode(this.episode1);
-        this.seasons.addEpisode(this.episode2);
-        this.seasons.addEpisode(this.episode3);
+        this.seasonSet.addEpisode(this.episode1);
+        this.seasonSet.addEpisode(this.episode2);
+        this.seasonSet.addEpisode(this.episode3);
 
-        for (final Season season : this.seasons.toArray()) {
+        for (final Season season : this.seasonSet.toArray()) {
             if (season.number() == 1) {
                 Assert.assertThat(season.episodes(), JUnitMatchers.hasItems(this.episode1, this.episode2));
                 Assert.assertEquals(2, season.episodes().size());
@@ -87,13 +86,13 @@ public class SeasonSetTest {
 
     @Test(expected = IllegalArgumentException.class)
     public final void testAddNullEpisode() {
-        this.seasons.addEpisode(null);
+        this.seasonSet.addEpisode(null);
     }
 
     @Test
     public final void testSeasonSet() {
-        Assert.assertNotNull(this.seasons.toArray());
-        Assert.assertEquals(0, this.seasons.toArray().length);
+        Assert.assertNotNull(this.seasonSet.toArray());
+        Assert.assertEquals(0, this.seasonSet.toArray().length);
     }
         
     //TODO: Remove me, test register()
@@ -101,14 +100,14 @@ public class SeasonSetTest {
     public void testAddListener() {
         SeasonSet seasonSet = new SeasonSet(1);
         
-        DomainObjectListener<SeasonSet> listener1 = Mockito.mock(DomainObjectListener.class);
-        DomainObjectListener<SeasonSet> listener2 = Mockito.mock(DomainObjectListener.class);
+        SeasonSetListener listener1 = Mockito.mock(SeasonSetListener.class);
+        SeasonSetListener listener2 = Mockito.mock(SeasonSetListener.class);
 
-        Mockito.verify(listener1, Mockito.times(0)).onUpdate(this.seasons);
-        Mockito.verify(listener2, Mockito.times(0)).onUpdate(this.seasons);       
+        Mockito.verify(listener1, Mockito.times(0)).onChangeNextEpisodeToSee(this.seasonSet);
+        Mockito.verify(listener2, Mockito.times(0)).onChangeNextEpisodeToSee(this.seasonSet);       
 
-        Assert.assertTrue(seasonSet.addListener(listener1));
-        Assert.assertFalse(seasonSet.addListener(listener1));
+        Assert.assertTrue(seasonSet.register(listener1));
+        Assert.assertFalse(seasonSet.register(listener1));
 
         Episode episode2 = Mockito.mock(Episode.class);
         Mockito.when(episode2.id()).thenReturn(123814);
@@ -120,7 +119,7 @@ public class SeasonSetTest {
 //        Mockito.verify(listener1, Mockito.times(1)).onUpdate(seasonSet);
 //        Mockito.verify(listener2, Mockito.times(0)).onUpdate(seasonSet);       
 
-        Assert.assertTrue(seasonSet.addListener(listener2));
+        Assert.assertTrue(seasonSet.register(listener2));
         
         Episode episode1 = Mockito.mock(Episode.class);
         Mockito.when(episode1.id()).thenReturn(123810);
@@ -141,15 +140,15 @@ public class SeasonSetTest {
     public void testRemoveListener() {
         SeasonSet seasonSet = new SeasonSet(1);
         
-        DomainObjectListener<SeasonSet> listener1 = Mockito.mock(DomainObjectListener.class);
-        DomainObjectListener<SeasonSet> listener2 = Mockito.mock(DomainObjectListener.class);
+        SeasonSetListener listener1 = Mockito.mock(SeasonSetListener.class);
+        SeasonSetListener listener2 = Mockito.mock(SeasonSetListener.class);
 
-        Mockito.verify(listener1, Mockito.times(0)).onUpdate(this.seasons);
-        Mockito.verify(listener2, Mockito.times(0)).onUpdate(this.seasons);       
+        Mockito.verify(listener1, Mockito.times(0)).onChangeNextEpisodeToSee(this.seasonSet);
+        Mockito.verify(listener2, Mockito.times(0)).onChangeNextEpisodeToSee(this.seasonSet);       
 
-        Assert.assertTrue(seasonSet.addListener(listener1));
-        Assert.assertTrue(seasonSet.addListener(listener2));
-        Assert.assertTrue(seasonSet.removeListener(listener2));
+        Assert.assertTrue(seasonSet.register(listener1));
+        Assert.assertTrue(seasonSet.register(listener2));
+        Assert.assertFalse(seasonSet.register(listener2));
         
         Episode episode2 = Mockito.mock(Episode.class);
         Mockito.when(episode2.id()).thenReturn(123814);
@@ -161,8 +160,8 @@ public class SeasonSetTest {
 //        Mockito.verify(listener1, Mockito.times(1)).onUpdate(seasonSet);
 //        Mockito.verify(listener2, Mockito.times(0)).onUpdate(seasonSet);
         
-        Assert.assertTrue(seasonSet.removeListener(listener1));
-        Assert.assertFalse(seasonSet.removeListener(listener1));
+        Assert.assertTrue(seasonSet.deregister(listener1));
+        Assert.assertFalse(seasonSet.deregister(listener1));
         
         Episode episode1 = Mockito.mock(Episode.class);
         Mockito.when(episode1.id()).thenReturn(123810);
