@@ -55,6 +55,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         "overview TEXT, " +
         "genres TEXT, " +
         "actors TEXT, " +
+        "posterFileName, " +
         "poster BLOB);";
 
     private static final String CREATE_TABLE_EPISODES =
@@ -245,6 +246,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put("overview", s.overview());
         cv.put("genres", s.genres());
         cv.put("actors", s.actors());
+        cv.put("posterFileName", s.posterFileName());
         cv.put("poster", s.poster() != null ? s.poster().toByteArray(): null);
         return cv;
     }
@@ -279,6 +281,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         .withOverview(c.getString(c.getColumnIndex("overview")))
         .withGenres(c.getString(c.getColumnIndex("genres")))
         .withActors(c.getString(c.getColumnIndex("actors")))
+        .withPosterFileName(c.getString(c.getColumnIndex("posterFileName")))
         .withPoster(c.getBlob(c.getColumnIndex("poster")))
         .build();
     }
