@@ -292,12 +292,12 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
     @Override
     public void onMarkAsNotSeen(Season season) {
-        this.updateNextEpisodeToSee();
+        //SeasonSet is not interested in this event
     }
 
     @Override
     public void onMarkAsSeen(Season season) {
-        this.updateNextEpisodeToSee();
+        //SeasonSet is not interested in this event
     }
 
     @Override
