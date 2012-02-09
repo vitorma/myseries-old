@@ -28,7 +28,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.util.Validate;
 
-public class Series implements DomainObjectListener<SeasonSet> {
+public class Series implements SeasonSetListener {
     public static final int INVALID_ID = -1;
 
     private int id;
@@ -57,6 +57,7 @@ public class Series implements DomainObjectListener<SeasonSet> {
         this.name = name;
 
         this.seasons = new SeasonSet(this.id);
+        this.seasons.register(this);
         this.listeners = new HashSet<DomainObjectListener<Series>>();
     }
 
@@ -167,9 +168,14 @@ public class Series implements DomainObjectListener<SeasonSet> {
     }
 
     //SeasonSetListener-------------------------------------------------------------------------------------------------
+    
+    @Override
+    public void onChangeNextEpisodeToSee(SeasonSet seasonSet) {
+        this.notifyListeners();
+    }
 
     @Override
-    public void onUpdate(SeasonSet entity) {//TODO Implement SeasonSetListener
+    public void onMerge(SeasonSet seasonSet) {
         this.notifyListeners();
     }
 
