@@ -1,5 +1,5 @@
 /*
- *   EpisodeElement.java
+ *   EpisodeElementHandler.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -35,7 +35,7 @@ import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
 
-public class EpisodeElement {
+public class EpisodeElementHandler {
     private static final String EPISODE = "Episode";
     private static final String ID = "id";
     private static final String SERIES_ID = "seriesid";
@@ -51,164 +51,164 @@ public class EpisodeElement {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    private Element wrappedElement;
+    private Element episodeElement;
     private Episode.Builder episodeBuilder;
 
     //Construction------------------------------------------------------------------------------------------------------
 
-    private EpisodeElement(RootElement root) {
-        Validate.isNonNull(root, "root");
+    private EpisodeElementHandler(RootElement rootElement) {
+        Validate.isNonNull(rootElement, "rootElement");
 
-        this.wrappedElement = root.requireChild(EPISODE);
+        this.episodeElement = rootElement.requireChild(EPISODE);
         this.episodeBuilder = Episode.builder();
     }
 
     //Factory-----------------------------------------------------------------------------------------------------------
 
-    public static EpisodeElement from(RootElement root) {
-        return new EpisodeElement(root);
+    public static EpisodeElementHandler from(RootElement rootElement) {
+        return new EpisodeElementHandler(rootElement);
     }
 
-    //Wrapped element---------------------------------------------------------------------------------------------------
+    //Episode element---------------------------------------------------------------------------------------------------
 
-    public Element wrappedElement() {
-        return this.wrappedElement;
+    public Element episodeElement() {
+        return this.episodeElement;
     }
 
     //Content handling--------------------------------------------------------------------------------------------------
 
-    public EpisodeElement withId() {
-        this.wrappedElement.getChild(ID).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingId() {
+        this.episodeElement.getChild(ID).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 int id = Numbers.parseInt(body, Episode.INVALID_ID);
-                EpisodeElement.this.episodeBuilder.withId(id);
+                EpisodeElementHandler.this.episodeBuilder.withId(id);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withSeriesId() {
-        this.wrappedElement.getChild(SERIES_ID).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingSeriesId() {
+        this.episodeElement.getChild(SERIES_ID).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 int seriesId = Numbers.parseInt(body, Series.INVALID_ID);
-                EpisodeElement.this.episodeBuilder.withSeriesId(seriesId);
+                EpisodeElementHandler.this.episodeBuilder.withSeriesId(seriesId);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withNumber() {
-        this.wrappedElement.getChild(NUMBER).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingNumber() {
+        this.episodeElement.getChild(NUMBER).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 int number = Numbers.parseInt(body, Episode.INVALID_NUMBER);
-                EpisodeElement.this.episodeBuilder.withNumber(number);
+                EpisodeElementHandler.this.episodeBuilder.withNumber(number);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withSeasonNumber() {
-        this.wrappedElement.getChild(SEASON_NUMBER).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingSeasonNumber() {
+        this.episodeElement.getChild(SEASON_NUMBER).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 int seasonNumber = Numbers.parseInt(body, Season.INVALID_NUMBER);
-                EpisodeElement.this.episodeBuilder.withSeasonNumber(seasonNumber);
+                EpisodeElementHandler.this.episodeBuilder.withSeasonNumber(seasonNumber);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withName() {
-        this.wrappedElement.getChild(NAME).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingName() {
+        this.episodeElement.getChild(NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                EpisodeElement.this.episodeBuilder.withName(body);
+                EpisodeElementHandler.this.episodeBuilder.withName(body);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withAirDate() {
-        this.wrappedElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingAirDate() {
+        this.episodeElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 Date airDate = Dates.parseDate(body, DATE_FORMAT, null);
-                EpisodeElement.this.episodeBuilder.withAirDate(airDate);
+                EpisodeElementHandler.this.episodeBuilder.withAirDate(airDate);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withOverview() {
-        this.wrappedElement.getChild(OVERVIEW).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingOverview() {
+        this.episodeElement.getChild(OVERVIEW).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                EpisodeElement.this.episodeBuilder.withOverview(body);
+                EpisodeElementHandler.this.episodeBuilder.withOverview(body);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withDirectors() {
-        this.wrappedElement.getChild(DIRECTORS).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingDirectors() {
+        this.episodeElement.getChild(DIRECTORS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 String directors = Strings.normalizePipeSeparated(body);
-                EpisodeElement.this.episodeBuilder.withDirectors(directors);
+                EpisodeElementHandler.this.episodeBuilder.withDirectors(directors);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withWriters() {
-        this.wrappedElement.getChild(WRITERS).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingWriters() {
+        this.episodeElement.getChild(WRITERS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 String writers = Strings.normalizePipeSeparated(body);
-                EpisodeElement.this.episodeBuilder.withWriters(writers);
+                EpisodeElementHandler.this.episodeBuilder.withWriters(writers);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withGuestStars() {
-        this.wrappedElement.getChild(GUEST_STARS).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingGuestStars() {
+        this.episodeElement.getChild(GUEST_STARS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 String guestStars = Strings.normalizePipeSeparated(body);
-                EpisodeElement.this.episodeBuilder.withGuestStars(guestStars);
+                EpisodeElementHandler.this.episodeBuilder.withGuestStars(guestStars);
             }
         });
 
         return this;
     }
 
-    public EpisodeElement withImageFileName() {
-        this.wrappedElement.getChild(IMAGE_FILE_NAME).setEndTextElementListener(new EndTextElementListener() {
+    public EpisodeElementHandler handlingImageFileName() {
+        this.episodeElement.getChild(IMAGE_FILE_NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                EpisodeElement.this.episodeBuilder.withImageFileName(body);
+                EpisodeElementHandler.this.episodeBuilder.withImageFileName(body);
             }
         });
 
         return this;
     }
 
-    //Handled content---------------------------------------------------------------------------------------------------
+    //Handled element---------------------------------------------------------------------------------------------------
 
-    public Episode handledContent() {
+    public Episode handledElement() {
         return this.episodeBuilder.build();
     }
 }

@@ -47,7 +47,7 @@ public class SeriesParser {
    public Series parse(int seriesId, Language language) {
         InputStream stream = this.streamFactory.streamForSeries(seriesId, language);
 
-        SeriesElement seriesElement = this.createSeriesElementFromRoot();
+        SeriesElementHandler seriesElement = this.createSeriesElementFromRoot();
 
         try {
             Xml.parse(stream, Xml.Encoding.UTF_8, this.rootElement.getContentHandler());
@@ -57,40 +57,40 @@ public class SeriesParser {
             throw new ParsingFailedException(e);
         }
 
-        return seriesElement.handledContent();
+        return seriesElement.handledElement();
     }
 
     //Element-----------------------------------------------------------------------------------------------------------
 
-    private SeriesElement createSeriesElementFromRoot() {
-        return SeriesElement.from(this.rootElement)
-            .withId()
-            .withName()
-            .withStatus()
-            .withAirDay()
-            .withAirTime()
-            .withAirDate()
-            .withRuntime()
-            .withNetwork()
-            .withOverview()
-            .withGenres()
-            .withActors()
-            .withPoster(this.streamFactory)
-            .withHandledContentOf(this.createEpisodeElementFromRoot());
+    private SeriesElementHandler createSeriesElementFromRoot() {
+        return SeriesElementHandler.from(this.rootElement)
+            .handlingId()
+            .handlingName()
+            .handlingStatus()
+            .handlingAirDay()
+            .handlingAirTime()
+            .handlingAirDate()
+            .handlingRuntime()
+            .handlingNetwork()
+            .handlingOverview()
+            .handlingGenres()
+            .handlingActors()
+            .handlingPoster(this.streamFactory)
+            .handlingEpisodesWith(this.createEpisodeElementFromRoot());
     }
 
-    private EpisodeElement createEpisodeElementFromRoot() {
-        return EpisodeElement.from(this.rootElement)
-            .withId()
-            .withSeriesId()
-            .withNumber()
-            .withSeasonNumber()
-            .withName()
-            .withAirDate()
-            .withOverview()
-            .withDirectors()
-            .withWriters()
-            .withGuestStars()
-            .withImageFileName();
+    private EpisodeElementHandler createEpisodeElementFromRoot() {
+        return EpisodeElementHandler.from(this.rootElement)
+            .handlingId()
+            .handlingSeriesId()
+            .handlingNumber()
+            .handlingSeasonNumber()
+            .handlingName()
+            .handlingAirDate()
+            .handlingOverview()
+            .handlingDirectors()
+            .handlingWriters()
+            .handlingGuestStars()
+            .handlingImageFileName();
     }
 }

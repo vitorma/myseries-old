@@ -1,5 +1,5 @@
 /*
- *   SeriesElement.java
+ *   SeriesElementHandler.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -35,7 +35,7 @@ import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
 
-public class SeriesElement {
+public class SeriesElementHandler {
     private static final String SERIES = "Series";
     private static final String ID = "id";
     private static final String NAME = "SeriesName";
@@ -50,171 +50,171 @@ public class SeriesElement {
     private static final String ACTORS = "Actors";
     private static final String POSTER = "poster";
 
-    private Element wrappedElement;
+    private Element seriesElement;
     private Series.Builder seriesBuilder;
 
     //Construction------------------------------------------------------------------------------------------------------
 
-    private SeriesElement(RootElement root) {
-        Validate.isNonNull(root, "root");
+    private SeriesElementHandler(RootElement rootElement) {
+        Validate.isNonNull(rootElement, "rootElement");
 
-        this.wrappedElement = root.requireChild(SERIES);
+        this.seriesElement = rootElement.requireChild(SERIES);
         this.seriesBuilder = Series.builder();
     }
 
     //Factory-----------------------------------------------------------------------------------------------------------
 
-    public static SeriesElement from(RootElement root) {
-        return new SeriesElement(root);
+    public static SeriesElementHandler from(RootElement rootElement) {
+        return new SeriesElementHandler(rootElement);
     }
 
     //Content handling--------------------------------------------------------------------------------------------------
 
-    public SeriesElement withId() {
-        this.wrappedElement.getChild(ID).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingId() {
+        this.seriesElement.getChild(ID).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 int id = Numbers.parseInt(body, Series.INVALID_ID);
-                SeriesElement.this.seriesBuilder.withId(id);
+                SeriesElementHandler.this.seriesBuilder.withId(id);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withName() {
-        this.wrappedElement.getChild(NAME).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingName() {
+        this.seriesElement.getChild(NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withName(body);
+                SeriesElementHandler.this.seriesBuilder.withName(body);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withStatus() {
-        this.wrappedElement.getChild(STATUS).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingStatus() {
+        this.seriesElement.getChild(STATUS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withStatus(body);
+                SeriesElementHandler.this.seriesBuilder.withStatus(body);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withAirDay() {
-        this.wrappedElement.getChild(AIR_DAY).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingAirDay() {
+        this.seriesElement.getChild(AIR_DAY).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withAirDay(body);
+                SeriesElementHandler.this.seriesBuilder.withAirDay(body);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withAirTime() {
-        this.wrappedElement.getChild(AIR_TIME).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingAirTime() {
+        this.seriesElement.getChild(AIR_TIME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withAirTime(body);
+                SeriesElementHandler.this.seriesBuilder.withAirTime(body);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withAirDate() {
-        this.wrappedElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingAirDate() {
+        this.seriesElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withAirDate(body);
+                SeriesElementHandler.this.seriesBuilder.withAirDate(body);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withRuntime() {
-        this.wrappedElement.getChild(RUNTIME).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingRuntime() {
+        this.seriesElement.getChild(RUNTIME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withRuntime(body);
+                SeriesElementHandler.this.seriesBuilder.withRuntime(body);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withNetwork() {
-        this.wrappedElement.getChild(NETWORK).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingNetwork() {
+        this.seriesElement.getChild(NETWORK).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withNetwork(body);
+                SeriesElementHandler.this.seriesBuilder.withNetwork(body);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withOverview() {
-        this.wrappedElement.getChild(OVERVIEW).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingOverview() {
+        this.seriesElement.getChild(OVERVIEW).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElement.this.seriesBuilder.withOverview(body);
+                SeriesElementHandler.this.seriesBuilder.withOverview(body);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withGenres() {
-        this.wrappedElement.getChild(GENRES).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingGenres() {
+        this.seriesElement.getChild(GENRES).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 String genres = Strings.normalizePipeSeparated(body);
-                SeriesElement.this.seriesBuilder.withGenres(genres);
+                SeriesElementHandler.this.seriesBuilder.withGenres(genres);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withActors() {
-        this.wrappedElement.getChild(ACTORS).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingActors() {
+        this.seriesElement.getChild(ACTORS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 String actors = Strings.normalizePipeSeparated(body);
-                SeriesElement.this.seriesBuilder.withActors(actors);
+                SeriesElementHandler.this.seriesBuilder.withActors(actors);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withPoster(final StreamFactory streamFactory) {
+    public SeriesElementHandler handlingPoster(final StreamFactory streamFactory) {//TODO handlingPosterFileName()
         Validate.isNonNull(streamFactory, "streamFactory");
 
-        this.wrappedElement.getChild(POSTER).setEndTextElementListener(new EndTextElementListener() {
+        this.seriesElement.getChild(POSTER).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
                 Bitmap bitmap = scaledBitmapFrom(body, streamFactory);
-                SeriesElement.this.seriesBuilder.withPoster(bitmap);
+                SeriesElementHandler.this.seriesBuilder.withPoster(bitmap);
             }
         });
 
         return this;
     }
 
-    public SeriesElement withHandledContentOf(final EpisodeElement episodeElement) {
-        Validate.isNonNull(episodeElement, "episodeElement");
+    public SeriesElementHandler handlingEpisodesWith(final EpisodeElementHandler episodeElementHandler) {
+        Validate.isNonNull(episodeElementHandler, "episodeElementHandler");
 
-        episodeElement.wrappedElement().setEndElementListener(new EndElementListener() {
+        episodeElementHandler.episodeElement().setEndElementListener(new EndElementListener() {
             @Override
             public void end() {
-                SeriesElement.this.seriesBuilder.withEpisode(episodeElement.handledContent());
+                SeriesElementHandler.this.seriesBuilder.withEpisode(episodeElementHandler.handledElement());
             }
         });
 
@@ -223,15 +223,15 @@ public class SeriesElement {
 
     //Handled content---------------------------------------------------------------------------------------------------
 
-    public Series handledContent() {
+    public Series handledElement() {
         return this.seriesBuilder.build();
     }
 
-    public SeriesElement addingHandledContentTo(final Collection<Series> seriesCollection) {
-        this.wrappedElement.setEndElementListener(new EndElementListener() {
+    public SeriesElementHandler addingHandledElementTo(final Collection<Series> seriesCollection) {
+        this.seriesElement.setEndElementListener(new EndElementListener() {
             @Override
             public void end() {
-                seriesCollection.add(SeriesElement.this.handledContent());
+                seriesCollection.add(SeriesElementHandler.this.handledElement());
             }
         });
 
@@ -240,7 +240,7 @@ public class SeriesElement {
 
     //Auxiliary---------------------------------------------------------------------------------------------------------
 
-    private static Bitmap scaledBitmapFrom(String fileName, StreamFactory streamFactory) {
+    private static Bitmap scaledBitmapFrom(String fileName, StreamFactory streamFactory) {//TODO Remove me ASAP
         if (Strings.isBlank(fileName)) return null;
         InputStream stream = streamFactory.streamForSeriesPoster(fileName);
         return BitmapFactory.decodeStream(stream);

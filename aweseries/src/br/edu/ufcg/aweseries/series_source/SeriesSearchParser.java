@@ -52,7 +52,7 @@ public class SeriesSearchParser {
         InputStream stream = this.streamFactory.streamForSeriesSearch(seriesName, language);
 
         List<Series> searchResult = new ArrayList<Series>();
-        this.createSeriesElementFromRoot().addingHandledContentTo(searchResult);
+        this.createSeriesElementFromRoot().addingHandledElementTo(searchResult);
 
         try {
             Xml.parse(stream, Xml.Encoding.UTF_8, this.rootElement.getContentHandler());
@@ -67,7 +67,7 @@ public class SeriesSearchParser {
 
     //Element-----------------------------------------------------------------------------------------------------------
 
-    private SeriesElement createSeriesElementFromRoot() {
-        return SeriesElement.from(this.rootElement).withId().withName().withOverview();
+    private SeriesElementHandler createSeriesElementFromRoot() {
+        return SeriesElementHandler.from(this.rootElement).handlingId().handlingName().handlingOverview();
     }
 }
