@@ -121,6 +121,12 @@ public abstract class SampleSeries {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
+            @Override
+            public InputStream streamForEpisodeImage(String fileName) {
+                // TODO Auto-generated method stub
+                return null;
+            }
 		});
 
 		return seriesParser.parse(this.id(), Language.EN);

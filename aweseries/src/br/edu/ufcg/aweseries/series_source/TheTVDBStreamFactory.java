@@ -40,22 +40,28 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
     @Override
     public InputStream streamForSeries(int seriesId, Language language) {
-        URL seriesUrl = this.urlFactory.urlForSeries(seriesId, language);
-        return this.buffered(this.streamFor(seriesUrl));
+        URL url = this.urlFactory.urlForSeries(seriesId, language);
+        return this.buffered(this.streamFrom(this.connectionTo(url)));
     }
 
     @Override
     public InputStream streamForSeriesSearch(String seriesName, Language language) {
-        URL seriesSearchUrl = this.urlFactory.urlForSeriesSearch(seriesName, language);
-        return this.buffered(this.streamFor(seriesSearchUrl));
+        URL url = this.urlFactory.urlForSeriesSearch(seriesName, language);
+        return this.buffered(this.streamFrom(this.connectionTo(url)));
     }
 
     //Image-------------------------------------------------------------------------------------------------------------
 
     @Override
     public InputStream streamForSeriesPoster(String fileName) {
-        URL seriesPosterUrl = this.urlFactory.urlForSeriesPoster(fileName);
-        return this.streamFor(seriesPosterUrl);
+        URL url = this.urlFactory.urlForSeriesPoster(fileName);
+        return this.buffered(this.streamFrom(this.connectionTo(url)));
+    }
+
+    @Override
+    public InputStream streamForEpisodeImage(String fileName) {
+        URL url = this.urlFactory.urlForEpisodeImage(fileName);
+        return this.buffered(this.streamFrom(this.connectionTo(url)));
     }
 
     //Stream------------------------------------------------------------------------------------------------------------
@@ -64,15 +70,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
         return new BufferedInputStream(stream);
     }
 
-    private InputStream streamFor(URL url) {
-        URLConnection connection = null;
-
-        try {
-            connection = url.openConnection();
-        } catch (IOException e) {
-            throw new ConnectionFailedException(e);
-        }
-
+    private InputStream streamFrom(URLConnection connection) {
         InputStream stream = null;
 
         try {
@@ -82,5 +80,20 @@ public class TheTVDBStreamFactory implements StreamFactory {
         }
 
         return stream;
+    }
+
+    //Connection--------------------------------------------------------------------------------------------------------
+
+    private URLConnection connectionTo(URL url) {
+        URLConnection connection = null;
+
+        try {
+            connection = url.openConnection();
+            connection.connect();
+        } catch (IOException e) {
+            throw new ConnectionFailedException(e);
+        }
+
+        return connection;
     }
 }

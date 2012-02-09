@@ -29,6 +29,7 @@ import br.edu.ufcg.aweseries.series_source.TheTVDBStreamFactory;
 public class TheTVDBStreamFactoryTest {
     private static final String BLANK_STRING = "  \n         \t  \n ";
     private static final String API_KEY = "AK1";
+    private static final String NON_BLANK_STRING = "a";
 
     //Construction------------------------------------------------------------------------------------------------------
 
@@ -61,7 +62,7 @@ public class TheTVDBStreamFactoryTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesSearchWithNullLanguageCausesIllegalArgumentException() {
-        new TheTVDBStreamFactory(API_KEY).streamForSeriesSearch("a", null);
+        new TheTVDBStreamFactory(API_KEY).streamForSeriesSearch(NON_BLANK_STRING, null);
     }
 
     //Image-------------------------------------------------------------------------------------------------------------
@@ -74,5 +75,15 @@ public class TheTVDBStreamFactoryTest {
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesPosterWithBlankFileNameCausesIllegalArgumentException() {
         new TheTVDBStreamFactory(API_KEY).streamForSeriesPoster(BLANK_STRING);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void gettingStreamForEpisodeImageWithNullFileNameCausesIllegalArgumentException() {
+        new TheTVDBStreamFactory(API_KEY).streamForEpisodeImage(null);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void gettingStreamForEpisodeImageWithBlankFileNameCausesIllegalArgumentException() {
+        new TheTVDBStreamFactory(API_KEY).streamForEpisodeImage(BLANK_STRING);
     }
 }

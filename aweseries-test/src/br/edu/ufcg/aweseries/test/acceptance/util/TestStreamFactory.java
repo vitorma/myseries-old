@@ -71,4 +71,10 @@ public class TestStreamFactory implements StreamFactory {
 			throw new IllegalArgumentException(parameterName + " should not be blank");
 	}
 
+    @Override
+    public InputStream streamForEpisodeImage(String fileName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

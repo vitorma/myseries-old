@@ -23,7 +23,6 @@ package br.edu.ufcg.aweseries.series_source;
 
 import java.io.InputStream;
 
-
 public interface StreamFactory {
 
     public InputStream streamForSeries(int seriesId, Language language);
@@ -31,4 +30,6 @@ public interface StreamFactory {
     public InputStream streamForSeriesSearch(String seriesName, Language language);
 
     public InputStream streamForSeriesPoster(String fileName);
+
+    public InputStream streamForEpisodeImage(String fileName);
 }

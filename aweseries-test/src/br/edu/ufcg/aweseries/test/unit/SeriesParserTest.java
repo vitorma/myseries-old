@@ -188,6 +188,12 @@ public class SeriesParserTest extends TestCase {
 			// TODO Auto-generated method stub
 			return null;
 		}
+
+        @Override
+        public InputStream streamForEpisodeImage(String fileName) {
+            // TODO Auto-generated method stub
+            return null;
+        }
 	}
 
 	public void testNullStreamFactoryThrowsException() {
