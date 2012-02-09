@@ -21,6 +21,7 @@
 
 package br.edu.ufcg.aweseries.model;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -128,10 +129,17 @@ public class Series implements SeasonSetListener {
         return this.poster != null;
     }
 
-    //Season------------------------------------------------------------------------------------------------------------
+    //Seasons-----------------------------------------------------------------------------------------------------------
 
     public SeasonSet seasons() {
         return this.seasons;
+    }
+
+    //Episodes----------------------------------------------------------------------------------------------------------
+
+    public Series includingAll(Collection<Episode> episodes) {
+        this.seasons.includingAll(episodes);
+        return this;
     }
 
     //Merge-------------------------------------------------------------------------------------------------------------
