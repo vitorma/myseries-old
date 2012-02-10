@@ -21,11 +21,13 @@
 
 package br.edu.ufcg.aweseries.test.unit.thetvdb;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 import br.edu.ufcg.aweseries.series_source.Language;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import br.edu.ufcg.aweseries.series_source.UnsupportedLanguageException;
 
 public class LanguageTests {
 
@@ -48,8 +50,8 @@ public class LanguageTests {
         Language.from(null);
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void languageFromInvalidAbbreviationThrowsIllegalArgumentException() {
+    @Test(expected=UnsupportedLanguageException.class)
+    public void languageFromInvalidAbbreviationThrowsUnsupportedLanguageException() {
         Language.from("zz");
     }
 

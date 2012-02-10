@@ -42,16 +42,15 @@ public enum Language {
             if (l.abbreviation.equalsIgnoreCase(abbreviation)) return l;
         }
 
-        throw new IllegalArgumentException();//TODO throw new UnsupportedLanguageException()
+        throw new UnsupportedLanguageException(abbreviation);
     }
 
     public static Language from(String abbreviation, Language alternative) {
-        Validate.isNonNull(abbreviation, "abbreviation");//TODO Let the other method perform this check
         Validate.isNonNull(alternative, "alternative");
 
         try {
             return from(abbreviation);
-        } catch (Exception e) {//TODO catch (UnsupportedLanguageException e)
+        } catch (UnsupportedLanguageException e) {
             return alternative;
         }
     }
