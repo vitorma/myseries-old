@@ -35,6 +35,10 @@ public enum Language {
         this.abbreviation = abbreviation;
     }
 
+    public String abbreviation() {
+        return this.abbreviation;
+    }
+
     public static Language from(String abbreviation) {
         Validate.isNonNull(abbreviation, "abbreviation");
 
@@ -53,10 +57,6 @@ public enum Language {
         } catch (UnsupportedLanguageException e) {
             return alternative;
         }
-    }
-
-    public String abbreviation() {
-        return this.abbreviation;
     }
 }
 
