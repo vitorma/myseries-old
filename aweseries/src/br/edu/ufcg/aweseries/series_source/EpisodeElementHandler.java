@@ -23,10 +23,16 @@ package br.edu.ufcg.aweseries.series_source;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.xml.sax.Attributes;
 
 import android.sax.Element;
+import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
+import android.sax.StartElementListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.Series;
@@ -53,6 +59,7 @@ public class EpisodeElementHandler {
 
     private Element episodeElement;
     private Episode.Builder episodeBuilder;
+    private List<Episode> results;
 
     //Construction------------------------------------------------------------------------------------------------------
 
@@ -60,7 +67,10 @@ public class EpisodeElementHandler {
         Validate.isNonNull(rootElement, "rootElement");
 
         this.episodeElement = rootElement.requireChild(EPISODE);
-        this.episodeBuilder = Episode.builder();
+        this.results = new LinkedList<Episode>();
+
+        this.initializeTheBuilderAtTheStartOfEachEpisodeElement();
+        this.storeTheCurrentResultAtTheEndOfEachEpisodeElement();
     }
 
     //Factory-----------------------------------------------------------------------------------------------------------
@@ -71,11 +81,25 @@ public class EpisodeElementHandler {
 
     //Episode element---------------------------------------------------------------------------------------------------
 
-    public Element episodeElement() {
-        return this.episodeElement;
+    private void storeTheCurrentResultAtTheEndOfEachEpisodeElement() {
+        this.episodeElement.setEndElementListener(new EndElementListener() {
+            @Override
+            public void end() {
+                EpisodeElementHandler.this.results.add(EpisodeElementHandler.this.currentResult());
+            }
+        });
     }
 
-    //Content handling--------------------------------------------------------------------------------------------------
+    private void initializeTheBuilderAtTheStartOfEachEpisodeElement() {
+        this.episodeElement.setStartElementListener(new StartElementListener() {
+            @Override
+            public void start(Attributes attributes) {
+                EpisodeElementHandler.this.episodeBuilder = Episode.builder();
+            }
+        });
+    }
+
+    //Children elements-------------------------------------------------------------------------------------------------
 
     public EpisodeElementHandler handlingId() {
         this.episodeElement.getChild(ID).setEndTextElementListener(new EndTextElementListener() {
@@ -206,9 +230,13 @@ public class EpisodeElementHandler {
         return this;
     }
 
-    //Handled element---------------------------------------------------------------------------------------------------
+    //Results-----------------------------------------------------------------------------------------------------------
 
-    public Episode handledElement() {
+    public Episode currentResult() {
         return this.episodeBuilder.build();
+    }
+
+    public List<Episode> allResults() {
+        return this.results;
     }
 }

@@ -63,13 +63,13 @@ public class UrlFactory {
 
     private String buildUrlForSeries(int seriesId, String language) {
         return this.mirrorXml()
-                   .append(this.apiKey)
-                   .append("/series/")
-                   .append(seriesId)
-                   .append("/all/")
-                   .append(language)
-                   .append(".xml")
-                   .toString();
+            .append(this.apiKey)
+            .append("/series/")
+            .append(seriesId)
+            .append("/all/")
+            .append(language)
+            .append(".xml")
+            .toString();
     }
 
     public URL urlForSeriesSearch(String seriesName, Language language) {
@@ -83,11 +83,11 @@ public class UrlFactory {
 
     private String buildUrlForSeriesSearch(String seriesName, String language) {
         return this.mirrorXml()
-                   .append("GetSeries.php?seriesname=")
-                   .append(this.encode(seriesName))
-                   .append("&language=")
-                   .append(language)
-                   .toString();
+            .append("GetSeries.php?seriesname=")
+            .append(this.encode(seriesName))
+            .append("&language=")
+            .append(language)
+            .toString();
     }
 
     //Image-------------------------------------------------------------------------------------------------------------

@@ -23,17 +23,19 @@ package br.edu.ufcg.aweseries.series_source;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 import android.sax.RootElement;
 import android.util.Xml;
+import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class SeriesParser {
     private StreamFactory streamFactory;
-    private RootElement rootElement;
 
     //Construction------------------------------------------------------------------------------------------------------
 
@@ -41,56 +43,74 @@ public class SeriesParser {
         Validate.isNonNull(streamFactory, "streamFactory");
 
         this.streamFactory = streamFactory;
-        this.rootElement = new RootElement("Data");
     }
 
-   public Series parse(int seriesId, Language language) {
+    //Parse-------------------------------------------------------------------------------------------------------------
+
+    public Series parse(int seriesId, Language language) {
         InputStream stream = this.streamFactory.streamForSeries(seriesId, language);
 
-        SeriesElementHandler seriesElement = this.createSeriesElementFromRoot();
+        Content content = new Content();
 
         try {
-            Xml.parse(stream, Xml.Encoding.UTF_8, this.rootElement.getContentHandler());
+            Xml.parse(stream, Xml.Encoding.UTF_8, content.handler());
         } catch (IOException e) {
             throw new ParsingFailedException(e);
         } catch (SAXException e) {
             throw new ParsingFailedException(e);
         }
 
-        return seriesElement.handledElement();
+        return content.handled();
     }
 
-    //Element-----------------------------------------------------------------------------------------------------------
+    //Content-----------------------------------------------------------------------------------------------------------
 
-    private SeriesElementHandler createSeriesElementFromRoot() {
-        return SeriesElementHandler.from(this.rootElement)
-            .handlingId()
-            .handlingName()
-            .handlingStatus()
-            .handlingAirDay()
-            .handlingAirTime()
-            .handlingAirDate()
-            .handlingRuntime()
-            .handlingNetwork()
-            .handlingOverview()
-            .handlingGenres()
-            .handlingActors()
-            .handlingPoster(this.streamFactory)
-            .handlingEpisodesWith(this.createEpisodeElementFromRoot());
-    }
+    private static class Content {
+        private static final String DATA = "Data";
 
-    private EpisodeElementHandler createEpisodeElementFromRoot() {
-        return EpisodeElementHandler.from(this.rootElement)
-            .handlingId()
-            .handlingSeriesId()
-            .handlingNumber()
-            .handlingSeasonNumber()
-            .handlingName()
-            .handlingAirDate()
-            .handlingOverview()
-            .handlingDirectors()
-            .handlingWriters()
-            .handlingGuestStars()
-            .handlingImageFileName();
+        private RootElement rootElement;
+        private SeriesElementHandler seriesElementHandler;
+        private EpisodeElementHandler episodeElementHandler;
+
+        private Content() {
+            this.rootElement = new RootElement(DATA);
+
+            this.seriesElementHandler = SeriesElementHandler.from(this.rootElement)
+                .handlingId()
+                .handlingName()
+                .handlingStatus()
+                .handlingAirDay()
+                .handlingAirTime()
+                .handlingAirDate()
+                .handlingRuntime()
+                .handlingNetwork()
+                .handlingOverview()
+                .handlingGenres()
+                .handlingActors()
+                .handlingPosterFileName();
+
+            this.episodeElementHandler = EpisodeElementHandler.from(this.rootElement)
+                .handlingId()
+                .handlingSeriesId()
+                .handlingNumber()
+                .handlingSeasonNumber()
+                .handlingName()
+                .handlingAirDate()
+                .handlingOverview()
+                .handlingDirectors()
+                .handlingWriters()
+                .handlingGuestStars()
+                .handlingImageFileName();
+        }
+
+        private ContentHandler handler() {
+            return this.rootElement.getContentHandler();
+        }
+
+        private Series handled() {
+            Series series = this.seriesElementHandler.currentResult();
+            List<Episode> episodes = this.episodeElementHandler.allResults();
+            return series.includingAll(episodes);
+        }
     }
 }

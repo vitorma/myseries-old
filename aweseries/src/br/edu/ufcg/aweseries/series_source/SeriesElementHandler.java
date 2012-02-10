@@ -21,15 +21,16 @@
 
 package br.edu.ufcg.aweseries.series_source;
 
-import java.io.InputStream;
-import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import org.xml.sax.Attributes;
+
 import android.sax.Element;
 import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
+import android.sax.StartElementListener;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
@@ -48,10 +49,11 @@ public class SeriesElementHandler {
     private static final String OVERVIEW = "Overview";
     private static final String GENRES = "Genre";
     private static final String ACTORS = "Actors";
-    private static final String POSTER = "poster";
+    private static final String POSTER_FILE_NAME = "poster";
 
     private Element seriesElement;
     private Series.Builder seriesBuilder;
+    private List<Series> results;
 
     //Construction------------------------------------------------------------------------------------------------------
 
@@ -59,7 +61,10 @@ public class SeriesElementHandler {
         Validate.isNonNull(rootElement, "rootElement");
 
         this.seriesElement = rootElement.requireChild(SERIES);
-        this.seriesBuilder = Series.builder();
+        this.results = new LinkedList<Series>();
+
+        this.initializeTheBuilderAtTheStartOfEachSeriesElement();
+        this.storeTheCurrentResultAtTheEndOfEachSeriesElement();
     }
 
     //Factory-----------------------------------------------------------------------------------------------------------
@@ -68,7 +73,27 @@ public class SeriesElementHandler {
         return new SeriesElementHandler(rootElement);
     }
 
-    //Content handling--------------------------------------------------------------------------------------------------
+    //Episode element---------------------------------------------------------------------------------------------------
+
+    private void initializeTheBuilderAtTheStartOfEachSeriesElement() {
+        this.seriesElement.setStartElementListener(new StartElementListener() {
+            @Override
+            public void start(Attributes attributes) {
+                SeriesElementHandler.this.seriesBuilder = Series.builder();
+            }
+        });
+    }
+
+    private void storeTheCurrentResultAtTheEndOfEachSeriesElement() {
+        this.seriesElement.setEndElementListener(new EndElementListener() {
+            @Override
+            public void end() {
+                SeriesElementHandler.this.results.add(SeriesElementHandler.this.currentResult());
+            }
+        });
+    }
+
+    //Children elements-------------------------------------------------------------------------------------------------
 
     public SeriesElementHandler handlingId() {
         this.seriesElement.getChild(ID).setEndTextElementListener(new EndTextElementListener() {
@@ -194,55 +219,24 @@ public class SeriesElementHandler {
         return this;
     }
 
-    public SeriesElementHandler handlingPoster(final StreamFactory streamFactory) {//TODO handlingPosterFileName()
-        Validate.isNonNull(streamFactory, "streamFactory");
-
-        this.seriesElement.getChild(POSTER).setEndTextElementListener(new EndTextElementListener() {
+    public SeriesElementHandler handlingPosterFileName() {
+        this.seriesElement.getChild(POSTER_FILE_NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                Bitmap bitmap = scaledBitmapFrom(body, streamFactory);
-                SeriesElementHandler.this.seriesBuilder.withPoster(bitmap);
+                SeriesElementHandler.this.seriesBuilder.withPosterFileName(body);
             }
         });
 
         return this;
     }
 
-    public SeriesElementHandler handlingEpisodesWith(final EpisodeElementHandler episodeElementHandler) {
-        Validate.isNonNull(episodeElementHandler, "episodeElementHandler");
+    //Results-----------------------------------------------------------------------------------------------------------
 
-        episodeElementHandler.episodeElement().setEndElementListener(new EndElementListener() {
-            @Override
-            public void end() {
-                SeriesElementHandler.this.seriesBuilder.withEpisode(episodeElementHandler.handledElement());
-            }
-        });
-
-        return this;
-    }
-
-    //Handled content---------------------------------------------------------------------------------------------------
-
-    public Series handledElement() {
+    public Series currentResult() {
         return this.seriesBuilder.build();
     }
 
-    public SeriesElementHandler addingHandledElementTo(final Collection<Series> seriesCollection) {
-        this.seriesElement.setEndElementListener(new EndElementListener() {
-            @Override
-            public void end() {
-                seriesCollection.add(SeriesElementHandler.this.handledElement());
-            }
-        });
-
-        return this;
-    }
-
-    //Auxiliary---------------------------------------------------------------------------------------------------------
-
-    private static Bitmap scaledBitmapFrom(String fileName, StreamFactory streamFactory) {//TODO Remove me ASAP
-        if (Strings.isBlank(fileName)) return null;
-        InputStream stream = streamFactory.streamForSeriesPoster(fileName);
-        return BitmapFactory.decodeStream(stream);
+    public List<Series> allResults() {
+        return this.results;
     }
 }
