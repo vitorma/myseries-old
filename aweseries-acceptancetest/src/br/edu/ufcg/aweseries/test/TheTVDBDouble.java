@@ -43,7 +43,7 @@ public class TheTVDBDouble implements SeriesSource {
 		this.seriesFactory = new DefaultSeriesFactory();
 
 		this.languageSeries = new HashMap<Language, Set<Series>>();
-		this.languageSeries.put(Language.EN, new HashSet<Series>());
+		this.languageSeries.put(Language.ENGLISH, new HashSet<Series>());
 	}
 
 	// Create Series
@@ -78,8 +78,8 @@ public class TheTVDBDouble implements SeriesSource {
 
 		results.addAll(this.resultsIn(language, seriesName));
 
-		if (!language.equals(Language.EN)) {
-			results.addAll(this.resultsIn(Language.EN, seriesName));
+		if (!language.equals(Language.ENGLISH)) {
+			results.addAll(this.resultsIn(Language.ENGLISH, seriesName));
 		}
 
 		return Collections.unmodifiableList(results);
@@ -118,7 +118,7 @@ public class TheTVDBDouble implements SeriesSource {
 	private Series fetchSeries(int seriesId, Language language) {
 		Set<Series> source = this.languageSeries.get((this.languageSeries.containsKey(language))
 				? language 
-						: Language.EN);
+						: Language.ENGLISH);
 
 		for (Series series : source) {
 			if (series.id() == seriesId)

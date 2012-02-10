@@ -94,6 +94,6 @@ public class TheTVDB implements SeriesSource {
     //Language----------------------------------------------------------------------------------------------------------
 
     private Language languageFrom(String language) {
-        return Language.from(language, Language.EN);
+        return Language.from(language, Language.ENGLISH);
     }
 }

@@ -52,12 +52,12 @@ public class TheTVDBStreamFactoryTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesSearchWithNullNameCausesIllegalArgumentException() {
-        new TheTVDBStreamFactory(API_KEY).streamForSeriesSearch(null, Language.EN);
+        new TheTVDBStreamFactory(API_KEY).streamForSeriesSearch(null, Language.ENGLISH);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesSearchWithBlankNameCausesIllegalArgumentException() {
-        new TheTVDBStreamFactory(API_KEY).streamForSeriesSearch(BLANK_STRING, Language.EN);
+        new TheTVDBStreamFactory(API_KEY).streamForSeriesSearch(BLANK_STRING, Language.ENGLISH);
     }
 
     @Test(expected=IllegalArgumentException.class)

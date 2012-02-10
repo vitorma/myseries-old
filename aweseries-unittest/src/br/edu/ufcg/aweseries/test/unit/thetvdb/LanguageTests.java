@@ -31,16 +31,16 @@ public class LanguageTests {
 
     @Test
     public void languageFromLowerCaseAbbreviationReturnsRightValue() {
-        assertThat(Language.from("en"), equalTo(Language.EN));
-        assertThat(Language.from("pt"), equalTo(Language.PT));
-        assertThat(Language.from("es"), equalTo(Language.ES));
+        assertThat(Language.from("en"), equalTo(Language.ENGLISH));
+        assertThat(Language.from("pt"), equalTo(Language.PORTUGUESE));
+        assertThat(Language.from("es"), equalTo(Language.SPANISH));
     }
 
     @Test
     public void languageFromUpperCaseAbbreviationReturnsRightValue() {
-        assertThat(Language.from("EN"), equalTo(Language.EN));
-        assertThat(Language.from("PT"), equalTo(Language.PT));
-        assertThat(Language.from("ES"), equalTo(Language.ES));
+        assertThat(Language.from("EN"), equalTo(Language.ENGLISH));
+        assertThat(Language.from("PT"), equalTo(Language.PORTUGUESE));
+        assertThat(Language.from("ES"), equalTo(Language.SPANISH));
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -55,8 +55,8 @@ public class LanguageTests {
 
     @Test
     public void languageAbbreviationIsLowerCase() {
-        assertThat(Language.EN.abbreviation(), equalTo("en"));
-        assertThat(Language.PT.abbreviation(), equalTo("pt"));
-        assertThat(Language.ES.abbreviation(), equalTo("es"));
+        assertThat(Language.ENGLISH.abbreviation(), equalTo("en"));
+        assertThat(Language.PORTUGUESE.abbreviation(), equalTo("pt"));
+        assertThat(Language.SPANISH.abbreviation(), equalTo("es"));
     }
 }

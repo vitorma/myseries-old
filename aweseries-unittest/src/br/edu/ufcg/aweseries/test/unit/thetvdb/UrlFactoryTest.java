@@ -52,12 +52,12 @@ public class UrlFactoryTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesSearchWithNullNameCausesIllegalArgumentException() {
-        new UrlFactory(API_KEY).urlForSeriesSearch(null, Language.EN);
+        new UrlFactory(API_KEY).urlForSeriesSearch(null, Language.ENGLISH);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingAnUrlForSeriesSearchWithBlankNameCausesIllegalArgumentException() {
-        new UrlFactory(API_KEY).urlForSeriesSearch(BLANK_STRING, Language.EN);
+        new UrlFactory(API_KEY).urlForSeriesSearch(BLANK_STRING, Language.ENGLISH);
     }
 
     @Test(expected=IllegalArgumentException.class)
