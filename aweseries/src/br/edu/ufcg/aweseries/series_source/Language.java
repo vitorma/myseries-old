@@ -24,29 +24,10 @@ package br.edu.ufcg.aweseries.series_source;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public enum Language {
-    DA,
-    FI,
-    NL,
-    DE,
-    IT,
-    ES,
-    FR,
-    PL,
-    HU,
-    EL,
-    TR,
-    RU,
-    HE,
-    JA,
-    PT,
-    ZH,
-    CS,
-    SL,
-    HR,
-    KO,
-    EN,
-    SV,
-    NO;
+    DE,//German
+    ES,//Spanish
+    PT,//Portuguese
+    EN;//English
 
     public static Language from(String abbreviation) {
         Validate.isNonNull(abbreviation, "abbreviation");
