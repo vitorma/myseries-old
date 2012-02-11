@@ -136,6 +136,10 @@ public class Series implements SeasonSetListener {
         return this.seasons;
     }
 
+    public Season season(int number) {
+        return this.seasons.season(number);
+    }
+
     //Episodes----------------------------------------------------------------------------------------------------------
 
     public List<Episode> episodes() {
