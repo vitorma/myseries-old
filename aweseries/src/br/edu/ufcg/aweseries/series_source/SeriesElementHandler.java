@@ -60,7 +60,7 @@ public class SeriesElementHandler {
     private SeriesElementHandler(RootElement rootElement) {
         Validate.isNonNull(rootElement, "rootElement");
 
-        this.seriesElement = rootElement.requireChild(SERIES);
+        this.seriesElement = rootElement.getChild(SERIES);
         this.results = new LinkedList<Series>();
 
         this.initializeTheBuilderAtTheStartOfEachSeriesElement();

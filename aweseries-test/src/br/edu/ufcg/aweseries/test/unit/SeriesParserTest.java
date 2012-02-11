@@ -19,207 +19,287 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.test.unit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import junit.framework.TestCase;
-import br.edu.ufcg.aweseries.model.Poster;
+import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.series_source.Language;
+import br.edu.ufcg.aweseries.series_source.ParsingFailedException;
 import br.edu.ufcg.aweseries.series_source.SeriesParser;
+import br.edu.ufcg.aweseries.series_source.StreamCreationFailedException;
 import br.edu.ufcg.aweseries.series_source.StreamFactory;
-import br.edu.ufcg.aweseries.test.util.SampleBitmap;
+import br.edu.ufcg.aweseries.series_source.TheTvDbConstants;
+import br.edu.ufcg.aweseries.util.Dates;
+import br.edu.ufcg.aweseries.util.Strings;
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class SeriesParserTest extends TestCase {
 
-	@SuppressWarnings("unused")
-	private String seriesWithoutPosterDescription =
-		"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
-		"<Data>" +
-		"  <Series>" +
-		"    <id>80248</id>" +
-		"    <Actors>||</Actors>" +
-		"    <Airs_DayOfWeek></Airs_DayOfWeek>" +
-		"    <Airs_Time></Airs_Time>" +
-		"    <ContentRating></ContentRating>" +
-		"    <FirstAired>2006-09-21</FirstAired>" +
-		"    <Genre>|Children|</Genre>" +
-		"    <IMDB_ID>tt0876219</IMDB_ID>" +
-		"    <Language>en</Language>" +
-		"    <Network>BBC One</Network>" +
-		"    <NetworkID></NetworkID>" +
-		"    <Overview>Single father, Count Dracula, moves to London from Transylvania with his two kids, Vlad and Ingrid. The story revolves around Vlad wanting to fit in with his classmates in his new school rather than sucking their blood as his father wants him to. Vlad befriends another outsider named Robin who wants to become less like the popular crowd and preferably more vampiric. </Overview>" +
-		"    <Rating>10.0</Rating>" +
-		"    <RatingCount>1</RatingCount>" +
-		"    <Runtime>30</Runtime>" +
-		"    <SeriesID>68779</SeriesID>" +
-		"    <SeriesName>Young Dracula</SeriesName>" +
-		"    <Status>Ended</Status>" +
-		"    <added></added>" +
-		"    <addedBy></addedBy>" +
-		"    <banner>graphical/80248-g3.jpg</banner>" +
-		"    <fanart>fanart/original/80248-2.jpg</fanart>" +
-		"    <lastupdated>1306063604</lastupdated>" +
-		"    <poster></poster>" +
-		"    <zap2it_id></zap2it_id>" +
-		"  </Series>" +
-		"</Data>";
+    //Field values------------------------------------------------------------------------------------------------------
 
-	private String baseSeriesWithPosterDescription =
-		"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
-		"<Data>" +
-		"  <Series>" +
-		"    <id>80348</id>" +
-		"    <Actors>|Zachary Levi|Yvonne Strahovski|Adam Baldwin|Bonita Friedericy|Julia Ling|Vik Sahay|Ryan McPartlin|Scott Krinsky|Mark Christopher Lawrence|Sarah Lancaster|Joshua Gomez|Mekenna Melvin|Linda Hamilton|Brandon Routh|Matthew Bomer|</Actors>" +
-		"    <Airs_DayOfWeek>Monday</Airs_DayOfWeek>" +
-		"    <Airs_Time>8:00 PM</Airs_Time>" +
-		"    <ContentRating>TV-PG</ContentRating>" +
-		"    <FirstAired>2007-09-24</FirstAired>" +
-		"    <Genre>|Action and Adventure|Comedy|Drama|</Genre>" +
-		"    <IMDB_ID>tt0934814</IMDB_ID>" +
-		"    <Language>en</Language>" +
-		"    <Network>NBC</Network>" +
-		"    <NetworkID></NetworkID>" +
-		"    <Overview>Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen governmeent secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7.</Overview>" +
-		"    <Rating>8.8</Rating>" +
-		"    <RatingCount>655</RatingCount>" +
-		"    <Runtime>60</Runtime>" +
-		"    <SeriesID>68724</SeriesID>" +
-		"    <SeriesName>Chuck</SeriesName>" +
-		"    <Status>Continuing</Status>" +
-		"    <added></added>" +
-		"    <addedBy></addedBy>" +
-		"    <banner>graphical/80348-g21.jpg</banner>" +
-		"    <fanart>fanart/original/80348-18.jpg</fanart>" +
-		"    <lastupdated>1315879458</lastupdated>" +
-		"    <poster>posters/80348-15.jpg</poster>" +
-		"    <zap2it_id>EP00930779</zap2it_id>" +
-		"  </Series>" +
-		"</Data>";
+    private static final String BASE_SERIES_ID = "1";
+    private static final String BASE_SERIES_NAME = "BaseSeries";
+    private static final String BASE_SERIES_STATUS = "";
+    private static final String BASE_SERIES_AIR_DAY = "";
+    private static final String BASE_SERIES_AIR_TIME = "";
+    private static final String BASE_SERIES_AIR_DATE = "";
+    private static final String BASE_SERIES_RUNTIME = "";
+    private static final String BASE_SERIES_NETWORK = "";
+    private static final String BASE_SERIES_OVERVIEW = "";
+    private static final String BASE_SERIES_GENRES = "";
+    private static final String BASE_SERIES_ACTORS = "";
+    private static final String BASE_SERIES_POSTER_FILE_NAME = "";
 
-	private String fullSeriesWithPosterDescription =
-		"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
-		"<Data>" +
-		"  <Series>" +
-		"    <id>80348</id>" +
-		"    <Actors>|Zachary Levi|Yvonne Strahovski|Adam Baldwin|Bonita Friedericy|Julia Ling|Vik Sahay|Ryan McPartlin|Scott Krinsky|Mark Christopher Lawrence|Sarah Lancaster|Joshua Gomez|Mekenna Melvin|Linda Hamilton|Brandon Routh|Matthew Bomer|</Actors>" +
-		"    <Airs_DayOfWeek>Monday</Airs_DayOfWeek>" +
-		"    <Airs_Time>8:00 PM</Airs_Time>" +
-		"    <ContentRating>TV-PG</ContentRating>" +
-		"    <FirstAired>2007-09-24</FirstAired>" +
-		"    <Genre>|Action and Adventure|Comedy|Drama|</Genre>" +
-		"    <IMDB_ID>tt0934814</IMDB_ID>" +
-		"    <Language>en</Language>" +
-		"    <Network>NBC</Network>" +
-		"    <NetworkID></NetworkID>" +
-		"    <Overview>Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen government secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7.</Overview>" +
-		"    <Rating>8.8</Rating>" +
-		"    <RatingCount>655</RatingCount>" +
-		"    <Runtime>60</Runtime>" +
-		"    <SeriesID>68724</SeriesID>" +
-		"    <SeriesName>Chuck</SeriesName>" +
-		"    <Status>Continuing</Status>" +
-		"    <added></added>" +
-		"    <addedBy></addedBy>" +
-		"    <banner>graphical/80348-g21.jpg</banner>" +
-		"    <fanart>fanart/original/80348-18.jpg</fanart>" +
-		"    <lastupdated>1315879458</lastupdated>" +
-		"    <poster>posters/80348-15.jpg</poster>" +
-		"    <zap2it_id>EP00930779</zap2it_id>" +
-		"  </Series>" +
-		"  <Episode>" +
-		"   <id>935481</id>" +
-		"   <Combined_episodenumber>1</Combined_episodenumber>" +
-		"   <Combined_season>0</Combined_season>" +
-		"   <DVD_chapter></DVD_chapter>" +
-		"   <DVD_discid></DVD_discid>" +
-		"   <DVD_episodenumber></DVD_episodenumber>" +
-		"   <DVD_season></DVD_season>" +
-		"   <Director>Robert Duncan McNeill</Director>" +
-		"   <EpImgFlag>2</EpImgFlag>" +
-		"   <EpisodeName>Chuck Versus the Third Dimension (2D)</EpisodeName>" +
-		"   <EpisodeNumber>1</EpisodeNumber>" +
-		"   <FirstAired>2009-02-03</FirstAired>" +
-		"   <GuestStars>|Dominic Monaghan|Jerome Bettis|</GuestStars>" +
-		"   <IMDB_ID></IMDB_ID>" +
-		"   <Language>en</Language>" +
-		"   <Overview>Chuck foils a plan to kill Tyler Martin, an international rock star. Chuck's night out with Tyler leads to trouble. Morgan holds a contest among his fellow employees. 2D version of the Episode originally aired in 3D</Overview>" +
-		"   <ProductionCode></ProductionCode>" +
-		"   <Rating>7.0</Rating>" +
-		"   <RatingCount>2</RatingCount>" +
-		"   <SeasonNumber>0</SeasonNumber>" +
-		"   <Writer>Chris Fedak|Josh Schwartz</Writer>" +
-		"   <absolute_number></absolute_number>" +
-		"   <airsafter_season></airsafter_season>" +
-		"   <airsbefore_episode>13</airsbefore_episode>" +
-		"   <airsbefore_season>2</airsbefore_season>" +
-		"   <filename>episodes/80348/935481.jpg</filename>" +
-		"   <lastupdated>1286047969</lastupdated>" +
-		"   <seasonid>27984</seasonid>" +
-		"   <seriesid>80348</seriesid>" +
-		"  </Episode>" +
-		"</Data>";
+    private static final String FULL_SERIES_ID = "2";
+    private static final String FULL_SERIES_NAME = "FullSeries";
+    private static final String FULL_SERIES_STATUS = "Continuing";
+    private static final String FULL_SERIES_AIR_DAY = "Sunday";
+    private static final String FULL_SERIES_AIR_TIME = "1:00 AM";
+    private static final String FULL_SERIES_AIR_DATE = "2012-01-01";
+    private static final String FULL_SERIES_RUNTIME = "60";
+    private static final String FULL_SERIES_NETWORK = "Network";
+    private static final String FULL_SERIES_OVERVIEW = "Overview";
+    private static final String FULL_SERIES_GENRES = "|Genre1|Genre2|";
+    private static final String FULL_SERIES_ACTORS = "|Actor1|Actor2|Actor3|Actor4|Actor5|Actor6|";
+    private static final String FULL_SERIES_POSTER_FILE_NAME = "Poster";
 
-	private Poster seriesPoster = new Poster(SampleBitmap.pixel);
+    private static final String SEASON_NUMBER = "1";
 
-	private class SeriesParserTestStreamFactory implements StreamFactory {
+    private static final String EPISODE1_ID = "1";
+    private static final String EPISODE1_NUMBER = "1";
+    private static final String EPISODE1_NAME = "Episode1";
+    private static final String EPISODE1_AIR_DATE = "2012-01-01";
+    private static final String EPISODE1_OVERVIEW = "Overview1";
+    private static final String EPISODE1_DIRECTORS = "|Director1|";
+    private static final String EPISODE1_WRITERS = "|Writer1|";
+    private static final String EPISODE1_GUEST_STARS = "|Actor1|Actor2|";
+    private static final String EPISODE1_IMAGE_FILE_NAME = "Image1";
 
-		@Override
-		public InputStream streamForSeriesPoster(String resourcePath) {
-			return new ByteArrayInputStream(SampleBitmap.pixelBytes);
-		}
+    private static final String EPISODE2_ID = "2";
+    private static final String EPISODE2_NUMBER = "2";
+    private static final String EPISODE2_NAME = "Episode2";
+    private static final String EPISODE2_AIR_DATE = "2012-01-08";
+    private static final String EPISODE2_OVERVIEW = "Overview2";
+    private static final String EPISODE2_DIRECTORS = "|Director1|Director2|";
+    private static final String EPISODE2_WRITERS = "|Writer1|Writer2|Writer3|";
+    private static final String EPISODE2_GUEST_STARS = "|Actor1|Actor2|Actor3|Actor4|Actor5|";
+    private static final String EPISODE2_IMAGE_FILE_NAME = "Image2";
 
-		@Override
-		public InputStream streamForSeries(int seriesId, Language language) {
-			// TODO Auto-generated method stub
-			return new ByteArrayInputStream(SeriesParserTest.this.fullSeriesWithPosterDescription.getBytes());
-		}
+    //XML Content-------------------------------------------------------------------------------------------------------
 
-		@Override
-		public InputStream streamForSeriesSearch(String seriesName, Language language) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+    private static final String BASE_SERIES_XML =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
+        "<Data>" +
+        "  <Series>" +
+        "    <id>" + BASE_SERIES_ID + "</id>" +
+        "    <Actors>" + BASE_SERIES_ACTORS + "</Actors>" +
+        "    <Airs_DayOfWeek>" + BASE_SERIES_AIR_DAY + "</Airs_DayOfWeek>" +
+        "    <Airs_Time>" + BASE_SERIES_AIR_TIME + "</Airs_Time>" +
+        "    <FirstAired>" + BASE_SERIES_AIR_DATE + "</FirstAired>" +
+        "    <Genre>" + BASE_SERIES_GENRES + "</Genre>" +
+        "    <Network>" + BASE_SERIES_NETWORK + "</Network>" +
+        "    <Overview>" + BASE_SERIES_OVERVIEW + "</Overview>" +
+        "    <Runtime>" + BASE_SERIES_RUNTIME + "</Runtime>" +
+        "    <SeriesName>" + BASE_SERIES_NAME + "</SeriesName>" +
+        "    <Status>" + BASE_SERIES_STATUS + "</Status>" +
+        "    <poster>" + BASE_SERIES_POSTER_FILE_NAME + "</poster>" +
+        "  </Series>" +
+        "</Data>";
+
+    private static final String FULL_SERIES_XML =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
+        "<Data>" +
+        "  <Series>" +
+        "    <id>" + FULL_SERIES_ID + "</id>" +
+        "    <Actors>" + FULL_SERIES_ACTORS + "</Actors>" +
+        "    <Airs_DayOfWeek>" + FULL_SERIES_AIR_DAY + "</Airs_DayOfWeek>" +
+        "    <Airs_Time>" + FULL_SERIES_AIR_TIME + "</Airs_Time>" +
+        "    <FirstAired>" + FULL_SERIES_AIR_DATE + "</FirstAired>" +
+        "    <Genre>" + FULL_SERIES_GENRES + "</Genre>" +
+        "    <Network>" + FULL_SERIES_NETWORK + "</Network>" +
+        "    <Overview>" + FULL_SERIES_OVERVIEW + "</Overview>" +
+        "    <Runtime>" + FULL_SERIES_RUNTIME + "</Runtime>" +
+        "    <SeriesName>" + FULL_SERIES_NAME + "</SeriesName>" +
+        "    <Status>" + FULL_SERIES_STATUS + "</Status>" +
+        "    <poster>" + FULL_SERIES_POSTER_FILE_NAME + "</poster>" +
+        "  </Series>" +
+        "  <Episode>" +
+        "   <id>" + EPISODE1_ID + "</id>" +
+        "   <Director>" + EPISODE1_DIRECTORS + "</Director>" +
+        "   <EpisodeName>" + EPISODE1_NAME +"</EpisodeName>" +
+        "   <EpisodeNumber>" + EPISODE1_NUMBER + "</EpisodeNumber>" +
+        "   <FirstAired>" + EPISODE1_AIR_DATE + "</FirstAired>" +
+        "   <GuestStars>" + EPISODE1_GUEST_STARS + "</GuestStars>" +
+        "   <Overview>" + EPISODE1_OVERVIEW + "</Overview>" +
+        "   <SeasonNumber>" + SEASON_NUMBER + "</SeasonNumber>" +
+        "   <Writer>" + EPISODE1_WRITERS + "</Writer>" +
+        "   <filename>" + EPISODE1_IMAGE_FILE_NAME + "</filename>" +
+        "   <seriesid>" + FULL_SERIES_ID + "</seriesid>" +
+        "  </Episode>" +
+        "  <Episode>" +
+        "   <id>" + EPISODE2_ID + "</id>" +
+        "   <Director>" + EPISODE2_DIRECTORS + "</Director>" +
+        "   <EpisodeName>" + EPISODE2_NAME +"</EpisodeName>" +
+        "   <EpisodeNumber>" + EPISODE2_NUMBER + "</EpisodeNumber>" +
+        "   <FirstAired>" + EPISODE2_AIR_DATE + "</FirstAired>" +
+        "   <GuestStars>" + EPISODE2_GUEST_STARS + "</GuestStars>" +
+        "   <Overview>" + EPISODE2_OVERVIEW + "</Overview>" +
+        "   <SeasonNumber>" + SEASON_NUMBER + "</SeasonNumber>" +
+        "   <Writer>" + EPISODE2_WRITERS + "</Writer>" +
+        "   <filename>" + EPISODE2_IMAGE_FILE_NAME + "</filename>" +
+        "   <seriesid>" + FULL_SERIES_ID + "</seriesid>" +
+        "  </Episode>" +
+        "</Data>";
+
+    private static final String SERIES_XML_WITHOUT_ROOT_ELEMENT =
+      "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
+      "  <Series>" +
+      "    <id>" + BASE_SERIES_ID + "</id>" +
+      "    <Actors>" + BASE_SERIES_ACTORS + "</Actors>" +
+      "    <Airs_DayOfWeek>" + BASE_SERIES_AIR_DAY + "</Airs_DayOfWeek>" +
+      "    <Airs_Time>" + BASE_SERIES_AIR_TIME + "</Airs_Time>" +
+      "    <FirstAired>" + BASE_SERIES_AIR_DATE + "</FirstAired>" +
+      "    <Genre>" + BASE_SERIES_GENRES + "</Genre>" +
+      "    <Network>" + BASE_SERIES_NETWORK + "</Network>" +
+      "    <Overview>" + BASE_SERIES_OVERVIEW + "</Overview>" +
+      "    <Runtime>" + BASE_SERIES_RUNTIME + "</Runtime>" +
+      "    <SeriesName>" + BASE_SERIES_NAME + "</SeriesName>" +
+      "    <Status>" + BASE_SERIES_STATUS + "</Status>" +
+      "    <poster>" + BASE_SERIES_POSTER_FILE_NAME + "</poster>" +
+      "  </Series>";
+
+    //StreamFactory-----------------------------------------------------------------------------------------------------
+
+    private static final int SERIES_ID_FOR_INVALID_XML = -1;
+
+    private static class SeriesParserTestStreamFactory implements StreamFactory {
+
+        private InputStream streamFor(String xml) {
+            return new ByteArrayInputStream(xml.getBytes());
+        }
 
         @Override
-        public InputStream streamForEpisodeImage(String fileName) {
-            // TODO Auto-generated method stub
-            return null;
+        public InputStream streamForSeries(int seriesId, Language language) {
+            Validate.isNonNull(language, "language");
+
+            if (seriesId == Integer.valueOf(BASE_SERIES_ID)) return this.streamFor(BASE_SERIES_XML);
+
+            if (seriesId == Integer.valueOf(FULL_SERIES_ID)) return this.streamFor(FULL_SERIES_XML);
+
+            if (seriesId == SERIES_ID_FOR_INVALID_XML) return this.streamFor(SERIES_XML_WITHOUT_ROOT_ELEMENT);
+
+            throw new StreamCreationFailedException();
         }
-	}
 
-	public void testNullStreamFactoryThrowsException() {
-		try {
-			new SeriesParser(null);
-			fail("Should have thrown an IllegalArgumentException");
-		} catch (IllegalArgumentException e) {}
-	}
+        @Override
+        public InputStream streamForSeriesSearch(String seriesName, Language language) {return null;}
 
-	public void failing_testSeriesWithoutPoster() {//TODO withoutPosterFileName
-		Series seriesWithoutPoster = new SeriesParser(new SeriesParserTestStreamFactory()).parse(80248, Language.ENGLISH);
+        @Override
+        public InputStream streamForSeriesPoster(String resourcePath) {return null;}
 
-		assertThat(seriesWithoutPoster.poster(), nullValue());
-	}
+        @Override
+        public InputStream streamForEpisodeImage(String fileName) {return null;}
+    }
 
-	public void testSeriesWithPoster() {//TODO withPosterFileName
-//		Series seriesWithPoster = new SeriesParser(new SeriesParserTestStreamFactory()).parse(80348, Language.EN);
-//
-//		assertThat(seriesWithPoster.poster(), notNullValue());
-//		assertThat(seriesWithPoster.poster(), equalTo(this.seriesPoster));
-	}
+    //Parser to test----------------------------------------------------------------------------------------------------
 
-	public void testSeriesOverview() {
-		Series series = new SeriesParser(new SeriesParserTestStreamFactory()).parse(80348, Language.ENGLISH);
+    private SeriesParser seriesParser = new SeriesParser(new SeriesParserTestStreamFactory());
 
-		assertThat(series.overview(), notNullValue());
-		assertThat(series.overview(), equalTo("Chuck Bartowski, ace computer geek at Buy More, is not in his right mind. That's a good thing. Ever since he unwittingly downloaded stolen government secrets into his brain, action, excitement and a cool secret- agent girlfriend have entered his life. It's a bad thing, too. Because now Chuck is in danger 24/7."));
-	}
+    //Construction------------------------------------------------------------------------------------------------------
+
+    public void testConstructingSeriesParserWithNullStreamFactoryCausesIllegalArgumentException() {
+        try {
+            new SeriesParser(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    //Parse-------------------------------------------------------------------------------------------------------------
+
+    public void testNullLanguageCausesIllegalArgumentExceptionAtTheParsing() {
+        try {
+            this.seriesParser.parse(Integer.valueOf(BASE_SERIES_ID), null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testParsingInvalidXmlCausesParsingFailedException() {
+        try {
+            this.seriesParser.parse(SERIES_ID_FOR_INVALID_XML, Language.ENGLISH);
+            fail("Should have thrown an ParsingFailedException");
+        } catch (ParsingFailedException e) {}
+    }
+
+    public void testSeriesParserParsesBaseSeries() {
+        Series baseSeries = this.seriesParser.parse(Integer.valueOf(BASE_SERIES_ID), Language.ENGLISH);
+
+        assertThat(baseSeries.id(), equalTo(Integer.valueOf(BASE_SERIES_ID)));
+        assertThat(baseSeries.name(), equalTo(BASE_SERIES_NAME));
+        assertThat(baseSeries.status(), equalTo(BASE_SERIES_STATUS));
+        assertThat(baseSeries.airDay(), equalTo(BASE_SERIES_AIR_DAY));
+        assertThat(baseSeries.airTime(), equalTo(BASE_SERIES_AIR_TIME));
+        assertThat(baseSeries.airDate(), equalTo(BASE_SERIES_AIR_DATE));
+        assertThat(baseSeries.runtime(), equalTo(BASE_SERIES_RUNTIME));
+        assertThat(baseSeries.network(), equalTo(BASE_SERIES_NETWORK));
+        assertThat(baseSeries.overview(), equalTo(BASE_SERIES_OVERVIEW));
+        assertThat(baseSeries.genres(), equalTo(Strings.normalizePipeSeparated(BASE_SERIES_GENRES)));
+        assertThat(baseSeries.actors(), equalTo(Strings.normalizePipeSeparated(BASE_SERIES_ACTORS)));
+        assertThat(baseSeries.posterFileName(), equalTo(BASE_SERIES_POSTER_FILE_NAME));
+
+        assertThat(baseSeries.episodes().size(), equalTo(0));
+    }
+
+    public void testSeriesParserParsesFullSeries() {
+        Series fullSeries = this.seriesParser.parse(Integer.valueOf(FULL_SERIES_ID), Language.ENGLISH);
+
+        assertThat(fullSeries.id(), equalTo(Integer.valueOf(FULL_SERIES_ID)));
+        assertThat(fullSeries.name(), equalTo(FULL_SERIES_NAME));
+        assertThat(fullSeries.status(), equalTo(FULL_SERIES_STATUS));
+        assertThat(fullSeries.airDay(), equalTo(FULL_SERIES_AIR_DAY));
+        assertThat(fullSeries.airTime(), equalTo(FULL_SERIES_AIR_TIME));
+        assertThat(fullSeries.airDate(), equalTo(FULL_SERIES_AIR_DATE));
+        assertThat(fullSeries.runtime(), equalTo(FULL_SERIES_RUNTIME));
+        assertThat(fullSeries.network(), equalTo(FULL_SERIES_NETWORK));
+        assertThat(fullSeries.overview(), equalTo(FULL_SERIES_OVERVIEW));
+        assertThat(fullSeries.genres(), equalTo(Strings.normalizePipeSeparated(FULL_SERIES_GENRES)));
+        assertThat(fullSeries.actors(), equalTo(Strings.normalizePipeSeparated(FULL_SERIES_ACTORS)));
+        assertThat(fullSeries.posterFileName(), equalTo(FULL_SERIES_POSTER_FILE_NAME));
+
+        assertThat(fullSeries.episodes().size(), equalTo(2));
+
+        Episode episode1 = fullSeries.season(Integer.valueOf(SEASON_NUMBER)).episode(Integer.valueOf(EPISODE1_NUMBER));
+
+        assertThat(episode1.id(), equalTo(Integer.valueOf(EPISODE1_ID)));
+        assertThat(episode1.seriesId(), equalTo(Integer.valueOf(FULL_SERIES_ID)));
+        assertThat(episode1.number(), equalTo(Integer.valueOf(EPISODE1_NUMBER)));
+        assertThat(episode1.seasonNumber(), equalTo(Integer.valueOf(SEASON_NUMBER)));
+        assertThat(episode1.name(), equalTo(EPISODE1_NAME));
+        assertThat(episode1.airDate(), equalTo(Dates.parseDate(EPISODE1_AIR_DATE, TheTvDbConstants.DATE_FORMAT, null)));
+        assertThat(episode1.overview(), equalTo(EPISODE1_OVERVIEW));
+        assertThat(episode1.directors(), equalTo(Strings.normalizePipeSeparated(EPISODE1_DIRECTORS)));
+        assertThat(episode1.writers(), equalTo(Strings.normalizePipeSeparated(EPISODE1_WRITERS)));
+        assertThat(episode1.guestStars(), equalTo(Strings.normalizePipeSeparated(EPISODE1_GUEST_STARS)));
+        assertThat(episode1.imageFileName(), equalTo(EPISODE1_IMAGE_FILE_NAME));
+
+        Episode episode2 = fullSeries.season(Integer.valueOf(SEASON_NUMBER)).episode(Integer.valueOf(EPISODE2_NUMBER));
+
+        assertThat(episode2.id(), equalTo(Integer.valueOf(EPISODE2_ID)));
+        assertThat(episode2.seriesId(), equalTo(Integer.valueOf(FULL_SERIES_ID)));
+        assertThat(episode2.number(), equalTo(Integer.valueOf(EPISODE2_NUMBER)));
+        assertThat(episode2.seasonNumber(), equalTo(Integer.valueOf(SEASON_NUMBER)));
+        assertThat(episode2.name(), equalTo(EPISODE2_NAME));
+        assertThat(episode2.airDate(), equalTo(Dates.parseDate(EPISODE2_AIR_DATE, TheTvDbConstants.DATE_FORMAT, null)));
+        assertThat(episode2.overview(), equalTo(EPISODE2_OVERVIEW));
+        assertThat(episode2.directors(), equalTo(Strings.normalizePipeSeparated(EPISODE2_DIRECTORS)));
+        assertThat(episode2.writers(), equalTo(Strings.normalizePipeSeparated(EPISODE2_WRITERS)));
+        assertThat(episode2.guestStars(), equalTo(Strings.normalizePipeSeparated(EPISODE2_GUEST_STARS)));
+        assertThat(episode2.imageFileName(), equalTo(EPISODE2_IMAGE_FILE_NAME));
+    }
 }

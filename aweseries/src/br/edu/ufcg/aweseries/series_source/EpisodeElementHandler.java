@@ -21,7 +21,6 @@
 
 package br.edu.ufcg.aweseries.series_source;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,8 +54,6 @@ public class EpisodeElementHandler {
     private static final String GUEST_STARS = "GuestStars";
     private static final String IMAGE_FILE_NAME = "filename";
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
     private Element episodeElement;
     private Episode.Builder episodeBuilder;
     private List<Episode> results;
@@ -66,7 +63,7 @@ public class EpisodeElementHandler {
     private EpisodeElementHandler(RootElement rootElement) {
         Validate.isNonNull(rootElement, "rootElement");
 
-        this.episodeElement = rootElement.requireChild(EPISODE);
+        this.episodeElement = rootElement.getChild(EPISODE);
         this.results = new LinkedList<Episode>();
 
         this.initializeTheBuilderAtTheStartOfEachEpisodeElement();
@@ -164,7 +161,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                Date airDate = Dates.parseDate(body, DATE_FORMAT, null);
+                Date airDate = Dates.parseDate(body, TheTvDbConstants.DATE_FORMAT, null);
                 EpisodeElementHandler.this.episodeBuilder.withAirDate(airDate);
             }
         });
