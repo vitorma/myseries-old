@@ -92,7 +92,7 @@ public class SeriesParserTest extends TestCase {
     private static final String EPISODE2_GUEST_STARS = "|Actor1|Actor2|Actor3|Actor4|Actor5|";
     private static final String EPISODE2_IMAGE_FILE_NAME = "Image2";
 
-    //XML Content-------------------------------------------------------------------------------------------------------
+    //XML content-------------------------------------------------------------------------------------------------------
 
     private static final String BASE_SERIES_XML =
         "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
@@ -185,9 +185,13 @@ public class SeriesParserTest extends TestCase {
             return new ByteArrayInputStream(xml.getBytes());
         }
 
+        private void checkLikeUrlFactoryWouldCheck(Language language) {
+            Validate.isNonNull(language, "language");
+        }
+
         @Override
         public InputStream streamForSeries(int seriesId, Language language) {
-            Validate.isNonNull(language, "language");
+            this.checkLikeUrlFactoryWouldCheck(language);
 
             if (seriesId == Integer.valueOf(BASE_SERIES_ID)) return this.streamFor(BASE_SERIES_XML);
 
@@ -237,7 +241,7 @@ public class SeriesParserTest extends TestCase {
         } catch (ParsingFailedException e) {}
     }
 
-    public void testSeriesParserParsesBaseSeries() {
+    public void testSeriesParserParsesBaseSeriesXml() {
         Series baseSeries = this.seriesParser.parse(Integer.valueOf(BASE_SERIES_ID), Language.ENGLISH);
 
         assertThat(baseSeries.id(), equalTo(Integer.valueOf(BASE_SERIES_ID)));
@@ -256,7 +260,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(baseSeries.episodes().size(), equalTo(0));
     }
 
-    public void testSeriesParserParsesFullSeries() {
+    public void testSeriesParserParsesFullSeriesXml() {
         Series fullSeries = this.seriesParser.parse(Integer.valueOf(FULL_SERIES_ID), Language.ENGLISH);
 
         assertThat(fullSeries.id(), equalTo(Integer.valueOf(FULL_SERIES_ID)));
