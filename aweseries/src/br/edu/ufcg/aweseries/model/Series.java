@@ -23,6 +23,7 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import android.graphics.Bitmap;
@@ -136,6 +137,10 @@ public class Series implements SeasonSetListener {
     }
 
     //Episodes----------------------------------------------------------------------------------------------------------
+
+    public List<Episode> episodes() {
+        return this.seasons.allEpisodes();
+    }
 
     public Series includingAll(Collection<Episode> episodes) {
         this.seasons.includingAll(episodes);
