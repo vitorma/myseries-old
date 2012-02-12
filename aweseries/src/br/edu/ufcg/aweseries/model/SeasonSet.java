@@ -36,22 +36,13 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     private int seriesId;
     private List<SeasonSetListener> listeners;
     private Episode nextEpisodeToSee;
-
+    
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
 
         this.seriesId = seriesId;
         this.map = new TreeMap<Integer, Season>();
         this.listeners = new LinkedList<SeasonSetListener>();
-    }
-
-    //TODO Remove
-    public void addAllEpisodes(List<Episode> episodes) {
-        Validate.isNonNull(episodes, "episodes should not be null");
-
-        for (Episode e : episodes) {
-            this.addEpisode(e);
-        }
     }
 
     public SeasonSet includingAll(Collection<Episode> episodes) {
@@ -74,6 +65,7 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
         }
 
         this.map.get(episode.seasonNumber()).including(episode);
+
     }
 
     private void addSeason(int seasonNumber) {
@@ -118,7 +110,7 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
         for (Season s : other.map.values()) {
             if (!this.hasSeason(s.number())) {
-                this.addAllEpisodes(s.episodes());
+                this.includingAll(s.episodes());
             }
         }
 
@@ -131,6 +123,16 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
     public int numberOfSeasons() {
         return this.map.size();
+    }
+
+    public int numberOfSeenEpisodes() {
+        int numberOfSeenEpisodes = 0;
+        
+        for (Season season : map.values()) {
+            numberOfSeenEpisodes += season.numberOfSeenEpisodes();
+        }
+        
+        return numberOfSeenEpisodes;
     }
 
     public Season season(int seasonNumber) {
@@ -201,13 +203,13 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     @Override
     public Iterator<Season> iterator() {
         return new Iterator<Season>() {
-            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ? SeasonSet.this.firstSeasonNumber()
-                    : Integer.MAX_VALUE;
+            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ? SeasonSet.this
+                    .firstSeasonNumber() : Integer.MAX_VALUE;
 
             @Override
             public boolean hasNext() {
                 return SeasonSet.this.numberOfSeasons() > 0
-                && this.seasonNumber <= SeasonSet.this.lastSeasonNumber();
+                        && this.seasonNumber <= SeasonSet.this.lastSeasonNumber();
             }
 
             @Override
@@ -229,13 +231,13 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
     public Iterator<Season> reversedIterator() {
         return new Iterator<Season>() {
-            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ? SeasonSet.this.lastSeasonNumber()
-                    : Integer.MIN_VALUE;
+            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ? SeasonSet.this
+                    .lastSeasonNumber() : Integer.MIN_VALUE;
 
             @Override
             public boolean hasNext() {
                 return SeasonSet.this.numberOfSeasons() > 0
-                && this.seasonNumber >= SeasonSet.this.firstSeasonNumber();
+                        && this.seasonNumber >= SeasonSet.this.firstSeasonNumber();
             }
 
             @Override
@@ -256,18 +258,18 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     }
 
     //Listeners ------------------------------------------------------------------------------------
-    
+
     public boolean deregister(SeasonSetListener listener) {
         return this.listeners.remove(listener);
     }
-    
+
     public boolean register(SeasonSetListener listener) {
         Validate.isNonNull(listener, "listener must not be null.");
-        
+
         if (this.listeners.contains(listener)) {
             return false;
         }
-        
+
         return this.listeners.add(listener);
     }
 
@@ -275,6 +277,13 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
         for (SeasonSetListener listener : this.listeners) {
             listener.onChangeNextEpisodeToSee(this);
         }
+    }
+    
+    private void notifyThatNumberOfSeenEpisodesChanged() {
+        for (SeasonSetListener l : this.listeners) {
+            l.onChangeNumberOfSeenEpisodes(this);
+        }
+        
     }
 
     private void notifyMerge() {
@@ -292,12 +301,12 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
     @Override
     public void onMarkAsNotSeen(Season season) {
-        //SeasonSet is not interested in this event
+      //SeasonSet is not interested in this event
     }
 
     @Override
     public void onMarkAsSeen(Season season) {
-        //SeasonSet is not interested in this event
+      //SeasonSet is not interested in this event
     }
 
     @Override
@@ -307,6 +316,8 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Season season) {
-        //SeasonSet is not interested in this event
+        this.notifyThatNumberOfSeenEpisodesChanged();
+
     }
+       
 }

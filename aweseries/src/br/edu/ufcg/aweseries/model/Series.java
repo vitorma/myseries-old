@@ -23,6 +23,7 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -45,10 +46,9 @@ public class Series implements SeasonSetListener {
     private String genres;
     private String actors;
     private String posterFileName;
-    private Poster poster;//TODO Remove
     private SeasonSet seasons;
 
-    private Set<DomainObjectListener<Series>> listeners;//TODO List<SeriesListener>
+    private List<SeriesListener> listeners;
 
     //Construction------------------------------------------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ public class Series implements SeasonSetListener {
 
         this.seasons = new SeasonSet(this.id);
         this.seasons.register(this);
-        this.listeners = new HashSet<DomainObjectListener<Series>>();
+        this.listeners = new LinkedList<SeriesListener>();
     }
 
     //Building----------------------------------------------------------------------------------------------------------
@@ -122,14 +122,6 @@ public class Series implements SeasonSetListener {
         return this.posterFileName;
     }
 
-    public Poster poster() {//TODO Remove
-        return this.poster;
-    }
-
-    public boolean hasPoster() {//TODO Remove
-        return this.poster != null;
-    }
-
     //Seasons-----------------------------------------------------------------------------------------------------------
 
     public SeasonSet seasons() {
@@ -142,8 +134,16 @@ public class Series implements SeasonSetListener {
 
     //Episodes----------------------------------------------------------------------------------------------------------
 
+    public int numberOfSeenEpisodes() {
+        return this.seasons.numberOfSeenEpisodes();
+    }
     public List<Episode> episodes() {
         return this.seasons.allEpisodes();
+    }
+    
+    public Episode nextEpisodeToSee() {
+        return this.seasons.nextEpisodeToSee();
+        
     }
 
     public Series includingAll(Collection<Episode> episodes) {
@@ -168,38 +168,70 @@ public class Series implements SeasonSetListener {
         this.genres = other.genres;
         this.actors = other.actors;
         this.posterFileName = other.posterFileName;
-        this.poster = other.poster;//TODO Remove
         this.seasons.mergeWith(other.seasons);
 
-        this.notifyListeners();
+        this.notifyThatWasMerged();
     }
 
     //SeriesListener----------------------------------------------------------------------------------------------------
 
-    public boolean addListener(DomainObjectListener<Series> listener) {//TODO Register SeriesListener
+    public boolean register(SeriesListener listener) {
+        Validate.isNonNull(listener, "listener to register should be non-null");
+
+        for (SeriesListener l : this.listeners) {
+            if (l == listener) return false;
+        }
+
         return this.listeners.add(listener);
     }
 
-    public boolean removeListener(DomainObjectListener<Series> listener) {//TODO Deregister SeriesListener
-        return this.listeners.remove(listener);
-    }
+    public boolean deregister(SeriesListener listener) {
+        Validate.isNonNull(listener, "listener to deregister should be non-null");
 
-    private void notifyListeners() {//TODO Specific notifications to SeriesListener
-        for (DomainObjectListener<Series> listener : this.listeners) {
-            listener.onUpdate(this);
+        for (int i = 0; i < this.listeners.size(); i++) {
+            if (this.listeners.get(i) == listener) {
+                this.listeners.remove(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    private void notifyThatNumberOfSeenEpisodesChanged() {
+        for (SeriesListener l : this.listeners) {
+            l.onChangeNumberOfSeenEpisodes(this);
         }
     }
 
+    private void notifyThatNextToSeeChanged() {
+        for (SeriesListener l : this.listeners) {
+            l.onChangeNextEpisodeToSee(this);
+        }
+    }
+    
+    private void notifyThatWasMerged() {
+        for (SeriesListener l : this.listeners) {
+            l.onMerge(this);
+        }
+    }
+    
     //SeasonSetListener-------------------------------------------------------------------------------------------------
     
     @Override
     public void onChangeNextEpisodeToSee(SeasonSet seasonSet) {
-        this.notifyListeners();
+        this.notifyThatNextToSeeChanged();
+    }
+    
+    @Override
+    public void onChangeNumberOfSeenEpisodes(SeasonSet seasonSet) {
+        this.notifyThatNumberOfSeenEpisodesChanged();
+        
     }
 
     @Override
     public void onMerge(SeasonSet seasonSet) {
-        this.notifyListeners();
+        this.notifyThatWasMerged();
     }
 
     //Object------------------------------------------------------------------------------------------------------------
@@ -230,7 +262,6 @@ public class Series implements SeasonSetListener {
         private String actors;
         private String posterFileName;
 
-        private Bitmap posterBitmap;//TODO Remove
         private Set<Episode> episodes;
 
         private Builder() {
@@ -298,20 +329,6 @@ public class Series implements SeasonSetListener {
             return this;
         }
 
-        //TODO Remove
-        public Builder withPoster(Bitmap posterBitmap) {
-            this.posterBitmap = posterBitmap;
-            return this;
-        }
-
-        //TODO Remove
-        public Builder withPoster(byte[] posterBitmap) {
-            if (posterBitmap != null) {
-                this.posterBitmap = BitmapFactory.decodeByteArray(posterBitmap, 0, posterBitmap.length);
-            }
-            return this;
-        }
-
         public Builder withEpisode(Episode episode) {
             this.episodes.add(episode);
             return this;
@@ -330,10 +347,10 @@ public class Series implements SeasonSetListener {
             series.genres = this.genres;
             series.actors = this.actors;
             series.posterFileName = this.posterFileName;
-            series.poster = this.posterBitmap != null ? new Poster(this.posterBitmap) : null;// TODO Remove
             series.seasons.includingAll(this.episodes);
 
             return series;
         }
     }
+
 }

@@ -200,7 +200,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             return null;
         }
         Series s = this.seriesByCurrentPositionOf(c);
-        s.seasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
+        s.seasons().includingAll(this.getAllEpisodesOf(s, db));
         c.close();
         db.close();
         return s;
@@ -213,7 +213,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         List<Series> allSeries = new ArrayList<Series>();
         while (c.moveToNext()) {
             Series s = this.seriesByCurrentPositionOf(c);
-            s.seasons().addAllEpisodes(this.getAllEpisodesOf(s, db));
+            s.seasons().includingAll(this.getAllEpisodesOf(s, db));
             allSeries.add(s);
         }
         c.close();
@@ -247,7 +247,6 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put("genres", s.genres());
         cv.put("actors", s.actors());
         cv.put("posterFileName", s.posterFileName());
-        cv.put("poster", s.poster() != null ? s.poster().toByteArray(): null);
         return cv;
     }
 
@@ -282,7 +281,6 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         .withGenres(c.getString(c.getColumnIndex("genres")))
         .withActors(c.getString(c.getColumnIndex("actors")))
         .withPosterFileName(c.getString(c.getColumnIndex("posterFileName")))
-        .withPoster(c.getBlob(c.getColumnIndex("poster")))
         .build();
     }
 

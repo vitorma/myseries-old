@@ -110,10 +110,10 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                     final Season season = series.seasons().season(e.seasonNumber());
 
                     final RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
-                    if (series.hasPoster()) {
-                        final Bitmap poster = series.poster().image();
-                        item.setImageViewBitmap(R.id.widgetPoster, poster);
-                    }
+//                    if (series.hasPoster()) {
+//                        final Bitmap poster = series.poster().image();
+//                        item.setImageViewBitmap(R.id.widgetPoster, poster);
+//                    }
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.name());
                     final String pre = String.format(
                             this.getString(R.string.season_and_episode_format_short),

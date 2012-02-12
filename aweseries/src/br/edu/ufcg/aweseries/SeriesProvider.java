@@ -275,10 +275,11 @@ public class SeriesProvider {
         if (series == null)
             throw new IllegalArgumentException("series should not be null");
 
-        if (!series.hasPoster())
-            return this.genericPosterImage();
+//        if (series.hasPoster())
+//            return series.poster().image();            
 
-        return series.poster().image();
+        return this.genericPosterImage();
+        
     }
 
     private Bitmap genericPosterImage() {

@@ -54,6 +54,7 @@ import br.edu.ufcg.aweseries.UpdateListener;
 import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.model.SeriesListener;
 import br.edu.ufcg.aweseries.util.Objects;
 
 public class SeriesListActivity extends ListActivity implements UpdateListener {
@@ -81,7 +82,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     //Series item view adapter------------------------------------------------------------------------------------------
 
     private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements
-            DomainObjectListener<Series>, FollowingSeriesListener {
+            SeriesListener, FollowingSeriesListener {
 
         public SeriesItemViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);
@@ -89,7 +90,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             seriesProvider.addFollowingSeriesListener(this);
 
             for (final Series series : objects) {
-                series.addListener(this);
+                series.register(this);
             }
         }
 
@@ -115,7 +116,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             name.setText(item.name());
 
             // next episode to see
-            final Episode nextEpisodeToSee = item.seasons().nextEpisodeToSee();
+            final Episode nextEpisodeToSee = item.nextEpisodeToSee();
             if (nextEpisodeToSee != null) {
                 nextToSee.setText(Objects.nullSafe(
                         nextEpisodeToSee.name(),
@@ -128,21 +129,34 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         }
 
         @Override
-        public void onUpdate(Series series) {
-            this.notifyDataSetChanged();
-        }
-
-        @Override
         public void onFollowing(Series followedSeries) {
-            followedSeries.addListener(this);
+            followedSeries.register(this);
             this.add(followedSeries);
             this.sort(comparator);
         }
 
         @Override
         public void onUnfollowing(Series unfollowedSeries) {
-            unfollowedSeries.removeListener(this);
+            unfollowedSeries.deregister(this);
             this.remove(unfollowedSeries);
+        }
+
+        @Override
+        public void onChangeNextEpisodeToSee(Series series) {
+            this.notifyDataSetChanged();
+            
+        }
+
+        @Override
+        public void onMerge(Series series) {
+            this.notifyDataSetChanged();
+            
+        }
+
+        @Override
+        public void onChangeNumberOfSeenEpisodes(Series series) {
+          //SeriesListActivity is not interested in this event
+            
         }
     }
 
