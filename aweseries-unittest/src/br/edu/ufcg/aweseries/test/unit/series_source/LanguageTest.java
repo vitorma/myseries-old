@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.edu.ufcg.aweseries.test.unit.thetvdb;
+package br.edu.ufcg.aweseries.test.unit.series_source;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
