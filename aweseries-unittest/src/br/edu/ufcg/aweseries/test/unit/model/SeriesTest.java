@@ -162,11 +162,10 @@ public class SeriesTest {
 		Assert.assertEquals("actors 1", this.series1.actors());
 	}
 
-	// TODO This test should be migrated to work with the builder
 	@Ignore
 	@Test
-	public final void testGetPoster() {
-		Assert.assertNotNull(this.series1.poster());
+	public final void testGetPoster() {//TODO posterFileName
+//		Assert.assertNotNull(this.series1.poster());
 	}
 
 	@Test
@@ -208,12 +207,4 @@ public class SeriesTest {
 					this.series1.hashCode(), this.series2.hashCode());
 		}
 	}
-
-//	@Test
-//	public final void testToString() {
-//		Assert.assertEquals(this.series1.name(), this.series1.toString());
-//		Assert.assertEquals(this.series2.name(), this.series2.toString());
-//		Assert.assertEquals(this.series3.name(), this.series3.toString());
-//		Assert.assertEquals(this.series4.name(), this.series4.toString());
-//	}
 }
