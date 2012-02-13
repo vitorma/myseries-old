@@ -38,8 +38,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -51,7 +51,6 @@ import br.edu.ufcg.aweseries.FollowingSeriesListener;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.UpdateListener;
-import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.model.SeriesListener;
@@ -82,7 +81,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     //Series item view adapter------------------------------------------------------------------------------------------
 
     private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements
-            SeriesListener, FollowingSeriesListener {
+    SeriesListener, FollowingSeriesListener {
 
         public SeriesItemViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);
@@ -101,7 +100,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             // if no view was passed, create one for the item
             if (itemView == null) {
                 final LayoutInflater li = (LayoutInflater) SeriesListActivity.this
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.series_list_item, null);
             }
 
@@ -144,19 +143,19 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         @Override
         public void onChangeNextEpisodeToSee(Series series) {
             this.notifyDataSetChanged();
-            
+
         }
 
         @Override
         public void onMerge(Series series) {
             this.notifyDataSetChanged();
-            
+
         }
 
         @Override
         public void onChangeNumberOfSeenEpisodes(Series series) {
-          //SeriesListActivity is not interested in this event
-            
+            //SeriesListActivity is not interested in this event
+
         }
     }
 
@@ -209,7 +208,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.series_list_options_menu, menu);
-        this.updateMenuItem = (MenuItem) menu.findItem(R.id.updateMenuItem);
+        this.updateMenuItem = menu.findItem(R.id.updateMenuItem);
         this.updateMenuItem.setEnabled(this.updateMenuItemStatus);
         return true;
     }
@@ -291,11 +290,11 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         };
 
         new AlertDialog.Builder(this)
-                .setMessage(
-                        String.format(this.getString(R.string.do_you_want_to_stop_following),
-                                series.name()))
-                .setPositiveButton(R.string.yes, dialogClickListener)
-                .setNegativeButton(R.string.no, dialogClickListener).show();
+        .setMessage(
+                String.format(this.getString(R.string.do_you_want_to_stop_following),
+                        series.name()))
+                        .setPositiveButton(R.string.yes, dialogClickListener)
+                        .setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
     private void showSearchActivity() {
@@ -305,7 +304,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
     private void setUpRecentAndUpcomingButtonClickListener() {
         final ImageButton recentAndUpcomingEpisodesButton = (ImageButton) this
-                .findViewById(R.id.recentAndUpcomingEpisodesButton);
+        .findViewById(R.id.recentAndUpcomingEpisodesButton);
 
         recentAndUpcomingEpisodesButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -328,7 +327,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         private final int updateFailureTitle = R.string.updating_series_failure_notification_title;
         private final int icon = R.drawable.stat_sys_upload;
         private final NotificationManager nm = (NotificationManager) SeriesListActivity.this
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+        .getSystemService(Context.NOTIFICATION_SERVICE);
 
         private void launchNotification(String title, String text) {
             final long when = System.currentTimeMillis();

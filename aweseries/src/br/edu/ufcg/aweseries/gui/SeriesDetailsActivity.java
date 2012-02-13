@@ -40,7 +40,6 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.model.SeriesListener;
@@ -272,18 +271,18 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
     public void onChangeNextEpisodeToSee(Series series) {
         //this.nextToSee.setText(series.nextEpisodeToSee().toString());
         //this.downloadDescription();
-        
+
     }
 
     @Override
     public void onMerge(Series series) {
         this.downloadDescription();
-        
+
     }
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Series series) {
         this.downloadDescription();
-        
+
     }
 }
