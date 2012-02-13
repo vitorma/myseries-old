@@ -27,8 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class Series implements SeasonSetListener {
@@ -134,13 +132,18 @@ public class Series implements SeasonSetListener {
 
     //Episodes----------------------------------------------------------------------------------------------------------
 
-    public int numberOfSeenEpisodes() {
-        return this.seasons.numberOfSeenEpisodes();
-    }
     public List<Episode> episodes() {
         return this.seasons.allEpisodes();
     }
-    
+
+    public int numberOfEpisodes() {
+        return this.seasons.allEpisodes().size();//TODO this.seasons.numberOfEpisodes();
+    }
+
+    public int numberOfSeenEpisodes() {
+        return this.seasons.numberOfSeenEpisodes();
+    }
+
     public Episode nextEpisodeToSee() {
         return this.seasons.nextEpisodeToSee();
         
@@ -176,7 +179,7 @@ public class Series implements SeasonSetListener {
     //SeriesListener----------------------------------------------------------------------------------------------------
 
     public boolean register(SeriesListener listener) {
-        Validate.isNonNull(listener, "listener to register should be non-null");
+        Validate.isNonNull(listener, "listener");
 
         for (SeriesListener l : this.listeners) {
             if (l == listener) return false;
@@ -186,7 +189,7 @@ public class Series implements SeasonSetListener {
     }
 
     public boolean deregister(SeriesListener listener) {
-        Validate.isNonNull(listener, "listener to deregister should be non-null");
+        Validate.isNonNull(listener, "listener");
 
         for (int i = 0; i < this.listeners.size(); i++) {
             if (this.listeners.get(i) == listener) {
@@ -197,7 +200,7 @@ public class Series implements SeasonSetListener {
 
         return false;
     }
-    
+
     private void notifyThatNumberOfSeenEpisodesChanged() {
         for (SeriesListener l : this.listeners) {
             l.onChangeNumberOfSeenEpisodes(this);
@@ -209,15 +212,15 @@ public class Series implements SeasonSetListener {
             l.onChangeNextEpisodeToSee(this);
         }
     }
-    
+
     private void notifyThatWasMerged() {
         for (SeriesListener l : this.listeners) {
             l.onMerge(this);
         }
     }
-    
+
     //SeasonSetListener-------------------------------------------------------------------------------------------------
-    
+
     @Override
     public void onChangeNextEpisodeToSee(SeasonSet seasonSet) {
         this.notifyThatNextToSeeChanged();
@@ -231,7 +234,7 @@ public class Series implements SeasonSetListener {
 
     @Override
     public void onMerge(SeasonSet seasonSet) {
-        this.notifyThatWasMerged();
+        //Series is not interested in this event
     }
 
     //Object------------------------------------------------------------------------------------------------------------
@@ -347,10 +350,8 @@ public class Series implements SeasonSetListener {
             series.genres = this.genres;
             series.actors = this.actors;
             series.posterFileName = this.posterFileName;
-            series.seasons.includingAll(this.episodes);
 
-            return series;
+            return series.includingAll(this.episodes);
         }
     }
-
 }
