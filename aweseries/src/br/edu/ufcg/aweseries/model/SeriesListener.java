@@ -23,9 +23,11 @@ package br.edu.ufcg.aweseries.model;
 
 public interface SeriesListener {
 
+    public void onChangeNumberOfSeenEpisodes(Series series);
+
     public void onChangeNextEpisodeToSee(Series series);
 
-    public void onMerge(Series series);
+    public void onChangeNextNonSpecialEpisodeToSee(Series series);
 
-    public void onChangeNumberOfSeenEpisodes(Series series);
+    public void onMerge(Series series);
 }

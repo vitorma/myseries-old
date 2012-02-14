@@ -38,8 +38,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -134,6 +134,8 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             this.sort(comparator);
         }
 
+        //SeriesListener------------------------------------------------------------------------------------------------
+
         @Override
         public void onUnfollowing(Series unfollowedSeries) {
             unfollowedSeries.deregister(this);
@@ -141,21 +143,24 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         }
 
         @Override
-        public void onChangeNextEpisodeToSee(Series series) {
-            this.notifyDataSetChanged();
+        public void onChangeNumberOfSeenEpisodes(Series series) {
+            //TODO Update the 'progress' bar
+        }
 
+        @Override
+        public void onChangeNextEpisodeToSee(Series series) {
+            //TODO This behavior will depend on the user's settings (SharedPreference)
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onChangeNextNonSpecialEpisodeToSee(Series series) {
+            //TODO This behavior will depend on the user's settings (SharedPreference)
         }
 
         @Override
         public void onMerge(Series series) {
             this.notifyDataSetChanged();
-
-        }
-
-        @Override
-        public void onChangeNumberOfSeenEpisodes(Series series) {
-            //SeriesListActivity is not interested in this event
-
         }
     }
 

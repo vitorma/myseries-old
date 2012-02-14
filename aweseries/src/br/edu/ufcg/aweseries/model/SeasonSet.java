@@ -31,11 +31,13 @@ import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class SeasonSet implements SeasonListener {
+    private static final int SPECIAL_EPISODES_SEASON_NUMBER = 0;
     private int seriesId;
 
     private TreeMap<Integer, Season> seasons;
     private int numberOfSeenEpisodes;
     private Episode nextEpisodeToSee;
+    private Episode nextNonSpecialEpisodeToSee;
     private List<SeasonSetListener> listeners;
 
     //Construction------------------------------------------------------------------------------------------------------
@@ -161,6 +163,10 @@ public class SeasonSet implements SeasonListener {
                (current != null && candidate != null && Dates.compare(current.airDate(), candidate.airDate()) > 0);
     }
 
+    public Episode nextNonSpecialEpisodeToSee() {
+        return this.nextNonSpecialEpisodeToSee;
+    }
+
     //Merge-------------------------------------------------------------------------------------------------------------
 
     public SeasonSet mergeWith(SeasonSet other) {
@@ -217,6 +223,12 @@ public class SeasonSet implements SeasonListener {
         }
     }
 
+    private void notifyThatNextNonSpecialEpisodeToSeeChanged() {
+        for (SeasonSetListener l : this.listeners) {
+            l.onChangeNextNonSpecialEpisodeToSee(this);
+        }
+    }
+
     private void notifyThatWasMerged() {
         for (SeasonSetListener l : this.listeners) {
             l.onMerge(this);
@@ -252,6 +264,11 @@ public class SeasonSet implements SeasonListener {
         if (this.nextEpisodeToSeeShouldBeThatOf(season)) {
             this.nextEpisodeToSee = season.nextEpisodeToSee();
             this.notifyThatNextEpisodeToSeeChanged();
+        }
+
+        if (season.number() != SPECIAL_EPISODES_SEASON_NUMBER) {
+            this.nextNonSpecialEpisodeToSee = season.nextEpisodeToSee();
+            this.notifyThatNextNonSpecialEpisodeToSeeChanged();
         }
     }
 

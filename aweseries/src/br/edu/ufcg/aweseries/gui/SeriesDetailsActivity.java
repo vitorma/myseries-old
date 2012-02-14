@@ -267,22 +267,27 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
         return App.environment().seriesProvider();
     }
 
+    //SeriesListener----------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onChangeNumberOfSeenEpisodes(Series series) {
+        //TODO Update the 'progress' bar
+        this.downloadDescription();
+    }
+
     @Override
     public void onChangeNextEpisodeToSee(Series series) {
-        //this.nextToSee.setText(series.nextEpisodeToSee().toString());
-        //this.downloadDescription();
+        //TODO This behavior will depend on the user's settings (SharedPreference)
+        this.downloadDescription();
+    }
 
+    @Override
+    public void onChangeNextNonSpecialEpisodeToSee(Series series) {
+        //TODO This behavior will depend on the user's settings (SharedPreference)
     }
 
     @Override
     public void onMerge(Series series) {
         this.downloadDescription();
-
-    }
-
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Series series) {
-        this.downloadDescription();
-
     }
 }

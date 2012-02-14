@@ -137,7 +137,7 @@ public class Series implements SeasonSetListener {
     }
 
     public int numberOfEpisodes() {
-        return this.seasons.episodes().size();//TODO this.seasons.numberOfEpisodes();
+        return this.seasons.numberOfEpisodes();
     }
 
     public int numberOfSeenEpisodes() {
@@ -146,7 +146,10 @@ public class Series implements SeasonSetListener {
 
     public Episode nextEpisodeToSee() {
         return this.seasons.nextEpisodeToSee();
-        
+    }
+
+    public Episode nextNonSpecialEpisodeToSee() {
+        return this.seasons.nextNonSpecialEpisodeToSee();
     }
 
     public Series includingAll(Collection<Episode> episodes) {
@@ -207,9 +210,15 @@ public class Series implements SeasonSetListener {
         }
     }
 
-    private void notifyThatNextToSeeChanged() {
+    private void notifyThatNextEpisodeToSeeChanged() {
         for (SeriesListener l : this.listeners) {
             l.onChangeNextEpisodeToSee(this);
+        }
+    }
+
+    private void notifyThatNextNonSpecialEpisodeToSeeChanged() {
+        for (SeriesListener l : this.listeners) {
+            l.onChangeNextNonSpecialEpisodeToSee(this);
         }
     }
 
@@ -222,14 +231,18 @@ public class Series implements SeasonSetListener {
     //SeasonSetListener-------------------------------------------------------------------------------------------------
 
     @Override
-    public void onChangeNextEpisodeToSee(SeasonSet seasonSet) {
-        this.notifyThatNextToSeeChanged();
-    }
-    
-    @Override
     public void onChangeNumberOfSeenEpisodes(SeasonSet seasonSet) {
         this.notifyThatNumberOfSeenEpisodesChanged();
-        
+    }
+
+    @Override
+    public void onChangeNextEpisodeToSee(SeasonSet seasonSet) {
+        this.notifyThatNextEpisodeToSeeChanged();
+    }
+
+    @Override
+    public void onChangeNextNonSpecialEpisodeToSee(SeasonSet seasonSet) {
+        this.notifyThatNextNonSpecialEpisodeToSeeChanged();
     }
 
     @Override
