@@ -23,15 +23,13 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 import br.edu.ufcg.aweseries.util.Validate;
 
-public class SeasonSet implements Iterable<Season>, SeasonListener {
+public class SeasonSet implements SeasonListener {
     private int seriesId;
 
     private TreeMap<Integer, Season> seasons;
@@ -157,6 +155,7 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
         return numberOfSeenEpisodes;
     }
 
+    //TODO Hm, is there a better approach? Maybe moving this code to onChangeNextEpisodeToSee(Season season) ?
     private void updateNextEpisodeToSee() {
         Episode next = this.findNextEpisodeToSee();
 
@@ -168,6 +167,8 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
         this.notifyThatNextEpisodeToSeeChanged();
     }
 
+    //FIXME To find the nextEpisodeToSee, the episodes should be compared by the airDate, not by the seasonNumber.
+    //      Think about an episode of the Season0 whose airDate is after the airDate of another episode of the Season1.
     private Episode findNextEpisodeToSee() {
         for (Season s : this.seasons.values()) {
             Episode next = s.nextEpisodeToSee();
@@ -250,12 +251,12 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
 
     @Override
     public void onMarkAsNotSeen(Season season) {
-      //SeasonSet is not interested in this event
+        //SeasonSet is not interested in this event
     }
 
     @Override
     public void onMarkAsSeen(Season season) {
-      //SeasonSet is not interested in this event
+        //SeasonSet is not interested in this event
     }
 
     @Override
@@ -266,74 +267,5 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     @Override
     public void onChangeNumberOfSeenEpisodes(Season season) {
         this.notifyThatNumberOfSeenEpisodesChanged();
-    }
-
-    //Iterator---------------------------------------------------------------------------------------------------------
-    //TODO Check whether SeasonSet really needs implement Iterator
-
-    private int firstSeasonNumber() {
-        return this.seasons.firstKey();
-    }
-
-    private int lastSeasonNumber() {
-        return this.seasons.lastKey();
-    }
-
-    @Override
-    public Iterator<Season> iterator() {
-        return new Iterator<Season>() {
-            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ?
-                                       SeasonSet.this.firstSeasonNumber() :
-                                       Integer.MAX_VALUE;
-
-            @Override
-            public boolean hasNext() {
-                return SeasonSet.this.numberOfSeasons() > 0 &&
-                       this.seasonNumber <= SeasonSet.this.lastSeasonNumber();
-            }
-
-            @Override
-            public Season next() {
-                if (!this.hasNext()) throw new NoSuchElementException();
-
-                Season next = SeasonSet.this.season(this.seasonNumber);
-                this.seasonNumber++;
-
-                return next;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    public Iterator<Season> reversedIterator() {
-        return new Iterator<Season>() {
-            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ?
-                                       SeasonSet.this.lastSeasonNumber() :
-                                       Integer.MIN_VALUE;
-
-            @Override
-            public boolean hasNext() {
-                return SeasonSet.this.numberOfSeasons() > 0 && this.seasonNumber >= SeasonSet.this.firstSeasonNumber();
-            }
-
-            @Override
-            public Season next() {
-                if (!this.hasNext()) throw new NoSuchElementException();
-
-                Season next = SeasonSet.this.season(this.seasonNumber);
-                this.seasonNumber--;
-
-                return next;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
     }
 }
