@@ -63,17 +63,17 @@ public class SeasonSetTest {
     
     @Test(expected = IllegalArgumentException.class)
     public final void testAddDuplicatedEpisode() {
-        this.seasonSet.addEpisode(this.episode1);
-        this.seasonSet.addEpisode(this.episode1);
+        this.seasonSet.including(this.episode1);
+        this.seasonSet.including(this.episode1);
     }
 
     @Test
     public final void testAddEpisode() {
-        this.seasonSet.addEpisode(this.episode1);
-        this.seasonSet.addEpisode(this.episode2);
-        this.seasonSet.addEpisode(this.episode3);
+        this.seasonSet.including(this.episode1);
+        this.seasonSet.including(this.episode2);
+        this.seasonSet.including(this.episode3);
 
-        for (final Season season : this.seasonSet.toArray()) {
+        for (final Season season : this.seasonSet.seasons()) {
             if (season.number() == 1) {
                 Assert.assertThat(season.episodes(), JUnitMatchers.hasItems(this.episode1, this.episode2));
                 Assert.assertEquals(2, season.episodes().size());
@@ -86,13 +86,13 @@ public class SeasonSetTest {
 
     @Test(expected = IllegalArgumentException.class)
     public final void testAddNullEpisode() {
-        this.seasonSet.addEpisode(null);
+        this.seasonSet.including(null);
     }
 
     @Test
     public final void testSeasonSet() {
-        Assert.assertNotNull(this.seasonSet.toArray());
-        Assert.assertEquals(0, this.seasonSet.toArray().length);
+        Assert.assertNotNull(this.seasonSet.seasons());
+        Assert.assertEquals(0, this.seasonSet.seasons().size());
     }
         
     //TODO: Remove me, test register()
@@ -114,7 +114,7 @@ public class SeasonSetTest {
         Mockito.when(episode2.seriesId()).thenReturn(1);
         Mockito.when(episode2.number()).thenReturn(2);
         Mockito.when(episode2.seasonNumber()).thenReturn(1);        
-        seasonSet.addEpisode(episode2);
+        seasonSet.including(episode2);
         
 //        Mockito.verify(listener1, Mockito.times(1)).onUpdate(seasonSet);
 //        Mockito.verify(listener2, Mockito.times(0)).onUpdate(seasonSet);       
@@ -127,7 +127,7 @@ public class SeasonSetTest {
         Mockito.when(episode1.number()).thenReturn(1);
         Mockito.when(episode1.seasonNumber()).thenReturn(1);        
 
-        seasonSet.addEpisode(episode1);
+        seasonSet.including(episode1);
         
 //        Mockito.verify(listener1, Mockito.times(2)).onUpdate(seasonSet);
 //        Mockito.verify(listener2, Mockito.times(1)).onUpdate(seasonSet);
@@ -155,7 +155,7 @@ public class SeasonSetTest {
         Mockito.when(episode2.seriesId()).thenReturn(1);
         Mockito.when(episode2.number()).thenReturn(2);
         Mockito.when(episode2.seasonNumber()).thenReturn(1);        
-        seasonSet.addEpisode(episode2);
+        seasonSet.including(episode2);
                 
 //        Mockito.verify(listener1, Mockito.times(1)).onUpdate(seasonSet);
 //        Mockito.verify(listener2, Mockito.times(0)).onUpdate(seasonSet);
@@ -169,7 +169,7 @@ public class SeasonSetTest {
         Mockito.when(episode1.number()).thenReturn(1);
         Mockito.when(episode1.seasonNumber()).thenReturn(1);        
 
-        seasonSet.addEpisode(episode1);
+        seasonSet.including(episode1);
         
 //        Mockito.verify(listener1, Mockito.times(1)).onUpdate(seasonSet);
 //        Mockito.verify(listener2, Mockito.times(0)).onUpdate(seasonSet);

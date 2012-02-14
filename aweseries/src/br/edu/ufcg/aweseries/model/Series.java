@@ -133,11 +133,11 @@ public class Series implements SeasonSetListener {
     //Episodes----------------------------------------------------------------------------------------------------------
 
     public List<Episode> episodes() {
-        return this.seasons.allEpisodes();
+        return this.seasons.episodes();
     }
 
     public int numberOfEpisodes() {
-        return this.seasons.allEpisodes().size();//TODO this.seasons.numberOfEpisodes();
+        return this.seasons.episodes().size();//TODO this.seasons.numberOfEpisodes();
     }
 
     public int numberOfSeenEpisodes() {
