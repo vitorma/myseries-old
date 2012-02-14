@@ -504,12 +504,12 @@ public class SeasonTest {
         markAsSeen(episode1, episode2);
 
         Assert.assertEquals(1, season.including(episode1).numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
+        Mockito.verify(listener1, Mockito.times(1)).onIncreaseNumberOfSeenEpisodes(season);
+        Mockito.verify(listener2, Mockito.times(1)).onIncreaseNumberOfSeenEpisodes(season);
 
         Assert.assertEquals(2, season.including(episode2).numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
+        Mockito.verify(listener1, Mockito.times(2)).onIncreaseNumberOfSeenEpisodes(season);
+        Mockito.verify(listener2, Mockito.times(2)).onIncreaseNumberOfSeenEpisodes(season);
     }
 
     @Test
@@ -632,7 +632,7 @@ public class SeasonTest {
     }
 
     @Test
-    public final void listenersAreNotifiedWhenTheNumberOfSeenEpisodesChangesBecauseAnEpisodeWasMarkedAsSeen() {
+    public final void listenersAreNotifiedWhenTheNumberOfSeenEpisodesIncreasesBecauseAnEpisodeWasMarkedAsSeen() {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2 = mockEpisode(2, 1, 2, 1);
 
@@ -652,15 +652,15 @@ public class SeasonTest {
         callOnMarkAsSeenFor(season, episode1);
 
         Assert.assertEquals(1, season.numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
+        Mockito.verify(listener1, Mockito.times(1)).onIncreaseNumberOfSeenEpisodes(season);
+        Mockito.verify(listener2, Mockito.times(1)).onIncreaseNumberOfSeenEpisodes(season);
 
         markAsSeen(episode2);
         callOnMarkAsSeenFor(season, episode2);
 
         Assert.assertEquals(2, season.numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
+        Mockito.verify(listener1, Mockito.times(2)).onIncreaseNumberOfSeenEpisodes(season);
+        Mockito.verify(listener2, Mockito.times(2)).onIncreaseNumberOfSeenEpisodes(season);
     }
 
     @Test
@@ -728,7 +728,7 @@ public class SeasonTest {
     }
 
     @Test
-    public final void listenersAreNotifiedWhenTheNumberOfSeenEpisodesChangesBecauseAnEpisodeWasMarkedAsNotSeen() {
+    public final void listenersAreNotifiedWhenTheNumberOfSeenEpisodesDecreasesBecauseAnEpisodeWasMarkedAsNotSeen() {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2 = mockEpisode(2, 1, 2, 1);
 
@@ -748,15 +748,15 @@ public class SeasonTest {
         callOnMarkAsNotSeenFor(season, episode1);
 
         Assert.assertEquals(1, season.numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
+        Mockito.verify(listener1, Mockito.times(1)).onDecreaseNumberOfSeenEpisodes(season);
+        Mockito.verify(listener2, Mockito.times(1)).onDecreaseNumberOfSeenEpisodes(season);
 
         markAsNotSeen(episode2);
         callOnMarkAsNotSeenFor(season, episode2);
 
         Assert.assertEquals(0, season.numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
+        Mockito.verify(listener1, Mockito.times(2)).onDecreaseNumberOfSeenEpisodes(season);
+        Mockito.verify(listener2, Mockito.times(2)).onDecreaseNumberOfSeenEpisodes(season);
     }
 
     @Test

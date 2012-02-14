@@ -33,8 +33,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -271,7 +271,13 @@ public class EpisodeListActivity extends ListActivity {
             }
 
             @Override
-            public void onChangeNumberOfSeenEpisodes(Season season) {
+            public void onIncreaseNumberOfSeenEpisodes(Season season) {
+                //TODO A better implementation
+                EpisodeListActivity.this.loadSeasonDataOnView();
+            }
+
+            @Override
+            public void onDecreaseNumberOfSeenEpisodes(Season season) {
                 //TODO A better implementation
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }

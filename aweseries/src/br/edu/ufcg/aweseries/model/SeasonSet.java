@@ -34,6 +34,7 @@ public class SeasonSet implements SeasonListener {
     private int seriesId;
 
     private TreeMap<Integer, Season> seasons;
+    private int numberOfSeenEpisodes;
     private Episode nextEpisodeToSee;
     private List<SeasonSetListener> listeners;
 
@@ -142,6 +143,10 @@ public class SeasonSet implements SeasonListener {
 
     //Seen--------------------------------------------------------------------------------------------------------------
 
+    public int numberOfSeenEpisodes() {
+        return this.numberOfSeenEpisodes;
+    }
+
     public Episode nextEpisodeToSee() {
         return this.nextEpisodeToSee;
     }
@@ -153,16 +158,6 @@ public class SeasonSet implements SeasonListener {
         return (current == null && candidate != null) ||
                (current != null && candidate == null && current.seasonNumber() == season.number()) ||
                (current != null && candidate != null && Dates.compare(current.airDate(), candidate.airDate()) > 0);
-    }
-
-    public int numberOfSeenEpisodes() {
-        int numberOfSeenEpisodes = 0;
-
-        for (Season s : this.seasons.values()) {
-            numberOfSeenEpisodes += s.numberOfSeenEpisodes();
-        }
-
-        return numberOfSeenEpisodes;
     }
 
     //Merge-------------------------------------------------------------------------------------------------------------
@@ -232,11 +227,8 @@ public class SeasonSet implements SeasonListener {
     //SeasonListener----------------------------------------------------------------------------------------------------
 
     @Override
-    public void onChangeNextEpisodeToSee(Season season) {
-        if (this.nextEpisodeToSeeShouldBeThatOf(season)) {
-            this.nextEpisodeToSee = season.nextEpisodeToSee();
-            this.notifyThatNextEpisodeToSeeChanged();
-        }
+    public void onMarkAsSeen(Season season) {
+        //SeasonSet is not interested in this event
     }
 
     @Override
@@ -245,17 +237,27 @@ public class SeasonSet implements SeasonListener {
     }
 
     @Override
-    public void onMarkAsSeen(Season season) {
-        //SeasonSet is not interested in this event
+    public void onIncreaseNumberOfSeenEpisodes(Season season) {
+        this.numberOfSeenEpisodes++;
+        this.notifyThatNumberOfSeenEpisodesChanged();
+    }
+
+    @Override
+    public void onDecreaseNumberOfSeenEpisodes(Season season) {
+        this.numberOfSeenEpisodes--;
+        this.notifyThatNumberOfSeenEpisodesChanged();
+    }
+
+    @Override
+    public void onChangeNextEpisodeToSee(Season season) {
+        if (this.nextEpisodeToSeeShouldBeThatOf(season)) {
+            this.nextEpisodeToSee = season.nextEpisodeToSee();
+            this.notifyThatNextEpisodeToSeeChanged();
+        }
     }
 
     @Override
     public void onMerge(Season season) {
         //SeasonSet is not interested in this event
-    }
-
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Season season) {
-        this.notifyThatNumberOfSeenEpisodesChanged();
     }
 }
