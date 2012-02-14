@@ -61,12 +61,21 @@ public class SeasonSet implements SeasonListener {
         return this.seasons.size();
     }
 
-    private boolean includesSeason(int seasonNumber) {
-        return this.seasons.containsKey(seasonNumber);
+    public boolean includes(Season season) {
+        return season != null && this.seasons.containsKey(season.number());
     }
 
     public Season season(int number) {
         return this.seasons.get(number);
+    }
+
+    private Season ensuredSeason(int number) {
+        if (!this.seasons.containsKey(number)) {
+            Season season = new Season(this.seriesId, number);
+            this.including(season);
+        }
+
+        return this.season(number);
     }
 
     public List<Season> seasons() {
@@ -79,10 +88,6 @@ public class SeasonSet implements SeasonListener {
         this.seasons.put(season.number(), season);
 
         return this;
-    }
-
-    private Season createSeason(int seasonNumber) {
-        return new Season(this.seriesId, seasonNumber);
     }
 
     //Episodes----------------------------------------------------------------------------------------------------------
@@ -108,6 +113,8 @@ public class SeasonSet implements SeasonListener {
     }
 
     public List<Episode> episodesBy(Specification<Episode> specification) {
+        Validate.isNonNull(specification, "specification");
+
         List<Episode> episodes = new ArrayList<Episode>();
 
         for (Season s : this.seasons.values()) {
@@ -117,16 +124,10 @@ public class SeasonSet implements SeasonListener {
         return episodes;
     }
 
-    //TODO A more beautiful code
     public SeasonSet including(Episode episode) {
         Validate.isNonNull(episode, "episode");
-        Validate.isTrue(episode.seriesId() == this.seriesId, "episode's seriesId should be %d", this.seriesId);
 
-        if (!this.includesSeason(episode.seasonNumber())) {
-            this.including(this.createSeason(episode.seasonNumber()));
-        }
-
-        this.season(episode.seasonNumber()).including(episode);
+        this.ensuredSeason(episode.seasonNumber()).including(episode);
 
         return this;
     }
@@ -162,23 +163,21 @@ public class SeasonSet implements SeasonListener {
 
     //Merge-------------------------------------------------------------------------------------------------------------
 
-    public void mergeWith(SeasonSet other) {
+    public SeasonSet mergeWith(SeasonSet other) {
         Validate.isNonNull(other, "other");
         Validate.isTrue(this.seriesId == other.seriesId, "other's seriesId should be %d", this.seriesId);
 
         for (Season s : this.seasons.values()) {
-            if (other.includesSeason(s.number())) {
-                s.mergeWith(other.season(s.number()));
-            }
+            if (other.includes(s)) s.mergeWith(other.season(s.number()));
         }
 
         for (Season s : other.seasons.values()) {
-            if (!this.includesSeason(s.number())) {
-                this.including(s);
-            }
+            if (!this.includes(s)) this.including(s);
         }
 
         this.notifyThatWasMerged();
+
+        return this;
     }
 
     //SeasonSetListener-------------------------------------------------------------------------------------------------

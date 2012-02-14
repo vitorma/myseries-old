@@ -23,9 +23,9 @@ package br.edu.ufcg.aweseries.model;
 
 public interface EpisodeListener {
 
-    public void onMarkAsSeen(Episode e);
+    public void onMarkAsSeen(Episode episode);
 
-    public void onMarkAsNotSeen(Episode e);
+    public void onMarkAsNotSeen(Episode episode);
 
-    public void onMerge(Episode e);
+    public void onMerge(Episode episode);
 }
