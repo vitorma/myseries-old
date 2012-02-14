@@ -48,7 +48,7 @@ public class EpisodeTest {
     private static final String DIRECTORS = "directors";
     private static final String WRITERS = "writers";
     private static final String GUEST_STARS = "guest stars";
-    private static final String IMAGE_FILE_NAME = "poster";
+    private static final String IMAGE_FILE_NAME = "image file name";
 
     //Mock--------------------------------------------------------------------------------------------------------------
 
@@ -106,7 +106,7 @@ public class EpisodeTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void buildinganEpisodeWithInvalidNumberCausesIllegalArgumentException() {
+    public void buildingAnEpisodeWithInvalidNumberCausesIllegalArgumentException() {
         Episode.builder()
             .withId(ID1)
             .withSeriesId(SERIES_ID1)
