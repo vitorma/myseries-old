@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class SeasonSet implements SeasonListener {
@@ -145,6 +146,15 @@ public class SeasonSet implements SeasonListener {
         return this.nextEpisodeToSee;
     }
 
+    private boolean nextEpisodeToSeeShouldBeThatOf(Season season) {
+        Episode current = this.nextEpisodeToSee;
+        Episode candidate = season.nextEpisodeToSee();
+
+        return (current == null && candidate != null) ||
+               (current != null && candidate == null && current.seasonNumber() == season.number()) ||
+               (current != null && candidate != null && Dates.compare(current.airDate(), candidate.airDate()) > 0);
+    }
+
     public int numberOfSeenEpisodes() {
         int numberOfSeenEpisodes = 0;
 
@@ -153,29 +163,6 @@ public class SeasonSet implements SeasonListener {
         }
 
         return numberOfSeenEpisodes;
-    }
-
-    //TODO Hm, is there a better approach? Maybe moving this code to onChangeNextEpisodeToSee(Season season) ?
-    private void updateNextEpisodeToSee() {
-        Episode next = this.findNextEpisodeToSee();
-
-        if (this.nextEpisodeToSee == next) return;
-        if (this.nextEpisodeToSee != null && this.nextEpisodeToSee.equals(next)) return;
-
-        this.nextEpisodeToSee = next;
-
-        this.notifyThatNextEpisodeToSeeChanged();
-    }
-
-    //FIXME To find the nextEpisodeToSee, the episodes should be compared by the airDate, not by the seasonNumber.
-    //      Think about an episode of the Season0 whose airDate is after the airDate of another episode of the Season1.
-    private Episode findNextEpisodeToSee() {
-        for (Season s : this.seasons.values()) {
-            Episode next = s.nextEpisodeToSee();
-            if (next != null) return next;
-        }
-
-        return null;
     }
 
     //Merge-------------------------------------------------------------------------------------------------------------
@@ -246,7 +233,10 @@ public class SeasonSet implements SeasonListener {
 
     @Override
     public void onChangeNextEpisodeToSee(Season season) {
-        this.updateNextEpisodeToSee();
+        if (this.nextEpisodeToSeeShouldBeThatOf(season)) {
+            this.nextEpisodeToSee = season.nextEpisodeToSee();
+            this.notifyThatNextEpisodeToSeeChanged();
+        }
     }
 
     @Override
