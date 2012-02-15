@@ -34,10 +34,12 @@ public class Dates {
             throw new IllegalArgumentException(NULL_FORMAT_MESSAGE);
         }
 
+        if (date == null || Strings.isBlank(date)) {
+            return alternative;
+        }
+
         try {
             return format.parse(date);
-        } catch (NullPointerException e) {
-            return alternative;
         } catch (ParseException e) {
             return alternative;
         }
