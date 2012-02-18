@@ -330,7 +330,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         private final int updateNotificationTitle = R.string.updating_series_notification_title;
         private final int updateFailureText = R.string.update_failure_notification_message;
         private final int updateFailureTitle = R.string.updating_series_failure_notification_title;
-        private final int icon = R.drawable.stat_sys_upload;
+        private final int icon = R.drawable.stat_sys_download;
         private final NotificationManager nm = (NotificationManager) SeriesListActivity.this
         .getSystemService(Context.NOTIFICATION_SERVICE);
 
