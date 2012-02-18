@@ -11,7 +11,12 @@ public class Validate {
     }
 
     public static void isTrue(boolean assertion, String message, Object... messageArguments) {
-        if (!assertion) throw new IllegalArgumentException(String.format(message, messageArguments));
+        if (!assertion) {
+            
+            if (message == null) { throw new IllegalArgumentException(); } 
+            
+            throw new IllegalArgumentException(String.format(message, messageArguments));
+        }
     }
 
     //IsNonNull---------------------------------------------------------------------------------------------------------

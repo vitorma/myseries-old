@@ -28,7 +28,7 @@ import br.edu.ufcg.aweseries.util.Strings;
 
 public class StringsTest {
 
-	@Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testIsNullEmpty() {
         Strings.isEmpty(null);
     }
@@ -49,6 +49,12 @@ public class StringsTest {
     public void testIsBlank() {
         Assert.assertTrue(Strings.isBlank(""));
         Assert.assertTrue(Strings.isBlank("                  "));
+        Assert.assertTrue(Strings.isBlank("\t"));
+        Assert.assertTrue(Strings.isBlank(" \t  "));
+        Assert.assertTrue(Strings.isBlank("\t\t\t"));
+        Assert.assertTrue(Strings.isBlank("\0"));
+        Assert.assertTrue(Strings.isBlank("   \0"));
+        Assert.assertTrue(Strings.isBlank("\t\t\t\0"));
         Assert.assertFalse(Strings.isBlank("0"));
         Assert.assertFalse(Strings.isBlank("  0  "));
     }
@@ -80,26 +86,22 @@ public class StringsTest {
     public void testNormalizeSinglePipeSeparatedString() {
         final String normalized = "single pipe separated";
 
-        Assert.assertEquals(normalized,
-                Strings.normalizePipeSeparated("single pipe separated"));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("single pipe separated"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("   single pipe separated  "));
-        Assert.assertEquals(normalized,
-                Strings.normalizePipeSeparated("|single pipe separated|"));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("|single pipe separated|"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("         |single pipe separated|    "));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("| single pipe separated   |"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("   |      single pipe separated   |      "));
-        Assert.assertEquals(normalized,
-                Strings.normalizePipeSeparated("|single pipe separated"));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("|single pipe separated"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("       |single pipe separated   "));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("       |    single pipe separated      "));
-        Assert.assertEquals(normalized,
-                Strings.normalizePipeSeparated("single pipe separated|"));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("single pipe separated|"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("     single pipe separated|       "));
         Assert.assertEquals(normalized,
@@ -110,35 +112,63 @@ public class StringsTest {
     public void testNormalizePipeSeparatedString() {
         final String normalized = "pipe, separated, string";
 
-        Assert.assertEquals(normalized,
-                Strings.normalizePipeSeparated("|pipe|separated|string|"));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("|pipe|separated|string|"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("    |pipe|separated|string|   "));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("|   pipe|   separated  |string  |"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("     |   pipe|   separated  |string  |    "));
-        Assert.assertEquals(normalized,
-                Strings.normalizePipeSeparated("|pipe|separated|string"));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("|pipe|separated|string"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("       |pipe|separated|string     "));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("|  pipe  |  separated  |  string"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("    |   pipe | separated  |  string   "));
-        Assert.assertEquals(normalized,
-                Strings.normalizePipeSeparated("pipe|separated|string|"));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("pipe|separated|string|"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("       pipe|separated|string|     "));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("pipe  |  separated  |  string   |"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("       pipe | separated  |  string   |   "));
-        Assert.assertEquals(normalized,
-                Strings.normalizePipeSeparated("pipe|separated|string"));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("pipe|separated|string"));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("       pipe|separated|string     "));
         Assert.assertEquals(normalized,
                 Strings.normalizePipeSeparated("    pipe  |     separated  |  string   "));
+    }
+
+    @Test
+    public void testNormalizeMultiplePipeSeparatedString() {
+        final String normalized = "pipe, separated, string";
+        
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("|pipe|separated|string|"));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("    |  pipe||separated|string|   "));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("|   pipe||||   separated  ||string  |"));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("     ||   pipe|||   separated  ||string  |    "));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("|pipe|separated|string"));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("       || | pipe||separated||\t|| |string     "));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("||||  pipe  |  separated  ||  string"));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("    ||   pipe ||||| separated  |||\0|  string   "));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("pipe||separated|string|||"));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("       pipe||separated||string|     "));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("pipe  ||  separated  ||  string   |"));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("       pipe || separated  ||  string   |   "));
+        Assert.assertEquals(normalized, Strings.normalizePipeSeparated("pipe|separated|string"));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated(" ||||      pipe||separated||string    | "));
+        Assert.assertEquals(normalized,
+                Strings.normalizePipeSeparated("  ||  pipe  ||     separated ||  string |  "));
     }
 }

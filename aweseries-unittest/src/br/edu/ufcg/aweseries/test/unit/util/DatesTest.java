@@ -33,59 +33,83 @@ import org.junit.Test;
 import br.edu.ufcg.aweseries.util.Dates;
 
 public class DatesTest {
-	private static final DateFormat FORMAT;
-	static {
-		FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-		FORMAT.setLenient(false);
-	}
-	private static final String STRING_DATE = "01/01/2011";
-	private static final Date TODAY = new Date();
+    private static final DateFormat FORMAT;
+    private static final DateFormat YMD_FORMAT;
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testParseDateFromStringWithNullFormat() {
-		Dates.parseDate(STRING_DATE, null, TODAY);
-	}
+    static {
+        FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+        FORMAT.setLenient(false);
+        YMD_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+        YMD_FORMAT.setLenient(false);
+    }
 
-	@Test
-	public void testParseDateFromString() throws ParseException {
-		Assert.assertEquals(FORMAT.parse(STRING_DATE), Dates.parseDate(STRING_DATE, FORMAT, TODAY));
-		Assert.assertEquals(TODAY, Dates.parseDate(null, FORMAT, TODAY));
-		Assert.assertEquals(TODAY, Dates.parseDate("invalid date", FORMAT, TODAY));
-		Assert.assertEquals(TODAY, Dates.parseDate("2011/01/01", FORMAT, TODAY));
-		Assert.assertEquals(null, Dates.parseDate("invalid date", FORMAT, null));
-		Assert.assertEquals(null, Dates.parseDate(null, FORMAT, null));
-	}
+    private static final String STRING_DATE = "01/01/2011";
+    private static final String STRING_DATE_YMD = "2011/01/01";
+    private static final Date TODAY = new Date();
 
-	@Test
-	public void testParseDateFromLong() {
-		Assert.assertEquals(TODAY, Dates.parseDate(null, TODAY));
-		Assert.assertEquals(new Date(0L), Dates.parseDate(0L, TODAY));
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testParseDateFromStringWithNullFormat() {
+        Dates.parseDate(STRING_DATE, null, TODAY);
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testToStringWithNullFormat() {
-		Dates.toString(TODAY, null, STRING_DATE);
-	}
+    @Test
+    public void testParseDateFromString() throws ParseException {
+        Assert.assertEquals(FORMAT.parse(STRING_DATE), Dates.parseDate(STRING_DATE, FORMAT, TODAY));
+        Assert.assertEquals(TODAY, Dates.parseDate(null, FORMAT, TODAY));
+        Assert.assertEquals(TODAY, Dates.parseDate("invalid date", FORMAT, TODAY));
+        Assert.assertEquals(TODAY, Dates.parseDate("", FORMAT, TODAY));
+        Assert.assertEquals(TODAY, Dates.parseDate("2011/01/01", FORMAT, TODAY));
+        Assert.assertEquals(null, Dates.parseDate("invalid date", FORMAT, null));
+        Assert.assertEquals(null, Dates.parseDate(null, FORMAT, null));
 
-	@Test
-	public void testToString() throws ParseException {
-		Date date = Dates.parseDate("05/01/2012", FORMAT, TODAY);
-		Assert.assertEquals(FORMAT.format(date), Dates.toString(date, FORMAT, STRING_DATE));
-		Assert.assertEquals(STRING_DATE, Dates.toString(null, FORMAT, STRING_DATE));
-		Assert.assertEquals(null, Dates.toString(null, FORMAT, null));
-	}
+        Assert.assertEquals(YMD_FORMAT.parse(STRING_DATE_YMD),
+                Dates.parseDate(STRING_DATE_YMD, YMD_FORMAT, TODAY));
+        Assert.assertEquals(YMD_FORMAT.parse(STRING_DATE_YMD),
+                Dates.parseDate(STRING_DATE_YMD, YMD_FORMAT, null));
+        Assert.assertEquals(TODAY, Dates.parseDate("2011/13/01", YMD_FORMAT, TODAY));
+        Assert.assertEquals(TODAY, Dates.parseDate("2011/10/32", YMD_FORMAT, TODAY));
+        Assert.assertEquals(TODAY, Dates.parseDate("", YMD_FORMAT, TODAY));
+        Assert.assertEquals(null, Dates.parseDate("2011/13/01", YMD_FORMAT, null));
+        Assert.assertEquals(null, Dates.parseDate("2011/10/32", YMD_FORMAT, null));
+    }
 
-	@Test
-	public void testCompare() {
-		Date d1 = new Date(1L);
-		Date d2 = new Date(2L);
+    @Test
+    public void testParseDateFromLong() {
+        Assert.assertEquals(TODAY, Dates.parseDate(null, TODAY));
+        Assert.assertEquals(null, Dates.parseDate(null, null));
 
-		Assert.assertEquals(-1, Dates.compare(d1, null));
-		Assert.assertEquals(0, Dates.compare(null, null));
-		Assert.assertEquals(1, Dates.compare(null, d1));
+        Assert.assertEquals(new Date(0L), Dates.parseDate(0L, TODAY));
+        Assert.assertEquals(new Date(Long.MIN_VALUE), Dates.parseDate(Long.MIN_VALUE, null));
+        Assert.assertEquals(new Date(Long.MAX_VALUE), Dates.parseDate(Long.MAX_VALUE, null));
+    }
 
-		Assert.assertEquals(-1, Dates.compare(d1, d2));
-		Assert.assertEquals(0, Dates.compare(d1, d1));
-		Assert.assertEquals(1, Dates.compare(d2, d1));
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testToStringWithNullFormat() {
+        Dates.toString(TODAY, null, STRING_DATE);
+    }
+
+    @Test
+    public void testToString() throws ParseException {
+        Date date = Dates.parseDate("05/01/2012", FORMAT, TODAY);
+        Assert.assertEquals(FORMAT.format(date), Dates.toString(date, FORMAT, STRING_DATE));
+        Assert.assertEquals(STRING_DATE, Dates.toString(null, FORMAT, STRING_DATE));
+        Assert.assertEquals(null, Dates.toString(null, FORMAT, null));
+    }
+
+    @Test
+    public void testCompare() {
+        Date d1 = new Date(1L);
+        Date d1Copy = new Date(1L);
+        Date d2 = new Date(2L);
+
+        Assert.assertEquals(-1, Dates.compare(d1, null));
+        Assert.assertEquals(0, Dates.compare(null, null));
+        Assert.assertEquals(1, Dates.compare(null, d1));
+
+        Assert.assertEquals(-1, Dates.compare(d1, d2));
+        Assert.assertEquals(0, Dates.compare(d1, d1));
+        Assert.assertEquals(0, Dates.compare(d1, d1Copy));
+        Assert.assertEquals(0, Dates.compare(d1Copy, d1));
+        Assert.assertEquals(1, Dates.compare(d2, d1));
+    }
 }
