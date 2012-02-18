@@ -1,5 +1,5 @@
 /*
- *   SeasonSetListener.java
+ *   SeriesListener.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -21,13 +21,13 @@
 
 package br.edu.ufcg.aweseries.model;
 
-public interface SeasonSetListener {
+public interface SeriesListener {
 
-    public void onChangeNumberOfSeenEpisodes(SeasonSet seasonSet);
+    public void onChangeNumberOfSeenEpisodes(Series series);
 
-    public void onChangeNextEpisodeToSee(SeasonSet seasonSet);
+    public void onChangeNextEpisodeToSee(Series series);
 
-    public void onChangeNextNonSpecialEpisodeToSee(SeasonSet seasonSet);
+    public void onChangeNextNonSpecialEpisodeToSee(Series series);
 
-    public void onMerge(SeasonSet seasonSet);
+    public void onMerge(Series series);
 }

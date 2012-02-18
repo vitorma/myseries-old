@@ -20,7 +20,7 @@
  */
 
 
-package br.edu.ufcg.aweseries.test.unit.thetvdb;
+package br.edu.ufcg.aweseries.test.unit.series_source;
 
 import org.junit.Test;
 

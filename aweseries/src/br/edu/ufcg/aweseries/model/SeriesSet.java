@@ -24,58 +24,50 @@ package br.edu.ufcg.aweseries.model;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+
+import br.edu.ufcg.aweseries.util.Validate;
 
 public class SeriesSet implements Iterable<Series> {
-    private Set<DomainObjectListener<SeriesSet>> listeners;
-    private Map<Integer, Series> map;
+    private Map<Integer, Series> series;
 
     public SeriesSet() {
-        this.map = new HashMap<Integer, Series>();
-        this.listeners = new HashSet<DomainObjectListener<SeriesSet>>(); 
+        this.series = new HashMap<Integer, Series>();
     }
 
     public int size() {
-        return this.map.size();
+        return this.series.size();
     }
 
     public boolean isEmpty() {
-        return this.map.isEmpty();
+        return this.series.isEmpty();
     }
 
     public boolean contains(Series series) {
-        if (series == null)
-            throw new IllegalArgumentException("series shouldn't be null");
+        Validate.isNonNull(series, "series");
 
-        return this.map.containsKey(series.id());
+        return this.series.containsKey(series.id());
     }
 
     public Series get(int seriesId) {
-        Series series = this.map.get(seriesId);
+        Validate.isTrue(this.series.containsKey(seriesId), "series with id %d doesn't belong to this set", seriesId);
 
-        if (series == null)
-            throw new IllegalArgumentException("series with id " + seriesId + " doesn't belong to this set");
-
-        return series;
+        return this.series.get(seriesId);
     }
 
     public Collection<Series> getAll() {
-        return Collections.unmodifiableCollection(this.map.values());
+        return Collections.unmodifiableCollection(this.series.values());
     }
 
     public void add(Series series) {
-        if (this.contains(series))
-            throw new IllegalArgumentException("series " + series.id() + " already belongs to this set");
+        Validate.isTrue(!this.contains(series), "series with id %d already belongs to this set", series.id());
 
-        this.map.put(series.id(), series);
+        this.series.put(series.id(), series);
     }
 
     public void addAll(Collection<Series> collection) {
-        if (collection == null)
-            throw new IllegalArgumentException("collection shouldn't be null");
+        Validate.isNonNull(collection, "collection");
 
         for (Series s : collection) {
             this.add(s);
@@ -83,33 +75,17 @@ public class SeriesSet implements Iterable<Series> {
     }
 
     public void remove(Series series) {
-        if (!this.contains(series))
-            throw new IllegalArgumentException("series " + series.id() + " doesn't belong to this set");
+        Validate.isTrue(this.contains(series), "series with id %d doesn't belong to this set", series.id());
 
-        this.map.remove(series.id());
+        this.series.remove(series.id());
     }
 
     public void clear() {
-        this.map.clear();
+        this.series.clear();
     }
 
     @Override
     public Iterator<Series> iterator() {
-        return this.map.values().iterator();
+        return this.series.values().iterator();
     }
-
-    public boolean addListener(DomainObjectListener<SeriesSet> listener) {
-        return this.listeners.add(listener);
-    }
-
-    public boolean removeListener(DomainObjectListener<SeriesSet> listener) {
-        return this.listeners.remove(listener);
-    }
-
-    public void notifyListeners() {
-        for (DomainObjectListener<SeriesSet> listener : this.listeners) {
-            listener.onUpdate(this);            
-        }
-    }
-
 }

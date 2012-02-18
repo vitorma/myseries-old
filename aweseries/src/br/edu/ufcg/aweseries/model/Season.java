@@ -69,7 +69,7 @@ public class Season implements EpisodeListener {
     }
 
     public boolean includes(Episode episode) {
-        return episode != null && this.episode(episode.number()) != null;
+        return episode != null && this.episodes.containsKey(episode.number());
     }
 
     public Episode episode(int number) {
@@ -81,7 +81,7 @@ public class Season implements EpisodeListener {
     }
 
     public List<Episode> episodesBy(Specification<Episode> specification) {
-        Validate.isNonNull(specification, "specification should be non-null");
+        Validate.isNonNull(specification, "specification");
 
         List<Episode> result = new ArrayList<Episode>();
 
@@ -95,21 +95,21 @@ public class Season implements EpisodeListener {
     }
 
     public Season including(Episode episode) {
-        Validate.isNonNull(episode, "episode should be non-null");
+        Validate.isNonNull(episode, "episode");
         Validate.isTrue(episode.seriesId() == this.seriesId, "episode's seriesId should be %d", this.seriesId);
         Validate.isTrue(episode.seasonNumber() == this.number, "episode's seasonNumber should be %d", this.number);
         Validate.isTrue(!this.includes(episode), "episode is already included");
 
         if (episode.wasSeen()) {
             this.numberOfSeenEpisodes++;
-            this.notifyThatNumberOfSeenEpisodesChanged();
+            this.notifyThatNumberOfSeenEpisodesIncreased();
         }
 
         if (!episode.wasSeen() && this.wasSeen()) {
             this.notifyThatWasMarkedAsNotSeen();
         }
 
-        if (this.nextToSeeShouldBe(episode)) {
+        if (this.nextEpisodeToSeeShouldBe(episode)) {
             this.nextEpisodeToSee = episode;
             this.notifyThatNextToSeeChanged();
         }
@@ -150,8 +150,10 @@ public class Season implements EpisodeListener {
         return this;
     }
 
-    private boolean nextToSeeShouldBe(Episode e) {
-        return !e.wasSeen() && (this.nextEpisodeToSee == null || this.nextEpisodeToSee.number() > e.number());
+    private boolean nextEpisodeToSeeShouldBe(Episode candidate) {
+        Episode current = this.nextEpisodeToSee;
+
+        return !candidate.wasSeen() && (current == null || current.number() > candidate.number());
     }
 
     private Episode findNextEpisodeToSee() {
@@ -170,15 +172,11 @@ public class Season implements EpisodeListener {
         Validate.isTrue(other.number == this.number, "other's number should be %d", this.number);
 
         for (Episode e : this.episodes.values()) {
-            if (other.includes(e)) {
-                e.mergeWith(other.episode(e.number()));
-            }
+            if (other.includes(e)) e.mergeWith(other.episode(e.number()));
         }
 
         for (Episode e : other.episodes.values()) {
-            if (!this.includes(e)) {
-                this.including(e);
-            }
+            if (!this.includes(e)) this.including(e);
         }
 
         this.notifyThatWasMerged();
@@ -189,7 +187,7 @@ public class Season implements EpisodeListener {
     //SeasonListener----------------------------------------------------------------------------------------------------
 
     public boolean register(SeasonListener listener) {
-        Validate.isNonNull(listener, "listener to register should be non-null");
+        Validate.isNonNull(listener, "listener");
 
         for (SeasonListener l : this.listeners) {
             if (l == listener) return false;
@@ -199,7 +197,7 @@ public class Season implements EpisodeListener {
     }
 
     public boolean deregister(SeasonListener listener) {
-        Validate.isNonNull(listener, "listener to deregister should be non-null");
+        Validate.isNonNull(listener, "listener");
 
         for (int i = 0; i < this.listeners.size(); i++) {
             if (this.listeners.get(i) == listener) {
@@ -223,9 +221,15 @@ public class Season implements EpisodeListener {
         }
     }
 
-    private void notifyThatNumberOfSeenEpisodesChanged() {
+    private void notifyThatNumberOfSeenEpisodesIncreased() {
         for (SeasonListener l : this.listeners) {
-            l.onChangeNumberOfSeenEpisodes(this);
+            l.onIncreaseNumberOfSeenEpisodes(this);
+        }
+    }
+
+    private void notifyThatNumberOfSeenEpisodesDecreased() {
+        for (SeasonListener l : this.listeners) {
+            l.onDecreaseNumberOfSeenEpisodes(this);
         }
     }
 
@@ -244,9 +248,9 @@ public class Season implements EpisodeListener {
     //EpisodeListener---------------------------------------------------------------------------------------------------
 
     @Override
-    public void onMarkAsSeen(Episode e) {
+    public void onMarkAsSeen(Episode episode) {
         this.numberOfSeenEpisodes++;
-        this.notifyThatNumberOfSeenEpisodesChanged();
+        this.notifyThatNumberOfSeenEpisodesIncreased();
 
         if (this.wasSeen()) {
             this.notifyThatWasMarkedAsSeen();
@@ -254,29 +258,29 @@ public class Season implements EpisodeListener {
             this.notifyThatNextToSeeChanged();
         }
 
-        if (!this.wasSeen() && e.equals(this.nextEpisodeToSee)) {
+        if (!this.wasSeen() && episode.equals(this.nextEpisodeToSee)) {
             this.nextEpisodeToSee = this.findNextEpisodeToSee();
             this.notifyThatNextToSeeChanged();
         }
     }
 
     @Override
-    public void onMarkAsNotSeen(Episode e) {
+    public void onMarkAsNotSeen(Episode episode) {
         if (this.wasSeen()) {
             this.notifyThatWasMarkedAsNotSeen();
         }
 
-        if (this.nextToSeeShouldBe(e)) {
-            this.nextEpisodeToSee = e;
+        if (this.nextEpisodeToSeeShouldBe(episode)) {
+            this.nextEpisodeToSee = episode;
             this.notifyThatNextToSeeChanged();
         }
 
         this.numberOfSeenEpisodes--;
-        this.notifyThatNumberOfSeenEpisodesChanged();
+        this.notifyThatNumberOfSeenEpisodesDecreased();
     }
 
     @Override
-    public void onMerge(Episode e) {
+    public void onMerge(Episode episode) {
         //Season is not interested in this event
     }
 

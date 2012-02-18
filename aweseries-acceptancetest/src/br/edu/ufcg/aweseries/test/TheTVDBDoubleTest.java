@@ -35,6 +35,7 @@ import java.util.Collection;
 import junit.framework.TestCase;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.series_source.SeriesNotFoundException;
+import br.edu.ufcg.aweseries.series_source.UnsupportedLanguageException;
 
 public class TheTVDBDoubleTest extends TestCase {
 
@@ -82,8 +83,8 @@ public class TheTVDBDoubleTest extends TestCase {
 	public void testCreateSeriesWithUnavailableLanguageThrowsException() {
 		try {
 			this.theTVDB.createSeries(UNAVAILABLE_LANGUAGE);
-			fail("Should have thrown an IllegalArgumentException for unavailable language");
-		} catch (IllegalArgumentException e) {}
+			fail("Should have thrown an UnsupportedLanguageException for unavailable language");
+		} catch (UnsupportedLanguageException e) {}
 	}
 
 	public void testCreateSeriesWithNullAttributesThrowsException() {
@@ -189,8 +190,8 @@ public class TheTVDBDoubleTest extends TestCase {
 	public void testSearchForUnavailableLanguageThrowsException() {
 		try {
 			this.theTVDB.searchFor("Series Name", UNAVAILABLE_LANGUAGE);
-			fail("Should have thrown an IllegalArgumentException for unavailable language");
-		} catch (IllegalArgumentException e) {}
+			fail("Should have thrown an UnsupportedLanguageException for unavailable language");
+		} catch (UnsupportedLanguageException e) {}
 	}
 
 	// Fetch Series
@@ -244,8 +245,8 @@ public class TheTVDBDoubleTest extends TestCase {
 	public void testFetchUnavailableLanguageThrowsException() {
 		try {
 			this.theTVDB.fetchSeries(123, UNAVAILABLE_LANGUAGE);
-			fail("Should have thrown an IllegalArgumentException");
-		} catch (IllegalArgumentException e) {}
+			fail("Should have thrown an UnsupportedLanguageException");
+		} catch (UnsupportedLanguageException e) {}
 	}
 
 	// Fetch All Series
@@ -319,8 +320,8 @@ public class TheTVDBDoubleTest extends TestCase {
 	public void testFetchAllUnavailableLanguageThrowsException() {
 		try {
 			this.theTVDB.fetchAllSeries(new int[]{123, 321}, UNAVAILABLE_LANGUAGE);
-			fail("Should have thrown an IllegalArgumentException for unavailable language");
-		} catch (IllegalArgumentException e) {}
+			fail("Should have thrown an UnsupportedLanguageException for unavailable language");
+		} catch (UnsupportedLanguageException e) {}
 	}
 
 	// TODO

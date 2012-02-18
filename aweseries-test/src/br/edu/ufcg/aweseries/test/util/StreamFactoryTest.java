@@ -101,7 +101,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 
 	public void testGettingFullSeriesWithNonExistentSeriesIdThrowsException() {
 		try {
-			this.factory().streamForSeries(NON_EXISTENT_SERIES_ID, Language.EN);
+			this.factory().streamForSeries(NON_EXISTENT_SERIES_ID, Language.ENGLISH);
 			fail("Should have thrown a FileNotFoundException");
 		} catch (RuntimeException e) {
 			assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
@@ -109,7 +109,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	}
 
 	public void testGettingFullSeriesReturnsFullData() throws IOException {
-		InputStream testSeriesStream = this.factory().streamForSeries(this.testSeriesId, Language.EN);
+		InputStream testSeriesStream = this.factory().streamForSeries(this.testSeriesId, Language.ENGLISH);
 
 		String contentOfTestSeriesStream = this.contentOf(testSeriesStream);
 
@@ -154,7 +154,7 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	// XXX
 	public void failing_testSearchingForNullSeriesThrowsAnException() {
 		try {
-			this.factory().streamForSeriesSearch(null, Language.EN);
+			this.factory().streamForSeriesSearch(null, Language.ENGLISH);
 			fail("Should have thrown an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {}
 	}
@@ -162,14 +162,14 @@ public abstract class StreamFactoryTest extends InstrumentationTestCase {
 	// XXX
 	public void failing_testSearchingForBlankSeriesReturnsNoResults() {
 		try {
-			this.factory().streamForSeriesSearch(BLANK_STRING, Language.EN);
+			this.factory().streamForSeriesSearch(BLANK_STRING, Language.ENGLISH);
 			fail("Should have thrown an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {}
 	}
 
 	// XXX
 	public void failing_testSearchingForValidSeriesReturnsValidResultData() throws IOException {
-		InputStream seriesSearchStream = this.factory().streamForSeriesSearch(this.testSeriesName, Language.EN);
+		InputStream seriesSearchStream = this.factory().streamForSeriesSearch(this.testSeriesName, Language.ENGLISH);
 
 		String contentOfSeriesSearchStream = this.contentOf(seriesSearchStream);
 

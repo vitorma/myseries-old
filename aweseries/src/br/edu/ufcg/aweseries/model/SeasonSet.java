@@ -23,70 +23,91 @@ package br.edu.ufcg.aweseries.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
+import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Validate;
 
-public class SeasonSet implements Iterable<Season>, SeasonListener {
-    private TreeMap<Integer, Season> map;
+public class SeasonSet implements SeasonListener {
+    private static final int SPECIAL_EPISODES_SEASON_NUMBER = 0;
     private int seriesId;
-    private List<SeasonSetListener> listeners;
+
+    private TreeMap<Integer, Season> seasons;
+    private int numberOfSeenEpisodes;
     private Episode nextEpisodeToSee;
+    private Episode nextNonSpecialEpisodeToSee;
+    private List<SeasonSetListener> listeners;
+
+    //Construction------------------------------------------------------------------------------------------------------
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
 
         this.seriesId = seriesId;
-        this.map = new TreeMap<Integer, Season>();
+
+        this.seasons = new TreeMap<Integer, Season>();
         this.listeners = new LinkedList<SeasonSetListener>();
     }
 
-    //TODO Remove
-    public void addAllEpisodes(List<Episode> episodes) {
-        Validate.isNonNull(episodes, "episodes should not be null");
+    //Immutable---------------------------------------------------------------------------------------------------------
 
-        for (Episode e : episodes) {
-            this.addEpisode(e);
-        }
+    public int seriesId() {
+        return this.seriesId;
     }
 
-    public SeasonSet includingAll(Collection<Episode> episodes) {
-        Validate.isNonNull(episodes, "episodes");
+    //Seasons-----------------------------------------------------------------------------------------------------------
 
-        for (Episode e : episodes) {
-            this.addEpisode(e);
+    public int numberOfSeasons() {
+        return this.seasons.size();
+    }
+
+    public boolean includes(Season season) {
+        return season != null && this.seasons.containsKey(season.number());
+    }
+
+    public Season season(int number) {
+        return this.seasons.get(number);
+    }
+
+    private Season ensuredSeason(int number) {
+        if (!this.seasons.containsKey(number)) {
+            Season season = new Season(this.seriesId, number);
+            this.including(season);
         }
+
+        return this.season(number);
+    }
+
+    public List<Season> seasons() {
+        return new ArrayList<Season>(this.seasons.values());
+    }
+
+    private SeasonSet including(Season season) {
+        season.register(this);
+
+        this.seasons.put(season.number(), season);
 
         return this;
     }
 
-    public void addEpisode(Episode episode) {
-        Validate.isNonNull(episode, "episode should not be null");
+    //Episodes----------------------------------------------------------------------------------------------------------
 
-        Validate.isTrue(episode.seriesId() == this.seriesId, "episode belongs to another series");
+    public int numberOfEpisodes() {
+        int numberOfEpisodes = 0;
 
-        if (!this.hasSeason(episode.seasonNumber())) {
-            this.addSeason(episode.seasonNumber());
+        for (Season s : this.seasons.values()) {
+            numberOfEpisodes += s.numberOfEpisodes();
         }
 
-        this.map.get(episode.seasonNumber()).including(episode);
+        return numberOfEpisodes;
     }
 
-    private void addSeason(int seasonNumber) {
-        Season newSeason = new Season(this.seriesId, seasonNumber);
-        newSeason.register(this);
-
-        this.map.put(seasonNumber, newSeason);
-    }
-
-    public List<Episode> allEpisodes() {
+    public List<Episode> episodes() {
         List<Episode> episodes = new ArrayList<Episode>();
 
-        for (Season s : this.map.values()) {
+        for (Season s : this.seasons.values()) {
             episodes.addAll(s.episodes());
         }
 
@@ -94,200 +115,131 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     }
 
     public List<Episode> episodesBy(Specification<Episode> specification) {
-        List<Episode> result = new ArrayList<Episode>();
+        Validate.isNonNull(specification, "specification");
 
-        for (Season s : this) {
-            result.addAll(s.episodesBy(specification));
+        List<Episode> episodes = new ArrayList<Episode>();
+
+        for (Season s : this.seasons.values()) {
+            episodes.addAll(s.episodesBy(specification));
         }
 
-        return result;
+        return episodes;
     }
 
-    public int lastSeasonNumber() {
-        return this.map.lastKey();
+    public SeasonSet including(Episode episode) {
+        Validate.isNonNull(episode, "episode");
+
+        this.ensuredSeason(episode.seasonNumber()).including(episode);
+
+        return this;
     }
 
-    public void mergeWith(SeasonSet other) {
-        Validate.isNonNull(other, "other seasonSet to merge should not be null");
+    public SeasonSet includingAll(Collection<Episode> episodes) {
+        Validate.isNonNull(episodes, "episodes");
 
-        for (Season s : this.map.values()) {
-            if (other.hasSeason(s.number())) {
-                s.mergeWith(other.season(s.number()));
-            }
+        for (Episode e : episodes) {
+            this.including(e);
         }
 
-        for (Season s : other.map.values()) {
-            if (!this.hasSeason(s.number())) {
-                this.addAllEpisodes(s.episodes());
-            }
-        }
+        return this;
+    }
 
-        this.notifyMerge();
+    //Seen--------------------------------------------------------------------------------------------------------------
+
+    public int numberOfSeenEpisodes() {
+        return this.numberOfSeenEpisodes;
     }
 
     public Episode nextEpisodeToSee() {
         return this.nextEpisodeToSee;
     }
 
-    public int numberOfSeasons() {
-        return this.map.size();
+    private boolean nextEpisodeToSeeShouldBeThatOf(Season season) {
+        Episode current = this.nextEpisodeToSee;
+        Episode candidate = season.nextEpisodeToSee();
+
+        return (current == null && candidate != null) ||
+               (current != null && candidate == null && current.seasonNumber() == season.number()) ||
+               (current != null && candidate != null && Dates.compare(current.airDate(), candidate.airDate()) > 0);
     }
 
-    public Season season(int seasonNumber) {
-        return this.map.get(seasonNumber);
+    public Episode nextNonSpecialEpisodeToSee() {
+        return this.nextNonSpecialEpisodeToSee;
     }
 
-    public int seriesId() {
-        return this.seriesId;
-    }
+    //Merge-------------------------------------------------------------------------------------------------------------
 
-    public Season[] toArray() {
-        final Season[] array = new Season[this.numberOfSeasons()];
+    public SeasonSet mergeWith(SeasonSet other) {
+        Validate.isNonNull(other, "other");
+        Validate.isTrue(this.seriesId == other.seriesId, "other's seriesId should be %d", this.seriesId);
 
-        int i = 0;
-        for (Season s : this) {
-            array[i] = s;
-            i++;
+        for (Season s : this.seasons.values()) {
+            if (other.includes(s)) s.mergeWith(other.season(s.number()));
         }
 
-        return array;
-    }
-
-    public List<Season> toList() {
-        final List<Season> list = new ArrayList<Season>();
-
-        for (Season season : this.map.values()) {
-            list.add(season);
+        for (Season s : other.seasons.values()) {
+            if (!this.includes(s)) this.including(s);
         }
 
-        return list;
+        this.notifyThatWasMerged();
+
+        return this;
     }
 
-    //Auxiliary methods ----------------------------------------------------------------------------
+    //SeasonSetListener-------------------------------------------------------------------------------------------------
 
-    private Episode findNextEpisodeToSee() {
-        for (final Season s : this.map.values()) {
-            final Episode next = s.nextEpisodeToSee();
-            if (next != null)
-                return next;
-        }
-
-        return null;
-    }
-
-    private int firstSeasonNumber() {
-        return this.map.firstKey();
-    }
-
-    private boolean hasSeason(int seasonNumber) {
-        return this.map.containsKey(seasonNumber);
-    }
-
-    private void updateNextEpisodeToSee() {
-        Episode next = this.findNextEpisodeToSee();
-
-        if (this.nextEpisodeToSee == next)
-            return;
-
-        if (this.nextEpisodeToSee != null && this.nextEpisodeToSee.equals(next))
-            return;
-
-        this.nextEpisodeToSee = next;
-        this.notifyChangeNextEpisodeToSee();
-    }
-
-    //Iterators ------------------------------------------------------------------------------------
-
-    @Override
-    public Iterator<Season> iterator() {
-        return new Iterator<Season>() {
-            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ? SeasonSet.this.firstSeasonNumber()
-                    : Integer.MAX_VALUE;
-
-            @Override
-            public boolean hasNext() {
-                return SeasonSet.this.numberOfSeasons() > 0
-                && this.seasonNumber <= SeasonSet.this.lastSeasonNumber();
-            }
-
-            @Override
-            public Season next() {
-                if (!this.hasNext())
-                    throw new NoSuchElementException();
-
-                Season next = SeasonSet.this.season(this.seasonNumber);
-                this.seasonNumber++;
-                return next;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    public Iterator<Season> reversedIterator() {
-        return new Iterator<Season>() {
-            private int seasonNumber = SeasonSet.this.numberOfSeasons() > 0 ? SeasonSet.this.lastSeasonNumber()
-                    : Integer.MIN_VALUE;
-
-            @Override
-            public boolean hasNext() {
-                return SeasonSet.this.numberOfSeasons() > 0
-                && this.seasonNumber >= SeasonSet.this.firstSeasonNumber();
-            }
-
-            @Override
-            public Season next() {
-                if (!this.hasNext())
-                    throw new NoSuchElementException();
-
-                Season next = SeasonSet.this.season(this.seasonNumber);
-                this.seasonNumber--;
-                return next;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    //Listeners ------------------------------------------------------------------------------------
-    
-    public boolean deregister(SeasonSetListener listener) {
-        return this.listeners.remove(listener);
-    }
-    
     public boolean register(SeasonSetListener listener) {
-        Validate.isNonNull(listener, "listener must not be null.");
-        
-        if (this.listeners.contains(listener)) {
-            return false;
+        Validate.isNonNull(listener, "listener");
+
+        for (SeasonSetListener l : this.listeners) {
+            if (l == listener) return false;
         }
-        
+
         return this.listeners.add(listener);
     }
 
-    private void notifyChangeNextEpisodeToSee() {
-        for (SeasonSetListener listener : this.listeners) {
-            listener.onChangeNextEpisodeToSee(this);
+    public boolean deregister(SeasonSetListener listener) {
+        Validate.isNonNull(listener, "listener");
+
+        for (int i = 0; i < this.listeners.size(); i++) {
+            if (this.listeners.get(i) == listener) {
+                this.listeners.remove(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void notifyThatNumberOfSeenEpisodesChanged() {
+        for (SeasonSetListener l : this.listeners) {
+            l.onChangeNumberOfSeenEpisodes(this);
         }
     }
 
-    private void notifyMerge() {
-        for (SeasonSetListener listener : this.listeners) {
-            listener.onMerge(this);
+    private void notifyThatNextEpisodeToSeeChanged() {
+        for (SeasonSetListener l : this.listeners) {
+            l.onChangeNextEpisodeToSee(this);
         }
     }
 
-    //SeasonListener methods -----------------------------------------------------------------------
+    private void notifyThatNextNonSpecialEpisodeToSeeChanged() {
+        for (SeasonSetListener l : this.listeners) {
+            l.onChangeNextNonSpecialEpisodeToSee(this);
+        }
+    }
+
+    private void notifyThatWasMerged() {
+        for (SeasonSetListener l : this.listeners) {
+            l.onMerge(this);
+        }
+    }
+
+    //SeasonListener----------------------------------------------------------------------------------------------------
 
     @Override
-    public void onChangeNextEpisodeToSee(Season season) {
-        this.updateNextEpisodeToSee();
+    public void onMarkAsSeen(Season season) {
+        //SeasonSet is not interested in this event
     }
 
     @Override
@@ -296,17 +248,32 @@ public class SeasonSet implements Iterable<Season>, SeasonListener {
     }
 
     @Override
-    public void onMarkAsSeen(Season season) {
-        //SeasonSet is not interested in this event
+    public void onIncreaseNumberOfSeenEpisodes(Season season) {
+        this.numberOfSeenEpisodes++;
+        this.notifyThatNumberOfSeenEpisodesChanged();
+    }
+
+    @Override
+    public void onDecreaseNumberOfSeenEpisodes(Season season) {
+        this.numberOfSeenEpisodes--;
+        this.notifyThatNumberOfSeenEpisodesChanged();
+    }
+
+    @Override
+    public void onChangeNextEpisodeToSee(Season season) {
+        if (this.nextEpisodeToSeeShouldBeThatOf(season)) {
+            this.nextEpisodeToSee = season.nextEpisodeToSee();
+            this.notifyThatNextEpisodeToSeeChanged();
+        }
+
+        if (season.number() != SPECIAL_EPISODES_SEASON_NUMBER) {
+            this.nextNonSpecialEpisodeToSee = season.nextEpisodeToSee();
+            this.notifyThatNextNonSpecialEpisodeToSeeChanged();
+        }
     }
 
     @Override
     public void onMerge(Season season) {
-        //SeasonSet is not interested in this event
-    }
-
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Season season) {
         //SeasonSet is not interested in this event
     }
 }

@@ -1,5 +1,5 @@
 /*
- *   SeasonSetListener.java
+ *   TheTvDbConstants.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,15 +19,12 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.edu.ufcg.aweseries.model;
+package br.edu.ufcg.aweseries.series_source;
 
-public interface SeasonSetListener {
+import java.text.SimpleDateFormat;
 
-    public void onChangeNumberOfSeenEpisodes(SeasonSet seasonSet);
-
-    public void onChangeNextEpisodeToSee(SeasonSet seasonSet);
-
-    public void onChangeNextNonSpecialEpisodeToSee(SeasonSet seasonSet);
-
-    public void onMerge(SeasonSet seasonSet);
+public class TheTvDbConstants {
+    public static final String API_KEY = "6F2B5A871C96FB05";
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final Language DEFAULT_LANGUAGE = Language.ENGLISH;
 }

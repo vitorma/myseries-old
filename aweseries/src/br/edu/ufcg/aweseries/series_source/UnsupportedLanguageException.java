@@ -1,5 +1,5 @@
 /*
- *   DomainObjectListener.java
+ *   UnsupportedLanguageException.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,11 +19,16 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package br.edu.ufcg.aweseries.series_source;
 
-package br.edu.ufcg.aweseries.model;
+public class UnsupportedLanguageException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
 
-@Deprecated
-public interface DomainObjectListener<T> {
+    public UnsupportedLanguageException() {
+        super();
+    }
 
-    void onUpdate(T entity);
+    public UnsupportedLanguageException(String language) {
+        super("Unsupported language: " + language);
+    }
 }

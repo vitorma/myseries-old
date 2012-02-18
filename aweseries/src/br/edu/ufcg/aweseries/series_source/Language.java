@@ -24,49 +24,39 @@ package br.edu.ufcg.aweseries.series_source;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public enum Language {
-    DA,
-    FI,
-    NL,
-    DE,
-    IT,
-    ES,
-    FR,
-    PL,
-    HU,
-    EL,
-    TR,
-    RU,
-    HE,
-    JA,
-    PT,
-    ZH,
-    CS,
-    SL,
-    HR,
-    KO,
-    EN,
-    SV,
-    NO;
+    GERMAN("de"),
+    SPANISH("es"),
+    PORTUGUESE("pt"),
+    ENGLISH("en");
+
+    private String abbreviation;
+
+    private Language(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
+
+    public String abbreviation() {
+        return this.abbreviation;
+    }
 
     public static Language from(String abbreviation) {
         Validate.isNonNull(abbreviation, "abbreviation");
 
-        return Language.valueOf(abbreviation.toUpperCase());
+        for (Language l : values()) {
+            if (l.abbreviation.equalsIgnoreCase(abbreviation)) return l;
+        }
+
+        throw new UnsupportedLanguageException(abbreviation);
     }
 
     public static Language from(String abbreviation, Language alternative) {
-        Validate.isNonNull(abbreviation, "abbreviation");
         Validate.isNonNull(alternative, "alternative");
 
         try {
-            return Language.valueOf(abbreviation.toUpperCase());
-        } catch (Exception e) {
+            return from(abbreviation);
+        } catch (UnsupportedLanguageException e) {
             return alternative;
         }
-    }
-
-    public String abbreviation() {
-        return this.toString().toLowerCase();
     }
 }
 

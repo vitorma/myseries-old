@@ -40,14 +40,14 @@ import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
-import br.edu.ufcg.aweseries.model.DomainObjectListener;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.model.SeriesListener;
 
 /**
  * Displays a series short review.
  */
-public class SeriesDetailsActivity extends Activity implements DomainObjectListener<Series> {
+public class SeriesDetailsActivity extends Activity implements SeriesListener {
     private int seriesId;
     private boolean loaded = false;
     private ProgressDialog dialog;
@@ -185,7 +185,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
     @Override
     public void onBackPressed() {
         Series series = this.seriesProvider().getSeries(this.seriesId);
-        series.removeListener(this);
+        series.deregister(this);
         super.onBackPressed();
 
     }
@@ -209,7 +209,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
     private void downloadDescription() {
         try {
             Series series = this.seriesProvider().getSeries(this.seriesId);
-            series.addListener(this);
+            series.register(this);
 
             this.seriesName.setText(series.name());
             this.seriesOverview.setText(series.overview());
@@ -223,7 +223,7 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
             this.seriesRuntime.setText(String.format(
                     this.getString(R.string.runtime_minutes_format), series.runtime()));
 
-            final Episode nextToSee = series.seasons().nextEpisodeToSee();
+            final Episode nextToSee = series.nextEpisodeToSee();
             if (nextToSee != null) {
                 this.nextToSee.setText(series.seasons().nextEpisodeToSee().name());
             } else {
@@ -267,8 +267,27 @@ public class SeriesDetailsActivity extends Activity implements DomainObjectListe
         return App.environment().seriesProvider();
     }
 
+    //SeriesListener----------------------------------------------------------------------------------------------------
+
     @Override
-    public void onUpdate(Series entity) {
+    public void onChangeNumberOfSeenEpisodes(Series series) {
+        //TODO Update the 'progress' bar
+        this.downloadDescription();
+    }
+
+    @Override
+    public void onChangeNextEpisodeToSee(Series series) {
+        //TODO This behavior will depend on the user's settings (SharedPreference)
+        this.downloadDescription();
+    }
+
+    @Override
+    public void onChangeNextNonSpecialEpisodeToSee(Series series) {
+        //TODO This behavior will depend on the user's settings (SharedPreference)
+    }
+
+    @Override
+    public void onMerge(Series series) {
         this.downloadDescription();
     }
 }

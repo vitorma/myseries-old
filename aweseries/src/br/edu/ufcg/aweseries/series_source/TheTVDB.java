@@ -29,7 +29,7 @@ import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class TheTVDB implements SeriesSource {
-    private final StreamFactory streamFactory;
+    private StreamFactory streamFactory;
 
     //Construction------------------------------------------------------------------------------------------------------
 
@@ -93,7 +93,7 @@ public class TheTVDB implements SeriesSource {
 
     //Language----------------------------------------------------------------------------------------------------------
 
-    private Language languageFrom(String language) {
-        return Language.from(language, Language.EN);
+    private Language languageFrom(String languageAbbreviation) {
+        return Language.from(languageAbbreviation, TheTvDbConstants.DEFAULT_LANGUAGE);
     }
 }
