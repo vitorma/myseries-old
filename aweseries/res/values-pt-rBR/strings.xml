@@ -15,6 +15,9 @@
     <string formatted="false" name="episode_number_format">Episódio %02d</string>
     <string formatted="false" name="episode_number_format_short">E%02d</string>
     <string name="first_aired">Data da estréia: </string>
+    <string name="invalid_search_criteria">Critério de busca inválido.</string>
+    <string name="connection_failed_message">Não foi possível conectar ao servidor. Por favor, verifique sua conexão à internet.</string>
+    <string name="parsing_failed">Erro de parsing.</string>
     <string name="follow">Acompanhar</string>
     <string name="genre">Gênero: </string>
     <string name="guest_stars">Artistas convidados:</string>

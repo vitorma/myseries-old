@@ -11,6 +11,9 @@
     <string name="directed_by">Dirigida por: </string>
     <string name="director">Director: </string>
     <string formatted="false" name="do_you_want_to_stop_following">"Desea dejar de seguir %s?"</string>
+    <string name="invalid_search_criteria">El criterio de búsqueda no es válido.</string>
+    <string name="connection_failed_message">No se puede conectar al servidor. Por favor, compruebe su conexión a Internet.</string>
+    <string name="parsing_failed">Error de parser.</string>
     <string name="episode_overview">Información general:</string>
     <string formatted="false" name="episode_number_format">Episodio %02d</string>
     <string formatted="false" name="episode_number_format_short">E%02d</string>

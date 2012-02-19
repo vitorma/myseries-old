@@ -27,6 +27,9 @@
     <string formatted="false" name="runtime_minutes_format">%s Minuten</string>
     <string name="my_series">Meine Serien</string>
     <string name="network">TV-Netzwerk: </string>
+    <string name="invalid_search_criteria">Die Suchkriterien ist nicht gültig.</string>
+    <string name="connection_failed_message">Unmöglich Server zu finden. Bitte überprüfen Sie Ihre Internetverbindung.</string>
+    <string name="parsing_failed">Das Parsen ist gescheitert.</string>
     <string name="next_episode_to_air">Kommenden: </string>
     <string name="next_episode_to_see">Nächste zu sehen: </string>
     <string name="no">Nein</string>

@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -86,18 +87,20 @@ public class SeriesProvider {
         List<Series> result = null;
 
         try {
-            result = this.seriesSource.searchFor(seriesName, App.environment().localization().language());
+            result = this.seriesSource.searchFor(seriesName, App.environment().localization()
+                    .language());
         } catch (InvalidSearchCriteriaException e) {
-            throw new RuntimeException("Invalid search criteria.");//TODO Internationalization
+            throw new RuntimeException(context().getString(R.string.invalid_search_criteria));
         } catch (ConnectionFailedException e) {
-            throw new RuntimeException("Connection failed. Please check your connection.");//TODO Internationalization
+            throw new RuntimeException(context().getString(R.string.connection_failed_message));
         } catch (ParsingFailedException e) {
-            throw new RuntimeException("Parsing failed.");//TODO Internationalization
+            throw new RuntimeException(context().getString(R.string.parsing_failed));
         }
 
         if (result.isEmpty())
-            throw new RuntimeException(
-                    App.environment().context().getString(R.string.no_results_found_for_criteria) + " " + seriesName);
+            throw new RuntimeException(App.environment().context()
+                    .getString(R.string.no_results_found_for_criteria)
+                    + " " + seriesName);
 
         return result.toArray(new Series[]{}); //TODO Return a List<Series>
     }
@@ -185,8 +188,8 @@ public class SeriesProvider {
 
             // TODO is there anything to do about any SeriesNotFoundException that may be thrown
             // here?
-            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(seriesToFollow.id(), App
-                    .environment().localization().language());
+            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(seriesToFollow.id(),
+                    App.environment().localization().language());
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 
             return null;
@@ -333,5 +336,9 @@ public class SeriesProvider {
         for (final UpdateListener listener : this.updateListeners) {
             listener.onUpdateFailure();
         }
+    }
+    
+    private Context context() {
+        return App.environment().context();
     }
 }
