@@ -58,7 +58,7 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
     private TextView seriesAirTime;
     private TextView seriesAirDays;
     private TextView seriesActors;
-    private TextView seriesFirsAirDay;
+    private TextView seriesFirstAirDay;
     private TextView seriesRuntime;
     private TextView seriesGenre;
     private TextView seriesNetwork;
@@ -78,7 +78,7 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
         this.seriesAirTime = (TextView) this.findViewById(R.id.airTimeTextView);
         this.seriesAirDays = (TextView) this.findViewById(R.id.airDaysTextView);
         this.seriesActors = (TextView) this.findViewById(R.id.actorsTextView);
-        this.seriesFirsAirDay = (TextView) this.findViewById(R.id.firstAiredTextView);
+        this.seriesFirstAirDay = (TextView) this.findViewById(R.id.firstAiredTextView);
         this.seriesNetwork = (TextView) this.findViewById(R.id.networkTextView);
         this.seriesGenre = (TextView) this.findViewById(R.id.genreTextView);
         this.seriesRuntime = (TextView) this.findViewById(R.id.runtimeTextView);
@@ -218,7 +218,7 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
             this.seriesAirTime.setText(series.airTime());
             this.seriesAirDays.setText(series.airDay());
             this.seriesActors.setText(series.actors());
-            this.seriesFirsAirDay.setText(Dates.toString(series.airDate(), App.environment()
+            this.seriesFirstAirDay.setText(Dates.toString(series.airDate(), App.environment()
                     .localization().dateFormat(), ""));
             this.seriesNetwork.setText(series.network());
             this.seriesGenre.setText(series.genres());

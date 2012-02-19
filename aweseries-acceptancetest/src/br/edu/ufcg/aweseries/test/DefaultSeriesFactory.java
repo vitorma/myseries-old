@@ -21,15 +21,20 @@
 
 package br.edu.ufcg.aweseries.test;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.test.KeyValueParser.KeyValuePair;
+import br.edu.ufcg.aweseries.util.Dates;
 
 public class DefaultSeriesFactory {
 	private static final int DEFAULT_ID = 0;
+
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 	private KeyValueParser keyValueParser = new KeyValueParser();
 
@@ -52,7 +57,7 @@ public class DefaultSeriesFactory {
 		.withStatus(values.get("status"))
 		.withAirDay(values.get("airsOn"))
 		.withAirTime(values.get("airsAt"))
-		.withAirDate(values.get("firstAired"))
+		.withAirDate(Dates.parseDate(values.get("firstAired"), DATE_FORMAT, null))
 		.withRuntime(values.get("runtime"))
 		.withNetwork(values.get("network"))
 		.withOverview(values.get("overview"))

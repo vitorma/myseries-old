@@ -26,6 +26,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import junit.framework.TestCase;
 import br.edu.ufcg.aweseries.model.Episode;
@@ -41,6 +44,8 @@ import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public class SeriesParserTest extends TestCase {
+    
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     //Field values------------------------------------------------------------------------------------------------------
 
@@ -249,7 +254,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(baseSeries.status(), equalTo(BASE_SERIES_STATUS));
         assertThat(baseSeries.airDay(), equalTo(BASE_SERIES_AIR_DAY));
         assertThat(baseSeries.airTime(), equalTo(BASE_SERIES_AIR_TIME));
-        assertThat(baseSeries.airDate(), equalTo(BASE_SERIES_AIR_DATE));
+        assertThat(baseSeries.airDate(), equalTo(null));
         assertThat(baseSeries.runtime(), equalTo(BASE_SERIES_RUNTIME));
         assertThat(baseSeries.network(), equalTo(BASE_SERIES_NETWORK));
         assertThat(baseSeries.overview(), equalTo(BASE_SERIES_OVERVIEW));
@@ -268,7 +273,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(fullSeries.status(), equalTo(FULL_SERIES_STATUS));
         assertThat(fullSeries.airDay(), equalTo(FULL_SERIES_AIR_DAY));
         assertThat(fullSeries.airTime(), equalTo(FULL_SERIES_AIR_TIME));
-        assertThat(fullSeries.airDate(), equalTo(FULL_SERIES_AIR_DATE));
+        assertThat(fullSeries.airDate(), equalTo(Dates.parseDate("2012-01-01", DATE_FORMAT, null)));
         assertThat(fullSeries.runtime(), equalTo(FULL_SERIES_RUNTIME));
         assertThat(fullSeries.network(), equalTo(FULL_SERIES_NETWORK));
         assertThat(fullSeries.overview(), equalTo(FULL_SERIES_OVERVIEW));

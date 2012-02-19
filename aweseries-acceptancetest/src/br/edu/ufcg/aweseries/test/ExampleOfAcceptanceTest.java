@@ -21,6 +21,8 @@
 
 package br.edu.ufcg.aweseries.test;
 
+import java.text.DateFormat;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import br.edu.ufcg.aweseries.App;
@@ -59,6 +61,12 @@ public class ExampleOfAcceptanceTest extends TestCase {
         @Override
         public String language() {
             return "en";
+        }
+
+        @Override
+        public DateFormat dateFormat() {
+            // TODO Auto-generated method stub
+            return null;
         }        
     }
 

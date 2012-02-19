@@ -22,6 +22,8 @@
 
 package br.edu.ufcg.aweseries.test.unit.model;
 
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -43,7 +45,7 @@ public class SeriesTest {
 		.withStatus("status 1")
 		.withAirDay("airs day 1")
 		.withAirTime("airs time 1")
-		.withAirDate("first aired 1")
+		.withAirDate(new Date(1L))
 		.withRuntime("runtime 1")
 		.withNetwork("network 1")
 		.withOverview("overview 1")
@@ -56,7 +58,7 @@ public class SeriesTest {
 				.withStatus("status 2")
 				.withAirDay("airs day 2")
 				.withAirTime("airs time 2")
-				.withAirDate("first aired 2")
+				.withAirDate(new Date(2L))
 				.withRuntime("runtime 2")
 				.withNetwork("network 2")
 				.withOverview("overview 2")
@@ -69,7 +71,7 @@ public class SeriesTest {
 				.withStatus("status 1")
 				.withAirDay("airs day 1")
 				.withAirTime("airs time 1")
-				.withAirDate("first aired 1")
+				.withAirDate(new Date(3L))
 				.withRuntime("runtime 1")
 				.withNetwork("network 1")
 				.withOverview("overview 1")
@@ -82,7 +84,7 @@ public class SeriesTest {
 				.withStatus("status 4")
 				.withAirDay("airs day 4")
 				.withAirTime("airs time 4")
-				.withAirDate("first aired 4")
+				.withAirDate(new Date(4L))
 				.withRuntime("runtime 4")
 				.withNetwork("network 4")
 				.withOverview("overview 4")
@@ -134,7 +136,7 @@ public class SeriesTest {
 
 	@Test
 	public final void testGetFirstAired() {
-		Assert.assertEquals("first aired 1", this.series1.airDate());
+		Assert.assertEquals(new Date(1L), this.series1.airDate());
 	}
 
 	@Test
