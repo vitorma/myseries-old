@@ -56,7 +56,8 @@ public class EpisodeListActivity extends ListActivity {
     private static final Comparator<Episode> EPISODE_COMPARATOR = EpisodeComparator.byNumber();
 
     //TODO This is not the best place for this constant
-    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat FORMAT = new SimpleDateFormat(App.environment().context()
+            .getString(R.string.date_format_short));
 
     private Series series;
     private Season season;

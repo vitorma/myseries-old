@@ -68,5 +68,6 @@
     <string name="writer">Writer: </string>
     <string name="yes">Ja</string>
     <string name="you_no_longer_follow">Sie folgen %s nicht mehr.</string>
+    <string name="date_format_short">yyyy-MM-dd</string>
 
 </resources>

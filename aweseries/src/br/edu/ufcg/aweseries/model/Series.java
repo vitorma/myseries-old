@@ -22,6 +22,7 @@
 package br.edu.ufcg.aweseries.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class Series implements SeasonSetListener {
     private int id;
     private String name;
     private String status;
-    private String airDate;
+    private Date airDate;
     private String airDay;
     private String airTime;
     private String runtime;
@@ -84,7 +85,7 @@ public class Series implements SeasonSetListener {
         return this.status;
     }
 
-    public String airDate() {
+    public Date airDate() {
         return this.airDate;
     }
 
@@ -268,7 +269,7 @@ public class Series implements SeasonSetListener {
         private int id;
         private String name;
         private String status;
-        private String airDate;
+        private Date airDate;
         private String airDay;
         private String airTime;
         private String runtime;
@@ -300,7 +301,7 @@ public class Series implements SeasonSetListener {
             return this;
         }
 
-        public Builder withAirDate(String airDate) {
+        public Builder withAirDate(Date airDate) {
             this.airDate = airDate;
             return this;
         }

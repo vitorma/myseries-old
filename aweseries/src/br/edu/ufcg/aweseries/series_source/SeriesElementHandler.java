@@ -21,6 +21,7 @@
 
 package br.edu.ufcg.aweseries.series_source;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.sax.StartElementListener;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Numbers;
 import br.edu.ufcg.aweseries.util.Strings;
 import br.edu.ufcg.aweseries.util.Validate;
@@ -155,7 +157,8 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withAirDate(body);
+                Date airDate=Dates.parseDate(body, TheTvDbConstants.DATE_FORMAT, null);
+                SeriesElementHandler.this.seriesBuilder.withAirDate(airDate);
             }
         });
 

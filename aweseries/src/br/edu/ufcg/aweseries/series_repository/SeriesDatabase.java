@@ -49,7 +49,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         "status TEXT, " +
         "airsDay TEXT, " +
         "airsTime TEXT, " +
-        "firstAired TEXT, " +
+        "firstAired INTEGER, " +
         "runtime TEXT, " +
         "network TEXT, " +
         "overview TEXT, " +
@@ -240,7 +240,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put("status", s.status());
         cv.put("airsDay", s.airDay());
         cv.put("airsTime", s.airTime());
-        cv.put("firstAired", s.airDate());
+        cv.put("firstAired", Numbers.parseLong(s.airDate(), null));
         cv.put("runtime", s.runtime());
         cv.put("network", s.network());
         cv.put("overview", s.overview());
@@ -274,7 +274,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         .withStatus(c.getString(c.getColumnIndex("status")))
         .withAirDay(c.getString(c.getColumnIndex("airsDay")))
         .withAirTime(c.getString(c.getColumnIndex("airsTime")))
-        .withAirDate(c.getString(c.getColumnIndex("firstAired")))
+        .withAirDate(Dates.parseDate(c.getLong(c.getColumnIndex("firstAired")), null))
         .withRuntime(c.getString(c.getColumnIndex("runtime")))
         .withNetwork(c.getString(c.getColumnIndex("network")))
         .withOverview(c.getString(c.getColumnIndex("overview")))

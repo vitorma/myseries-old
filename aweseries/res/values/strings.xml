@@ -69,5 +69,6 @@
     <string name="invalid_search_criteria">Invalid search criteria.</string>
     <string name="connection_failed_message">Connection failed. Please check your connection.</string>
     <string name="parsing_failed">Parsing failed.</string>
+    <string name="date_format_short">yyyy-MM-dd</string>
 
 </resources>

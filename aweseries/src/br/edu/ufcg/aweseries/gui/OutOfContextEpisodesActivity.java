@@ -61,7 +61,8 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
     private static final int LIST_VIEW_RESOURCE_ID = R.layout.list_without_toolbar;
 
     //TODO This is not the best place for this constant
-    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat FORMAT = new SimpleDateFormat(App.environment().context()
+            .getString(R.string.date_format_short));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

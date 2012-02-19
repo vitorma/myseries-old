@@ -69,5 +69,6 @@
     <string name="writer">Autor: </string>
     <string name="yes">Sí</string>
     <string name="you_no_longer_follow">Dejaste de seguir la serie %s.</string>
+    <string name="date_format_short">yyyy-MM-dd</string>
 
 </resources>

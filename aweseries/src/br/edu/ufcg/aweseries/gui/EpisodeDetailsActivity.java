@@ -42,8 +42,9 @@ public class EpisodeDetailsActivity extends Activity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
     //TODO This is not the best place for this constant
-    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
+    private static final DateFormat FORMAT = new SimpleDateFormat(App.environment().context()
+            .getString(R.string.date_format_short));
+    
     private Episode episode;
     private TextView episodeName;
     private TextView episodeFirstAired;
@@ -66,6 +67,7 @@ public class EpisodeDetailsActivity extends Activity {
     //Private-----------------------------------------------------------------------------------------------------------
 
     private void populateView() {
+        
         this.setUpLocalReferencesToViewFields();
         this.loadEpisode();
 
