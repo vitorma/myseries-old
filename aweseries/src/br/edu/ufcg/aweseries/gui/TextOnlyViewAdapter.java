@@ -22,6 +22,8 @@
 
 package br.edu.ufcg.aweseries.gui;
 
+import java.util.List;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +37,7 @@ public final class TextOnlyViewAdapter extends ArrayAdapter<Series> {
     private final SeriesSearchActivity seriesSearchView;
 
     public TextOnlyViewAdapter(SeriesSearchActivity seriesSearchView, Context context,
-            int seriesItemResourceId, Series[] objects) {
+            int seriesItemResourceId, List<Series> objects) {
         super(context, seriesItemResourceId, objects);
         this.seriesSearchView = seriesSearchView;
     }

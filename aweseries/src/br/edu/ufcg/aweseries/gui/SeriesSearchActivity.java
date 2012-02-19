@@ -22,6 +22,8 @@
 
 package br.edu.ufcg.aweseries.gui;
 
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -68,7 +70,7 @@ public class SeriesSearchActivity extends ListActivity {
                         .findViewById(R.id.searchField);
 
                 try {
-                    final Series[] searchResultsArray = App.environment().seriesProvider()
+                    final List<Series> searchResultsArray = App.environment().seriesProvider()
                             .searchSeries(searchField.getText().toString());
 
                     SeriesSearchActivity.this.setListAdapter(new TextOnlyViewAdapter(

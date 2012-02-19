@@ -24,10 +24,10 @@ package br.edu.ufcg.aweseries;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import static br.edu.ufcg.aweseries.util.Dates.today;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -83,7 +83,7 @@ public class SeriesProvider {
         return this.seriesRepository.getAll();
     }
 
-    public Series[] searchSeries(String seriesName) {
+    public List<Series> searchSeries(String seriesName) {
         List<Series> result = null;
 
         try {
@@ -102,7 +102,7 @@ public class SeriesProvider {
                     .getString(R.string.no_results_found_for_criteria)
                     + " " + seriesName);
 
-        return result.toArray(new Series[]{}); //TODO Return a List<Series>
+        return result;
     }
 
     public void updateData() {
@@ -239,10 +239,6 @@ public class SeriesProvider {
     }
 
     //Recent and upcoming episodes--------------------------------------------------------------------------------------
-
-    private static Date today() {//TODO Get today from another place
-        return new Date();
-    }
 
     private Specification<Episode> recentEpisodesSpecification() {
         return AirdateSpecification.before(today()).and(SeenMarkSpecification.asNotSeen());

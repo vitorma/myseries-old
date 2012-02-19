@@ -61,4 +61,9 @@ public class Dates {
         return Objects.nullSafe(date1, MAX_DATE).compareTo(
                Objects.nullSafe(date2, MAX_DATE));
     }
+    
+    public static Date today() {
+        return new Date();
+    }
+
 }

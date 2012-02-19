@@ -86,7 +86,7 @@ public class ExampleOfAcceptanceTest extends TestCase {
 
         public String firstResult() {
             // TODO Auto-generated method stub
-            return App.environment().seriesProvider().searchSeries(this.searchField)[0].name();
+            return App.environment().seriesProvider().searchSeries(this.searchField).get(0).name();
             //return null;
         }
 
