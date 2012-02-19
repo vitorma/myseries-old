@@ -21,6 +21,8 @@
 
 package br.edu.ufcg.aweseries;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class AndroidLocalizationProvider implements LocalizationProvider {
@@ -28,5 +30,11 @@ public class AndroidLocalizationProvider implements LocalizationProvider {
     @Override
     public String language() {
         return Locale.getDefault().getLanguage();
+    }
+
+    @Override
+    public DateFormat dateFormat() {
+        return new SimpleDateFormat(App.environment().context()
+                .getString(R.string.date_format_short));
     }
 }

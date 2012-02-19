@@ -55,10 +55,6 @@ public class EpisodeListActivity extends ListActivity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final Comparator<Episode> EPISODE_COMPARATOR = EpisodeComparator.byNumber();
 
-    //TODO This is not the best place for this constant
-    private static final DateFormat FORMAT = new SimpleDateFormat(App.environment().context()
-            .getString(R.string.date_format_short));
-
     private Series series;
     private Season season;
     private CheckBox isSeasonViewed;
@@ -105,14 +101,15 @@ public class EpisodeListActivity extends ListActivity {
             TextView numberTextView = (TextView) itemView.findViewById(R.id.episodeNumberTextView);
             TextView dateTextView = (TextView) itemView.findViewById(R.id.episodeDateTextView);
             CheckBox isViewedCheckBox = (CheckBox) itemView
-            .findViewById(R.id.episodeIsViewedCheckBox);
+                    .findViewById(R.id.episodeIsViewedCheckBox);
 
-            nameTextView.setText(Objects.nullSafe(
-                    episode.name(),
-                    this.getContext().getResources().getString(R.string.unnamed_episode)));
-            numberTextView.setText(String.format(EpisodeListActivity.this.getString(R.string.episode_number_format),
+            nameTextView.setText(Objects.nullSafe(episode.name(), this.getContext().getResources()
+                    .getString(R.string.unnamed_episode)));
+            numberTextView.setText(String.format(
+                    EpisodeListActivity.this.getString(R.string.episode_number_format),
                     episode.number()));
-            dateTextView.setText(Dates.toString(episode.airDate(), FORMAT, ""));
+            dateTextView.setText(Dates.toString(episode.airDate(), App.environment().localization()
+                    .dateFormat(), ""));
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 

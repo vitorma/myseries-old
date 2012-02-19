@@ -40,10 +40,6 @@ import br.edu.ufcg.aweseries.util.Objects;
 
 public class EpisodeDetailsActivity extends Activity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
-
-    //TODO This is not the best place for this constant
-    private static final DateFormat FORMAT = new SimpleDateFormat(App.environment().context()
-            .getString(R.string.date_format_short));
     
     private Episode episode;
     private TextView episodeName;
@@ -74,7 +70,8 @@ public class EpisodeDetailsActivity extends Activity {
         this.episodeName.setText(Objects.nullSafe(
                 this.episode.name(),
                 this.getResources().getString(R.string.unnamed_episode)));
-        this.episodeFirstAired.setText(Dates.toString(this.episode.airDate(), FORMAT, ""));
+        this.episodeFirstAired.setText(Dates.toString(this.episode.airDate(), App.environment()
+                .localization().dateFormat(), ""));
         this.episodeDirector.setText(this.episode.directors());
         this.episodeWriter.setText(this.episode.writers());
         this.episodeGuestStars.setText(this.episode.guestStars());

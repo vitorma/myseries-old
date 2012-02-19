@@ -22,9 +22,6 @@
 
 package br.edu.ufcg.aweseries.gui;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -52,12 +49,6 @@ import br.edu.ufcg.aweseries.util.Dates;
  * Displays a series short review.
  */
 public class SeriesDetailsActivity extends Activity implements SeriesListener {
-    
-    //TODO This is not the best place for this constant
-    private static final DateFormat FORMAT = new SimpleDateFormat(App.environment().context()
-            .getString(R.string.date_format_short));
-
-    
     private int seriesId;
     private boolean loaded = false;
     private ProgressDialog dialog;
@@ -227,7 +218,8 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
             this.seriesAirTime.setText(series.airTime());
             this.seriesAirDays.setText(series.airDay());
             this.seriesActors.setText(series.actors());
-            this.seriesFirsAirDay.setText(Dates.toString(series.airDate(), FORMAT, ""));
+            this.seriesFirsAirDay.setText(Dates.toString(series.airDate(), App.environment()
+                    .localization().dateFormat(), ""));
             this.seriesNetwork.setText(series.network());
             this.seriesGenre.setText(series.genres());
             this.seriesRuntime.setText(String.format(

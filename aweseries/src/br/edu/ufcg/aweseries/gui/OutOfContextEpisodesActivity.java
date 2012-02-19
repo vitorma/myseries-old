@@ -60,10 +60,6 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
 
     private static final int LIST_VIEW_RESOURCE_ID = R.layout.list_without_toolbar;
 
-    //TODO This is not the best place for this constant
-    private static final DateFormat FORMAT = new SimpleDateFormat(App.environment().context()
-            .getString(R.string.date_format_short));
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,7 +160,8 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
             .setText(String.format(OutOfContextEpisodesActivity.this
                     .getString(R.string.season_and_episode_format), season.number(),
                     episode.number()));
-            dateTextView.setText(Dates.toString(episode.airDate(), FORMAT, ""));
+            dateTextView.setText(Dates.toString(episode.airDate(), App.environment().localization()
+                    .dateFormat(), ""));
             isViewedCheckBox.setChecked(episode.wasSeen());
         }
 

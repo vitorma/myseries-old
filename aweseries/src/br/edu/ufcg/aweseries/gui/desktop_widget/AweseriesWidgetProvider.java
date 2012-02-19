@@ -61,9 +61,6 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
 
     public static class UpdateService extends IntentService {
 
-        //TODO This is not the best place for this constant
-        private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
         private static final Comparator<Episode> COMPARATOR =
             EpisodeComparator.reversedByAirdateThenBySeasonThenByNumber();
 
@@ -89,8 +86,7 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
             final RemoteViews views = new RemoteViews(context.getPackageName(), layout);
             views.removeAllViews(R.id.innerLinearLayout);
 
-            final SortedSet<Episode> recent = this.sortedSetBy(seriesProvider
-                    .recentEpisodes());
+            final SortedSet<Episode> recent = this.sortedSetBy(seriesProvider.recentEpisodes());
 
             if (recent.isEmpty()) {
                 Log.d("Widget", "recent list is empty");
@@ -117,11 +113,16 @@ public class AweseriesWidgetProvider extends AppWidgetProvider {
                     final String pre = String.format(
                             this.getString(R.string.season_and_episode_format_short),
                             season.number(), e.number());
-                    item.setTextViewText(R.id.widgetEpisodeNameTextView, String.format(
-                            pre +
-                            this.getString(R.string.separator) +
-                            Objects.nullSafe(e.name(), this.getString(R.string.unnamed_episode))));
-                    item.setTextViewText(R.id.widgetEpisodeDateTextView, Dates.toString(e.airDate(), FORMAT, ""));
+                    item.setTextViewText(
+                            R.id.widgetEpisodeNameTextView,
+                            String.format(pre
+                                    + this.getString(R.string.separator)
+                                    + Objects.nullSafe(e.name(),
+                                            this.getString(R.string.unnamed_episode))));
+                    item.setTextViewText(
+                            R.id.widgetEpisodeDateTextView,
+                            Dates.toString(e.airDate(), App.environment().localization()
+                                    .dateFormat(), ""));
 
                     views.addView(R.id.innerLinearLayout, item);
                     viewsToAdd--;

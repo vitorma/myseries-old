@@ -21,7 +21,11 @@
 
 package br.edu.ufcg.aweseries;
 
+import java.text.DateFormat;
+
 public interface LocalizationProvider {
 
     public String language();
+    
+    public DateFormat dateFormat();
 }
