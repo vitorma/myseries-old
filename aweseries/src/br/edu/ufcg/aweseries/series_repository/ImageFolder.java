@@ -1,6 +1,7 @@
 package br.edu.ufcg.aweseries.series_repository;
 
 import java.io.File;
+import java.io.IOException;
 
 import android.os.Environment;
 import br.edu.ufcg.aweseries.App;
@@ -14,21 +15,32 @@ public enum ImageFolder {
         try {
             if (!directory.exists()) {
                 directory.mkdirs();
+                File nomedia = new File(directory, ".nomedia");
+                nomedia.createNewFile();
             }
         } catch (SecurityException e) {
             throw new RuntimeException("can't create the given directory: " + path);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
         return directory;
     }
 
     private static String rootPath() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath()
-                + System.getProperty("file.separator") + "Android"
-                + System.getProperty("file.separator") + "data"
-                + System.getProperty("file.separator")
-                + App.environment().context().getPackageName()
-                + System.getProperty("file.separator") + "files";
+        StringBuilder sb = new StringBuilder();
+        sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
+        sb.append(System.getProperty("file.separator"));
+        sb.append("Android");
+        sb.append(System.getProperty("file.separator"));
+        sb.append("data");
+        sb.append(System.getProperty("file.separator"));
+        sb.append(App.environment().context().getPackageName());
+        sb.append(System.getProperty("file.separator")); 
+        sb.append("files");
+        
+        return sb.toString();
     }
 
     private static File rootDirectory() {
