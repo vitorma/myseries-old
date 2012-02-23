@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.gui;
 
 import java.util.Comparator;
@@ -44,9 +43,6 @@ import br.edu.ufcg.aweseries.model.Season;
 import br.edu.ufcg.aweseries.model.SeasonListener;
 import br.edu.ufcg.aweseries.model.Series;
 
-/**
- * GUI representation of the list of seasons for a series.
- */
 public class SeasonListActivity extends ListActivity {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final SeasonComparator SEASON_COMPARATOR = new SeasonComparator();
@@ -175,38 +171,32 @@ public class SeasonListActivity extends ListActivity {
 
         @Override
         public void onMarkAsSeen(Season season) {
-            //TODO A better implementation
             this.notifyDataSetChanged();
         }
 
         @Override
         public void onMarkAsNotSeen(Season season) {
-            //TODO A better implementation
             this.notifyDataSetChanged();
         }
 
         @Override
         public void onChangeNextEpisodeToSee(Season season) {
-            //TODO A better implementation
-            this.notifyDataSetChanged();
+            //SeasonListActivity is not interested in this event
         }
 
         @Override
         public void onMerge(Season season) {
-            //TODO A better implementation
-            this.notifyDataSetChanged();
+            //SeasonListActivity is not interested in this event
         }
 
         @Override
         public void onIncreaseNumberOfSeenEpisodes(Season season) {
-            //TODO A better implementation
-            this.notifyDataSetChanged();
+            //SeasonListActivity is not interested in this event
         }
 
         @Override
         public void onDecreaseNumberOfSeenEpisodes(Season season) {
-            //TODO A better implementation
-            this.notifyDataSetChanged();
+            //SeasonListActivity is not interested in this event
         }
     }
 

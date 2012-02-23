@@ -19,11 +19,8 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.gui;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -138,6 +135,7 @@ public class EpisodeListActivity extends ListActivity {
         @Override
         public void onMarkAsNotSeen(Episode e) {
             this.notifyDataSetChanged();
+            
 
         }
 
@@ -246,37 +244,31 @@ public class EpisodeListActivity extends ListActivity {
 
             @Override
             public void onChangeNextEpisodeToSee(Season season) {
-                //TODO A better implementation
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }
 
             @Override
             public void onMarkAsNotSeen(Season season) {
-                //TODO A better implementation
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }
 
             @Override
             public void onMarkAsSeen(Season season) {
-                //TODO A better implementation
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }
 
             @Override
             public void onMerge(Season season) {
-                //TODO A better implementation
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }
 
             @Override
             public void onIncreaseNumberOfSeenEpisodes(Season season) {
-                //TODO A better implementation
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }
 
             @Override
             public void onDecreaseNumberOfSeenEpisodes(Season season) {
-                //TODO A better implementation
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }
         });

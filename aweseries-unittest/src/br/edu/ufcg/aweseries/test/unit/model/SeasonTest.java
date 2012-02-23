@@ -242,7 +242,6 @@ public class SeasonTest {
 
         season.markAsSeen();
         markAsSeen(episode1, episode2);
-        callOnMarkAsSeenFor(season, episode1, episode2);
 
         Assert.assertTrue(season.wasSeen());
         Assert.assertNull(season.nextEpisodeToSee());
@@ -270,7 +269,6 @@ public class SeasonTest {
 
         season.markAsNotSeen();
         markAsNotSeen(episode1, episode2);
-        callOnMarkAsNotSeenFor(season, episode1, episode2);
 
         Assert.assertFalse(season.wasSeen());
         Assert.assertEquals(episode1, season.nextEpisodeToSee());

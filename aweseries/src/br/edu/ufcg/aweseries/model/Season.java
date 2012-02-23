@@ -38,6 +38,7 @@ public class Season implements EpisodeListener {
     private int numberOfSeenEpisodes;
     private Episode nextEpisodeToSee;
     private List<SeasonListener> listeners;
+    private boolean listening;
 
     //Construction------------------------------------------------------------------------------------------------------
 
@@ -50,6 +51,7 @@ public class Season implements EpisodeListener {
 
         this.episodes = new TreeMap<Integer, Episode>();
         this.listeners = new LinkedList<SeasonListener>();
+        this.listening = true;
     }
 
     //Immutable---------------------------------------------------------------------------------------------------------
@@ -135,17 +137,35 @@ public class Season implements EpisodeListener {
     }
 
     public Season markAsSeen() {
+        this.listening = false;
+
         for (Episode e : this.episodes.values()) {
             e.markAsSeen();
         }
+
+        this.numberOfSeenEpisodes = this.numberOfEpisodes();
+        this.notifyThatNumberOfSeenEpisodesIncreased();
+        this.nextEpisodeToSee = null;
+        this.notifyThatNextToSeeChanged();
+        this.listening = true;
+        this.notifyThatWasMarkedAsSeen();
 
         return this;
     }
 
     public Season markAsNotSeen() {
+        this.listening = false;
+
         for (Episode e : this.episodes.values()) {
             e.markAsNotSeen();
         }
+
+        this.numberOfSeenEpisodes = 0;
+        this.notifyThatNumberOfSeenEpisodesDecreased();
+        this.nextEpisodeToSee = this.episodes.get(this.episodes.firstKey());
+        this.notifyThatNextToSeeChanged();
+        this.listening = true;
+        this.notifyThatWasMarkedAsNotSeen();
 
         return this;
     }
@@ -249,6 +269,8 @@ public class Season implements EpisodeListener {
 
     @Override
     public void onMarkAsSeen(Episode episode) {
+        if (!this.listening) return;
+
         this.numberOfSeenEpisodes++;
         this.notifyThatNumberOfSeenEpisodesIncreased();
 
@@ -266,6 +288,8 @@ public class Season implements EpisodeListener {
 
     @Override
     public void onMarkAsNotSeen(Episode episode) {
+        if (!this.listening) return;
+
         if (this.wasSeen()) {
             this.notifyThatWasMarkedAsNotSeen();
         }
