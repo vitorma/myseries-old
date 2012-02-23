@@ -198,9 +198,10 @@ public class SeriesProvider {
         @Override
         protected void onPostExecute(Void result) {
             SeriesProvider.this.notifyListenersOfFollowedSeries(this.followedSeries);
+            App.environment().imageProvider().downloadImageOf(this.followedSeries); //TODO: move me elsewhere
         }
     };
-
+    
     public void unfollow(Series series) {
         this.seriesRepository.delete(series);
         this.notifyListenersOfUnfollowedSeries(series);
@@ -269,22 +270,6 @@ public class SeriesProvider {
     }
 
     //TODO: Move this method to an utilitary class----------------------------------------------------------------------
-
-    public Bitmap getPosterOf(Series series) {
-        if (series == null)
-            throw new IllegalArgumentException("series should not be null");
-
-//        if (series.hasPoster())
-//            return series.poster().image();            
-
-        return this.genericPosterImage();
-        
-    }
-
-    private Bitmap genericPosterImage() {
-        return BitmapFactory.decodeResource(App.environment().context().getResources(),
-                R.drawable.small_poster_clapperboard);
-    }
 
     //TODO: Remove it ASAP----------------------------------------------------------------------------------------------
 

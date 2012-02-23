@@ -21,14 +21,18 @@
 
 package br.edu.ufcg.aweseries.series_source;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import br.edu.ufcg.aweseries.ImageSource;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.util.Validate;
 
-public class TheTVDB implements SeriesSource {
+public class TheTVDB implements SeriesSource, ImageSource {
     private StreamFactory streamFactory;
 
     //Construction------------------------------------------------------------------------------------------------------
@@ -95,5 +99,19 @@ public class TheTVDB implements SeriesSource {
 
     private Language languageFrom(String languageAbbreviation) {
         return Language.from(languageAbbreviation, TheTvDbConstants.DEFAULT_LANGUAGE);
+    }
+
+    @Override
+    public Bitmap fetchSeriesPoster(String filename) {
+        InputStream is = this.streamFactory.streamForSeriesPoster(filename);
+        Bitmap bmp = BitmapFactory.decodeStream(is);
+        return bmp;
+    }
+
+    @Override
+    public Bitmap fetchEpisodeImage(String filename) {
+        InputStream is = this.streamFactory.streamForEpisodeImage(filename);
+        Bitmap bmp = BitmapFactory.decodeStream(is);
+        return bmp;
     }
 }

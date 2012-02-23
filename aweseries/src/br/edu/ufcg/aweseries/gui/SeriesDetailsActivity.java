@@ -38,6 +38,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
+import br.edu.ufcg.aweseries.ImageProvider;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Episode;
@@ -232,7 +233,7 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
                 this.nextToSee.setText(R.string.up_to_date);
             }
 
-            Bitmap bmp = this.seriesProvider().getPosterOf(series);
+            Bitmap bmp = this.imageProvider().getPosterOf(series);
             if (bmp != null) {
                 // WallpaperManager.
                 // View v = this.findViewById(R.layout.series_view);
@@ -267,6 +268,10 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
      */
     private SeriesProvider seriesProvider() {
         return App.environment().seriesProvider();
+    }
+    
+    private ImageProvider imageProvider() {
+        return App.environment().imageProvider();
     }
 
     //SeriesListener----------------------------------------------------------------------------------------------------

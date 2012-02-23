@@ -48,6 +48,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.FollowingSeriesListener;
+import br.edu.ufcg.aweseries.ImageProvider;
+import br.edu.ufcg.aweseries.PosterDownloadListener;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.UpdateListener;
@@ -59,6 +61,7 @@ import br.edu.ufcg.aweseries.util.Objects;
 public class SeriesListActivity extends ListActivity implements UpdateListener {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final SeriesComparator comparator = new SeriesComparator();
+    private static final ImageProvider imageProvider = App.environment().imageProvider();
 
     private SeriesItemViewAdapter dataAdapter;
     private UpdateNotificationLauncher nLauncher;
@@ -81,12 +84,13 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
     //Series item view adapter------------------------------------------------------------------------------------------
 
     private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements
-    SeriesListener, FollowingSeriesListener {
+    SeriesListener, FollowingSeriesListener, PosterDownloadListener {
 
         public SeriesItemViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);
 
             seriesProvider.addFollowingSeriesListener(this);
+            imageProvider.register(this);
 
             for (final Series series : objects) {
                 series.register(this);
@@ -111,7 +115,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
             // load series data
             final Series item = this.getItem(position);
-            image.setImageBitmap(seriesProvider.getPosterOf(item));
+            image.setImageBitmap(imageProvider.getPosterOf(item));
             name.setText(item.name());
 
             // next episode to see
@@ -160,6 +164,11 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
         @Override
         public void onMerge(Series series) {
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onDownloadPosterOf(Series series) {
             this.notifyDataSetChanged();
         }
     }

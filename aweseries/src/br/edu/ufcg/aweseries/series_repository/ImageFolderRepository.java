@@ -15,6 +15,10 @@ public class ImageFolderRepository implements ImageRepository {
     
     private String seriesPostersFolder;
     private String episodeImagesFolder;
+    
+    public static ImageFolderRepository newInstance() {
+        return new ImageFolderRepository();
+    }
 
     private ImageFolderRepository() {
         this.seriesPostersFolder = ImageFolder.SERIES_POSTERS.directory().getAbsolutePath();

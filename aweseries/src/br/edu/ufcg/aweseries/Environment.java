@@ -24,6 +24,8 @@ package br.edu.ufcg.aweseries;
 
 import android.content.Context;
 import br.edu.ufcg.aweseries.series_repository.DefaultSeriesRepositoryFactory;
+import br.edu.ufcg.aweseries.series_repository.ImageFolderRepository;
+import br.edu.ufcg.aweseries.series_repository.ImageRepository;
 import br.edu.ufcg.aweseries.series_repository.SeriesRepositoryFactory;
 import br.edu.ufcg.aweseries.series_source.TheTVDB;
 
@@ -38,6 +40,7 @@ public class Environment {
     private TheTVDB theTVDB;
     private SeriesProvider seriesProvider;
     private LocalizationProvider localization;
+    private ImageProvider imageProvider;
 
     private static final String apiKey = "6F2B5A871C96FB05";
 
@@ -157,6 +160,15 @@ public class Environment {
      */
     public void setLocalizationTo(LocalizationProvider newLocalization) {
         this.localization = newLocalization;
+    }
+
+    public ImageProvider imageProvider() {
+        if (this.imageProvider == null) {
+            this.imageProvider = ImageProvider.newInstance(theTVDB(),
+                    ImageFolderRepository.newInstance());
+       }
+        
+        return this.imageProvider;
     }
 
 }
