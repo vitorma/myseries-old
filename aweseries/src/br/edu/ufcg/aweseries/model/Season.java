@@ -104,7 +104,7 @@ public class Season implements EpisodeListener {
 
         if (episode.wasSeen()) {
             this.numberOfSeenEpisodes++;
-            this.notifyThatNumberOfSeenEpisodesIncreased();
+            this.notifyThatNumberOfSeenEpisodesChanged();
         }
 
         if (!episode.wasSeen() && this.wasSeen()) {
@@ -144,7 +144,7 @@ public class Season implements EpisodeListener {
         }
 
         this.numberOfSeenEpisodes = this.numberOfEpisodes();
-        this.notifyThatNumberOfSeenEpisodesIncreased();
+        this.notifyThatNumberOfSeenEpisodesChanged();
         this.nextEpisodeToSee = null;
         this.notifyThatNextToSeeChanged();
         this.listening = true;
@@ -161,7 +161,7 @@ public class Season implements EpisodeListener {
         }
 
         this.numberOfSeenEpisodes = 0;
-        this.notifyThatNumberOfSeenEpisodesDecreased();
+        this.notifyThatNumberOfSeenEpisodesChanged();
         this.nextEpisodeToSee = this.episodes.get(this.episodes.firstKey());
         this.notifyThatNextToSeeChanged();
         this.listening = true;
@@ -241,15 +241,9 @@ public class Season implements EpisodeListener {
         }
     }
 
-    private void notifyThatNumberOfSeenEpisodesIncreased() {
+    private void notifyThatNumberOfSeenEpisodesChanged() {
         for (SeasonListener l : this.listeners) {
-            l.onIncreaseNumberOfSeenEpisodes(this);
-        }
-    }
-
-    private void notifyThatNumberOfSeenEpisodesDecreased() {
-        for (SeasonListener l : this.listeners) {
-            l.onDecreaseNumberOfSeenEpisodes(this);
+            l.onChangeNumberOfSeenEpisodes(this);
         }
     }
 
@@ -272,7 +266,7 @@ public class Season implements EpisodeListener {
         if (!this.listening) return;
 
         this.numberOfSeenEpisodes++;
-        this.notifyThatNumberOfSeenEpisodesIncreased();
+        this.notifyThatNumberOfSeenEpisodesChanged();
 
         if (this.wasSeen()) {
             this.notifyThatWasMarkedAsSeen();
@@ -300,7 +294,7 @@ public class Season implements EpisodeListener {
         }
 
         this.numberOfSeenEpisodes--;
-        this.notifyThatNumberOfSeenEpisodesDecreased();
+        this.notifyThatNumberOfSeenEpisodesChanged();
     }
 
     @Override
