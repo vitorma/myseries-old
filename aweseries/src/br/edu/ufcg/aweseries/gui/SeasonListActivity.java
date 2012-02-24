@@ -190,12 +190,7 @@ public class SeasonListActivity extends ListActivity {
         }
 
         @Override
-        public void onIncreaseNumberOfSeenEpisodes(Season season) {
-            //SeasonListActivity is not interested in this event
-        }
-
-        @Override
-        public void onDecreaseNumberOfSeenEpisodes(Season season) {
+        public void onChangeNumberOfSeenEpisodes(Season season) {
             //SeasonListActivity is not interested in this event
         }
     }

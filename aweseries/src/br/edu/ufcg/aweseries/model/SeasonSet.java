@@ -35,12 +35,9 @@ public class SeasonSet implements SeasonListener {
     private int seriesId;
 
     private TreeMap<Integer, Season> seasons;
-    private int numberOfSeenEpisodes;
-    private Episode nextEpisodeToSee;
-    private Episode nextNonSpecialEpisodeToSee;
     private List<SeasonSetListener> listeners;
 
-    //Construction------------------------------------------------------------------------------------------------------
+    // Construction------------------------------------------------------------------------------------------------------
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
@@ -147,24 +144,42 @@ public class SeasonSet implements SeasonListener {
     //Seen--------------------------------------------------------------------------------------------------------------
 
     public int numberOfSeenEpisodes() {
-        return this.numberOfSeenEpisodes;
+        int numberOfSeenEpisodes = 0;
+
+        for (Season s : this.seasons.values()) {
+            numberOfSeenEpisodes += s.numberOfSeenEpisodes();
+        }
+
+        return numberOfSeenEpisodes;
     }
 
-    public Episode nextEpisodeToSee() {
-        return this.nextEpisodeToSee;
+    public Episode nextEpisodeToSee(boolean includingSpecialEpisodes) {
+        if (!includingSpecialEpisodes) return this.findNextNonSpecialEpisodeToSee();
+
+        Episode nextNonSpecialEpisodeToSee = this.findNextNonSpecialEpisodeToSee();
+        Episode nextSpecialEpisodeToSee = this.nextSpecialEpisodeToSee();
+
+        if (nextNonSpecialEpisodeToSee == null) return nextSpecialEpisodeToSee;
+        if (nextSpecialEpisodeToSee == null) return nextNonSpecialEpisodeToSee;
+
+        return Dates.compare(nextNonSpecialEpisodeToSee.airDate(), nextSpecialEpisodeToSee.airDate()) < 1
+               ? nextNonSpecialEpisodeToSee
+               : nextSpecialEpisodeToSee;
     }
 
-    private boolean nextEpisodeToSeeShouldBeThatOf(Season season) {
-        Episode current = this.nextEpisodeToSee;
-        Episode candidate = season.nextEpisodeToSee();
-
-        return (current == null && candidate != null) ||
-               (current != null && candidate == null && current.seasonNumber() == season.number()) ||
-               (current != null && candidate != null && Dates.compare(current.airDate(), candidate.airDate()) > 0);
+    private Episode nextSpecialEpisodeToSee() {
+        Season specialEpisodes = this.season(SPECIAL_EPISODES_SEASON_NUMBER);
+        return specialEpisodes != null ? specialEpisodes.nextEpisodeToSee() : null;
     }
 
-    public Episode nextNonSpecialEpisodeToSee() {
-        return this.nextNonSpecialEpisodeToSee;
+    private Episode findNextNonSpecialEpisodeToSee() {
+        for (Season s : this.seasons.values()) {
+            if (s.number() == SPECIAL_EPISODES_SEASON_NUMBER) continue;
+
+            if (!s.wasSeen()) return s.nextEpisodeToSee();
+        }
+
+        return null;
     }
 
     //Merge-------------------------------------------------------------------------------------------------------------
@@ -223,12 +238,6 @@ public class SeasonSet implements SeasonListener {
         }
     }
 
-    private void notifyThatNextNonSpecialEpisodeToSeeChanged() {
-        for (SeasonSetListener l : this.listeners) {
-            l.onChangeNextNonSpecialEpisodeToSee(this);
-        }
-    }
-
     private void notifyThatWasMerged() {
         for (SeasonSetListener l : this.listeners) {
             l.onMerge(this);
@@ -248,28 +257,13 @@ public class SeasonSet implements SeasonListener {
     }
 
     @Override
-    public void onIncreaseNumberOfSeenEpisodes(Season season) {
-        this.numberOfSeenEpisodes++;
-        this.notifyThatNumberOfSeenEpisodesChanged();
-    }
-
-    @Override
-    public void onDecreaseNumberOfSeenEpisodes(Season season) {
-        this.numberOfSeenEpisodes--;
+    public void onChangeNumberOfSeenEpisodes(Season season) {
         this.notifyThatNumberOfSeenEpisodesChanged();
     }
 
     @Override
     public void onChangeNextEpisodeToSee(Season season) {
-        if (this.nextEpisodeToSeeShouldBeThatOf(season)) {
-            this.nextEpisodeToSee = season.nextEpisodeToSee();
-            this.notifyThatNextEpisodeToSeeChanged();
-        }
-
-        if (season.number() != SPECIAL_EPISODES_SEASON_NUMBER) {
-            this.nextNonSpecialEpisodeToSee = season.nextEpisodeToSee();
-            this.notifyThatNextNonSpecialEpisodeToSeeChanged();
-        }
+        this.notifyThatNextEpisodeToSeeChanged();
     }
 
     @Override
