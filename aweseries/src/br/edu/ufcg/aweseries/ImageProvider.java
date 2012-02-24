@@ -29,6 +29,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import br.edu.ufcg.aweseries.model.Series;
 import br.edu.ufcg.aweseries.series_repository.ImageRepository;
+import br.edu.ufcg.aweseries.series_repository.exceptions.ExternalStorageNotAvailableException;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public final class ImageProvider {
@@ -49,9 +50,12 @@ public final class ImageProvider {
 
                 Bitmap fetchedPoster = ImageProvider.this.imageSource.fetchSeriesPoster(this.series
                         .posterFileName());
-
-                ImageProvider.this.imageRepository.insertSeriesPoster(this.series.id(),
-                        fetchedPoster);
+                try {
+                    ImageProvider.this.imageRepository.insertSeriesPoster(this.series.id(),
+                            fetchedPoster);
+                } catch (ExternalStorageNotAvailableException e) {
+                    // TODO: handle exception
+                }
             }
 
             return null;
