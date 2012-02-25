@@ -21,6 +21,7 @@
 
 package br.edu.ufcg.aweseries;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,63 +41,80 @@ public final class ImageProvider {
     private List<PosterDownloadListener> listeners;
     private ImageRepository imageRepository;
     public ImageSource imageSource;
-    
+
+    private enum Failure {
+        CONNECTION_FAILED, IMAGE_IO, EXTERNAL_STORAGE_UNAVAILABLE, UNKNOWN
+    };
+
     //TODO implement
     private class DownloadEpisodeTask extends AsyncTask<Episode, Void, Void> {
         @Override
         protected Void doInBackground(Episode... params) {
             return null;
-        }        
+        }
     }
 
-    private class DownloadPosterTask extends AsyncTask<Series, Void, Void> {
+    private class DownloadPosterTask extends AsyncTask<Void, Void, Void> {
+        private Failure failure;
         private Series series;
-        
+
+        public DownloadPosterTask(Series series) {
+            super();
+            Validate.isNonNull(series, "series");
+
+            this.series = series;
+        }
+
         @Override
-        protected Void doInBackground(Series... params) {
-            this.series = params[0];
+        protected void onPreExecute() {
+            ImageProvider.this.notifyListenersOfStartDownloadingPosterOf(this.series);
+        }
 
-            //TODO: this verification shouldn't be here
+        @Override
+        protected Void doInBackground(Void... params) {
             //TODO: improve the treatment of these exception
-            if (this.series.posterFileName() != null && !this.series.posterFileName().equals("")) {
 
-                ImageProvider.this.notifyListenersOfStartDownloadingPosterOf(this.series);
-                
-                Bitmap fetchedPoster = null;
+            Bitmap fetchedPoster = null;
 
-                try {
+            try {
 
-                    fetchedPoster = ImageProvider.this.imageSource.fetchSeriesPoster(this.series
-                            .posterFileName());
+                fetchedPoster = ImageProvider.this.imageSource.fetchSeriesPoster(this.series
+                        .posterFileName());
 
-                } catch (ConnectionFailedException e) {
-                    e.printStackTrace();
+            } catch (ConnectionFailedException e) {
+                e.printStackTrace();
+                this.cancel(true);
+                this.failure = Failure.CONNECTION_FAILED;
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.failure = Failure.UNKNOWN;
+            }
 
-                    ImageProvider.this
-                            .notifyListenersOfConnectionFailureWhileDownloadingPosterOf(this.series);
+            try {
 
-                    return null;
-                }
+                ImageProvider.this.imageRepository.insertSeriesPoster(this.series.id(),
+                        fetchedPoster);
 
-                try {
+            } catch (ImageIoException e) {
+                //TODO notify someone?
 
-                    ImageProvider.this.imageRepository.insertSeriesPoster(this.series.id(),
-                            fetchedPoster);
+                e.printStackTrace();
+                this.failure = Failure.IMAGE_IO;
+                this.cancel(true);
+                return null;
 
-                } catch (ImageIoException e) {
-                    e.printStackTrace();
+            } catch (ExternalStorageNotAvailableException e) {
 
-                    ImageProvider.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
+                //TODO notify someone?
+                e.printStackTrace();
+                this.failure = Failure.EXTERNAL_STORAGE_UNAVAILABLE;
+                this.cancel(true);
+                return null;
 
-                    return null;
-                    
-                } catch (ExternalStorageNotAvailableException e) {
-                    e.printStackTrace();
-                    
-                    ImageProvider.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
-                    
-                    return null;
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.failure = Failure.UNKNOWN;
             }
 
             return null;
@@ -106,17 +124,37 @@ public final class ImageProvider {
         protected void onPostExecute(Void result) {
             ImageProvider.this.notifyListenersOfDownloadPosterOf(this.series);
         }
+
+        @Override
+        protected void onCancelled() {
+            switch (this.failure) {
+                case CONNECTION_FAILED:
+                    ImageProvider.this
+                            .notifyListenersOfConnectionFailureWhileDownloadingPosterOf(this.series);
+                    break;
+
+                case EXTERNAL_STORAGE_UNAVAILABLE:
+                    ImageProvider.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
+                    break;
+
+                case IMAGE_IO:
+                    ImageProvider.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
+                    break;
+
+                case UNKNOWN:
+                    //TODO: PANIC!
+            }
+        }
     };
 
-    public static ImageProvider
-            newInstance(ImageSource imageSource, ImageRepository imageRepository) {
+    public static ImageProvider newInstance(ImageSource imageSource, ImageRepository imageRepository) {
         return new ImageProvider(imageSource, imageRepository);
     }
 
     public void notifyListenersOfStartDownloadingPosterOf(Series series) {
         for (PosterDownloadListener listener : this.listeners) {
             listener.onStartDownloadingPosterOf(series);
-        }        
+        }
     }
 
     private void notifyListenersOfFailureWhileSavingPosterOf(Series series) {
@@ -138,12 +176,20 @@ public final class ImageProvider {
     }
 
     public void downloadImageOf(Series series) {
-        new DownloadPosterTask().execute(series);
+        new DownloadPosterTask(series).execute();
     }
 
     private Bitmap genericPosterImage() {
         return BitmapFactory.decodeResource(App.environment().context().getResources(),
                 R.drawable.small_poster_clapperboard);
+    }
+
+    public void removePosterOf(Series series) {
+        try {
+            this.imageRepository.deleteSeriesPoster(series.id());
+        } catch (ImageIoException e) {
+            //TODO: Just ignore it if not found, do something if sdcard was removed
+        }
     }
 
     public Bitmap getPosterOf(Series series) {
@@ -155,6 +201,11 @@ public final class ImageProvider {
             if (poster != null) {
                 return poster;
             }
+
+            else {
+                this.downloadImageOf(series);
+            }
+
         }
 
         return this.genericPosterImage();
