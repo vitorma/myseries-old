@@ -1,3 +1,24 @@
+/*
+ *   ImageProvider.java
+ *
+ *   Copyright 2012 MySeries Team.
+ *
+ *   This file is part of MySeries.
+ *
+ *   MySeries is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   MySeries is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package br.edu.ufcg.aweseries.series_repository;
 
 import java.io.File;
@@ -54,15 +75,14 @@ public class ImageFolderRepository implements ImageRepository {
     public void deleteSeriesPoster(int seriesId) {
         File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
         if(!poster.delete())
-            throw new RuntimeException("can't delete the given file: " + poster);
-    
+            throw new ImageIoException("write", poster.toString());    
     }
 
     @Override
     public void deleteEpisodeImage(int episodeId) {
         File episodeImage = new File(episodeImagesFolder, episodeId + IMAGE_EXTENSION);
         if(!episodeImage.delete())
-            throw new RuntimeException("can't delete the given file: " + episodeImage);
+            throw new ImageIoException("delete", episodeImage.toString());
     }
 
     @Override
@@ -80,7 +100,7 @@ public class ImageFolderRepository implements ImageRepository {
             image.compress(IMAGE_FORMAT, 85, os);
             os.close();
         } catch (IOException e) {
-            throw new RuntimeException("can't create the given file: " + file);
+            throw new ImageIoException("create", file.toString());
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- *   ImageSource.java
+ *   InsufficientPermissionException.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,14 +19,18 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.edu.ufcg.aweseries;
+package br.edu.ufcg.aweseries.series_repository;
 
-import android.graphics.Bitmap;
-
-public interface ImageSource {
-
-    Bitmap fetchSeriesPoster(String filename);
+public class ImageIoException extends RuntimeException {
+    private static final long serialVersionUID = -2674512815215899997L;
+    private static final String cause
+        = "Can't %s image file %s";    
     
-    Bitmap fetchEpisodeImage(String filename);
-
+    public ImageIoException() {
+        super();
+    }
+    
+    public ImageIoException(String action, String filename) {
+        super(String.format(cause, action, filename));
+    }
 }

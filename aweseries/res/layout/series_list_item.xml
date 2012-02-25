@@ -1,60 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
+    android:baselineAligned="true"
     android:orientation="horizontal"
-    android:baselineAligned="true">
+    android:padding="5dp" >
 
-    <ImageView android:id="@+id/seriesImageView"
-        android:src="@drawable/small_poster_clapperboard"
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="68dp"
         android:layout_height="100dp"
-        android:layout_gravity="center_vertical"
-        android:scaleType="centerInside"/>
+        android:layout_gravity="center_vertical" >
 
-    <RelativeLayout android:id="@+id/linearLayout11"
-        android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/seriesImageView"
+            android:layout_width="68dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerInside"
+            android:src="@drawable/small_poster_clapperboard" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/linearLayout11"
         android:layout_width="match_parent"
-        android:paddingLeft="5dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingLeft="5dp" >
 
-        <TextView android:id="@+id/nameTextView"
-            android:text="@string/loading"
+        <TextView
+            android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="2dp"
-            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:lines="1"
-            android:scrollHorizontally="true"
+            android:layout_alignParentTop="true"
             android:ellipsize="marquee"
+            android:lines="1"
             android:marqueeRepeatLimit="marquee_forever"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:paddingRight="2dp"
+            android:scrollHorizontally="true"
+            android:text="@string/loading"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView android:id="@+id/nextToSeeLabelTextView"
-            android:text="@string/next_episode_to_see"
+        <TextView
+            android:id="@+id/nextToSeeLabelTextView"
+            style="@style/aweseries_style.15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="2dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/nameTextView"
-            style="@style/aweseries_style.15sp"/>
+            android:paddingRight="2dp"
+            android:text="@string/next_episode_to_see" />
 
-        <TextView android:id="@+id/nextToSeeTextView"
-            android:text="@string/loading"
+        <TextView
+            android:id="@+id/nextToSeeTextView"
+            style="@style/aweseries_style.15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="2dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/nextToSeeLabelTextView"
-            android:lines="1"
-            android:scrollHorizontally="true"
             android:ellipsize="marquee"
+            android:lines="1"
             android:marqueeRepeatLimit="marquee_forever"
-            style="@style/aweseries_style.15sp"/>
-
+            android:paddingRight="2dp"
+            android:scrollHorizontally="true"
+            android:text="@string/loading" />
     </RelativeLayout>
 
 </LinearLayout>

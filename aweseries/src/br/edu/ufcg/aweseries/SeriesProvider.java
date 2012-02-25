@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries;
 
 import java.util.ArrayList;
@@ -49,10 +48,9 @@ import br.edu.ufcg.aweseries.series_source.SeriesSource;
 
 /**
  * Supply series information to the system.
- *
  * The private constructor avoids instantiation of the SeriesProvider.
  * Most times, it should be gotten from Environment.seriesProvider().
- *
+ * 
  * @see newSeriesProvider()
  */
 public class SeriesProvider {
@@ -135,8 +133,7 @@ public class SeriesProvider {
         protected Void doInBackground(Void... params) {
             try {
                 this.upToDateSeries = SeriesProvider.this.seriesSource.fetchAllSeries(
-                        this.seriesToUpdate,
-                        App.environment().localization().language());
+                        this.seriesToUpdate, App.environment().localization().language());
             } catch (SeriesNotFoundException e) {
                 // TODO: find a better way to tell that a problem happened when fetching the series
                 this.upToDateSeries = null;
@@ -188,8 +185,25 @@ public class SeriesProvider {
 
             // TODO is there anything to do about any SeriesNotFoundException that may be thrown
             // here?
-            this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(seriesToFollow.id(),
-                    App.environment().localization().language());
+            try {
+
+                this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(
+                        seriesToFollow.id(), App.environment().localization().language());
+
+            } catch (SeriesNotFoundException e) {
+                //TODO: notify someone?
+
+                return null;
+            } catch (ConnectionFailedException e) {
+                //TODO: notify someone?
+
+                return null;
+            } catch (ParsingFailedException e) {
+                //TODO: notify someone?
+
+                return null;
+            }
+
             SeriesProvider.this.seriesRepository.insert(this.followedSeries);
 
             return null;
@@ -201,7 +215,7 @@ public class SeriesProvider {
             App.environment().imageProvider().downloadImageOf(this.followedSeries); //TODO: move me elsewhere
         }
     };
-    
+
     public void unfollow(Series series) {
         this.seriesRepository.delete(series);
         this.notifyListenersOfUnfollowedSeries(series);
@@ -318,7 +332,7 @@ public class SeriesProvider {
             listener.onUpdateFailure();
         }
     }
-    
+
     private Context context() {
         return App.environment().context();
     }

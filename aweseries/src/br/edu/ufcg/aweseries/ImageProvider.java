@@ -21,37 +21,74 @@
 
 package br.edu.ufcg.aweseries;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.model.Series;
+import br.edu.ufcg.aweseries.series_repository.ImageIoException;
 import br.edu.ufcg.aweseries.series_repository.ImageRepository;
+import br.edu.ufcg.aweseries.series_source.ConnectionFailedException;
+import br.edu.ufcg.aweseries.series_source.ImageSource;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public final class ImageProvider {
     private List<PosterDownloadListener> listeners;
     private ImageRepository imageRepository;
     public ImageSource imageSource;
+    
+    //TODO implement
+    private class DownloadEpisodeTask extends AsyncTask<Episode, Void, Void> {
+        @Override
+        protected Void doInBackground(Episode... params) {
+            return null;
+        }        
+    }
 
-    private class DownloadImageTask extends AsyncTask<Series, Void, Void> {
+    private class DownloadPosterTask extends AsyncTask<Series, Void, Void> {
         private Series series;
-
+        
         @Override
         protected Void doInBackground(Series... params) {
             this.series = params[0];
 
             //TODO: this verification shouldn't be here
-            //TODO: Catch exception of download failure?
             if (this.series.posterFileName() != null && !this.series.posterFileName().equals("")) {
 
-                Bitmap fetchedPoster = ImageProvider.this.imageSource.fetchSeriesPoster(this.series
-                        .posterFileName());
+                ImageProvider.this.notifyListenersOfStartDownloadingPosterOf(this.series);
+                
+                Bitmap fetchedPoster = null;
 
-                ImageProvider.this.imageRepository.insertSeriesPoster(this.series.id(),
-                        fetchedPoster);
+                try {
+
+                    fetchedPoster = ImageProvider.this.imageSource.fetchSeriesPoster(this.series
+                            .posterFileName());
+
+                } catch (ConnectionFailedException e) {
+                    e.printStackTrace();
+
+                    ImageProvider.this
+                            .notifyListenersOfConnectionFailureWhileDownloadingPosterOf(this.series);
+
+                    return null;
+                }
+
+                try {
+
+                    ImageProvider.this.imageRepository.insertSeriesPoster(this.series.id(),
+                            fetchedPoster);
+
+                } catch (ImageIoException e) {
+                    e.printStackTrace();
+
+                    ImageProvider.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
+
+                    return null;
+                }
             }
 
             return null;
@@ -68,6 +105,24 @@ public final class ImageProvider {
         return new ImageProvider(imageSource, imageRepository);
     }
 
+    public void notifyListenersOfStartDownloadingPosterOf(Series series) {
+        for (PosterDownloadListener listener : this.listeners) {
+            listener.onStartDownloadingPosterOf(series);
+        }        
+    }
+
+    private void notifyListenersOfFailureWhileSavingPosterOf(Series series) {
+        for (PosterDownloadListener listener : this.listeners) {
+            listener.onFailureWhileSavingPosterOf(series);
+        }
+    }
+
+    private void notifyListenersOfConnectionFailureWhileDownloadingPosterOf(Series series) {
+        for (PosterDownloadListener listener : this.listeners) {
+            listener.onConnectionFailureWhileDownloadingPosterOf(series);
+        }
+    }
+
     private ImageProvider(ImageSource imageSource, ImageRepository imageRepository) {
         this.imageSource = imageSource;
         this.imageRepository = imageRepository;
@@ -75,7 +130,7 @@ public final class ImageProvider {
     }
 
     public void downloadImageOf(Series series) {
-        new DownloadImageTask().execute(series);
+        new DownloadPosterTask().execute(series);
     }
 
     private Bitmap genericPosterImage() {
@@ -97,7 +152,7 @@ public final class ImageProvider {
         return this.genericPosterImage();
     }
 
-    public void notifyListenersOfDownloadPosterOf(Series series) {
+    private void notifyListenersOfDownloadPosterOf(Series series) {
         for (PosterDownloadListener listener : this.listeners) {
             listener.onDownloadPosterOf(series);
         }

@@ -23,6 +23,7 @@ package br.edu.ufcg.aweseries.gui;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -44,6 +45,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.edu.ufcg.aweseries.App;
@@ -83,8 +85,10 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
     //Series item view adapter------------------------------------------------------------------------------------------
 
-    private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements
-    SeriesListener, FollowingSeriesListener, PosterDownloadListener {
+    private class SeriesItemViewAdapter extends ArrayAdapter<Series> implements SeriesListener,
+            FollowingSeriesListener, PosterDownloadListener {
+
+        private List<Series> downloadingPosters = new LinkedList<Series>();
 
         public SeriesItemViewAdapter(Context context, int seriesItemResourceId, List<Series> objects) {
             super(context, seriesItemResourceId, objects);
@@ -104,7 +108,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             // if no view was passed, create one for the item
             if (itemView == null) {
                 final LayoutInflater li = (LayoutInflater) SeriesListActivity.this
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 itemView = li.inflate(R.layout.series_list_item, null);
             }
 
@@ -112,18 +116,26 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
             final TextView name = (TextView) itemView.findViewById(R.id.nameTextView);
             final TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
+            final ProgressBar progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
 
             // load series data
             final Series item = this.getItem(position);
-            image.setImageBitmap(imageProvider.getPosterOf(item));
             name.setText(item.name());
+
+            if (this.downloadingPosters.contains(item)) {
+                image.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                image.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                image.setImageBitmap(imageProvider.getPosterOf(item));
+            }
 
             // next episode to see
             final Episode nextEpisodeToSee = item.nextEpisodeToSee();
             if (nextEpisodeToSee != null) {
-                nextToSee.setText(Objects.nullSafe(
-                        nextEpisodeToSee.name(),
-                        this.getContext().getString(R.string.unnamed_episode)));
+                nextToSee.setText(Objects.nullSafe(nextEpisodeToSee.name(), this.getContext()
+                        .getString(R.string.unnamed_episode)));
             } else {
                 nextToSee.setText(R.string.up_to_date);
             }
@@ -169,7 +181,36 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
         @Override
         public void onDownloadPosterOf(Series series) {
+            this.hideProgressBarAndShowPoster(series);
             this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onStartDownloadingPosterOf(Series series) {
+            this.hidePosterAndShowProgressBar(series);
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onConnectionFailureWhileDownloadingPosterOf(Series series) {
+            // TODO Show toast            
+            this.hideProgressBarAndShowPoster(series);
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onFailureWhileSavingPosterOf(Series series) {
+            // TODO Show toast
+            this.hideProgressBarAndShowPoster(series);
+            this.notifyDataSetChanged();
+        }
+
+        private void hidePosterAndShowProgressBar(Series series) {
+            this.downloadingPosters.add(series);
+        }
+
+        private void hideProgressBarAndShowPoster(Series series) {
+            this.downloadingPosters.remove(series);
         }
     }
 
@@ -304,11 +345,11 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         };
 
         new AlertDialog.Builder(this)
-        .setMessage(
-                String.format(this.getString(R.string.do_you_want_to_stop_following),
-                        series.name()))
-                        .setPositiveButton(R.string.yes, dialogClickListener)
-                        .setNegativeButton(R.string.no, dialogClickListener).show();
+                .setMessage(
+                        String.format(this.getString(R.string.do_you_want_to_stop_following),
+                                series.name()))
+                .setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
     private void showSearchActivity() {
@@ -318,7 +359,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
 
     private void setUpRecentAndUpcomingButtonClickListener() {
         final ImageButton recentAndUpcomingEpisodesButton = (ImageButton) this
-        .findViewById(R.id.recentAndUpcomingEpisodesButton);
+                .findViewById(R.id.recentAndUpcomingEpisodesButton);
 
         recentAndUpcomingEpisodesButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -341,7 +382,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         private final int updateFailureTitle = R.string.updating_series_failure_notification_title;
         private final int icon = R.drawable.stat_sys_download;
         private final NotificationManager nm = (NotificationManager) SeriesListActivity.this
-        .getSystemService(Context.NOTIFICATION_SERVICE);
+                .getSystemService(Context.NOTIFICATION_SERVICE);
 
         private void launchNotification(String title, String text) {
             final long when = System.currentTimeMillis();
@@ -399,13 +440,13 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         if (this.updateMenuItem != null) {
             this.updateMenuItem.setEnabled(false);
         }
-        this.updateMenuItemStatus  = false;
+        this.updateMenuItemStatus = false;
     }
 
     private void enableUpdateMenuItem() {
         if (this.updateMenuItem != null) {
             this.updateMenuItem.setEnabled(true);
         }
-        this.updateMenuItemStatus  = true;
+        this.updateMenuItemStatus = true;
     }
 }

@@ -126,7 +126,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("Series", null, this.contentValuesBy(series));
         for (Episode e : series.seasons().episodes()) {
-            Log.d("SeriesDataBase", "id: " + e.id() + " airdate: " + e.airDate());
+            //Log.d("SeriesDataBase", "id: " + e.id() + " airdate: " + e.airDate());
             db.insert("Episode", null, this.contentValuesBy(e));
         }
         db.close();

@@ -1,5 +1,5 @@
 /*
- *   PosterDownloadListener.java
+ *   ImageSource.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,17 +19,14 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.edu.ufcg.aweseries;
+package br.edu.ufcg.aweseries.series_source;
 
-import br.edu.ufcg.aweseries.model.Series;
+import android.graphics.Bitmap;
 
-public interface PosterDownloadListener {
-        
-    void onDownloadPosterOf(Series series);
+public interface ImageSource {
+
+    Bitmap fetchSeriesPoster(String filename);
     
-    void onStartDownloadingPosterOf(Series series);
-    
-    void onConnectionFailureWhileDownloadingPosterOf(Series series);
-    
-    void onFailureWhileSavingPosterOf(Series series);
+    Bitmap fetchEpisodeImage(String filename);
+
 }
