@@ -32,109 +32,144 @@
         </TextView>
     </LinearLayout>
 
-    <TableLayout
-        android:id="@+id/linearLayout2"
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dip"
-        android:layout_weight="1.1"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content" >
 
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+        <TableLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dip"
+            android:layout_weight="1.1"
+            android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/textView1"
+            <TableRow
+                android:id="@+id/tableRow1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="1dip"
-                android:text="@string/first_aired" >
-            </TextView>
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dip"
+                    android:text="@string/first_aired" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/episodeFirstAiredTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dip"
+                    android:text="@string/loading" >
+                </TextView>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dip"
+                    android:text="@string/director" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/episodeDirectorTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dip"
+                    android:text="@string/loading" >
+                </TextView>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dip"
+                    android:text="@string/writer" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/episodeWriterTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dip"
+                    android:text="@string/loading" >
+                </TextView>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dip"
+                    android:text="@string/guest_stars" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/episodeGuestStarsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dip"
+                    android:text="@string/loading" >
+                </TextView>
+            </TableRow>
 
             <TextView
-                android:id="@+id/episodeFirstAiredTextView"
+                android:id="@+id/episodeOverviewTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dip"
                 android:text="@string/loading" >
             </TextView>
-        </TableRow>
 
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/textView2"
+            <TableRow
+                android:id="@+id/tableRow3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="1dip"
-                android:text="@string/director" >
-            </TextView>
+                android:layout_marginTop="10dip" >
+            </TableRow>
 
-            <TextView
-                android:id="@+id/episodeDirectorTextView"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="1dip"
-                android:text="@string/loading" >
-            </TextView>
-        </TableRow>
+                android:layout_gravity="center_vertical" >
 
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="1dip"
-                android:text="@string/writer" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/episodeWriterTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="1dip"
-                android:text="@string/loading" >
-            </TextView>
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="1dip"
-                android:text="@string/guest_stars" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/episodeGuestStarsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="1dip"
-                android:text="@string/loading" >
-            </TextView>
-        </TableRow>
-
-        <TextView
-            android:id="@+id/episodeOverviewTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dip"
-            android:text="@string/loading" >
-        </TextView>
-    </TableLayout>
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/clapperboard"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </TableLayout>
+    </ScrollView>
 
 </LinearLayout>

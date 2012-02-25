@@ -113,7 +113,7 @@ public class UrlFactory {
     }
 
     private String buildUrlForEpisodeImage(String fileName) {
-        return this.mirrorBanners().append(this.encode(fileName)).toString();
+        return this.mirrorBanners().append("_cache/").append(this.encode(fileName)).toString();
     }
 
     //URL---------------------------------------------------------------------------------------------------------------

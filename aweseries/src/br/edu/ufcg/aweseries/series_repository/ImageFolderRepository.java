@@ -62,14 +62,14 @@ public class ImageFolderRepository implements ImageRepository {
     @Override
     public void updateSeriesPoster(int seriesId, Bitmap file) {
         this.seriesPostersFolder = ImageFolder.SERIES_POSTERS.directory();
-        this.deleteSeriesPoster(seriesId);
+        //this.deleteSeriesPoster(seriesId);
         this.insertSeriesPoster(seriesId, file);
     }
 
     @Override
     public void updateEpisodeImage(int episodeId, Bitmap file) {
         this.episodeImagesFolder = ImageFolder.EPISODE_IMAGES.directory();
-        this.deleteEpisodeImage(episodeId);
+        //this.deleteEpisodeImage(episodeId);
         this.insertEpisodeImage(episodeId, file);
     }
 

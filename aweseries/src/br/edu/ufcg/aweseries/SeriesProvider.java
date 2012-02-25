@@ -29,8 +29,6 @@ import java.util.Set;
 import static br.edu.ufcg.aweseries.util.Dates.today;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import br.edu.ufcg.aweseries.model.AirdateSpecification;
@@ -212,7 +210,7 @@ public class SeriesProvider {
         @Override
         protected void onPostExecute(Void result) {
             SeriesProvider.this.notifyListenersOfFollowedSeries(this.followedSeries);
-            App.environment().imageProvider().downloadImageOf(this.followedSeries); //TODO: move me elsewhere
+            App.environment().imageProvider().downloadPosterOf(this.followedSeries); //TODO: move me elsewhere
         }
     };
 

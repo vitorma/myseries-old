@@ -19,57 +19,99 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.gui;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import br.edu.ufcg.aweseries.App;
+import br.edu.ufcg.aweseries.EpisodeImageDownloadListener;
+import br.edu.ufcg.aweseries.ImageProvider;
 import br.edu.ufcg.aweseries.R;
 import br.edu.ufcg.aweseries.SeriesProvider;
 import br.edu.ufcg.aweseries.model.Episode;
 import br.edu.ufcg.aweseries.util.Dates;
 import br.edu.ufcg.aweseries.util.Objects;
 
-public class EpisodeDetailsActivity extends Activity {
+public class EpisodeDetailsActivity extends Activity implements EpisodeImageDownloadListener {
+    private static final ImageProvider imageProvider = App.environment().imageProvider();
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
-    
-    private Episode episode;
-    private TextView episodeName;
-    private TextView episodeFirstAired;
-    private TextView episodeOverview;
-    private TextView episodeDirector;
-    private TextView episodeWriter;
-    private TextView episodeGuestStars;
-    private CheckBox isViewed;
 
-    //Interface---------------------------------------------------------------------------------------------------------
+    private Episode episode;
+    private TextView episodeDirector;
+    private TextView episodeFirstAired;
+    private TextView episodeGuestStars;
+    private TextView episodeName;
+    private TextView episodeOverview;
+    private TextView episodeWriter;
+    private Bitmap image;
+    private ImageView imageView;
+    private CheckBox isViewed;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageProvider.register(this);
         this.setContentView(R.layout.episode_view);
         this.populateView();
         this.setUpSeenEpisodeCheckBox();
     }
-
+    
     //Private-----------------------------------------------------------------------------------------------------------
 
+    private void loadEpisode() {
+        final Bundle extras = this.getIntent().getExtras();
+
+        int seriesId = extras.getInt("series id");
+        int seasonNumber = extras.getInt("season number");
+        int episodeNumber = extras.getInt("episode number");
+
+        this.episode = seriesProvider.getSeries(seriesId).seasons().season(seasonNumber)
+                .episode(episodeNumber);
+    }
+
+    private void loadEpisodeImage() {
+        this.image = imageProvider.getImageOf(episode);
+
+        this.imageView.setImageBitmap(this.image);
+
+        if (this.image != null) {
+            this.setupForLoadedImage();
+        }
+
+        else
+            this.setupForUnavailableImage();
+    }
+
+    private void setupForLoadedImage() {
+        this.progressBar.setVisibility(View.GONE);
+        this.imageView.setVisibility(View.VISIBLE);
+    }
+
+    private void setupForLoadingImage() {
+        this.progressBar.setVisibility(View.VISIBLE);
+        this.imageView.setVisibility(View.GONE);
+    }
+
+    private void setupForUnavailableImage() {
+        this.progressBar.setVisibility(View.GONE);
+        this.imageView.setVisibility(View.GONE);
+    }
+
     private void populateView() {
-        
+
         this.setUpLocalReferencesToViewFields();
         this.loadEpisode();
 
-        this.episodeName.setText(Objects.nullSafe(
-                this.episode.name(),
-                this.getResources().getString(R.string.unnamed_episode)));
+        this.episodeName.setText(Objects.nullSafe(this.episode.name(), this.getResources()
+                .getString(R.string.unnamed_episode)));
         this.episodeFirstAired.setText(Dates.toString(this.episode.airDate(), App.environment()
                 .localization().dateFormat(), ""));
         this.episodeDirector.setText(this.episode.directors());
@@ -77,6 +119,12 @@ public class EpisodeDetailsActivity extends Activity {
         this.episodeGuestStars.setText(this.episode.guestStars());
         this.episodeOverview.setText(this.episode.overview());
         this.isViewed.setChecked(this.episode.wasSeen());
+
+        this.loadEpisodeImage();
+
+        if (this.image == null) {
+            imageProvider.downloadImageOf(this.episode);
+        }
     }
 
     private void setUpLocalReferencesToViewFields() {
@@ -87,16 +135,8 @@ public class EpisodeDetailsActivity extends Activity {
         this.episodeWriter = (TextView) this.findViewById(R.id.episodeWriterTextView);
         this.episodeGuestStars = (TextView) this.findViewById(R.id.episodeGuestStarsTextView);
         this.isViewed = (CheckBox) this.findViewById(R.id.isEpisodeViewedCheckBox);
-    }
-
-    private void loadEpisode() {
-        final Bundle extras = this.getIntent().getExtras();
-
-        int seriesId = extras.getInt("series id");
-        int seasonNumber = extras.getInt("season number");
-        int episodeNumber = extras.getInt("episode number");
-
-        this.episode = seriesProvider.getSeries(seriesId).seasons().season(seasonNumber).episode(episodeNumber);
+        this.imageView = (ImageView) this.findViewById(R.id.imageView);
+        this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
     }
 
     private void setUpSeenEpisodeCheckBox() {
@@ -111,4 +151,36 @@ public class EpisodeDetailsActivity extends Activity {
             }
         });
     }
+
+    //Interface---------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onConnectionFailureWhileDownloadingImageOf(Episode episode) {
+        if (episode.equals(this.episode)) {
+            this.setupForUnavailableImage();
+        }
+    }
+
+    @Override
+    public void onDownloadImageOf(Episode episode) {
+        if (episode.equals(this.episode)) {
+            this.loadEpisodeImage();
+            this.setupForLoadedImage();
+        }
+    }
+
+    @Override
+    public void onFailureWhileSavingImageOf(Episode episode) {
+        if (episode.equals(this.episode)) {
+            this.setupForUnavailableImage();
+        }
+    }
+
+    @Override
+    public void onStartDownloadingImageOf(Episode episode) {
+        if (episode.equals(this.episode)) {
+            this.setupForLoadingImage();
+        }
+    }
+
 }

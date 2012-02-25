@@ -34,8 +34,8 @@ import br.edu.ufcg.aweseries.util.Validate;
 public class TheTVDB implements SeriesSource, ImageSource {
     private StreamFactory streamFactory;
 
-    //Construction------------------------------------------------------------------------------------------------------
-
+    //Construction---------------------------------------------------------------------------------
+    
     public TheTVDB(String apiKey) {
         this(new TheTVDBStreamFactory(apiKey));
     }
@@ -46,7 +46,7 @@ public class TheTVDB implements SeriesSource, ImageSource {
         this.streamFactory = streamFactory;
     }
 
-    //SeriesSource------------------------------------------------------------------------------------------------------
+    //SeriesSource---------------------------------------------------------------------------------
 
     @Override
     public List<Series> searchFor(String seriesName, String languageAbbreviation) {
@@ -94,11 +94,13 @@ public class TheTVDB implements SeriesSource, ImageSource {
         return result;
     }
 
-    //Language----------------------------------------------------------------------------------------------------------
+    //Language-------------------------------------------------------------------------------------
 
     private Language languageFrom(String languageAbbreviation) {
         return Language.from(languageAbbreviation, TheTvDbConstants.DEFAULT_LANGUAGE);
     }
+    
+    //Images---------------------------------------------------------------------------------------
 
     @Override
     public Bitmap fetchSeriesPoster(String filename) {
