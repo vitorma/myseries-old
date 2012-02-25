@@ -28,7 +28,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import junit.framework.TestCase;
 import br.edu.ufcg.aweseries.model.Episode;
@@ -242,7 +241,7 @@ public class SeriesParserTest extends TestCase {
     public void testParsingInvalidXmlCausesParsingFailedException() {
         try {
             this.seriesParser.parse(SERIES_ID_FOR_INVALID_XML, Language.ENGLISH);
-            fail("Should have thrown an ParsingFailedException");
+            fail("Should have thrown a ParsingFailedException");
         } catch (ParsingFailedException e) {}
     }
 

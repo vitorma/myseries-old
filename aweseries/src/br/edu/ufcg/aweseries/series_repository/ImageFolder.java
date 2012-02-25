@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import android.os.Environment;
 import br.edu.ufcg.aweseries.App;
+import br.edu.ufcg.aweseries.series_repository.exceptions.ExternalStorageNotAvailableException;
 
 public enum ImageFolder {
     SERIES_POSTERS, EPISODE_IMAGES;
@@ -21,30 +22,23 @@ public enum ImageFolder {
         } catch (SecurityException e) {
             throw new RuntimeException("can't create the given directory: " + path);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new RuntimeException("can't write/read the on given directory: " + path);
         }
 
         return directory;
     }
 
     private static String rootPath() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
-        sb.append(System.getProperty("file.separator"));
-        sb.append("Android");
-        sb.append(System.getProperty("file.separator"));
-        sb.append("data");
-        sb.append(System.getProperty("file.separator"));
-        sb.append(App.environment().context().getPackageName());
-        sb.append(System.getProperty("file.separator")); 
-        sb.append("files");
-        
-        return sb.toString();
+        return rootDirectory().getPath();
     }
 
     private static File rootDirectory() {
-        return ImageFolder.ensuredDirectory(ImageFolder.rootPath());
+        if(!isAvaliable())
+            throw new ExternalStorageNotAvailableException();
+        //TODO create a shared preference to select internal or external storage
+        //if(App.environment().context().getSharedPreferences("STORAGE_MODE", 0).equals(EXTERNAL))
+        return App.environment().context().getExternalFilesDir(null);
+        //return App.environment().context().getFilesDir();
     }
 
     public String path() {
@@ -52,7 +46,10 @@ public enum ImageFolder {
     }
 
     public File directory() {
-        ImageFolder.rootDirectory();
         return ImageFolder.ensuredDirectory(this.path());
+    }
+    
+    private static boolean isAvaliable(){
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }

@@ -263,12 +263,7 @@ public class EpisodeListActivity extends ListActivity {
             }
 
             @Override
-            public void onIncreaseNumberOfSeenEpisodes(Season season) {
-                EpisodeListActivity.this.loadSeasonDataOnView();
-            }
-
-            @Override
-            public void onDecreaseNumberOfSeenEpisodes(Season season) {
+            public void onChangeNumberOfSeenEpisodes(Season season) {
                 EpisodeListActivity.this.loadSeasonDataOnView();
             }
         });

@@ -226,9 +226,9 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
             this.seriesRuntime.setText(String.format(
                     this.getString(R.string.runtime_minutes_format), series.runtime()));
 
-            final Episode nextToSee = series.nextEpisodeToSee();
+            final Episode nextToSee = series.nextEpisodeToSee(true);
             if (nextToSee != null) {
-                this.nextToSee.setText(series.seasons().nextEpisodeToSee().name());
+                this.nextToSee.setText(nextToSee.name());
             } else {
                 this.nextToSee.setText(R.string.up_to_date);
             }

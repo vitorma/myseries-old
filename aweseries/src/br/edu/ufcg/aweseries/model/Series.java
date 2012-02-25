@@ -145,12 +145,8 @@ public class Series implements SeasonSetListener {
         return this.seasons.numberOfSeenEpisodes();
     }
 
-    public Episode nextEpisodeToSee() {
-        return this.seasons.nextEpisodeToSee();
-    }
-
-    public Episode nextNonSpecialEpisodeToSee() {
-        return this.seasons.nextNonSpecialEpisodeToSee();
+    public Episode nextEpisodeToSee(boolean includingSpecialEpisodes) {
+        return this.seasons.nextEpisodeToSee(includingSpecialEpisodes);
     }
 
     public Series includingAll(Collection<Episode> episodes) {

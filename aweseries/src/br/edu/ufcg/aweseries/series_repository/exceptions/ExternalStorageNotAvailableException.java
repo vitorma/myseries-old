@@ -1,5 +1,5 @@
 /*
- *   SeasonListener.java
+ *   ExternalStorageNotAvailableException.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,17 +19,10 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.edu.ufcg.aweseries.model;
+package br.edu.ufcg.aweseries.series_repository.exceptions;
 
-public interface SeasonListener {
+public class ExternalStorageNotAvailableException extends RuntimeException {
 
-    public void onMarkAsSeen(Season season);
+    private static final long serialVersionUID = -8776554670321622512L;
 
-    public void onMarkAsNotSeen(Season season);
-
-    public void onChangeNumberOfSeenEpisodes(Season season);
-
-    public void onChangeNextEpisodeToSee(Season season);
-
-    public void onMerge(Season season);
 }

@@ -21,7 +21,6 @@
 
 package br.edu.ufcg.aweseries;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +33,7 @@ import br.edu.ufcg.aweseries.series_repository.ImageIoException;
 import br.edu.ufcg.aweseries.series_repository.ImageRepository;
 import br.edu.ufcg.aweseries.series_source.ConnectionFailedException;
 import br.edu.ufcg.aweseries.series_source.ImageSource;
+import br.edu.ufcg.aweseries.series_repository.exceptions.ExternalStorageNotAvailableException;
 import br.edu.ufcg.aweseries.util.Validate;
 
 public final class ImageProvider {
@@ -57,6 +57,7 @@ public final class ImageProvider {
             this.series = params[0];
 
             //TODO: this verification shouldn't be here
+            //TODO: improve the treatment of these exception
             if (this.series.posterFileName() != null && !this.series.posterFileName().equals("")) {
 
                 ImageProvider.this.notifyListenersOfStartDownloadingPosterOf(this.series);
@@ -87,6 +88,13 @@ public final class ImageProvider {
 
                     ImageProvider.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
 
+                    return null;
+                    
+                } catch (ExternalStorageNotAvailableException e) {
+                    e.printStackTrace();
+                    
+                    ImageProvider.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
+                    
                     return null;
                 }
             }

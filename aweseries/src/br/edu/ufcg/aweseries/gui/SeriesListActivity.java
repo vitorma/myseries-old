@@ -39,8 +39,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -132,7 +132,7 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             }
 
             // next episode to see
-            final Episode nextEpisodeToSee = item.nextEpisodeToSee();
+            final Episode nextEpisodeToSee = item.nextEpisodeToSee(true);//TODO SharedPreference
             if (nextEpisodeToSee != null) {
                 nextToSee.setText(Objects.nullSafe(nextEpisodeToSee.name(), this.getContext()
                         .getString(R.string.unnamed_episode)));
