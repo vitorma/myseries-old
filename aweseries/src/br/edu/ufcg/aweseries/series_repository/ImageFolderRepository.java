@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.series_repository.exceptions.ExternalStorageNotAvailableException;
+import br.edu.ufcg.aweseries.util.Validate;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -56,6 +57,8 @@ public class ImageFolderRepository implements ImageRepository {
 
     @Override
     public void insertSeriesPoster(int seriesId, Bitmap file) throws ExternalStorageNotAvailableException {
+        Validate.isNonNull(file, "poster");
+        
         File seriesPostersFolder = imageFolder(SERIES_POSTERS);
         File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
         saveImageFile(file, poster);
@@ -64,6 +67,8 @@ public class ImageFolderRepository implements ImageRepository {
 
     @Override
     public void insertEpisodeImage(int episodeId, Bitmap file) throws ExternalStorageNotAvailableException {
+        Validate.isNonNull(file, "episode image");
+        
         File episodeImagesFolder = imageFolder(EPISODE_IMAGES);
         File episodeImage = new File(episodeImagesFolder, episodeId + IMAGE_EXTENSION);
         saveImageFile(file, episodeImage);

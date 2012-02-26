@@ -223,7 +223,7 @@ public final class ImageProvider {
         }
     }
 
-    public enum Failure {
+    private enum Failure {
         CONNECTION_FAILED, EXTERNAL_STORAGE_UNAVAILABLE, IMAGE_IO, UNKNOWN
     }
 
