@@ -165,7 +165,7 @@ public class Environment {
     public ImageProvider imageProvider() {
         if (this.imageProvider == null) {
             this.imageProvider = ImageProvider.newInstance(theTVDB(),
-                    ImageFolderRepository.newInstance());
+                    ImageFolderRepository.newInstance(context));
        }
         
         return this.imageProvider;

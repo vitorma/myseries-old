@@ -21,7 +21,7 @@
 
 package br.edu.ufcg.aweseries.series_repository.exceptions;
 
-public class ExternalStorageNotAvailableException extends RuntimeException {
+public class ExternalStorageNotAvailableException extends Exception {
 
     private static final long serialVersionUID = -8776554670321622512L;
 

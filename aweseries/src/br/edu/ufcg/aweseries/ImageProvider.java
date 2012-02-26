@@ -223,7 +223,7 @@ public final class ImageProvider {
         }
     }
 
-    private enum Failure {
+    public enum Failure {
         CONNECTION_FAILED, EXTERNAL_STORAGE_UNAVAILABLE, IMAGE_IO, UNKNOWN
     }
 
@@ -288,11 +288,15 @@ public final class ImageProvider {
         Validate.isNonNull(episode, "episode");
 
         if (episode.imageFileName() != null && !episode.imageFileName().equals("")) {
-            Bitmap image = this.imageRepository.getEpisodeImage(episode.id());
-            
+            Bitmap image;
+            try {
+                image = this.imageRepository.getEpisodeImage(episode.id());
+            } catch (ExternalStorageNotAvailableException e) {
+             // TODO Auto-generated catch block
+                return null;
+            }
             return image;
         }
-
         return null;
     }
 
@@ -300,12 +304,19 @@ public final class ImageProvider {
         Validate.isNonNull(series, "series");
 
         if (series.posterFileName() != null && !series.posterFileName().equals("")) {
-            Bitmap poster = this.imageRepository.getSeriesPoster(series.id());
+            Bitmap poster;
+            try {
+                poster = this.imageRepository.getSeriesPoster(series.id());
+            } catch (ExternalStorageNotAvailableException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return this.genericPosterImage();
+            }
 
             if (poster != null) {
                 return poster;
             }
-            
+
             else {
                 this.downloadPosterOf(series);
             }
@@ -392,6 +403,9 @@ public final class ImageProvider {
             this.imageRepository.deleteEpisodeImage(episode.id());
         } catch (ImageIoException e) {
             //TODO: Just ignore it if not found, do something if sdcard was removed
+        } catch (ExternalStorageNotAvailableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
@@ -400,6 +414,9 @@ public final class ImageProvider {
             this.imageRepository.deleteSeriesPoster(series.id());
         } catch (ImageIoException e) {
             //TODO: Just ignore it if not found, do something if sdcard was removed
+        } catch (ExternalStorageNotAvailableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
