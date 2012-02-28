@@ -137,7 +137,8 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             final Episode nextEpisodeToSee = item.nextEpisodeToSee(true);//TODO SharedPreference
             if (nextEpisodeToSee != null) {
                 nextToSee.setText(Objects.nullSafe(nextEpisodeToSee.name(), this.getContext().getString(R.string.unnamed_episode)));
-                seenMark.setChecked(false);
+                seenMark.setEnabled(true);
+                seenMark.setChecked(nextEpisodeToSee.wasSeen());
                 seenMark.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View arg0) {
