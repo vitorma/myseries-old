@@ -39,10 +39,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -113,10 +114,11 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             }
 
             // get views for the series fields
-            final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
-            final TextView name = (TextView) itemView.findViewById(R.id.nameTextView);
-            final TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
-            final ProgressBar progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+            ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
+            ProgressBar progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+            TextView name = (TextView) itemView.findViewById(R.id.nameTextView);
+            TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
+            final CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.seenMarkCheckBox);
 
             // load series data
             final Series item = this.getItem(position);
@@ -134,10 +136,18 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             // next episode to see
             final Episode nextEpisodeToSee = item.nextEpisodeToSee(true);//TODO SharedPreference
             if (nextEpisodeToSee != null) {
-                nextToSee.setText(Objects.nullSafe(nextEpisodeToSee.name(), this.getContext()
-                        .getString(R.string.unnamed_episode)));
+                nextToSee.setText(Objects.nullSafe(nextEpisodeToSee.name(), this.getContext().getString(R.string.unnamed_episode)));
+                seenMark.setChecked(false);
+                seenMark.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        seriesProvider.markEpisodeAsSeen(nextEpisodeToSee);
+                    }
+                });
             } else {
                 nextToSee.setText(R.string.up_to_date);
+                seenMark.setChecked(false);
+                seenMark.setEnabled(false);
             }
 
             return itemView;
