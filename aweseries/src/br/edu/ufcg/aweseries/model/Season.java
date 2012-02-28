@@ -122,7 +122,7 @@ public class Season implements EpisodeListener {
         return this;
     }
 
-    //Seen--------------------------------------------------------------------------------------------------------------
+    //SeenMark----------------------------------------------------------------------------------------------------------
 
     public int numberOfSeenEpisodes() {
         return this.numberOfSeenEpisodes;

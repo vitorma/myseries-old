@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone" />
+
     </FrameLayout>
 
     <RelativeLayout
@@ -45,33 +46,45 @@
             android:lines="1"
             android:marqueeRepeatLimit="marquee_forever"
             android:paddingRight="2dp"
+            android:paddingLeft="3dp"
             android:scrollHorizontally="true"
             android:text="@string/loading"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/nextToSeeLabelTextView"
-            style="@style/aweseries_style.15sp"
+        <CheckBox
+            android:id="@+id/episodeIsViewedCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/nameTextView"
-            android:paddingRight="2dp"
-            android:text="@string/next_episode_to_see" />
+            android:layout_alignParentBottom="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
 
         <TextView
             android:id="@+id/nextToSeeTextView"
             style="@style/aweseries_style.15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/nextToSeeLabelTextView"
+            android:layout_toRightOf="@id/episodeIsViewedCheckBox"
+            android:layout_alignBottom="@id/episodeIsViewedCheckBox"
             android:ellipsize="marquee"
             android:lines="1"
             android:marqueeRepeatLimit="marquee_forever"
             android:paddingRight="2dp"
+            android:paddingBottom="5dp"
             android:scrollHorizontally="true"
             android:text="@string/loading" />
-    </RelativeLayout>
+
+        <TextView
+            android:id="@+id/nextToSeeLabelTextView"
+            style="@style/aweseries_style.10sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/episodeIsViewedCheckBox"
+            android:layout_above="@id/nextToSeeTextView"
+            android:paddingRight="2dp"
+            android:text="@string/next_episode_to_see" />
+
+   </RelativeLayout>
 
 </LinearLayout>

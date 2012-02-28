@@ -37,7 +37,7 @@ public class SeasonSet implements SeasonListener {
     private TreeMap<Integer, Season> seasons;
     private List<SeasonSetListener> listeners;
 
-    // Construction------------------------------------------------------------------------------------------------------
+    //Construction------------------------------------------------------------------------------------------------------
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
@@ -141,7 +141,7 @@ public class SeasonSet implements SeasonListener {
         return this;
     }
 
-    //Seen--------------------------------------------------------------------------------------------------------------
+    //SeenMark----------------------------------------------------------------------------------------------------------
 
     public int numberOfSeenEpisodes() {
         int numberOfSeenEpisodes = 0;
@@ -154,9 +154,9 @@ public class SeasonSet implements SeasonListener {
     }
 
     public Episode nextEpisodeToSee(boolean includingSpecialEpisodes) {
-        if (!includingSpecialEpisodes) return this.findNextNonSpecialEpisodeToSee();
+        if (!includingSpecialEpisodes) return this.nextNonSpecialEpisodeToSee();
 
-        Episode nextNonSpecialEpisodeToSee = this.findNextNonSpecialEpisodeToSee();
+        Episode nextNonSpecialEpisodeToSee = this.nextNonSpecialEpisodeToSee();
         Episode nextSpecialEpisodeToSee = this.nextSpecialEpisodeToSee();
 
         if (nextNonSpecialEpisodeToSee == null) return nextSpecialEpisodeToSee;
@@ -172,7 +172,7 @@ public class SeasonSet implements SeasonListener {
         return specialEpisodes != null ? specialEpisodes.nextEpisodeToSee() : null;
     }
 
-    private Episode findNextNonSpecialEpisodeToSee() {
+    private Episode nextNonSpecialEpisodeToSee() {
         for (Season s : this.seasons.values()) {
             if (s.number() == SPECIAL_EPISODES_SEASON_NUMBER) continue;
 
