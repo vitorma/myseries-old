@@ -119,6 +119,9 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             TextView name = (TextView) itemView.findViewById(R.id.nameTextView);
             TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
             final CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.seenMarkCheckBox);
+            final ChunkBar chunkBar = (ChunkBar) itemView.findViewById(R.id.chunkBar1);
+            chunkBar.setParts(new boolean[] { true, true, false, false, false, true, false, true,
+                    true, true, false, false, false, true, false, true });
 
             // load series data
             final Series item = this.getItem(position);
@@ -136,7 +139,8 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             // next episode to see
             final Episode nextEpisodeToSee = item.nextEpisodeToSee(true);//TODO SharedPreference
             if (nextEpisodeToSee != null) {
-                nextToSee.setText(Objects.nullSafe(nextEpisodeToSee.name(), this.getContext().getString(R.string.unnamed_episode)));
+                nextToSee.setText(Objects.nullSafe(nextEpisodeToSee.name(), this.getContext()
+                        .getString(R.string.unnamed_episode)));
                 seenMark.setEnabled(true);
                 seenMark.setChecked(nextEpisodeToSee.wasSeen());
                 seenMark.setOnClickListener(new OnClickListener() {
