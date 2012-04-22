@@ -37,7 +37,7 @@ public class ChunkBar extends View {
     private Paint background;
     private Paint textPaint;
     private static final int DEFAULT_DRAWING_COLOR = Color.rgb(50, 182, 231);
-    private final int DEFAULT_BACKGROUND_COLOR = Color.DKGRAY;
+    private final int DEFAULT_BACKGROUND_COLOR = Color.rgb(27, 27, 27);
     private static final int DEFAULT_TEXT_COLOR = Color.WHITE;
 
     public ChunkBar(Context context) {

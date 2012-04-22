@@ -19,7 +19,6 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.edu.ufcg.aweseries.gui;
 
 import java.util.List;
@@ -29,13 +28,16 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import br.edu.ufcg.aweseries.App;
 import br.edu.ufcg.aweseries.R;
@@ -55,6 +57,7 @@ public class SeriesSearchActivity extends ListActivity {
 
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
+        this.setupSearchFieldActionListeners();
     }
 
     /**
@@ -66,26 +69,58 @@ public class SeriesSearchActivity extends ListActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchActivity.this
-                        .findViewById(R.id.searchField);
-
-                try {
-                    final List<Series> searchResultsArray = App.environment().seriesProvider()
-                            .searchSeries(searchField.getText().toString());
-
-                    SeriesSearchActivity.this.setListAdapter(new TextOnlyViewAdapter(
-                            SeriesSearchActivity.this, SeriesSearchActivity.this,
-                            R.layout.text_only_list_item, searchResultsArray));
-
-                } catch (final Exception e) {
-                    Log.e(SeriesSearchActivity.class.getName(), e.getMessage());
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(
-                            SeriesSearchActivity.this);
-                    builder.setMessage(e.getMessage());
-                    builder.create().show();
-                }
+                performSearch();
             }
         });
+    }
+
+    private void performSearch() {
+        final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchActivity.this
+                .findViewById(R.id.searchField);
+        try {
+            final List<Series> searchResultsArray = App.environment().seriesProvider()
+                    .searchSeries(searchField.getText().toString());
+
+            SeriesSearchActivity.this.setListAdapter(new TextOnlyViewAdapter(
+                    SeriesSearchActivity.this, SeriesSearchActivity.this,
+                    R.layout.text_only_list_item, searchResultsArray));
+
+        } catch (final Exception e) {
+            Log.e(SeriesSearchActivity.class.getName(), e.getMessage());
+            final AlertDialog.Builder builder = new AlertDialog.Builder(SeriesSearchActivity.this);
+            builder.setMessage(e.getMessage());
+            builder.create().show();
+        }
+
+    }
+
+    private void setupSearchFieldActionListeners() {
+        final AutoCompleteTextView searchField = (AutoCompleteTextView) findViewById(R.id.searchField);
+
+        searchField.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    performSearch();
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+        searchField.setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    performSearch();
+                }
+
+                return false;
+            }
+        });
+
     }
 
     /**
@@ -154,8 +189,7 @@ public class SeriesSearchActivity extends ListActivity {
                             seriesProvider.follow(selectedItem);
 
                             String message = String.format(SeriesSearchActivity.this
-                                    .getString(R.string.series_will_be_added), selectedItem
-                                    .name());
+                                    .getString(R.string.series_will_be_added), selectedItem.name());
 
                             this.showToastWith(message);
                         }
