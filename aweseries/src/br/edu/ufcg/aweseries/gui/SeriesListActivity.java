@@ -46,6 +46,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -119,9 +120,6 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
             TextView name = (TextView) itemView.findViewById(R.id.nameTextView);
             TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
             final CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.seenMarkCheckBox);
-            final ChunkBar chunkBar = (ChunkBar) itemView.findViewById(R.id.chunkBar1);
-            chunkBar.setParts(new boolean[] { true, true, false, false, false, true, false, true,
-                    true, true, false, false, false, true, false, true });
 
             // load series data
             final Series item = this.getItem(position);
@@ -135,6 +133,11 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
                 progressBar.setVisibility(View.GONE);
                 image.setImageBitmap(imageProvider.getPosterOf(item));
             }
+
+            //seen episodes chunk bar
+            final SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView
+                    .findViewById(R.id.SeenEpisodesBar);
+            seenEpisodesBar.setSeries(item);
 
             // next episode to see
             final Episode nextEpisodeToSee = item.nextEpisodeToSee(true);//TODO SharedPreference
@@ -176,6 +179,12 @@ public class SeriesListActivity extends ListActivity implements UpdateListener {
         @Override
         public void onChangeNumberOfSeenEpisodes(Series series) {
             //TODO Update the 'progress' bar
+            int index = this.getPosition(series);
+
+            ListView listView = getListView();
+            final SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) listView.getChildAt(index)
+                    .findViewById(R.id.SeenEpisodesBar);
+            seenEpisodesBar.setSeries(series);
         }
 
         @Override

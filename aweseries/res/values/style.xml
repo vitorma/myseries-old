@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
 
-    <style name="aweseries_style">
-    </style>
+    <style name="aweseries_style"></style>
 
     <style name="aweseries_style.10sp">
         <item name="android:textSize">10sp</item>
@@ -35,14 +33,21 @@
         <item name="android:background">@android:color/black</item>
     </style>
 
+    <color name="aweseries_style.toolbar_background">#00000000</color>
+
     <style name="aweseries_style.toolbar_button">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">44sp</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
-    <color name="aweseries_style.toolbar_background">#00000000</color>
-    <dimen name="aweseries.widget_margin">5dp</dimen>
 
+    <dimen name="aweseries_style.widget_margin">5dp</dimen>
+
+    <color name="aweseries_style.chunkbar_foreground">#32B6E7</color>
+    <color name="aweseries_style.chunkbar_background">#272727</color>
+
+    <dimen name="aweseries_style.chunkbar_textSize">12sp</dimen>
+
+    <color name="aweseries_style.chunkbar_textColor">#A0A0A0</color>
 
 </resources>
-

@@ -26,15 +26,19 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class ChunkBar extends View {
-
     private boolean[] parts;
     private Paint foreground;
     private Paint background;
+    private Paint textPaint;
+    private static final int DEFAULT_DRAWING_COLOR = Color.rgb(50, 182, 231);
+    private final int DEFAULT_BACKGROUND_COLOR = Color.DKGRAY;
+    private static final int DEFAULT_TEXT_COLOR = Color.WHITE;
 
     public ChunkBar(Context context) {
         this(context, null);
@@ -49,9 +53,28 @@ public class ChunkBar extends View {
 
         this.parts = new boolean[] { false };
         this.foreground = new Paint();
-        this.foreground.setColor(Color.GREEN);
+        this.foreground.setColor(DEFAULT_DRAWING_COLOR);
         this.background = new Paint();
-        this.background.setColor(android.R.color.background_light);
+        this.background.setColor(DEFAULT_BACKGROUND_COLOR);
+        this.textPaint = new Paint();
+        this.textPaint.setColor(DEFAULT_TEXT_COLOR);
+    }
+
+    public void setBackgroundColor(int color) {
+        this.background.setColor(color);
+    }
+
+    public void setForegroundColor(int color) {
+        this.foreground.setColor(color);
+    }
+
+    public void setTextColor(int color) {
+        this.textPaint.setColor(color);
+    }
+
+    public void setTextSize(float textSize) {
+        Validate.isTrue(textSize > 0.0, "textSize should be greater than 0");
+        this.textPaint.setTextSize(textSize);
     }
 
     public void setParts(boolean[] parts) {
@@ -63,26 +86,39 @@ public class ChunkBar extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int width = getMeasuredWidth();
-        int height = getMeasuredHeight();
 
-        float partWidth = (float) (width - 4) / parts.length;
-        float partHeight = (float) height - 4;
-        float dx = 2;
-        float dy = 2;
+        int availableParts = 0;
+        for (boolean part : this.parts) {
+            if (part) {
+                ++availableParts;
+            }
+        }
 
-        RectF rect = new RectF(1, 1, width - 1, height - 1);
-        canvas.drawRoundRect(rect, height / 5, height / 5, background);
+        String text = String.format(" %d/%d ", availableParts, this.parts.length);
+        float textWidth = this.textPaint.measureText(text);
 
-        RectF rect2 = new RectF(0, 0, width, height);
-        canvas.drawRoundRect(rect2, height / 5, height / 5, background);
+        int d = 2;
+        int height = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
+        int width = getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - (int) textWidth - 2
+                * d;
+
+        float partWidth = (float) (width) / parts.length;
+        float partHeight = (float) height;
+
+        RectF rect = new RectF(getPaddingLeft(), getPaddingTop(), width, height);
+        canvas.drawRect(rect, background);
 
         for (int i = 0; i < this.parts.length; ++i) {
             if (this.parts[i]) {
-                canvas.drawRect(i * partWidth, dy, (i + 1) * partWidth, partHeight - dy,
-                        this.foreground);
+                canvas.drawRect(i * partWidth + getPaddingLeft(), getPaddingTop(), (i + 1)
+                        * partWidth, partHeight - getPaddingBottom(), this.foreground);
             }
         }
+
+        textPaint.setAntiAlias(true);
+        textPaint.setTextAlign(Align.RIGHT);
+
+        canvas.drawText(text, getMeasuredWidth() - getPaddingRight(), height, textPaint);
 
         canvas.save();
     }
