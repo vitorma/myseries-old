@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="aweseries_style"></style>
+
+    <style name="aweseries_style.10sp">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="aweseries_style.20sp">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="aweseries_style.30sp">
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="aweseries_style.12sp">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="aweseries_style.12sp.white">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="aweseries_style.15sp">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="aweseries_style.toolbar">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">50sp</item>
+        <item name="android:background">@android:color/black</item>
+    </style>
+
+    <color name="aweseries_style.toolbar_background">#00000000</color>
+
+    <style name="aweseries_style.toolbar_button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">44sp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <dimen name="aweseries_style.widget_margin">5dp</dimen>
+
+    <color name="aweseries_style.chunkbar_foreground">#32B6E7</color>
+    <color name="aweseries_style.chunkbar_background">#272727</color>
+
+    <dimen name="aweseries_style.chunkbar_textSize">12sp</dimen>
+
+    <color name="aweseries_style.chunkbar_textColor">#A0A0A0</color>
+
+</resources>

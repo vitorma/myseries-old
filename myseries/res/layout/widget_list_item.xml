@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="2dp">
+
+    <ImageView
+        android:id="@+id/widgetPoster"
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/widgetEpisodeDateTextView"
+        android:layout_alignTop="@+id/widgetEpisodeSeriesTextView"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/small_poster_clapperboard" >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/widgetEpisodeSeriesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/widgetPoster"
+        android:layout_alignParentTop="true"
+        android:lines="1"
+        android:scrollHorizontally="true"
+        android:text="@string/loading"
+        style="@style/aweseries_style.12sp.white"/>
+
+    <TextView
+        android:id="@+id/widgetEpisodeNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/widgetPoster"
+        android:layout_below="@+id/widgetEpisodeSeriesTextView"
+        android:lines="1"
+        android:scrollHorizontally="true"
+        android:text="@string/loading"
+        style="@style/aweseries_style.10sp"/>
+
+    <TextView
+        android:id="@+id/widgetEpisodeDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/widgetPoster"
+        android:layout_below="@+id/widgetEpisodeNameTextView"
+        android:text="@string/loading"
+        style="@style/aweseries_style.10sp"/>
+
+</RelativeLayout>
