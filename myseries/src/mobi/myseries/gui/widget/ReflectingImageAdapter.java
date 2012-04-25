@@ -17,10 +17,10 @@ import android.graphics.Shader.TileMode;
  * @author potiuk
  * 
  */
-public class ReflectingImageAdapter extends AbstractCoverFlowImageAdapter {
+public class ReflectingImageAdapter extends CoverFlowAdapter {
 
     /** The linked adapter. */
-    private final AbstractCoverFlowImageAdapter linkedAdapter;
+    private final CoverFlowAdapter linkedAdapter;
     /**
      * Gap between the image and its reflection.
      */
@@ -45,7 +45,7 @@ public class ReflectingImageAdapter extends AbstractCoverFlowImageAdapter {
      * @param linkedAdapter
      *            adapter that provides images to get reflections
      */
-    public ReflectingImageAdapter(final AbstractCoverFlowImageAdapter linkedAdapter) {
+    public ReflectingImageAdapter(final CoverFlowAdapter linkedAdapter) {
         super();
         this.linkedAdapter = linkedAdapter;
     }

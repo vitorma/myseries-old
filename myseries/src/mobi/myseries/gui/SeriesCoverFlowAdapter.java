@@ -21,31 +21,25 @@
 
 package mobi.myseries.gui;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mobi.myseries.application.App;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.widget.AbstractCoverFlowImageAdapter;
-
+import mobi.myseries.domain.model.SeriesListener;
+import mobi.myseries.gui.widget.CoverFlowAdapter;
 import android.graphics.Bitmap;
 
-public class SeriesCoverFlowAdapter extends AbstractCoverFlowImageAdapter {
+public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
 
     private List<Series> seriesList;
-    private Map<Integer, WeakReference<Bitmap>> seriesPosters;
 
     public SeriesCoverFlowAdapter() {
-        super();
         this.seriesList = new ArrayList<Series>(SERIES_PROVIDER.followedSeries());
-        this.seriesPosters = new HashMap<Integer, WeakReference<Bitmap>>();
     }
 
     @Override
@@ -56,11 +50,16 @@ public class SeriesCoverFlowAdapter extends AbstractCoverFlowImageAdapter {
     @Override
     protected Bitmap createBitmap(int position) {
         Bitmap bitmap = IMAGE_PROVIDER.getPosterOf(this.seriesList.get(position));
-        this.seriesPosters.put(position, new WeakReference<Bitmap>(bitmap));
         return bitmap;
     }
 
     public Series itemOf(int position) {
         return this.seriesList.get(position);
+    }
+
+    public void registerSeriesListener(SeriesListener sl) {
+        for (Series s : this.seriesList) {
+            s.register(sl);
+        }
     }
 }

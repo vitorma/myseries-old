@@ -201,11 +201,11 @@ public class CoverFlow extends Gallery {
      */
     @Override
     public void setAdapter(final SpinnerAdapter adapter) {
-        if (!(adapter instanceof AbstractCoverFlowImageAdapter)) {
+        if (!(adapter instanceof CoverFlowAdapter)) {
             throw new IllegalArgumentException("The adapter should derive from "
-                    + AbstractCoverFlowImageAdapter.class.getName());
+                    + CoverFlowAdapter.class.getName());
         }
-        final AbstractCoverFlowImageAdapter coverAdapter = (AbstractCoverFlowImageAdapter) adapter;
+        final CoverFlowAdapter coverAdapter = (CoverFlowAdapter) adapter;
         coverAdapter.setWidth(imageWidth);
         coverAdapter.setHeight(imageHeight);
         if (withReflection) {

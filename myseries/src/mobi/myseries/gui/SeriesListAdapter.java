@@ -66,7 +66,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series>
        SERIES_PROVIDER.addFollowingSeriesListener(this);
        IMAGE_PROVIDER.register(this);
 
-       for (final Series series : objects) {
+       for (Series series : objects) {
            series.register(this);
        }
 
