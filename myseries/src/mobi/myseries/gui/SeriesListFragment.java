@@ -22,6 +22,8 @@
 package mobi.myseries.gui;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
+import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +34,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 public class SeriesListFragment extends ListFragment {
+    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+
     private SeriesListAdapter adapter;
 
     @Override
@@ -47,7 +51,7 @@ public class SeriesListFragment extends ListFragment {
     @Override  
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.adapter = new SeriesListAdapter(this.getActivity());
+        this.adapter = new SeriesListAdapter(this.getActivity(), SERIES_PROVIDER.followedSeries());
         this.setListAdapter(this.adapter);
         this.setupItemClickListener();
     }
