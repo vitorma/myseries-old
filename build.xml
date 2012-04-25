@@ -10,11 +10,11 @@
     </target>
 
     <target name="clean-jvm-unittests">
-        <ant dir="myseries-unittest" target="clean"/>
+        <ant dir="myseries-unittest-junit4" target="clean"/>
     </target>
 
     <target name="clean-android-unittests">
-        <ant dir="myseries-test" target="clean"/>
+        <ant dir="myseries-unittest" target="clean"/>
     </target>
 
     <target name="clean-acceptancetests">
@@ -67,11 +67,11 @@
     </target>
 
     <target name="build-jvm-unittests">
-        <ant dir="myseries-unittest" target="compile"/>
+        <ant dir="myseries-unittest-junit4" target="compile"/>
     </target>
 
     <target name="build-android-unittests">
-        <ant dir="myseries-test">
+        <ant dir="myseries-unittest">
             <target name="debug"/>
             <target name="install"/>
         </ant>
@@ -88,13 +88,13 @@
     <!-- Unit Testing -->
 
     <target name="run-jvm-unittests">
-        <ant dir="myseries-unittest">
+        <ant dir="myseries-unittest-junit4">
             <target name="run-tests"/>
         </ant>
     </target>
 
     <target name="run-android-unittests">
-        <ant dir="myseries-test">
+        <ant dir="myseries-unittest">
             <target name="test"/>
             <target name="fetch-test-report"/>
         </ant>
