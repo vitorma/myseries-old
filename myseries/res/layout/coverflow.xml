@@ -4,7 +4,8 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:padding="5dp" >
 
 	<mobi.myseries.gui.widget.CoverFlow
 		xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
@@ -21,8 +22,7 @@
 	<RelativeLayout
         android:id="@+id/coverflow_data_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="5dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/coverflow_item_name"
@@ -33,11 +33,18 @@
             android:ellipsize="marquee"
             android:lines="1"
             android:marqueeRepeatLimit="marquee_forever"
-            android:paddingRight="2dp"
-            android:paddingLeft="3dp"
+            android:layout_marginTop="10dp"
             android:scrollHorizontally="true"
             android:text="@string/loading"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <mobi.myseries.gui.SeenEpisodesBar
+            android:id="@+id/coverflow_item_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/coverflow_item_name"
+            android:layout_marginTop="5dp" />
 
         <CheckBox
             android:id="@+id/coverflow_item_seen_mark"

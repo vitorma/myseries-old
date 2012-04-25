@@ -65,6 +65,7 @@ public class SeriesCoverFlowFragment extends Fragment {
 
         this.seriesItemViewHolder = new SeriesItemViewHolder();
         this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.coverflow_item_name);
+        this.seriesItemViewHolder.bar = (SeenEpisodesBar) this.getActivity().findViewById(R.id.coverflow_item_bar);
         this.seriesItemViewHolder.nextToSee = (TextView) this.getActivity().findViewById(R.id.coverflow_item_next_to_see);
         this.seriesItemViewHolder.seenMark = (CheckBox) this.getActivity().findViewById(R.id.coverflow_item_seen_mark);
 
@@ -89,6 +90,7 @@ public class SeriesCoverFlowFragment extends Fragment {
             public void onItemSelected(final AdapterView< ? > parent, final View view, final int position, final long id) {
                 Series item = seriesAdapter.itemOf(position);
                 seriesItemViewHolder.name.setText(item.name());
+                seriesItemViewHolder.bar.setSeries(item);
                 Episode next = item.nextEpisodeToSee(true);
                 if (next != null) {
                     seriesItemViewHolder.nextToSee.setText(next.name());
@@ -106,10 +108,9 @@ public class SeriesCoverFlowFragment extends Fragment {
         });
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-
     private static class SeriesItemViewHolder {
         private TextView name;
+        private SeenEpisodesBar bar;
         private TextView nextToSee;
         private CheckBox seenMark;
     }
