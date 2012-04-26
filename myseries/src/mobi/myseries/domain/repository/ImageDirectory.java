@@ -1,5 +1,5 @@
 /*
- *   ImageFolderRepository.java
+ *   ImageDirectory.java
  *
  *   Copyright 2012 MySeries Team.
  *
