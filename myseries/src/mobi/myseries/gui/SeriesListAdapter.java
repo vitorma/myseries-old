@@ -24,14 +24,11 @@ package mobi.myseries.gui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.FollowingSeriesListener;
 import mobi.myseries.application.ImageProvider;
-import mobi.myseries.application.PosterDownloadListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
@@ -45,18 +42,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class SeriesListAdapter extends ArrayAdapter<Series>
-        implements FollowingSeriesListener, PosterDownloadListener, SeriesListener {
+public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, FollowingSeriesListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
     private static final int ITEM_LAYOUT = R.layout.series_list_item;
 
     private LayoutInflater layoutInflater;
-    private List<Series> downloadingPosters = new LinkedList<Series>();
 
     public SeriesListAdapter(Context context, Collection<Series> objects) {
        super(context, ITEM_LAYOUT, new ArrayList<Series>(objects));
@@ -64,7 +58,6 @@ public class SeriesListAdapter extends ArrayAdapter<Series>
        this.layoutInflater = LayoutInflater.from(context);
 
        SERIES_PROVIDER.addFollowingSeriesListener(this);
-       IMAGE_PROVIDER.register(this);
 
        for (Series series : objects) {
            series.register(this);
@@ -82,7 +75,6 @@ public class SeriesListAdapter extends ArrayAdapter<Series>
         }
 
         ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
-        ProgressBar progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
         TextView name = (TextView) itemView.findViewById(R.id.nameTextView);
         SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.SeenEpisodesBar);
         TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
@@ -90,17 +82,8 @@ public class SeriesListAdapter extends ArrayAdapter<Series>
 
         Series item = this.getItem(position);
 
-        if (this.downloadingPosters.contains(item)) {
-            image.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
-        } else {
-            image.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-            image.setImageBitmap(IMAGE_PROVIDER.getPosterOf(item));
-        }
-
+        image.setImageBitmap(IMAGE_PROVIDER.getPosterOf(item));
         name.setText(item.name());
-
         seenEpisodesBar.setSeries(item);
 
         final Episode nextEpisodeToSee = item.nextEpisodeToSee(true);//TODO SharedPreference
@@ -163,40 +146,6 @@ public class SeriesListAdapter extends ArrayAdapter<Series>
     @Override
     public void onMerge(Series series) {
         this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onDownloadPosterOf(Series series) {
-        this.hideProgressBarAndShowPoster(series);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onStartDownloadingPosterOf(Series series) {
-        this.hidePosterAndShowProgressBar(series);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onConnectionFailureWhileDownloadingPosterOf(Series series) {
-        // TODO Show toast            
-        this.hideProgressBarAndShowPoster(series);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onFailureWhileSavingPosterOf(Series series) {
-        // TODO Show toast
-        this.hideProgressBarAndShowPoster(series);
-        this.notifyDataSetChanged();
-    }
-
-    private void hidePosterAndShowProgressBar(Series series) {
-        this.downloadingPosters.add(series);
-    }
-
-    private void hideProgressBarAndShowPoster(Series series) {
-        this.downloadingPosters.remove(series);
     }
 
     private static class SeriesComparator implements Comparator<Series> {
