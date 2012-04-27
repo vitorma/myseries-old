@@ -32,6 +32,7 @@ import mobi.myseries.domain.repository.ImageIoException;
 import mobi.myseries.domain.repository.ImageRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ImageSource;
+import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
 
 import android.graphics.Bitmap;
@@ -278,24 +279,16 @@ public final class ImageProvider {
     public Bitmap getPosterOf(Series series) {
         Validate.isNonNull(series, "series");
 
-        if (series.posterFileName() != null && !series.posterFileName().equals("")) {
-            Bitmap poster;
-            try {
-                poster = this.imageRepository.getSeriesPoster(series.id());
-            } catch (ExternalStorageNotAvailableException e) {
-                //TODO Auto-generated catch block
-                e.printStackTrace();
-                return this.genericPosterImage();
-            }
-
-            if (poster != null) {
-                return poster;
-            } else {
-                this.downloadPosterOf(series);
-            }
+        if (series.posterFileName() == null || Strings.isBlank(series.posterFileName())) {
+            return this.genericPosterImage();
         }
 
-        return this.genericPosterImage();
+        try {
+            Bitmap poster = this.imageRepository.getSeriesPoster(series.id());
+            return poster != null ? poster : this.genericPosterImage();
+        } catch (ExternalStorageNotAvailableException e) {
+            return this.genericPosterImage();
+        }
     }
 
     public void notifyListenersOfConnectionFailureWhileDownloadingImageOf(Episode episode) {
