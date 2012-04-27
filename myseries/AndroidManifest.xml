@@ -10,16 +10,16 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="13" />
+        android:targetSdkVersion="15" />
 
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:name=".application.App" >
+        android:name=".application.App"
+        android:theme="@style/Theme.Sherlock">
         <activity
             android:label="@string/app_name"
-            android:name=".gui.MySeriesActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            android:name=".gui.MySeriesActivity">
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

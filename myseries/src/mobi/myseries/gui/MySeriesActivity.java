@@ -31,16 +31,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 
-public class MySeriesActivity extends FragmentActivity implements UpdateListener {
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
-    private Fragment seriesListFragment;
-    private Fragment seriesCoverFlowFragment;
+    private SeriesListFragment seriesListFragment;
+    private SeriesCoverFlowFragment seriesCoverFlowFragment;
 
     public MySeriesActivity() {
         seriesProvider.addListener(this);
@@ -66,27 +65,27 @@ public class MySeriesActivity extends FragmentActivity implements UpdateListener
 
     //Menu--------------------------------------------------------------------------------------------------------------
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.getMenuInflater().inflate(R.menu.series_list_options_menu, menu);
-        this.updateMenuItem = menu.findItem(R.id.updateMenuItem);
-        this.updateMenuItem.setEnabled(this.updateMenuItemStatus);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.addSeriesMenuItem:
-                this.showSearchActivity();
-                return true;
-            case R.id.updateMenuItem:
-                seriesProvider.updateData();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        this.getMenuInflater().inflate(R.menu.series_list_options_menu, menu);
+//        this.updateMenuItem = menu.findItem(R.id.updateMenuItem);
+//        this.updateMenuItem.setEnabled(this.updateMenuItemStatus);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.addSeriesMenuItem:
+//                this.showSearchActivity();
+//                return true;
+//            case R.id.updateMenuItem:
+//                seriesProvider.updateData();
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     @Override
     public boolean onSearchRequested() {

@@ -10,8 +10,8 @@
 	<mobi.myseries.gui.widget.CoverFlow
 		xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
 		android:id="@+id/coverflow"
-		coverflow:imageWidth="100dip"
-		coverflow:imageHeight="150dip"
+		coverflow:imageWidth="68dp"
+		coverflow:imageHeight="100dp"
 		coverflow:withReflection="true"
 		coverflow:imageReflectionRatio="0.2"
 		coverflow:reflectionGap="2dip"

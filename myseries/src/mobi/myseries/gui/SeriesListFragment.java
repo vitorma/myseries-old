@@ -27,13 +27,14 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-public class SeriesListFragment extends ListFragment {
+import com.actionbarsherlock.app.SherlockListFragment;
+
+public class SeriesListFragment extends SherlockListFragment {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
     private SeriesListAdapter adapter;

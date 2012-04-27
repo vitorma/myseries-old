@@ -31,18 +31,19 @@ import mobi.myseries.gui.widget.CoverFlow;
 import mobi.myseries.gui.widget.ReflectingImageAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-public class SeriesCoverFlowFragment extends Fragment implements SeriesListener {
+import com.actionbarsherlock.app.SherlockFragment;
+
+public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private SeriesCoverFlowAdapter seriesAdapter;
     private ReflectingImageAdapter adapter;
