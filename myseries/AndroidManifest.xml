@@ -16,7 +16,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:name=".application.App"
-        android:theme="@style/Theme.Sherlock">
+        android:theme="@style/Theme.Sherlock"
+        uiOptions="splitActionBarWhenNarrow">
         <activity
             android:label="@string/app_name"
             android:name=".gui.MySeriesActivity">

@@ -31,11 +31,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
+    private static final String SCHEDULE = "MY SCHEDULE";
+    private static final String SEARCH = "SEARCH SERIES";
+    private static final String UPDATE = "UPDATE MY SERIES DATA";
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
     private SeriesListFragment seriesListFragment;
@@ -65,13 +69,22 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     //Menu--------------------------------------------------------------------------------------------------------------
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        this.getMenuInflater().inflate(R.menu.series_list_options_menu, menu);
-//        this.updateMenuItem = menu.findItem(R.id.updateMenuItem);
-//        this.updateMenuItem.setEnabled(this.updateMenuItemStatus);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(SCHEDULE)
+            .setIcon(R.drawable.actionbar_calendar)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menu.add(SEARCH)
+            .setIcon(R.drawable.actionbar_search)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menu.add(UPDATE)
+            .setIcon(R.drawable.actionbar_update)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        return true;
+    }
 //
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
