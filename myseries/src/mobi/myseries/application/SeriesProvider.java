@@ -26,6 +26,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import mobi.myseries.R;
 import mobi.myseries.domain.model.Episode;
@@ -71,23 +74,46 @@ public class SeriesProvider {
     }
 
     public List<Series> searchSeries(String seriesName) {
-        List<Series> result = null;
-
+    	AsyncTask<String, Void, List<Series>> task = new searchSeriesTask().execute(seriesName);
         try {
-            result = this.seriesSource.searchFor(seriesName, App.environment().localization().language());
-        } catch (InvalidSearchCriteriaException e) {
-            throw new RuntimeException(context().getString(R.string.invalid_search_criteria));
-        } catch (ConnectionFailedException e) {
-            throw new RuntimeException(context().getString(R.string.connection_failed_message));
-        } catch (ParsingFailedException e) {
-            throw new RuntimeException(context().getString(R.string.parsing_failed));
-        }
+			return task.get(5, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+		return null;
+    }
 
-        if (result.isEmpty())
-            throw new RuntimeException(
-                    App.environment().context().getString(R.string.no_results_found_for_criteria) + " " + seriesName);
+    private class searchSeriesTask extends AsyncTask<String, Void, List<Series>> {
+    	List<Series> result = null;
 
-        return result;
+        @Override
+        protected List<Series> doInBackground(String... params) {
+            final String seriesName = params[0];
+
+            try {
+              result = seriesSource.searchFor(seriesName, App.environment().localization().language());
+          } catch (InvalidSearchCriteriaException e) {
+              throw new RuntimeException(context().getString(R.string.invalid_search_criteria));
+          } catch (ConnectionFailedException e) {
+              throw new RuntimeException(context().getString(R.string.connection_failed_message));
+          } catch (ParsingFailedException e) {
+              throw new RuntimeException(context().getString(R.string.parsing_failed));
+          }
+
+            if (result.isEmpty())
+                  throw new RuntimeException(
+                          App.environment().context().getString(R.string.no_results_found_for_criteria) + " " + seriesName);
+
+              return result;
+     }
     }
 
     public void updateData() {
