@@ -37,9 +37,13 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
-    private static final String SCHEDULE = "MY SCHEDULE";
-    private static final String SEARCH = "SEARCH SERIES";
-    private static final String UPDATE = "UPDATE MY SERIES DATA";
+    //TODO Menu from xml
+    private static final String SCHEDULE = "SCHEDULE";
+    private static final String SEARCH = "SEARCH";
+    private static final String UPDATE = "UPDATE";
+    private static final String SETTINGS = "SETTINGS";
+    private static final String HELP = "HELP";
+
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
     private SeriesListFragment seriesListFragment;
@@ -73,15 +77,27 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(SCHEDULE)
             .setIcon(R.drawable.actionbar_calendar)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(SEARCH)
             .setIcon(R.drawable.actionbar_search)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(UPDATE)
             .setIcon(R.drawable.actionbar_update)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(HELP)
+            .setIcon(R.drawable.actionbar_help)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
+        menu.add("HELP2")
+        .setIcon(R.drawable.actionbar_help)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
+        menu.add("HELP3")
+            .setIcon(R.drawable.actionbar_help)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         return true;
     }
