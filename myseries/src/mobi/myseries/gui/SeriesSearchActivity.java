@@ -27,10 +27,9 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -45,7 +44,11 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class SeriesSearchActivity extends ListActivity {
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.MenuItem;
+
+public class SeriesSearchActivity extends SherlockListActivity {
     private final SeriesProvider seriesProvider = App.environment().seriesProvider();
 
     @Override
@@ -53,9 +56,31 @@ public class SeriesSearchActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.search);
 
+        ActionBar ab = this.getSupportActionBar();
+        ab.setTitle(R.string.search_series);
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setDisplayShowTitleEnabled(true);
+
+
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
         this.setupSearchFieldActionListeners();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch( item.getItemId() ) {
+            case android.R.id.home:
+                this.up();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void up() {
+        Intent i = new Intent(this, MySeriesActivity.class);
+        this.startActivity(i);
     }
 
     private void setupSearchButtonClickListener() {

@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -57,6 +58,9 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.my_series_layout);
+
+        ActionBar ab = this.getSupportActionBar();
+        ab.setTitle(R.string.my_series);
 
         if (savedInstanceState == null) {
             this.seriesListFragment = new SeriesListFragment();

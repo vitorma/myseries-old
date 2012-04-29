@@ -40,6 +40,7 @@
     <string name="review_not_available">Review not available</string>
     <string name="recent_episodes">Recent episodes</string>
     <string name="runtime">Runtime: </string>
+    <string name="search_series">Search Series</string>
     <string name="seasons">Seasons</string>
     <string formatted="false" name="season_and_episode_format">Season %02d - Episode %02d</string>
     <string formatted="false" name="season_and_episode_format_short">S%02dE%02d</string>
