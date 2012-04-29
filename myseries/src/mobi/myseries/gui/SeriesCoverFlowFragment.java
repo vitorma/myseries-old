@@ -84,8 +84,11 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         this.coverFlow.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView< ? > parent, final View view, final int position, final long id) {
-                Intent intent = new Intent(view.getContext(), SeriesDetailsActivity.class);
                 Series series = seriesAdapter.itemOf(position);
+
+                if (!SeriesCoverFlowFragment.this.isSelected(series)) {return;}
+
+                Intent intent = new Intent(view.getContext(), SeriesDetailsActivity.class);
                 intent.putExtra("series id", series.id());
                 intent.putExtra("series name", series.name());
                 SeriesCoverFlowFragment.this.startActivity(intent);
