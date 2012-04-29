@@ -76,13 +76,17 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(SCHEDULE)
+            .setIntent(new Intent(this, RecentAndUpcomingEpisodesActivity.class))
             .setIcon(R.drawable.actionbar_calendar)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(SEARCH)
             .setIcon(R.drawable.actionbar_search)
+            .setIntent(new Intent(this, SeriesSearchActivity.class))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
+        //TODO add SETTINGS or PREFERENCES
+        //TODO implement the actions
         menu.add(UPDATE)
             .setIcon(R.drawable.actionbar_update)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -91,17 +95,9 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             .setIcon(R.drawable.actionbar_help)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-        menu.add("HELP2")
-        .setIcon(R.drawable.actionbar_help)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
-        menu.add("HELP3")
-            .setIcon(R.drawable.actionbar_help)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
         return true;
     }
-//
+
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        switch (item.getItemId()) {
