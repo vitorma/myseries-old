@@ -85,11 +85,14 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             .setIntent(new Intent(this, SeriesSearchActivity.class))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        //TODO add SETTINGS or PREFERENCES
         //TODO implement the actions
         menu.add(UPDATE)
             .setIcon(R.drawable.actionbar_update)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(SETTINGS)
+            .setIcon(R.drawable.actionbar_settings)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         menu.add(HELP)
             .setIcon(R.drawable.actionbar_help)
