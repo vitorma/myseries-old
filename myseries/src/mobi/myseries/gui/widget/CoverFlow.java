@@ -370,4 +370,12 @@ public class CoverFlow extends Gallery {
             a.recycle();
         }
     }
+
+    public int getMiddlePosition() {
+        return this.getCount() / 2;
+    }
+
+    public void selectMiddleItem() {
+        this.setSelection(this.getMiddlePosition());
+    }
 }

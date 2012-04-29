@@ -77,7 +77,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
         this.seriesAdapter.registerSeriesListener(this);
         this.setupListeners();
-        this.coverFlow.setSelection(0);
+        this.coverFlow.selectMiddleItem();
     }
 
     private void setupListeners() {
