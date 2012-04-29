@@ -22,6 +22,8 @@
 package mobi.myseries.gui;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import mobi.myseries.application.App;
@@ -61,5 +63,11 @@ public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
         for (Series s : this.seriesList) {
             s.register(sl);
         }
+    }
+
+    public SeriesCoverFlowAdapter sort(Comparator<Series> seriesComparator) {
+        Collections.sort(this.seriesList, seriesComparator);
+        this.notifyDataSetChanged();
+        return this;
     }
 }

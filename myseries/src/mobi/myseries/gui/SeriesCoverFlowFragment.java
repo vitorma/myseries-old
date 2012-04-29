@@ -21,6 +21,8 @@
 
 package mobi.myseries.gui;
 
+import java.util.Comparator;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
@@ -45,6 +47,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final Comparator<Series> COMPARATOR = new SeriesComparator();
+
     private SeriesCoverFlowAdapter seriesAdapter;
     private ReflectingImageAdapter adapter;
     private CoverFlow coverFlow;
@@ -64,7 +68,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.seriesAdapter = new SeriesCoverFlowAdapter();
+        this.seriesAdapter = new SeriesCoverFlowAdapter().sort(COMPARATOR);
         this.adapter = new ReflectingImageAdapter(this.seriesAdapter);
         this.coverFlow = (CoverFlow) this.getActivity().findViewById(R.id.coverflow);
         this.coverFlow.setAdapter(this.adapter);
@@ -170,5 +174,12 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         private SeenEpisodesBar bar;
         private TextView nextToSee;
         private CheckBox seenMark;
+    }
+
+    private static class SeriesComparator implements Comparator<Series> {
+        @Override
+        public int compare(Series series1, Series series2) {
+            return series1.name().compareTo(series2.name());
+        }
     }
 }
