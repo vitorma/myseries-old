@@ -21,8 +21,6 @@
 
 package br.edu.ufcg.aweseries.gui;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -166,8 +164,7 @@ public abstract class OutOfContextEpisodesActivity extends ListActivity {
         }
 
         private void setUpSeenEpisodeCheckBoxListener(final Episode episode, View itemView) {
-            final CheckBox isViewedCheckBox = (CheckBox) itemView
-            .findViewById(R.id.episodeIsViewedCheckBox);
+            final CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
 
             isViewedCheckBox.setOnClickListener(new OnClickListener() {
                 @Override

@@ -67,6 +67,39 @@
             android:name=".gui.UpcomingEpisodesActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar">
         </activity>
+        <receiver
+            android:name=".gui.appwidget.MySeriesWidget"
+            android:label="@string/large_widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recent_episodes_appwidget_info_4x4" />
+        </receiver>
+        <receiver
+            android:name=".gui.appwidget.MySeriesMediumWidget"
+            android:label="@string/med_widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recent_episodes_appwidget_info_4x2" />
+        </receiver>
+        <receiver
+            android:name=".gui.appwidget.MySeriesSmallWidget"
+            android:label="@string/small_widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recent_episodes_appwidget_info_4x1" />
+        </receiver>
+        <service android:name=".gui.appwidget.MySeriesWidget$UpdateService" />
+        <service android:name=".gui.appwidget.MySeriesSmallWidget$UpdateServiceSmall" />
+        <service android:name=".gui.appwidget.MySeriesMediumWidget$UpdateServiceMedium" />
     </application>
 
 </manifest>
