@@ -40,6 +40,7 @@ import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
+import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
@@ -74,10 +75,25 @@ public class SeriesProvider {
     }
 
     public List<Series> searchSeries(String seriesName) {
-    	AsyncTask<String, Void, List<Series>> task = new searchSeriesTask().execute(seriesName);
-        try {
-			return task.get(5, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
+    	int timeout = 10;
+    	List<Series> result = null;
+    	    	
+    	AsyncTask<String, Void, AsyncTaskResult<List<Series>>> task = new searchSeriesTask().execute(seriesName);
+        
+    	try {
+    		AsyncTaskResult<List<Series>> taskResult = task.get(timeout, TimeUnit.SECONDS);
+			
+    		if(taskResult.error() != null){
+				throw new RuntimeException(taskResult.error().getMessage());
+			}
+    		
+    		result = taskResult.result();
+    		
+            if (result.isEmpty())
+                throw new RuntimeException(
+                        App.environment().context().getString(R.string.no_results_found_for_criteria) + " " + seriesName);
+			
+    	} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
@@ -88,33 +104,34 @@ public class SeriesProvider {
 			e.printStackTrace();
 		}
         
-		return null;
+		return result;
     }
 
-    private class searchSeriesTask extends AsyncTask<String, Void, List<Series>> {
-    	List<Series> result = null;
-
+    private class searchSeriesTask extends AsyncTask<String, Void, AsyncTaskResult<List<Series>>> {
+    	
         @Override
-        protected List<Series> doInBackground(String... params) {
+        protected AsyncTaskResult<List<Series>> doInBackground(String... params) {
             final String seriesName = params[0];
 
             try {
-              result = seriesSource.searchFor(seriesName, App.environment().localization().language());
+            	
+              List<Series> seriesList= seriesSource.searchFor(seriesName, App.environment().localization().language());
+              return new AsyncTaskResult<List<Series>>(seriesList);
+              
           } catch (InvalidSearchCriteriaException e) {
-              throw new RuntimeException(context().getString(R.string.invalid_search_criteria));
+              return new AsyncTaskResult<List<Series>>(new RuntimeException(context().getString(R.string.invalid_search_criteria)));
+         
           } catch (ConnectionFailedException e) {
-              throw new RuntimeException(context().getString(R.string.connection_failed_message));
+              return new AsyncTaskResult<List<Series>>(new RuntimeException(context().getString(R.string.connection_failed_message)));
+          
           } catch (ParsingFailedException e) {
-              throw new RuntimeException(context().getString(R.string.parsing_failed));
+        	  return new AsyncTaskResult<List<Series>>(new RuntimeException(context().getString(R.string.parsing_failed)));
           }
 
-            if (result.isEmpty())
-                  throw new RuntimeException(
-                          App.environment().context().getString(R.string.no_results_found_for_criteria) + " " + seriesName);
-
-              return result;
+            
      }
-    }
+       
+   }
 
     public void updateData() {
         new UpdateSeriesTask().execute();
