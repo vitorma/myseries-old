@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:padding="5dp" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp" >
 
-	<mobi.myseries.gui.widget.CoverFlow
-		xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
-		android:id="@+id/coverflow"
-		coverflow:imageWidth="68dp"
-		coverflow:imageHeight="100dp"
-		coverflow:withReflection="true"
-		coverflow:imageReflectionRatio="0.2"
-		coverflow:reflectionGap="2dip"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="5dip"/>
+    <TextView
+        android:id="@+id/coverflow_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_series_followed"
+            android:visibility="invisible"/>
 
-	<RelativeLayout
+    <mobi.myseries.gui.widget.CoverFlow
+        xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
+        android:id="@+id/coverflow"
+        coverflow:imageWidth="68dp"
+        coverflow:imageHeight="100dp"
+        coverflow:withReflection="true"
+        coverflow:imageReflectionRatio="0.2"
+        coverflow:reflectionGap="2dip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"/>
+
+    <RelativeLayout
         android:id="@+id/coverflow_data_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

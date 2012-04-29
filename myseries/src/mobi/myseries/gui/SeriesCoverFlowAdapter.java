@@ -70,4 +70,8 @@ public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
         this.notifyDataSetChanged();
         return this;
     }
+
+    public boolean isEmpty() {
+        return this.seriesList.isEmpty();
+    }
 }

@@ -41,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -72,6 +73,13 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         this.adapter = new ReflectingImageAdapter(this.seriesAdapter);
         this.coverFlow = (CoverFlow) this.getActivity().findViewById(R.id.coverflow);
         this.coverFlow.setAdapter(this.adapter);
+
+        if (this.seriesAdapter.isEmpty()) {
+            ((TextView) this.getActivity().findViewById(R.id.coverflow_empty)).setVisibility(View.VISIBLE);
+            ((CoverFlow) this.getActivity().findViewById(R.id.coverflow)).setVisibility(View.INVISIBLE);
+            ((RelativeLayout) this.getActivity().findViewById(R.id.coverflow_data_layout)).setVisibility(View.INVISIBLE);
+            return;
+        }
 
         this.seriesItemViewHolder = new SeriesItemViewHolder();
         this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.coverflow_item_name);
