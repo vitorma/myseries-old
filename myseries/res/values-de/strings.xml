@@ -32,6 +32,7 @@
     <string name="parsing_failed">Das Parsen ist gescheitert.</string>
     <string name="next_episode_to_air">Kommenden: </string>
     <string name="next_episode_to_see">Nächste zu sehen: </string>
+    <string formatted="false" name="next_to_see_format">S%02dF%02d</string>
     <string name="no">Nein</string>
     <string name="no_episode_aired">Keine Episode ausgestrahlt</string>
     <string name="no_episodes">Keine Episode</string>

@@ -33,7 +33,6 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
-import mobi.myseries.shared.Objects;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,8 +87,8 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
         final Episode nextEpisodeToSee = item.nextEpisodeToSee(true);//TODO SharedPreference
         if (nextEpisodeToSee != null) {
-            nextToSee.setText(
-                Objects.nullSafe(nextEpisodeToSee.name(), this.getContext().getString(R.string.unnamed_episode)));
+            String format = this.getContext().getString(R.string.next_to_see_format);
+            nextToSee.setText(String.format(format, nextEpisodeToSee.seasonNumber(), nextEpisodeToSee.number()));
             seenMark.setEnabled(true);
             seenMark.setChecked(nextEpisodeToSee.wasSeen());
             seenMark.setOnClickListener(new OnClickListener() {

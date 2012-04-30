@@ -32,6 +32,7 @@
     <string name="network">Canal: </string>
     <string name="next_episode_to_air">Próxima estréia: </string>
     <string name="next_episode_to_see">Próximo a assistir: </string>
+    <string formatted="false" name="next_to_see_format">T%02dE%02d</string>
     <string name="no">Não</string>
     <string name="no_episode_aired">nenhum episódio lançado</string>
     <string name="no_episodes">nenhum episódio</string>
