@@ -14,14 +14,14 @@
         android:layout_height="100dp"
         android:layout_gravity="center_vertical"
         android:scaleType="centerInside"
-        android:src="@drawable/small_poster_clapperboard" />
+        android:src="@drawable/small_poster_clapperboard"/>
 
     <RelativeLayout
         android:id="@+id/linearLayout11"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:paddingLeft="2dp" >
+        android:paddingLeft="2dp">
 
         <TextView
             android:id="@+id/nameTextView"
@@ -35,42 +35,7 @@
             android:paddingLeft="3dp"
             android:scrollHorizontally="true"
             android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <CheckBox
-            android:id="@+id/seenMarkCheckBox"
-            android:button="@drawable/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:focusable="false"
-            android:focusableInTouchMode="false" />
-
-        <TextView
-            android:id="@+id/nextToSeeTextView"
-            style="@style/aweseries_style.15sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/seenMarkCheckBox"
-            android:layout_toRightOf="@id/seenMarkCheckBox"
-            android:ellipsize="marquee"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:paddingBottom="5dp"
-            android:paddingRight="2dp"
-            android:scrollHorizontally="true"
-            android:text="@string/loading" />
-
-        <TextView
-            android:id="@+id/nextToSeeLabelTextView"
-            style="@style/aweseries_style.10sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/nextToSeeTextView"
-            android:layout_toRightOf="@id/seenMarkCheckBox"
-            android:paddingRight="2dp"
-            android:text="@string/next_episode_to_see" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <mobi.myseries.gui.SeenEpisodesBar
             android:id="@+id/SeenEpisodesBar"
@@ -79,7 +44,36 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/nameTextView"
             android:layout_marginLeft="3dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"/>
+
+         <TextView
+            android:id="@+id/nextToSeeTextView"
+            style="@style/aweseries_style.15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text="@string/loading"/>
+
+         <CheckBox
+            android:id="@+id/seenMarkCheckBox"
+            android:button="@drawable/checkbox_nexttosee"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_toLeftOf="@id/nextToSeeTextView"
+            android:layout_alignBaseline="@id/nextToSeeTextView"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
+
+        <TextView
+            android:id="@+id/nextToSeeLabelTextView"
+            style="@style/aweseries_style.10sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_above="@id/nextToSeeTextView"
+            android:text="@string/next_episode_to_see"/>
+
     </RelativeLayout>
 
 </LinearLayout>

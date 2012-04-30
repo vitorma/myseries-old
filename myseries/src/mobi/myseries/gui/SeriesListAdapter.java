@@ -89,7 +89,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         if (nextEpisodeToSee != null) {
             String format = this.getContext().getString(R.string.next_to_see_format);
             nextToSee.setText(String.format(format, nextEpisodeToSee.seasonNumber(), nextEpisodeToSee.number()));
-            seenMark.setEnabled(true);
+            seenMark.setVisibility(View.VISIBLE);
             seenMark.setChecked(nextEpisodeToSee.wasSeen());
             seenMark.setOnClickListener(new OnClickListener() {
                 @Override
@@ -98,9 +98,9 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
                 }
             });
         } else {
-            nextToSee.setText(R.string.up_to_date);
+            nextToSee.setText(R.string.nexttosee_uptodate);
             seenMark.setChecked(false);
-            seenMark.setEnabled(false);
+            seenMark.setVisibility(View.INVISIBLE);
         }
 
         return itemView;

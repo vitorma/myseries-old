@@ -129,7 +129,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         if (next != null) {
             String format = this.getActivity().getString(R.string.next_to_see_format);
             this.seriesItemViewHolder.nextToSee.setText(String.format(format, next.seasonNumber(), next.number()));
-            this.seriesItemViewHolder.seenMark.setEnabled(true);
+            this.seriesItemViewHolder.seenMark.setVisibility(View.VISIBLE);
             this.seriesItemViewHolder.seenMark.setChecked(next.wasSeen());
             this.seriesItemViewHolder.seenMark.setOnClickListener(new OnClickListener() {
                 @Override
@@ -138,9 +138,9 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
                 }
             });
         } else {
-            this.seriesItemViewHolder.nextToSee.setText(R.string.up_to_date);
+            this.seriesItemViewHolder.nextToSee.setText(R.string.nexttosee_uptodate);
             this.seriesItemViewHolder.seenMark.setChecked(false);
-            this.seriesItemViewHolder.seenMark.setEnabled(false);
+            this.seriesItemViewHolder.seenMark.setVisibility(View.INVISIBLE);
         }
     }
 

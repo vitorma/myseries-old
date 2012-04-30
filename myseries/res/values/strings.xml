@@ -30,6 +30,7 @@
     <string name="next_episode_to_air">Next to air: </string>
     <string name="next_episode_to_see">Next to see: </string>
     <string formatted="false" name="next_to_see_format">S%02dE%02d</string>
+    <string name="nexttosee_uptodate">UP-TO-DATE</string>
     <string name="no">No</string>
     <string name="no_episode_aired">no episode aired</string>
     <string name="no_episodes">no episode aired</string>
