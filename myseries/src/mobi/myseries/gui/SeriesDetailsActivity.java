@@ -37,8 +37,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -86,22 +84,22 @@ public class SeriesDetailsActivity extends Activity implements SeriesListener {
         this.setupSeasonsButtonListener();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.getMenuInflater().inflate(R.menu.series_details_options_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.stopFollowingSeriesMenuItem:
-                this.showUnfollowingDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        this.getMenuInflater().inflate(R.menu.series_details_options_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.stopFollowingSeriesMenuItem:
+//                this.showUnfollowingDialog();
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     private void showUnfollowingDialog() {
         final Series series = this.seriesProvider().getSeries(this.seriesId);

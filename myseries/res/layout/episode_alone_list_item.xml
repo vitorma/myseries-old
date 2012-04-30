@@ -8,6 +8,7 @@
 
     <CheckBox
         android:id="@+id/episodeIsViewedCheckBox"
+        android:button="@drawable/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dip"
