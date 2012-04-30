@@ -61,7 +61,7 @@
     <string name="updating_series_failure_notification_title">AweSeries data update failure</string>
     <string name="update_failure_notification_message">Data update has failed. Please check your Internet connection or try again later.</string>
     <string name="updating_series_data">Updating series data...</string>
-    <string name="up_to_date">up to date</string>
+    <string name="up_to_date">Up-to-date</string>
     <string name="update">Update</string>
     <string name="upcoming_episodes">Upcoming episodes</string>
     <string name="writer">Writer: </string>

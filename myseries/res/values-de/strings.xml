@@ -62,7 +62,7 @@
     <string name="updating_series_failure_notification_title">Aktualisierung der Daten von AweSeries hatte ein Ausfall</string>
     <string name="update_failure_notification_message">Aktualisierung der Daten wurde abrupt unterbrochen. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später erneut.</string>
     <string name="updating_series_data">Aktualisierung der Daten von Series...</string>
-    <string name="up_to_date">up to date</string>
+    <string name="up_to_date">Aktualisiert</string>
     <string name="update">Aktualisierung</string>
     <string name="upcoming_episodes">Anstehender Episoden</string>
     <string name="writer">Writer: </string>

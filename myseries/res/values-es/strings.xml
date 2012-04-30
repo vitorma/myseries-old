@@ -59,7 +59,7 @@
     <string name="stop_following">Dejar de seguir</string>
     <string name="unknown_series">Serie desconocida</string>
     <string name="unnamed_episode">Episodio sin nombre</string>
-    <string name="up_to_date">al dia</string>
+    <string name="up_to_date">Al día</string>
     <string name="update">Actualizar</string>
     <string name="updating_series_failure_notification_title">La actualización no se ha realizado correctamente.</string>
     <string name="updating_series_notification_title">Actualización de los datos de la serie.</string>
