@@ -26,9 +26,10 @@
             android:id="@+id/searchButton"
             android:layout_width="52dp"
             android:layout_height="match_parent"
-            android:background="@drawable/seasons_button"
-            android:src="@drawable/ic_search_category_default" >
+            android:background="@drawable/button"
+            android:src="@drawable/ic_search_api_holo_light">
         </ImageButton>
+
     </LinearLayout>
 
     <ListView

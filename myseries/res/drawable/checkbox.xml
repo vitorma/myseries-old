@@ -3,26 +3,26 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/btn_check_on_pressed_holo_dark"
+        android:drawable="@drawable/btn_check_on_pressed_holo_light"
         android:state_pressed="true"/>
 
     <item
-        android:drawable="@drawable/btn_check_on_disabled_holo_dark"
+        android:drawable="@drawable/btn_check_on_disabled_holo_light"
         android:state_focused="false"
         android:state_checked="false"/>
 
     <item
-        android:drawable="@drawable/btn_check_on_disabled_focused_holo_dark"
+        android:drawable="@drawable/btn_check_on_disabled_focused_holo_light"
         android:state_focused="true"
         android:state_checked="false"/>
 
     <item
-        android:drawable="@drawable/btn_check_on_holo_dark"
+        android:drawable="@drawable/btn_check_on_holo_light"
         android:state_focused="false"
         android:state_checked="true"/>
 
     <item
-        android:drawable="@drawable/btn_check_on_focused_holo_dark"
+        android:drawable="@drawable/btn_check_on_focused_holo_light"
         android:state_focused="true"
         android:state_checked="true"/>
 
