@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp" >
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/coverflow_empty"
@@ -17,41 +17,18 @@
     <mobi.myseries.gui.widget.CoverFlow
         xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
         android:id="@+id/coverflow"
-        coverflow:imageWidth="68dp"
-        coverflow:imageHeight="100dp"
+        coverflow:imageWidth="82dp"
+        coverflow:imageHeight="120dp"
         coverflow:withReflection="true"
         coverflow:imageReflectionRatio="0.2"
-        coverflow:reflectionGap="2dip"
+        coverflow:reflectionGap="0dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dip"/>
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout
         android:id="@+id/coverflow_data_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/coverflow_item_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:ellipsize="marquee"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:layout_marginTop="10dp"
-            android:scrollHorizontally="true"
-            android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-        <mobi.myseries.gui.SeenEpisodesBar
-            android:id="@+id/coverflow_item_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="10dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/coverflow_item_name"
-            android:layout_marginTop="5dp" />
 
         <TextView
             android:id="@+id/coverflow_item_next_to_see"
@@ -77,8 +54,31 @@
             style="@style/aweseries_style.10sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="5dp"
             android:layout_alignParentRight="true"
             android:layout_above="@id/coverflow_item_next_to_see"
             android:text="@string/next_episode_to_see"/>
+
+        <mobi.myseries.gui.SeenEpisodesBar
+            android:id="@+id/coverflow_item_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="9dp"
+            android:layout_above="@id/coverflow_item_next_to_see_label"/>
+
+        <TextView
+            android:id="@+id/coverflow_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/coverflow_item_bar"
+            android:paddingBottom="5dp"
+            android:layout_centerHorizontal="true"
+            android:ellipsize="marquee"
+            android:lines="1"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:text="@string/loading"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
     </RelativeLayout>
+
 </LinearLayout>

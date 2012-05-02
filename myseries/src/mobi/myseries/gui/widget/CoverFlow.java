@@ -47,12 +47,12 @@ public class CoverFlow extends Gallery {
     /**
      * The maximum angle the Child ImageView will be rotated by.
      */
-    private int mMaxRotationAngle = 60;
+    private int mMaxRotationAngle = 45; //This value was originally 60
 
     /**
      * The maximum zoom on the centre Child.
      */
-    private int mMaxZoom = -120;
+    private int mMaxZoom = -120; //This value was originally -120
 
     /**
      * The Centre of the Coverflow.
@@ -365,7 +365,7 @@ public class CoverFlow extends Gallery {
             withReflection = a.getBoolean(R.styleable.CoverFlow_withReflection, false);
             imageReflectionRatio = a.getFloat(R.styleable.CoverFlow_imageReflectionRatio, 0.2f);
             reflectionGap = a.getDimension(R.styleable.CoverFlow_reflectionGap, 4);
-            setSpacing(-15);
+            setSpacing(-9);
         } finally {
             a.recycle();
         }

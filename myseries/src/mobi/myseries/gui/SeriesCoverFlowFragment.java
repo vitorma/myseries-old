@@ -127,7 +127,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
         final Episode next = item.nextEpisodeToSee(true);
         if (next != null) {
-            String format = this.getActivity().getString(R.string.next_to_see_format);
+            String format = App.environment().context().getString(R.string.next_to_see_format);
             this.seriesItemViewHolder.nextToSee.setText(String.format(format, next.seasonNumber(), next.number()));
             this.seriesItemViewHolder.seenMark.setVisibility(View.VISIBLE);
             this.seriesItemViewHolder.seenMark.setChecked(next.wasSeen());
