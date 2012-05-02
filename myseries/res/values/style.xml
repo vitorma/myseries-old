@@ -43,11 +43,14 @@
 
     <dimen name="aweseries_style.widget_margin">5dp</dimen>
 
+    <!-- ChunkBar -->
     <color name="aweseries_style.chunkbar_foreground">#32B6E7</color>
     <color name="aweseries_style.chunkbar_background">#272727</color>
+    <color name="aweseries_style.chunkbar_textColor">#FFFFFF</color>
+    <color name="aweseries_style.chunkbar_textBackground">#2086AC</color>
+    <dimen name="aweseries_style.chunkbar_textSize">10dp</dimen>
 
-    <dimen name="aweseries_style.chunkbar_textSize">12sp</dimen>
 
-    <color name="aweseries_style.chunkbar_textColor">#A0A0A0</color>
+    <color name="aweseries_style.red">#700000</color>
 
 </resources>

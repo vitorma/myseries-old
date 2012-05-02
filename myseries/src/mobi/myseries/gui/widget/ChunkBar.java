@@ -26,19 +26,22 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Align;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class ChunkBar extends View {
+    private static final int DEFAULT_DRAWING_COLOR = Color.rgb(50, 182, 231);
+    private static final int DEFAULT_BACKGROUND_COLOR = Color.rgb(27, 27, 27);
+    private static final int DEFAULT_TEXT_COLOR = Color.WHITE;
+    private static final int DEFAULT_TEXT_BACKGROUND_COLOR = Color.rgb(27, 27, 27);
+    private static final String TEXT_WIDTH_PARAMETER = "0000/0000";
+
     private boolean[] parts;
     private Paint foreground;
     private Paint background;
     private Paint textPaint;
-    private static final int DEFAULT_DRAWING_COLOR = Color.rgb(50, 182, 231);
-    private static final int DEFAULT_BACKGROUND_COLOR = Color.rgb(27, 27, 27);
-    private static final int DEFAULT_TEXT_COLOR = Color.WHITE;
+    private Paint textBackground;
 
     public ChunkBar(Context context) {
         this(context, null);
@@ -58,6 +61,8 @@ public class ChunkBar extends View {
         this.background.setColor(DEFAULT_BACKGROUND_COLOR);
         this.textPaint = new Paint();
         this.textPaint.setColor(DEFAULT_TEXT_COLOR);
+        this.textBackground = new Paint();
+        this.textBackground.setColor(DEFAULT_TEXT_BACKGROUND_COLOR);
     }
 
     public void setBackgroundColor(int color) {
@@ -70,6 +75,10 @@ public class ChunkBar extends View {
 
     public void setTextColor(int color) {
         this.textPaint.setColor(color);
+    }
+
+    public void setTextBackgroundColor(int color) {
+        this.textBackground.setColor(color);
     }
 
     public void setTextSize(float textSize) {
@@ -95,8 +104,8 @@ public class ChunkBar extends View {
             }
         }
 
-        String text = String.format(" %d/%d ", availableParts, this.parts.length);
-        float textWidth = this.textPaint.measureText(text);
+        String text = String.format("%d/%d", availableParts, this.parts.length);
+        float textWidth = this.textPaint.measureText(TEXT_WIDTH_PARAMETER);
 
         int d = 2;
         int height = this.getMeasuredHeight() - this.getPaddingTop() - this.getPaddingBottom();
@@ -119,10 +128,17 @@ public class ChunkBar extends View {
             }
         }
 
-        textPaint.setAntiAlias(true);
-        textPaint.setTextAlign(Align.RIGHT);
+        int textBackgroundRight = this.getMeasuredWidth() + (int) textWidth;
 
-        canvas.drawText(text, this.getMeasuredWidth() - this.getPaddingRight(), height, this.textPaint);
+        RectF rect2 = new RectF(width, this.getPaddingTop(), textBackgroundRight, height);
+        canvas.drawRect(rect2, textBackground);
+
+        textPaint.setAntiAlias(true);
+        textPaint.setTextAlign(Paint.Align.RIGHT);
+
+        int internalPadding = 2;
+        float textY = height - 2;
+        canvas.drawText(text, this.getMeasuredWidth() - this.getPaddingRight() - internalPadding, textY, this.textPaint);
 
         canvas.save();
     }

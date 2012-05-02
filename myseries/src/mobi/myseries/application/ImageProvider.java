@@ -34,7 +34,6 @@ import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ImageSource;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -254,7 +253,7 @@ public final class ImageProvider {
 
     private Bitmap genericPosterImage() {
         return BitmapFactory.decodeResource(App.environment().context().getResources(),
-                R.drawable.small_poster_clapperboard);
+                R.drawable.generic_poster);
     }
 
     public Bitmap getImageOf(Episode episode) {

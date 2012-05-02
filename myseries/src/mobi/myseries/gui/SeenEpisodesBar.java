@@ -27,7 +27,6 @@ import mobi.myseries.R;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.widget.ChunkBar;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
@@ -45,11 +44,10 @@ public class SeenEpisodesBar extends LinearLayout {
 
         ChunkBar chunkBar = new ChunkBar(this.getContext());
         chunkBar.setParts(parts);
-        chunkBar.setBackgroundColor(this.getResources().getColor(
-                R.color.aweseries_style_chunkbar_background));
-        chunkBar.setForegroundColor(this.getResources().getColor(
-                R.color.aweseries_style_chunkbar_foreground));
+        chunkBar.setBackgroundColor(this.getResources().getColor(R.color.aweseries_style_chunkbar_background));
+        chunkBar.setForegroundColor(this.getResources().getColor(R.color.aweseries_style_chunkbar_foreground));
         chunkBar.setTextColor(this.getResources().getColor(R.color.aweseries_style_chunkbar_textColor));
+        chunkBar.setTextBackgroundColor(this.getResources().getColor(R.color.aweseries_style_chunkbar_textBackground));
         chunkBar.setTextSize(this.getResources().getDimension(R.dimen.aweseries_style_chunkbar_textSize));
 
         this.removeAllViews();
