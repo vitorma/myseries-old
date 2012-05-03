@@ -1,5 +1,5 @@
 /*
- *   App.java
+ *   SearchSeriesException.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -21,29 +21,15 @@
 
 package mobi.myseries.application;
 
-import java.util.List;
+public class SearchSeriesException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-import mobi.myseries.domain.model.Series;
-import android.app.Application;
-
-public class App extends Application {
-    private static Environment environment;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        environment = Environment.newEnvironment(this);
+    public SearchSeriesException(String message) {
+        super(message);
     }
 
-    public static Environment environment() {
-        return environment;
-    }
-
-    public static List<Series> searchSeries(String seriesName) throws Exception {
-        return new SearchSeriesService(environment.theTVDB()).search(seriesName, localLanguage());
-    }
-
-    private static String localLanguage() {
-        return environment.localization().language();
+    public SearchSeriesException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
+

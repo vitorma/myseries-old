@@ -31,12 +31,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -95,23 +95,24 @@ public class SeriesSearchActivity extends SherlockListActivity {
     }
 
     private void performSearch() {
-        final EditText searchField = (EditText) SeriesSearchActivity.this
-                .findViewById(R.id.searchField);
+        EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
+
         try {
-            final List<Series> searchResultsArray = App.environment().seriesProvider()
-                    .searchSeries(searchField.getText().toString());
+            List<Series> searchResultsArray = App.searchSeries(searchField.getText().toString());
 
-            SeriesSearchActivity.this.setListAdapter(new TextOnlyViewAdapter(
-                    SeriesSearchActivity.this, SeriesSearchActivity.this,
-                    R.layout.text_only_list_item, searchResultsArray));
+            ArrayAdapter<Series> adapter = new TextOnlyViewAdapter(
+                    SeriesSearchActivity.this,
+                    SeriesSearchActivity.this,
+                    R.layout.text_only_list_item,
+                    searchResultsArray);
 
-        } catch (final Exception e) {
-            Log.e(SeriesSearchActivity.class.getName(), e.getMessage());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(SeriesSearchActivity.this);
-            builder.setMessage(e.getMessage());
-            builder.create().show();
+            SeriesSearchActivity.this.setListAdapter(adapter);
+        } catch (Exception e) {
+            new AlertDialog.Builder(SeriesSearchActivity.this)
+                    .setMessage(e.getMessage())
+                    .create()
+                    .show();
         }
-
     }
 
     private void setupSearchFieldActionListeners() {
