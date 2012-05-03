@@ -81,12 +81,6 @@ public class ChunkBar extends View {
         this.textBackground.setColor(color);
     }
 
-    public void setTextSize(float textSize) {
-        Validate.isTrue(textSize > 0.0, "textSize should be greater than 0");
-
-        this.textPaint.setTextSize(textSize);
-    }
-
     public void setParts(boolean[] parts) {
         Validate.isNonNull(parts, "parts");
 
@@ -133,11 +127,12 @@ public class ChunkBar extends View {
         RectF rect2 = new RectF(width, this.getPaddingTop(), textBackgroundRight, height);
         canvas.drawRect(rect2, textBackground);
 
+        textPaint.setTextSize(height);
         textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.RIGHT);
 
         int internalPadding = 2;
-        float textY = height - 2;
+        float textY = height - 1;
         canvas.drawText(text, this.getMeasuredWidth() - this.getPaddingRight() - internalPadding, textY, this.textPaint);
 
         canvas.save();
