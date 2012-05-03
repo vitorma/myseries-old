@@ -26,26 +26,18 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
-import mobi.myseries.R;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
-import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
-
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -73,65 +65,6 @@ public class SeriesProvider {
     public Collection<Series> followedSeries() {
         return this.seriesRepository.getAll();
     }
-
-    public List<Series> searchSeries(String seriesName) {
-    	int timeout = 10;
-    	List<Series> result = null;
-    	    	
-    	AsyncTask<String, Void, AsyncTaskResult<List<Series>>> task = new searchSeriesTask().execute(seriesName);
-        
-    	try {
-    		AsyncTaskResult<List<Series>> taskResult = task.get(timeout, TimeUnit.SECONDS);
-			
-    		if(taskResult.error() != null){
-				throw new RuntimeException(taskResult.error().getMessage());
-			}
-    		
-    		result = taskResult.result();
-    		
-            if (result.isEmpty())
-                throw new RuntimeException(
-                        App.environment().context().getString(R.string.no_results_found_for_criteria) + " " + seriesName);
-			
-    	} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TimeoutException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-		return result;
-    }
-
-    private class searchSeriesTask extends AsyncTask<String, Void, AsyncTaskResult<List<Series>>> {
-    	
-        @Override
-        protected AsyncTaskResult<List<Series>> doInBackground(String... params) {
-            final String seriesName = params[0];
-
-            try {
-            	
-              List<Series> seriesList= seriesSource.searchFor(seriesName, App.environment().localization().language());
-              return new AsyncTaskResult<List<Series>>(seriesList);
-              
-          } catch (InvalidSearchCriteriaException e) {
-              return new AsyncTaskResult<List<Series>>(new RuntimeException(context().getString(R.string.invalid_search_criteria)));
-         
-          } catch (ConnectionFailedException e) {
-              return new AsyncTaskResult<List<Series>>(new RuntimeException(context().getString(R.string.connection_failed_message)));
-          
-          } catch (ParsingFailedException e) {
-        	  return new AsyncTaskResult<List<Series>>(new RuntimeException(context().getString(R.string.parsing_failed)));
-          }
-
-            
-     }
-       
-   }
 
     public void updateData() {
         new UpdateSeriesTask().execute();
@@ -359,9 +292,5 @@ public class SeriesProvider {
         for (final UpdateListener listener : this.updateListeners) {
             listener.onUpdateFailure();
         }
-    }
-
-    private Context context() {
-        return App.environment().context();
     }
 }

@@ -1,5 +1,5 @@
 /*
- *   App.java
+ *   Message.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -21,29 +21,19 @@
 
 package mobi.myseries.application;
 
-import java.util.List;
+import mobi.myseries.R;
+import android.content.Context;
 
-import mobi.myseries.domain.model.Series;
-import android.app.Application;
+public class Message {
+    private static final Context CONTEXT = App.environment().context();
 
-public class App extends Application {
-    private static Environment environment;
+    /* Search Series */
+    public static final String NO_RESULTS_FOUND_FOR_CRITERIA = stringFrom(R.string.no_results_found_for_criteria);
+    public static final String INVALID_SEARCH_CRITERIA = stringFrom(R.string.invalid_search_criteria);
+    public static final String CONNECTION_FAILED = stringFrom(R.string.connection_failed_message);
+    public static final String PARSING_FAILED = stringFrom(R.string.parsing_failed);
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        environment = Environment.newEnvironment(this);
-    }
-
-    public static Environment environment() {
-        return environment;
-    }
-
-    public static List<Series> searchSeries(String seriesName) throws Exception {
-        return new SearchSeriesService(environment.theTVDB()).search(seriesName, localLanguage());
-    }
-
-    private static String localLanguage() {
-        return environment.localization().language();
+    private static String stringFrom(int resourceId) {
+        return CONTEXT.getString(resourceId);
     }
 }
