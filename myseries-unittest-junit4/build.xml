@@ -43,7 +43,13 @@
         </ant>
     </target>
 
+    <!--
+         TODO: Return to this line as soon as there isn't anymore problems in compiling a
+               main project that needs a library project (in this case, myseries needs
+               actionbarsherlock)
     <target name="compile" depends="-compile-tested-project">
+    -->
+    <target name="compile">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${classes.dir}"/>
         <mkdir dir="${reports.dir}"/>
