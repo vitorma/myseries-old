@@ -95,7 +95,7 @@ public class SeriesSearchActivity extends ListActivity {
     }
 
     private void setupSearchFieldActionListeners() {
-        final AutoCompleteTextView searchField = (AutoCompleteTextView) findViewById(R.id.searchField);
+        final TextView searchField = (TextView) findViewById(R.id.searchField);
 
         searchField.setOnEditorActionListener(new OnEditorActionListener() {
             @Override

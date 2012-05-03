@@ -37,8 +37,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -95,7 +95,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
     }
 
     private void performSearch() {
-        final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchActivity.this
+        final EditText searchField = (EditText) SeriesSearchActivity.this
                 .findViewById(R.id.searchField);
         try {
             final List<Series> searchResultsArray = App.environment().seriesProvider()
@@ -115,7 +115,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
     }
 
     private void setupSearchFieldActionListeners() {
-        final AutoCompleteTextView searchField = (AutoCompleteTextView) findViewById(R.id.searchField);
+        final EditText searchField = (EditText) findViewById(R.id.searchField);
 
         searchField.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
@@ -240,10 +240,8 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
     @Override
     public final boolean onSearchRequested() {
-        final AutoCompleteTextView searchField = (AutoCompleteTextView) SeriesSearchActivity.this
-                .findViewById(R.id.searchField);
+        final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
         searchField.requestFocus();
-        searchField.selectAll();
         return true;
     }
 
