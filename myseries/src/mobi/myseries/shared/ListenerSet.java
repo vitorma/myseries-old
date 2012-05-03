@@ -27,23 +27,23 @@ import java.util.List;
 
 
 public class ListenerSet<L> implements Iterable<L> {
-	private List<L> listeners;
+    private List<L> listeners;
 
-	public ListenerSet() {
-		this.listeners = new LinkedList<L>();
-	}
+    public ListenerSet() {
+        this.listeners = new LinkedList<L>();
+    }
 
-	public boolean register(L listener) {
-		Validate.isNonNull(listener, "listener");
+    public boolean register(L listener) {
+        Validate.isNonNull(listener, "listener");
 
         for (L l : this.listeners) {
             if (l == listener) return false;
         }
 
         return this.listeners.add(listener);
-	}
+    }
 
-	public boolean deregister(L listener) {
+    public boolean deregister(L listener) {
         Validate.isNonNull(listener, "listener");
 
         for (int i = 0; i < this.listeners.size(); i++) {
@@ -56,8 +56,8 @@ public class ListenerSet<L> implements Iterable<L> {
         return false;
     }
 
-	@Override
-	public Iterator<L> iterator() {
-		return this.listeners.iterator();
-	}
+    @Override
+    public Iterator<L> iterator() {
+        return this.listeners.iterator();
+    }
 }
