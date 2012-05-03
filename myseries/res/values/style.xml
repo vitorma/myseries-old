@@ -48,7 +48,6 @@
     <color name="aweseries_style.chunkbar_background">#272727</color>
     <color name="aweseries_style.chunkbar_textColor">#FFFFFF</color>
     <color name="aweseries_style.chunkbar_textBackground">#2086AC</color>
-    <dimen name="aweseries_style.chunkbar_textSize">10dp</dimen>
 
 
     <color name="aweseries_style.red">#700000</color>

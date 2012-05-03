@@ -48,7 +48,6 @@ public class SeenEpisodesBar extends LinearLayout {
         chunkBar.setForegroundColor(this.getResources().getColor(R.color.aweseries_style_chunkbar_foreground));
         chunkBar.setTextColor(this.getResources().getColor(R.color.aweseries_style_chunkbar_textColor));
         chunkBar.setTextBackgroundColor(this.getResources().getColor(R.color.aweseries_style_chunkbar_textBackground));
-        chunkBar.setTextSize(this.getResources().getDimension(R.dimen.aweseries_style_chunkbar_textSize));
 
         this.removeAllViews();
         this.addView(chunkBar);
