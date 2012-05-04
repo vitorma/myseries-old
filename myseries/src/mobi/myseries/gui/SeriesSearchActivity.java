@@ -25,6 +25,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.SearchSeriesListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import android.app.AlertDialog;
@@ -90,23 +91,34 @@ public class SeriesSearchActivity extends SherlockListActivity {
     private void performSearch() {
         EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
 
-        try {
-            List<Series> searchResultsArray = App.searchSeries(searchField.getText().toString());
+        App.searchSeries(searchField.getText().toString(), new SearchSeriesListener() {
 
-            ArrayAdapter<Series> adapter = new TextOnlyViewAdapter(
-                    SeriesSearchActivity.this,
-                    SeriesSearchActivity.this,
-                    R.layout.text_only_list_item,
-                    searchResultsArray);
+                    @Override
+                    public void onSucess(List<Series> series) {
+                        ArrayAdapter<Series> adapter = new TextOnlyViewAdapter(
+                                SeriesSearchActivity.this,
+                                SeriesSearchActivity.this,
+                                R.layout.text_only_list_item,
+                                series);
+                        SeriesSearchActivity.this.setListAdapter(adapter);
+                    }
+                    
+                    @Override
+                    public void onFaluire(Throwable exception) {
+                        if(!SeriesSearchActivity.this.isFinishing())
+                        new AlertDialog.Builder(SeriesSearchActivity.this)
+                        .setMessage(exception.getMessage())
+                        .create()
+                        .show();
+                    }
 
-            SeriesSearchActivity.this.setListAdapter(adapter);
-        } catch (Exception e) {
-            new AlertDialog.Builder(SeriesSearchActivity.this)
-                    .setMessage(e.getMessage())
-                    .create()
-                    .show();
+                    @Override
+                    public void onProgress() {
+                        final ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
+                        searchButton.setClickable(false);
+                    }
+                });
         }
-    }
 
     private void setupSearchFieldActionListeners() {
         final EditText searchField = (EditText) findViewById(R.id.searchField);
