@@ -23,10 +23,6 @@ package mobi.myseries.application;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -47,44 +43,18 @@ public class SearchSeriesService {
         this.seriesSource = seriesSource;
     }
 
-    public List<Series> search(String seriesName, String language) throws Exception {
-        AsyncTask<String, Void, AsyncTaskResult<List<Series>>> task = new SearchSeriesTask(this.seriesSource);
-        task.execute(seriesName, language);
+    public void search(String seriesName, String language, SearchSeriesListener listener) {
 
-        AsyncTaskResult<List<Series>> taskResult = null;
-
-        try {
-            taskResult = task.get(TIMEOUT, TimeUnit.SECONDS);
-        } catch (CancellationException e) {
-            //TODO Find a better message
-            throw new SearchSeriesException("CancellationException", e);
-        } catch (ExecutionException e) {
-            //TODO Find a better message
-            throw new SearchSeriesException("ExecutionException", e);
-        } catch (InterruptedException e) {
-            //TODO Find a better message
-            throw new SearchSeriesException("InterruptedException", e);
-        } catch (TimeoutException e) {
-            //TODO Find a better message
-            throw new SearchSeriesException("TimeoutException", e);
-        }
-
-        if(taskResult.error() != null){
-            throw taskResult.error();
-        }
-
-        if (taskResult.result().isEmpty()) {
-            throw new SearchSeriesException(Message.NO_RESULTS_FOUND_FOR_CRITERIA);
-        }
-
-        return Collections.unmodifiableList(taskResult.result());
-    }
+        new SearchSeriesTask(this.seriesSource, listener).execute(seriesName, language);
+}
 
     private static class SearchSeriesTask extends AsyncTask<String, Void, AsyncTaskResult<List<Series>>> {
         private SeriesSource seriesSource;
+        private SearchSeriesListener listener;
 
-        private SearchSeriesTask(SeriesSource seriesSource) {
+        private SearchSeriesTask(SeriesSource seriesSource, SearchSeriesListener listener) {
             this.seriesSource = seriesSource;
+            this.listener = listener;
         }
 
         @Override
@@ -93,14 +63,31 @@ public class SearchSeriesService {
             String language = params[1];
 
             try {
-                List<Series> seriesList= this.seriesSource.searchFor(seriesName, language);
-                return new AsyncTaskResult<List<Series>>(seriesList);
+                List<Series> seriesList = this.seriesSource.searchFor(seriesName, language);
+                if (!seriesList.isEmpty())
+                    return new AsyncTaskResult<List<Series>>(seriesList);
+
+                return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.NO_RESULTS_FOUND_FOR_CRITERIA));
             } catch (InvalidSearchCriteriaException e) {
                 return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.INVALID_SEARCH_CRITERIA, e));
             } catch (ConnectionFailedException e) {
                 return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.CONNECTION_FAILED, e));
             } catch (ParsingFailedException e) {
                 return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.PARSING_FAILED, e));
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            listener.onProgress();
+        }
+
+        @Override
+        protected void onPostExecute(AsyncTaskResult<List<Series>> taskResult) {
+            if (taskResult.error() == null){
+                listener.onSucess(Collections.unmodifiableList(taskResult.result()));
+            }else{
+                listener.onFaluire(taskResult.error());
             }
         }
     }

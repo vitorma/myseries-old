@@ -21,9 +21,6 @@
 
 package mobi.myseries.application;
 
-import java.util.List;
-
-import mobi.myseries.domain.model.Series;
 import android.app.Application;
 
 public class App extends Application {
@@ -39,8 +36,8 @@ public class App extends Application {
         return environment;
     }
 
-    public static List<Series> searchSeries(String seriesName) throws Exception {
-        return new SearchSeriesService(environment.theTVDB()).search(seriesName, localLanguage());
+    public static void searchSeries(String seriesName, SearchSeriesListener listener) {
+        new SearchSeriesService(environment.theTVDB()).search(seriesName, localLanguage(), listener);
     }
 
     private static String localLanguage() {
