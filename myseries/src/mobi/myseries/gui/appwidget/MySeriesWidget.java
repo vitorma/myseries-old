@@ -35,7 +35,7 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.EpisodeComparator;
-import mobi.myseries.gui.RecentAndUpcomingEpisodesActivity;
+import mobi.myseries.gui.schedule.MyScheduleActivity;
 import mobi.myseries.shared.Dates;
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -112,7 +112,7 @@ public class MySeriesWidget extends AppWidgetProvider {
                 }
             }
 
-            Intent intent = new Intent(context, RecentAndUpcomingEpisodesActivity.class);
+            Intent intent = new Intent(context, MyScheduleActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);

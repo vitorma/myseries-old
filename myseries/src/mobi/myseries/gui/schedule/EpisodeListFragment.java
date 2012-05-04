@@ -1,5 +1,5 @@
 /*
- *   SeriesListFragment.java
+ *   EpisodeListFragment.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,26 +19,29 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui;
+package mobi.myseries.gui.schedule;
+
+import java.util.Comparator;
+import java.util.List;
 
 import mobi.myseries.R;
-import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.gui.EpisodeDetailsActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public class SeriesListFragment extends SherlockListFragment {
+public abstract class EpisodeListFragment extends SherlockListFragment {
     private static final int LAYOUT = R.layout.list;
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+
+    protected abstract List<Episode> episodes();
+    protected abstract Comparator<Episode> episodesComparator();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,28 +59,30 @@ public class SeriesListFragment extends SherlockListFragment {
 
         this.setUpContentView();
         this.setUpListAdapter();
-        this.setupItemClickListener();
+        this.setUpItemClickListener();
     }
 
     private void setUpContentView() {
         TextView empty = (TextView) this.getActivity().findViewById(android.R.id.empty);
-        empty.setText(this.getString(R.string.no_series_followed));
+        empty.setText(this.getString(R.string.no_episodes));
     }
 
     private void setUpListAdapter() {
-        ListAdapter adapter = new SeriesListAdapter(this.getActivity(), SERIES_PROVIDER.followedSeries());
-        this.setListAdapter(adapter);
+        EpisodeListAdapter dataAdapter = new EpisodeListAdapter(this.getActivity(), this.episodes());
+        dataAdapter.sort(this.episodesComparator());
+        this.setListAdapter(dataAdapter);
     }
 
-    private void setupItemClickListener() {
+    private void setUpItemClickListener() {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(view.getContext(), SeriesDetailsActivity.class);
-                Series series = (Series) parent.getItemAtPosition(position);
-                intent.putExtra("series id", series.id());
-                intent.putExtra("series name", series.name());
-                SeriesListFragment.this.startActivity(intent);
+                Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
+                Episode episode = (Episode) parent.getItemAtPosition(position);
+                intent.putExtra("series id", episode.seriesId());
+                intent.putExtra("season number", episode.seasonNumber());
+                intent.putExtra("episode number", episode.number());
+                EpisodeListFragment.this.startActivity(intent);
             }
         });
     }

@@ -216,37 +216,51 @@ public class SeriesProvider {
         return this.seriesRepository.get(seriesId);
     }
 
-    //Recent and upcoming episodes--------------------------------------------------------------------------------------
+    //Schedule----------------------------------------------------------------------------------------------------------
 
     private Specification<Episode> recentEpisodesSpecification() {
         return AirdateSpecification.before(Dates.today()).and(SeenMarkSpecification.asNotSeen());
     }
 
     public List<Episode> recentEpisodes() {
-        final List<Episode> recent = new ArrayList<Episode>();
+        List<Episode> recentEpisodes = new ArrayList<Episode>();
 
-        for (final Series s : this.followedSeries()) {
-            recent.addAll(s.seasons().episodesBy(this.recentEpisodesSpecification()));
+        for (Series s : this.followedSeries()) {
+            recentEpisodes.addAll(s.seasons().episodesBy(this.recentEpisodesSpecification()));
         }
 
-        return recent;
+        return recentEpisodes;
+    }
+
+    private Specification<Episode> todayEpisodesSpecification() {
+        return AirdateSpecification.on(Dates.today()).and(SeenMarkSpecification.asNotSeen());
+    }
+
+    public List<Episode> todayEpisodes() {
+        List<Episode> todayEpisodes = new ArrayList<Episode>();
+
+        for (Series s : this.followedSeries()) {
+            todayEpisodes.addAll(s.seasons().episodesBy(this.todayEpisodesSpecification()));
+        }
+
+        return todayEpisodes;
     }
 
     private Specification<Episode> upcomingEpisodesSpecification() {
-        return AirdateSpecification.before(Dates.today()).not().and(SeenMarkSpecification.asNotSeen());
+        return AirdateSpecification.after(Dates.today()).and(SeenMarkSpecification.asNotSeen());
     }
 
     public List<Episode> upcomingEpisodes() {
-        final List<Episode> upcoming = new ArrayList<Episode>();
+        List<Episode> upcomingEpisodes = new ArrayList<Episode>();
 
-        for (final Series s : this.followedSeries()) {
-            upcoming.addAll(s.seasons().episodesBy(this.upcomingEpisodesSpecification()));
+        for (Series s : this.followedSeries()) {
+            upcomingEpisodes.addAll(s.seasons().episodesBy(this.upcomingEpisodesSpecification()));
         }
 
-        return upcoming;
+        return upcomingEpisodes;
     }
 
-    //TODO: Remove it ASAP----------------------------------------------------------------------------------------------
+    //SeenMark----------------------------------------------------------------------------------------------------------
 
     public void markSeasonAsSeen(Season season) {
         season.markAsSeen();
