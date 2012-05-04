@@ -28,6 +28,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".gui.schedule.MyScheduleActivity">
+        </activity>
+        <activity
             android:name=".gui.SeriesSearchActivity">
         </activity>
         <activity
@@ -54,18 +57,6 @@
         <activity
             android:name=".gui.EpisodeDetailsActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name=".gui.RecentAndUpcomingEpisodesActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-        </activity>
-        <activity
-            android:name=".gui.RecentEpisodesActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar">
-        </activity>
-        <activity
-            android:name=".gui.UpcomingEpisodesActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar">
         </activity>
         <receiver
             android:name=".gui.appwidget.MySeriesWidget"

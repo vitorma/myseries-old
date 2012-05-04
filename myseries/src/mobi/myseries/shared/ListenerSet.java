@@ -22,35 +22,35 @@
 package mobi.myseries.shared;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.WeakHashMap;
 
 
 public class ListenerSet<L> implements Iterable<L> {
-    private List<L> listeners;
+    // It uses a HashMap because that is the only already implemented collection of weak references
+    private WeakHashMap<L, Object> listeners;
 
     public ListenerSet() {
-        this.listeners = new LinkedList<L>();
+        this.listeners = new WeakHashMap<L, Object>();
     }
 
     public boolean register(L listener) {
         Validate.isNonNull(listener, "listener");
 
-        for (L l : this.listeners) {
-            if (l == listener) return false;
+        if (this.listeners.keySet().contains(listener)) {
+            return false;
         }
 
-        return this.listeners.add(listener);
+        this.listeners.put(listener, null);
+
+        return true;
     }
 
     public boolean deregister(L listener) {
         Validate.isNonNull(listener, "listener");
 
-        for (int i = 0; i < this.listeners.size(); i++) {
-            if (this.listeners.get(i) == listener) {
-                this.listeners.remove(i);
-                return true;
-            }
+        if (this.listeners.keySet().contains(listener)) {
+            this.listeners.remove(listener);
+            return true;
         }
 
         return false;
@@ -58,6 +58,6 @@ public class ListenerSet<L> implements Iterable<L> {
 
     @Override
     public Iterator<L> iterator() {
-        return this.listeners.iterator();
+        return this.listeners.keySet().iterator();
     }
 }

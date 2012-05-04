@@ -1,5 +1,5 @@
 /*
- *   RecentEpisodesActivity.java
+ *   TodayEpisodesFragment.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui;
+package mobi.myseries.gui.schedule;
 
 import java.util.Comparator;
 import java.util.List;
@@ -27,15 +27,20 @@ import java.util.List;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 
-public class RecentEpisodesActivity extends OutOfContextEpisodesActivity {
+public class TodayEpisodesFragment extends EpisodeListFragment {
 
     @Override
     protected List<Episode> episodes() {
-        return App.environment().seriesProvider().recentEpisodes();
+        return App.environment().seriesProvider().todayEpisodes();
     }
 
     @Override
     protected Comparator<Episode> episodesComparator() {
-        return EpisodeComparator.reversedByAirdateThenBySeasonThenByNumber();
+        return new Comparator<Episode>() {
+            @Override
+            public int compare(Episode e1, Episode e2) {
+                return 0;
+            }
+        };
     }
 }

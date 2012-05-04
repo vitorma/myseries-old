@@ -62,7 +62,6 @@ public class SeriesSearchActivity extends SherlockListActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
 
-
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
         this.setupSearchFieldActionListeners();

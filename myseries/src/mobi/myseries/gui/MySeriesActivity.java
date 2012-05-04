@@ -25,6 +25,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
+import mobi.myseries.gui.schedule.MyScheduleActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -80,7 +81,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(SCHEDULE)
-            .setIntent(new Intent(this, RecentAndUpcomingEpisodesActivity.class))
+            .setIntent(new Intent(this, MyScheduleActivity.class))
             .setIcon(R.drawable.actionbar_calendar)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 

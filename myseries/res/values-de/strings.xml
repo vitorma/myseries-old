@@ -25,6 +25,7 @@
     <string name="loading_dialog_text">Loading...</string>
     <string name="med_widget_name">AweSeries (4x2)</string>
     <string formatted="false" name="runtime_minutes_format">%s Minuten</string>
+    <string name="my_schedule">Mein Terminplain</string>
     <string name="my_series">Meine Serien</string>
     <string name="network">TV-Netzwerk: </string>
     <string name="invalid_search_criteria">Die Suchkriterien ist nicht gültig.</string>
@@ -43,8 +44,10 @@
     <string formatted="false" name="now_you_follow_series">Nun folgen Sie %s.</string>
     <string name="overview">Überlick</string>
     <string name="review_not_available">Beschreibung nicht verfügbar.</string>
-    <string name="recent_episodes">Letzten Episoden</string>
     <string name="runtime">Länge: </string>
+    <string name="schedule_today">Heute</string>
+    <string name="schedule_recent">Letzten</string>
+    <string name="schedule_upcoming">Anstehender</string>
     <string name="seasons">Staffel</string>
     <string formatted="false" name="season_and_episode_format">Staffel %02d - Episode %02d</string>
     <string formatted="false" name="season_and_episode_format_short">S%02dE%02d</string>
@@ -66,7 +69,6 @@
     <string name="updating_series_data">Aktualisierung der Daten von Series...</string>
     <string name="up_to_date">Aktualisiert</string>
     <string name="update">Aktualisierung</string>
-    <string name="upcoming_episodes">Anstehender Episoden</string>
     <string name="writer">Writer: </string>
     <string name="yes">Ja</string>
     <string name="you_no_longer_follow">Sie folgen %s nicht mehr.</string>

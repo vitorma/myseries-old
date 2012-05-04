@@ -25,6 +25,7 @@
     <string name="loading_dialog_text">Downloading...</string>
     <string name="med_widget_name">AweSeries (4x2)</string>
     <string formatted="false" name="runtime_minutes_format">%s minutes</string>
+    <string name="my_schedule">My Schedule</string>
     <string name="my_series">My Series</string>
     <string name="network">Network: </string>
     <string name="next_episode_to_air">Next to air: </string>
@@ -57,6 +58,9 @@
     <string name="special_episodes">Special Episodes</string>
     <string name="status">Status: </string>
     <string name="stop_following">Stop following</string>
+    <string name="schedule_recent">Recent</string>
+    <string name="schedule_today">Today</string>
+    <string name="schedule_upcoming">Upcoming</string>
     <string name="unknown_series">Unknown Series</string>
     <string name="unnamed_episode">Unnamed Episode</string>
     <string name="updating_series_notification_title">AweSeries data update</string>
