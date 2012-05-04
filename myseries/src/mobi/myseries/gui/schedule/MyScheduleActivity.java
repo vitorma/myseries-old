@@ -26,6 +26,7 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 public class MyScheduleActivity extends SherlockFragmentActivity {
     @Override
@@ -51,5 +52,16 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         ab.addTab(recentTab);
         ab.addTab(todayTab, true);
         ab.addTab(upcomingTab);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -29,7 +29,6 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -68,18 +67,13 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch( item.getItemId() ) {
+        switch(item.getItemId()) {
             case android.R.id.home:
-                this.up();
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void up() {
-        Intent i = new Intent(this, MySeriesActivity.class);
-        this.startActivity(i);
     }
 
     private void setupSearchButtonClickListener() {
