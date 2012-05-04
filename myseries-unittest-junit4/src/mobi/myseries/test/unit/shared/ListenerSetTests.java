@@ -21,6 +21,8 @@
 
 package mobi.myseries.test.unit.shared;
 
+import java.lang.ref.WeakReference;
+
 import mobi.myseries.shared.ListenerSet;
 
 import org.junit.After;
@@ -85,6 +87,24 @@ public class ListenerSetTests {
         listeners.deregister(listener);
 
         assertThat(listeners.deregister(listener), is(false));
+    }
+
+    @Test
+    public void listenersMustBeWeaklyReferenced() {
+        // Given
+        Object listener = new Object();
+
+        WeakReference<Object> reference = new WeakReference<Object>(listener);
+        assertThat(reference.get(), is(listener));
+
+        listeners.register(listener);
+
+        // When
+        listener = null;
+        System.gc();
+
+        // Then
+        assertThat(reference.get(), nullValue());
     }
 
     @Test(expected=IllegalArgumentException.class)
