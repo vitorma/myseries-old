@@ -28,13 +28,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Region.Op;
 import android.text.TextPaint;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
 
 public class ChunkBar extends View {
     private static final int DEFAULT_DRAWING_COLOR = Color.rgb(50, 182, 231);
