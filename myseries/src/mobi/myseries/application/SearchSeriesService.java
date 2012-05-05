@@ -34,8 +34,6 @@ import mobi.myseries.shared.Validate;
 import android.os.AsyncTask;
 
 public class SearchSeriesService {
-    private static final long TIMEOUT = 5L;
-
     private SeriesSource seriesSource;
 
     public SearchSeriesService(SeriesSource seriesSource) {
@@ -55,6 +53,11 @@ public class SearchSeriesService {
         private SearchSeriesTask(SeriesSource seriesSource, SearchSeriesListener listener) {
             this.seriesSource = seriesSource;
             this.listener = listener;
+        }
+        
+        @Override
+        protected void onPreExecute() {
+            listener.onStart();
         }
 
         @Override
@@ -79,7 +82,7 @@ public class SearchSeriesService {
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            listener.onProgress();
+            listener.onStart();
         }
 
         @Override
@@ -89,6 +92,7 @@ public class SearchSeriesService {
             }else{
                 listener.onFaluire(taskResult.error());
             }
+            listener.onFinish();
         }
     }
 }
