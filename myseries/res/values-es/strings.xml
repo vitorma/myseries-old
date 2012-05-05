@@ -21,13 +21,13 @@
     <string name="follow">Seguir</string>
     <string name="genre">Género: </string>
     <string name="guest_stars">Estrellas invitadas:</string>
-    <string name="large_widget_name">AweSeries (4x4)</string>
+    <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">último episodio emitido:</string>
     <string name="listing_title">Título de la lista</string>
     <string name="loading">A cargar...</string>
     <string name="loading_dialog_text">Cargando...</string>
     <string name="searching_dialog_text">Buscando...</string>
-    <string name="med_widget_name">AweSeries (4x2)</string>
+    <string name="med_widget_name">My Series (4x2)</string>
     <string formatted="false" name="runtime_minutes_format">%s minutos</string>
     <string name="my_schedule">Mi Horario</string>
     <string name="my_series">Series que sigo</string>
@@ -60,7 +60,7 @@
     <string name="separator"> - </string>
     <string formatted="false" name="series_will_be_added">La serie %s aparecerá en su lista muy pronto.</string>
     <string formatted="false" name="series_will_be_removed">La serie %s sera eliminado de su lista muy pronto.</string>
-    <string name="small_widget_name">AweSeries (4x1)</string>
+    <string name="small_widget_name">My Series (4x1)</string>
     <string name="special_episodes">Episodios Especiales</string>
     <string name="status">Estatus: </string>
     <string name="stop_following">Dejar de seguir</string>
