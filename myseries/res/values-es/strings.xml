@@ -26,6 +26,7 @@
     <string name="listing_title">Título de la lista</string>
     <string name="loading">A cargar...</string>
     <string name="loading_dialog_text">Cargando...</string>
+    <string name="searching_dialog_text">Buscando...</string>
     <string name="med_widget_name">AweSeries (4x2)</string>
     <string formatted="false" name="runtime_minutes_format">%s minutos</string>
     <string name="my_schedule">Mi Horario</string>

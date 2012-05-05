@@ -32,6 +32,7 @@ public class Message {
     public static final String INVALID_SEARCH_CRITERIA = stringFrom(R.string.invalid_search_criteria);
     public static final String CONNECTION_FAILED = stringFrom(R.string.connection_failed_message);
     public static final String PARSING_FAILED = stringFrom(R.string.parsing_failed);
+    public static final String SEARCHING = stringFrom(R.string.searching_dialog_text);
 
     private static String stringFrom(int resourceId) {
         return CONTEXT.getString(resourceId);

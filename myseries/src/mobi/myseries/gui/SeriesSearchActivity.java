@@ -25,11 +25,13 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.Message;
 import mobi.myseries.application.SearchSeriesListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -90,6 +92,8 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
     private void performSearch() {
         EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
+        final ProgressDialog dialog = ProgressDialog.show(SeriesSearchActivity.this, "", 
+                Message.SEARCHING, true);
 
         App.searchSeries(searchField.getText().toString(), new SearchSeriesListener() {
 
@@ -113,9 +117,15 @@ public class SeriesSearchActivity extends SherlockListActivity {
                     }
 
                     @Override
-                    public void onProgress() {
-                        final ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
-                        searchButton.setClickable(false);
+                    public void onStart() {
+                        dialog.show();
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        dialog.dismiss();
+                        
                     }
                 });
         }
