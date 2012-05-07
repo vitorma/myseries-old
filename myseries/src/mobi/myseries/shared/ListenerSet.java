@@ -27,12 +27,12 @@ import java.util.NoSuchElementException;
 
 
 public class ListenerSet<L> implements Iterable<L> {
-    private ListenerNode firstSentinel = new ListenerNode(null);
-    private ListenerNode lastSentinel = new ListenerNode(null);
+    private ListenerNode firstSentinel;
+    private ListenerNode lastSentinel;
 
     public ListenerSet() {
         this.firstSentinel = new ListenerNode(null);
-        this.lastSentinel = new ListenerNode(null);
+        this.lastSentinel = this.firstSentinel;
 
         this.firstSentinel.setNext(this.lastSentinel);
         this.lastSentinel.setPrevious(this.firstSentinel);
@@ -120,7 +120,7 @@ public class ListenerSet<L> implements Iterable<L> {
         public ListenerIterator(ListenerNode firstListener) {
             this.thisListener = firstListener;
         }
-        
+
         private ListenerNode nextListener() {
             return this.thisListener.next();
         }
