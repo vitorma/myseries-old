@@ -25,7 +25,17 @@ import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-
+/**
+ * Made to store observers -- listeners --, this collection keeps weak
+ * references to its items. It won't participate in keeping the stored
+ * instances uncollectible, so use it carefully.
+ *
+ * As it is made to be used in the observer pattern, the items aren't compared
+ * by their equals method, but by their memory address. Each item is stored
+ * only once and null values aren't allowed.
+ *
+ * @param <L> The type of the observers/listeners -- the stored items.
+ */
 public class ListenerSet<L> implements Iterable<L> {
     private ListenerNode<L> firstSentinel;
     private ListenerNode<L> lastSentinel;
