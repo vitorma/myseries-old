@@ -27,11 +27,11 @@ import java.util.NoSuchElementException;
 
 
 public class ListenerSet<L> implements Iterable<L> {
-    private ListenerNode firstSentinel;
-    private ListenerNode lastSentinel;
+    private ListenerNode<L> firstSentinel;
+    private ListenerNode<L> lastSentinel;
 
     public ListenerSet() {
-        this.firstSentinel = new ListenerNode(null);
+        this.firstSentinel = new ListenerNode<L>(null);
         this.lastSentinel = this.firstSentinel;
 
         this.firstSentinel.setNext(this.lastSentinel);
@@ -45,8 +45,8 @@ public class ListenerSet<L> implements Iterable<L> {
             return false;
         }
 
-        ListenerNode newLastListener = new ListenerNode(listener);
-        ListenerNode oldLastListener = this.lastSentinel.previous();
+        ListenerNode<L> newLastListener = new ListenerNode<L>(listener);
+        ListenerNode<L> oldLastListener = this.lastSentinel.previous();
 
         oldLastListener.setNext(newLastListener);
         newLastListener.setPrevious(oldLastListener);
@@ -80,14 +80,14 @@ public class ListenerSet<L> implements Iterable<L> {
 
     @Override
     public Iterator<L> iterator() {
-        return new ListenerIterator(this.firstSentinel);
+        return new ListenerIterator<L>(this.firstSentinel, this.lastSentinel);
     }
 
-    private class ListenerNode {
+    private static class ListenerNode<L> {
         private WeakReference<L> listener;
 
-        private ListenerNode next;
-        private ListenerNode previous;
+        private ListenerNode<L> next;
+        private ListenerNode<L> previous;
 
         public ListenerNode(L listener) {
             this.listener = new WeakReference<L>(listener);
@@ -97,35 +97,37 @@ public class ListenerSet<L> implements Iterable<L> {
             return this.listener.get();
         }
 
-        public ListenerNode next() {
+        public ListenerNode<L> next() {
             return this.next;
         }
 
-        public void setNext(ListenerNode next) {
+        public void setNext(ListenerNode<L> next) {
             this.next = next;
         }
 
-        public ListenerNode previous() {
+        public ListenerNode<L> previous() {
             return this.previous;
         }
 
-        public void setPrevious(ListenerNode previous) {
+        public void setPrevious(ListenerNode<L> previous) {
             this.previous = previous;
         }
     }
 
-    private class ListenerIterator implements Iterator<L> {
-        private ListenerNode thisListener;
+    private static class ListenerIterator<L> implements Iterator<L> {
+        private ListenerNode<L> lastSentinelOfTheList;
+        private ListenerNode<L> thisListener;
 
-        public ListenerIterator(ListenerNode firstListener) {
+        public ListenerIterator(ListenerNode<L> firstListener, ListenerNode<L> lastSentinel) {
             this.thisListener = firstListener;
+            this.lastSentinelOfTheList = lastSentinel;
         }
 
-        private ListenerNode nextListener() {
+        private ListenerNode<L> nextListener() {
             return this.thisListener.next();
         }
 
-        private ListenerNode previousListener() {
+        private ListenerNode<L> previousListener() {
             return this.thisListener.previous();
         }
 
@@ -133,15 +135,15 @@ public class ListenerSet<L> implements Iterable<L> {
         public boolean hasNext() {
             this.removeNextCollectedListeners();
 
-            return this.nextListener() != lastSentinel;
+            return this.nextListener() != this.lastSentinelOfTheList;
         }
 
         private void removeNextCollectedListeners() {
-            for (ListenerNode nextListener = this.nextListener();
-                    nextListener != lastSentinel && nextListener.listener() == null;
+            for (ListenerNode<L> nextListener = this.nextListener();
+                    nextListener != this.lastSentinelOfTheList && nextListener.listener() == null;
                     nextListener = this.nextListener()) {
 
-                new ListenerIterator(nextListener).remove();
+                new ListenerIterator<L>(nextListener, this.lastSentinelOfTheList).remove();
             }
         }
 
@@ -157,8 +159,8 @@ public class ListenerSet<L> implements Iterable<L> {
 
         @Override
         public void remove() {
-            ListenerNode nextListener = this.nextListener();
-            ListenerNode previousListener = this.previousListener();
+            ListenerNode<L> nextListener = this.nextListener();
+            ListenerNode<L> previousListener = this.previousListener();
 
             previousListener.setNext(nextListener);
             nextListener.setPrevious(previousListener);
