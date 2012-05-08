@@ -26,7 +26,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.EpisodeDetailsActivity;
+import mobi.myseries.gui.detail.EpisodeDetailsActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -77,11 +77,11 @@ public abstract class EpisodeListFragment extends SherlockListFragment {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(view.getContext(), EpisodeDetailsActivity.class);
-                Episode episode = (Episode) parent.getItemAtPosition(position);
-                intent.putExtra("series id", episode.seriesId());
-                intent.putExtra("season number", episode.seasonNumber());
-                intent.putExtra("episode number", episode.number());
+                Episode e = (Episode) parent.getItemAtPosition(position);
+
+                Intent intent = EpisodeDetailsActivity.newIntent(
+                    view.getContext(), e.seriesId(), e.seasonNumber(), e.number());
+
                 EpisodeListFragment.this.startActivity(intent);
             }
         });

@@ -76,6 +76,10 @@ public class SeasonSet implements SeasonListener {
         return new ArrayList<Season>(this.seasons.values());
     }
 
+    public boolean hasSpecialEpisodes() {
+        return this.seasons.containsKey(0);
+    }
+
     private SeasonSet including(Season season) {
         season.register(this);
 

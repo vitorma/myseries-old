@@ -28,7 +28,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockListFragment;
 
-class ScheduleTabListener implements ActionBar.TabListener {
+public class ScheduleTabListener implements ActionBar.TabListener {
     private SherlockListFragment fragment;
 
     public ScheduleTabListener(SherlockListFragment fragment) {
