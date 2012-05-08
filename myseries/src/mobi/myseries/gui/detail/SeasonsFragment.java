@@ -112,6 +112,8 @@ public class SeasonsFragment extends SherlockFragment {
                         SeasonsFragment.this.list.collapseGroup(i);
                     }
                 }
+
+                SeasonsFragment.this.list.setSelectedGroup(groupPosition);
             }
         });
 
@@ -150,6 +152,8 @@ public class SeasonsFragment extends SherlockFragment {
             this.startActivity(intent);
             return;
         }
+
+        this.list.setSelectedChild(this.currentGroup, this.currentChild, true);
 
         EpisodeFragment details = (EpisodeFragment) this.getFragmentManager().findFragmentById(R.id.overview_details);
 
