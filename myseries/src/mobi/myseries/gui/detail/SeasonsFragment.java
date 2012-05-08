@@ -91,6 +91,7 @@ public class SeasonsFragment extends SherlockFragment {
         this.list = (ExpandableListView) this.getActivity().findViewById(R.id.seasons);
         this.list.setAdapter(this.adapter);
         this.list.setGroupIndicator(null);
+
         this.list.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -98,6 +99,19 @@ public class SeasonsFragment extends SherlockFragment {
                 SeasonsFragment.this.currentChild = childPosition;
                 SeasonsFragment.this.showDetails();
                 return true;
+            }
+        });
+
+        this.list.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                int numberOfGroups = SeasonsFragment.this.adapter.getGroupCount();
+
+                for (int i = 0; i < numberOfGroups; i++) {
+                    if (i != groupPosition) {
+                        SeasonsFragment.this.list.collapseGroup(i);
+                    }
+                }
             }
         });
 
