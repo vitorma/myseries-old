@@ -8,8 +8,6 @@ import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.SeasonListener;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.Dates;
-import mobi.myseries.shared.Objects;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,18 +78,13 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
             itemView = LayoutInflater.from(this.context).inflate(R.layout.episode_list_item, null);
         }
 
-        TextView nameTextView = (TextView) itemView.findViewById(R.id.episodeNameTextView);
         TextView numberTextView = (TextView) itemView.findViewById(R.id.episodeNumberTextView);
-        TextView dateTextView = (TextView) itemView.findViewById(R.id.episodeDateTextView);
         final CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
 
         final Episode episode = this.episode(groupPosition, childPosition);
 
-        nameTextView.setText(Objects.nullSafe(episode.name(), this.context.getString(R.string.unnamed_episode)));
         numberTextView.setText(String.format(this.context.getString(R.string.episode_number_format), episode.number()));
-        dateTextView.setText(Dates.toString(episode.airDate(), App.environment().localization().dateFormat(), ""));
         isViewedCheckBox.setChecked(episode.wasSeen());
-
         isViewedCheckBox.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
