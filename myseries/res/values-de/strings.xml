@@ -19,12 +19,13 @@
     <string name="follow">Folgen</string>
     <string name="genre">Genre: </string>
     <string name="guest_stars">Gaststars:</string>
-    <string name="large_widget_name">AweSeries (4x4)</string>
+    <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">latzte:</string>
     <string name="listing_title">Titel der Liste.</string>
     <string name="loading">Loading...</string>
     <string name="loading_dialog_text">Loading...</string>
-    <string name="med_widget_name">AweSeries (4x2)</string>
+    <string name="searching_dialog_text">Suchen...</string>
+    <string name="med_widget_name">My Series (4x2)</string>
     <string formatted="false" name="runtime_minutes_format">%s Minuten</string>
     <string name="my_schedule">Mein Terminplain</string>
     <string name="my_series">Meine Serien</string>
@@ -59,13 +60,13 @@
     <string name="separator"> - </string>
     <string formatted="false" name="series_will_be_added">%s wird zu Ihrer Liste hinzugefügt bald.</string>
     <string formatted="false" name="series_will_be_removed">%s wird von Ihrer Liste gestrichen bald.</string>
-    <string name="small_widget_name">AweSeries (4x1)</string>
+    <string name="small_widget_name">My Series (4x1)</string>
     <string name="status">Status: </string>
     <string name="stop_following">Entfolgen</string>
     <string name="unknown_series">Unbekannte Serie</string>
     <string name="unnamed_episode">Unbekannte Episode</string>
-    <string name="updating_series_notification_title">Aktualisierung der Daten von AweSeries</string>
-    <string name="updating_series_failure_notification_title">Aktualisierung der Daten von AweSeries hatte ein Ausfall</string>
+    <string name="updating_series_notification_title">Aktualisierung der Daten von My Series</string>
+    <string name="updating_series_failure_notification_title">Aktualisierung der Daten von My Series hatte ein Ausfall</string>
     <string name="update_failure_notification_message">Aktualisierung der Daten wurde abrupt unterbrochen. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später erneut.</string>
     <string name="updating_series_data">Aktualisierung der Daten von Series...</string>
     <string name="up_to_date">Aktualisiert</string>

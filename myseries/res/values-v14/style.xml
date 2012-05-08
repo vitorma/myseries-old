@@ -2,39 +2,39 @@
 
 <resources>
 
-    <style name="aweseries_style">
+    <style name="myseries_style">
     </style>
 
-    <style name="aweseries_style.10sp">
+    <style name="myseries_style.10sp">
         <item name="android:textSize">10sp</item>
     </style>
 
-    <style name="aweseries_style.20sp">
+    <style name="myseries_style.20sp">
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="aweseries_style.30sp">
+    <style name="myseries_style.30sp">
         <item name="android:textSize">30sp</item>
     </style>
-    <style name="aweseries_style.12sp">
+    <style name="myseries_style.12sp">
         <item name="android:textSize">12sp</item>
     </style>
-    <style name="aweseries_style.15sp">
+    <style name="myseries_style.15sp">
         <item name="android:textSize">15sp</item>
     </style>
-    <style name="aweseries_style.toolbar">
+    <style name="myseries_style.toolbar">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">50sp</item>
         <item name="android:background">@android:color/black</item>
     </style>
 
-    <style name="aweseries_style.toolbar_button">
+    <style name="myseries_style.toolbar_button">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">44sp</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
-    <color name="aweseries_style.toolbar_background">#00000000</color>
-    <dimen name="aweseries.widget_margin">0dp</dimen>
+    <color name="myseries_style.toolbar_background">#00000000</color>
+    <dimen name="myseries.widget_margin">0dp</dimen>
 
 
 </resources>

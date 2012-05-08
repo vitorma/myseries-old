@@ -19,12 +19,13 @@
     <string name="follow">Follow</string>
     <string name="genre">Genre: </string>
     <string name="guest_stars">Guest stars:</string>
-    <string name="large_widget_name">AweSeries (4x4)</string>
+    <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">last aired:</string>
     <string name="listing_title">Listing title</string>
     <string name="loading">Loading...</string>
     <string name="loading_dialog_text">Downloading...</string>
-    <string name="med_widget_name">AweSeries (4x2)</string>
+    <string name="searching_dialog_text">Searching...</string>
+    <string name="med_widget_name">My Series (4x2)</string>
     <string formatted="false" name="runtime_minutes_format">%s minutes</string>
     <string name="my_schedule">My Schedule</string>
     <string name="my_series">My Series</string>
@@ -55,7 +56,7 @@
     <string name="separator"> - </string>
     <string formatted="false" name="series_will_be_added">The Series %s will be added to your list soon.</string>
     <string formatted="false" name="series_will_be_removed">The Series %s will be removed from your list soon.</string>
-    <string name="small_widget_name">AweSeries (4x1)</string>
+    <string name="small_widget_name">My Series (4x1)</string>
     <string name="special_episodes">Special Episodes</string>
     <string name="status">Status: </string>
     <string name="stop_following">Stop following</string>
@@ -64,8 +65,8 @@
     <string name="schedule_upcoming">Upcoming</string>
     <string name="unknown_series">Unknown Series</string>
     <string name="unnamed_episode">Unnamed Episode</string>
-    <string name="updating_series_notification_title">AweSeries data update</string>
-    <string name="updating_series_failure_notification_title">AweSeries data update failure</string>
+    <string name="updating_series_notification_title">My Series data update</string>
+    <string name="updating_series_failure_notification_title">My Series data update failure</string>
     <string name="update_failure_notification_message">Data update has failed. Please check your Internet connection or try again later.</string>
     <string name="updating_series_data">Updating series data...</string>
     <string name="up_to_date">Up-to-date</string>

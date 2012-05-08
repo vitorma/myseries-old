@@ -46,7 +46,7 @@
 
          <TextView
             android:id="@+id/nextToSeeTextView"
-            style="@style/aweseries_style.15sp"
+            style="@style/myseries_style.15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -65,7 +65,7 @@
 
         <TextView
             android:id="@+id/nextToSeeLabelTextView"
-            style="@style/aweseries_style.10sp"
+            style="@style/myseries_style.10sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

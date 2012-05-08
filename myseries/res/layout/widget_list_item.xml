@@ -24,7 +24,7 @@
         android:lines="1"
         android:scrollHorizontally="true"
         android:text="@string/loading"
-        style="@style/aweseries_style.12sp.white"/>
+        style="@style/myseries_style.12sp.white"/>
 
     <TextView
         android:id="@+id/widgetEpisodeNameTextView"
@@ -35,7 +35,7 @@
         android:lines="1"
         android:scrollHorizontally="true"
         android:text="@string/loading"
-        style="@style/aweseries_style.10sp"/>
+        style="@style/myseries_style.10sp"/>
 
     <TextView
         android:id="@+id/widgetEpisodeDateTextView"
@@ -44,6 +44,6 @@
         android:layout_toRightOf="@+id/widgetPoster"
         android:layout_below="@+id/widgetEpisodeNameTextView"
         android:text="@string/loading"
-        style="@style/aweseries_style.10sp"/>
+        style="@style/myseries_style.10sp"/>
 
 </RelativeLayout>

@@ -21,26 +21,47 @@
 
 package mobi.myseries.shared;
 
+import java.lang.ref.WeakReference;
 import java.util.Iterator;
-import java.util.WeakHashMap;
+import java.util.NoSuchElementException;
 
-
+/**
+ * Made to store observers -- listeners --, this collection keeps weak
+ * references to its items. It won't participate in keeping the stored
+ * instances uncollectible, so use it carefully.
+ *
+ * As it is made to be used in the observer pattern, the items aren't compared
+ * by their equals method, but by their memory address. Each item is stored
+ * only once and null values aren't allowed.
+ *
+ * @param <L> The type of the observers/listeners -- the stored items.
+ */
 public class ListenerSet<L> implements Iterable<L> {
-    // It uses a HashMap because that is the only already implemented collection of weak references
-    private WeakHashMap<L, Object> listeners;
+    private ListenerNode<L> firstSentinel;
+    private ListenerNode<L> lastSentinel;
 
     public ListenerSet() {
-        this.listeners = new WeakHashMap<L, Object>();
+        this.firstSentinel = new ListenerNode<L>(null);
+        this.lastSentinel = this.firstSentinel;
+
+        this.firstSentinel.setNext(this.lastSentinel);
+        this.lastSentinel.setPrevious(this.firstSentinel);
     }
 
     public boolean register(L listener) {
         Validate.isNonNull(listener, "listener");
 
-        if (this.listeners.keySet().contains(listener)) {
+        if (isRegistered(listener)) {
             return false;
         }
 
-        this.listeners.put(listener, null);
+        ListenerNode<L> newLastListener = new ListenerNode<L>(listener);
+        ListenerNode<L> oldLastListener = this.lastSentinel.previous();
+
+        oldLastListener.setNext(newLastListener);
+        newLastListener.setPrevious(oldLastListener);
+        newLastListener.setNext(this.lastSentinel);
+        this.lastSentinel.setPrevious(newLastListener);
 
         return true;
     }
@@ -48,16 +69,111 @@ public class ListenerSet<L> implements Iterable<L> {
     public boolean deregister(L listener) {
         Validate.isNonNull(listener, "listener");
 
-        if (this.listeners.keySet().contains(listener)) {
-            this.listeners.remove(listener);
-            return true;
+        for (Iterator<L> it = this.iterator(); it.hasNext();) {
+            if (it.next() == listener) {
+                it.remove();
+                return true;
+            }
         }
 
         return false;
     }
 
+    private boolean isRegistered(L listener) {
+        for (Iterator<L> it = this.iterator(); it.hasNext();) {
+            if (it.next() == listener) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public Iterator<L> iterator() {
-        return this.listeners.keySet().iterator();
+        return new ListenerIterator<L>(this.firstSentinel, this.lastSentinel);
+    }
+
+    private static class ListenerNode<L> {
+        private WeakReference<L> listener;
+
+        private ListenerNode<L> next;
+        private ListenerNode<L> previous;
+
+        public ListenerNode(L listener) {
+            this.listener = new WeakReference<L>(listener);
+        }
+
+        public L listener() {
+            return this.listener.get();
+        }
+
+        public ListenerNode<L> next() {
+            return this.next;
+        }
+
+        public void setNext(ListenerNode<L> next) {
+            this.next = next;
+        }
+
+        public ListenerNode<L> previous() {
+            return this.previous;
+        }
+
+        public void setPrevious(ListenerNode<L> previous) {
+            this.previous = previous;
+        }
+    }
+
+    private static class ListenerIterator<L> implements Iterator<L> {
+        private ListenerNode<L> lastSentinelOfTheList;
+        private ListenerNode<L> thisListener;
+
+        public ListenerIterator(ListenerNode<L> firstListener, ListenerNode<L> lastSentinel) {
+            this.thisListener = firstListener;
+            this.lastSentinelOfTheList = lastSentinel;
+        }
+
+        private ListenerNode<L> nextListener() {
+            return this.thisListener.next();
+        }
+
+        private ListenerNode<L> previousListener() {
+            return this.thisListener.previous();
+        }
+
+        @Override
+        public boolean hasNext() {
+            this.removeNextCollectedListeners();
+
+            return this.nextListener() != this.lastSentinelOfTheList;
+        }
+
+        private void removeNextCollectedListeners() {
+            for (ListenerNode<L> nextListener = this.nextListener();
+                    nextListener != this.lastSentinelOfTheList && nextListener.listener() == null;
+                    nextListener = this.nextListener()) {
+
+                new ListenerIterator<L>(nextListener, this.lastSentinelOfTheList).remove();
+            }
+        }
+
+        @Override
+        public L next() {
+            if (!this.hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            this.thisListener = this.nextListener();
+            return this.thisListener.listener();
+        }
+
+        @Override
+        public void remove() {
+            ListenerNode<L> nextListener = this.nextListener();
+            ListenerNode<L> previousListener = this.previousListener();
+
+            previousListener.setNext(nextListener);
+            nextListener.setPrevious(previousListener);
+        }
     }
 }

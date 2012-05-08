@@ -10,6 +10,8 @@ public interface SearchSeriesListener {
 
     public void onFaluire(Throwable exception);
 
-    public void onProgress();
+    public void onStart();
+    
+    public void onFinish();
 
 }

@@ -49,7 +49,7 @@ import android.widget.RemoteViews;
 public class MySeriesWidget extends AppWidgetProvider {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final ImageProvider imageProvider = App.environment().imageProvider();
-    protected static final int layout = R.layout.aweseries_desktop_widget;
+    protected static final int layout = R.layout.myseries_desktop_widget;
     protected static final int itemLayout = R.layout.widget_list_item;
     protected static final int noItemLayout = R.layout.text_only_list_item;
     private static final String REFRESH = "mobi.myseries.gui.appwidget.REFRESH";

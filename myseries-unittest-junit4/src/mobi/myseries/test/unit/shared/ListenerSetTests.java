@@ -22,6 +22,8 @@
 package mobi.myseries.test.unit.shared;
 
 import java.lang.ref.WeakReference;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import mobi.myseries.shared.ListenerSet;
 
@@ -30,8 +32,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 import static org.junit.matchers.JUnitMatchers.*;
+import static org.hamcrest.CoreMatchers.*;
 
 public class ListenerSetTests {
 
@@ -107,6 +109,170 @@ public class ListenerSetTests {
         assertThat(reference.get(), nullValue());
     }
 
+    @Test
+    public void equivalentButDifferentListenersArentTheSameInRegistering() {
+        // Given
+        Object firstListener = new EqualBy(1);
+        Object secondListener = new EqualBy(1);
+
+        listeners.register(firstListener);
+
+        // When
+        assertThat(listeners.register(secondListener), is(true));
+
+        // Then
+        assertThat(listeners, hasItem(sameInstance(firstListener)));
+        assertThat(listeners, hasItem(sameInstance(secondListener)));
+    }
+
+    @Test
+    public void equivalentButDifferentListenersArentTheSameInDeregistering() {
+        // Given
+        Object firstListener = new EqualBy(1);
+        Object secondListener = new EqualBy(1);
+
+        listeners.register(firstListener);
+
+        // When
+        assertThat(listeners.deregister(secondListener), is(false));
+
+        // Then
+        assertThat(listeners, hasItem(sameInstance(firstListener)));
+    }
+
+    @Test
+    public void iterationShouldBeKeptAfterGarbageCollection() {
+        // Given
+        Object firstListener = new Object();
+        Object secondListener = new Object();
+        Object thirdListener = new Object();
+
+        listeners.register(firstListener);
+        listeners.register(secondListener);
+        listeners.register(thirdListener);
+
+        Iterator<Object> it = listeners.iterator();
+
+        // Start iterating
+        assertThat(it.next(), is(either(sameInstance(firstListener))
+                                    .or(sameInstance(secondListener))
+                                    .or(sameInstance(thirdListener))));
+
+        // After an element is collected
+        secondListener = null;
+        System.gc();
+
+        // Then the iteration should not stop
+        assertThat(it.next(), is(either(sameInstance(firstListener))
+                                    .or(sameInstance(thirdListener))));
+    }
+
+    @Test
+    public void iterationShouldBeKeptAfterListenerRegistration() {
+        // Given
+        Object firstListener = new Object();
+        Object secondListener = new Object();
+        Object thirdListener = new Object();
+
+        listeners.register(firstListener);
+        listeners.register(secondListener);
+
+        Iterator<Object> it = listeners.iterator();
+
+        // Start iterating
+        assertThat(it.next(), is(either(sameInstance(firstListener))
+                                    .or(sameInstance(secondListener))));
+
+        // After an element is collected
+        listeners.register(thirdListener);
+
+        // Then the iteration should not stop
+        assertThat(it.next(), is(either(sameInstance(firstListener))
+                                    .or(sameInstance(secondListener))
+                                    .or(sameInstance(thirdListener))));
+
+        assertThat(it.next(), is(either(sameInstance(firstListener))
+                                 .or(sameInstance(secondListener))
+                                 .or(sameInstance(thirdListener))));
+    }
+
+    @Test
+    public void iterationShouldBeKeptAfterListenerDeregistration() {
+        // Given
+        Object firstListener = new Object();
+        Object secondListener = new Object();
+        Object thirdListener = new Object();
+
+        listeners.register(firstListener);
+        listeners.register(secondListener);
+        listeners.register(thirdListener);
+
+        Iterator<Object> it = listeners.iterator();
+
+        // Start iterating
+        assertThat(it.next(), is(either(sameInstance(firstListener))
+                                    .or(sameInstance(secondListener))
+                                    .or(sameInstance(thirdListener))));
+
+        // After an element is collected
+        listeners.deregister(secondListener);
+
+        // Then the iteration should not stop
+        assertThat(it.next(), is(either(sameInstance(firstListener))
+                                    .or(sameInstance(thirdListener))));
+    }
+
+    @Test(expected=NoSuchElementException.class)
+    public void iteratorShouldThrowExceptionWhenThereIsNoElements() {
+        listeners.iterator().next();
+    }
+
+    @Test(expected=NoSuchElementException.class)
+    public void iteratorShouldThrowExceptionWhenThereIsNoMoreElements() {
+        Object listener = new Object();
+
+        listeners.register(listener);
+
+        Iterator<Object> it = listeners.iterator();
+
+        it.next();
+        it.next();
+    }
+
+    @Test
+    public void iteratorShouldRemoveCollectedElements() {
+        Object firstListener = new Object();
+        Object secondListener = new Object();
+
+        listeners.register(firstListener);
+        listeners.register(secondListener);
+
+        firstListener = null;
+        System.gc();
+
+        Iterator<Object> it = listeners.iterator();
+
+        assertThat(it.next(), sameInstance(secondListener));
+        assertThat(it.hasNext(), is(false));
+    }
+
+    @Test(expected=NoSuchElementException.class)
+    public void iteratorShouldThrowExceptionWhenElementsAreCollected() {
+        Object firstListener = new Object();
+        Object secondListener = new Object();
+
+        listeners.register(firstListener);
+        listeners.register(secondListener);
+
+        firstListener = null;
+        System.gc();
+
+        Iterator<Object> it = listeners.iterator();
+
+        assertThat(it.next(), sameInstance(secondListener));
+        it.next();
+    }
+
     @Test(expected=IllegalArgumentException.class)
     public void itCannotRegisterNullListeners() {
         new ListenerSet<Object>().register(null);
@@ -115,5 +281,38 @@ public class ListenerSetTests {
     @Test(expected=IllegalArgumentException.class)
     public void itCannotDeregisterNullListeners() {
         new ListenerSet<Object>().deregister(null);
+    }
+
+    /**
+     * This class has its equivalence relation based on the id provided in the constructor.
+     */
+    private static class EqualBy {
+        private int id;
+
+        public EqualBy(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + this.id;
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            EqualBy other = (EqualBy) obj;
+            if (this.id != other.id)
+                return false;
+            return true;
+        }
     }
 }

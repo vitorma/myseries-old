@@ -40,6 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -89,9 +90,13 @@ public class SeriesSearchActivity extends SherlockListActivity {
     }
 
     private void performSearch() {
-        EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
-
-        App.searchSeries(searchField.getText().toString(), new SearchSeriesListener() {
+        final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
+        final ProgressBar progressBar = (ProgressBar) SeriesSearchActivity.this.findViewById(R.id.progressBar);
+        final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
+        
+        SeriesSearchActivity.this.setListAdapter(null);
+        
+         App.searchSeries(searchField.getText().toString(), new SearchSeriesListener() {
 
                     @Override
                     public void onSucess(List<Series> series) {
@@ -105,7 +110,6 @@ public class SeriesSearchActivity extends SherlockListActivity {
                     
                     @Override
                     public void onFaluire(Throwable exception) {
-                        if(!SeriesSearchActivity.this.isFinishing())
                         new AlertDialog.Builder(SeriesSearchActivity.this)
                         .setMessage(exception.getMessage())
                         .create()
@@ -113,9 +117,17 @@ public class SeriesSearchActivity extends SherlockListActivity {
                     }
 
                     @Override
-                    public void onProgress() {
-                        final ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
-                        searchButton.setClickable(false);
+                    public void onStart() {
+                       progressBar.setVisibility(View.VISIBLE);
+                       searchField.setEnabled(false);
+                       searchButton.setEnabled(false);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        searchField.setEnabled(true);
+                        searchButton.setEnabled(true);
                     }
                 });
         }
@@ -142,7 +154,6 @@ public class SeriesSearchActivity extends SherlockListActivity {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
                     performSearch();
                 }
-
                 return false;
             }
         });
