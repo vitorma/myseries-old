@@ -1,28 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical">
 
-    <CheckBox
-        android:id="@+id/isSeasonViewedCheckBox"
-        android:button="@drawable/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
+    <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|left">
 
-    <TextView
-        android:text="@string/loading"
-        android:layout_height="wrap_content"
+        <CheckBox
+            android:id="@+id/isSeasonViewedCheckBox"
+            android:button="@drawable/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
+
+        <TextView
+            android:id="@+id/itemName"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    </LinearLayout>
+
+    <mobi.myseries.gui.SeenEpisodesBar
+        android:id="@+id/seen_episodes"
         android:layout_width="wrap_content"
-        android:id="@+id/itemName"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:padding="5dp"
-        android:lines="1"
-        android:scrollHorizontally="true"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever"/>
+        android:layout_height="9dp"
+        android:layout_marginBottom="7dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"/>
 
 </LinearLayout>

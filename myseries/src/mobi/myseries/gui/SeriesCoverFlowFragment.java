@@ -122,7 +122,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
     private void downloadDescription(Series item) {
         this.seriesItemViewHolder.name.setText(item.name());
-        this.seriesItemViewHolder.bar.setSeries(item);
+        this.seriesItemViewHolder.bar.updateWithEpisodesOf(item);
 
         final Episode next = item.nextEpisodeToSee(true);
         if (next != null) {

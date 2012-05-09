@@ -8,6 +8,7 @@ import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.SeasonListener;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.SeenEpisodesBar;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,6 +131,7 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
         final Season season = this.season(groupPosition);
 
         TextView name = (TextView) itemView.findViewById(R.id.itemName);
+        SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.seen_episodes);
         final CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
 
         if (season.number() == 0) {
@@ -137,6 +139,8 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
         } else {
             name.setText(String.format(this.context.getString(R.string.season_number_format), season.number()));
         }
+
+        seenEpisodesBar.updateWithEpisodesOf(season);
 
         isSeasonViewed.setChecked(season.wasSeen());
         isSeasonViewed.setOnClickListener(new OnClickListener() {
@@ -175,7 +179,7 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Season season) {
-        //It's not my problem
+        this.notifyDataSetChanged();
     }
 
     @Override

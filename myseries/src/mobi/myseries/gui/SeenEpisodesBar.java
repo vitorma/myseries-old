@@ -25,6 +25,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.widget.ChunkBar;
 import android.content.Context;
@@ -33,9 +34,25 @@ import android.widget.LinearLayout;
 
 public class SeenEpisodesBar extends LinearLayout {
 
-    public void setSeries(Series series) {
-        List<Episode> episodes = series.episodes();
+    public SeenEpisodesBar(Context context) {
+        this(context, null);
+    }
 
+    public SeenEpisodesBar(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        this.setOrientation(LinearLayout.HORIZONTAL);
+    }
+
+    public void updateWithEpisodesOf(Series series) {
+        this.updateWith(series.episodes());
+    }
+
+    public void updateWithEpisodesOf(Season season) {
+        this.updateWith(season.episodes());
+    }
+
+    private void updateWith(List<Episode> episodes) {
         boolean[] parts = new boolean[episodes.size()];
 
         for (int i = 0; i < episodes.size(); ++i) {
@@ -51,15 +68,5 @@ public class SeenEpisodesBar extends LinearLayout {
 
         this.removeAllViews();
         this.addView(chunkBar);
-    }
-
-    public SeenEpisodesBar(Context context) {
-        this(context, null);
-    }
-
-    public SeenEpisodesBar(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        this.setOrientation(LinearLayout.HORIZONTAL);
     }
 }
