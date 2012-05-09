@@ -4,6 +4,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.MySeriesActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -73,6 +74,8 @@ public class SeriesOverviewActivity extends SherlockFragmentActivity implements 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
+                Intent intent = new Intent(this, MySeriesActivity.class);
+                this.startActivity(intent);
                 this.finish();
                 return true;
             default:
