@@ -8,7 +8,6 @@ import mobi.myseries.gui.MySeriesActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.ArrayAdapter;
 
@@ -93,12 +92,6 @@ public class SeriesOverviewActivity extends SherlockFragmentActivity implements 
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-
-        Fragment f = this.getSupportFragmentManager().findFragmentById(R.id.overview_details);
-
-        if (f != null) {
-            ft.remove(f);
-        }
 
         switch (itemPosition) {
             case DETAILS:
