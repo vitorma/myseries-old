@@ -26,7 +26,7 @@
             android:id="@+id/itemName"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textSize="16sp"/>
 
     </LinearLayout>
 
