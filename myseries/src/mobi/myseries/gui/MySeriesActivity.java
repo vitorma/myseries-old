@@ -26,10 +26,11 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.gui.schedule.MyScheduleActivity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
+
+//import android.app.Notification;
+//import android.app.NotificationManager;
+//import android.app.PendingIntent;
+//import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -107,6 +108,17 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
         return true;
     }
+    
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if (item.getTitle().equals(UPDATE)) {
+            this.updateMenuItem = item;
+            seriesProvider.updateData();
+        }
+        
+        return super.onMenuItemSelected(featureId, item);
+    }
+    
 
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
@@ -130,26 +142,26 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     //Update------------------------------------------------------------------------------------------------------------
     
-    private UpdateNotificationLauncher updateNotificationLauncher;
+    //private UpdateNotificationLauncher updateNotificationLauncher;
     private MenuItem updateMenuItem;
     private boolean updateMenuItemStatus = true;
     
     @Override
     public void onUpdateStart() {
-        this.updateNotificationLauncher.launchUpdatingNotification();
+        //this.updateNotificationLauncher.launchUpdatingNotification();
         this.disableUpdateMenuItem();
     }
     
     @Override
     public void onUpdateFailure() {
-        this.updateNotificationLauncher.clearNotification();
-        this.updateNotificationLauncher.launchUpdatingFailureNotification();
+        //this.updateNotificationLauncher.clearNotification();
+        //this.updateNotificationLauncher.launchUpdatingFailureNotification();
         this.enableUpdateMenuItem();
     }
     
     @Override
     public void onUpdateSuccess() {
-        this.updateNotificationLauncher.clearNotification();
+        //this.updateNotificationLauncher.clearNotification();
         this.enableUpdateMenuItem();
     }
     
@@ -167,6 +179,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         this.updateMenuItemStatus = true;
     }
 
+    /*
     private class UpdateNotificationLauncher {
         private final int id = 0;
         private final int updateNotificationText = R.string.updating_series_data;
@@ -193,6 +206,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             this.nm.notify(this.id, notification);
         }
 
+        
         public void launchUpdatingNotification() {
             this.launchNotification(
                     MySeriesActivity.this.getString(this.updateNotificationTitle),
@@ -208,7 +222,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         public void clearNotification() {
             this.nm.cancelAll();
         }
-    }
+        
+    }*/
 
     //Search------------------------------------------------------------------------------------------------------------
 
