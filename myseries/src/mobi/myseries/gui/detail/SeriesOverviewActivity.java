@@ -19,8 +19,12 @@ import com.actionbarsherlock.view.MenuItem;
 public class SeriesOverviewActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final String SERIES_ID = "seriesId";
+    private static final String CURRENT_SPINNER_ITEM = "currentSpinnerItem";
+    private static final int DETAILS = 0;
+    private static final int SEASONS = 1;
 
     private int seriesId;
+    private int currentSpinnerItem;
     private Series series;
 
     public static Intent newIntent(Context context, int seriesId) {
@@ -36,8 +40,10 @@ public class SeriesOverviewActivity extends SherlockFragmentActivity implements 
 
         if (savedInstanceState == null) {
             this.seriesId = this.getIntent().getExtras().getInt(SERIES_ID);
+            this.currentSpinnerItem = SEASONS;
         } else {
             this.seriesId = savedInstanceState.getInt(SERIES_ID);
+            this.currentSpinnerItem = savedInstanceState.getInt(CURRENT_SPINNER_ITEM);
         }
 
         this.series = SERIES_PROVIDER.getSeries(this.seriesId);
@@ -55,12 +61,13 @@ public class SeriesOverviewActivity extends SherlockFragmentActivity implements 
 
         adapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
         ab.setListNavigationCallbacks(adapter, this);
-        ab.setSelectedNavigationItem(1);
+        ab.setSelectedNavigationItem(this.currentSpinnerItem);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(SERIES_ID, this.seriesId);
+        outState.putInt(CURRENT_SPINNER_ITEM, this.currentSpinnerItem);
         super.onSaveInstanceState(outState);
     }
 
@@ -94,11 +101,16 @@ public class SeriesOverviewActivity extends SherlockFragmentActivity implements 
         }
 
         switch (itemPosition) {
-            case 0:
+            case DETAILS:
+                this.currentSpinnerItem = DETAILS;
                 ft.replace(R.id.overview_container, SeriesDetailsFragment.newInstance(this.seriesId));
                 break;
-            default:
+            case SEASONS:
+                this.currentSpinnerItem = SEASONS;
                 ft.replace(R.id.overview_container, SeasonsFragment.newInstance(this.seriesId));
+                break;
+            default:
+                return false;
         }
 
         ft.commit();
