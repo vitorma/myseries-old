@@ -120,8 +120,22 @@ public class Series implements SeasonSetListener {
         return this.seasons.season(number);
     }
 
+    public Season lastSeason() {
+        int lastNumber = this.hasSpecialEpisodes() ? this.seasons.numberOfSeasons() - 1 : this.seasons.numberOfSeasons();
+        return this.season(lastNumber);
+    }
+
+    public boolean hasSpecialEpisodes() {
+        return this.seasons.hasSpecialEpisodes();
+    }
+
     public List<Episode> episodes() {
         return this.seasons.episodes();
+    }
+
+    public Episode lastEpisode() {
+        int lastNumber = this.lastSeason().numberOfEpisodes();
+        return this.lastSeason().episode(lastNumber);
     }
 
     public int numberOfEpisodes() {

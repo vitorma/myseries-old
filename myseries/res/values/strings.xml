@@ -8,6 +8,7 @@
     <string name="air_day">Air day: </string>
     <string name="app_name">My Series</string>
     <string name="back">Back</string>
+    <string name="details">Details of</string>
     <string name="directed_by">Directed by: </string>
     <string name="director">Director: </string>
     <string formatted="false" name="do_you_want_to_stop_following">"Do you want to stop following %s?"</string>
@@ -50,7 +51,7 @@
     <string formatted="false" name="season_and_episode_format_short">S%02dE%02d</string>
     <string formatted="false" name="season_number_format">Season %02d</string>
     <string formatted="false" name="season_number_format_short">S%02d</string>
-    <string formatted="false" name="seasons_of_series">%s\'s Seasons</string>
+    <string name="seasons_of_series">Seasons of</string>
     <string name="season_name">Season name</string>
     <string name="separator"> - </string>
     <string formatted="false" name="series_will_be_added">The Series %s will be added to your list soon.</string>

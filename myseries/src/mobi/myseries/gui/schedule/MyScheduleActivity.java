@@ -22,6 +22,8 @@
 package mobi.myseries.gui.schedule;
 
 import mobi.myseries.R;
+import mobi.myseries.gui.MySeriesActivity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -58,6 +60,8 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
+                Intent intent = new Intent(this, MySeriesActivity.class);
+                this.startActivity(intent);
                 this.finish();
                 return true;
             default:

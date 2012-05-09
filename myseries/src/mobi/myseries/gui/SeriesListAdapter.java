@@ -87,7 +87,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
         image.setImageBitmap(IMAGE_PROVIDER.getPosterOf(item));
         name.setText(item.name());
-        seenEpisodesBar.setSeries(item);
+        seenEpisodesBar.updateWithEpisodesOf(item);
 
         final Episode nextEpisodeToSee = item.nextEpisodeToSee(true);//TODO SharedPreference
         if (nextEpisodeToSee != null) {

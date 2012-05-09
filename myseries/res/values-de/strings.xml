@@ -8,6 +8,7 @@
     <string name="air_day">Sendungen Tag: </string>
     <string name="app_name">My Series</string>
     <string name="back">Stornieren</string>
+    <string name="details">Details der</string>
     <string name="directed_by">Regie: </string>
     <string name="director">Direktor: </string>
     <string formatted="false" name="do_you_want_to_stop_following">"Wollen Sie folgen %s stoppen?"</string>
@@ -54,7 +55,7 @@
     <string formatted="false" name="season_and_episode_format_short">S%02dE%02d</string>
     <string formatted="false" name="season_number_format">Staffel %02d</string>
     <string formatted="false" name="season_number_format_short">S%02d</string>
-    <string formatted="false" name="seasons_of_series">%s\'s Staffeln</string>
+    <string name="seasons_of_series">Staffeln der</string>
     <string name="season_name">Staffel Name</string>
     <string name="separator"> - </string>
     <string formatted="false" name="series_will_be_added">%s wird zu Ihrer Liste hinzugefügt bald.</string>

@@ -8,6 +8,7 @@
     <string name="air_day">Dia de la liberación: </string>
     <string name="app_name">My Series</string>
     <string name="back">Volver</string>
+    <string name="details">Detalles de</string>
     <string name="directed_by">Dirigida por: </string>
     <string name="director">Director: </string>
     <string formatted="false" name="do_you_want_to_stop_following">"Desea dejar de seguir %s?"</string>
@@ -52,7 +53,7 @@
     <string formatted="false" name="season_and_episode_format_short">T%02dE%02d</string>
     <string formatted="false" name="season_number_format">Temporada %02d</string>
     <string formatted="false" name="season_number_format_short">T%02d</string>
-    <string formatted="false" name="seasons_of_series">Temporadas de %s</string>
+    <string name="seasons_of_series">Temporadas de</string>
     <string name="schedule_today">Hoy</string>
     <string name="schedule_recent">Recientes</string>
     <string name="schedule_upcoming">Próximos</string>

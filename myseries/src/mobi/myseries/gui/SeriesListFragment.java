@@ -25,6 +25,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.detail.SeriesOverviewActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -73,10 +74,8 @@ public class SeriesListFragment extends SherlockListFragment {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(view.getContext(), SeriesDetailsActivity.class);
                 Series series = (Series) parent.getItemAtPosition(position);
-                intent.putExtra("series id", series.id());
-                intent.putExtra("series name", series.name());
+                Intent intent = SeriesOverviewActivity.newIntent(view.getContext(), series.id());
                 SeriesListFragment.this.startActivity(intent);
             }
         });
