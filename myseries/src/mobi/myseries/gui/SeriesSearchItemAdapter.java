@@ -1,5 +1,5 @@
 /*
- *   TextOnlyViewAdapter.java
+ *   SeriesSearchItemAdapter.java
  *
  *   Copyright 2012 MySeries Team.
  *
