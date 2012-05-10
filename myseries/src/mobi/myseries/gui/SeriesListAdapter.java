@@ -29,11 +29,15 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.FollowingSeriesListener;
 import mobi.myseries.application.ImageProvider;
+import mobi.myseries.application.PosterDownloadListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,7 +47,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, FollowingSeriesListener {
+public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, FollowingSeriesListener, PosterDownloadListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
@@ -152,5 +156,30 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         public int compare(Series seriesA, Series seriesB) {
             return seriesA.name().compareTo(seriesB.name());
         }
+    }
+
+    @Override
+    public void onDownloadPosterOf(Series series) {
+        Log.v("naofalhei", "no download");
+        this.notifyDataSetChanged();
+        
+    }
+
+    @Override
+    public void onStartDownloadingPosterOf(Series series) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onConnectionFailureWhileDownloadingPosterOf(Series series) {
+        Log.v("falhei", "no download");
+        
+    }
+
+    @Override
+    public void onFailureWhileSavingPosterOf(Series series) {
+        // TODO Auto-generated method stub
+        
     }
 }

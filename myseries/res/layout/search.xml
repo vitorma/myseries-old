@@ -27,28 +27,30 @@
             android:layout_width="52dp"
             android:layout_height="match_parent"
             android:background="@drawable/button"
-            android:src="@drawable/ic_search_api_holo_light">
-        </ImageButton>
+            android:src="@drawable/ic_search_api_holo_light"/>
 
     </LinearLayout>
-    
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        
+
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
             android:visibility="gone"/>
-        
+
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ListView>
-    
+            android:layout_height="match_parent"
+            android:listSelector="@drawable/list_selector_holo_light"
+            android:divider="@drawable/list_divider_holo_light"
+            android:scrollbarThumbVertical="@drawable/fastscroll_thumb_holo"
+            android:scrollbarTrackVertical="@drawable/fastscroll_track_holo_light"/>
+
     </FrameLayout>
 
 </LinearLayout>

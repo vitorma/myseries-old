@@ -9,10 +9,11 @@
 
     <TextView
         android:id="@+id/coverflow_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="@string/no_series_followed"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:gravity="center"/>
 
     <mobi.myseries.gui.widget.CoverFlow
         xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"

@@ -40,7 +40,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -48,23 +47,38 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 public class SeriesSearchActivity extends SherlockListActivity {
     private final SeriesProvider seriesProvider = App.environment().seriesProvider();
-
+    private List<Series> seriesFound;
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         this.setContentView(R.layout.search);
-
+        
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.search_series);
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
+        setSupportProgressBarIndeterminateVisibility(false);
 
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
         this.setupSearchFieldActionListeners();
+        final List<Series> series = (List<Series>) getLastNonConfigurationInstance();
+        if(series != null){
+            seriesFound = series;
+            setupListOnAdapter(series);
+        }
+        
+    }
+    
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+       final List<Series> series = seriesFound;
+       return series;
     }
 
     @Override
@@ -91,22 +105,18 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
     private void performSearch() {
         final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
-        final ProgressBar progressBar = (ProgressBar) SeriesSearchActivity.this.findViewById(R.id.progressBar);
         final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
-        
         SeriesSearchActivity.this.setListAdapter(null);
         
          App.searchSeries(searchField.getText().toString(), new SearchSeriesListener() {
+                   
 
                     @Override
                     public void onSucess(List<Series> series) {
-                        ArrayAdapter<Series> adapter = new TextOnlyViewAdapter(
-                                SeriesSearchActivity.this,
-                                SeriesSearchActivity.this,
-                                R.layout.text_only_list_item,
-                                series);
-                        SeriesSearchActivity.this.setListAdapter(adapter);
+                        seriesFound = series;
+                        setupListOnAdapter(series);
                     }
+                  
                     
                     @Override
                     public void onFaluire(Throwable exception) {
@@ -118,19 +128,28 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
                     @Override
                     public void onStart() {
-                       progressBar.setVisibility(View.VISIBLE);
+                       setSupportProgressBarIndeterminateVisibility(true);
                        searchField.setEnabled(false);
                        searchButton.setEnabled(false);
                     }
 
                     @Override
                     public void onFinish() {
-                        progressBar.setVisibility(View.INVISIBLE);
+                        setSupportProgressBarIndeterminateVisibility(false);
                         searchField.setEnabled(true);
                         searchButton.setEnabled(true);
                     }
                 });
         }
+    
+    private void setupListOnAdapter(List<Series> series) {
+        ArrayAdapter<Series> adapter = new TextOnlyViewAdapter(
+                SeriesSearchActivity.this,
+                SeriesSearchActivity.this,
+                R.layout.text_only_list_item,
+                series);
+        SeriesSearchActivity.this.setListAdapter(adapter);
+    }
 
     private void setupSearchFieldActionListeners() {
         final EditText searchField = (EditText) findViewById(R.id.searchField);

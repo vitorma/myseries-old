@@ -11,6 +11,10 @@
         android:id="@+id/seasons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:listSelector="@drawable/list_selector_holo_light"/>
+        android:listSelector="@drawable/list_selector_holo_light"
+        android:divider="@drawable/list_divider_holo_light"
+        android:scrollbarThumbVertical="@drawable/fastscroll_thumb_holo"
+        android:scrollbarTrackVertical="@drawable/fastscroll_track_holo_light"
+        android:drawSelectorOnTop="true"/>
 
 </LinearLayout>

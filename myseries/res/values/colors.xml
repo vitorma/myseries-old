@@ -3,6 +3,6 @@
 <resources>
 
     <color name="transparent">#00000000</color>
+    <color name="light_gray">#656565</color>
 
 </resources>
-
