@@ -62,8 +62,9 @@ public class App extends Application {
 
         return followSeriesService;
     }
-    public static void addSeriesFollowingListener(SeriesFollowingListener listener) {
-        followSeriesService().addFollowingSeriesListener(listener);
+
+    public static void registerSeriesFollowingListener(SeriesFollowingListener listener) {
+        followSeriesService().registerSeriesFollowingListener(listener);
     }
 
     public static void follow(Series series) {

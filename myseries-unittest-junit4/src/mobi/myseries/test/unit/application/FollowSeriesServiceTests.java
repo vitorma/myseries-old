@@ -85,7 +85,7 @@ public class FollowSeriesServiceTests {
                                                            this.imageProvider,
                                                            false);
 
-        this.followSeriesService.addFollowingSeriesListener(this.seriesFollowingListener);
+        this.followSeriesService.registerSeriesFollowingListener(this.seriesFollowingListener);
     }
 
     @After
@@ -284,6 +284,6 @@ public class FollowSeriesServiceTests {
 
     @Test(expected=IllegalArgumentException.class)
     public void cannotRegisterNullFollowingListeners() {
-        this.followSeriesService.addFollowingSeriesListener(null);
+        this.followSeriesService.registerSeriesFollowingListener(null);
     }
 }

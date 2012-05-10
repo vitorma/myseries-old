@@ -108,7 +108,7 @@ public class FollowSeriesService {
         this.seriesRepository.clear();
     }
 
-    public void addFollowingSeriesListener(SeriesFollowingListener listener) {
+    public void registerSeriesFollowingListener(SeriesFollowingListener listener) {
         this.seriesFollowingListeners.register(listener);
     }
 
