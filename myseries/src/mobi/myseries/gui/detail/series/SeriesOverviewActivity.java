@@ -10,22 +10,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.ArrayAdapter;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-public class SeriesOverviewActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener {
+public class SeriesOverviewActivity extends SherlockFragmentActivity {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final String SERIES_ID = "seriesId";
-    private static final String CURRENT_SPINNER_ITEM = "currentSpinnerItem";
-    private static final int DETAILS = 0;
-    private static final int SEASONS = 1;
+    private static final String CURRENT_TAB = "currentTab";
+    private static final int SEASONS = 0;
 
     private int seriesId;
-    private int currentSpinnerItem;
+    private int currentTab;
+
     private Series series;
+
+    private ActionBar.Tab seasonsTab;
+    private ActionBar.Tab detailsTab;
 
     public static Intent newIntent(Context context, int seriesId) {
         Intent intent = new Intent(context, SeriesOverviewActivity.class);
@@ -40,41 +44,37 @@ public class SeriesOverviewActivity extends SherlockFragmentActivity implements 
 
         if (savedInstanceState == null) {
             this.seriesId = this.getIntent().getExtras().getInt(SERIES_ID);
-            this.currentSpinnerItem = SEASONS;
+            this.currentTab = SEASONS;
         } else {
             this.seriesId = savedInstanceState.getInt(SERIES_ID);
-            this.currentSpinnerItem = savedInstanceState.getInt(CURRENT_SPINNER_ITEM);
+            this.currentTab = savedInstanceState.getInt(CURRENT_TAB);
         }
 
         this.series = SERIES_PROVIDER.getSeries(this.seriesId);
 
         ActionBar ab = this.getSupportActionBar();
-
-        ab.setDisplayShowTitleEnabled(false);
+        ab.setTitle(this.series.name());
+        ab.setDisplayShowTitleEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                ab.getThemedContext(),
-                R.layout.sherlock_spinner_item,
-                this.spinnerItems());
+        this.seasonsTab = ab.newTab().setText(R.string.seasons);
+        this.seasonsTab.setTabListener(new SeriesOverviewTabListener(SeasonsFragment.newInstance(this.seriesId)));
 
-        adapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-        ab.setListNavigationCallbacks(adapter, this);
-        ab.setSelectedNavigationItem(this.currentSpinnerItem);
+        this.detailsTab = ab.newTab().setText(R.string.details);
+        this.detailsTab.setTabListener(new SeriesOverviewTabListener(SeriesDetailsFragment.newInstance(this.seriesId)));
+
+        ab.addTab(this.seasonsTab, false);
+        ab.addTab(this.detailsTab, false);
+
+        ab.setSelectedNavigationItem(this.currentTab);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(SERIES_ID, this.seriesId);
-        outState.putInt(CURRENT_SPINNER_ITEM, this.currentSpinnerItem);
+        outState.putInt(CURRENT_TAB, this.currentTab);
         super.onSaveInstanceState(outState);
-    }
-
-    private String[] spinnerItems() {
-        return new String[] {
-                this.getString(R.string.details) + " " + this.series.name(),
-                this.getString(R.string.seasons_of_series) + " " + this.series.name()};
     }
 
     @Override
@@ -90,25 +90,25 @@ public class SeriesOverviewActivity extends SherlockFragmentActivity implements 
         }
     }
 
-    @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+    public class SeriesOverviewTabListener implements ActionBar.TabListener {
+        private SherlockFragment fragment;
 
-        switch (itemPosition) {
-            case DETAILS:
-                this.currentSpinnerItem = DETAILS;
-                ft.replace(R.id.overview_container, SeriesDetailsFragment.newInstance(this.seriesId));
-                break;
-            case SEASONS:
-                this.currentSpinnerItem = SEASONS;
-                ft.replace(R.id.overview_container, SeasonsFragment.newInstance(this.seriesId));
-                break;
-            default:
-                return false;
+        public SeriesOverviewTabListener(SherlockFragment fragment) {
+            this.fragment = fragment;
         }
 
-        ft.commit();
+        @Override
+        public void onTabReselected(Tab tab, FragmentTransaction ft) { }
 
-        return true;
+        @Override
+        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+            SeriesOverviewActivity.this.currentTab = tab.getPosition();
+            ft.replace(R.id.overview_container, this.fragment);
+        }
+
+        @Override
+        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+            ft.remove(this.fragment);
+        }
     }
 }

@@ -11,6 +11,7 @@
         android:id="@+id/seasons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:groupIndicator="@null"
         android:listSelector="@drawable/list_selector_holo_light"
         android:divider="@drawable/list_divider_holo_light"
         android:scrollbarThumbVertical="@drawable/fastscroll_thumb_holo"

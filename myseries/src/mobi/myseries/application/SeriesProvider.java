@@ -46,8 +46,10 @@ public class SeriesProvider {
     private final SeriesRepository seriesRepository;
 
     private final Set<UpdateListener> updateListeners;
+    private UpdateSeriesTask updateSeriesTask;
 
-    public static SeriesProvider newInstance(SeriesSource seriesSource, SeriesRepository seriesRepository) {
+    public static SeriesProvider newInstance(SeriesSource seriesSource,
+            SeriesRepository seriesRepository) {
         return new SeriesProvider(seriesSource, seriesRepository);
     }
 
@@ -64,8 +66,21 @@ public class SeriesProvider {
         return this.seriesRepository.getAll();
     }
 
-    public void updateData() {
-        new UpdateSeriesTask().execute();
+    private void killUpdateInProgress() {
+        if (this.updateSeriesTask != null && !this.updateSeriesTask.isCancelled()) {
+            this.updateSeriesTask.cancel(true);
+            
+            Log.d("SeriesProvider", "Update cancelled");
+        }
+
+        this.updateSeriesTask = null;
+    }
+
+    public synchronized void updateData() {
+        this.killUpdateInProgress();
+
+        this.updateSeriesTask = new UpdateSeriesTask();
+        this.updateSeriesTask.execute();
     }
 
     private class UpdateSeriesTask extends AsyncTask<Void, Void, Void> {
@@ -93,15 +108,19 @@ public class SeriesProvider {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                this.upToDateSeries = SeriesProvider.this.seriesSource.fetchAllSeries(
-                        this.seriesToUpdate, App.environment().localization().language());
+                this.upToDateSeries =
+                        SeriesProvider.this.seriesSource.fetchAllSeries(this.seriesToUpdate, App
+                                .environment().localization().language());
             } catch (SeriesNotFoundException e) {
+                e.printStackTrace();
                 // TODO: find a better way to tell that a problem happened when fetching the series
                 this.upToDateSeries = null;
             } catch (ConnectionFailedException e) {
+                e.printStackTrace();
                 // TODO: find a better way to tell that a problem happened when fetching the series
                 this.upToDateSeries = null;
             } catch (ParsingFailedException e) {
+                e.printStackTrace();
                 // TODO: find a better way to tell that a problem happened when fetching the series
                 this.upToDateSeries = null;
             }
@@ -122,6 +141,7 @@ public class SeriesProvider {
             for (Series theirSeries : this.upToDateSeries) {
                 Series ourSeries = SeriesProvider.this.getSeries(theirSeries.id());
                 ourSeries.mergeWith(theirSeries);
+                App.environment().imageProvider().downloadPosterOf(ourSeries);
                 allOurSeries.add(ourSeries);
             }
 
@@ -129,7 +149,7 @@ public class SeriesProvider {
 
             SeriesProvider.this.notifyListenersOfUpdateSuccess();
             Log.d("Update", "Update successful.");
-
+            SeriesProvider.this.updateSeriesTask = null;
         }
     }
 
@@ -137,7 +157,7 @@ public class SeriesProvider {
         return this.seriesRepository.get(seriesId);
     }
 
-    //Schedule----------------------------------------------------------------------------------------------------------
+    // Schedule----------------------------------------------------------------------------------------------------------
 
     private Specification<Episode> recentEpisodesSpecification() {
         return AirdateSpecification.before(Dates.today()).and(SeenMarkSpecification.asNotSeen());
@@ -181,7 +201,7 @@ public class SeriesProvider {
         return upcomingEpisodes;
     }
 
-    //SeenMark----------------------------------------------------------------------------------------------------------
+    // SeenMark----------------------------------------------------------------------------------------------------------
 
     public void markSeasonAsSeen(Season season) {
         season.markAsSeen();

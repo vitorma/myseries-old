@@ -8,7 +8,7 @@
     <string name="air_day">Sendungen Tag: </string>
     <string name="app_name">My Series</string>
     <string name="back">Stornieren</string>
-    <string name="details">Details der</string>
+    <string name="details">Details</string>
     <string name="directed_by">Regie: </string>
     <string name="director">Direktor: </string>
     <string formatted="false" name="do_you_want_to_stop_following">"Wollen Sie folgen %s stoppen?"</string>

@@ -30,6 +30,7 @@ import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.shared.AsyncTaskResult;
+import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
 import android.os.AsyncTask;
 
@@ -41,23 +42,25 @@ public class SearchSeriesService {
         this.seriesSource = seriesSource;
     }
 
-    public void search(String seriesName, String language, SearchSeriesListener listener) {
+    public void search(String seriesName, String language, ListenerSet<SearchSeriesListener> listener) {
 
         new SearchSeriesTask(this.seriesSource, listener).execute(seriesName, language);
 }
 
     private static class SearchSeriesTask extends AsyncTask<String, Void, AsyncTaskResult<List<Series>>> {
         private SeriesSource seriesSource;
-        private SearchSeriesListener listener;
+        private ListenerSet<SearchSeriesListener> listener;
 
-        private SearchSeriesTask(SeriesSource seriesSource, SearchSeriesListener listener) {
+        private SearchSeriesTask(SeriesSource seriesSource, ListenerSet<SearchSeriesListener> listener) {
             this.seriesSource = seriesSource;
             this.listener = listener;
         }
         
         @Override
         protected void onPreExecute() {
-            listener.onStart();
+            for (SearchSeriesListener l : listener) {
+                l.onStart();
+            }
         }
 
         @Override
@@ -81,18 +84,15 @@ public class SearchSeriesService {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
-            listener.onStart();
-        }
-
-        @Override
         protected void onPostExecute(AsyncTaskResult<List<Series>> taskResult) {
-            if (taskResult.error() == null){
-                listener.onSucess(Collections.unmodifiableList(taskResult.result()));
-            }else{
-                listener.onFaluire(taskResult.error());
+            for (SearchSeriesListener l : listener) {
+                if (taskResult.error() == null){
+                    l.onSucess(Collections.unmodifiableList(taskResult.result()));
+                }else{
+                    l.onFaluire(taskResult.error());
+                }
+                l.onFinish();
             }
-            listener.onFinish();
         }
     }
 }
