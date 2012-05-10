@@ -1,10 +1,11 @@
-package mobi.myseries.gui.detail;
+package mobi.myseries.gui.detail.series;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.MySeriesActivity;
+import mobi.myseries.gui.detail.season.SeasonsFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;

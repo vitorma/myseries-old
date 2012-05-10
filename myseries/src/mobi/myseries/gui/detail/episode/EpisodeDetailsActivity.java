@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.detail;
+package mobi.myseries.gui.detail.episode;
 
 import java.util.List;
 
@@ -28,6 +28,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.detail.series.SeriesOverviewActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;

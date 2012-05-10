@@ -29,7 +29,7 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
-import mobi.myseries.gui.detail.SeriesOverviewActivity;
+import mobi.myseries.gui.detail.series.SeriesOverviewActivity;
 import mobi.myseries.gui.widget.CoverFlow;
 import mobi.myseries.gui.widget.ReflectingImageAdapter;
 import android.content.Intent;
