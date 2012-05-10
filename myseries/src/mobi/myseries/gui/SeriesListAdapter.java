@@ -34,9 +34,11 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
+import mobi.myseries.gui.detail.series.SeriesOverviewActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +73,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
             this.setNameTo(item.name(), itemView);
             this.setSeenEpisodesBarFor(item, itemView);
             this.setNextEpisodeToSeeTo(item.nextEpisodeToSee(true), itemView); //TODO SharedPreference
+            this.setUpShowingSeriesDetailsViewOnClickFor(item, itemView);
             this.setUpStopFollowingOnLongClickFor(item, itemView);
 
             return itemView;
@@ -122,6 +125,17 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
                 seenMark.setChecked(false);
                 seenMark.setVisibility(View.INVISIBLE);
             }
+        }
+
+        private void setUpShowingSeriesDetailsViewOnClickFor(final Series series, View itemView) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = SeriesOverviewActivity.newIntent(context, series.id());
+                    context.startActivity(intent);
+                }
+            });
         }
 
         private void setUpStopFollowingOnLongClickFor(final Series series, View itemView) {
