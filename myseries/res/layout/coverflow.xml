@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp">
+    android:paddingTop="15dp">
 
     <TextView
         android:id="@+id/coverflow_empty"
@@ -15,71 +14,79 @@
             android:visibility="invisible"
             android:gravity="center"/>
 
-    <mobi.myseries.gui.widget.CoverFlow
-        xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
-        android:id="@+id/coverflow"
-        coverflow:imageWidth="82dp"
-        coverflow:imageHeight="120dp"
-        coverflow:withReflection="true"
-        coverflow:imageReflectionRatio="0.2"
-        coverflow:reflectionGap="0dp"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:padding="5dp">
 
-    <RelativeLayout
-        android:id="@+id/coverflow_data_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <mobi.myseries.gui.widget.CoverFlow
+            xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
+            android:id="@+id/coverflow"
+            coverflow:imageWidth="82dp"
+            coverflow:imageHeight="120dp"
+            coverflow:withReflection="true"
+            coverflow:imageReflectionRatio="0.2"
+            coverflow:reflectionGap="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/coverflow_item_next_to_see"
-            style="@style/myseries_style.15sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:text="@string/loading"/>
+        <RelativeLayout
+            android:id="@+id/coverflow_data_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-         <CheckBox
-            android:id="@+id/coverflow_item_seen_mark"
-            android:button="@drawable/checkbox_nexttosee"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_toLeftOf="@id/coverflow_item_next_to_see"
-            android:layout_alignBaseline="@id/coverflow_item_next_to_see"
-            android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            <TextView
+                android:id="@+id/coverflow_item_next_to_see"
+                style="@style/myseries_style.15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:text="@string/loading"/>
 
-        <TextView
-            android:id="@+id/coverflow_item_next_to_see_label"
-            style="@style/myseries_style.10sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:layout_alignParentRight="true"
-            android:layout_above="@id/coverflow_item_next_to_see"
-            android:text="@string/next_episode_to_see"/>
+             <CheckBox
+                android:id="@+id/coverflow_item_seen_mark"
+                android:button="@drawable/checkbox_nexttosee"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_toLeftOf="@id/coverflow_item_next_to_see"
+                android:layout_alignBaseline="@id/coverflow_item_next_to_see"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
 
-        <mobi.myseries.gui.SeenEpisodesBar
-            android:id="@+id/coverflow_item_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="9dp"
-            android:layout_above="@id/coverflow_item_next_to_see_label"/>
+            <TextView
+                android:id="@+id/coverflow_item_next_to_see_label"
+                style="@style/myseries_style.10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_above="@id/coverflow_item_next_to_see"
+                android:text="@string/next_episode_to_see"/>
 
-        <TextView
-            android:id="@+id/coverflow_item_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/coverflow_item_bar"
-            android:paddingBottom="5dp"
-            android:layout_centerHorizontal="true"
-            android:ellipsize="marquee"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <mobi.myseries.gui.SeenEpisodesBar
+                android:id="@+id/coverflow_item_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="9dp"
+                android:layout_above="@id/coverflow_item_next_to_see_label"/>
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/coverflow_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/coverflow_item_bar"
+                android:paddingBottom="5dp"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="marquee"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:text="@string/loading"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-</LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
