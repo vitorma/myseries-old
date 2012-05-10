@@ -21,6 +21,7 @@
 
 package mobi.myseries.application;
 
+import mobi.myseries.shared.ListenerSet;
 import android.app.Application;
 
 public class App extends Application {
@@ -36,7 +37,7 @@ public class App extends Application {
         return environment;
     }
 
-    public static void searchSeries(String seriesName, SearchSeriesListener listener) {
+    public static void searchSeries(String seriesName, ListenerSet<SearchSeriesListener> listener) {
         new SearchSeriesService(environment.theTVDB()).search(seriesName, localLanguage(), listener);
     }
 
