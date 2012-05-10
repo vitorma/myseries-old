@@ -27,12 +27,12 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.gui.schedule.MyScheduleActivity;
 
-//import android.app.Notification;
-//import android.app.NotificationManager;
-//import android.app.PendingIntent;
-//import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -91,11 +91,10 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             .setIntent(new Intent(this, SeriesSearchActivity.class))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        //TODO implement the actions
         menu.add(UPDATE)
             .setIcon(R.drawable.actionbar_update)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
+        
         //TODO add intent
         menu.add(SETTINGS)
             .setIcon(R.drawable.actionbar_settings)
@@ -144,87 +143,30 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     
     //private UpdateNotificationLauncher updateNotificationLauncher;
     private MenuItem updateMenuItem;
-    private boolean updateMenuItemStatus = true;
     
     @Override
-    public void onUpdateStart() {
-        //this.updateNotificationLauncher.launchUpdatingNotification();
-        this.disableUpdateMenuItem();
+    public void onUpdateStart() {        
+        ImageView spinner = new ImageView(this);
+        spinner.setImageResource(R.drawable.actionbar_spinner);
+        Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotate);
+        rotation.setRepeatCount(Animation.INFINITE);
+        this.updateMenuItem.setActionView(spinner);
+        spinner.startAnimation(rotation);
     }
     
     @Override
     public void onUpdateFailure() {
-        //this.updateNotificationLauncher.clearNotification();
-        //this.updateNotificationLauncher.launchUpdatingFailureNotification();
-        this.enableUpdateMenuItem();
+        Toast.makeText(this, R.string.update_failure_notification_message, 5).show();
+        this.updateMenuItem.getActionView().setAnimation(null);
+        this.updateMenuItem.setActionView(null);
     }
     
     @Override
     public void onUpdateSuccess() {
-        //this.updateNotificationLauncher.clearNotification();
-        this.enableUpdateMenuItem();
+        this.updateMenuItem.getActionView().setAnimation(null);
+        this.updateMenuItem.setActionView(null);
     }
     
-    private void disableUpdateMenuItem() {
-        if (this.updateMenuItem != null) {
-            this.updateMenuItem.setEnabled(false);
-        }
-        this.updateMenuItemStatus = false;
-    }
-    
-    private void enableUpdateMenuItem() {
-        if (this.updateMenuItem != null) {
-            this.updateMenuItem.setEnabled(true);
-        }
-        this.updateMenuItemStatus = true;
-    }
-
-    /*
-    private class UpdateNotificationLauncher {
-        private final int id = 0;
-        private final int updateNotificationText = R.string.updating_series_data;
-        private final int updateNotificationTitle = R.string.updating_series_notification_title;
-        private final int updateFailureText = R.string.update_failure_notification_message;
-        private final int updateFailureTitle = R.string.updating_series_failure_notification_title;
-        private final int icon = R.drawable.stat_sys_download;
-        private final NotificationManager nm = (NotificationManager) MySeriesActivity.this
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        private void launchNotification(String title, String text) {
-            final long when = System.currentTimeMillis();
-
-            final Notification notification = new Notification(this.icon,
-                    MySeriesActivity.this.getString(this.updateNotificationText), when);
-            final Context context = MySeriesActivity.this.getApplicationContext();
-
-            final Intent notificationIntent = new Intent(MySeriesActivity.this, MySeriesActivity.class);
-            final PendingIntent contentIntent = PendingIntent.getActivity(MySeriesActivity.this,
-                    0, notificationIntent, 0);
-
-            notification.setLatestEventInfo(context, title, text, contentIntent);
-
-            this.nm.notify(this.id, notification);
-        }
-
-        
-        public void launchUpdatingNotification() {
-            this.launchNotification(
-                    MySeriesActivity.this.getString(this.updateNotificationTitle),
-                    MySeriesActivity.this.getString(this.updateNotificationText));
-        }
-
-        public void launchUpdatingFailureNotification() {
-            this.launchNotification(
-                    MySeriesActivity.this.getString(this.updateFailureTitle),
-                    MySeriesActivity.this.getString(this.updateFailureText));
-        }
-
-        public void clearNotification() {
-            this.nm.cancelAll();
-        }
-        
-    }*/
-
     //Search------------------------------------------------------------------------------------------------------------
 
     private void showSearchActivity() {
