@@ -45,7 +45,6 @@ public class SeriesProvider {
     private final SeriesSource seriesSource;
     private final SeriesRepository seriesRepository;
 
-    private final Set<FollowingSeriesListener> followingSeriesListeners;
     private final Set<UpdateListener> updateListeners;
 
     public static SeriesProvider newInstance(SeriesSource seriesSource, SeriesRepository seriesRepository) {
@@ -58,7 +57,6 @@ public class SeriesProvider {
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
-        this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
         this.updateListeners = new HashSet<UpdateListener>();
     }
 
@@ -133,83 +131,6 @@ public class SeriesProvider {
             Log.d("Update", "Update successful.");
 
         }
-    }
-
-    public void follow(Series series) {
-        new FollowSeriesTask().execute(series);
-    }
-
-    private class FollowSeriesTask extends AsyncTask<Series, Void, Void> {
-        private Series followedSeries;
-
-        @Override
-        protected Void doInBackground(Series... params) {
-            final Series seriesToFollow = params[0];
-
-            // TODO is there anything to do about any SeriesNotFoundException that may be thrown
-            // here?
-            try {
-
-                this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(
-                        seriesToFollow.id(), App.environment().localization().language());
-
-            } catch (SeriesNotFoundException e) {
-                //TODO: notify someone?
-
-                return null;
-            } catch (ConnectionFailedException e) {
-                //TODO: notify someone?
-
-                return null;
-            } catch (ParsingFailedException e) {
-                //TODO: notify someone?
-
-                return null;
-            }
-
-            SeriesProvider.this.seriesRepository.insert(this.followedSeries);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            SeriesProvider.this.notifyListenersOfFollowedSeries(this.followedSeries);
-            App.environment().imageProvider().downloadPosterOf(this.followedSeries); //TODO: move me elsewhere
-        }
-    };
-
-    public void unfollow(Series series) {
-        this.seriesRepository.delete(series);
-        this.notifyListenersOfUnfollowedSeries(series);
-    }
-
-    public boolean follows(Series series) {
-        return this.seriesRepository.contains(series);
-    }
-
-    public void wipeFollowedSeries() {
-        for (final Series s : this.followedSeries()) {
-            this.notifyListenersOfUnfollowedSeries(s);
-        }
-
-        this.seriesRepository.clear();
-    }
-
-    private void notifyListenersOfFollowedSeries(Series followedSeries) {
-        for (final FollowingSeriesListener listener : this.followingSeriesListeners) {
-            listener.onFollowing(followedSeries);
-        }
-    }
-
-    private void notifyListenersOfUnfollowedSeries(Series unfollowedSeries) {
-        for (final FollowingSeriesListener listener : this.followingSeriesListeners) {
-            listener.onUnfollowing(unfollowedSeries);
-        }
-    }
-
-    public void addFollowingSeriesListener(FollowingSeriesListener listener) {
-        this.followingSeriesListeners.add(listener);
     }
 
     public Series getSeries(int seriesId) {

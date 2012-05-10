@@ -21,10 +21,12 @@
 
 package mobi.myseries.application;
 
+import mobi.myseries.domain.model.Series;
 import android.app.Application;
 
 public class App extends Application {
     private static Environment environment;
+    private static FollowSeriesService followSeriesService;
 
     @Override
     public void onCreate() {
@@ -36,11 +38,41 @@ public class App extends Application {
         return environment;
     }
 
+    // Search Series
+
     public static void searchSeries(String seriesName, SearchSeriesListener listener) {
         new SearchSeriesService(environment.theTVDB()).search(seriesName, localLanguage(), listener);
     }
 
     private static String localLanguage() {
         return environment.localization().language();
+    }
+
+    // Follow Series
+
+    private static FollowSeriesService followSeriesService() {
+        if (followSeriesService == null) {
+            followSeriesService = new FollowSeriesService(environment.theTVDB(),
+                                                          environment.repository(),
+                                                          environment.localization(),
+                                                          environment.imageProvider());
+        }
+
+        return followSeriesService;
+    }
+    public static void addSeriesFollowingListener(SeriesFollowingListener listener) {
+        followSeriesService().addFollowingSeriesListener(listener);
+    }
+
+    public static void follow(Series series) {
+        followSeriesService().follow(series);
+    }
+
+    public static void unfollow(Series series) {
+        followSeriesService().unfollow(series);
+    }
+
+    public static boolean follows(Series series) {
+        return followSeriesService().follows(series);
     }
 }

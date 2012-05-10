@@ -27,7 +27,7 @@ import java.util.Comparator;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.FollowingSeriesListener;
+import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.PosterDownloadListener;
 import mobi.myseries.application.SeriesProvider;
@@ -47,7 +47,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, FollowingSeriesListener, PosterDownloadListener {
+public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, SeriesFollowingListener, PosterDownloadListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
@@ -60,7 +60,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
        this.layoutInflater = LayoutInflater.from(context);
 
-       SERIES_PROVIDER.addFollowingSeriesListener(this);
+       App.addSeriesFollowingListener(this);
 
        for (Series series : objects) {
            series.register(this);

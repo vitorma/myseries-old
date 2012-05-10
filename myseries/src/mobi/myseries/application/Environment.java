@@ -24,6 +24,7 @@ package mobi.myseries.application;
 import mobi.myseries.domain.repository.ImageDirectory;
 import mobi.myseries.domain.repository.SeriesCache;
 import mobi.myseries.domain.repository.SeriesDatabase;
+import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.TheTVDB;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
@@ -34,6 +35,7 @@ public class Environment {
     private SeriesProvider seriesProvider;
     private LocalizationProvider localization;
     private ImageProvider imageProvider;
+    private SeriesRepository seriesRepository;
 
     private static final String apiKey = "6F2B5A871C96FB05";
 
@@ -60,7 +62,7 @@ public class Environment {
     }
 
     private SeriesProvider defaultSeriesProvider() {
-        return SeriesProvider.newInstance(this.theTVDB(), new SeriesCache(new SeriesDatabase(this.context())));
+        return SeriesProvider.newInstance(this.theTVDB(), this.repository());
     }
 
     public void setSeriesProvider(SeriesProvider newSeriesProvider) {
@@ -107,4 +109,11 @@ public class Environment {
         return this.imageProvider;
     }
 
+    public SeriesRepository repository() {
+        if (this.seriesRepository == null) {
+            this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context()));
+        }
+
+        return this.seriesRepository;
+    }
 }

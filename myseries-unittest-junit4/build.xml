@@ -17,6 +17,7 @@
         <!-- test tools -->
         <fileset dir="${lib.dir}" includes="junit4.jar"/>
         <fileset dir="${lib.dir}" includes="mockito*.jar"/>
+        <fileset dir="${lib.dir}" includes="powermock*/*.jar"/>
 
         <!-- coverage tool -->
         <fileset dir="${lib.dir}" includes="emma*.jar"/>
