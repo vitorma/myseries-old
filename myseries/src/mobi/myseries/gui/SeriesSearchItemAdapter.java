@@ -33,10 +33,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public final class TextOnlyViewAdapter extends ArrayAdapter<Series> {
+public final class SeriesSearchItemAdapter extends ArrayAdapter<Series> {
     private final SeriesSearchActivity seriesSearchView;
 
-    public TextOnlyViewAdapter(SeriesSearchActivity seriesSearchView, Context context,
+    public SeriesSearchItemAdapter(SeriesSearchActivity seriesSearchView, Context context,
             int seriesItemResourceId, List<Series> objects) {
         super(context, seriesItemResourceId, objects);
         this.seriesSearchView = seriesSearchView;

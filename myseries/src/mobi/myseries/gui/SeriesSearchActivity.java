@@ -102,7 +102,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
                     @Override
                     public void onSucess(List<Series> series) {
-                        ArrayAdapter<Series> adapter = new TextOnlyViewAdapter(
+                        ArrayAdapter<Series> adapter = new SeriesSearchItemAdapter(
                                 SeriesSearchActivity.this,
                                 SeriesSearchActivity.this,
                                 R.layout.text_only_list_item,

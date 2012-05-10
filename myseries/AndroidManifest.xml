@@ -34,10 +34,10 @@
             android:name=".gui.SeriesSearchActivity">
         </activity>
         <activity
-            android:name=".gui.detail.SeriesOverviewActivity">
+            android:name=".gui.detail.series.SeriesOverviewActivity">
         </activity>
         <activity
-            android:name=".gui.detail.EpisodeDetailsActivity">
+            android:name=".gui.detail.episode.EpisodeDetailsActivity">
         </activity>
 
         <receiver
