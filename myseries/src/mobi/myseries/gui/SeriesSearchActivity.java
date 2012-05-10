@@ -264,7 +264,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
                     @Override
                     public void onClick(final View v) {
                         if (userFollowsSeries) {
-                            App.unfollow(selectedItem);
+                            App.stopFollowing(selectedItem);
                         } else {
                             App.follow(selectedItem);
 

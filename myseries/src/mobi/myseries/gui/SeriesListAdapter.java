@@ -60,7 +60,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
        this.layoutInflater = LayoutInflater.from(context);
 
-       App.addSeriesFollowingListener(this);
+       App.registerSeriesFollowingListener(this);
 
        for (Series series : objects) {
            series.register(this);

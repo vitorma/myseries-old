@@ -87,7 +87,7 @@ public class FollowSeriesService {
     }
 
 
-    public void unfollow(Series series) {
+    public void stopFollowing(Series series) {
         Validate.isNonNull(series, "series");
 
         this.seriesRepository.delete(series);
@@ -108,7 +108,7 @@ public class FollowSeriesService {
         this.seriesRepository.clear();
     }
 
-    public void addFollowingSeriesListener(SeriesFollowingListener listener) {
+    public void registerSeriesFollowingListener(SeriesFollowingListener listener) {
         this.seriesFollowingListeners.register(listener);
     }
 
@@ -129,10 +129,12 @@ public class FollowSeriesService {
 
         private Series followedSeries;
 
-        private boolean failed = true; // it will only be considered successful
-                                       // after actually being successful
+        private boolean failed;
 
         protected void followSeries(Series seriesToFollow) {
+            this.failed = true; // it will only be considered successful
+                                // after actually being successful
+
             // TODO is there anything to do about any SeriesNotFoundException that may be thrown
             // here?
             try {
