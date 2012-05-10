@@ -28,6 +28,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SearchSeriesListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.ListenerSet;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -51,7 +52,7 @@ import com.actionbarsherlock.view.Window;
 
 public class SeriesSearchActivity extends SherlockListActivity {
     private final SeriesProvider seriesProvider = App.environment().seriesProvider();
-    private List<Series> seriesFound;
+    private StateHolder state;
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,18 +68,36 @@ public class SeriesSearchActivity extends SherlockListActivity {
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
         this.setupSearchFieldActionListeners();
-        final List<Series> series = (List<Series>) getLastNonConfigurationInstance();
-        if(series != null){
-            seriesFound = series;
-            setupListOnAdapter(series);
+
+        Object retained = getLastNonConfigurationInstance();
+        if (retained != null && retained instanceof StateHolder) {
+          state = (StateHolder) retained;
+          
+          if(state.seriesFound != null)
+          setupListOnAdapter(state.seriesFound);
+          
+          if(state.isShowingDialog)
+              state.dialog.show();
+        } else {
+          state = new StateHolder();
         }
-        
     }
     
     @Override
     public Object onRetainNonConfigurationInstance() {
-       final List<Series> series = seriesFound;
-       return series;
+       return state;
+    }
+    
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(state.dialog != null && state.dialog.isShowing()) {
+            state.dialog.dismiss();
+            state.isShowingDialog = true;
+          }else{
+              state.isShowingDialog = false;
+          }
+
     }
 
     @Override
@@ -107,23 +126,24 @@ public class SeriesSearchActivity extends SherlockListActivity {
         final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
         final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
         SeriesSearchActivity.this.setListAdapter(null);
-        
-         App.searchSeries(searchField.getText().toString(), new SearchSeriesListener() {
-                   
+        state.seriesFound = null;
+
+        SearchSeriesListener listener =  new SearchSeriesListener() {
 
                     @Override
                     public void onSucess(List<Series> series) {
-                        seriesFound = series;
+                        state.seriesFound = series;
                         setupListOnAdapter(series);
                     }
                   
                     
                     @Override
                     public void onFaluire(Throwable exception) {
-                        new AlertDialog.Builder(SeriesSearchActivity.this)
+                        Dialog dialog = new AlertDialog.Builder(SeriesSearchActivity.this)
                         .setMessage(exception.getMessage())
-                        .create()
-                        .show();
+                        .create();
+                        dialog.show();
+                        state.dialog = dialog;
                     }
 
                     @Override
@@ -139,8 +159,13 @@ public class SeriesSearchActivity extends SherlockListActivity {
                         searchField.setEnabled(true);
                         searchButton.setEnabled(true);
                     }
-                });
-        }
+                };
+
+                ListenerSet<SearchSeriesListener> listeners = new ListenerSet<SearchSeriesListener>();
+                listeners.register(listener);
+
+                App.searchSeries(searchField.getText().toString(), listeners);
+    }
     
     private void setupListOnAdapter(List<Series> series) {
         ArrayAdapter<Series> adapter = new TextOnlyViewAdapter(
@@ -203,7 +228,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
                 this.setFollowButtonClickListener();
 
                 this.dialog.show();
-
+                state.dialog = this.dialog;
             }
 
             /**
@@ -286,4 +311,11 @@ public class SeriesSearchActivity extends SherlockListActivity {
         super.onWindowFocusChanged(hasFocus);
         this.onSearchRequested();
     }
+
+    private static class StateHolder {
+        Dialog dialog;
+        boolean isShowingDialog;
+        List<Series> seriesFound;
+        public StateHolder() {}
+      }
 }
