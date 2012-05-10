@@ -21,15 +21,18 @@
 
 package mobi.myseries.test.unit.application;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
-import android.graphics.Bitmap;
+import java.util.Arrays;
 
 import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.ImageProvider;
@@ -42,9 +45,15 @@ import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
 
-import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import android.graphics.Bitmap;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Bitmap.class, ImageProvider.class})
@@ -144,21 +153,132 @@ public class FollowSeriesServiceTests {
         verifyZeroInteractions(this.seriesFollowingListener);
     }
 
-    // Unfollow
+    @Test
+    public void errorsMustBeDetectedAfterSuccessfulFollowing() throws ParsingFailedException,
+                                                                      ConnectionFailedException,
+                                                                      SeriesNotFoundException {
+        Series seriesToBeFollowed = mock(Series.class);
+
+        when(this.seriesSource.fetchSeries(anyInt(), anyString()))
+            .thenReturn(seriesToBeFollowed)
+            .thenThrow(new SeriesNotFoundException());
+
+        Series seriesToBeFollowed2 = mock(Series.class);
+
+        this.followSeriesService.follow(seriesToBeFollowed);
+        this.followSeriesService.follow(seriesToBeFollowed2);
+
+        assertThat(this.followSeriesService.follows(seriesToBeFollowed2), is(false));
+
+        verify(this.seriesFollowingListener, only()).onFollowing(seriesToBeFollowed);
+    }
+
+    @Test
+    public void followedSeriesMustBeSaved() throws ParsingFailedException,
+                                                   ConnectionFailedException,
+                                                   SeriesNotFoundException {
+        Series seriesToBeFollowed = mock(Series.class);
+
+        doReturn(seriesToBeFollowed).when(this.seriesSource).fetchSeries(anyInt(), anyString());
+
+        this.followSeriesService.follow(seriesToBeFollowed);
+
+        verify(this.seriesRepository).insert(seriesToBeFollowed);
+    }
+
+    @Test
+    public void seriesFollowingListenersMustBeNotifiedOfFollow() throws ParsingFailedException,
+                                                                        ConnectionFailedException,
+                                                                        SeriesNotFoundException {
+        Series seriesToBeFollowed = mock(Series.class);
+
+        doReturn(seriesToBeFollowed).when(this.seriesSource).fetchSeries(anyInt(), anyString());
+
+        this.followSeriesService.follow(seriesToBeFollowed);
+
+        verify(this.seriesFollowingListener).onFollowing(seriesToBeFollowed);
+    }
+
+    @Test
+    public void whenASeriesIsFollowedTwiceItMustBeNotifiedEachTime() throws ParsingFailedException,
+                                                                            ConnectionFailedException,
+                                                                            SeriesNotFoundException {
+        Series searchResultSeries = mock(Series.class);
+        Series seriesToBeFollowed1 = mock(Series.class);
+        Series seriesToBeFollowed2 = mock(Series.class);
+
+        when(this.seriesSource.fetchSeries(anyInt(), anyString()))
+            .thenReturn(seriesToBeFollowed1,
+                        seriesToBeFollowed2);
+
+        this.followSeriesService.follow(searchResultSeries);
+        this.followSeriesService.follow(searchResultSeries);
+
+        verify(this.seriesFollowingListener).onFollowing(seriesToBeFollowed1);
+        verify(this.seriesFollowingListener).onFollowing(seriesToBeFollowed2);
+    }
+
+    // Stop Following
 
     @Test(expected=IllegalArgumentException.class)
-    public void cannotUnfollowNullSeries() {
-        this.followSeriesService.unfollow(null);
+    public void cannotStopFollowingNullSeries() {
+        this.followSeriesService.stopFollowing(null);
+    }
+
+    @Test
+    public void whenStopFollowingTheSeriesShouldBeRemovedFromTheRepository() {
+        Series followedSeries = mock(Series.class);
+
+        this.followSeriesService.stopFollowing(followedSeries);
+
+        verify(this.seriesRepository).delete(followedSeries);
+    }
+
+    @Test
+    public void whenStopFollowingListenersMustBeNotified() {
+        Series followedSeries = mock(Series.class);
+
+        this.followSeriesService.stopFollowing(followedSeries);
+
+        verify(this.seriesFollowingListener).onUnfollowing(followedSeries);
     }
 
     // Follows
 
-    @Test(expected=IllegalArgumentException.class)
-    public void cannotCheckIfNullSeriesIsFollowed() {
-        this.followSeriesService.follows(null);
+    @Test
+    public void followsShouldReturnWhetherASeriesIsInRepositoryOrNot() {
+        Series followedSeries = mock(Series.class);
+        Series notFollowedSeries = mock(Series.class);
+
+        doReturn(true).when(this.seriesRepository).contains(followedSeries);
+        doReturn(false).when(this.seriesRepository).contains(notFollowedSeries);
+
+        assertThat(this.followSeriesService.follows(followedSeries), is(true));
+        assertThat(this.followSeriesService.follows(notFollowedSeries), is(false));
     }
 
     // WipeFollowedSeries
+
+    @Test
+    public void seriesRepositoryShouldBeClearedAfterAWipe() {
+        this.followSeriesService.wipeFollowedSeries();
+        verify(this.seriesRepository).clear();
+    }
+
+    @Test
+    public void seriesFollowingListenersMustBeNotifiedAfterAWipe() throws ParsingFailedException,
+                                                                          ConnectionFailedException,
+                                                                          SeriesNotFoundException {
+        Series series1 = mock(Series.class);
+        Series series2 = mock(Series.class);
+
+        doReturn(Arrays.asList(series1, series2)).when(this.seriesRepository).getAll();
+
+        this.followSeriesService.wipeFollowedSeries();
+
+        verify(this.seriesFollowingListener).onUnfollowing(series1);
+        verify(this.seriesFollowingListener).onUnfollowing(series2);
+    }
 
     // Observer
 
@@ -166,5 +286,4 @@ public class FollowSeriesServiceTests {
     public void cannotRegisterNullFollowingListeners() {
         this.followSeriesService.addFollowingSeriesListener(null);
     }
-
 }

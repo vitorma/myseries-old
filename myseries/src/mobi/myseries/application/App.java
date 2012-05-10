@@ -70,8 +70,8 @@ public class App extends Application {
         followSeriesService().follow(series);
     }
 
-    public static void unfollow(Series series) {
-        followSeriesService().unfollow(series);
+    public static void stopFollowing(Series series) {
+        followSeriesService().stopFollowing(series);
     }
 
     public static boolean follows(Series series) {
