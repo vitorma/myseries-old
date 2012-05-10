@@ -8,7 +8,7 @@
     <string name="air_day">Dia de la liberación: </string>
     <string name="app_name">My Series</string>
     <string name="back">Volver</string>
-    <string name="details">Detalles de</string>
+    <string name="details">Detalles</string>
     <string name="directed_by">Dirigida por: </string>
     <string name="director">Director: </string>
     <string formatted="false" name="do_you_want_to_stop_following">"Desea dejar de seguir %s?"</string>

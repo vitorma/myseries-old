@@ -5,12 +5,12 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeriesOverviewTabListener implements ActionBar.TabListener {
-    private SherlockListFragment fragment;
+    private SherlockFragment fragment;
 
-    public SeriesOverviewTabListener(SherlockListFragment fragment) {
+    public SeriesOverviewTabListener(SherlockFragment fragment) {
         this.fragment = fragment;
     }
 
@@ -19,7 +19,7 @@ public class SeriesOverviewTabListener implements ActionBar.TabListener {
 
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        ft.replace(R.id.container, this.fragment);
+        ft.replace(R.id.overview_container, this.fragment);
     }
 
     @Override

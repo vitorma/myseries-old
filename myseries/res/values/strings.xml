@@ -8,7 +8,7 @@
     <string name="air_day">Air day: </string>
     <string name="app_name">My Series</string>
     <string name="back">Back</string>
-    <string name="details">Details of</string>
+    <string name="details">Details</string>
     <string name="directed_by">Directed by: </string>
     <string name="director">Director: </string>
     <string formatted="false" name="do_you_want_to_stop_following">"Do you want to stop following %s?"</string>
