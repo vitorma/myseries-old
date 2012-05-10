@@ -10,7 +10,6 @@ import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Dates;
-import mobi.myseries.shared.Objects;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,18 +60,14 @@ public class EpisodeListAdapter extends ArrayAdapter<Episode> implements Episode
     }
 
     private void showData(Episode episode, Season season, Series series, View itemView) {
-        TextView nameTextView = (TextView) itemView.findViewById(R.id.episodeNameTextView);
         TextView seriesTextView = (TextView) itemView.findViewById(R.id.episodeSeriesTextView);
         TextView seasonTextView = (TextView) itemView.findViewById(R.id.episodeSeasonEpisodeTextView);
         TextView dateTextView = (TextView) itemView.findViewById(R.id.episodeDateTextView);
         CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
 
-        String safe_name = this.getContext().getString(R.string.unnamed_episode);
-        nameTextView.setText(Objects.nullSafe(episode.name(), safe_name));
-
         seriesTextView.setText(series.name());
 
-        String format = this.getContext().getString(R.string.season_and_episode_format);
+        String format = this.getContext().getString(R.string.season_and_episode_format_short);
         seasonTextView.setText(String.format(format, season.number(), episode.number()));
 
         java.text.DateFormat dateFormat = App.environment().localization().dateFormat();
