@@ -31,8 +31,17 @@ import mobi.myseries.gui.schedule.MyScheduleActivity;
 //import android.app.NotificationManager;
 //import android.app.PendingIntent;
 //import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.ViewAnimator;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -95,7 +104,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         menu.add(UPDATE)
             .setIcon(R.drawable.actionbar_update)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
+        
         //TODO add intent
         menu.add(SETTINGS)
             .setIcon(R.drawable.actionbar_settings)
@@ -149,20 +158,32 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public void onUpdateStart() {
         //this.updateNotificationLauncher.launchUpdatingNotification();
-        this.disableUpdateMenuItem();
+        //this.disableUpdateMenuItem();
+        
+        ImageView spinner = new ImageView(this);
+        spinner.setImageResource(R.drawable.actionbar_spinner);
+        Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotate);
+        //spinner.setAnimation(rotation);
+        rotation.setRepeatCount(Animation.INFINITE);
+        this.updateMenuItem.setActionView(spinner);
+        spinner.startAnimation(rotation);
     }
     
     @Override
     public void onUpdateFailure() {
         //this.updateNotificationLauncher.clearNotification();
         //this.updateNotificationLauncher.launchUpdatingFailureNotification();
-        this.enableUpdateMenuItem();
+        //this.enableUpdateMenuItem();
+        this.updateMenuItem.getActionView().setAnimation(null);
+        this.updateMenuItem.setActionView(null);
     }
     
     @Override
     public void onUpdateSuccess() {
         //this.updateNotificationLauncher.clearNotification();
-        this.enableUpdateMenuItem();
+        //this.enableUpdateMenuItem();
+        this.updateMenuItem.getActionView().setAnimation(null);
+        this.updateMenuItem.setActionView(null);
     }
     
     private void disableUpdateMenuItem() {
