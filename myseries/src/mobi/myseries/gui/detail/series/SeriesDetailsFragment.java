@@ -5,7 +5,6 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.Dates;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -53,27 +52,25 @@ public class SeriesDetailsFragment extends SherlockFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        TextView seriesOverview = (TextView) this.getActivity().findViewById(R.id.seriesOverviewTextView);
         TextView seriesStatus = (TextView) this.getActivity().findViewById(R.id.statusTextView);
-        TextView seriesAirTime = (TextView) this.getActivity().findViewById(R.id.airTimeTextView);
         TextView seriesAirDays = (TextView) this.getActivity().findViewById(R.id.airDaysTextView);
-        TextView seriesActors = (TextView) this.getActivity().findViewById(R.id.actorsTextView);
-        TextView seriesFirstAirDay = (TextView) this.getActivity().findViewById(R.id.firstAiredTextView);
-        TextView seriesNetwork = (TextView) this.getActivity().findViewById(R.id.networkTextView);
-        TextView seriesGenre = (TextView) this.getActivity().findViewById(R.id.genreTextView);
         TextView seriesRuntime = (TextView) this.getActivity().findViewById(R.id.runtimeTextView);
+
+        TextView seriesGenre = (TextView) this.getActivity().findViewById(R.id.genreTextView);
+        TextView seriesActors = (TextView) this.getActivity().findViewById(R.id.actorsTextView);
+
+        TextView seriesOverview = (TextView) this.getActivity().findViewById(R.id.seriesOverviewTextView);
 
         Series series = SERIES_PROVIDER.getSeries(this.seriesId);
 
-        seriesOverview.setText(series.overview());
         seriesStatus.setText(series.status().toString());
-        seriesAirTime.setText(series.airTime());
         seriesAirDays.setText(series.airDay());
-        seriesActors.setText(series.actors());
-        seriesFirstAirDay.setText(Dates.toString(series.airDate(), App.environment().localization().dateFormat(), ""));
-        seriesNetwork.setText(series.network());
-        seriesGenre.setText(series.genres());
         seriesRuntime.setText(String.format(this.getString(R.string.runtime_minutes_format), series.runtime()));
+
+        seriesGenre.setText(series.genres());
+        seriesActors.setText(series.actors());
+
+        seriesOverview.setText(series.overview());
 
         Bitmap bmp = IMAGE_PROVIDER.getPosterOf(series);
 
