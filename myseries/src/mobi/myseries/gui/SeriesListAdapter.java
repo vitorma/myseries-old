@@ -34,7 +34,9 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +47,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, SeriesFollowingListener, PosterDownloadListener {
+public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener,
+                                                                       SeriesFollowingListener,
+                                                                       PosterDownloadListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
@@ -67,6 +71,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
             this.setNameTo(item.name(), itemView);
             this.setSeenEpisodesBarFor(item, itemView);
             this.setNextEpisodeToSeeTo(item.nextEpisodeToSee(true), itemView); //TODO SharedPreference
+            this.setUpStopFollowingOnLongClickFor(item, itemView);
 
             return itemView;
         }
@@ -117,6 +122,34 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
                 seenMark.setChecked(false);
                 seenMark.setVisibility(View.INVISIBLE);
             }
+        }
+
+        private void setUpStopFollowingOnLongClickFor(final Series series, View itemView) {
+            String notFormatedDialgText = this.context.getString(R.string.do_you_want_to_stop_following);
+            final String dialogText = String.format(notFormatedDialgText, series.name());
+
+            final String yesText = this.context.getString(R.string.yes_i_do);
+            final String noText = this.context.getString(R.string.no_i_dont);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    new AlertDialog.Builder(context)
+                            .setCancelable(false)
+                            .setMessage(dialogText)
+                            .setPositiveButton(yesText, new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    App.stopFollowing(series);
+                                }
+                            })
+                            .setNegativeButton(noText, null)
+                            .show();
+                    return true;
+                }
+            });
         }
     }
 
