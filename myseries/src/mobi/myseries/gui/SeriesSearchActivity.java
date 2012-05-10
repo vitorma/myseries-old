@@ -168,7 +168,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
     }
     
     private void setupListOnAdapter(List<Series> series) {
-        ArrayAdapter<Series> adapter = new TextOnlyViewAdapter(
+        ArrayAdapter<Series> adapter = new SeriesSearchItemAdapter(
                 SeriesSearchActivity.this,
                 SeriesSearchActivity.this,
                 R.layout.text_only_list_item,
