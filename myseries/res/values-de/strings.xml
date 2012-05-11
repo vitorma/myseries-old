@@ -39,10 +39,10 @@
     <string formatted="false" name="next_to_see_format">S%02dF%02d</string>
     <string name="no_i_dont">Nein</string>
     <string name="no_episode_aired">Keine Episode ausgestrahlt</string>
-    <string name="no_episodes">Keine Episode</string>
+    <string name="no_episodes">Keine Episode in der liste.</string>
     <string name="no_items_to_list">Keine Einträge in der Liste.</string>
     <string name="no_results_found_for_criteria">Keine Ergebnisse für Kriterien gefunden</string>
-    <string name="no_series_followed">Sie folgen keiner Serie noch.</string>
+    <string name="no_series_followed">Sie folgen keiner serie noch.</string>
     <string formatted="false" name="now_you_follow_series">Nun folgen Sie %s.</string>
     <string name="overview">Überlick</string>
     <string name="review_not_available">Beschreibung nicht verfügbar.</string>

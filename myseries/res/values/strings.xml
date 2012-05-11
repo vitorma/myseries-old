@@ -36,10 +36,10 @@
     <string name="nexttosee_uptodate">UP-TO-DATE</string>
     <string name="no_i_dont">No, I don\'t</string>
     <string name="no_episode_aired">no episode aired</string>
-    <string name="no_episodes">no episode aired</string>
-    <string name="no_items_to_list">No items to list</string>
-    <string name="no_results_found_for_criteria">No results found for criteria</string>
-    <string name="no_series_followed">No series followed</string>
+    <string name="no_episodes">No episodes to see.</string>
+    <string name="no_items_to_list">No items to list.</string>
+    <string name="no_results_found_for_criteria">No results found for criteria.</string>
+    <string name="no_series_followed">No followed series.</string>
     <string formatted="false" name="now_you_follow_series">Now you follow %s.</string>
     <string name="overview">Overview</string>
     <string name="review_not_available">Review not available</string>
