@@ -1,5 +1,5 @@
 /*
- *   RecentEpisodesFragment.java
+ *   RecentEpisodesFactory.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -28,15 +28,15 @@ import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.EpisodeComparator;
 
-public class RecentEpisodesFragment extends EpisodeListFragment {
+public class RecentEpisodesFactory implements EpisodeListFactory {
 
     @Override
-    protected List<Episode> episodes() {
+    public List<Episode> episodes() {
         return App.environment().seriesProvider().recentEpisodes();
     }
 
     @Override
-    protected Comparator<Episode> episodesComparator() {
+    public Comparator<Episode> episodesComparator() {
         return EpisodeComparator.reversedByAirdateThenBySeasonThenByNumber();
     }
 }

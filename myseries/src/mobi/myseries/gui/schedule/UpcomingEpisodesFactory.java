@@ -1,5 +1,5 @@
 /*
- *   UpcomingEpisodesFragment.java
+ *   UpcomingEpisodesFactory.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -28,15 +28,15 @@ import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.EpisodeComparator;
 
-public class UpcomingEpisodesFragment extends EpisodeListFragment {
+public class UpcomingEpisodesFactory implements EpisodeListFactory {
 
     @Override
-    protected List<Episode> episodes() {
+    public List<Episode> episodes() {
         return App.environment().seriesProvider().upcomingEpisodes();
     }
 
     @Override
-    protected Comparator<Episode> episodesComparator() {
+    public Comparator<Episode> episodesComparator() {
         return EpisodeComparator.byAirdateThenBySeasonThenByNumber();
     }
 }

@@ -27,7 +27,7 @@ import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
 
-public class Episode {
+public class Episode implements Publisher<EpisodeListener> {
     private int id;
     private int seriesId;
     private int number;
@@ -141,10 +141,12 @@ public class Episode {
         this.notifyThatWasMerged();
     }
 
+    @Override
     public boolean register(EpisodeListener listener) {
         return this.listeners.register(listener);
     }
 
+    @Override
     public boolean deregister(EpisodeListener listener) {
         return this.listeners.deregister(listener);
     }

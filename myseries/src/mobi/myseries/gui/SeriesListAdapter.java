@@ -196,7 +196,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
     }
 
     @Override
-    public void onUnfollowing(Series unfollowedSeries) {
+    public void onStopFollowing(Series unfollowedSeries) {
         unfollowedSeries.deregister(this);
         this.remove(unfollowedSeries);
     }

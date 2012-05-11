@@ -1,5 +1,5 @@
 /*
- *   TodayEpisodesFragment.java
+ *   TodayEpisodesFactory.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -27,15 +27,15 @@ import java.util.List;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 
-public class TodayEpisodesFragment extends EpisodeListFragment {
+public class TodayEpisodesFactory implements EpisodeListFactory {
 
     @Override
-    protected List<Episode> episodes() {
+    public List<Episode> episodes() {
         return App.environment().seriesProvider().todayEpisodes();
     }
 
     @Override
-    protected Comparator<Episode> episodesComparator() {
+    public Comparator<Episode> episodesComparator() {
         return new Comparator<Episode>() {
             @Override
             public int compare(Episode e1, Episode e2) {

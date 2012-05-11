@@ -21,12 +21,10 @@
 
 package mobi.myseries.gui.schedule;
 
-import java.util.Comparator;
-import java.util.List;
-
 import mobi.myseries.R;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.detail.episode.EpisodeDetailsActivity;
+import mobi.myseries.shared.Validate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,11 +35,15 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public abstract class EpisodeListFragment extends SherlockListFragment {
+public class EpisodeListFragment extends SherlockListFragment {
     private static final int LAYOUT = R.layout.list;
 
-    protected abstract List<Episode> episodes();
-    protected abstract Comparator<Episode> episodesComparator();
+    private EpisodeListFactory episodeListFactory;
+
+    public EpisodeListFragment(EpisodeListFactory episodeListFactory) {
+        Validate.isNonNull(episodeListFactory, "episodeListFactory");
+        this.episodeListFactory = episodeListFactory;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,8 +70,8 @@ public abstract class EpisodeListFragment extends SherlockListFragment {
     }
 
     private void setUpListAdapter() {
-        EpisodeListAdapter dataAdapter = new EpisodeListAdapter(this.getActivity(), this.episodes());
-        dataAdapter.sort(this.episodesComparator());
+        EpisodeListAdapter dataAdapter = new EpisodeListAdapter(this.getActivity(),
+                                                                this.episodeListFactory);
         this.setListAdapter(dataAdapter);
     }
 

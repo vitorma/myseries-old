@@ -29,7 +29,7 @@ import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
-public class Season implements EpisodeListener {
+public class Season implements EpisodeListener, Publisher<SeasonListener> {
     private int seriesId;
     private int number;
 
@@ -193,10 +193,12 @@ public class Season implements EpisodeListener {
         return this;
     }
 
+    @Override
     public boolean register(SeasonListener listener) {
         return this.listeners.register(listener);
     }
 
+    @Override
     public boolean deregister(SeasonListener listener) {
         return this.listeners.deregister(listener);
     }

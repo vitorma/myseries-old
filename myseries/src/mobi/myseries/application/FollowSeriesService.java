@@ -120,7 +120,7 @@ public class FollowSeriesService {
 
     private void notifyListenersOfUnfollowedSeries(Series unfollowedSeries) {
         for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
-            listener.onUnfollowing(unfollowedSeries);
+            listener.onStopFollowing(unfollowedSeries);
         }
     }
 

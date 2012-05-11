@@ -56,13 +56,13 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         ActionBar.Tab recentTab = ab.newTab().setText(R.string.schedule_recent);
-        recentTab.setTabListener(new ScheduleTabListener(new RecentEpisodesFragment()));
+        recentTab.setTabListener(new ScheduleTabListener(new EpisodeListFragment(new RecentEpisodesFactory())));
 
         ActionBar.Tab todayTab = ab.newTab().setText(R.string.schedule_today);
-        todayTab.setTabListener(new ScheduleTabListener(new TodayEpisodesFragment()));
+        todayTab.setTabListener(new ScheduleTabListener(new EpisodeListFragment(new TodayEpisodesFactory())));
 
         ActionBar.Tab upcomingTab = ab.newTab().setText(R.string.schedule_upcoming);
-        upcomingTab.setTabListener(new ScheduleTabListener(new UpcomingEpisodesFragment()));
+        upcomingTab.setTabListener(new ScheduleTabListener(new EpisodeListFragment(new UpcomingEpisodesFactory())));
 
         ab.addTab(recentTab, false);
         ab.addTab(todayTab, false);

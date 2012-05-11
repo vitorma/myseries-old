@@ -25,5 +25,5 @@ import mobi.myseries.domain.model.Series;
 
 public interface SeriesFollowingListener {
     void onFollowing(Series followedSeries);
-    void onUnfollowing(Series unfollowedSeries);
+    void onStopFollowing(Series unfollowedSeries);
 }
