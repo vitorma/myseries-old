@@ -91,7 +91,7 @@ public class SeasonsFragment extends SherlockFragment {
 
     private void showDetailsOf(int currentGroupPosition, int childPosition) {
         int seasonNumber = this.adapter.seasonNumber(currentGroupPosition);
-        int episodeNumber = this.adapter.episodeNumber(childPosition);
+        int episodeNumber = this.adapter.episodeNumber(childPosition, this.adapter.season(currentGroupPosition).numberOfEpisodes());
 
         Intent intent = EpisodeDetailsActivity.newIntent(this.getActivity(), this.seriesId, seasonNumber, episodeNumber);
         this.startActivity(intent);

@@ -81,5 +81,6 @@
     <string name="date_format_short">yyyy-MM-dd</string>
     <string name="preview">Preview:</string>
     <string name="not_available">Not available</string>
+    <string name="powered_by_thetvdb">Powered by thetvdb.com</string>
 
 </resources>

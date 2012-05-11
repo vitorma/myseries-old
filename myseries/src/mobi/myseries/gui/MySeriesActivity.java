@@ -26,6 +26,9 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.gui.schedule.MyScheduleActivity;
+import mobi.myseries.gui.search.SeriesSearchActivity;
+import mobi.myseries.gui.series.SeriesCoverFlowFragment;
+import mobi.myseries.gui.series.SeriesListFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -143,27 +146,34 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     
     //private UpdateNotificationLauncher updateNotificationLauncher;
     private MenuItem updateMenuItem;
+    private ImageView spinner = null;
     
     @Override
     public void onUpdateStart() {        
-        ImageView spinner = new ImageView(this);
-        spinner.setImageResource(R.drawable.actionbar_spinner);
+        this.spinner = new ImageView(this);
+        this.spinner.setImageResource(R.drawable.actionbar_spinner);
+        try {
+            this.spinner.setMinimumWidth((int) this.getSupportActionBar().getThemedContext()
+                    .getResources().getDimension(R.dimen.action_button_min_width));
+        } catch (Exception e) { // can't find? live with it.
+        }
+        
         Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotate);
         rotation.setRepeatCount(Animation.INFINITE);
-        this.updateMenuItem.setActionView(spinner);
-        spinner.startAnimation(rotation);
+        this.spinner.startAnimation(rotation);
+        this.updateMenuItem.setActionView(this.spinner);
     }
     
     @Override
     public void onUpdateFailure() {
         Toast.makeText(this, R.string.update_failure_notification_message, 5).show();
-        this.updateMenuItem.getActionView().setAnimation(null);
+        this.spinner.setAnimation(null);
         this.updateMenuItem.setActionView(null);
     }
     
     @Override
     public void onUpdateSuccess() {
-        this.updateMenuItem.getActionView().setAnimation(null);
+        this.spinner.setAnimation(null);
         this.updateMenuItem.setActionView(null);
     }
     

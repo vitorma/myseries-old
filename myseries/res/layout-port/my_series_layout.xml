@@ -10,6 +10,6 @@
         android:id="@+id/series_list_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="mobi.myseries.gui.SeriesListFragment"/>
+        class="mobi.myseries.gui.series.SeriesListFragment"/>
 
 </LinearLayout>

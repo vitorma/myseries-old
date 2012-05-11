@@ -19,16 +19,21 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui;
+package mobi.myseries.gui.series;
 
 import java.util.Comparator;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.ImageProvider;
+import mobi.myseries.application.PosterDownloadListener;
+import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
+import mobi.myseries.gui.SeenEpisodesBar;
+import mobi.myseries.gui.SeriesComparator;
 import mobi.myseries.gui.detail.series.SeriesOverviewActivity;
 import mobi.myseries.gui.widget.CoverFlow;
 import mobi.myseries.gui.widget.ReflectingImageAdapter;
@@ -49,6 +54,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final Comparator<Series> COMPARATOR = new SeriesComparator();
 
     private SeriesCoverFlowAdapter seriesAdapter;
@@ -56,9 +62,45 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     private CoverFlow coverFlow;
     private SeriesItemViewHolder seriesItemViewHolder;
 
+    /**
+     * Necessary because it must there be a strong reference to the listener so it cannot be collected.
+     */
+    private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
+
+        @Override
+        public void onFollowing(Series followedSeries) {
+            SeriesCoverFlowFragment.this.reload();
+        }
+
+        @Override
+        public void onStopFollowing(Series unfollowedSeries) {
+            SeriesCoverFlowFragment.this.reload();
+        }
+    };
+
+    private PosterDownloadListener posterDownloadListener = new PosterDownloadListener() {
+
+        @Override
+        public void onStartDownloadingPosterOf(Series series) {}
+
+        @Override
+        public void onFailureWhileSavingPosterOf(Series series) {}
+
+        @Override
+        public void onDownloadPosterOf(Series series) {
+            SeriesCoverFlowFragment.this.reload();
+        }
+
+        @Override
+        public void onConnectionFailureWhileDownloadingPosterOf(Series series) {}
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IMAGE_PROVIDER.register(this.posterDownloadListener);
+        App.registerSeriesFollowingListener(this.seriesFollowingListener);
     }
 
     @Override
@@ -69,7 +111,10 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        this.reload();
+    }
 
+    public void reload() {
         this.seriesAdapter = new SeriesCoverFlowAdapter().sort(COMPARATOR);
         this.adapter = new ReflectingImageAdapter(this.seriesAdapter);
         this.coverFlow = (CoverFlow) this.getActivity().findViewById(R.id.coverflow);
@@ -118,6 +163,17 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
                 //TODO Show 'No followed series'
             }
         });
+
+        this.coverFlow.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Series series = SeriesCoverFlowFragment.this.seriesAdapter.itemOf(position);
+
+                if (!SeriesCoverFlowFragment.this.isSelected(series)) {return true;}
+
+                StopFollowingSeriesConfirmationDialog.buildFor(series, view.getContext()).show();
+                return true;
+            }});
     }
 
     private void downloadDescription(Series item) {

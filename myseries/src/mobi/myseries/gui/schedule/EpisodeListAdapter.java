@@ -33,9 +33,7 @@ public class EpisodeListAdapter extends ArrayAdapter<Episode> implements Episode
     /**
      * Necessary because it must there be a strong reference to the listener so it cannot be collected.
      */
-    private SeriesFollowingListener seriesFollowingListener;
-
-    private class SeriesFollowingEpisodeListListener implements SeriesFollowingListener {
+    private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
 
         @Override
         public void onFollowing(Series followedSeries) {
@@ -49,7 +47,7 @@ public class EpisodeListAdapter extends ArrayAdapter<Episode> implements Episode
                 EpisodeListAdapter.this.remove(e);
             }
         }
-    }
+    };
 
     public EpisodeListAdapter(Context context,
                               EpisodeListFactory episodeListFactory) {
@@ -59,7 +57,6 @@ public class EpisodeListAdapter extends ArrayAdapter<Episode> implements Episode
         this.episodeListFactory = episodeListFactory;
         this.layoutInflater = LayoutInflater.from(context);
 
-        this.seriesFollowingListener = new SeriesFollowingEpisodeListListener();
         App.registerSeriesFollowingListener(this.seriesFollowingListener);
 
         this.reloadData();

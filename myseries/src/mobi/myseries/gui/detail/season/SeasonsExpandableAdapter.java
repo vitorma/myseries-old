@@ -38,26 +38,34 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
     }
 
     public int seasonNumber(int groupPosition) {
-        return this.series.hasSpecialEpisodes() ? groupPosition : groupPosition + 1;
+        int ascPosition = this.series.hasSpecialEpisodes() ? groupPosition : groupPosition + 1;
+
+        int descPosition = this.series.hasSpecialEpisodes() ? this.series.seasons().numberOfSeasons() - ascPosition - 1
+                                                            : this.series.seasons().numberOfSeasons() - ascPosition + 1;
+
+        return descPosition;
     }
 
-    public int episodeNumber(int childPosition) {
-        return childPosition + 1;
+    public int episodeNumber(int childPosition, int numberOfEpisodesOfItsSeason) {
+        int ascPosition = childPosition + 1;
+        int descPosition = numberOfEpisodesOfItsSeason - ascPosition + 1;
+        return descPosition;
     }
 
     public Season season(int groupPosition) {
         return this.series.season(this.seasonNumber(groupPosition));
     }
 
-    public Episode episode(int groupPosition, int childPosition) {
-        return this.season(groupPosition).episode(this.episodeNumber(childPosition));
+    private Episode episode(int groupPosition, int childPosition) {
+        Season season = this.season(groupPosition);
+        return season.episode(this.episodeNumber(childPosition, season.numberOfEpisodes()));
     }
 
-    public int groupPosition(Episode episode) {
+    private int groupPosition(Episode episode) {
         return this.series.hasSpecialEpisodes() ? episode.seasonNumber() : episode.seasonNumber() - 1;
     }
 
-    public int childPosition(Episode episode) {
+    private int childPosition(Episode episode) {
         return episode.number() - 1;
     }
 

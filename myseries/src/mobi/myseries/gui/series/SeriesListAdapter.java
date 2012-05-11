@@ -19,24 +19,24 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui;
+package mobi.myseries.gui.series;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.PosterDownloadListener;
+import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
+import mobi.myseries.gui.SeenEpisodesBar;
+import mobi.myseries.gui.SeriesComparator;
 import mobi.myseries.gui.detail.series.SeriesOverviewActivity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -138,28 +138,11 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         }
 
         private void setUpStopFollowingOnLongClickFor(final Series series, View itemView) {
-            String notFormatedDialgText = this.context.getString(R.string.do_you_want_to_stop_following);
-            final String dialogText = String.format(notFormatedDialgText, series.name());
-
-            final String yesText = this.context.getString(R.string.yes_i_do);
-            final String noText = this.context.getString(R.string.no_i_dont);
-
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
 
                 @Override
                 public boolean onLongClick(View v) {
-                    new AlertDialog.Builder(context)
-                            .setCancelable(false)
-                            .setMessage(dialogText)
-                            .setPositiveButton(yesText, new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    App.stopFollowing(series);
-                                }
-                            })
-                            .setNegativeButton(noText, null)
-                            .show();
+                    StopFollowingSeriesConfirmationDialog.buildFor(series, context).show();
                     return true;
                 }
             });
