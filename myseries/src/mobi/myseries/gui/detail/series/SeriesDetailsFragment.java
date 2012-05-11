@@ -6,6 +6,7 @@ import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,19 +65,21 @@ public class SeriesDetailsFragment extends SherlockFragment {
         Series series = SERIES_PROVIDER.getSeries(this.seriesId);
 
         seriesStatus.setText(series.status().toString());
-        seriesAirDays.setText(series.airDay());
+        seriesAirDays.setText(series.airDay() + " " + series.airTime() + " (" + series.network() + ")");
         seriesRuntime.setText(String.format(this.getString(R.string.runtime_minutes_format), series.runtime()));
 
         seriesGenre.setText(series.genres());
         seriesActors.setText(series.actors());
-
         seriesOverview.setText(series.overview());
 
         Bitmap bmp = IMAGE_PROVIDER.getPosterOf(series);
 
-        if (bmp != null) {
-            ImageView view = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
-            view.setImageBitmap(bmp);
-        }
+        ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
+        seriesPoster.setImageBitmap(bmp);
+
+        ImageView background = (ImageView) getActivity().findViewById(R.id.background);
+        BitmapDrawable drawable = new BitmapDrawable(getResources(), bmp);
+        drawable.setAlpha(30);
+        background.setImageDrawable(drawable);
     }
 }

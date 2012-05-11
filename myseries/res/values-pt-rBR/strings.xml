@@ -2,7 +2,7 @@
 <resources>
 
     <string name="about">Sobre</string>
-    <string name="actors">Atores: </string>
+    <string name="actors">Atores</string>
     <string name="add_series">Adicionar série</string>
     <string name="air_time">Horário das estréias: </string>
     <string name="air_day">Dia das estréias: </string>
@@ -20,7 +20,7 @@
     <string name="connection_failed_message">Não foi possível conectar ao servidor. Por favor, verifique sua conexão à internet.</string>
     <string name="parsing_failed">Erro de parsing.</string>
     <string name="follow">Acompanhar</string>
-    <string name="genre">Gênero: </string>
+    <string name="genre">Gêneros</string>
     <string name="guest_stars">Artistas convidados:</string>
     <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">último exibido:</string>

@@ -1,5 +1,5 @@
 /*
- *   UpcomingEpisodesFragment.java
+ *   SeriesComparator.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,24 +19,16 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.schedule;
+package mobi.myseries.gui;
 
 import java.util.Comparator;
-import java.util.List;
 
-import mobi.myseries.application.App;
-import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.EpisodeComparator;
+import mobi.myseries.domain.model.Series;
 
-public class UpcomingEpisodesFragment extends EpisodeListFragment {
+public class SeriesComparator implements Comparator<Series> {
 
     @Override
-    protected List<Episode> episodes() {
-        return App.environment().seriesProvider().upcomingEpisodes();
-    }
-
-    @Override
-    protected Comparator<Episode> episodesComparator() {
-        return EpisodeComparator.byAirdateThenBySeasonThenByNumber();
+    public int compare(Series series1, Series series2) {
+        return series1.name().compareTo(series2.name());
     }
 }

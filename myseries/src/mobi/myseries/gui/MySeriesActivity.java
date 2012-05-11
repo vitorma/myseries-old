@@ -26,6 +26,9 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.gui.schedule.MyScheduleActivity;
+import mobi.myseries.gui.search.SeriesSearchActivity;
+import mobi.myseries.gui.series.SeriesCoverFlowFragment;
+import mobi.myseries.gui.series.SeriesListFragment;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui;
+package mobi.myseries.gui.search;
 
 import java.util.List;
 

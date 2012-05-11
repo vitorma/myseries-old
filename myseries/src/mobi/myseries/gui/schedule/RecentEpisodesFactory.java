@@ -1,5 +1,5 @@
 /*
- *   FollowingSeriesListener.java
+ *   RecentEpisodesFactory.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,11 +19,24 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.application;
+package mobi.myseries.gui.schedule;
 
-import mobi.myseries.domain.model.Series;
+import java.util.Comparator;
+import java.util.List;
 
-public interface SeriesFollowingListener {
-    void onFollowing(Series followedSeries);
-    void onStopFollowing(Series unfollowedSeries);
+import mobi.myseries.application.App;
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.gui.EpisodeComparator;
+
+public class RecentEpisodesFactory implements EpisodeListFactory {
+
+    @Override
+    public List<Episode> episodes() {
+        return App.environment().seriesProvider().recentEpisodes();
+    }
+
+    @Override
+    public Comparator<Episode> episodesComparator() {
+        return EpisodeComparator.reversedByAirdateThenBySeasonThenByNumber();
+    }
 }

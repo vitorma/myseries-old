@@ -1,5 +1,5 @@
 /*
- *   RecentEpisodesFragment.java
+ *   Publisher.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,24 +19,11 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.schedule;
+package mobi.myseries.domain.model;
 
-import java.util.Comparator;
-import java.util.List;
+public interface Publisher<L> {
 
-import mobi.myseries.application.App;
-import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.EpisodeComparator;
+    public boolean register(L listener);
 
-public class RecentEpisodesFragment extends EpisodeListFragment {
-
-    @Override
-    protected List<Episode> episodes() {
-        return App.environment().seriesProvider().recentEpisodes();
-    }
-
-    @Override
-    protected Comparator<Episode> episodesComparator() {
-        return EpisodeComparator.reversedByAirdateThenBySeasonThenByNumber();
-    }
+    public boolean deregister(L listener);
 }

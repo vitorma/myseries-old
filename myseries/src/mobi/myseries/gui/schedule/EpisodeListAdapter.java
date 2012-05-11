@@ -1,15 +1,18 @@
 package mobi.myseries.gui.schedule;
 
+import java.util.Comparator;
 import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +28,60 @@ public class EpisodeListAdapter extends ArrayAdapter<Episode> implements Episode
 
     private LayoutInflater layoutInflater;
 
-    public EpisodeListAdapter(Context context, List<Episode> objects) {
-        super(context, EPISODE_ITEM_RESOURCE_ID, objects);
+    private EpisodeListFactory episodeListFactory;
 
+    /**
+     * Necessary because it must there be a strong reference to the listener so it cannot be collected.
+     */
+    private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
+
+        @Override
+        public void onFollowing(Series followedSeries) {
+            EpisodeListAdapter.this.reloadData();
+        }
+
+        @Override
+        public void onStopFollowing(Series unfollowedSeries) {
+            // Remove all the unfollowedSeries' episodes from the adapter
+            for (Episode e : unfollowedSeries.episodes()) {
+                EpisodeListAdapter.this.remove(e);
+            }
+        }
+    };
+
+    public EpisodeListAdapter(Context context,
+                              EpisodeListFactory episodeListFactory) {
+        super(context, EPISODE_ITEM_RESOURCE_ID);
+        Validate.isNonNull(episodeListFactory, "episodeListFactory");
+
+        this.episodeListFactory = episodeListFactory;
         this.layoutInflater = LayoutInflater.from(context);
 
-        for (Episode e : objects) {
+        App.registerSeriesFollowingListener(this.seriesFollowingListener);
+
+        this.reloadData();
+    }
+
+    private List<Episode> episodes() {
+        return this.episodeListFactory.episodes();
+    }
+
+    private Comparator<Episode> episodesComparator() {
+        return this.episodeListFactory.episodesComparator();
+    }
+
+    private void reloadData() {
+        this.clear();
+
+        List<Episode> episodes = this.episodes();
+
+        for (Episode e : episodes) {
             e.register(this);
+            this.add(e);
         }
+
+        this.sort(this.episodesComparator());
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -98,7 +147,7 @@ public class EpisodeListAdapter extends ArrayAdapter<Episode> implements Episode
 
     @Override
     public void onMarkAsNotSeen(Episode e) {
-        //All episodes here are already marked as not seen
+        this.reloadData();
     }
 
     @Override

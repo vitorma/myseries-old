@@ -31,7 +31,7 @@ import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
-public class SeasonSet implements SeasonListener {
+public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     private static final int SPECIAL_EPISODES_SEASON_NUMBER = 0;
     private int seriesId;
 
@@ -194,10 +194,12 @@ public class SeasonSet implements SeasonListener {
         return this;
     }
 
+    @Override
     public boolean register(SeasonSetListener listener) {
         return this.listeners.register(listener);
     }
 
+    @Override
     public boolean deregister(SeasonSetListener listener) {
         return this.listeners.deregister(listener);
     }
