@@ -152,6 +152,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     public void onUpdateStart() {        
         this.spinner = new ImageView(this);
         this.spinner.setImageResource(R.drawable.actionbar_spinner);
+        this.spinner.setMinimumWidth((int) this.getSupportActionBar().getThemedContext()
+                .getResources().getDimension(R.dimen.action_button_min_width));
         Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotate);
         rotation.setRepeatCount(Animation.INFINITE);
         this.spinner.startAnimation(rotation);
