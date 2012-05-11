@@ -2,7 +2,7 @@
 <resources>
 
     <string name="about">About</string>
-    <string name="actors">Actors: </string>
+    <string name="actors">Actors</string>
     <string name="add_series">Add series</string>
     <string name="air_time">Air time: </string>
     <string name="air_day">Air day: </string>
@@ -17,7 +17,7 @@
     <string formatted="false" name="episode_number_format_short">E%02d</string>
     <string name="first_aired">First aired: </string>
     <string name="follow">Follow</string>
-    <string name="genre">Genre: </string>
+    <string name="genre">Genres</string>
     <string name="guest_stars">Guest stars:</string>
     <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">last aired:</string>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:baselineAligned="true"
     android:orientation="horizontal"
-    android:padding="5dp" >
+    android:padding="5dp">
 
     <ImageView
         android:id="@+id/seriesImageView"
