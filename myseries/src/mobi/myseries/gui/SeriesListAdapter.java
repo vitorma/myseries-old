@@ -23,7 +23,6 @@ package mobi.myseries.gui;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -164,13 +163,6 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
                     return true;
                 }
             });
-        }
-    }
-
-    private static class SeriesComparator implements Comparator<Series> {
-        @Override
-        public int compare(Series seriesA, Series seriesB) {
-            return seriesA.name().compareTo(seriesB.name());
         }
     }
 

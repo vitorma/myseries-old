@@ -183,11 +183,4 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         private TextView nextToSee;
         private CheckBox seenMark;
     }
-
-    private static class SeriesComparator implements Comparator<Series> {
-        @Override
-        public int compare(Series series1, Series series2) {
-            return series1.name().compareTo(series2.name());
-        }
-    }
 }
