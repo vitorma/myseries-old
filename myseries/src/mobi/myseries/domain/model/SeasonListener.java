@@ -31,5 +31,6 @@ public interface SeasonListener {
 
     public void onChangeNextEpisodeToSee(Season season);
 
+    @Deprecated
     public void onMerge(Season season);
 }
