@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui;
+package mobi.myseries.gui.series;
 
 import java.util.Comparator;
 
@@ -29,6 +29,8 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
+import mobi.myseries.gui.SeenEpisodesBar;
+import mobi.myseries.gui.SeriesComparator;
 import mobi.myseries.gui.detail.series.SeriesOverviewActivity;
 import mobi.myseries.gui.widget.CoverFlow;
 import mobi.myseries.gui.widget.ReflectingImageAdapter;

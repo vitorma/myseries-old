@@ -31,7 +31,7 @@
             android:name=".gui.schedule.MyScheduleActivity">
         </activity>
         <activity
-            android:name=".gui.SeriesSearchActivity">
+            android:name=".gui.search.SeriesSearchActivity">
         </activity>
         <activity
             android:name=".gui.detail.series.SeriesOverviewActivity">

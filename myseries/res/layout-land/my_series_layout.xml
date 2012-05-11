@@ -10,6 +10,6 @@
         android:id="@+id/series_coverflow_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="mobi.myseries.gui.SeriesCoverFlowFragment"/>
+        class="mobi.myseries.gui.series.SeriesCoverFlowFragment"/>
 
 </LinearLayout>
