@@ -58,8 +58,8 @@ public class Series implements SeasonSetListener {
         this.seasons = new SeasonSet(this.id);
         this.seasons.register(this);
         this.listeners = new ListenerSet<SeriesListener>();
+        
     }
-
     public static Series.Builder builder() {
         return new Series.Builder();
     }

@@ -29,5 +29,6 @@ public interface SeriesListener {
 
     public void onChangeNextNonSpecialEpisodeToSee(Series series);
 
+    @Deprecated
     public void onMerge(Series series);
 }
