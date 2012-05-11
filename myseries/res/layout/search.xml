@@ -35,13 +35,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:visibility="gone"/>
-
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
@@ -50,6 +43,16 @@
             android:divider="@drawable/list_divider_holo_light"
             android:scrollbarThumbVertical="@drawable/fastscroll_thumb_holo"
             android:scrollbarTrackVertical="@drawable/fastscroll_track_holo_light"/>
+        
+        <TextView
+            android:id="@+id/poweredby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:textColor="#FFFFFF"
+            android:background="#bf000000"
+            android:text="@string/powered_by_thetvdb"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </FrameLayout>
 
