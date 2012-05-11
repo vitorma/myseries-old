@@ -2,7 +2,7 @@
 <resources>
 
     <string name="about">Sobre</string>
-    <string name="actors">Actores: </string>
+    <string name="actors">Actores</string>
     <string name="add_series">Añadir series</string>
     <string name="air_time">Horas de la liberación: </string>
     <string name="air_day">Dia de la liberación: </string>
@@ -20,7 +20,7 @@
     <string formatted="false" name="episode_number_format_short">E%02d</string>
     <string name="first_aired">Emitió por primera vez: </string>
     <string name="follow">Seguir</string>
-    <string name="genre">Género: </string>
+    <string name="genre">Géneros</string>
     <string name="guest_stars">Estrellas invitadas:</string>
     <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">último episodio emitido:</string>
