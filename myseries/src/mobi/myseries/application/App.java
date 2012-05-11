@@ -21,6 +21,8 @@
 
 package mobi.myseries.application;
 
+
+import java.util.List;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 
@@ -28,12 +30,14 @@ import android.app.Application;
 
 public class App extends Application {
     private static Environment environment;
+    private static SearchSeriesService searchService;
     private static FollowSeriesService followSeriesService;
 
     @Override
     public void onCreate() {
         super.onCreate();
         environment = Environment.newEnvironment(this);
+        searchService = new SearchSeriesService(environment.theTVDB());
     }
 
     public static Environment environment() {
@@ -41,11 +45,23 @@ public class App extends Application {
     }
 
     // Search Series
-
-    public static void searchSeries(String seriesName, ListenerSet<SearchSeriesListener> listener) {
-        new SearchSeriesService(environment.theTVDB()).search(seriesName, localLanguage(), listener);
+    public static void searchSeries(String seriesName) {
+        searchService.search(seriesName, localLanguage());
     }
-
+    
+    public static void registerSearchSeriesListener(SearchSeriesListener listener){
+        searchService.registerListener(listener);
+    }
+    
+    public static void deregisterSearchSeriesListener(SearchSeriesListener listener){
+        searchService.deregisterListener(listener);
+    }
+    
+    public static List<Series> getLastValidSearchResult(){
+        return SearchSeriesService.getLastSearchResult();
+  
+    }
+    
     private static String localLanguage() {
         return environment.localization().language();
     }

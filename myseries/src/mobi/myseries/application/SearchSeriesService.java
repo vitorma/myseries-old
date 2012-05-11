@@ -36,29 +36,45 @@ import android.os.AsyncTask;
 
 public class SearchSeriesService {
     private SeriesSource seriesSource;
+    private ListenerSet<SearchSeriesListener> listenerSet;
+    private static List<Series> lastSearchResult;
 
     public SearchSeriesService(SeriesSource seriesSource) {
         Validate.isNonNull(seriesSource, "seriesSource");
         this.seriesSource = seriesSource;
+        this.listenerSet = new ListenerSet<SearchSeriesListener>();
+    }
+    
+    public void registerListener(SearchSeriesListener listener){
+        this.listenerSet.register(listener);
+    }
+    
+    public void deregisterListener(SearchSeriesListener listener){
+        this.listenerSet.deregister(listener);
     }
 
-    public void search(String seriesName, String language, ListenerSet<SearchSeriesListener> listener) {
+    public void search(String seriesName, String language) {
 
-        new SearchSeriesTask(this.seriesSource, listener).execute(seriesName, language);
+        new SearchSeriesTask(this.seriesSource, listenerSet).execute(seriesName, language);
 }
-
+    public static List<Series> getLastSearchResult(){
+        return lastSearchResult;
+        
+}
     private static class SearchSeriesTask extends AsyncTask<String, Void, AsyncTaskResult<List<Series>>> {
         private SeriesSource seriesSource;
-        private ListenerSet<SearchSeriesListener> listener;
+        private ListenerSet<SearchSeriesListener> listenerSet;
+        
 
-        private SearchSeriesTask(SeriesSource seriesSource, ListenerSet<SearchSeriesListener> listener) {
+        private SearchSeriesTask(SeriesSource seriesSource, ListenerSet<SearchSeriesListener> listenerSet) {
             this.seriesSource = seriesSource;
-            this.listener = listener;
+            this.listenerSet = listenerSet;
         }
         
         @Override
         protected void onPreExecute() {
-            for (SearchSeriesListener l : listener) {
+            lastSearchResult = null;
+            for (SearchSeriesListener l : listenerSet) {
                 l.onStart();
             }
         }
@@ -85,7 +101,8 @@ public class SearchSeriesService {
 
         @Override
         protected void onPostExecute(AsyncTaskResult<List<Series>> taskResult) {
-            for (SearchSeriesListener l : listener) {
+            lastSearchResult = taskResult.result();
+            for (SearchSeriesListener l : listenerSet) {
                 if (taskResult.error() == null){
                     l.onSucess(Collections.unmodifiableList(taskResult.result()));
                 }else{

@@ -172,6 +172,8 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
        super(context, ITEM_LAYOUT, new ArrayList<Series>(objects));
 
        this.listItemFactory = new SeriesListItemFactory(context);
+       
+       IMAGE_PROVIDER.register(this);
 
        App.registerSeriesFollowingListener(this);
 
