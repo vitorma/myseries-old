@@ -140,6 +140,12 @@ public class SeriesProvider {
 
             for (Series theirSeries : this.upToDateSeries) {
                 Series ourSeries = SeriesProvider.this.getSeries(theirSeries.id());
+
+                if (ourSeries == null) { // it happens when the user stops following
+                                         // the series during the update
+                    continue;
+                }
+
                 ourSeries.mergeWith(theirSeries);
                 App.environment().imageProvider().downloadPosterOf(ourSeries);
                 allOurSeries.add(ourSeries);
