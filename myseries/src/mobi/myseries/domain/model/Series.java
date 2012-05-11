@@ -31,7 +31,7 @@ import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
 
-public class Series implements SeasonSetListener {
+public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     private int id;
     private String name;
     private String status;
@@ -58,8 +58,8 @@ public class Series implements SeasonSetListener {
         this.seasons = new SeasonSet(this.id);
         this.seasons.register(this);
         this.listeners = new ListenerSet<SeriesListener>();
+        
     }
-
     public static Series.Builder builder() {
         return new Series.Builder();
     }
@@ -175,10 +175,12 @@ public class Series implements SeasonSetListener {
         this.notifyThatWasMerged();
     }
 
+    @Override
     public boolean register(SeriesListener listener) {
         return this.listeners.register(listener);
     }
 
+    @Override
     public boolean deregister(SeriesListener listener) {
         return this.listeners.deregister(listener);
     }

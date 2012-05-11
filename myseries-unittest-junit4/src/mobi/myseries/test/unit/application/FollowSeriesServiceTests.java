@@ -240,7 +240,7 @@ public class FollowSeriesServiceTests {
 
         this.followSeriesService.stopFollowing(followedSeries);
 
-        verify(this.seriesFollowingListener).onUnfollowing(followedSeries);
+        verify(this.seriesFollowingListener).onStopFollowing(followedSeries);
     }
 
     // Follows
@@ -276,8 +276,8 @@ public class FollowSeriesServiceTests {
 
         this.followSeriesService.wipeFollowedSeries();
 
-        verify(this.seriesFollowingListener).onUnfollowing(series1);
-        verify(this.seriesFollowingListener).onUnfollowing(series2);
+        verify(this.seriesFollowingListener).onStopFollowing(series1);
+        verify(this.seriesFollowingListener).onStopFollowing(series2);
     }
 
     // Observer

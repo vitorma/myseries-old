@@ -1,5 +1,5 @@
 /*
- *   SeasonListener.java
+ *   UpcomingEpisodesFactory.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,18 +19,24 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.model;
+package mobi.myseries.gui.schedule;
 
-public interface SeasonListener {
+import java.util.Comparator;
+import java.util.List;
 
-    public void onMarkAsSeen(Season season);
+import mobi.myseries.application.App;
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.gui.EpisodeComparator;
 
-    public void onMarkAsNotSeen(Season season);
+public class UpcomingEpisodesFactory implements EpisodeListFactory {
 
-    public void onChangeNumberOfSeenEpisodes(Season season);
+    @Override
+    public List<Episode> episodes() {
+        return App.environment().seriesProvider().upcomingEpisodes();
+    }
 
-    public void onChangeNextEpisodeToSee(Season season);
-
-    @Deprecated
-    public void onMerge(Season season);
+    @Override
+    public Comparator<Episode> episodesComparator() {
+        return EpisodeComparator.byAirdateThenBySeasonThenByNumber();
+    }
 }

@@ -25,9 +25,9 @@
     <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">último exibido:</string>
     <string name="listing_title">Título da lista</string>
-    <string name="loading">Carregando...</string>
-    <string name="loading_dialog_text">Carregando...</string>
-    <string name="searching_dialog_text">Pesquisando...</string>
+    <string name="loading">Carregando…</string>
+    <string name="loading_dialog_text">Carregando…</string>
+    <string name="searching_dialog_text">Pesquisando…</string>
     <string name="med_widget_name">My Series (4x2)</string>
     <string formatted="false" name="runtime_minutes_format">%s minutes</string>
     <string name="my_schedule">Minha Agenda</string>
@@ -37,7 +37,7 @@
     <string name="next_episode_to_see">Próximo a assistir: </string>
     <string formatted="false" name="next_to_see_format">T%02dE%02d</string>
     <string name="nexttosee_uptodate">EM DIA</string>
-    <string name="no">Não</string>
+    <string name="no_i_dont">Não</string>
     <string name="no_episode_aired">nenhum episódio lançado</string>
     <string name="no_episodes">nenhum episódio</string>
     <string name="no_items_to_list">Nenhum item na lista.</string>
@@ -71,10 +71,10 @@
     <string name="updating_series_failure_notification_title">A atualização falhou</string>
     <string name="updating_series_notification_title">Atualizando dados das séries</string>
     <string name="update_failure_notification_message">A atualização falhou. Verifique a sua conexão e tente novamente.</string>
-    <string name="updating_series_data">Baixando dados das séries...</string>
+    <string name="updating_series_data">Baixando dados das séries…</string>
     <string name="upcoming_episodes">Episódios por vir</string>
     <string name="writer">Autor: </string>
-    <string name="yes">Sim</string>
+    <string name="yes_i_do">Sim</string>
     <string name="you_no_longer_follow">Você não acompanha mais %s.</string>
     <string name="date_format_short">dd/MM/yyyy</string>
 

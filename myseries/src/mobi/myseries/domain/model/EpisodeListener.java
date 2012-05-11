@@ -27,5 +27,6 @@ public interface EpisodeListener {
 
     public void onMarkAsNotSeen(Episode episode);
 
+    @Deprecated
     public void onMerge(Episode episode);
 }

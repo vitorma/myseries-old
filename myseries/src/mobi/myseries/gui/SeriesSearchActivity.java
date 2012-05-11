@@ -51,7 +51,8 @@ import com.actionbarsherlock.view.Window;
 
 public class SeriesSearchActivity extends SherlockListActivity {
     private StateHolder state;
-
+    private SearchSeriesListener listener;
+    
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +64,8 @@ public class SeriesSearchActivity extends SherlockListActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
         setSupportProgressBarIndeterminateVisibility(false);
-
+        
+        this.setUpSearchListener();
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
         this.setupSearchFieldActionListeners();
@@ -71,15 +73,28 @@ public class SeriesSearchActivity extends SherlockListActivity {
         Object retained = getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
           state = (StateHolder) retained;
-          
-          if(state.seriesFound != null)
-          setupListOnAdapter(state.seriesFound);
-          
-          if(state.isShowingDialog)
-              state.dialog.show();
+          loadState();
         } else {
           state = new StateHolder();
         }
+    }
+
+    private void loadState() {
+        
+        if(state.isSearching){
+              if(App.getLastValidSearchResult() != null){
+                  setupListOnAdapter(App.getLastValidSearchResult());
+              }
+              listener.onStart();
+              App.registerSearchSeriesListener(listener);
+              
+              } else {
+                  if(state.seriesFound != null)
+                      setupListOnAdapter(state.seriesFound);
+          
+                  if(state.isShowingDialog)
+                      state.dialog.show();
+                  }
     }
     
     @Override
@@ -90,14 +105,15 @@ public class SeriesSearchActivity extends SherlockListActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        App.deregisterSearchSeriesListener(listener);
         if(state.dialog != null && state.dialog.isShowing()) {
             state.dialog.dismiss();
             state.isShowingDialog = true;
           }else{
               state.isShowingDialog = false;
           }
-
-    }
+        
+   }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -120,50 +136,55 @@ public class SeriesSearchActivity extends SherlockListActivity {
             }
         });
     }
+    
+    private void setUpSearchListener(){
+        final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
+        final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
+       
+        this.listener =  new SearchSeriesListener() {
+
+            @Override
+            public void onSucess(List<Series> series) {
+                state.seriesFound = series;
+                setupListOnAdapter(series);
+            }
+          
+            
+            @Override
+            public void onFaluire(Throwable exception) {
+                Dialog dialog = new AlertDialog.Builder(SeriesSearchActivity.this)
+                .setMessage(exception.getMessage())
+                .create();
+                dialog.show();
+                state.dialog = dialog;
+            }
+
+            @Override
+            public void onStart() {
+               state.isSearching = true;
+               setSupportProgressBarIndeterminateVisibility(true);
+               searchField.setEnabled(false);
+               searchButton.setEnabled(false);
+            }
+
+            @Override
+            public void onFinish() {
+                state.isSearching = false;
+                setSupportProgressBarIndeterminateVisibility(false);
+                searchField.setEnabled(true);
+                searchButton.setEnabled(true);
+            }
+        };
+    }
 
     private void performSearch() {
         final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
-        final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
+        
         SeriesSearchActivity.this.setListAdapter(null);
         state.seriesFound = null;
-
-        SearchSeriesListener listener =  new SearchSeriesListener() {
-
-                    @Override
-                    public void onSucess(List<Series> series) {
-                        state.seriesFound = series;
-                        setupListOnAdapter(series);
-                    }
-                  
-                    
-                    @Override
-                    public void onFaluire(Throwable exception) {
-                        Dialog dialog = new AlertDialog.Builder(SeriesSearchActivity.this)
-                        .setMessage(exception.getMessage())
-                        .create();
-                        dialog.show();
-                        state.dialog = dialog;
-                    }
-
-                    @Override
-                    public void onStart() {
-                       setSupportProgressBarIndeterminateVisibility(true);
-                       searchField.setEnabled(false);
-                       searchButton.setEnabled(false);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        setSupportProgressBarIndeterminateVisibility(false);
-                        searchField.setEnabled(true);
-                        searchButton.setEnabled(true);
-                    }
-                };
-
-                ListenerSet<SearchSeriesListener> listeners = new ListenerSet<SearchSeriesListener>();
-                listeners.register(listener);
-
-                App.searchSeries(searchField.getText().toString(), listeners);
+        
+        App.registerSearchSeriesListener(listener);
+        App.searchSeries(searchField.getText().toString());
     }
     
     private void setupListOnAdapter(List<Series> series) {
@@ -312,6 +333,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
     }
 
     private static class StateHolder {
+        public boolean isSearching;
         Dialog dialog;
         boolean isShowingDialog;
         List<Series> seriesFound;

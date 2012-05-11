@@ -22,9 +22,9 @@
     <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">last aired:</string>
     <string name="listing_title">Listing title</string>
-    <string name="loading">Loading...</string>
-    <string name="loading_dialog_text">Downloading...</string>
-    <string name="searching_dialog_text">Searching...</string>
+    <string name="loading">Loading…</string>
+    <string name="loading_dialog_text">Downloading…</string>
+    <string name="searching_dialog_text">Searching…</string>
     <string name="med_widget_name">My Series (4x2)</string>
     <string formatted="false" name="runtime_minutes_format">%s minutes</string>
     <string name="my_schedule">My Schedule</string>
@@ -34,7 +34,7 @@
     <string name="next_episode_to_see">Next to see: </string>
     <string formatted="false" name="next_to_see_format">S%02dE%02d</string>
     <string name="nexttosee_uptodate">UP-TO-DATE</string>
-    <string name="no">No</string>
+    <string name="no_i_dont">No, I don\'t</string>
     <string name="no_episode_aired">no episode aired</string>
     <string name="no_episodes">no episode aired</string>
     <string name="no_items_to_list">No items to list</string>
@@ -68,12 +68,12 @@
     <string name="updating_series_notification_title">My Series data update</string>
     <string name="updating_series_failure_notification_title">My Series data update failure</string>
     <string name="update_failure_notification_message">Data update has failed. Please check your Internet connection or try again later.</string>
-    <string name="updating_series_data">Updating series data...</string>
+    <string name="updating_series_data">Updating series data…</string>
     <string name="up_to_date">Up-to-date</string>
     <string name="update">Update</string>
     <string name="upcoming_episodes">Upcoming episodes</string>
     <string name="writer">Writer: </string>
-    <string name="yes">Yes</string>
+    <string name="yes_i_do">Yes, I do</string>
     <string name="you_no_longer_follow">You no longer follow %s.</string>
     <string name="invalid_search_criteria">Invalid search criteria.</string>
     <string name="connection_failed_message">Connection failed. Please check your connection.</string>

@@ -29,5 +29,6 @@ public interface SeasonSetListener {
 
     public void onChangeNextNonSpecialEpisodeToSee(SeasonSet seasonSet);
 
+    @Deprecated
     public void onMerge(SeasonSet seasonSet);
 }
