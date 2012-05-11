@@ -25,6 +25,7 @@ import java.util.Comparator;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
@@ -58,9 +59,27 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     private CoverFlow coverFlow;
     private SeriesItemViewHolder seriesItemViewHolder;
 
+    /**
+     * Necessary because it must there be a strong reference to the listener so it cannot be collected.
+     */
+    private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
+
+        @Override
+        public void onFollowing(Series followedSeries) {
+            SeriesCoverFlowFragment.this.reload();
+        }
+
+        @Override
+        public void onStopFollowing(Series unfollowedSeries) {
+            SeriesCoverFlowFragment.this.reload();
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        App.registerSeriesFollowingListener(this.seriesFollowingListener);
     }
 
     @Override
@@ -71,7 +90,10 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        this.reload();
+    }
 
+    public void reload() {
         this.seriesAdapter = new SeriesCoverFlowAdapter().sort(COMPARATOR);
         this.adapter = new ReflectingImageAdapter(this.seriesAdapter);
         this.coverFlow = (CoverFlow) this.getActivity().findViewById(R.id.coverflow);
@@ -120,6 +142,17 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
                 //TODO Show 'No followed series'
             }
         });
+
+        this.coverFlow.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Series series = SeriesCoverFlowFragment.this.seriesAdapter.itemOf(position);
+
+                if (!SeriesCoverFlowFragment.this.isSelected(series)) {return true;}
+
+                StopFollowingSeriesConfirmationDialog.buildFor(series, view.getContext()).show();
+                return true;
+            }});
     }
 
     private void downloadDescription(Series item) {
