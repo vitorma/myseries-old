@@ -25,6 +25,8 @@ import java.util.Comparator;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.ImageProvider;
+import mobi.myseries.application.PosterDownloadListener;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
@@ -52,6 +54,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final Comparator<Series> COMPARATOR = new SeriesComparator();
 
     private SeriesCoverFlowAdapter seriesAdapter;
@@ -75,10 +78,28 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         }
     };
 
+    private PosterDownloadListener posterDownloadListener = new PosterDownloadListener() {
+
+        @Override
+        public void onStartDownloadingPosterOf(Series series) {}
+
+        @Override
+        public void onFailureWhileSavingPosterOf(Series series) {}
+
+        @Override
+        public void onDownloadPosterOf(Series series) {
+            SeriesCoverFlowFragment.this.reload();
+        }
+
+        @Override
+        public void onConnectionFailureWhileDownloadingPosterOf(Series series) {}
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        IMAGE_PROVIDER.register(this.posterDownloadListener);
         App.registerSeriesFollowingListener(this.seriesFollowingListener);
     }
 
