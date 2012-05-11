@@ -21,15 +21,17 @@
 
 package mobi.myseries.application;
 
-import java.util.List;
 
+import java.util.List;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
+
 import android.app.Application;
 
 public class App extends Application {
     private static Environment environment;
     private static SearchSeriesService searchService;
+    private static FollowSeriesService followSeriesService;
 
     @Override
     public void onCreate() {
@@ -42,6 +44,7 @@ public class App extends Application {
         return environment;
     }
 
+    // Search Series
     public static void searchSeries(String seriesName) {
         searchService.search(seriesName, localLanguage());
     }
@@ -56,10 +59,39 @@ public class App extends Application {
     
     public static List<Series> getLastValidSearchResult(){
         return SearchSeriesService.getLastSearchResult();
-        
+  
     }
-
+    
     private static String localLanguage() {
         return environment.localization().language();
+    }
+
+    // Follow Series
+
+    private static FollowSeriesService followSeriesService() {
+        if (followSeriesService == null) {
+            followSeriesService = new FollowSeriesService(environment.theTVDB(),
+                                                          environment.repository(),
+                                                          environment.localization(),
+                                                          environment.imageProvider());
+        }
+
+        return followSeriesService;
+    }
+
+    public static void registerSeriesFollowingListener(SeriesFollowingListener listener) {
+        followSeriesService().registerSeriesFollowingListener(listener);
+    }
+
+    public static void follow(Series series) {
+        followSeriesService().follow(series);
+    }
+
+    public static void stopFollowing(Series series) {
+        followSeriesService().stopFollowing(series);
+    }
+
+    public static boolean follows(Series series) {
+        return followSeriesService().follows(series);
     }
 }

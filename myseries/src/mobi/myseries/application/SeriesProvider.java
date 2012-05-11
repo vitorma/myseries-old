@@ -45,10 +45,11 @@ public class SeriesProvider {
     private final SeriesSource seriesSource;
     private final SeriesRepository seriesRepository;
 
-    private final Set<FollowingSeriesListener> followingSeriesListeners;
     private final Set<UpdateListener> updateListeners;
+    private UpdateSeriesTask updateSeriesTask;
 
-    public static SeriesProvider newInstance(SeriesSource seriesSource, SeriesRepository seriesRepository) {
+    public static SeriesProvider newInstance(SeriesSource seriesSource,
+            SeriesRepository seriesRepository) {
         return new SeriesProvider(seriesSource, seriesRepository);
     }
 
@@ -58,7 +59,6 @@ public class SeriesProvider {
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
-        this.followingSeriesListeners = new HashSet<FollowingSeriesListener>();
         this.updateListeners = new HashSet<UpdateListener>();
     }
 
@@ -66,8 +66,21 @@ public class SeriesProvider {
         return this.seriesRepository.getAll();
     }
 
-    public void updateData() {
-        new UpdateSeriesTask().execute();
+    private void killUpdateInProgress() {
+        if (this.updateSeriesTask != null && !this.updateSeriesTask.isCancelled()) {
+            this.updateSeriesTask.cancel(true);
+            
+            Log.d("SeriesProvider", "Update cancelled");
+        }
+
+        this.updateSeriesTask = null;
+    }
+
+    public synchronized void updateData() {
+        this.killUpdateInProgress();
+
+        this.updateSeriesTask = new UpdateSeriesTask();
+        this.updateSeriesTask.execute();
     }
 
     private class UpdateSeriesTask extends AsyncTask<Void, Void, Void> {
@@ -95,15 +108,19 @@ public class SeriesProvider {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                this.upToDateSeries = SeriesProvider.this.seriesSource.fetchAllSeries(
-                        this.seriesToUpdate, App.environment().localization().language());
+                this.upToDateSeries =
+                        SeriesProvider.this.seriesSource.fetchAllSeries(this.seriesToUpdate, App
+                                .environment().localization().language());
             } catch (SeriesNotFoundException e) {
+                e.printStackTrace();
                 // TODO: find a better way to tell that a problem happened when fetching the series
                 this.upToDateSeries = null;
             } catch (ConnectionFailedException e) {
+                e.printStackTrace();
                 // TODO: find a better way to tell that a problem happened when fetching the series
                 this.upToDateSeries = null;
             } catch (ParsingFailedException e) {
+                e.printStackTrace();
                 // TODO: find a better way to tell that a problem happened when fetching the series
                 this.upToDateSeries = null;
             }
@@ -124,6 +141,7 @@ public class SeriesProvider {
             for (Series theirSeries : this.upToDateSeries) {
                 Series ourSeries = SeriesProvider.this.getSeries(theirSeries.id());
                 ourSeries.mergeWith(theirSeries);
+                App.environment().imageProvider().downloadPosterOf(ourSeries);
                 allOurSeries.add(ourSeries);
             }
 
@@ -131,92 +149,15 @@ public class SeriesProvider {
 
             SeriesProvider.this.notifyListenersOfUpdateSuccess();
             Log.d("Update", "Update successful.");
-
+            SeriesProvider.this.updateSeriesTask = null;
         }
-    }
-
-    public void follow(Series series) {
-        new FollowSeriesTask().execute(series);
-    }
-
-    private class FollowSeriesTask extends AsyncTask<Series, Void, Void> {
-        private Series followedSeries;
-
-        @Override
-        protected Void doInBackground(Series... params) {
-            final Series seriesToFollow = params[0];
-
-            // TODO is there anything to do about any SeriesNotFoundException that may be thrown
-            // here?
-            try {
-
-                this.followedSeries = SeriesProvider.this.seriesSource.fetchSeries(
-                        seriesToFollow.id(), App.environment().localization().language());
-
-            } catch (SeriesNotFoundException e) {
-                //TODO: notify someone?
-
-                return null;
-            } catch (ConnectionFailedException e) {
-                //TODO: notify someone?
-
-                return null;
-            } catch (ParsingFailedException e) {
-                //TODO: notify someone?
-
-                return null;
-            }
-
-            SeriesProvider.this.seriesRepository.insert(this.followedSeries);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            SeriesProvider.this.notifyListenersOfFollowedSeries(this.followedSeries);
-            App.environment().imageProvider().downloadPosterOf(this.followedSeries); //TODO: move me elsewhere
-        }
-    };
-
-    public void unfollow(Series series) {
-        this.seriesRepository.delete(series);
-        this.notifyListenersOfUnfollowedSeries(series);
-    }
-
-    public boolean follows(Series series) {
-        return this.seriesRepository.contains(series);
-    }
-
-    public void wipeFollowedSeries() {
-        for (final Series s : this.followedSeries()) {
-            this.notifyListenersOfUnfollowedSeries(s);
-        }
-
-        this.seriesRepository.clear();
-    }
-
-    private void notifyListenersOfFollowedSeries(Series followedSeries) {
-        for (final FollowingSeriesListener listener : this.followingSeriesListeners) {
-            listener.onFollowing(followedSeries);
-        }
-    }
-
-    private void notifyListenersOfUnfollowedSeries(Series unfollowedSeries) {
-        for (final FollowingSeriesListener listener : this.followingSeriesListeners) {
-            listener.onUnfollowing(unfollowedSeries);
-        }
-    }
-
-    public void addFollowingSeriesListener(FollowingSeriesListener listener) {
-        this.followingSeriesListeners.add(listener);
     }
 
     public Series getSeries(int seriesId) {
         return this.seriesRepository.get(seriesId);
     }
 
-    //Schedule----------------------------------------------------------------------------------------------------------
+    // Schedule----------------------------------------------------------------------------------------------------------
 
     private Specification<Episode> recentEpisodesSpecification() {
         return AirdateSpecification.before(Dates.today()).and(SeenMarkSpecification.asNotSeen());
@@ -260,7 +201,7 @@ public class SeriesProvider {
         return upcomingEpisodes;
     }
 
-    //SeenMark----------------------------------------------------------------------------------------------------------
+    // SeenMark----------------------------------------------------------------------------------------------------------
 
     public void markSeasonAsSeen(Season season) {
         season.markAsSeen();

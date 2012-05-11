@@ -26,7 +26,6 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SearchSeriesListener;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 import android.app.AlertDialog;
@@ -51,7 +50,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 public class SeriesSearchActivity extends SherlockListActivity {
-    private final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private StateHolder state;
     private SearchSeriesListener listener;
     
@@ -275,7 +273,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
             private void setFollowButtonClickListener() {
                 final Button followButton = (Button) this.dialog.findViewById(R.id.followButton);
 
-                final boolean userFollowsSeries = seriesProvider.follows(this.selectedItem);
+                final boolean userFollowsSeries = App.follows(this.selectedItem);
 
                 if (userFollowsSeries) {
                     followButton.setText(R.string.stop_following);
@@ -287,9 +285,9 @@ public class SeriesSearchActivity extends SherlockListActivity {
                     @Override
                     public void onClick(final View v) {
                         if (userFollowsSeries) {
-                            seriesProvider.unfollow(selectedItem);
+                            App.stopFollowing(selectedItem);
                         } else {
-                            seriesProvider.follow(selectedItem);
+                            App.follow(selectedItem);
 
                             String message = String.format(SeriesSearchActivity.this
                                     .getString(R.string.series_will_be_added), selectedItem.name());

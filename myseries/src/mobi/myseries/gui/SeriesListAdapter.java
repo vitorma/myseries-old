@@ -27,17 +27,19 @@ import java.util.Comparator;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.FollowingSeriesListener;
+import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.PosterDownloadListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
+import mobi.myseries.gui.detail.series.SeriesOverviewActivity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,20 +49,139 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, FollowingSeriesListener, PosterDownloadListener {
+public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener,
+                                                                       SeriesFollowingListener,
+                                                                       PosterDownloadListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
     private static final int ITEM_LAYOUT = R.layout.series_list_item;
 
-    private LayoutInflater layoutInflater;
+    private static class SeriesListItemFactory {
+        private Context context;
+        private LayoutInflater layoutInflater;
+
+        private SeriesListItemFactory(Context context) {
+            this.context = context;
+            this.layoutInflater = LayoutInflater.from(this.context);
+        }
+
+        public View draw(Series item, View oldView) {
+            View itemView = prepareViewFrom(oldView);
+
+            this.setPosterTo(IMAGE_PROVIDER.getPosterOf(item), itemView);
+            this.setNameTo(item.name(), itemView);
+            this.setSeenEpisodesBarFor(item, itemView);
+            this.setNextEpisodeToSeeTo(item.nextEpisodeToSee(true), itemView); //TODO SharedPreference
+            this.setUpShowingSeriesDetailsViewOnClickFor(item, itemView);
+            this.setUpStopFollowingOnLongClickFor(item, itemView);
+
+            return itemView;
+        }
+
+        private View prepareViewFrom(View oldView) {
+            View itemView = oldView;
+
+            if (oldView == null) {
+                itemView = layoutInflater.inflate(ITEM_LAYOUT, null);
+            }
+
+            return itemView;
+        }
+        private void setPosterTo(Bitmap poster, View itemView) {
+            ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
+            image.setImageBitmap(poster);
+        }
+
+        private void setNameTo(String name, View itemView) {
+            TextView nameView = (TextView) itemView.findViewById(R.id.nameTextView);
+            nameView.setText(name);
+        }
+
+        private void setSeenEpisodesBarFor(Series series, View itemView) {
+            SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.SeenEpisodesBar);
+            seenEpisodesBar.updateWithEpisodesOf(series);
+        }
+
+        private void setNextEpisodeToSeeTo(final Episode nextEpisode, View itemView) {
+            TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
+            CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.seenMarkCheckBox);
+
+            if (nextEpisode != null) {
+                String format = this.context.getString(R.string.next_to_see_format);
+                nextToSee.setText(String.format(format, nextEpisode.seasonNumber(), nextEpisode.number()));
+
+                seenMark.setVisibility(View.VISIBLE);
+                seenMark.setChecked(nextEpisode.wasSeen());
+                seenMark.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        SERIES_PROVIDER.markEpisodeAsSeen(nextEpisode);
+                    }
+                });
+            } else {
+                nextToSee.setText(R.string.nexttosee_uptodate);
+
+                seenMark.setChecked(false);
+                seenMark.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        private void setUpShowingSeriesDetailsViewOnClickFor(final Series series, View itemView) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = SeriesOverviewActivity.newIntent(context, series.id());
+                    context.startActivity(intent);
+                }
+            });
+        }
+
+        private void setUpStopFollowingOnLongClickFor(final Series series, View itemView) {
+            String notFormatedDialgText = this.context.getString(R.string.do_you_want_to_stop_following);
+            final String dialogText = String.format(notFormatedDialgText, series.name());
+
+            final String yesText = this.context.getString(R.string.yes_i_do);
+            final String noText = this.context.getString(R.string.no_i_dont);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    new AlertDialog.Builder(context)
+                            .setCancelable(false)
+                            .setMessage(dialogText)
+                            .setPositiveButton(yesText, new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    App.stopFollowing(series);
+                                }
+                            })
+                            .setNegativeButton(noText, null)
+                            .show();
+                    return true;
+                }
+            });
+        }
+    }
+
+    private static class SeriesComparator implements Comparator<Series> {
+        @Override
+        public int compare(Series seriesA, Series seriesB) {
+            return seriesA.name().compareTo(seriesB.name());
+        }
+    }
+
+    private SeriesListItemFactory listItemFactory;
 
     public SeriesListAdapter(Context context, Collection<Series> objects) {
        super(context, ITEM_LAYOUT, new ArrayList<Series>(objects));
 
-       this.layoutInflater = LayoutInflater.from(context);
+       this.listItemFactory = new SeriesListItemFactory(context);
 
-       SERIES_PROVIDER.addFollowingSeriesListener(this);
+       App.registerSeriesFollowingListener(this);
 
        for (Series series : objects) {
            series.register(this);
@@ -71,43 +192,8 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View itemView = convertView;
-
-        if (itemView == null) {
-            itemView = this.layoutInflater.inflate(ITEM_LAYOUT, null);
-        }
-
-        ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
-        TextView name = (TextView) itemView.findViewById(R.id.nameTextView);
-        SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.SeenEpisodesBar);
-        TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
-        CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.seenMarkCheckBox);
-
         Series item = this.getItem(position);
-
-        image.setImageBitmap(IMAGE_PROVIDER.getPosterOf(item));
-        name.setText(item.name());
-        seenEpisodesBar.updateWithEpisodesOf(item);
-
-        final Episode nextEpisodeToSee = item.nextEpisodeToSee(true);//TODO SharedPreference
-        if (nextEpisodeToSee != null) {
-            String format = this.getContext().getString(R.string.next_to_see_format);
-            nextToSee.setText(String.format(format, nextEpisodeToSee.seasonNumber(), nextEpisodeToSee.number()));
-            seenMark.setVisibility(View.VISIBLE);
-            seenMark.setChecked(nextEpisodeToSee.wasSeen());
-            seenMark.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    SERIES_PROVIDER.markEpisodeAsSeen(nextEpisodeToSee);
-                }
-            });
-        } else {
-            nextToSee.setText(R.string.nexttosee_uptodate);
-            seenMark.setChecked(false);
-            seenMark.setVisibility(View.INVISIBLE);
-        }
-
-        return itemView;
+        return this.listItemFactory.draw(item, convertView);
     }
 
     @Override
@@ -125,13 +211,6 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Series series) {
-        //TODO Update the 'progress' bar
-//        int index = this.getPosition(series);
-//
-//        ListView listView = this.getListView();
-//        final SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) listView.getChildAt(index)
-//                .findViewById(R.id.SeenEpisodesBar);
-//        seenEpisodesBar.setSeries(series);
         this.notifyDataSetChanged();
     }
 
@@ -151,35 +230,17 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         this.notifyDataSetChanged();
     }
 
-    private static class SeriesComparator implements Comparator<Series> {
-        @Override
-        public int compare(Series seriesA, Series seriesB) {
-            return seriesA.name().compareTo(seriesB.name());
-        }
-    }
-
     @Override
     public void onDownloadPosterOf(Series series) {
-        Log.v("naofalhei", "no download");
         this.notifyDataSetChanged();
-        
     }
 
     @Override
-    public void onStartDownloadingPosterOf(Series series) {
-        // TODO Auto-generated method stub
-        
-    }
+    public void onStartDownloadingPosterOf(Series series) {}
 
     @Override
-    public void onConnectionFailureWhileDownloadingPosterOf(Series series) {
-        Log.v("falhei", "no download");
-        
-    }
+    public void onConnectionFailureWhileDownloadingPosterOf(Series series) {}
 
     @Override
-    public void onFailureWhileSavingPosterOf(Series series) {
-        // TODO Auto-generated method stub
-        
-    }
+    public void onFailureWhileSavingPosterOf(Series series) {}
 }
