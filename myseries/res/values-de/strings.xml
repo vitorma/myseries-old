@@ -10,7 +10,7 @@
     <string name="back">Stornieren</string>
     <string name="details">Details</string>
     <string name="directed_by">Regie: </string>
-    <string name="director">Direktor: </string>
+    <string name="director">Direktors</string>
     <string formatted="false" name="do_you_want_to_stop_following">"Wollen Sie folgen %s stoppen?"</string>
     <string name="episode_overview">Überschau:</string>
     <string formatted="false" name="episode_number_format">Episode %02d</string>
@@ -18,7 +18,7 @@
     <string name="first_aired">Erstausstrahlung: </string>
     <string name="follow">Folgen</string>
     <string name="genre">Genres</string>
-    <string name="guest_stars">Gaststars:</string>
+    <string name="guest_stars">Gaststars</string>
     <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">latzte:</string>
     <string name="listing_title">Titel der Liste.</string>
@@ -71,7 +71,7 @@
     <string name="updating_series_data">Aktualisierung der Daten von Series...</string>
     <string name="up_to_date">Aktualisiert</string>
     <string name="update">Aktualisierung</string>
-    <string name="writer">Writer: </string>
+    <string name="writer">Writers</string>
     <string name="yes_i_do">Ja</string>
     <string name="you_no_longer_follow">Sie folgen %s nicht mehr.</string>
     <string name="date_format_short">yyyy-MM-dd</string>

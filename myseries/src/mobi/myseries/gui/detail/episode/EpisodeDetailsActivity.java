@@ -82,14 +82,13 @@ public class EpisodeDetailsActivity extends SherlockFragmentActivity {
         this.pager = (ViewPager) this.findViewById(R.id.pager);
         this.pager.setAdapter(this.adapter);
         this.pageIndicator = (TitlePageIndicator) this.findViewById(R.id.titles);
-        this.pageIndicator.setViewPager(pager);
+        this.pageIndicator.setViewPager(this.pager);
 
         Episode current = series.season(this.seasonNumber).episode(this.episodeNumber);
         this.pager.setCurrentItem(this.adapter.positionOf(current));
 
         ActionBar ab = this.getSupportActionBar();
-        String ep = this.getString(R.string.episode_overview);
-        ab.setTitle(ep + " " + series.name());
+        ab.setTitle(series.name());
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
     }

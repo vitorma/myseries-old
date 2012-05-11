@@ -10,7 +10,7 @@
     <string name="back">Back</string>
     <string name="details">Details</string>
     <string name="directed_by">Directed by: </string>
-    <string name="director">Director: </string>
+    <string name="director">Directors</string>
     <string formatted="false" name="do_you_want_to_stop_following">"Do you want to stop following %s?"</string>
     <string name="episode_overview">Overview:</string>
     <string formatted="false" name="episode_number_format">Episode %02d</string>
@@ -18,7 +18,7 @@
     <string name="first_aired">First aired: </string>
     <string name="follow">Follow</string>
     <string name="genre">Genres</string>
-    <string name="guest_stars">Guest stars:</string>
+    <string name="guest_stars">Guest stars</string>
     <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">last aired:</string>
     <string name="listing_title">Listing title</string>
@@ -72,7 +72,7 @@
     <string name="up_to_date">Up-to-date</string>
     <string name="update">Update</string>
     <string name="upcoming_episodes">Upcoming episodes</string>
-    <string name="writer">Writer: </string>
+    <string name="writer">Writers</string>
     <string name="yes_i_do">Yes, I do</string>
     <string name="you_no_longer_follow">You no longer follow %s.</string>
     <string name="invalid_search_criteria">Invalid search criteria.</string>

@@ -10,7 +10,7 @@
     <string name="back">Voltar</string>
     <string name="details">Detalhes</string>
     <string name="directed_by">Dirigido por: </string>
-    <string name="director">Diretor: </string>
+    <string name="director">Diretores</string>
     <string formatted="false" name="do_you_want_to_stop_following">"Você deseja deixar de acompanhar %s?"</string>
     <string name="episode_overview">Overview:</string>
     <string formatted="false" name="episode_number_format">Episódio %02d</string>
@@ -21,7 +21,7 @@
     <string name="parsing_failed">Erro de parsing.</string>
     <string name="follow">Acompanhar</string>
     <string name="genre">Gêneros</string>
-    <string name="guest_stars">Artistas convidados:</string>
+    <string name="guest_stars">Artistas convidados</string>
     <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">último exibido:</string>
     <string name="listing_title">Título da lista</string>
@@ -73,7 +73,7 @@
     <string name="update_failure_notification_message">A atualização falhou. Verifique a sua conexão e tente novamente.</string>
     <string name="updating_series_data">Baixando dados das séries…</string>
     <string name="upcoming_episodes">Episódios por vir</string>
-    <string name="writer">Autor: </string>
+    <string name="writer">Autores</string>
     <string name="yes_i_do">Sim</string>
     <string name="you_no_longer_follow">Você não acompanha mais %s.</string>
     <string name="date_format_short">dd/MM/yyyy</string>

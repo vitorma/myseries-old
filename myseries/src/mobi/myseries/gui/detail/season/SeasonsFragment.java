@@ -5,7 +5,6 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.detail.episode.EpisodeDetailsActivity;
-import mobi.myseries.gui.detail.episode.EpisodeFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;

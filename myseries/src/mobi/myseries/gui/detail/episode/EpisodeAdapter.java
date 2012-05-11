@@ -10,7 +10,9 @@ import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.Objects;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +26,8 @@ import android.widget.TextView;
 public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImageDownloadListener, EpisodeListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
+	private static final Resources RESOURCES = App.environment().context().getResources();
+    private static final Bitmap GENERIC_IMAGE = BitmapFactory.decodeResource(RESOURCES, R.drawable.clapperboard);
     private static final int ITEM_LAYOUT = R.layout.episode;
 
     private Episode episode;
@@ -60,8 +64,8 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
         this.episodeName = (TextView) itemView.findViewById(R.id.episodeNameTextView);
         this.episodeFirstAired = (TextView) itemView.findViewById(R.id.episodeFirstAiredTextView);
         this.episodeOverview = (TextView) itemView.findViewById(R.id.episodeOverviewTextView);
-        this.episodeDirector = (TextView) itemView.findViewById(R.id.episodeDirectorTextView);
-        this.episodeWriter = (TextView) itemView.findViewById(R.id.episodeWriterTextView);
+        this.episodeDirector = (TextView) itemView.findViewById(R.id.episodeDirectorsTextView);
+        this.episodeWriter = (TextView) itemView.findViewById(R.id.episodeWritersTextView);
         this.episodeGuestStars = (TextView) itemView.findViewById(R.id.episodeGuestStarsTextView);
         this.isViewed = (CheckBox) itemView.findViewById(R.id.isEpisodeViewedCheckBox);
         this.imageView = (ImageView) itemView.findViewById(R.id.imageView);
@@ -134,6 +138,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
         if (this.image != null) {
             this.setupForLoadedImage();
         } else {
+            this.imageView.setImageBitmap(GENERIC_IMAGE);
             this.setupForUnavailableImage();
         }
     }
@@ -150,7 +155,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
 
     private void setupForUnavailableImage() {
         this.progressBar.setVisibility(View.GONE);
-        this.imageView.setVisibility(View.GONE);
+        this.imageView.setVisibility(View.VISIBLE);
     }
 
     @Override

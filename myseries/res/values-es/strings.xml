@@ -10,7 +10,7 @@
     <string name="back">Volver</string>
     <string name="details">Detalles</string>
     <string name="directed_by">Dirigida por: </string>
-    <string name="director">Director: </string>
+    <string name="director">Directores</string>
     <string formatted="false" name="do_you_want_to_stop_following">"Desea dejar de seguir %s?"</string>
     <string name="invalid_search_criteria">El criterio de búsqueda no es válido.</string>
     <string name="connection_failed_message">No se puede conectar al servidor. Por favor, compruebe su conexión a Internet.</string>
@@ -21,7 +21,7 @@
     <string name="first_aired">Emitió por primera vez: </string>
     <string name="follow">Seguir</string>
     <string name="genre">Géneros</string>
-    <string name="guest_stars">Estrellas invitadas:</string>
+    <string name="guest_stars">Estrellas invitadas</string>
     <string name="large_widget_name">My Series (4x4)</string>
     <string name="last_episode_aired">último episodio emitido:</string>
     <string name="listing_title">Título de la lista</string>
@@ -74,7 +74,7 @@
     <string name="update_failure_notification_message">La actualización ha fallado. Compruebe la conexión y vuelva a intentarlo.</string>
     <string name="updating_series_data">A descargar datos de la serie…</string>
     <string name="upcoming_episodes">Próximos episodios</string>
-    <string name="writer">Autor: </string>
+    <string name="writer">Autores</string>
     <string name="yes_i_do">Sí</string>
     <string name="you_no_longer_follow">Dejaste de seguir la serie %s.</string>
     <string name="date_format_short">yyyy-MM-dd</string>

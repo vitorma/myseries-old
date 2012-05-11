@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/genre"
                     android:textStyle="bold"
-                    android:textColor="@color/light_gray"/>
+                    android:textColor="@color/gray"/>
 
                 <TextView
                     android:id="@+id/genreTextView"
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/actors"
                     android:textStyle="bold"
-                    android:textColor="@color/light_gray"/>
+                    android:textColor="@color/gray"/>
 
                 <TextView
                     android:id="@+id/actorsTextView"
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/overview"
                     android:textStyle="bold"
-                    android:textColor="@color/light_gray"/>
+                    android:textColor="@color/gray"/>
 
                 <TextView
                     android:id="@+id/seriesOverviewTextView"
