@@ -26,6 +26,7 @@ import java.util.Collection;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.ImageLoader;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.PosterDownloadListener;
 import mobi.myseries.application.SeriesFollowingListener;
@@ -33,6 +34,8 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
+import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
+import mobi.myseries.domain.repository.ImageDirectory;
 import mobi.myseries.gui.SeenEpisodesBar;
 import mobi.myseries.gui.SeriesComparator;
 import mobi.myseries.gui.detail.series.SeriesOverviewActivity;
@@ -68,7 +71,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         public View draw(Series item, View oldView) {
             View itemView = prepareViewFrom(oldView);
 
-            this.setPosterTo(IMAGE_PROVIDER.getPosterOf(item), itemView);
+            this.setPosterTo(item, itemView);
             this.setNameTo(item.name(), itemView);
             this.setSeenEpisodesBarFor(item, itemView);
             this.setNextEpisodeToSeeTo(item.nextEpisodeToSee(true), itemView); //TODO SharedPreference
@@ -87,9 +90,9 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
             return itemView;
         }
-        private void setPosterTo(Bitmap poster, View itemView) {
+        private void setPosterTo(Series series, View itemView) {
             ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
-            image.setImageBitmap(poster);
+            IMAGE_PROVIDER.setPosterTo(series, image);
         }
 
         private void setNameTo(String name, View itemView) {

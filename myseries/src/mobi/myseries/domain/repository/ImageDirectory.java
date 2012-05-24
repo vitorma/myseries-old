@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 
 import android.content.Context;
@@ -151,5 +152,11 @@ public class ImageDirectory implements ImageRepository {
 
     private boolean isAvaliable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    }
+    
+    public String getPathForPoster(Series series) throws ExternalStorageNotAvailableException{
+        File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
+        return seriesPostersFolder + FILE_SEPARATOR + series.id() + IMAGE_EXTENSION;
+        
     }
 }

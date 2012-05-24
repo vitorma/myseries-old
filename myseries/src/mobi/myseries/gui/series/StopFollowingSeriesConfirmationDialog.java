@@ -39,8 +39,7 @@ public class StopFollowingSeriesConfirmationDialog {
         final String noText = context.getString(R.string.no_i_dont);
 
         return new AlertDialog.Builder(context)
-                       .setCancelable(false)
-                       .setMessage(dialogText)
+                        .setMessage(dialogText)
                         .setPositiveButton(yesText, new DialogInterface.OnClickListener() {
 
                             @Override

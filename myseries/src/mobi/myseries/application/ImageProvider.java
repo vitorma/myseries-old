@@ -37,8 +37,10 @@ import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.widget.ImageView;
 
 public final class ImageProvider {
+    private static final ImageLoader IMAGE_LOADER = new ImageLoader();     
 
     private class DownloadEpisodeTask extends AsyncTask<Void, Void, Void> {
         private Episode episode;
@@ -383,6 +385,11 @@ public final class ImageProvider {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public void setPosterTo(Series series, ImageView image) {
+        IMAGE_LOADER.load(series, image, this.genericPosterImage());
+        
     }
 
 }

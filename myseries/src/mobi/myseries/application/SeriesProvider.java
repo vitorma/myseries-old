@@ -127,6 +127,11 @@ public class SeriesProvider {
 
             return null;
         }
+        
+        @Override
+        protected void onCancelled() {
+            
+        }
 
         @Override
         protected void onPostExecute(Void result) {
