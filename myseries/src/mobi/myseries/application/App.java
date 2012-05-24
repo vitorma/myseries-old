@@ -23,21 +23,28 @@ package mobi.myseries.application;
 
 
 import java.util.List;
+
+import mobi.myseries.R;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
+import mobi.myseries.domain.repository.ImageDirectory;
 import mobi.myseries.shared.ListenerSet;
 
 import android.app.Application;
+import android.widget.ImageView;
 
 public class App extends Application {
     private static Environment environment;
     private static SearchSeriesService searchService;
     private static FollowSeriesService followSeriesService;
+    private static ImageloaderService imageLoadService;
 
     @Override
     public void onCreate() {
         super.onCreate();
         environment = Environment.newEnvironment(this);
         searchService = new SearchSeriesService(environment.theTVDB());
+        imageLoadService = new ImageloaderService();
     }
 
     public static Environment environment() {
@@ -93,5 +100,12 @@ public class App extends Application {
 
     public static boolean follows(Series series) {
         return followSeriesService().follows(series);
+    }
+    
+    public static void loadPoster(Series series, ImageView imageView) {
+    	String path;
+		path = ImageDirectory.getPathForPoster(series.id());
+    	//path = "http://thetvdb.com/banners/_cache/posters/79349-2.jpg";
+    	imageLoadService.load(path, imageView, R.drawable.generic_poster);
     }
 }

@@ -26,7 +26,6 @@ import java.util.Collection;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.ImageLoader;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.PosterDownloadListener;
 import mobi.myseries.application.SeriesFollowingListener;
@@ -94,7 +93,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
         private void setPosterTo(Series series, View itemView) {
             ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
-            IMAGE_PROVIDER.setPosterTo(series, image);
+            App.loadPoster(series, image);
         }
 
         private void setNameTo(String name, View itemView) {
