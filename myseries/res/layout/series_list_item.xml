@@ -1,77 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="true"
-    android:orientation="horizontal"
     android:padding="5dp">
 
     <ImageView
         android:id="@+id/seriesImageView"
         android:layout_width="61dp"
         android:layout_height="90dp"
-        android:layout_gravity="center_vertical"
         android:scaleType="centerInside"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:src="@drawable/small_poster_clapperboard"/>
 
-    <RelativeLayout
-        android:id="@+id/linearLayout11"
+    <TextView
+        android:id="@+id/nameTextView"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/seriesImageView"
+        android:ellipsize="marquee"
+        android:lines="1"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:text="@string/loading"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <mobi.myseries.gui.SeenEpisodesBar
+        android:id="@+id/SeenEpisodesBar"
+        android:layout_width="match_parent"
+        android:layout_height="9dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/nameTextView"
+        android:layout_toRightOf="@id/seriesImageView"/>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:paddingLeft="5dp">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/SeenEpisodesBar"
+        android:layout_toRightOf="@id/seriesImageView">
 
-        <TextView
-            android:id="@+id/nameTextView"
+        <include
+            android:id="@+id/nextToSeePanel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:ellipsize="marquee"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:layout_height="match_parent"
+            layout="@layout/nexttosee_panel"/>
 
-        <mobi.myseries.gui.SeenEpisodesBar
-            android:id="@+id/SeenEpisodesBar"
+        <include
+            android:id="@+id/nextToSeeUpToDatePanel"
             android:layout_width="wrap_content"
-            android:layout_height="9dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/nameTextView"
-            android:layout_marginTop="10dp"/>
+            android:layout_height="match_parent"
+            layout="@layout/nexttosee_panel_uptodate"/>
 
-         <TextView
-            android:id="@+id/nextToSeeTextView"
-            style="@style/myseries_style.15sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:text="@string/loading"/>
+    </FrameLayout>
 
-         <CheckBox
-            android:id="@+id/seenMarkCheckBox"
-            android:button="@drawable/checkbox_nexttosee"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_toLeftOf="@id/nextToSeeTextView"
-            android:layout_alignBaseline="@id/nextToSeeTextView"
-            android:focusable="false"
-            android:focusableInTouchMode="false"/>
-
-        <TextView
-            android:id="@+id/nextToSeeLabelTextView"
-            style="@style/myseries_style.10sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_above="@id/nextToSeeTextView"
-            android:text="@string/next_episode_to_see"/>
-
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

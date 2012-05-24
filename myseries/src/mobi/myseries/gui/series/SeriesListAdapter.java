@@ -51,6 +51,7 @@ import android.widget.TextView;
 public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener,
                                                                        SeriesFollowingListener,
                                                                        PosterDownloadListener {
+
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
@@ -87,6 +88,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
             return itemView;
         }
+
         private void setPosterTo(Bitmap poster, View itemView) {
             ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
             image.setImageBitmap(poster);
@@ -103,27 +105,31 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         }
 
         private void setNextEpisodeToSeeTo(final Episode nextEpisode, View itemView) {
+            View nextToSeePanel = itemView.findViewById(R.id.nextToSeePanel);
+            View nextToSeeUpToDatePanel = itemView.findViewById(R.id.nextToSeeUpToDatePanel);
+
+            if (nextEpisode == null) {
+                nextToSeePanel.setVisibility(View.INVISIBLE);
+                nextToSeeUpToDatePanel.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            nextToSeePanel.setVisibility(View.VISIBLE);
+            nextToSeeUpToDatePanel.setVisibility(View.INVISIBLE);
+
             TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
             CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.seenMarkCheckBox);
 
-            if (nextEpisode != null) {
-                String format = this.context.getString(R.string.next_to_see_format);
-                nextToSee.setText(String.format(format, nextEpisode.seasonNumber(), nextEpisode.number()));
+            String format = this.context.getString(R.string.next_to_see_format);
+            nextToSee.setText(String.format(format, nextEpisode.seasonNumber(), nextEpisode.number()));
 
-                seenMark.setVisibility(View.VISIBLE);
-                seenMark.setChecked(nextEpisode.wasSeen());
-                seenMark.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View arg0) {
-                        SERIES_PROVIDER.markEpisodeAsSeen(nextEpisode);
-                    }
-                });
-            } else {
-                nextToSee.setText(R.string.nexttosee_uptodate);
-
-                seenMark.setChecked(false);
-                seenMark.setVisibility(View.INVISIBLE);
-            }
+            seenMark.setChecked(nextEpisode.wasSeen());
+            seenMark.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SERIES_PROVIDER.markEpisodeAsSeen(nextEpisode);
+                }
+            });
         }
 
         private void setUpShowingSeriesDetailsViewOnClickFor(final Series series, View itemView) {
@@ -155,7 +161,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
        super(context, ITEM_LAYOUT, new ArrayList<Series>(objects));
 
        this.listItemFactory = new SeriesListItemFactory(context);
-       
+
        IMAGE_PROVIDER.register(this);
 
        App.registerSeriesFollowingListener(this);
