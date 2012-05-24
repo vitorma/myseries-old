@@ -1,5 +1,8 @@
 package mobi.myseries.application;
 
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.repository.ImageDirectory;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -26,8 +29,8 @@ public class ImageloaderService {
 
     }
 
-    public void load(String path, ImageLoadSupplicant suplicant) {
-        String filepath = "file://" + path;
+    public void loadPoster(Series series, ImageLoadSupplicant suplicant) {
+        String filepath = "file://" + ImageDirectory.getPathForPoster(series.id()) ;
         
         // Creates display image options for custom display task
         options = new DisplayImageOptions.Builder()

@@ -98,9 +98,6 @@ public class App extends Application {
     }
     
     public static void loadPoster(Series series, ImageLoadSupplicant suplicant) {
-    	String path;
-		path = ImageDirectory.getPathForPoster(series.id());
-    	//path = "http://thetvdb.com/banners/_cache/posters/79349-2.jpg";
-    	imageLoadService.load(path, suplicant);
+    	imageLoadService.loadPoster(series, suplicant);
     }
 }
