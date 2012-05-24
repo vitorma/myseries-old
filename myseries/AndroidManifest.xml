@@ -20,7 +20,7 @@
 
         <activity
             android:label="@string/app_name"
-            android:name=".gui.MySeriesActivity"
+            android:name=".gui.myseries.MySeriesActivity"
             android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -28,16 +28,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.schedule.MyScheduleActivity">
+            android:name=".gui.myschedule.MyScheduleActivity">
         </activity>
         <activity
-            android:name=".gui.search.SeriesSearchActivity">
+            android:name=".gui.seriessearch.SeriesSearchActivity">
         </activity>
         <activity
-            android:name=".gui.detail.series.SeriesOverviewActivity">
+            android:name=".gui.series.SeriesActivity">
         </activity>
         <activity
-            android:name=".gui.detail.episode.EpisodeDetailsActivity">
+            android:name=".gui.episodes.EpisodeDetailsActivity">
         </activity>
 
         <receiver

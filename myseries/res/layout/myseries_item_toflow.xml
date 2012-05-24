@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <mobi.myseries.gui.widget.CoverFlow
+        <mobi.myseries.gui.shared.CoverFlow
             xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
             android:id="@+id/coverflow"
             coverflow:imageWidth="75dp"
@@ -49,7 +49,7 @@
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-            <mobi.myseries.gui.SeenEpisodesBar
+            <mobi.myseries.gui.shared.SeenEpisodesBar
                 android:id="@+id/coverflow_item_bar"
                 android:layout_width="match_parent"
                 android:layout_height="9dp"
