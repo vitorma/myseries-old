@@ -51,7 +51,7 @@ public class SeasonsFragment extends SherlockFragment {
             return null;
         }
 
-        return inflater.inflate(R.layout.seasons_fragment, container, false);
+        return inflater.inflate(R.layout.series_seasons, container, false);
     }
 
     @Override

@@ -49,9 +49,9 @@ import android.widget.RemoteViews;
 public class MySeriesWidget extends AppWidgetProvider {
     private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
     private static final ImageProvider imageProvider = App.environment().imageProvider();
-    protected static final int layout = R.layout.myseries_desktop_widget;
-    protected static final int itemLayout = R.layout.widget_list_item;
-    protected static final int noItemLayout = R.layout.text_only_list_item;
+    protected static final int layout = R.layout.appwidget;
+    protected static final int itemLayout = R.layout.appwidget_item;
+    protected static final int noItemLayout = R.layout.appwidget_noitem_deletemeasap;
     private static final String REFRESH = "mobi.myseries.gui.appwidget.REFRESH";
     protected static final int LIMIT = 9;
 
@@ -84,7 +84,7 @@ public class MySeriesWidget extends AppWidgetProvider {
             SortedSet<Episode> recent = sortedSetBy(seriesProvider.recentEpisodes());
 
             if (recent.isEmpty()) {
-                RemoteViews item = new RemoteViews(context.getPackageName(), noItemLayout);
+                RemoteViews item = new RemoteViews(context.getPackageName(), noItemLayout); //TODO Use a better approach for empty sets
                 item.setTextViewText(R.id.itemName, context.getString(R.string.up_to_date));
                 rv.addView(R.id.innerLinearLayout, item);
             } else {

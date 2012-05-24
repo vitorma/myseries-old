@@ -101,7 +101,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.series_coverflow, container, false);
+        return inflater.inflate(R.layout.myseries_item_toflow, container, false);
     }
 
     @Override

@@ -66,13 +66,13 @@
                     android:id="@+id/seriesNextToSeePanel"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    layout="@layout/nexttosee_panel"/>
+                    layout="@layout/myseries_item_nexttosee"/>
 
                 <include
                     android:id="@+id/seriesNextToSeeUpToDatePanel"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    layout="@layout/nexttosee_panel_uptodate"/>
+                    layout="@layout/myseries_item_nexttosee_uptodate"/>
 
             </FrameLayout>
 

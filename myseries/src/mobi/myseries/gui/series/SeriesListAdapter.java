@@ -55,7 +55,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
-    private static final int ITEM_LAYOUT = R.layout.series_list_item;
+    private static final int ITEM_LAYOUT = R.layout.myseries_item_tolist;
 
     private static class SeriesListItemFactory {
         private Context context;

@@ -40,7 +40,7 @@ public class SeriesOverviewActivity extends SherlockFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.overview);
+        this.setContentView(R.layout.series);
 
         if (savedInstanceState == null) {
             this.seriesId = this.getIntent().getExtras().getInt(SERIES_ID);
