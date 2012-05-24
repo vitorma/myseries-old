@@ -37,7 +37,6 @@ import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.widget.ImageView;
 
 public final class ImageProvider {
     

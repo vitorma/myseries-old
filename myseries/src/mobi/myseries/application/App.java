@@ -24,14 +24,9 @@ package mobi.myseries.application;
 
 import java.util.List;
 
-import mobi.myseries.R;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
 import mobi.myseries.domain.repository.ImageDirectory;
-import mobi.myseries.shared.ListenerSet;
-
 import android.app.Application;
-import android.widget.ImageView;
 
 public class App extends Application {
     private static Environment environment;
@@ -102,10 +97,10 @@ public class App extends Application {
         return followSeriesService().follows(series);
     }
     
-    public static void loadPoster(Series series, ImageView imageView) {
+    public static void loadPoster(Series series, ImageLoadSupplicant suplicant) {
     	String path;
 		path = ImageDirectory.getPathForPoster(series.id());
     	//path = "http://thetvdb.com/banners/_cache/posters/79349-2.jpg";
-    	imageLoadService.load(path, imageView, R.drawable.generic_poster);
+    	imageLoadService.load(path, suplicant);
     }
 }

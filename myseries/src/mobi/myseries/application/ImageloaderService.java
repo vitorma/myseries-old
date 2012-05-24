@@ -1,7 +1,5 @@
 package mobi.myseries.application;
 
-import android.widget.ImageView;
-
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -28,19 +26,19 @@ public class ImageloaderService {
 
     }
 
-    public void load(String path, ImageView imageView, int defaultBitmapResource) {
+    public void load(String path, ImageLoadSupplicant suplicant) {
         String filepath = "file://" + path;
         
         // Creates display image options for custom display task
         options = new DisplayImageOptions.Builder()
-                                         .showImageForEmptyUrl(defaultBitmapResource)
-                                         .showStubImage(defaultBitmapResource)
+                                         .showImageForEmptyUrl(suplicant.getDefaultResource())
+                                         .showStubImage(suplicant.getDefaultResource())
                                          .cacheInMemory()
                                          .cacheOnDisc()
                                          .decodingType(DecodingType.MEMORY_SAVING)
                                          .build();
         
-        imageLoader.displayImage(filepath, imageView, options);
+        imageLoader.displayImage(filepath, suplicant.getImageView(), options);
         
     }
 }
