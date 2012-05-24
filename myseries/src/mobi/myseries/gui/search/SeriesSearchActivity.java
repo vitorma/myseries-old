@@ -27,7 +27,6 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SearchSeriesListener;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.ListenerSet;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -57,7 +56,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        this.setContentView(R.layout.search);
+        this.setContentView(R.layout.seriessearch);
         
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.search_series);
@@ -188,10 +187,10 @@ public class SeriesSearchActivity extends SherlockListActivity {
     }
     
     private void setupListOnAdapter(List<Series> series) {
-        ArrayAdapter<Series> adapter = new SeriesSearchItemAdapter(
+        ArrayAdapter<Series> adapter = new SeriesSearchItemAdapter(//TODO Use a simple ArrayAdapter<String> and use StateHolder#seriesFound to recover series
                 SeriesSearchActivity.this,
                 SeriesSearchActivity.this,
-                R.layout.text_only_list_item,
+                R.layout.seriessearch_item_deletemeasap,
                 series);
         SeriesSearchActivity.this.setListAdapter(adapter);
     }
@@ -241,7 +240,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
                 this.selectedItem = (Series) parent.getItemAtPosition(position);
 
                 this.dialog = new Dialog(SeriesSearchActivity.this);
-                this.dialog.setContentView(R.layout.series_overview_dialog);
+                this.dialog.setContentView(R.layout.seriessearch_following);
 
                 this.updateDialogText();
                 this.setBackButtonClickListener();

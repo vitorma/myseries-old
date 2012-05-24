@@ -41,7 +41,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.schedule);
+        this.setContentView(R.layout.myschedule);
 
         if (savedInstanceState == null) {
             this.currentTab = TODAY;

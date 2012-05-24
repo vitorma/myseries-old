@@ -47,7 +47,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -62,9 +61,6 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     private CoverFlow coverFlow;
     private SeriesItemViewHolder seriesItemViewHolder;
 
-    /**
-     * Necessary because it must there be a strong reference to the listener so it cannot be collected.
-     */
     private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
 
         @Override
@@ -105,7 +101,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.coverflow, container, false);
+        return inflater.inflate(R.layout.myseries_item_toflow, container, false);
     }
 
     @Override
@@ -122,23 +118,24 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
         if (this.seriesAdapter.isEmpty()) {
             ((TextView) this.getActivity().findViewById(R.id.coverflow_empty)).setVisibility(View.VISIBLE);
-            ((CoverFlow) this.getActivity().findViewById(R.id.coverflow)).setVisibility(View.INVISIBLE);
-            ((RelativeLayout) this.getActivity().findViewById(R.id.coverflow_data_layout)).setVisibility(View.INVISIBLE);
+            this.getActivity().findViewById(R.id.seriesData).setVisibility(View.INVISIBLE);
             return;
         }
 
         this.seriesItemViewHolder = new SeriesItemViewHolder();
         this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.coverflow_item_name);
         this.seriesItemViewHolder.bar = (SeenEpisodesBar) this.getActivity().findViewById(R.id.coverflow_item_bar);
-        this.seriesItemViewHolder.nextToSee = (TextView) this.getActivity().findViewById(R.id.coverflow_item_next_to_see);
-        this.seriesItemViewHolder.seenMark = (CheckBox) this.getActivity().findViewById(R.id.coverflow_item_seen_mark);
+        this.seriesItemViewHolder.nextToSee = (TextView) this.getActivity().findViewById(R.id.nextToSeeTextView);
+        this.seriesItemViewHolder.seenMark = (CheckBox) this.getActivity().findViewById(R.id.seenMarkCheckBox);
+        this.seriesItemViewHolder.nextToSeePanel = this.getActivity().findViewById(R.id.seriesNextToSeePanel);
+        this.seriesItemViewHolder.nextToSeeUpToDatePanel = this.getActivity().findViewById(R.id.seriesNextToSeeUpToDatePanel);
 
         this.seriesAdapter.registerSeriesListener(this);
-        this.setupListeners();
+        this.setUpListeners();
         this.coverFlow.selectMiddleItem();
     }
 
-    private void setupListeners() {
+    private void setUpListeners() {
         this.coverFlow.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView< ? > parent, final View view, final int position, final long id) {
@@ -159,9 +156,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
             }
 
             @Override
-            public void onNothingSelected(final AdapterView< ? > parent) {
-                //TODO Show 'No followed series'
-            }
+            public void onNothingSelected(final AdapterView< ? > parent) {}
         });
 
         this.coverFlow.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -180,23 +175,27 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         this.seriesItemViewHolder.name.setText(item.name());
         this.seriesItemViewHolder.bar.updateWithEpisodesOf(item);
 
-        final Episode next = item.nextEpisodeToSee(true);
-        if (next != null) {
-            String format = App.environment().context().getString(R.string.next_to_see_format);
-            this.seriesItemViewHolder.nextToSee.setText(String.format(format, next.seasonNumber(), next.number()));
-            this.seriesItemViewHolder.seenMark.setVisibility(View.VISIBLE);
-            this.seriesItemViewHolder.seenMark.setChecked(next.wasSeen());
-            this.seriesItemViewHolder.seenMark.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    SERIES_PROVIDER.markEpisodeAsSeen(next);
-                }
-            });
-        } else {
-            this.seriesItemViewHolder.nextToSee.setText(R.string.nexttosee_uptodate);
-            this.seriesItemViewHolder.seenMark.setChecked(false);
-            this.seriesItemViewHolder.seenMark.setVisibility(View.INVISIBLE);
+        final Episode next = item.nextEpisodeToSee(true); //TODO SharedPreference or remove the boolean
+
+        if (next == null) {
+            this.seriesItemViewHolder.nextToSeePanel.setVisibility(View.INVISIBLE);
+            this.seriesItemViewHolder.nextToSeeUpToDatePanel.setVisibility(View.VISIBLE);
+            return;
         }
+
+        this.seriesItemViewHolder.nextToSeePanel.setVisibility(View.VISIBLE);
+        this.seriesItemViewHolder.nextToSeeUpToDatePanel.setVisibility(View.INVISIBLE);
+
+        String format = App.environment().context().getString(R.string.next_to_see_format);
+        this.seriesItemViewHolder.nextToSee.setText(String.format(format, next.seasonNumber(), next.number()));
+
+        this.seriesItemViewHolder.seenMark.setChecked(next.wasSeen());
+        this.seriesItemViewHolder.seenMark.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                SERIES_PROVIDER.markEpisodeAsSeen(next);
+            }
+        });
     }
 
     private boolean isSelected(Series series) {
@@ -238,5 +237,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         private SeenEpisodesBar bar;
         private TextView nextToSee;
         private CheckBox seenMark;
+        private View nextToSeePanel;
+        private View nextToSeeUpToDatePanel;
     }
 }

@@ -46,7 +46,7 @@ public class SeriesDetailsFragment extends SherlockFragment {
             return null;
         }
 
-        return inflater.inflate(R.layout.series_view, container, false);
+        return inflater.inflate(R.layout.series_details, container, false);
     }
 
     @Override

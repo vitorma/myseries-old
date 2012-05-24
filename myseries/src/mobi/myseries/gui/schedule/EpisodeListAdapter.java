@@ -23,7 +23,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class EpisodeListAdapter extends ArrayAdapter<Episode> implements EpisodeListener {
-    private static final int EPISODE_ITEM_RESOURCE_ID = R.layout.episode_alone_list_item;
+    private static final int EPISODE_ITEM_RESOURCE_ID = R.layout.myschedule_item;
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
     private LayoutInflater layoutInflater;

@@ -102,7 +102,7 @@ public class ReflectingImageAdapter extends CoverFlowAdapter {
         canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
         final Paint paint = new Paint();
         final LinearGradient shader = new LinearGradient(0, originalImage.getHeight(), 0,
-                bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff, TileMode.MIRROR);
+                bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff, TileMode.CLAMP);
         paint.setShader(shader);
         paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
         canvas.drawRect(0, height, width, bitmapWithReflection.getHeight() + reflectionGap, paint);

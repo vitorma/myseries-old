@@ -53,7 +53,7 @@ public class EpisodeFragment extends SherlockListFragment {
             return null;
         }
 
-        return inflater.inflate(R.layout.episode_fragment, container, false);
+        return inflater.inflate(R.layout.episodes_fragment_deletemeasap, container, false);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
 	private static final Resources RESOURCES = App.environment().context().getResources();
     private static final Bitmap GENERIC_IMAGE = BitmapFactory.decodeResource(RESOURCES, R.drawable.clapperboard);
-    private static final int ITEM_LAYOUT = R.layout.episode;
+    private static final int ITEM_LAYOUT = R.layout.episodes_item;
 
     private Episode episode;
     private TextView episodeDirector;

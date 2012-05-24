@@ -27,6 +27,10 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="myseries_style.18sp">
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="myseries_style.toolbar">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">50sp</item>

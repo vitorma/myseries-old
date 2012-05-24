@@ -29,7 +29,6 @@ import mobi.myseries.gui.schedule.MyScheduleActivity;
 import mobi.myseries.gui.search.SeriesSearchActivity;
 import mobi.myseries.gui.series.SeriesCoverFlowFragment;
 import mobi.myseries.gui.series.SeriesListFragment;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.Animation;
@@ -62,7 +61,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.my_series_layout);
+        this.setContentView(R.layout.myseries);
 
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_series);

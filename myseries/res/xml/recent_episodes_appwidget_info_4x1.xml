@@ -3,7 +3,7 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/small_widget_name"
-    android:initialLayout="@layout/myseries_desktop_widget"
+    android:initialLayout="@layout/appwidget"
     android:updatePeriodMillis="3600000"
     android:minWidth="294dp"
     android:minHeight="72dp"

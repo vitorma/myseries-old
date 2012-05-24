@@ -84,7 +84,7 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
         View itemView = convertView;
 
         if (itemView == null){
-            itemView = LayoutInflater.from(this.context).inflate(R.layout.episode_list_item, null);
+            itemView = LayoutInflater.from(this.context).inflate(R.layout.series_seasons_item_episode, null);
         }
 
         TextView numberTextView = (TextView) itemView.findViewById(R.id.episodeNumberTextView);
@@ -133,7 +133,7 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
         View itemView = convertView;
 
         if (itemView == null) {
-            itemView = LayoutInflater.from(this.context).inflate(R.layout.season_list_item, null);
+            itemView = LayoutInflater.from(this.context).inflate(R.layout.series_seasons_item_season, null);
         }
 
         final Season season = this.season(groupPosition);

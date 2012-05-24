@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="20dp">
+
+    <TextView
+        android:id="@+id/coverflow_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_series_followed"
+        android:visibility="invisible"
+        android:gravity="center"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <mobi.myseries.gui.widget.CoverFlow
+            xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
+            android:id="@+id/coverflow"
+            coverflow:imageWidth="75dp"
+            coverflow:imageHeight="110dp"
+            coverflow:withReflection="true"
+            coverflow:imageReflectionRatio="0.2"
+            coverflow:reflectionGap="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"/>
+
+        <RelativeLayout
+            android:id="@+id/seriesData"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/coverflow_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <mobi.myseries.gui.SeenEpisodesBar
+                android:id="@+id/coverflow_item_bar"
+                android:layout_width="match_parent"
+                android:layout_height="9dp"
+                android:layout_marginTop="8dp"
+                android:layout_below="@id/coverflow_item_name"/>
+
+            <FrameLayout
+                android:id="@+id/nextToSee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <include
+                    android:id="@+id/seriesNextToSeePanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    layout="@layout/myseries_item_nexttosee"/>
+
+                <include
+                    android:id="@+id/seriesNextToSeeUpToDatePanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    layout="@layout/myseries_item_nexttosee_uptodate"/>
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</FrameLayout>
