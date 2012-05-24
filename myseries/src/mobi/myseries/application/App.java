@@ -23,21 +23,23 @@ package mobi.myseries.application;
 
 
 import java.util.List;
-import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.ListenerSet;
 
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.repository.ImageDirectory;
 import android.app.Application;
 
 public class App extends Application {
     private static Environment environment;
     private static SearchSeriesService searchService;
     private static FollowSeriesService followSeriesService;
+    private static ImageloaderService imageLoadService;
 
     @Override
     public void onCreate() {
         super.onCreate();
         environment = Environment.newEnvironment(this);
         searchService = new SearchSeriesService(environment.theTVDB());
+        imageLoadService = new ImageloaderService();
     }
 
     public static Environment environment() {
@@ -93,5 +95,9 @@ public class App extends Application {
 
     public static boolean follows(Series series) {
         return followSeriesService().follows(series);
+    }
+    
+    public static void loadPoster(Series series, ImageLoadSupplicant suplicant) {
+    	imageLoadService.loadPoster(series, suplicant);
     }
 }
