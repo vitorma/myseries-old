@@ -34,14 +34,11 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
-import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
-import mobi.myseries.domain.repository.ImageDirectory;
 import mobi.myseries.gui.series.SeriesActivity;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,7 +55,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
-    private static final int ITEM_LAYOUT = R.layout.myseries_item_tolist;
+    private static final int ITEM_LAYOUT = R.layout.myseries_item;
 
     private static class SeriesListItemFactory {
         private Context context;
@@ -114,29 +111,24 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         }
 
         private void setSeenEpisodesBarFor(Series series, View itemView) {
-            SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.SeenEpisodesBar);
+            SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.seenEpisodesBar);
             seenEpisodesBar.updateWithEpisodesOf(series);
         }
 
         private void setNextEpisodeToSeeTo(final Episode nextEpisode, View itemView) {
-            View nextToSeePanel = itemView.findViewById(R.id.nextToSeePanel);
-            View nextToSeeUpToDatePanel = itemView.findViewById(R.id.nextToSeeUpToDatePanel);
+            TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
+            CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.nextToSeeCheckBox);
 
             if (nextEpisode == null) {
-                nextToSeePanel.setVisibility(View.INVISIBLE);
-                nextToSeeUpToDatePanel.setVisibility(View.VISIBLE);
+                nextToSee.setText(this.context.getString(R.string.nexttosee_uptodate));
+                seenMark.setVisibility(View.GONE);
                 return;
             }
-
-            nextToSeePanel.setVisibility(View.VISIBLE);
-            nextToSeeUpToDatePanel.setVisibility(View.INVISIBLE);
-
-            TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
-            CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.seenMarkCheckBox);
 
             String format = this.context.getString(R.string.next_to_see_format);
             nextToSee.setText(String.format(format, nextEpisode.seasonNumber(), nextEpisode.number()));
 
+            seenMark.setVisibility(View.VISIBLE);
             seenMark.setChecked(nextEpisode.wasSeen());
             seenMark.setOnClickListener(new OnClickListener() {
                 @Override

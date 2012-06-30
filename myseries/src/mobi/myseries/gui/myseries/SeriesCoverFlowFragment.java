@@ -101,7 +101,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.myseries_item_toflow, container, false);
+        return inflater.inflate(R.layout.myseries_item, container, false);
     }
 
     @Override
@@ -123,12 +123,10 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         }
 
         this.seriesItemViewHolder = new SeriesItemViewHolder();
-        this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.coverflow_item_name);
-        this.seriesItemViewHolder.bar = (SeenEpisodesBar) this.getActivity().findViewById(R.id.coverflow_item_bar);
+        this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.nameTextView);
+        this.seriesItemViewHolder.bar = (SeenEpisodesBar) this.getActivity().findViewById(R.id.seenEpisodesBar);
         this.seriesItemViewHolder.nextToSee = (TextView) this.getActivity().findViewById(R.id.nextToSeeTextView);
-        this.seriesItemViewHolder.seenMark = (CheckBox) this.getActivity().findViewById(R.id.seenMarkCheckBox);
-        this.seriesItemViewHolder.nextToSeePanel = this.getActivity().findViewById(R.id.seriesNextToSeePanel);
-        this.seriesItemViewHolder.nextToSeeUpToDatePanel = this.getActivity().findViewById(R.id.seriesNextToSeeUpToDatePanel);
+        this.seriesItemViewHolder.seenMark = (CheckBox) this.getActivity().findViewById(R.id.nextToSeeCheckBox);
 
         this.seriesAdapter.registerSeriesListener(this);
         this.setUpListeners();
@@ -178,17 +176,15 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         final Episode next = item.nextEpisodeToSee(true); //TODO SharedPreference or remove the boolean
 
         if (next == null) {
-            this.seriesItemViewHolder.nextToSeePanel.setVisibility(View.INVISIBLE);
-            this.seriesItemViewHolder.nextToSeeUpToDatePanel.setVisibility(View.VISIBLE);
+            this.seriesItemViewHolder.nextToSee.setText(R.string.nexttosee_uptodate);
+            this.seriesItemViewHolder.seenMark.setVisibility(View.GONE);
             return;
         }
-
-        this.seriesItemViewHolder.nextToSeePanel.setVisibility(View.VISIBLE);
-        this.seriesItemViewHolder.nextToSeeUpToDatePanel.setVisibility(View.INVISIBLE);
 
         String format = App.environment().context().getString(R.string.next_to_see_format);
         this.seriesItemViewHolder.nextToSee.setText(String.format(format, next.seasonNumber(), next.number()));
 
+        this.seriesItemViewHolder.seenMark.setVisibility(View.VISIBLE);
         this.seriesItemViewHolder.seenMark.setChecked(next.wasSeen());
         this.seriesItemViewHolder.seenMark.setOnClickListener(new OnClickListener() {
             @Override
@@ -237,7 +233,5 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         private SeenEpisodesBar bar;
         private TextView nextToSee;
         private CheckBox seenMark;
-        private View nextToSeePanel;
-        private View nextToSeeUpToDatePanel;
     }
 }

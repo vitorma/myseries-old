@@ -190,7 +190,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
         ArrayAdapter<Series> adapter = new SeriesSearchItemAdapter(//TODO Use a simple ArrayAdapter<String> and use StateHolder#seriesFound to recover series
                 SeriesSearchActivity.this,
                 SeriesSearchActivity.this,
-                R.layout.seriessearch_item_deletemeasap,
+                R.layout.seriessearch_item,
                 series);
         SeriesSearchActivity.this.setListAdapter(adapter);
     }

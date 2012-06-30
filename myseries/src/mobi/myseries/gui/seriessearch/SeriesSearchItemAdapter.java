@@ -49,7 +49,7 @@ public final class SeriesSearchItemAdapter extends ArrayAdapter<Series> {
         if (itemView == null) {
             final LayoutInflater vi = (LayoutInflater) this.seriesSearchView
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            itemView = vi.inflate(R.layout.seriessearch_item_deletemeasap, null);
+            itemView = vi.inflate(R.layout.seriessearch_item, null);
         }
 
         // get views for the series fields

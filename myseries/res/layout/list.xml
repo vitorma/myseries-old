@@ -4,24 +4,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="10dp">
+    android:layout_height="match_parent">
 
     <ListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:drawSelectorOnTop="false"
-        android:listSelector="@drawable/list_selector_holo_light"
-        android:divider="@drawable/list_divider_holo_light"
-        android:scrollbarThumbVertical="@drawable/fastscroll_thumb_holo"
-        android:scrollbarTrackVertical="@drawable/fastscroll_track_holo_light"/>
+        android:layout_height="match_parent"/>
 
     <TextView
         android:id="@id/android:empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/no_items_to_list"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

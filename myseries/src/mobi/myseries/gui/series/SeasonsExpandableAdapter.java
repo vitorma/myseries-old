@@ -61,13 +61,13 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
         return season.episode(this.episodeNumber(childPosition, season.numberOfEpisodes()));
     }
 
-    private int groupPosition(Episode episode) {
-        return this.series.hasSpecialEpisodes() ? episode.seasonNumber() : episode.seasonNumber() - 1;
-    }
-
-    private int childPosition(Episode episode) {
-        return episode.number() - 1;
-    }
+//    private int groupPosition(Episode episode) {
+//        return this.series.hasSpecialEpisodes() ? episode.seasonNumber() : episode.seasonNumber() - 1;
+//    }
+//
+//    private int childPosition(Episode episode) {
+//        return episode.number() - 1;
+//    }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
@@ -88,11 +88,13 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
         }
 
         TextView numberTextView = (TextView) itemView.findViewById(R.id.episodeNumberTextView);
+        TextView nameTextView = (TextView) itemView.findViewById(R.id.episodeNameTextView);
         final CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
 
         final Episode episode = this.episode(groupPosition, childPosition);
 
-        numberTextView.setText(String.format(this.context.getString(R.string.episode_number_format), episode.number()));
+        numberTextView.setText(String.format("%02d", episode.number()));
+        nameTextView.setText(episode.name());
         isViewedCheckBox.setChecked(episode.wasSeen());
         isViewedCheckBox.setOnClickListener(new OnClickListener() {
             @Override

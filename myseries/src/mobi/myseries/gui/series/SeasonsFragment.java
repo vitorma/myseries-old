@@ -84,7 +84,8 @@ public class SeasonsFragment extends SherlockFragment {
                     }
                 }
 
-                SeasonsFragment.this.list.setSelectedGroup(groupPosition);
+//                SeasonsFragment.this.list.setSelectedGroup(groupPosition);
+//                SeasonsFragment.this.list.scrollTo(0, groupPosition);
             }
         });
     }

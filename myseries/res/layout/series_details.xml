@@ -7,166 +7,121 @@
 
     <ImageView
         android:id="@+id/background"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:layout_height="match_parent"/>
 
     <ScrollView
-        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbarThumbVertical="@drawable/fastscroll_thumb_holo"
-        android:scrollbarTrackVertical="@drawable/fastscroll_track_holo_light"
-        android:padding="10dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/linearLayout1"
+            <ImageView
+                android:id="@+id/seriesPosterImageView"
+                android:scaleType="centerInside"
+                android:layout_width="37dp"
+                android:layout_height="57dp"
+                android:layout_marginTop="@dimen/gap_medium"
+                android:layout_marginLeft="@dimen/gap_medium"
+                android:layout_marginRight="6dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:id="@+id/statusTextView"
+                android:drawableLeft="@drawable/ic_hourglass"
+                style="@style/TextView.Data.Small.Bold"
+                android:gravity="center_vertical|left"
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:layout_alignTop="@id/seriesPosterImageView"
+                android:layout_toRightOf="@id/seriesPosterImageView"/>
+
+            <TextView
+                android:id="@+id/airDaysTextView"
+                android:drawableLeft="@drawable/ic_calendar"
+                style="@style/TextView.Data.Small"
+                android:gravity="center_vertical|left"
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:layout_below="@id/statusTextView"
+                android:layout_toRightOf="@id/seriesPosterImageView"/>
+
+            <TextView
+                android:id="@+id/runtimeTextView"
+                style="@style/TextView.Data.Small"
+                android:drawableLeft="@drawable/ic_runtime"
+                android:gravity="center_vertical|left"
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:layout_below="@id/airDaysTextView"
+                android:layout_toRightOf="@id/seriesPosterImageView"/>
+
+            <TextView
+                android:id="@+id/genreLabel"
+                android:text="@string/genre"
+                style="@style/TextView.Label.Small.Bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/gap_large"
+                android:layout_marginLeft="@dimen/gap_medium"
+                android:layout_marginRight="@dimen/gap_medium"
+                android:layout_below="@id/seriesPosterImageView"/>
 
-                <ImageView
-                    android:id="@+id/seriesPosterImageView"
-                    android:layout_width="38dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginRight="5dp"/>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical|left">
-
-                    <TextView
-                        android:id="@+id/statusTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"/>
-
-                    <LinearLayout
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:orientation="horizontal"
-                         android:gravity="center_vertical|left">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginTop="1dp"
-                            android:layout_marginBottom="1dp"
-                            android:src="@drawable/ic_calendar"/>
-
-                        <TextView
-                            android:id="@+id/airDaysTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/myseries_style.12sp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:orientation="horizontal"
-                         android:gravity="center_vertical|left">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginTop="1dp"
-                            android:layout_marginBottom="1dp"
-                            android:src="@drawable/ic_runtime"/>
-
-                        <TextView
-                            android:id="@+id/runtimeTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/myseries_style.12sp"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/genreTextView"
+                style="@style/TextView.Data.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp">
+                android:layout_marginLeft="@dimen/gap_medium"
+                android:layout_marginRight="@dimen/gap_medium"
+                android:layout_below="@id/genreLabel"/>
 
-                <TextView
-                    android:id="@+id/genreLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/genre"
-                    android:textStyle="bold"
-                    android:textColor="@color/gray"/>
-
-                <TextView
-                    android:id="@+id/genreTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/myseries_style.12sp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/actorsLabel"
+                android:text="@string/actors"
+                style="@style/TextView.Label.Small.Bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp">
+                android:layout_marginTop="@dimen/gap_large"
+                android:layout_marginLeft="@dimen/gap_medium"
+                android:layout_marginRight="@dimen/gap_medium"
+                android:layout_below="@id/genreTextView"/>
 
-                <TextView
-                    android:id="@+id/actorsLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/actors"
-                    android:textStyle="bold"
-                    android:textColor="@color/gray"/>
-
-                <TextView
-                    android:id="@+id/actorsTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/myseries_style.12sp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/actorsTextView"
+                style="@style/TextView.Data.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp">
+                android:layout_marginLeft="@dimen/gap_medium"
+                android:layout_marginRight="@dimen/gap_medium"
+                android:layout_below="@id/actorsLabel"/>
 
-                <TextView
-                    android:id="@+id/overviewLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/overview"
-                    android:textStyle="bold"
-                    android:textColor="@color/gray"/>
+            <TextView
+                android:id="@+id/overviewLabel"
+                android:text="@string/overview"
+                style="@style/TextView.Label.Small.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_large"
+                android:layout_marginLeft="@dimen/gap_medium"
+                android:layout_marginRight="@dimen/gap_medium"
+                android:layout_below="@id/actorsTextView"/>
 
-                <TextView
-                    android:id="@+id/seriesOverviewTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/myseries_style.12sp"/>
+            <TextView
+                android:id="@+id/seriesOverviewTextView"
+                style="@style/TextView.Data.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/gap_medium"
+                android:layout_marginRight="@dimen/gap_medium"
+                android:layout_marginBottom="@dimen/gap_medium"
+                android:layout_below="@id/overviewLabel"/>
 
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </ScrollView>
 

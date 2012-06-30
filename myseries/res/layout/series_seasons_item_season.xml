@@ -1,41 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:paddingTop="@dimen/gap_medium"
+    android:paddingBottom="@dimen/gap_medium"
+    android:paddingLeft="@dimen/toucharea_minimum_side"
+    android:paddingRight="@dimen/gap_medium">
 
-    <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical|left">
+    <CheckBox
+        android:id="@+id/isSeasonViewedCheckBox"
+        android:layout_width="@dimen/checkbox_width"
+        android:layout_height="@dimen/checkbox_height"
+        android:layout_marginLeft="@dimen/gap_medium"
+        android:layout_alignParentRight="true"/>
 
-        <CheckBox
-            android:id="@+id/isSeasonViewedCheckBox"
-            android:button="@drawable/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:focusableInTouchMode="false"/>
-
-        <TextView
-            android:id="@+id/itemName"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/itemName"
+        style="@style/TextView.Data.Medium"
+        android:gravity="top"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@id/isSeasonViewedCheckBox"/>
 
     <mobi.myseries.gui.shared.SeenEpisodesBar
         android:id="@+id/seen_episodes"
         android:layout_width="wrap_content"
-        android:layout_height="9dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"/>
+        android:layout_height="@dimen/chunkbar_height"
+        android:layout_toLeftOf="@id/isSeasonViewedCheckBox"
+        android:layout_alignBottom="@id/isSeasonViewedCheckBox"/>
 
-</LinearLayout>
+</RelativeLayout>

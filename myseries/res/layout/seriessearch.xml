@@ -1,59 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="10dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
+    <ImageButton
+        android:id="@+id/searchButton"
+        android:src="@drawable/ic_search_api_holo_light"
+        android:layout_width="@dimen/imagebutton_width"
+        android:layout_height="@dimen/imagebutton_height"
+        android:layout_margin="@dimen/gap_medium"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"/>
+
+    <EditText
+        android:id="@+id/searchField"
+        style="@style/EditText.PlainText.ActionDone"
+        android:hint="@string/search_series"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="4dp">
+        android:layout_height="@dimen/imagebutton_height"
+        android:layout_marginTop="@dimen/gap_medium"
+        android:layout_marginBottom="@dimen/gap_medium"
+        android:layout_marginLeft="@dimen/gap_medium"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/searchButton"/>
 
-        <EditText
-            android:id="@+id/searchField"
-            android:background="@drawable/textfield_search"
-            android:textColor="@android:color/black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:imeOptions="actionDone"
-            android:singleLine="true"/>
-
-        <ImageButton
-            android:id="@+id/searchButton"
-            android:layout_width="52dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/button"
-            android:src="@drawable/ic_search_api_holo_light"/>
-
-    </LinearLayout>
-
-    <FrameLayout
+    <ListView
+        android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchField"/>
 
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:listSelector="@drawable/list_selector_holo_light"
-            android:divider="@drawable/list_divider_holo_light"
-            android:scrollbarThumbVertical="@drawable/fastscroll_thumb_holo"
-            android:scrollbarTrackVertical="@drawable/fastscroll_track_holo_light"/>
-        
-        <TextView
-            android:id="@+id/poweredby"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:textColor="#FFFFFF"
-            android:background="#bf000000"
-            android:text="@string/powered_by_thetvdb"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/poweredby"
+        android:text="@string/powered_by_thetvdb"
+        style="@style/TextView.Translucent.Label.Small"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"/>
 
-    </FrameLayout>
-
-</LinearLayout>
+</RelativeLayout>

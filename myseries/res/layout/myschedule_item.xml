@@ -1,56 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:baselineAligned="true"
-    android:orientation="horizontal"
-    android:padding="5dip" >
+    android:layout_height="50dp"
+    android:padding="@dimen/gap_medium">
 
     <CheckBox
         android:id="@+id/episodeIsViewedCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_margin="5dip"
-        android:button="@drawable/checkbox"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:layout_width="@dimen/checkbox_width"
+        android:layout_height="@dimen/checkbox_height"
+        android:layout_marginRight="@dimen/gap_medium"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"/>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
+    <TextView
+        android:id="@+id/episodeSeriesTextView"
+        style="@style/TextView.Label.Small"
+        android:gravity="top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/episodeIsViewedCheckBox"/>
 
-        <TextView
-            android:id="@+id/episodeSeriesTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:ellipsize="marquee"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+    <TextView
+        android:id="@+id/episodeSeasonEpisodeTextView"
+        style="@style/TextView.Data.Medium"
+        android:gravity="bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_below="@id/episodeSeriesTextView"
+        android:layout_toRightOf="@id/episodeIsViewedCheckBox"/>
 
-        <TextView
-            android:id="@+id/episodeSeasonEpisodeTextView"
-            style="@style/myseries_style.15sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:text="@string/loading" />
+    <TextView
+        android:id="@+id/episodeDateTextView"
+        style="@style/TextView.Data.Medium"
+        android:gravity="bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
 
-        <TextView
-            android:id="@+id/episodeDateTextView"
-            style="@style/myseries_style.15sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

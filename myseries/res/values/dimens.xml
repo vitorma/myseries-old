@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+
+    <dimen name="gap_small">4dp</dimen>
+    <dimen name="gap_medium">8dp</dimen>
+    <dimen name="gap_large">16dp</dimen>
+
+    <dimen name="toucharea_minimum_side">48dp</dimen>
+
+    <dimen name="checkbox_height">32dp</dimen>
+    <dimen name="checkbox_width">32dp</dimen>
+
+    <dimen name="imagebutton_height">40dp</dimen>
+    <dimen name="imagebutton_width">40dp</dimen>
+
+    <dimen name="chunkbar_height">9dp</dimen>
+
+    <dimen name="myseries_item_height">106dp</dimen>
+    <dimen name="myseries_image_height">106dp</dimen>
+    <dimen name="myseries_image_width">69dp</dimen>
+
+</resources>

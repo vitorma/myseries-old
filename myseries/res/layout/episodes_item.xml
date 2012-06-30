@@ -3,184 +3,133 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scrollbarThumbVertical="@drawable/fastscroll_thumb_holo"
-    android:scrollbarTrackVertical="@drawable/fastscroll_track_holo_light">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/episodeFirstAiredTextView"
+            android:drawableLeft="@drawable/ic_calendar"
+            style="@style/TextView.Data.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginTop="@dimen/gap_medium"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
 
-            <ImageView
-                android:id="@+id/episodeFirstAiredImageView"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_calendar"/>
+        <ImageView
+            android:id="@+id/imageView"
+            android:src="@drawable/clapperboard"
+            android:background="@color/gray"
+            android:layout_width="300dp"
+            android:layout_height="168dp"
+            android:layout_marginTop="@dimen/gap_medium"
+            android:layout_below="@id/episodeFirstAiredTextView"
+            android:layout_centerHorizontal="true"/>
 
-            <TextView
-                android:id="@+id/episodeFirstAiredTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/myseries_style.12sp"/>
+        <CheckBox
+            android:id="@+id/isEpisodeViewedCheckBox"
+            android:layout_width="@dimen/checkbox_width"
+            android:layout_height="@dimen/checkbox_height"
+            android:layout_marginTop="@dimen/gap_medium"
+            android:layout_below="@id/imageView"
+            android:layout_alignLeft="@id/imageView"/>
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/episodeNameTextView"
+            style="@style/TextView.Data.Small.Bold"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/checkbox_height"
+            android:layout_marginTop="@dimen/gap_medium"
+            android:layout_marginLeft="@dimen/gap_medium"
+            android:layout_marginRight="@dimen/gap_medium"
+            android:layout_below="@id/imageView"
+            android:layout_toRightOf="@id/isEpisodeViewedCheckBox"/>
 
-        <FrameLayout
-            android:id="@+id/frameLayout"
+        <TextView
+            android:id="@+id/episodeGuestStarsLabel"
+            android:text="@string/guest_stars"
+            style="@style/TextView.Label.Small.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:layout_marginTop="@dimen/gap_large"
+            android:layout_marginLeft="@dimen/gap_medium"
+            android:layout_marginRight="@dimen/gap_medium"
+            android:layout_below="@id/isEpisodeViewedCheckBox"/>
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone"/>
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/clapperboard"
-                android:visibility="visible"/>
-
-        </FrameLayout>
-
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/episodeGuestStarsTextView"
+            style="@style/TextView.Data.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical|left"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginLeft="@dimen/gap_medium"
+            android:layout_marginRight="@dimen/gap_medium"
+            android:layout_below="@id/episodeGuestStarsLabel"/>
 
-            <CheckBox
-                android:id="@+id/isEpisodeViewedCheckBox"
-                android:button="@drawable/checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left|center_vertical"/>
-
-            <TextView
-                android:id="@+id/episodeNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-       <LinearLayout
+        <TextView
+            android:id="@+id/episodeWritersLabel"
+            android:text="@string/writer"
+            style="@style/TextView.Label.Small.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginTop="@dimen/gap_large"
+            android:layout_marginLeft="@dimen/gap_medium"
+            android:layout_marginRight="@dimen/gap_medium"
+            android:layout_below="@id/episodeGuestStarsTextView"/>
 
-            <TextView
-                android:id="@+id/episodeGuestStarsLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/guest_stars"
-                android:textStyle="bold"
-                android:textColor="@color/gray"/>
-
-            <TextView
-                android:id="@+id/episodeGuestStarsTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/myseries_style.12sp"/>
-
-        </LinearLayout>
-
-       <LinearLayout
+        <TextView
+            android:id="@+id/episodeWritersTextView"
+            style="@style/TextView.Data.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginLeft="@dimen/gap_medium"
+            android:layout_marginRight="@dimen/gap_medium"
+            android:layout_below="@id/episodeWritersLabel"/>
 
-            <TextView
-                android:id="@+id/episodeWritersLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/writer"
-                android:textStyle="bold"
-                android:textColor="@color/gray"/>
-
-            <TextView
-                android:id="@+id/episodeWritersTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/myseries_style.12sp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/episodeDirectorsLabel"
+            android:text="@string/director"
+            style="@style/TextView.Label.Small.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginTop="@dimen/gap_large"
+            android:layout_marginLeft="@dimen/gap_medium"
+            android:layout_marginRight="@dimen/gap_medium"
+            android:layout_below="@id/episodeWritersTextView"/>
 
-            <TextView
-                android:id="@+id/episodeDirectorsLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/director"
-                android:textStyle="bold"
-                android:textColor="@color/gray"/>
-
-            <TextView
-                android:id="@+id/episodeDirectorsTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/myseries_style.12sp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/episodeDirectorsTextView"
+            style="@style/TextView.Data.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginLeft="@dimen/gap_medium"
+            android:layout_marginRight="@dimen/gap_medium"
+            android:layout_below="@id/episodeDirectorsLabel"/>
 
-            <TextView
-                android:id="@+id/episodeOverviewLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/overview"
-                android:textStyle="bold"
-                android:textColor="@color/gray"/>
+        <TextView
+            android:id="@+id/episodeOverviewLabel"
+            android:text="@string/overview"
+            style="@style/TextView.Label.Small.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap_large"
+            android:layout_marginLeft="@dimen/gap_medium"
+            android:layout_marginRight="@dimen/gap_medium"
+            android:layout_below="@id/episodeDirectorsTextView"/>
 
-            <TextView
-                android:id="@+id/episodeOverviewTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/myseries_style.12sp"/>
+        <TextView
+            android:id="@+id/episodeOverviewTextView"
+            style="@style/TextView.Data.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/gap_medium"
+            android:layout_marginRight="@dimen/gap_medium"
+            android:layout_marginBottom="@dimen/gap_medium"
+            android:layout_below="@id/episodeOverviewLabel"/>
 
-        </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>

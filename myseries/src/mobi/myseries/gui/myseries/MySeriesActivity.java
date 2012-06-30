@@ -68,12 +68,12 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             this.seriesListFragment = new SeriesListFragment();
             this.getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.series_list_fragment, this.seriesListFragment);
+                .add(R.id.seriesListFragment, this.seriesListFragment);
 
             this.seriesCoverFlowFragment = new SeriesCoverFlowFragment();
             this.getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.series_coverflow_fragment, this.seriesCoverFlowFragment);
+                .add(R.id.seriesCoverFlowFragment, this.seriesCoverFlowFragment);
         }
     }
 

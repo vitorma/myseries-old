@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/coverflow_empty"
+        android:text="@string/no_series_followed"
+        style="@style/TextView.Data.Medium"
+        android:visibility="invisible"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            layout="@layout/myseries_item_data"
+            android:id="@+id/seriesData"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/myseries_item_height"
+            android:layout_alignParentBottom="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/seriesData">
+
+            <mobi.myseries.gui.shared.CoverFlow
+                xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
+                android:id="@+id/coverflow"
+                coverflow:imageWidth="@dimen/myseries_image_width"
+                coverflow:imageHeight="@dimen/myseries_image_height"
+                coverflow:withReflection="true"
+                coverflow:imageReflectionRatio="0.25"
+                coverflow:reflectionGap="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

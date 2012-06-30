@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/myseries_item_height">
+
+    <ImageView
+        android:id="@+id/seriesImageView"
+        android:layout_width="@dimen/myseries_image_width"
+        android:layout_height="@dimen/myseries_image_height"
+        android:scaleType="centerInside"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingBottom="@dimen/gap_medium"
+        android:layout_alignParentLeft="true"/>
+
+    <include
+        layout="@layout/myseries_item_data"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/myseries_item_height"
+        android:layout_toRightOf="@id/seriesImageView"/>
+
+</RelativeLayout>

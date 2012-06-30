@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImageDownloadListener, EpisodeListener {
@@ -40,7 +39,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
     private Bitmap image;
     private ImageView imageView;
     private CheckBox isViewed;
-    private ProgressBar progressBar;
+//    private ProgressBar progressBar;
 
     private LayoutInflater layoutInflater;
 
@@ -69,7 +68,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
         this.episodeGuestStars = (TextView) itemView.findViewById(R.id.episodeGuestStarsTextView);
         this.isViewed = (CheckBox) itemView.findViewById(R.id.isEpisodeViewedCheckBox);
         this.imageView = (ImageView) itemView.findViewById(R.id.imageView);
-        this.progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+//        this.progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
 
         this.episode = this.getItem(position);
 
@@ -144,17 +143,17 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
     }
 
     private void setupForLoadedImage() {
-        this.progressBar.setVisibility(View.GONE);
+//        this.progressBar.setVisibility(View.GONE);
         this.imageView.setVisibility(View.VISIBLE);
     }
 
     private void setupForLoadingImage() {
-        this.progressBar.setVisibility(View.VISIBLE);
-        this.imageView.setVisibility(View.GONE);
+//        this.progressBar.setVisibility(View.VISIBLE);
+//        this.imageView.setVisibility(View.GONE);
     }
 
     private void setupForUnavailableImage() {
-        this.progressBar.setVisibility(View.GONE);
+//        this.progressBar.setVisibility(View.GONE);
         this.imageView.setVisibility(View.VISIBLE);
     }
 
