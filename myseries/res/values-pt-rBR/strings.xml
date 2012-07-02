@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Labels -->
+
+    <string name="actors">Atores</string>
+    <string name="back">Voltar</string>
+    <string name="details">Detalhes</string>
+    <string name="directors">Diretores</string>
+    <string name="follow">Seguir</string>
+    <string name="genres">Gêneros</string>
+    <string name="guest_stars">Artistas convidados</string>
+    <string name="help">Ajuda</string>
+    <string name="my_schedule">Minha Agenda</string>
+    <string name="my_series">Minhas séries</string>
+    <string name="next_to_see">Próximo a assistir:</string>
+    <string name="no">Não</string>
+    <string name="no_episodes_to_see">Nenhum episódio por assistir.</string>
+    <string name="no_followed_series">Você ainda não acompanha nenhuma série.</string>
+    <string name="overview">Visão geral</string>
+    <string name="overview_unavailable">Resumo não disponível.</string>
+    <string name="powered_by_thetvdb">Powered by www.thetvdb.com</string>
+    <string name="recent">Recentes</string>
+    <string name="search_series">Buscar série</string>
+    <string name="seasons">Temporadas</string>
+    <string name="series_name">Nome da série</string>
+    <string name="settings">Configurações</string>
+    <string name="special_episodes">Episódios especiais</string>
+    <string name="stop_following">Parar de seguir</string>
+    <string name="to_be_announced">Ainda não divulgado</string>
+    <string name="today">Hoje</string>
+    <string name="up_to_date">EM DIA</string>
+    <string name="upcoming">Por vir</string>
+    <string name="update_series_data">Atualizar dados das séries</string>
+    <string name="writers">Autores</string>
+    <string name="yes">Sim</string>
+
+    <!-- Label formats -->
+
+    <string name="date_format">dd-MM-yyyy</string>
+    <string name="episode_number_format" formatted="false">T%02dE%02d</string>
+    <string name="runtime_minutes_format" formatted="false">%s minutos</string>
+    <string name="season_number_format" formatted="false">Temporada %02d</string>
+
+    <!-- Messages -->
+
+    <string name="connection_failed_title">Falha na conexão.</string>
+    <string name="connection_failed_message">Verifique sua conexão e tente novamente.</string>
+    <string name="invalid_criteria_title">Nome de série inválido.</string>
+    <string name="invalid_criteria_message">Digite ao menos uma palavra.</string>
+    <string name="no_results_title">Nenhuma série encontrada.</string>
+    <string name="no_results_message">Tente procurar por outro nome.</string>
+    <string name="parsing_failed_title">Erro ao ler arquivo da web.</string>
+    <string name="parsing_failed_message">Sua conexão pode estar muito lenta.</string>
+    <string name="update_failed_title">A atualização falhou.</string>
+    <string name="update_failed_message">Verifique sua conexão e tente novamente.</string>
+
+    <!-- Message formats -->
+
+    <string name="stop_follow_message_format" formatted="false">Deseja parar de seguir %s?</string>
+    <string name="follow_successfull_message_format" formatted="false">A série %s aparecerá na sua lista em breve.</string>
+
+    <!-- Do not translate -->
+
+    <string name="app_name">My Series</string>
+    <string name="large_widget_name">My Series (4x4)</string>
+    <string name="medium_widget_name">My Series (4x2)</string>
+    <string name="small_widget_name">My Series (4x1)</string>
+
+</resources>
