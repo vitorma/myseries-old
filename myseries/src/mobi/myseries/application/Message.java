@@ -28,11 +28,11 @@ public class Message {
     private static final Context CONTEXT = App.environment().context();
 
     /* Search Series */
-    public static final String NO_RESULTS_FOUND_FOR_CRITERIA = stringFrom(R.string.no_results_found_for_criteria);
-    public static final String INVALID_SEARCH_CRITERIA = stringFrom(R.string.invalid_search_criteria);
+    //TODO Show dialogs with title
+    public static final String NO_RESULTS_FOUND_FOR_CRITERIA = stringFrom(R.string.no_results_message);
+    public static final String INVALID_SEARCH_CRITERIA = stringFrom(R.string.invalid_criteria_message);
     public static final String CONNECTION_FAILED = stringFrom(R.string.connection_failed_message);
-    public static final String PARSING_FAILED = stringFrom(R.string.parsing_failed);
-    public static final String SEARCHING = stringFrom(R.string.searching_dialog_text);
+    public static final String PARSING_FAILED = stringFrom(R.string.parsing_failed_message);
 
     private static String stringFrom(int resourceId) {
         return CONTEXT.getString(resourceId);

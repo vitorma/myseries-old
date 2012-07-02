@@ -57,7 +57,7 @@ public class SeriesListFragment extends SherlockListFragment {
 
     private void setUpContentView() {
         TextView empty = (TextView) this.getActivity().findViewById(android.R.id.empty);
-        empty.setText(this.getString(R.string.no_series_followed));
+        empty.setText(this.getString(R.string.no_followed_series));
     }
 
     private void setUpListAdapter() {

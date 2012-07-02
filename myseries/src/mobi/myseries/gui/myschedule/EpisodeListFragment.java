@@ -66,7 +66,7 @@ public class EpisodeListFragment extends SherlockListFragment {
 
     private void setUpContentView() {
         TextView empty = (TextView) this.getActivity().findViewById(android.R.id.empty);
-        empty.setText(this.getString(R.string.no_episodes));
+        empty.setText(this.getString(R.string.no_episodes_to_see));
     }
 
     private void setUpListAdapter() {

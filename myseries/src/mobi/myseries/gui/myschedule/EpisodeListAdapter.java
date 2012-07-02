@@ -116,7 +116,7 @@ public class EpisodeListAdapter extends ArrayAdapter<Episode> implements Episode
 
         seriesTextView.setText(series.name());
 
-        String format = this.getContext().getString(R.string.season_and_episode_format_short);
+        String format = this.getContext().getString(R.string.episode_number_format);
         seasonTextView.setText(String.format(format, season.number(), episode.number()));
 
         java.text.DateFormat dateFormat = App.environment().localization().dateFormat();

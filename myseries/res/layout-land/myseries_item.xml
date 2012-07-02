@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/coverflow_empty"
-        android:text="@string/no_series_followed"
+        android:text="@string/no_followed_series"
         style="@style/TextView.Data.Medium"
         android:visibility="invisible"
         android:gravity="center"

@@ -36,6 +36,6 @@ public class AndroidLocalizationProvider implements LocalizationProvider {
 
     @Override
     public DateFormat dateFormat() {
-        return new SimpleDateFormat(App.environment().context().getString(R.string.date_format_short));
+        return new SimpleDateFormat(App.environment().context().getString(R.string.date_format));
     }
 }

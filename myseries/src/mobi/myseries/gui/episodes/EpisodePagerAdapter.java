@@ -40,7 +40,7 @@ public class EpisodePagerAdapter extends FragmentStatePagerAdapter implements Ti
     @Override
     public String getTitle(int position) {
         Episode e = this.episodes.get(position);
-        String format = this.context.getString(R.string.season_and_episode_format_short);
+        String format = this.context.getString(R.string.episode_number_format);
         return String.format(format, e.seasonNumber(), e.number());
     }
 }

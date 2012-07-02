@@ -120,12 +120,12 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
             CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.nextToSeeCheckBox);
 
             if (nextEpisode == null) {
-                nextToSee.setText(this.context.getString(R.string.nexttosee_uptodate));
+                nextToSee.setText(this.context.getString(R.string.up_to_date));
                 seenMark.setVisibility(View.GONE);
                 return;
             }
 
-            String format = this.context.getString(R.string.next_to_see_format);
+            String format = this.context.getString(R.string.episode_number_format);
             nextToSee.setText(String.format(format, nextEpisode.seasonNumber(), nextEpisode.number()));
 
             seenMark.setVisibility(View.VISIBLE);

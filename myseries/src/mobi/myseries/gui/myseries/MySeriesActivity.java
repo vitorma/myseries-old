@@ -163,7 +163,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     
     @Override
     public void onUpdateFailure() {
-        Toast.makeText(this, R.string.update_failure_notification_message, 5).show();
+        //TODO Show dialog with title
+        Toast.makeText(this, R.string.update_failed_message, 5).show();
         this.spinner.setAnimation(null);
         this.updateMenuItem.setActionView(null);
     }

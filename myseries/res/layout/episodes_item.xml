@@ -71,7 +71,7 @@
 
         <TextView
             android:id="@+id/episodeWritersLabel"
-            android:text="@string/writer"
+            android:text="@string/writers"
             style="@style/TextView.Label.Small.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
 
         <TextView
             android:id="@+id/episodeDirectorsLabel"
-            android:text="@string/director"
+            android:text="@string/directors"
             style="@style/TextView.Label.Small.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

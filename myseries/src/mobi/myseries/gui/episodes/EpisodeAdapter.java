@@ -72,7 +72,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
 
         this.episode = this.getItem(position);
 
-        this.episodeName.setText(Objects.nullSafe(episode.name(), this.getContext().getString(R.string.unnamed_episode)));
+        this.episodeName.setText(Objects.nullSafe(episode.name(), this.getContext().getString(R.string.to_be_announced)));
         this.episodeFirstAired.setText(Dates.toString(episode.airDate(), App.environment().localization().dateFormat(), ""));
         this.episodeDirector.setText(episode.directors());
         this.episodeWriter.setText(episode.writers());

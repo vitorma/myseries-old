@@ -32,11 +32,11 @@ import android.content.DialogInterface;
 public class StopFollowingSeriesConfirmationDialog {
 
     public static AlertDialog buildFor(final Series series, Context context) {
-        String notFormatedDialgText = context.getString(R.string.do_you_want_to_stop_following);
+        String notFormatedDialgText = context.getString(R.string.stop_follow_message_format);
         final String dialogText = String.format(notFormatedDialgText, series.name());
 
-        final String yesText = context.getString(R.string.yes_i_do);
-        final String noText = context.getString(R.string.no_i_dont);
+        final String yesText = context.getString(R.string.yes);
+        final String noText = context.getString(R.string.no);
 
         return new AlertDialog.Builder(context)
                         .setMessage(dialogText)

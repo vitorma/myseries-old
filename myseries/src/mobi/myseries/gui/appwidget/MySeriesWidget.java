@@ -101,7 +101,7 @@ public class MySeriesWidget extends AppWidgetProvider {
                     item.setImageViewBitmap(R.id.widgetPoster, imageProvider.getPosterOf(series));
                     item.setTextViewText(R.id.widgetEpisodeSeriesTextView, series.name());
                     String episodeName = String.format(
-                            this.getString(R.string.season_and_episode_format_short), season.number(), e.number());
+                            this.getString(R.string.episode_number_format), season.number(), e.number());
                     item.setTextViewText(R.id.widgetEpisodeNameTextView, episodeName);
                     item.setTextViewText(
                             R.id.widgetEpisodeDateTextView,

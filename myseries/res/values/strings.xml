@@ -1,86 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
 
-    <string name="about">About</string>
+    <!-- Labels -->
+
     <string name="actors">Actors</string>
-    <string name="add_series">Add series</string>
-    <string name="air_time">Air time: </string>
-    <string name="air_day">Air day: </string>
-    <string name="app_name">My Series</string>
     <string name="back">Back</string>
     <string name="details">Details</string>
-    <string name="directed_by">Directed by: </string>
-    <string name="director">Directors</string>
-    <string formatted="false" name="do_you_want_to_stop_following">"Do you want to stop following %s?"</string>
-    <string name="episode_overview">Overview:</string>
-    <string formatted="false" name="episode_number_format">Episode %02d</string>
-    <string formatted="false" name="episode_number_format_short">E%02d</string>
-    <string name="first_aired">First aired: </string>
+    <string name="directors">Directors</string>
     <string name="follow">Follow</string>
-    <string name="genre">Genres</string>
+    <string name="genres">Genres</string>
     <string name="guest_stars">Guest stars</string>
-    <string name="large_widget_name">My Series (4x4)</string>
-    <string name="last_episode_aired">last aired:</string>
-    <string name="listing_title">Listing title</string>
-    <string name="loading">Loading…</string>
-    <string name="loading_dialog_text">Downloading…</string>
-    <string name="searching_dialog_text">Searching…</string>
-    <string name="med_widget_name">My Series (4x2)</string>
-    <string formatted="false" name="runtime_minutes_format">%s minutes</string>
+    <string name="help">Help</string>
     <string name="my_schedule">My Schedule</string>
     <string name="my_series">My Series</string>
-    <string name="network">Network: </string>
-    <string name="next_episode_to_air">Next to air: </string>
-    <string name="next_episode_to_see">Next to see: </string>
-    <string formatted="false" name="next_to_see_format">S%02dE%02d</string>
-    <string name="nexttosee_uptodate">UP-TO-DATE</string>
-    <string name="no_i_dont">No, I don\'t</string>
-    <string name="no_episode_aired">no episode aired</string>
-    <string name="no_episodes">No episodes to see.</string>
-    <string name="no_items_to_list">No items to list.</string>
-    <string name="no_results_found_for_criteria">No results found for criteria.</string>
-    <string name="no_series_followed">No followed series.</string>
-    <string formatted="false" name="now_you_follow_series">Now you follow %s.</string>
+    <string name="next_to_see">Next to see:</string>
+    <string name="no">No</string>
+    <string name="no_episodes_to_see">No episodes to see.</string>
+    <string name="no_followed_series">No followed series.</string>
     <string name="overview">Overview</string>
-    <string name="review_not_available">Review not available</string>
-    <string name="recent_episodes">Recent episodes</string>
-    <string name="runtime">Runtime: </string>
+    <string name="overview_unavailable">Overview is unavailable.</string>
+    <string name="powered_by_thetvdb">Powered by www.thetvdb.com</string>
+    <string name="recent">Recent</string>
     <string name="search_series">Search Series</string>
     <string name="seasons">Seasons</string>
-    <string formatted="false" name="season_and_episode_format">Season %02d - Episode %02d</string>
-    <string formatted="false" name="season_and_episode_format_short">S%02dE%02d</string>
-    <string formatted="false" name="season_number_format">Season %02d</string>
-    <string formatted="false" name="season_number_format_short">S%02d</string>
-    <string name="seasons_of_series">Seasons of</string>
-    <string name="season_name">Season name</string>
-    <string name="separator"> - </string>
-    <string formatted="false" name="series_will_be_added">The Series %s will be added to your list soon.</string>
-    <string formatted="false" name="series_will_be_removed">The Series %s will be removed from your list soon.</string>
-    <string name="small_widget_name">My Series (4x1)</string>
+    <string name="series_name">Series name</string>
+    <string name="settings">Settings</string>
     <string name="special_episodes">Special Episodes</string>
-    <string name="status">Status: </string>
     <string name="stop_following">Stop following</string>
-    <string name="schedule_recent">Recent</string>
-    <string name="schedule_today">Today</string>
-    <string name="schedule_upcoming">Upcoming</string>
-    <string name="unknown_series">Unknown Series</string>
-    <string name="unnamed_episode">Unnamed Episode</string>
-    <string name="updating_series_notification_title">My Series data update</string>
-    <string name="updating_series_failure_notification_title">My Series data update failure</string>
-    <string name="update_failure_notification_message">Data update has failed. Please check your Internet connection or try again later.</string>
-    <string name="updating_series_data">Updating series data…</string>
-    <string name="up_to_date">Up-to-date</string>
-    <string name="update">Update</string>
-    <string name="upcoming_episodes">Upcoming episodes</string>
-    <string name="writer">Writers</string>
-    <string name="yes_i_do">Yes, I do</string>
-    <string name="you_no_longer_follow">You no longer follow %s.</string>
-    <string name="invalid_search_criteria">Invalid search criteria.</string>
-    <string name="connection_failed_message">Connection failed. Please check your connection.</string>
-    <string name="parsing_failed">Parsing failed.</string>
-    <string name="date_format_short">yyyy-MM-dd</string>
-    <string name="preview">Preview:</string>
-    <string name="not_available">Not available</string>
-    <string name="powered_by_thetvdb">Powered by thetvdb.com</string>
+    <string name="to_be_announced">To be announced</string>
+    <string name="today">Today</string>
+    <string name="up_to_date">UP-TO-DATE</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="update_series_data">Update series data</string>
+    <string name="writers">Writers</string>
+    <string name="yes">Yes</string>
+
+    <!-- Label formats -->
+
+    <string name="date_format">yyyy-MM-dd</string>
+    <string name="episode_number_format" formatted="false">S%02dE%02d</string>
+    <string name="runtime_minutes_format" formatted="false">%s minutes</string>
+    <string name="season_number_format" formatted="false">Season %02d</string>
+
+    <!-- Messages -->
+
+    <string name="connection_failed_title">Connection failed.</string>
+    <string name="connection_failed_message">Check your connection and try again.</string>
+    <string name="invalid_criteria_title">Invalid series name.</string>
+    <string name="invalid_criteria_message">Type at least one word.</string>
+    <string name="no_results_title">No series found.</string>
+    <string name="no_results_message">Try searching another name.</string>
+    <string name="parsing_failed_title">Error reading file from the web.</string>
+    <string name="parsing_failed_message">Your connection may be too slow.</string>
+    <string name="update_failed_title">Data update has failed.</string>
+    <string name="update_failed_message">Check your connection and try again.</string>
+
+    <!-- Message formats -->
+
+    <string name="stop_follow_message_format" formatted="false">Do you want to stop following %s?</string>
+    <string name="follow_successfull_message_format" formatted="false">The series %s will be added to your list soon.</string>
+
+    <!-- Do not translate -->
+
+    <string name="app_name">My Series</string>
+    <string name="large_widget_name">My Series (4x4)</string>
+    <string name="med_widget_name">My Series (4x2)</string>
+    <string name="small_widget_name">My Series (4x1)</string>
 
 </resources>

@@ -289,7 +289,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
                             App.follow(selectedItem);
 
                             String message = String.format(SeriesSearchActivity.this
-                                    .getString(R.string.series_will_be_added), selectedItem.name());
+                                    .getString(R.string.follow_successfull_message_format), selectedItem.name());
 
                             this.showToastWith(message);
                         }
