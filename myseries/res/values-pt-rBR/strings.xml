@@ -20,7 +20,7 @@
     <string name="no_followed_series">Você ainda não acompanha nenhuma série.</string>
     <string name="overview">Visão geral</string>
     <string name="overview_unavailable">Resumo não disponível.</string>
-    <string name="powered_by_thetvdb">Powered by www.thetvdb.com</string>
+    <string name="powered_by_thetvdb">Fonte: www.thetvdb.com</string>
     <string name="recent">Recentes</string>
     <string name="search_series">Buscar série</string>
     <string name="seasons">Temporadas</string>
@@ -38,7 +38,7 @@
 
     <!-- Label formats -->
 
-    <string name="date_format">dd-MM-yyyy</string>
+    <string name="date_format">dd/MM/yyyy</string>
     <string name="episode_number_format" formatted="false">T%02dE%02d</string>
     <string name="runtime_minutes_format" formatted="false">%s minutos</string>
     <string name="season_number_format" formatted="false">Temporada %02d</string>

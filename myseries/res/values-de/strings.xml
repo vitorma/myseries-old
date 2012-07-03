@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Labels -->
+
+    <string name="actors">Schauspieler</string>
+    <string name="back">Zurückkehren</string>
+    <string name="details">Details</string>
+    <string name="directors">Direktors</string>
+    <string name="follow">Folgen</string>
+    <string name="genres">Genres</string>
+    <string name="guest_stars">Gaststars</string>
+    <string name="help">Hilfe</string>
+    <string name="my_schedule">Mein Terminplan</string>
+    <string name="my_series">Meine Serien</string>
+    <string name="next_to_see">Nächste zu sehen:</string>
+    <string name="no">Nein</string>
+    <string name="no_episodes_to_see">Keine Episoden zu sehen.</string>
+    <string name="no_followed_series">Sie folgen keine Serien.</string>
+    <string name="overview">Zusammenfassung</string>
+    <string name="overview_unavailable">Zusammenfassung ist noch nicht vorhanden.</string>
+    <string name="powered_by_thetvdb">Ein Dienst von www.thetvdb.com</string>
+    <string name="recent">Vor kurzem</string>
+    <string name="search_series">Suche Serien</string>
+    <string name="seasons">Staffeln</string>
+    <string name="series_name">Serienname</string>
+    <string name="settings">Einstellungen</string>
+    <string name="special_episodes">Special Episodes</string>
+    <string name="stop_following">Entfolgen</string>
+    <string name="to_be_announced">Wird noch bekannt gegeben</string>
+    <string name="today">Heute</string>
+    <string name="up_to_date">AKTUALISIERT</string>
+    <string name="upcoming">Anstehender</string>
+    <string name="update_series_data">Aktualisiere Seriendaten</string>
+    <string name="writers">Autoren</string>
+    <string name="yes">Ja</string>
+
+    <!-- Label formats -->
+
+    <string name="date_format">yyyy-MM-dd</string>
+    <string name="episode_number_format" formatted="false">S%02dE%02d</string>
+    <string name="runtime_minutes_format" formatted="false">%s minuten</string>
+    <string name="season_number_format" formatted="false">Staffel %02d</string>
+
+    <!-- Messages -->
+
+    <string name="connection_failed_title">Verbindung fehlgeschlagen..</string>
+    <string name="connection_failed_message">Überprüfen Sie, ob Ihre Internetverbindung aktiv ist, und versuchen Sie erneut.</string>
+    <string name="invalid_criteria_title">Serie name ist ungültige.</string>
+    <string name="invalid_criteria_message">Bitte geben Sie mindestens ein Wort.</string>
+    <string name="no_results_title">Keine Serie gefunden.</string>
+    <string name="no_results_message">Bitte suchen Sie einen anderen Namen.</string>
+    <string name="parsing_failed_title">Fehler beim Lesen der Datei aus dem Web.</string>
+    <string name="parsing_failed_message">Ihre Verbindung ist möglicherweise zu langsam.</string>
+    <string name="update_failed_title">Fehler beim Aktualisieren der Daten.</string>
+    <string name="update_failed_message">Überprüfen Sie, ob Ihre Internetverbindung aktiv ist, und versuchen Sie erneut.</string>
+
+    <!-- Message formats -->
+
+    <string name="stop_follow_message_format" formatted="false">Wollen Sie folgen %s zu stoppen?</string>
+    <string name="follow_successfull_message_format" formatted="false">Die Serie %s wird in der Liste in Kürze erscheinen.</string>
+
+    <!-- Do not translate -->
+
+    <string name="app_name">My Series</string>
+    <string name="large_widget_name">My Series (4x4)</string>
+    <string name="med_widget_name">My Series (4x2)</string>
+    <string name="small_widget_name">My Series (4x1)</string>
+
+</resources>
