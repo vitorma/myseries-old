@@ -154,7 +154,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
                 @Override
                 public boolean onLongClick(View v) {
-                    StopFollowingSeriesConfirmationDialog.buildFor(series, context).show();
+                    new StopFollowingDialogBuilder(series, context).build().show();
                     return true;
                 }
             });

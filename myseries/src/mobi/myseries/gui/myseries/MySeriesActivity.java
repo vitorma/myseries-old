@@ -27,12 +27,12 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
+import mobi.myseries.gui.shared.FailureDialogBuilder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -140,11 +140,11 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     }
 
     //Update------------------------------------------------------------------------------------------------------------
-    
+
     //private UpdateNotificationLauncher updateNotificationLauncher;
     private MenuItem updateMenuItem;
     private ImageView spinner = null;
-    
+
     @Override
     public void onUpdateStart() {        
         this.spinner = new ImageView(this);
@@ -160,21 +160,25 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         this.spinner.startAnimation(rotation);
         this.updateMenuItem.setActionView(this.spinner);
     }
-    
+
     @Override
     public void onUpdateFailure() {
-        //TODO Show dialog with title
-        Toast.makeText(this, R.string.update_failed_message, 5).show();
         this.spinner.setAnimation(null);
         this.updateMenuItem.setActionView(null);
+
+        new FailureDialogBuilder(this)
+            .setTitle(R.string.update_failed_title)
+            .setMessage(R.string.update_failed_message)
+            .build()
+            .show();
     }
-    
+
     @Override
     public void onUpdateSuccess() {
         this.spinner.setAnimation(null);
         this.updateMenuItem.setActionView(null);
     }
-    
+
     //Search------------------------------------------------------------------------------------------------------------
 
     private void showSearchActivity() {

@@ -62,6 +62,18 @@
         <item name="android:textSize">@dimen/text_size_small</item>
     </style>
 
+    <style name="TextView.Dialog"/>
+
+    <style name="TextView.Dialog.Title">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="TextView.Dialog.Message">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <!-- EditText -->
 
     <style name="EditText" parent="android:Widget.EditText">
@@ -97,6 +109,17 @@
 
     <style name="ImageButton" parent="android:Widget.ImageButton">
         <item name="android:background">@drawable/button</item>
+    </style>
+
+    <!-- DialogButton -->
+
+    <style name="DialogButton">
+        <item name="android:background">@drawable/item_background_holo_light</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <!-- ListView -->
@@ -145,5 +168,8 @@
         <item name="selectedColor">@color/black</item>
         <item name="selectedBold">true</item>
     </style>
+
+    <!-- Animation -->
+    <style name="DialogAnimation" parent="android:Animation.Dialog"/>
 
 </resources>

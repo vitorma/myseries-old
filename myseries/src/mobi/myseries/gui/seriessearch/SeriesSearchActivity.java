@@ -27,16 +27,16 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SearchSeriesListener;
 import mobi.myseries.domain.model.Series;
-import android.app.AlertDialog;
+import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
+import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
+import mobi.myseries.gui.shared.FailureDialogBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -147,13 +147,12 @@ public class SeriesSearchActivity extends SherlockListActivity {
                 state.seriesFound = series;
                 setupListOnAdapter(series);
             }
-          
-            
+
             @Override
             public void onFaluire(Throwable exception) {
-                Dialog dialog = new AlertDialog.Builder(SeriesSearchActivity.this)
-                .setMessage(exception.getMessage())
-                .create();
+                Dialog dialog = new FailureDialogBuilder(SeriesSearchActivity.this)
+                    .setMessage(exception.getMessage())
+                    .build();
                 dialog.show();
                 state.dialog = dialog;
             }
@@ -228,70 +227,45 @@ public class SeriesSearchActivity extends SherlockListActivity {
      */
     private void setupItemClickListener() {
         this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            /** Current selected item. */
             private Series selectedItem;
-
-            /** Custom dialog to show the overview of a series. */
+            private boolean userFollowsSeries;
             private Dialog dialog;
 
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
                     final int position, final long id) {
                 this.selectedItem = (Series) parent.getItemAtPosition(position);
+                this.userFollowsSeries = App.follows(this.selectedItem);
 
-                this.dialog = new Dialog(SeriesSearchActivity.this);
-                this.dialog.setContentView(R.layout.seriessearch_following);
-
-                this.updateDialogText();
-                this.setBackButtonClickListener();
-                this.setFollowButtonClickListener();
+                this.dialog = new ConfirmationDialogBuilder(SeriesSearchActivity.this)
+                    .setTitle(this.selectedItem.name())
+                    .setMessage(this.selectedItem.overview())
+                    .setSurrogateMessage(R.string.overview_unavailable)
+                    .setPositiveButton(this.followButtonTextResourceId(), this.followButtonClickListener())
+                    .setNegativeButton(R.string.back, null)
+                    .build();
 
                 this.dialog.show();
                 state.dialog = this.dialog;
             }
 
-            /**
-             * Sets a listener to 'Back' button click events.
-             */
-            private void setBackButtonClickListener() {
-                final Button backButton = (Button) this.dialog.findViewById(R.id.backButton);
-
-                backButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        dialog.dismiss();
-                    }
-                });
+            private int followButtonTextResourceId() {
+                return this.userFollowsSeries ? R.string.stop_following : R.string.follow;
             }
 
-            /**
-             * Sets a listener to 'Follow' button click events.
-             */
-            // TODO Auto-generated method stub
-
-            private void setFollowButtonClickListener() {
-                final Button followButton = (Button) this.dialog.findViewById(R.id.followButton);
-
-                final boolean userFollowsSeries = App.follows(this.selectedItem);
-
-                if (userFollowsSeries) {
-                    followButton.setText(R.string.stop_following);
-                } else {
-                    followButton.setText(R.string.follow);
-                }
-
-                followButton.setOnClickListener(new OnClickListener() {
+            private ButtonOnClickListener followButtonClickListener() {
+                return new ButtonOnClickListener() {
                     @Override
-                    public void onClick(final View v) {
+                    public void onClick(Dialog dialog) {
                         if (userFollowsSeries) {
                             App.stopFollowing(selectedItem);
                         } else {
                             App.follow(selectedItem);
 
-                            String message = String.format(SeriesSearchActivity.this
+                            String toastMessage = String.format(SeriesSearchActivity.this
                                     .getString(R.string.follow_successfull_message_format), selectedItem.name());
 
-                            this.showToastWith(message);
+                            this.showToastWith(toastMessage);
                         }
 
                         dialog.dismiss();
@@ -302,18 +276,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
                                 Toast.LENGTH_LONG);
                         toast.show();
                     }
-                });
-            }
-
-            /**
-             * Updates the overviewTextView and the title of the dialog.
-             */
-            private void updateDialogText() {
-                TextView seriesOverview = (TextView) this.dialog
-                        .findViewById(R.id.overviewTextView);
-
-                this.dialog.setTitle(this.selectedItem.name());
-                seriesOverview.setText(this.selectedItem.overview());
+                };
             }
         });
     }

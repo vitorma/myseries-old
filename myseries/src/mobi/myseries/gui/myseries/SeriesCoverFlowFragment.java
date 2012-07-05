@@ -164,7 +164,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
                 if (!SeriesCoverFlowFragment.this.isSelected(series)) {return true;}
 
-                StopFollowingSeriesConfirmationDialog.buildFor(series, view.getContext()).show();
+                new StopFollowingDialogBuilder(series, view.getContext()).build().show();
                 return true;
             }});
     }
