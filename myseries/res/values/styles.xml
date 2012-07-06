@@ -138,8 +138,6 @@
         <item name="android:divider">@drawable/list_divider_holo_light</item>
         <item name="android:showDividers">beginning|middle|end</item>
         <item name="android:fastScrollEnabled">true</item>
-        <item name="android:scrollbarThumbVertical">@drawable/fastscroll_thumb_holo</item>
-        <item name="android:scrollbarTrackVertical">@drawable/fastscroll_track_holo_light</item>
     </style>
 
     <!-- ExpandableListView -->
@@ -150,8 +148,6 @@
         <item name="android:divider">@drawable/list_divider_holo_light</item>
         <item name="android:childDivider">@drawable/list_divider_holo_light</item>
         <item name="android:fastScrollEnabled">true</item>
-        <item name="android:scrollbarThumbVertical">@drawable/fastscroll_thumb_holo</item>
-        <item name="android:scrollbarTrackVertical">@drawable/fastscroll_track_holo_light</item>
         <item name="android:groupIndicator">@drawable/expander_group_holo_light</item>
         <item name="android:indicatorRight">@dimen/toucharea_minimum_side</item>
     </style>
@@ -160,8 +156,6 @@
 
     <style name="ScrollView" parent="android:Widget.ScrollView">
         <item name="android:fastScrollEnabled">true</item>
-        <item name="android:scrollbarThumbVertical">@drawable/fastscroll_thumb_holo</item>
-        <item name="android:scrollbarTrackVertical">@drawable/fastscroll_track_holo_light</item>
     </style>
 
     <!-- TitlePageIndicator -->

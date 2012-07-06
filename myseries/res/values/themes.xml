@@ -13,7 +13,23 @@
         <item name="android:scrollViewStyle">@style/ScrollView</item>
         <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
 
-        <!-- Put scroll attributes (scrollBars and fastScroll) here -->
+        <!-- Scroll -->
+
+        <item name="android:scrollbarFadeDuration">250</item>
+        <item name="android:scrollbarDefaultDelayBeforeFade">300</item>
+        <item name="android:scrollbarSize">10dip</item>
+        <item name="android:scrollbarThumbHorizontal">@drawable/scrollbar_handle_holo_light</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_handle_holo_light</item>
+        <item name="android:scrollbarTrackHorizontal">@null</item>
+        <item name="android:scrollbarTrackVertical">@null</item>
+
+        <!-- API 11 and later -->
+
+        <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
+        <item name="android:fastScrollPreviewBackgroundLeft">@drawable/fastscroll_label_left_holo_light</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/fastscroll_label_right_holo_light</item>
+        <item name="android:fastScrollTrackDrawable">@drawable/fastscroll_track_holo_light</item>
+        <item name="android:fastScrollOverlayPosition">floating</item>
     </style>
 
     <style name="MySeriesTheme.Dialog">
