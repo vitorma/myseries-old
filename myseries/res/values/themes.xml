@@ -12,6 +12,8 @@
         <item name="android:expandableListViewStyle">@style/ExpandableListView</item>
         <item name="android:scrollViewStyle">@style/ScrollView</item>
         <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
+
+        <!-- Put scroll attributes (scrollBars and fastScroll) here -->
     </style>
 
     <style name="MySeriesTheme.Dialog">

@@ -30,6 +30,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
+import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -41,7 +42,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -272,9 +272,10 @@ public class SeriesSearchActivity extends SherlockListActivity {
                     }
 
                     private void showToastWith(String message) {
-                        Toast toast = Toast.makeText(App.environment().context(), message,
-                                Toast.LENGTH_LONG);
-                        toast.show();
+                        new ToastBuilder(App.environment().context())
+                            .setMessage(message)
+                            .build()
+                            .show();
                     }
                 };
             }

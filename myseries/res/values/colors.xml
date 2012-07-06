@@ -4,6 +4,7 @@
 
     <color name="transparent">#00000000</color>
     <color name="translucent">#bf000000</color>
+    <color name="shadow">#bb000000</color>
 
     <color name="white">#ffffffff</color>
     <color name="light_gray">#01000000</color>
