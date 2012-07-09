@@ -21,18 +21,13 @@
 
 package mobi.myseries.gui.appwidget;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
 
 public class MySeriesMediumWidget extends MySeriesWidget {
     private static int LIMIT = 4;
 
     @Override
-    protected Intent createUpdateIntent(Context context) {
-        Intent intent = new Intent(context, UpdateServiceMedium.class);
-        return intent;
+    protected Class updateServiceClass() {
+        return UpdateServiceMedium.class;
     }
 
     public static class UpdateServiceMedium extends UpdateService {
@@ -41,15 +36,8 @@ public class MySeriesMediumWidget extends MySeriesWidget {
         }
 
         @Override
-        public void onHandleIntent(Intent intent) {
-            ComponentName componentName = new ComponentName(this, MySeriesMediumWidget.class);
-            AppWidgetManager manager = AppWidgetManager.getInstance(this);
-            Intent i = new Intent(this, MySeriesMediumWidget.class);
-
-            manager.updateAppWidget(
-                    componentName,
-                    buildUpdate(this, super.layout(), super.itemLayout(), super.noItemLayout(), LIMIT, i)
-            );
+        protected Class widgetClass() {
+            return MySeriesMediumWidget.class;
         }
     }
 }

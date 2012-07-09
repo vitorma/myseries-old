@@ -1,49 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginBottom="2dp">
+    android:layout_height="48dp"
+    android:background="@drawable/item_background_holo_light"
+    android:clickable="true"
+    android:focusable="true">
 
     <ImageView
-        android:id="@+id/widgetPoster"
-        android:layout_width="25dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/widgetEpisodeDateTextView"
-        android:layout_alignTop="@+id/widgetEpisodeSeriesTextView"
-        android:layout_marginRight="5dp"
-        android:src="@drawable/small_poster_clapperboard" >
-    </ImageView>
+        android:id="@+id/poster"
+        android:src="@drawable/small_poster_clapperboard"
+        android:scaleType="centerInside"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"/>
 
     <TextView
-        android:id="@+id/widgetEpisodeSeriesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/widgetPoster"
+        android:id="@+id/seriesName"
+        style="@style/TextView.Label.Small"
+        android:gravity="top"
+        android:paddingTop="@dimen/gap_small"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
         android:layout_alignParentTop="true"
-        android:lines="1"
-        android:scrollHorizontally="true"
-        android:textSize="12sp"
-        android:textColor="@color/white"/>
+        android:layout_toRightOf="@id/poster"/>
 
     <TextView
-        android:id="@+id/widgetEpisodeNameTextView"
+        android:id="@+id/episodeNumber"
+        style="@style/TextView.Data.Medium"
+        android:gravity="bottom"
+        android:paddingBottom="@dimen/gap_small"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/widgetPoster"
-        android:layout_below="@+id/widgetEpisodeSeriesTextView"
-        android:lines="1"
-        android:scrollHorizontally="true"
-        android:textSize="12sp"
-        android:textColor="@color/gray"/>
+        android:layout_height="28dp"
+        android:layout_below="@id/seriesName"
+        android:layout_toRightOf="@id/poster"/>
 
     <TextView
-        android:id="@+id/widgetEpisodeDateTextView"
+        android:id="@+id/episodeAirDate"
+        style="@style/TextView.Data.Medium"
+        android:gravity="bottom"
+        android:paddingBottom="@dimen/gap_small"
+        android:paddingRight="@dimen/gap_medium"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/widgetPoster"
-        android:layout_below="@+id/widgetEpisodeNameTextView"
-        android:textSize="12sp"
-        android:textColor="@color/gray"/>
+        android:layout_height="28dp"
+        android:layout_below="@id/seriesName"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

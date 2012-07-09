@@ -1,30 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:focusable="true"
-    android:background="@drawable/widget_background">
+    android:background="@drawable/dialog_full_holo_light">
 
-    <LinearLayout android:id="@+id/innerLinearLayout"
+    <LinearLayout
+        android:id="@+id/buttonBar"
+        android:background="@drawable/ab_solid_dark_holo"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:clickable="true"
-        android:focusable="true">
+        android:layout_height="48dp">
+
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:src="@drawable/ic_launcher"
+            android:scaleType="centerInside"
+            android:background="@drawable/item_background_holo_dark"
+            android:padding="@dimen/gap_medium"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <ImageButton
+            android:id="@+id/scheduleButton"
+            android:src="@drawable/actionbar_calendar"
+            android:scaleType="centerInside"
+            android:background="@drawable/item_background_holo_dark"
+            android:padding="@dimen/gap_medium"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <ImageButton
+            android:id="@+id/refreshButton"
+            android:src="@drawable/actionbar_update"
+            android:scaleType="centerInside"
+            android:background="@drawable/item_background_holo_dark"
+            android:padding="@dimen/gap_medium"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <ImageButton
+            android:id="@+id/lessItemsButton"
+            android:src="@drawable/ic_less_items"
+            android:scaleType="centerInside"
+            android:background="@drawable/item_background_holo_dark"
+            android:padding="@dimen/gap_medium"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <ImageButton
+            android:id="@+id/moreItemsButton"
+            android:src="@drawable/ic_more_items"
+            android:scaleType="centerInside"
+            android:background="@drawable/item_background_holo_dark"
+            android:padding="@dimen/gap_medium"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/ImageButtonWidget"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/widget_item_background"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_action_refresh"/>
+    <LinearLayout android:id="@+id/container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-</RelativeLayout>
+</LinearLayout>
