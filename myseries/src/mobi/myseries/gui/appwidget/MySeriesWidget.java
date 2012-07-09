@@ -58,6 +58,7 @@ public class MySeriesWidget extends AppWidgetProvider {
     protected static final int noItemLayout = R.layout.appwidget_noitem_deletemeasap;
     private static final String REFRESH = "mobi.myseries.gui.appwidget.REFRESH";
     private static final String ADD = "mobi.myseries.gui.appwidget.ADD";
+    private static final String REMOVE = "mobi.myseries.gui.appwidget.REMOVE";
     protected static final int LIMIT = 9;
     private static final String NUMBER_OF_ITEMS = "mobi.myseries.gui.appwidget.numberOfItems";
 
@@ -79,6 +80,9 @@ public class MySeriesWidget extends AppWidgetProvider {
             context.startService(this.createUpdateIntent(context));
         } else if (ADD.equals(intent.getAction())) {
             this.numberOfItems++;
+            context.startService(this.createUpdateIntent(context));
+        } else if (REMOVE.equals(intent.getAction()) && this.numberOfItems > 0) {
+            this.numberOfItems--;
             context.startService(this.createUpdateIntent(context));
         } else {
             super.onReceive(context, intent);
@@ -105,6 +109,7 @@ public class MySeriesWidget extends AppWidgetProvider {
     public static class UpdateService extends IntentService {
         private static final Comparator<Episode> COMPARATOR =
             EpisodeComparator.reversedByAirdateThenBySeasonThenByNumber();
+
 
         //Experimental
         protected int numberOfItems;
@@ -160,7 +165,7 @@ public class MySeriesWidget extends AppWidgetProvider {
 
                     //Launch EpisodesActivity - item.onClick()
                     Intent i = EpisodeDetailsActivity.newIntent(context, e.seriesId(), e.seasonNumber(), e.number());
-                    PendingIntent pi = PendingIntent.getActivity(context, 4+viewToAdd, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pi = PendingIntent.getActivity(context, 5+viewToAdd, i, PendingIntent.FLAG_UPDATE_CURRENT);
                     item.setOnClickPendingIntent(R.id.item, pi);
 
                     rv.addView(R.id.container, item);
@@ -188,12 +193,19 @@ public class MySeriesWidget extends AppWidgetProvider {
             PendingIntent pi3 = PendingIntent.getBroadcast(this, 3, i3, PendingIntent.FLAG_CANCEL_CURRENT);
             rv.setOnClickPendingIntent(R.id.refreshButton, pi3);
 
-//            //Experimental - add items
+            //Experimental - add items
             Intent i4 = new Intent(this, this.widgetClass());
             i4.putExtra(NUMBER_OF_ITEMS, this.numberOfItems);
             i4.setAction(ADD);
             PendingIntent pi4 = PendingIntent.getBroadcast(this, 4, i4, PendingIntent.FLAG_CANCEL_CURRENT);
             rv.setOnClickPendingIntent(R.id.moreItemsButton, pi4);
+
+            //Experimental - remove items
+            Intent i5 = new Intent(this, this.widgetClass());
+            i5.putExtra(NUMBER_OF_ITEMS, this.numberOfItems);
+            i5.setAction(REMOVE);
+            PendingIntent pi5 = PendingIntent.getBroadcast(this, 5, i5, PendingIntent.FLAG_CANCEL_CURRENT);
+            rv.setOnClickPendingIntent(R.id.lessItemsButton, pi5);
 
             return rv;
         }
