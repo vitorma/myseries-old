@@ -157,7 +157,7 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         if (nextNonSpecialEpisodeToSee == null) return nextSpecialEpisodeToSee;
         if (nextSpecialEpisodeToSee == null) return nextNonSpecialEpisodeToSee;
 
-        return Dates.compare(nextNonSpecialEpisodeToSee.airDate(), nextSpecialEpisodeToSee.airDate()) < 1
+        return Dates.compareByNullLast(nextNonSpecialEpisodeToSee.airDate(), nextSpecialEpisodeToSee.airDate()) < 1
                ? nextNonSpecialEpisodeToSee
                : nextSpecialEpisodeToSee;
     }

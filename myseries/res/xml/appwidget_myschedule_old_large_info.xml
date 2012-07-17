@@ -2,10 +2,9 @@
 
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:initialLayout="@layout/appwidget"
+    android:initialLayout="@layout/appwidget_myschedule_old"
     android:updatePeriodMillis="3600000"
     android:minWidth="256dp"
-    android:minHeight="208dp"
+    android:minHeight="304dp"
     >
-
 </appwidget-provider>

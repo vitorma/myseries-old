@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/actionBar"
+    android:background="@drawable/ab_solid_dark_holo"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/appwidget_actionbar_height">
+
+    <ImageButton
+        android:id="@+id/homeButton"
+        android:src="@drawable/ic_launcher"
+        android:scaleType="centerInside"
+        android:background="@drawable/item_background_holo_dark"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="@dimen/appwidget_actionbar_button_width"
+        android:layout_height="@dimen/appwidget_actionbar_button_height"/>
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextView.AppWidget.Title"
+        android:gravity="center_vertical|left"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/appwidget_actionbar_button_height"
+        android:layout_weight="1"/>
+
+    <ImageButton
+        android:id="@+id/scheduleButton"
+        android:src="@drawable/actionbar_calendar"
+        android:scaleType="centerInside"
+        android:background="@drawable/item_background_holo_dark"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="@dimen/appwidget_actionbar_button_width"
+        android:layout_height="@dimen/appwidget_actionbar_button_height"/>
+
+    <ImageButton
+        android:id="@+id/configureButton"
+        android:src="@drawable/actionbar_settings"
+        android:scaleType="centerInside"
+        android:background="@drawable/item_background_holo_dark"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="@dimen/appwidget_actionbar_button_width"
+        android:layout_height="@dimen/appwidget_actionbar_button_height"/>
+
+    <ImageButton
+        android:id="@+id/refreshButton"
+        android:src="@drawable/actionbar_update"
+        android:scaleType="centerInside"
+        android:background="@drawable/item_background_holo_dark"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="@dimen/appwidget_actionbar_button_width"
+        android:layout_height="@dimen/appwidget_actionbar_button_height"/>
+
+</LinearLayout>

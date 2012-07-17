@@ -26,9 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import mobi.myseries.application.App;
-import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;

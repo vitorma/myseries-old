@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:paddingBottom="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="@dimen/gap_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/schedule_mode"
+                style="@style/TextView.Label.Medium.Bold"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <RadioGroup
+                android:id="@+id/scheduleModeRadioGroup"
+                style="@style/RadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/recent"
+                    android:text="@string/recent_episodes"
+                    android:textSize="@dimen/text_size_medium"
+                    style="@style/RadioButton"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"/>
+
+                <RadioButton
+                    android:id="@+id/today"
+                    android:text="@string/today_episodes"
+                    android:textSize="@dimen/text_size_medium"
+                    android:checked="true"
+                    style="@style/RadioButton"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"/>
+
+                <RadioButton
+                    android:id="@+id/upcoming"
+                    android:text="@string/upcoming_episodes"
+                    android:textSize="@dimen/text_size_medium"
+                    style="@style/RadioButton"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"/>
+
+            </RadioGroup>
+
+            <TextView
+                android:text="@string/sorting"
+                style="@style/TextView.Label.Medium.Bold"
+                android:gravity="bottom|left"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <RadioGroup
+                android:id="@+id/sortModeRadioGroup"
+                style="@style/RadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/oldest_first"
+                    android:text="@string/oldest_episode_first"
+                    android:textSize="@dimen/text_size_medium"
+                    android:checked="true"
+                    style="@style/RadioButton"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"/>
+
+                <RadioButton
+                    android:id="@+id/newest_first"
+                    android:text="@string/newest_episode_first"
+                    android:textSize="@dimen/text_size_medium"
+                    style="@style/RadioButton"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_gravity="bottom">
+
+        <View
+            android:background="@drawable/list_divider_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentTop="true"/>
+
+        <View
+            android:id="@+id/dividerVertical"
+            android:background="@drawable/list_divider_holo_light"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:text="@string/cancel"
+            android:background="@drawable/item_background_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toLeftOf="@id/dividerVertical"/>
+
+        <Button
+            android:id="@+id/saveButton"
+            android:text="@string/save"
+            android:background="@drawable/item_background_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toRightOf="@id/dividerVertical"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

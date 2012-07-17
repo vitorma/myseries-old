@@ -22,32 +22,53 @@
 package mobi.myseries.gui.myschedule;
 
 import mobi.myseries.R;
+import mobi.myseries.gui.myschedule.EpisodeListFragment.RecentEpisodesFragment;
+import mobi.myseries.gui.myschedule.EpisodeListFragment.TodayEpisodesFragment;
+import mobi.myseries.gui.myschedule.EpisodeListFragment.UpcomingEpisodesFragment;
 import mobi.myseries.gui.myseries.MySeriesActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MyScheduleActivity extends SherlockFragmentActivity {
-    private static final int TODAY = 1;
-    private static final String CURRENT_TAB = "currentTab";
-    private int currentTab;
+    private int selectedTab;
+
+    public static interface Extra {
+        public static final String SELECTED_TAB = "selectedTab";
+    }
+
+    public static interface Tab {
+        public static final int RECENT = 0;
+        public static final int TODAY = 1;
+        public static final int UPCOMING = 2;
+    }
+
+    public static Intent newIntent(Context context, int selectedTab) {
+        Intent intent = new Intent(context, MyScheduleActivity.class);
+
+        intent.putExtra(Extra.SELECTED_TAB, selectedTab);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.myschedule);
 
-        if (savedInstanceState == null) {
-            this.currentTab = TODAY;
-        } else {
-            this.currentTab = savedInstanceState.getInt(CURRENT_TAB);
-        }
+        Bundle extras = this.getIntent().getExtras();
+        this.selectedTab = extras.getInt(Extra.SELECTED_TAB);
+
+//        if (extras == null) {
+//            this.selectedTab = Tab.TODAY;
+//        } else {
+//        }
 
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_schedule);
@@ -56,25 +77,24 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         ActionBar.Tab recentTab = ab.newTab().setText(R.string.recent);
-        recentTab.setTabListener(new ScheduleTabListener(new EpisodeListFragment(new RecentEpisodesFactory())));
+        recentTab.setTabListener(new ScheduleTabListener(new RecentEpisodesFragment()));
 
         ActionBar.Tab todayTab = ab.newTab().setText(R.string.today);
-        todayTab.setTabListener(new ScheduleTabListener(new EpisodeListFragment(new TodayEpisodesFactory())));
+        todayTab.setTabListener(new ScheduleTabListener(new TodayEpisodesFragment()));
 
         ActionBar.Tab upcomingTab = ab.newTab().setText(R.string.upcoming);
-        upcomingTab.setTabListener(new ScheduleTabListener(new EpisodeListFragment(new UpcomingEpisodesFactory())));
+        upcomingTab.setTabListener(new ScheduleTabListener(new UpcomingEpisodesFragment()));
 
         ab.addTab(recentTab, false);
         ab.addTab(todayTab, false);
         ab.addTab(upcomingTab, false);
 
-        ab.setSelectedNavigationItem(this.currentTab);
+        ab.setSelectedNavigationItem(this.selectedTab);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(CURRENT_TAB, this.currentTab);
-        super.onSaveInstanceState(outState);
+        this.getIntent().putExtra(Extra.SELECTED_TAB, this.selectedTab);
     }
 
     @Override
@@ -98,16 +118,16 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         }
 
         @Override
-        public void onTabReselected(Tab tab, FragmentTransaction ft) { }
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) { }
 
         @Override
-        public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            MyScheduleActivity.this.currentTab = tab.getPosition();
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            MyScheduleActivity.this.selectedTab = tab.getPosition();
             ft.replace(R.id.container, this.fragment);
         }
 
         @Override
-        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
             ft.remove(this.fragment);
         }
     }

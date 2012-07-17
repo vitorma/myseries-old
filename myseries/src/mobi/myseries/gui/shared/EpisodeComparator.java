@@ -25,54 +25,58 @@ import java.util.Comparator;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.Validate;
 
 public class EpisodeComparator {
+
     public static Comparator<Episode> byNumber() {
         return new Comparator<Episode>() {
             @Override
             public int compare(Episode episode1, Episode episode2) {
                 checkThatBothAreNotNull(episode1, episode2);
+
                 return compareByNumber(episode1, episode2);
             }
         };
     }
 
-    public static Comparator<Episode> byAirdateThenBySeasonThenByNumber() {
+    public static Comparator<Episode> byOldestFirst() {
         return new Comparator<Episode>() {
             @Override
             public int compare(Episode episode1, Episode episode2) {
                 checkThatBothAreNotNull(episode1, episode2);
 
                 int byAirdate = compareByAirdate(episode1, episode2);
-                if (byAirdate != 0) return byAirdate;
+
+                if (byAirdate != 0) {
+                    return byAirdate;
+                }
 
                 int bySeason = compareBySeason(episode1, episode2);
-                if (bySeason != 0) return bySeason;
+
+                if (bySeason != 0) {
+                    return bySeason;
+                }
 
                 return compareByNumber(episode1, episode2);
             }
         };
     }
 
-    public static Comparator<Episode> reversedByAirdateThenBySeasonThenByNumber() {
+    public static Comparator<Episode> byNewestFirst() {
         return new Comparator<Episode>() {
             @Override
             public int compare(Episode episode1, Episode episode2) {
-                return byAirdateThenBySeasonThenByNumber().compare(episode2, episode1);
+                return byOldestFirst().compare(episode2, episode1);
             }
         };
     }
 
-    //Auxiliar----------------------------------------------------------------------------------------------------------
+    /* Auxiliary */
 
     private static void checkThatBothAreNotNull(Episode episode1, Episode episode2) {
-        if (episode1 == null) {
-            throw new IllegalArgumentException("episode1 should not be null");
-        }
-
-        if (episode2 == null) {
-            throw new IllegalArgumentException("episode1 should not be null");
-        }
+        Validate.isNonNull(episode1, "episode1");
+        Validate.isNonNull(episode2, "episode2");
     }
 
     private static int compareByNumber(Episode episode1, Episode episode2) {
@@ -84,6 +88,6 @@ public class EpisodeComparator {
     }
 
     private static int compareByAirdate(Episode episode1, Episode episode2) {
-        return Dates.compare(episode1.airDate(), episode2.airDate());
+        return Dates.compareByNullLast(episode1.airDate(), episode2.airDate());
     }
 }

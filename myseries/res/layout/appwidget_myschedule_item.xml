@@ -3,49 +3,48 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item"
+    android:paddingTop="@dimen/gap_small"
+    android:paddingBottom="@dimen/gap_small"
+    android:paddingLeft="@dimen/gap_medium"
+    android:paddingRight="@dimen/gap_medium"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="@drawable/item_background_holo_light"
-    android:clickable="true"
-    android:focusable="true">
+    android:layout_height="@dimen/appwidget_item_height">
 
     <ImageView
         android:id="@+id/poster"
         android:src="@drawable/small_poster_clapperboard"
+        android:adjustViewBounds="true"
         android:scaleType="centerInside"
-        android:padding="@dimen/gap_medium"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/appwidget_item_poster_width"
+        android:layout_height="@dimen/appwidget_item_poster_height"
         android:layout_alignParentLeft="true"/>
 
     <TextView
         android:id="@+id/seriesName"
         style="@style/TextView.Label.Small"
         android:gravity="top"
-        android:paddingTop="@dimen/gap_small"
+        android:paddingLeft="@dimen/gap_medium"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_alignParentTop="true"
+        android:layout_height="16dp"
+        android:layout_alignTop="@id/poster"
         android:layout_toRightOf="@id/poster"/>
 
     <TextView
         android:id="@+id/episodeNumber"
-        style="@style/TextView.Data.Medium"
+        style="@style/TextView.Data.Small"
         android:gravity="bottom"
-        android:paddingBottom="@dimen/gap_small"
+        android:paddingLeft="@dimen/gap_medium"
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
+        android:layout_height="16dp"
         android:layout_below="@id/seriesName"
         android:layout_toRightOf="@id/poster"/>
 
     <TextView
         android:id="@+id/episodeAirDate"
-        style="@style/TextView.Data.Medium"
+        style="@style/TextView.Data.Small"
         android:gravity="bottom"
-        android:paddingBottom="@dimen/gap_small"
-        android:paddingRight="@dimen/gap_medium"
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
+        android:layout_height="16dp"
         android:layout_below="@id/seriesName"
         android:layout_alignParentRight="true"/>
 

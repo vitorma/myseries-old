@@ -23,8 +23,7 @@ package mobi.myseries.gui.myschedule;
 
 import mobi.myseries.R;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.episodes.EpisodeDetailsActivity;
-import mobi.myseries.shared.Validate;
+import mobi.myseries.gui.episodes.EpisodesActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,13 +34,35 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public class EpisodeListFragment extends SherlockListFragment {
+public abstract class EpisodeListFragment extends SherlockListFragment {
     private static final int LAYOUT = R.layout.list;
 
     private EpisodeListFactory episodeListFactory;
 
+    /*
+     * Isso é um remendo temporário por causa de um bug introduzido com a adição do parâmetro episodeListFactory
+     * no construtor do fragment. Fragments devem ter um construtor vazio que o framework possa usar de vez em quando.
+     * http://developer.android.com/reference/android/app/Fragment.html
+     */
+    public static class RecentEpisodesFragment extends EpisodeListFragment {
+        public RecentEpisodesFragment() {
+            super(new RecentEpisodesFactory());
+        }
+    }
+
+    public static class TodayEpisodesFragment extends EpisodeListFragment {
+        public TodayEpisodesFragment() {
+            super(new TodayEpisodesFactory());
+        }
+    }
+
+    public static class UpcomingEpisodesFragment extends EpisodeListFragment {
+        public UpcomingEpisodesFragment() {
+            super(new UpcomingEpisodesFactory());
+        }
+    }
+
     public EpisodeListFragment(EpisodeListFactory episodeListFactory) {
-        Validate.isNonNull(episodeListFactory, "episodeListFactory");
         this.episodeListFactory = episodeListFactory;
     }
 
@@ -81,7 +102,7 @@ public class EpisodeListFragment extends SherlockListFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Episode e = (Episode) parent.getItemAtPosition(position);
 
-                Intent intent = EpisodeDetailsActivity.newIntent(
+                Intent intent = EpisodesActivity.newIntent(
                     view.getContext(), e.seriesId(), e.seasonNumber(), e.number());
 
                 EpisodeListFragment.this.startActivity(intent);

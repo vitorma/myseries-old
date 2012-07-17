@@ -82,7 +82,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(SCHEDULE)
-            .setIntent(new Intent(this, MyScheduleActivity.class))
+            .setIntent(MyScheduleActivity.newIntent(this, MyScheduleActivity.Tab.TODAY))
             .setIcon(R.drawable.actionbar_calendar)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
@@ -94,7 +94,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         menu.add(UPDATE)
             .setIcon(R.drawable.actionbar_update)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        
+
         //TODO add intent
         menu.add(SETTINGS)
             .setIcon(R.drawable.actionbar_settings)
@@ -107,17 +107,16 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
         return true;
     }
-    
+
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
             this.updateMenuItem = item;
             seriesProvider.updateData();
         }
-        
+
         return super.onMenuItemSelected(featureId, item);
     }
-    
 
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {

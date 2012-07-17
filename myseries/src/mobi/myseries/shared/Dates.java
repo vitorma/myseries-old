@@ -57,13 +57,12 @@ public class Dates {
         return date != null ? format.format(date) : alternative;
     }
 
-    public static int compare(Date date1, Date date2) {
+    public static int compareByNullLast(Date date1, Date date2) {
         return Objects.nullSafe(date1, MAX_DATE).compareTo(
                Objects.nullSafe(date2, MAX_DATE));
     }
-    
+
     public static Date today() {
         return new Date();
     }
-
 }

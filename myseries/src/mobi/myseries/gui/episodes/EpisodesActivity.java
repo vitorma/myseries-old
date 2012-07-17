@@ -1,5 +1,5 @@
 /*
- *   EpisodeDetailsActivity.java
+ *   EpisodesActivity.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -39,10 +39,14 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TitlePageIndicator;
 
-public class EpisodeDetailsActivity extends SherlockFragmentActivity {
-    private static final String SERIES_ID = "seriesId";
-    private static final String SEASON_NUMBER = "seasonNumber";
-    private static final String EPISODE_NUMBER = "episodeNumber";
+public class EpisodesActivity extends SherlockFragmentActivity {
+
+    public static interface Extra {
+        public String SERIES_ID = "seriesId";
+        public String SEASON_NUMBER = "seasonNumber";
+        public String EPISODE_NUMBER = "episodeNumber";
+    }
+
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
     private int seriesId;
@@ -54,11 +58,11 @@ public class EpisodeDetailsActivity extends SherlockFragmentActivity {
     private TitlePageIndicator pageIndicator;
 
     public static Intent newIntent(Context context, int seriesId, int seasonNumber, int episodeNumber) {
-        Intent intent = new Intent(context, EpisodeDetailsActivity.class);
+        Intent intent = new Intent(context, EpisodesActivity.class);
 
-        intent.putExtra(SERIES_ID, seriesId);
-        intent.putExtra(SEASON_NUMBER, seasonNumber);
-        intent.putExtra(EPISODE_NUMBER, episodeNumber);
+        intent.putExtra(Extra.SERIES_ID, seriesId);
+        intent.putExtra(Extra.SEASON_NUMBER, seasonNumber);
+        intent.putExtra(Extra.EPISODE_NUMBER, episodeNumber);
 
         return intent;
     }
@@ -70,9 +74,9 @@ public class EpisodeDetailsActivity extends SherlockFragmentActivity {
 
         Bundle extras = this.getIntent().getExtras();
 
-        this.seriesId = extras.getInt(SERIES_ID);
-        this.seasonNumber = extras.getInt(SEASON_NUMBER);
-        this.episodeNumber = extras.getInt(EPISODE_NUMBER);
+        this.seriesId = extras.getInt(Extra.SERIES_ID);
+        this.seasonNumber = extras.getInt(Extra.SEASON_NUMBER);
+        this.episodeNumber = extras.getInt(Extra.EPISODE_NUMBER);
 
         Series series = SERIES_PROVIDER.getSeries(this.seriesId);
 

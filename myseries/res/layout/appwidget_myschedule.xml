@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_full_holo_light"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/appwidget_actionbar"/>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:paddingTop="@dimen/gap_small"
+        android:paddingBottom="@dimen/gap_small"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:text="@string/no_episodes_to_see"
+        style="@style/TextView.AppWidget.Data"
+        android:gravity="center"
+        android:minHeight="@dimen/appwidget_item_height"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

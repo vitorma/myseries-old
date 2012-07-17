@@ -21,11 +21,9 @@
 
 package mobi.myseries.application;
 
-
 import java.util.List;
 
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.ImageDirectory;
 import android.app.Application;
 
 public class App extends Application {

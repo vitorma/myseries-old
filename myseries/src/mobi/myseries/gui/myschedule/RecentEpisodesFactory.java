@@ -37,6 +37,6 @@ public class RecentEpisodesFactory implements EpisodeListFactory {
 
     @Override
     public Comparator<Episode> episodesComparator() {
-        return EpisodeComparator.reversedByAirdateThenBySeasonThenByNumber();
+        return EpisodeComparator.byNewestFirst();
     }
 }

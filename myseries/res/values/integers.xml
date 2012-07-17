@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="tab_recent">0</integer>
+    <integer name="tab_today">1</integer>
+    <integer name="tab_upcoming">2</integer>
+
+</resources>

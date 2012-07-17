@@ -4,7 +4,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.episodes.EpisodeDetailsActivity;
+import mobi.myseries.gui.episodes.EpisodesActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -94,7 +94,7 @@ public class SeasonsFragment extends SherlockFragment {
         int seasonNumber = this.adapter.seasonNumber(currentGroupPosition);
         int episodeNumber = this.adapter.episodeNumber(childPosition, this.adapter.season(currentGroupPosition).numberOfEpisodes());
 
-        Intent intent = EpisodeDetailsActivity.newIntent(this.getActivity(), this.seriesId, seasonNumber, episodeNumber);
+        Intent intent = EpisodesActivity.newIntent(this.getActivity(), this.seriesId, seasonNumber, episodeNumber);
         this.startActivity(intent);
     }
 }

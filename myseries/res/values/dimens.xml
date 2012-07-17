@@ -24,4 +24,12 @@
     <dimen name="myseries_image_height">106dp</dimen>
     <dimen name="myseries_image_width">69dp</dimen>
 
+    <dimen name="appwidget_actionbar_height">40dp</dimen>
+    <dimen name="appwidget_actionbar_button_height">40dp</dimen>
+    <dimen name="appwidget_actionbar_button_width">40dp</dimen>
+    <dimen name="appwidget_actionbar_text_size">16sp</dimen>
+    <dimen name="appwidget_item_height">40dp</dimen>
+    <dimen name="appwidget_item_poster_height">32dp</dimen>
+    <dimen name="appwidget_item_poster_width">21dp</dimen>
+
 </resources>

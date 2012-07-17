@@ -1,5 +1,5 @@
 /*
- *   MySeriesSmallWidget.java
+ *   MyScheduleWidgetProviderMedium.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -21,21 +21,11 @@
 
 package mobi.myseries.gui.appwidget;
 
-
-public class MySeriesSmallWidget extends MySeriesWidget {
+public class MyScheduleWidgetProviderMedium extends MyScheduleWidgetProviderLarge {
+    private static int LIMIT = 4;
 
     @Override
     protected Class updateServiceClass() {
-        return UpdateServiceSmall.class;
-    }
-
-    public static class UpdateServiceSmall extends UpdateService {
-        public UpdateServiceSmall() {
-            super("mobi.myseries.gui.appwidget.MySeriesSmallWidget$UpdateServiceSmall");
-        }
-
-        protected Class widgetClass() {
-            return MySeriesSmallWidget.class;
-        }
+        return MyScheduleWidgetServiceMedium.class;
     }
 }

@@ -37,6 +37,6 @@ public class UpcomingEpisodesFactory implements EpisodeListFactory {
 
     @Override
     public Comparator<Episode> episodesComparator() {
-        return EpisodeComparator.byAirdateThenBySeasonThenByNumber();
+        return EpisodeComparator.byOldestFirst();
     }
 }
