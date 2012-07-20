@@ -2,6 +2,7 @@ package mobi.myseries.gui.series;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.ImageLoadSupplicant;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
@@ -74,8 +75,18 @@ public class DetailsFragment extends SherlockFragment {
 
         Bitmap bmp = IMAGE_PROVIDER.getPosterOf(series);
 
-        ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
-        seriesPoster.setImageBitmap(bmp);
+        final ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
+        App.loadPoster(series, new ImageLoadSupplicant() {
+            @Override
+            public ImageView getImageView() {
+                return seriesPoster;
+            }
+
+            @Override
+            public int getDefaultResource() {
+                return R.drawable.generic_poster;
+            }
+        });
 
         ImageView background = (ImageView) getActivity().findViewById(R.id.background);
         BitmapDrawable drawable = new BitmapDrawable(getResources(), bmp);

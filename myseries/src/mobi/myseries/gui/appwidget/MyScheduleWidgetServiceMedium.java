@@ -1,12 +1,13 @@
 package mobi.myseries.gui.appwidget;
 
 public class MyScheduleWidgetServiceMedium extends MyScheduleWidgetServiceLarge {
+
     public MyScheduleWidgetServiceMedium() {
-        super("mobi.myseries.gui.appwidget.MyScheduleWidgetProviderMedium$MyScheduleWidgetServiceMedium");
+        super("mobi.myseries.gui.appwidget.MyScheduleWidgetServiceMedium");
     }
 
     @Override
-    protected Class widgetClass() {
+    protected Class<MyScheduleWidgetProviderMedium> widgetClass() {
         return MyScheduleWidgetProviderMedium.class;
     }
 }

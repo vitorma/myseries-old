@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/linearLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView
-        android:text="TextView"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/itemName"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:padding="5dp"
-        android:lines="1"
-        android:scrollHorizontally="true"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever">
-    </TextView>
-</LinearLayout>
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemName"
+    style="@style/TextView.AppWidget.Data"
+    android:gravity="center"
+    android:minHeight="@dimen/appwidget_item_height"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"/>

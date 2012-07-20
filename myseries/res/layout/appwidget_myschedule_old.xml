@@ -8,63 +8,15 @@
     android:orientation="vertical"
     android:background="@drawable/dialog_full_holo_light">
 
-    <LinearLayout
-        android:id="@+id/buttonBar"
-        android:background="@drawable/ab_solid_dark_holo"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="48dp">
-
-        <ImageButton
-            android:id="@+id/homeButton"
-            android:src="@drawable/ic_launcher"
-            android:scaleType="centerInside"
-            android:background="@drawable/item_background_holo_dark"
-            android:padding="@dimen/gap_medium"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
-
-        <ImageButton
-            android:id="@+id/scheduleButton"
-            android:src="@drawable/actionbar_calendar"
-            android:scaleType="centerInside"
-            android:background="@drawable/item_background_holo_dark"
-            android:padding="@dimen/gap_medium"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
-
-        <ImageButton
-            android:id="@+id/refreshButton"
-            android:src="@drawable/actionbar_update"
-            android:scaleType="centerInside"
-            android:background="@drawable/item_background_holo_dark"
-            android:padding="@dimen/gap_medium"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
-
-        <ImageButton
-            android:id="@+id/lessItemsButton"
-            android:src="@drawable/ic_less_items"
-            android:scaleType="centerInside"
-            android:background="@drawable/item_background_holo_dark"
-            android:padding="@dimen/gap_medium"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
-
-        <ImageButton
-            android:id="@+id/moreItemsButton"
-            android:src="@drawable/ic_more_items"
-            android:scaleType="centerInside"
-            android:background="@drawable/item_background_holo_dark"
-            android:padding="@dimen/gap_medium"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
-
-    </LinearLayout>
+    <include
+        layout="@layout/appwidget_actionbar"/>
 
     <LinearLayout android:id="@+id/container"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
+
+    <include
+        layout="@layout/appwidget_scrollbar"/>
 
 </LinearLayout>

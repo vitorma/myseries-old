@@ -21,11 +21,6 @@
 
 package mobi.myseries.gui.appwidget;
 
-
-import mobi.myseries.R;
-import mobi.myseries.application.App;
-import mobi.myseries.application.ImageProvider;
-import mobi.myseries.application.SeriesProvider;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -34,38 +29,28 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class MyScheduleWidgetProviderLarge extends AppWidgetProvider {
-    static final SeriesProvider seriesProvider = App.environment().seriesProvider();
-    static final ImageProvider imageProvider = App.environment().imageProvider();
-    protected static final int layout = R.layout.appwidget_myschedule_old;
-    protected static final int itemLayout = R.layout.appwidget_myschedule_item;
-    protected static final int noItemLayout = R.layout.appwidget_empty_view;
     static final String REFRESH = "mobi.myseries.gui.appwidget.REFRESH";
     static final String ADD = "mobi.myseries.gui.appwidget.ADD";
     static final String REMOVE = "mobi.myseries.gui.appwidget.REMOVE";
-    protected static final int LIMIT = 9;
     static final String NUMBER_OF_ITEMS = "mobi.myseries.gui.appwidget.numberOfItems";
 
-    private int numberOfItems;
-
-    public MyScheduleWidgetProviderLarge() {
-        super();
-    }
+    private final int numberOfItems = 2;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            this.numberOfItems = extras.getInt(NUMBER_OF_ITEMS);
+//            this.numberOfItems = extras.getInt(NUMBER_OF_ITEMS);
             Log.d("Widget.onReceive","numberOfItems=" + this.numberOfItems);
         }
 
         if (REFRESH.equals(intent.getAction())) {
             context.startService(this.createUpdateIntent(context));
         } else if (ADD.equals(intent.getAction())) {
-            this.numberOfItems++;
+//            this.numberOfItems++;
             context.startService(this.createUpdateIntent(context));
         } else if (REMOVE.equals(intent.getAction()) && this.numberOfItems > 0) {
-            this.numberOfItems--;
+//            this.numberOfItems--;
             context.startService(this.createUpdateIntent(context));
         } else {
             super.onReceive(context, intent);
@@ -74,16 +59,18 @@ public class MyScheduleWidgetProviderLarge extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        context.startService(this.createUpdateIntent(context));
+        for (int i=0; i < appWidgetIds.length; ++i) {
+            context.startService(this.createUpdateIntent(context));
+        }
     }
 
     protected Intent createUpdateIntent(Context context) {
         Intent i = new Intent(context, this.updateServiceClass());
-        i.putExtra(NUMBER_OF_ITEMS, this.numberOfItems);
+        i.putExtra(NUMBER_OF_ITEMS, 2);
         return i;
     }
 
-    protected Class updateServiceClass() {
+    protected Class<? extends MyScheduleWidgetServiceLarge> updateServiceClass() {
         return MyScheduleWidgetServiceLarge.class;
     }
 }

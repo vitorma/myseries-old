@@ -10,6 +10,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.widget.RemoteViews;
 
 public class MyScheduleWidgetProvider extends AppWidgetProvider {
@@ -66,7 +67,7 @@ public class MyScheduleWidgetProvider extends AppWidgetProvider {
         //ConfigureButton
         Intent configureIntent = new Intent(context, MyScheduleWidgetPreferenceActivity.class);
         configureIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        configureIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        configureIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
         PendingIntent configurePendingIntent = PendingIntent.getActivity(context, 2, configureIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.configureButton, configurePendingIntent);
 

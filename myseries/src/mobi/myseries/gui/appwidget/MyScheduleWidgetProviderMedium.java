@@ -22,10 +22,9 @@
 package mobi.myseries.gui.appwidget;
 
 public class MyScheduleWidgetProviderMedium extends MyScheduleWidgetProviderLarge {
-    private static int LIMIT = 4;
 
     @Override
-    protected Class updateServiceClass() {
+    protected Class<MyScheduleWidgetServiceMedium> updateServiceClass() {
         return MyScheduleWidgetServiceMedium.class;
     }
 }

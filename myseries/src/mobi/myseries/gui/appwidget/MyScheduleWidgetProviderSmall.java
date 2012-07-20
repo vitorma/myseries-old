@@ -24,7 +24,7 @@ package mobi.myseries.gui.appwidget;
 public class MyScheduleWidgetProviderSmall extends MyScheduleWidgetProviderLarge {
 
     @Override
-    protected Class updateServiceClass() {
+    protected Class<MyScheduleWidgetServiceSmall> updateServiceClass() {
         return MyScheduleWidgetServiceSmall.class;
     }
 }
