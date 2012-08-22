@@ -39,73 +39,32 @@
         <activity
             android:name=".gui.episodes.EpisodesActivity">
         </activity>
-
-        <!-- Old AppWidgets -->
+        <activity
+            android:name="mobi.myseries.gui.appwidget.SchedulePreferenceActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
 
         <receiver
-            android:name=".gui.appwidget.MyScheduleWidgetProviderLarge"
-            android:label="@string/appwidget_myschedule_old_large"
+            android:name=".gui.appwidget.ScheduleWidgetV8"
+            android:label="@string/appwidget_myschedule"
             android:enabled="@bool/oldWidgetsEnabled"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.gui.appwidget.REFRESH"/>
-            </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_myschedule_old_large_info" />
+                android:resource="@xml/appwidget_myschedule_old_info"/>
         </receiver>
-
         <receiver
-            android:name=".gui.appwidget.MyScheduleWidgetProviderMedium"
-            android:label="@string/appwidget_myschedule_old_medium"
-            android:enabled="@bool/oldWidgetsEnabled"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.gui.appwidget.REFRESH"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_myschedule_old_medium_info" />
-        </receiver>
-
-        <receiver
-            android:name=".gui.appwidget.MyScheduleWidgetProviderSmall"
-            android:label="@string/appwidget_myschedule_old_small"
-            android:enabled="@bool/oldWidgetsEnabled"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.gui.appwidget.REFRESH"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_myschedule_old_small_info" />
-        </receiver>
-
-        <service android:name="mobi.myseries.gui.appwidget.MyScheduleWidgetServiceLarge"/>
-        <service android:name="mobi.myseries.gui.appwidget.MyScheduleWidgetServiceSmall"/>
-        <service android:name="mobi.myseries.gui.appwidget.MyScheduleWidgetServiceMedium"/>
-
-        <!-- New AppWidgets -->
-
-        <receiver
-            android:name="mobi.myseries.gui.appwidget.MyScheduleWidgetProvider"
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetV11"
             android:label="@string/appwidget_myschedule"
             android:enabled="@bool/newWidgetsEnabled"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.gui.appwidget.REFRESH"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
@@ -113,17 +72,12 @@
         </receiver>
 
         <service
-            android:name="mobi.myseries.gui.appwidget.MyScheduleWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS">
-        </service>
-
-        <activity
-            android:name="mobi.myseries.gui.appwidget.MyScheduleWidgetPreferenceActivity"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
-            </intent-filter>
-        </activity>
+            android:name="mobi.myseries.gui.appwidget.RefreshService"/>
+        <service
+            android:name="mobi.myseries.gui.appwidget.SetupService"/>
+        <service
+            android:name="mobi.myseries.gui.appwidget.AdapterService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
     </application>
 

@@ -3,8 +3,11 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/appwidget_myschedule"
-    android:minHeight="88dp"
     android:minWidth="250dp"
+    android:minHeight="88dp"
+    android:minResizeWidth="250dp"
+    android:minResizeHeight="88dp"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
-    android:configure="mobi.myseries.gui.appwidget.MyScheduleWidgetPreferenceActivity"/>
+    android:configure="mobi.myseries.gui.appwidget.SchedulePreferenceActivity"
+    android:previewImage="@drawable/appwidget_myschedule_preview"/>

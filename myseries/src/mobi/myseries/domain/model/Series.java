@@ -29,6 +29,7 @@ import java.util.Set;
 
 import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
 public class Series implements SeasonSetListener, Publisher<SeriesListener> {
@@ -58,8 +59,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         this.seasons = new SeasonSet(this.id);
         this.seasons.register(this);
         this.listeners = new ListenerSet<SeriesListener>();
-        
     }
+
     public static Series.Builder builder() {
         return new Series.Builder();
     }
@@ -131,6 +132,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
     public List<Episode> episodes() {
         return this.seasons.episodes();
+    }
+
+    public List<Episode> episodesBy(Specification<Episode> specification) {
+        return this.seasons.episodesBy(specification);
     }
 
     public Episode lastEpisode() {

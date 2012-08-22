@@ -251,7 +251,7 @@ public final class ImageProvider {
         new DownloadPosterTask(series).execute();
     }
 
-    private Bitmap genericPosterImage() {
+    public Bitmap genericPosterImage() {
         return BitmapFactory.decodeResource(App.environment().context().getResources(),
                 R.drawable.generic_poster);
     }

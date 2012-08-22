@@ -23,28 +23,21 @@ package mobi.myseries.shared;
 
 public abstract class Strings {
     private static final String SEPARATOR = "\\|";
-    private static final String NULL_STRING_MESSAGE = "string should not be null";
 
     public static boolean isEmpty(String string) {
-        if (string == null) {
-            throw new IllegalArgumentException(NULL_STRING_MESSAGE);
-        }
+        Validate.isNonNull(string, "string");
 
         return string.equals("");
     }
 
     public static boolean isBlank(String string) {
-        if (string == null) {
-            throw new IllegalArgumentException(NULL_STRING_MESSAGE);
-        }
+        Validate.isNonNull(string, "string");
 
         return Strings.isEmpty(string.trim());
     }
 
     public static String normalizePipeSeparated(String string) {
-        if (string == null) {
-            throw new IllegalArgumentException(NULL_STRING_MESSAGE);
-        }
+        Validate.isNonNull(string, "string");
 
         final String[] items = string.trim().split(SEPARATOR);
         final StringBuilder builder = new StringBuilder();

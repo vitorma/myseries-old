@@ -16,6 +16,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="unavailable_date">UNAVAILABLE DATE</string>
+    <string name="page_info_format" formatted="false">Page %d of %d</string>
 
     <!-- Labels -->
 
@@ -80,9 +81,6 @@
     <!-- Do not translate -->
 
     <string name="app">My Series</string>
-    <string name="appwidget_myschedule_old_large">My Schedule (4x4)</string>
-    <string name="appwidget_myschedule_old_medium">My Schedule (4x3)</string>
-    <string name="appwidget_myschedule_old_small">My Schedule (4x2)</string>
     <string name="appwidget_myschedule">My Schedule</string>
 
 </resources>

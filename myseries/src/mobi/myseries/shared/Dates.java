@@ -23,16 +23,14 @@ package mobi.myseries.shared;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Dates {
     private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
-    private static final String NULL_FORMAT_MESSAGE = "format should not be null";
 
     public static Date parseDate(String date, DateFormat format, Date alternative) {
-        if (format == null) {
-            throw new IllegalArgumentException(NULL_FORMAT_MESSAGE);
-        }
+        Validate.isNonNull(format, "format");
 
         if (date == null || Strings.isBlank(date)) {
             return alternative;
@@ -46,15 +44,21 @@ public class Dates {
     }
 
     public static Date parseDate(Long date, Date alternative) {
-        return date != null ? new Date(date) : alternative;
+        if (date == null) {
+            return alternative;
+        }
+
+        return new Date(date);
     }
 
     public static String toString(Date date, DateFormat format, String alternative) {
-        if (format == null) {
-            throw new IllegalArgumentException(NULL_FORMAT_MESSAGE);
+        Validate.isNonNull(format, "format");
+
+        if (date == null) {
+            return alternative;
         }
 
-        return date != null ? format.format(date) : alternative;
+        return format.format(date);
     }
 
     public static int compareByNullLast(Date date1, Date date2) {
@@ -63,6 +67,13 @@ public class Dates {
     }
 
     public static Date today() {
-        return new Date();
+        Calendar c = Calendar.getInstance();
+
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        return c.getTime();
     }
 }

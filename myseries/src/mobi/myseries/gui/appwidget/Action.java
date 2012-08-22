@@ -1,5 +1,5 @@
 /*
- *   MyScheduleWidgetProviderSmall.java
+ *   Action.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -21,10 +21,11 @@
 
 package mobi.myseries.gui.appwidget;
 
-public class MyScheduleWidgetProviderSmall extends MyScheduleWidgetProviderLarge {
-
-    @Override
-    protected Class<MyScheduleWidgetServiceSmall> updateServiceClass() {
-        return MyScheduleWidgetServiceSmall.class;
-    }
+public interface Action {
+    public static final String REFRESH = "mobi.myseries.gui.appwidget.REFRESH";
+    public static final String GO_TO_FIRST = "mobi.myseries.gui.appwidget.SCROLL_TO_FIRST";
+    public static final String GO_TO_LAST = "mobi.myseries.gui.appwidget.SCROLL_TO_LAST";
+    public static final String GO_TO_PREVIOUS = "mobi.myseries.gui.appwidget.SCROLL_TO_PREVIOUS";
+    public static final String GO_TO_NEXT = "mobi.myseries.gui.appwidget.SCROLL_TO_NEXT";
+    public static final String SETUP = "mobi.myseries.gui.appwidget.SETUP";
 }

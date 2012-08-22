@@ -32,7 +32,7 @@ public class UpcomingEpisodesFactory implements EpisodeListFactory {
 
     @Override
     public List<Episode> episodes() {
-        return App.environment().seriesProvider().upcomingEpisodes();
+        return App.upcomingSchedule();
     }
 
     @Override

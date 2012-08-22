@@ -290,7 +290,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     private ContentValues contentValuesBy(Series s) {
-        final ContentValues cv = new ContentValues();
+        ContentValues cv = new ContentValues();
+
         cv.put(SERIES_ID, s.id());
         cv.put(SERIES_NAME, s.name());
         cv.put(SERIES_STATUS, s.status());
@@ -303,11 +304,13 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put(SERIES_GENRES, s.genres());
         cv.put(SERIES_ACTORS, s.actors());
         cv.put(SERIES_POSTER, s.posterFileName());
+
         return cv;
     }
 
     private ContentValues contentValuesBy(Episode e) {
-        final ContentValues cv = new ContentValues();
+        ContentValues cv = new ContentValues();
+
         cv.put(EPISODE_ID, e.id());
         cv.put(EPISODE_SERIES, e.seriesId());
         cv.put(EPISODE_NUMBER, e.number());
@@ -320,6 +323,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put(EPISODE_GUESTSTARS, e.guestStars());
         cv.put(EPISODE_IMAGE, e.imageFileName());
         cv.put(EPISODE_SEENMARK, String.valueOf(e.wasSeen()));
+
         return cv;
     }
 
@@ -341,13 +345,16 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     private Episode episodeByCurrentPositionOf(Cursor c) {
+        int airDateColumnIndex = c.getColumnIndex(EPISODE_AIRDATE);
+        Long airDate = c.isNull(airDateColumnIndex) ? null : c.getLong(airDateColumnIndex);
+
         return Episode.builder()
             .withId(c.getInt(c.getColumnIndex(EPISODE_ID)))
             .withSeriesId(c.getInt(c.getColumnIndex(EPISODE_SERIES)))
             .withNumber(c.getInt(c.getColumnIndex(EPISODE_NUMBER)))
             .withSeasonNumber(c.getInt(c.getColumnIndex(EPISODE_SEASON)))
             .withName(c.getString(c.getColumnIndex(EPISODE_NAME)))
-            .withAirDate(Dates.parseDate(c.getLong(c.getColumnIndex(EPISODE_AIRDATE)), null))
+            .withAirDate(Dates.parseDate(airDate, null))
             .withOverview(c.getString(c.getColumnIndex(EPISODE_OVERVIEW)))
             .withDirectors(c.getString(c.getColumnIndex(EPISODE_DIRECTORS)))
             .withWriters(c.getString(c.getColumnIndex(EPISODE_WRITERS)))

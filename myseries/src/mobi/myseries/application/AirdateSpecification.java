@@ -39,7 +39,8 @@ public abstract class AirdateSpecification extends AbstractSpecification<Episode
 
     @Override
     public boolean isSatisfiedBy(Episode episode) {
-        Validate.isNonNull(episode, "episode should be non-null");
+        Validate.isNonNull(episode, "episode");
+
         return this.isSatisfiedByNonNull(episode);
     }
 

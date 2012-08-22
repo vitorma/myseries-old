@@ -31,7 +31,7 @@ public class TodayEpisodesFactory implements EpisodeListFactory {
 
     @Override
     public List<Episode> episodes() {
-        return App.environment().seriesProvider().todayEpisodes();
+        return App.todaySchedule();
     }
 
     @Override

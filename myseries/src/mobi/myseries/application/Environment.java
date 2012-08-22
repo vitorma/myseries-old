@@ -21,7 +21,9 @@
 
 package mobi.myseries.application;
 
+import mobi.myseries.domain.repository.ImageCache;
 import mobi.myseries.domain.repository.ImageDirectory;
+import mobi.myseries.domain.repository.ImageRepository;
 import mobi.myseries.domain.repository.SeriesCache;
 import mobi.myseries.domain.repository.SeriesDatabase;
 import mobi.myseries.domain.repository.SeriesRepository;
@@ -37,6 +39,9 @@ public class Environment {
     private ImageProvider imageProvider;
     private SeriesRepository seriesRepository;
 
+    //At this moment, use it just for getPoster
+    private ImageRepository imageRepository;
+
     private static final String apiKey = "6F2B5A871C96FB05";
 
     public static Environment newEnvironment(Context context) {
@@ -47,6 +52,7 @@ public class Environment {
         Validate.isNonNull(context, "context");
 
         this.context = context;
+        this.imageRepository = new ImageCache(new ImageDirectory(context), this.repository());
     }
 
     public Context context() {
@@ -115,5 +121,9 @@ public class Environment {
         }
 
         return this.seriesRepository;
+    }
+
+    public ImageRepository imageRepository() {
+        return this.imageRepository;
     }
 }

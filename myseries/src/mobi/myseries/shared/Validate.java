@@ -6,6 +6,7 @@ public class Validate {
     private static final String SHOULD_BE_NON_NULL = "%s should be non-null";
     private static final String SHOULD_BE_NON_BLANK = "%s should be non-blank";
     private static final String SHOULD_ALL_BE_NON_NULL = "all elements of %s should be non-null";
+    private static final String SHOULD_BE_NON_NEGATIVE = "%s should be non-negative";
 
     //IsTrue------------------------------------------------------------------------------------------------------------
 
@@ -57,5 +58,11 @@ public class Validate {
 
     public static void isNonBlank(String string, String alias) {
         isNonBlank(string, SHOULD_BE_NON_BLANK, alias);
+    }
+
+    //IsNonNegative-----------------------------------------------------------------------------------------------------
+
+    public static void isNonNegative(int value, String alias) {
+        isTrue(value >= 0, SHOULD_BE_NON_NEGATIVE, alias);
     }
 }

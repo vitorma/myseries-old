@@ -32,7 +32,7 @@ public class RecentEpisodesFactory implements EpisodeListFactory {
 
     @Override
     public List<Episode> episodes() {
-        return App.environment().seriesProvider().recentEpisodes();
+        return App.recentSchedule();
     }
 
     @Override

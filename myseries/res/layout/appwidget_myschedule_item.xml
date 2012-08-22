@@ -2,7 +2,10 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item"
+    android:id="@+id/itemPanel"
+    android:background="@drawable/list_selector_holo_light"
+    android:clickable="true"
+    android:focusable="true"
     android:paddingTop="@dimen/gap_small"
     android:paddingBottom="@dimen/gap_small"
     android:paddingLeft="@dimen/gap_medium"
@@ -11,8 +14,7 @@
     android:layout_height="@dimen/appwidget_item_height">
 
     <ImageView
-        android:id="@+id/poster"
-        android:src="@drawable/small_poster_clapperboard"
+        android:id="@+id/seriesPoster"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
         android:layout_width="@dimen/appwidget_item_poster_width"
@@ -26,8 +28,8 @@
         android:paddingLeft="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="16dp"
-        android:layout_alignTop="@id/poster"
-        android:layout_toRightOf="@id/poster"/>
+        android:layout_alignTop="@id/seriesPoster"
+        android:layout_toRightOf="@id/seriesPoster"/>
 
     <TextView
         android:id="@+id/episodeNumber"
@@ -37,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_below="@id/seriesName"
-        android:layout_toRightOf="@id/poster"/>
+        android:layout_toRightOf="@id/seriesPoster"/>
 
     <TextView
         android:id="@+id/episodeAirDate"

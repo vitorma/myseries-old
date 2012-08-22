@@ -1,4 +1,4 @@
-package mobi.myseries.gui.appwidget;
+package mobi.myseries.gui.myschedule;
 
 public interface SortMode {
     public static final int OLDEST_FIRST = 0;

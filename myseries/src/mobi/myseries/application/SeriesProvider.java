@@ -35,8 +35,6 @@ import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
-import mobi.myseries.shared.Dates;
-import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -168,51 +166,7 @@ public class SeriesProvider {
         return this.seriesRepository.get(seriesId);
     }
 
-    // Schedule----------------------------------------------------------------------------------------------------------
-
-    private Specification<Episode> recentEpisodesSpecification() {
-        return AirdateSpecification.before(Dates.today()).and(SeenMarkSpecification.asNotSeen());
-    }
-
-    public List<Episode> recentEpisodes() {
-        List<Episode> recentEpisodes = new ArrayList<Episode>();
-
-        for (Series s : this.followedSeries()) {
-            recentEpisodes.addAll(s.seasons().episodesBy(this.recentEpisodesSpecification()));
-        }
-
-        return recentEpisodes;
-    }
-
-    private Specification<Episode> todayEpisodesSpecification() {
-        return AirdateSpecification.on(Dates.today()).and(SeenMarkSpecification.asNotSeen());
-    }
-
-    public List<Episode> todayEpisodes() {
-        List<Episode> todayEpisodes = new ArrayList<Episode>();
-
-        for (Series s : this.followedSeries()) {
-            todayEpisodes.addAll(s.seasons().episodesBy(this.todayEpisodesSpecification()));
-        }
-
-        return todayEpisodes;
-    }
-
-    private Specification<Episode> upcomingEpisodesSpecification() {
-        return AirdateSpecification.after(Dates.today()).and(SeenMarkSpecification.asNotSeen());
-    }
-
-    public List<Episode> upcomingEpisodes() {
-        List<Episode> upcomingEpisodes = new ArrayList<Episode>();
-
-        for (Series s : this.followedSeries()) {
-            upcomingEpisodes.addAll(s.seasons().episodesBy(this.upcomingEpisodesSpecification()));
-        }
-
-        return upcomingEpisodes;
-    }
-
-    // SeenMark----------------------------------------------------------------------------------------------------------
+    //SeenMark----------------------------------------------------------------------------------------------------------
 
     public void markSeasonAsSeen(Season season) {
         season.markAsSeen();

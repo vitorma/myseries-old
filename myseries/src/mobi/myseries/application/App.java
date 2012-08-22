@@ -21,16 +21,21 @@
 
 package mobi.myseries.application;
 
+import java.text.DateFormat;
 import java.util.List;
 
+import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
 import android.app.Application;
+import android.graphics.Bitmap;
 
 public class App extends Application {
     private static Environment environment;
     private static SearchSeriesService searchService;
     private static FollowSeriesService followSeriesService;
     private static ImageloaderService imageLoadService;
+    private static Schedule schedule;
 
     @Override
     public void onCreate() {
@@ -38,6 +43,7 @@ public class App extends Application {
         environment = Environment.newEnvironment(this);
         searchService = new SearchSeriesService(environment.theTVDB());
         imageLoadService = new ImageloaderService();
+        schedule = new Schedule(environment.repository());
     }
 
     public static Environment environment() {
@@ -94,8 +100,59 @@ public class App extends Application {
     public static boolean follows(Series series) {
         return followSeriesService().follows(series);
     }
-    
+
+    /* SERIES */
+
+    public static Series getSeries(int seriesId) {
+        return environment.seriesProvider().getSeries(seriesId);
+    }
+
+    /* IMAGES */
+
     public static void loadPoster(Series series, ImageLoadSupplicant suplicant) {
-    	imageLoadService.loadPoster(series, suplicant);
+        imageLoadService.loadPoster(series, suplicant);
+    }
+
+    public static Bitmap seriesPoster(int seriesId) {
+        //TODO Delegate
+
+        Bitmap poster = null;
+
+        try {
+            poster = environment.imageRepository().getSeriesPoster(seriesId);
+        } catch (ExternalStorageNotAvailableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        if (poster == null) {
+            poster = environment.imageProvider().genericPosterImage();
+        }
+
+        return poster;
+    }
+
+    /* SCHEDULE */
+
+    public static List<Episode> scheduledEpisodes(int scheduleMode, int sortMode) {
+        return schedule.episodes(scheduleMode, sortMode);
+    }
+
+    public static List<Episode> recentSchedule() {
+        return schedule.recent();
+    }
+
+    public static List<Episode> todaySchedule() {
+        return schedule.today();
+    }
+
+    public static List<Episode> upcomingSchedule() {
+        return schedule.upcoming();
+    }
+
+    /* LOCALIZATION */
+
+    public static DateFormat dateFormat() {
+        return environment.localization().dateFormat();
     }
 }

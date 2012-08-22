@@ -1,6 +1,5 @@
-package mobi.myseries.gui.appwidget;
+package mobi.myseries.gui.myschedule;
 
-import mobi.myseries.gui.myschedule.MyScheduleActivity;
 
 public interface ScheduleMode {
     public static final int RECENT = MyScheduleActivity.Tab.RECENT;

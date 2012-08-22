@@ -1,5 +1,5 @@
 /*
- *   MyScheduleWidgetProviderMedium.java
+ *   Extra.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -21,10 +21,8 @@
 
 package mobi.myseries.gui.appwidget;
 
-public class MyScheduleWidgetProviderMedium extends MyScheduleWidgetProviderLarge {
-
-    @Override
-    protected Class<MyScheduleWidgetServiceMedium> updateServiceClass() {
-        return MyScheduleWidgetServiceMedium.class;
-    }
+public interface Extra {
+    public static final String APPWIDGET_ID = "appWidgetId";
+    public static final String SCHEDULE_MODE = "scheduleMode";
+    public static final String SORT_MODE = "sortMode";
 }

@@ -27,7 +27,7 @@
         android:layout_height="@dimen/appwidget_actionbar_button_height"/>
 
     <TextView
-        android:id="@+id/ammountTextView"
+        android:id="@+id/pageTextView"
         style="@style/TextView.Label.Small"
         android:gravity="center"
         android:background="@color/transparent"
