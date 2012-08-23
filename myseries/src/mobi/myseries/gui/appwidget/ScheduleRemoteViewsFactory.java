@@ -26,6 +26,7 @@ import java.util.List;
 
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;

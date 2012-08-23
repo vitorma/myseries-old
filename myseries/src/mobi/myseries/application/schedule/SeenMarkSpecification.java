@@ -1,5 +1,5 @@
 /*
- *   SeenSpecification.java
+ *   SeenMarkSpecification.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.application;
+package mobi.myseries.application.schedule;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.shared.AbstractSpecification;
@@ -43,7 +43,8 @@ public class SeenMarkSpecification extends AbstractSpecification<Episode> {
 
     @Override
     public boolean isSatisfiedBy(Episode episode) {
-        Validate.isNonNull(episode, "episode should be non-null");
+        Validate.isNonNull(episode, "episode");
+
         return episode.wasSeen() == this.seenMark;
     }
 }

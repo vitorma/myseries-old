@@ -22,10 +22,12 @@
 package mobi.myseries.gui.myschedule;
 
 import mobi.myseries.R;
+import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.EpisodeListFragment.RecentEpisodesFragment;
 import mobi.myseries.gui.myschedule.EpisodeListFragment.TodayEpisodesFragment;
 import mobi.myseries.gui.myschedule.EpisodeListFragment.UpcomingEpisodesFragment;
 import mobi.myseries.gui.myseries.MySeriesActivity;
+import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,22 +39,12 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MyScheduleActivity extends SherlockFragmentActivity {
-    private int selectedTab;
+    private int scheduleMode;
 
-    public static interface Extra {
-        public static final String SELECTED_TAB = "selectedTab";
-    }
-
-    public static interface Tab {
-        public static final int RECENT = 0;
-        public static final int TODAY = 1;
-        public static final int UPCOMING = 2;
-    }
-
-    public static Intent newIntent(Context context, int selectedTab) {
+    public static Intent newIntent(Context context, int scheduleMode) {
         Intent intent = new Intent(context, MyScheduleActivity.class);
 
-        intent.putExtra(Extra.SELECTED_TAB, selectedTab);
+        intent.putExtra(Extra.SCHEDULE_MODE, scheduleMode);
 
         return intent;
     }
@@ -63,12 +55,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         this.setContentView(R.layout.myschedule);
 
         Bundle extras = this.getIntent().getExtras();
-        this.selectedTab = extras.getInt(Extra.SELECTED_TAB);
-
-//        if (extras == null) {
-//            this.selectedTab = Tab.TODAY;
-//        } else {
-//        }
+        this.scheduleMode = extras.getInt(Extra.SCHEDULE_MODE);
 
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_schedule);
@@ -85,16 +72,16 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         ActionBar.Tab upcomingTab = ab.newTab().setText(R.string.upcoming);
         upcomingTab.setTabListener(new ScheduleTabListener(new UpcomingEpisodesFragment()));
 
-        ab.addTab(recentTab, false);
-        ab.addTab(todayTab, false);
-        ab.addTab(upcomingTab, false);
+        ab.addTab(recentTab, ScheduleMode.RECENT, false);
+        ab.addTab(todayTab, ScheduleMode.TODAY, false);
+        ab.addTab(upcomingTab, ScheduleMode.UPCOMING, false);
 
-        ab.setSelectedNavigationItem(this.selectedTab);
+        ab.setSelectedNavigationItem(this.scheduleMode);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        this.getIntent().putExtra(Extra.SELECTED_TAB, this.selectedTab);
+        this.getIntent().putExtra(Extra.SCHEDULE_MODE, this.scheduleMode);
     }
 
     @Override
@@ -110,10 +97,10 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         }
     }
 
-    public class ScheduleTabListener implements ActionBar.TabListener {
+    private class ScheduleTabListener implements ActionBar.TabListener {
         private SherlockListFragment fragment;
 
-        public ScheduleTabListener(SherlockListFragment fragment) {
+        private ScheduleTabListener(SherlockListFragment fragment) {
             this.fragment = fragment;
         }
 
@@ -122,7 +109,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
 
         @Override
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-            MyScheduleActivity.this.selectedTab = tab.getPosition();
+            MyScheduleActivity.this.scheduleMode = tab.getPosition();
             ft.replace(R.id.container, this.fragment);
         }
 

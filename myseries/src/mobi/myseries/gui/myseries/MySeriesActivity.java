@@ -25,6 +25,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
+import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
@@ -82,7 +83,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(SCHEDULE)
-            .setIntent(MyScheduleActivity.newIntent(this, MyScheduleActivity.Tab.TODAY))
+            .setIntent(MyScheduleActivity.newIntent(this, ScheduleMode.TODAY))
             .setIcon(R.drawable.actionbar_calendar)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 

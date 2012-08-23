@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;

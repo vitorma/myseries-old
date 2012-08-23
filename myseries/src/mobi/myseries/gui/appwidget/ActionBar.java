@@ -22,8 +22,8 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
+import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
-import mobi.myseries.gui.myschedule.ScheduleMode;
 import mobi.myseries.gui.myseries.MySeriesActivity;
 import android.app.PendingIntent;
 import android.content.Context;

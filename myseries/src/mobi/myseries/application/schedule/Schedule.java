@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.application;
+package mobi.myseries.application.schedule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,8 +30,6 @@ import java.util.List;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
-import mobi.myseries.gui.myschedule.ScheduleMode;
-import mobi.myseries.gui.myschedule.SortMode;
 import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.Specification;

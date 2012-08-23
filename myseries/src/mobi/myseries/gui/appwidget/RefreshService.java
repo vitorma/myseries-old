@@ -21,6 +21,7 @@
 
 package mobi.myseries.gui.appwidget;
 
+import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.shared.Android;
 import android.app.IntentService;
 import android.content.Context;

@@ -1,5 +1,5 @@
 /*
- *   Extra.java
+ *   SortMode.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,10 +19,9 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.appwidget;
+package mobi.myseries.application.schedule;
 
-public interface Extra {
-    public static final String APPWIDGET_ID = "appWidgetId";
-    public static final String SCHEDULE_MODE = "scheduleMode";
-    public static final String SORT_MODE = "sortMode";
+public interface SortMode {
+    public static final int OLDEST_FIRST = 0;
+    public static final int NEWEST_FIRST = 1;
 }
