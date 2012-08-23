@@ -9,5 +9,5 @@
     android:minResizeHeight="88dp"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
-    android:configure="mobi.myseries.gui.appwidget.SchedulePreferenceActivity"
+    android:configure="mobi.myseries.gui.appwidget.AppWidgetPreferenceActivity"
     android:previewImage="@drawable/appwidget_myschedule_preview"/>

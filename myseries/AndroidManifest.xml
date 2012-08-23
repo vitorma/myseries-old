@@ -29,6 +29,9 @@
         </activity>
         <activity
             android:name=".gui.myschedule.MyScheduleActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.myseries.MySeriesActivity"/>
         </activity>
         <activity
             android:name=".gui.seriessearch.SeriesSearchActivity">
@@ -40,7 +43,10 @@
             android:name=".gui.episodes.EpisodesActivity">
         </activity>
         <activity
-            android:name="mobi.myseries.gui.appwidget.SchedulePreferenceActivity">
+            android:name="mobi.myseries.gui.schedule.SchedulePreferenceActivity">
+        </activity>
+        <activity
+            android:name="mobi.myseries.gui.appwidget.AppWidgetPreferenceActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>

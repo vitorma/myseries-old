@@ -11,12 +11,14 @@
     <string name="today_episodes">Today episodes</string>
     <string name="upcoming_episodes">Upcoming episodes</string>
     <string name="sorting">SORTING</string>
-    <string name="oldest_episode_first">Oldest episode first</string>
-    <string name="newest_episode_first">Newest episode first</string>
+    <string name="sort_by_format" formatted="false">Sort %s by…</string>
+    <string name="oldest_first">Oldest first</string>
+    <string name="newest_first">Newest first</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="unavailable_date">UNAVAILABLE DATE</string>
     <string name="page_info_format" formatted="false">Page %d of %d</string>
+    <string name="episodes">episodes</string>
 
     <!-- Labels -->
 

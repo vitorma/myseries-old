@@ -71,7 +71,7 @@
             </RadioGroup>
 
             <TextView
-                android:text="@string/sorting"
+                android:id="@+id/sortMode"
                 style="@style/TextView.Label.Medium.Bold"
                 android:gravity="bottom|left"
                 android:paddingLeft="@dimen/gap_medium"
@@ -92,7 +92,7 @@
 
                 <RadioButton
                     android:id="@+id/oldest_first"
-                    android:text="@string/oldest_episode_first"
+                    android:text="@string/oldest_first"
                     android:textSize="@dimen/text_size_medium"
                     android:checked="true"
                     style="@style/RadioButton"
@@ -103,7 +103,7 @@
 
                 <RadioButton
                     android:id="@+id/newest_first"
-                    android:text="@string/newest_episode_first"
+                    android:text="@string/newest_first"
                     android:textSize="@dimen/text_size_medium"
                     style="@style/RadioButton"
                     android:paddingLeft="@dimen/gap_medium"

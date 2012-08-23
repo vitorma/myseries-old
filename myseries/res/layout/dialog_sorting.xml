@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_full_holo_light">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextView.Dialog.Title"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/titleDivider"
+        android:background="@color/blue"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"/>
+
+    <ScrollView
+        android:id="@+id/messagePanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <RadioGroup
+            android:id="@+id/sortModes"
+            style="@style/RadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/oldestFirst"
+                android:text="@string/oldest_first"
+                android:textSize="@dimen/text_size_medium"
+                style="@style/RadioButton"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toucharea_minimum_side"/>
+
+            <RadioButton
+                android:id="@+id/newestFirst"
+                android:text="@string/newest_first"
+                android:textSize="@dimen/text_size_medium"
+                style="@style/RadioButton"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toucharea_minimum_side"/>
+
+        </RadioGroup>
+
+    </ScrollView>
+
+</LinearLayout>

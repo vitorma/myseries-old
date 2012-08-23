@@ -72,8 +72,8 @@ public class SetupService extends IntentService {
     }
 
     private void loadEpisodes() {
-        int scheduleMode = SchedulePreferenceActivity.scheduleModeBy(this, this.appWidgetId);
-        int sortMode = SchedulePreferenceActivity.sortModeBy(this, this.appWidgetId);
+        int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this, this.appWidgetId);
+        int sortMode = AppWidgetPreferenceActivity.sortModeBy(this, this.appWidgetId);
 
         this.episodes = new ArrayList<Episode>(App.scheduledEpisodes(scheduleMode, sortMode));
     }
@@ -128,12 +128,12 @@ public class SetupService extends IntentService {
     }
 
     private int currentPage() {
-        return SchedulePreferenceActivity.getIntPreference(
+        return AppWidgetPreferenceActivity.getIntPreference(
                 this, this.appWidgetId, PREF_PAGE_KEY, ItemPageBrowser.FIRST_PAGE);
     }
 
     private void saveCurrentPage() {
-        SchedulePreferenceActivity.saveIntPreference(
+        AppWidgetPreferenceActivity.saveIntPreference(
                 this, this.appWidgetId, PREF_PAGE_KEY, this.itemPageBrowser.currentPage());
     }
 }

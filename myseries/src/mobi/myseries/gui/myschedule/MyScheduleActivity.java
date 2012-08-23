@@ -23,15 +23,17 @@ package mobi.myseries.gui.myschedule;
 
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.gui.myschedule.EpisodeListFragment.RecentEpisodesFragment;
-import mobi.myseries.gui.myschedule.EpisodeListFragment.TodayEpisodesFragment;
-import mobi.myseries.gui.myschedule.EpisodeListFragment.UpcomingEpisodesFragment;
-import mobi.myseries.gui.myseries.MySeriesActivity;
+import mobi.myseries.application.schedule.SortMode;
+import mobi.myseries.gui.myschedule.ScheduleFragment.RecentFragment;
+import mobi.myseries.gui.myschedule.ScheduleFragment.TodayFragment;
+import mobi.myseries.gui.myschedule.ScheduleFragment.UpcomingFragment;
 import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -39,6 +41,9 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MyScheduleActivity extends SherlockFragmentActivity {
+    private static final String PREFS_NAME = "mobi.myseries.gui.schedule.SchedulePreferences";
+    private static final String PREF_SORT_MODE_KEY = "sortMode_";
+
     private int scheduleMode;
 
     public static Intent newIntent(Context context, int scheduleMode) {
@@ -49,34 +54,36 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         return intent;
     }
 
+    public static int sortModeBy(Context context, int scheduleMode) {
+        return getIntPreference(context, scheduleMode, PREF_SORT_MODE_KEY, SortMode.OLDEST_FIRST);
+    }
+
+    public static boolean saveSortMode(Context context, int scheduleMode, int sortMode) {
+        return saveIntPreference(context, scheduleMode, PREF_SORT_MODE_KEY, sortMode);
+    }
+
+    private static int getIntPreference(Context context, int scheduleMode, String key, int defaultValue) {
+        return getPreferences(context)
+            .getInt(key + scheduleMode, defaultValue);
+    }
+
+    private static boolean saveIntPreference(Context context, int appWidgetId, String key, int value) {
+        return getPreferences(context)
+            .edit()
+            .putInt(key + appWidgetId, value)
+            .commit();
+    }
+
+    private static SharedPreferences getPreferences(Context context) {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.myschedule);
-
-        Bundle extras = this.getIntent().getExtras();
-        this.scheduleMode = extras.getInt(Extra.SCHEDULE_MODE);
-
-        ActionBar ab = this.getSupportActionBar();
-        ab.setTitle(R.string.my_schedule);
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowTitleEnabled(true);
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        ActionBar.Tab recentTab = ab.newTab().setText(R.string.recent);
-        recentTab.setTabListener(new ScheduleTabListener(new RecentEpisodesFragment()));
-
-        ActionBar.Tab todayTab = ab.newTab().setText(R.string.today);
-        todayTab.setTabListener(new ScheduleTabListener(new TodayEpisodesFragment()));
-
-        ActionBar.Tab upcomingTab = ab.newTab().setText(R.string.upcoming);
-        upcomingTab.setTabListener(new ScheduleTabListener(new UpcomingEpisodesFragment()));
-
-        ab.addTab(recentTab, ScheduleMode.RECENT, false);
-        ab.addTab(todayTab, ScheduleMode.TODAY, false);
-        ab.addTab(upcomingTab, ScheduleMode.UPCOMING, false);
-
-        ab.setSelectedNavigationItem(this.scheduleMode);
+        this.setUpScheduleModeFromExtras();
+        this.setUpActionBar();
     }
 
     @Override
@@ -88,13 +95,35 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this, MySeriesActivity.class);
-                this.startActivity(intent);
-                this.finish();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setUpScheduleModeFromExtras() {
+        this.scheduleMode = this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
+    }
+
+    private void setUpActionBar() {
+        ActionBar ab = this.getSupportActionBar();
+
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setDisplayShowTitleEnabled(true);
+        ab.setTitle(R.string.my_schedule);
+
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        ab.addTab(this.newTab(R.string.recent, new RecentFragment()), ScheduleMode.RECENT, false);
+        ab.addTab(this.newTab(R.string.today, new TodayFragment()), ScheduleMode.TODAY, false);
+        ab.addTab(this.newTab(R.string.upcoming, new UpcomingFragment()), ScheduleMode.UPCOMING, false);
+        ab.setSelectedNavigationItem(this.scheduleMode);
+    }
+
+    private ActionBar.Tab newTab(int tabNameResource, SherlockListFragment fragment) {
+        return this.getSupportActionBar().newTab()
+            .setText(tabNameResource)
+            .setTabListener(new ScheduleTabListener(fragment));
     }
 
     private class ScheduleTabListener implements ActionBar.TabListener {
@@ -110,6 +139,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         @Override
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             MyScheduleActivity.this.scheduleMode = tab.getPosition();
+
             ft.replace(R.id.container, this.fragment);
         }
 

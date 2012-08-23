@@ -1,6 +1,5 @@
 package mobi.myseries.gui.myschedule;
 
-import java.util.Comparator;
 import java.util.List;
 
 import mobi.myseries.R;
@@ -12,7 +11,6 @@ import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Dates;
-import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,65 +20,51 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-public class EpisodeListAdapter extends ArrayAdapter<Episode> implements EpisodeListener {
-    private static final int EPISODE_ITEM_RESOURCE_ID = R.layout.myschedule_item;
+public class ScheduleAdapter extends ArrayAdapter<Episode> implements EpisodeListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final int EPISODE_ITEM_RESOURCE_ID = R.layout.myschedule_item;
 
+    private int scheduleMode;
     private LayoutInflater layoutInflater;
-
-    private EpisodeListFactory episodeListFactory;
-
-    /**
-     * Necessary because it must there be a strong reference to the listener so it cannot be collected.
-     */
     private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
-
         @Override
         public void onFollowing(Series followedSeries) {
-            EpisodeListAdapter.this.reloadData();
+            ScheduleAdapter.this.setUpData();
         }
 
         @Override
         public void onStopFollowing(Series unfollowedSeries) {
-            // Remove all the unfollowedSeries' episodes from the adapter
             for (Episode e : unfollowedSeries.episodes()) {
-                EpisodeListAdapter.this.remove(e);
+                ScheduleAdapter.this.remove(e);
             }
         }
     };
 
-    public EpisodeListAdapter(Context context,
-                              EpisodeListFactory episodeListFactory) {
-        super(context, EPISODE_ITEM_RESOURCE_ID);
-        Validate.isNonNull(episodeListFactory, "episodeListFactory");
+    public ScheduleAdapter(Context context, int scheduleMode) {
+        super(context, R.layout.myschedule_item);
 
-        this.episodeListFactory = episodeListFactory;
+        this.scheduleMode = scheduleMode;
         this.layoutInflater = LayoutInflater.from(context);
 
         App.registerSeriesFollowingListener(this.seriesFollowingListener);
 
-        this.reloadData();
+        this.setUpData();
     }
 
     private List<Episode> episodes() {
-        return this.episodeListFactory.episodes();
+        int sortMode = MyScheduleActivity.sortModeBy(this.getContext(), this.scheduleMode);
+
+        return App.scheduledEpisodes(this.scheduleMode, sortMode);
     }
 
-    private Comparator<Episode> episodesComparator() {
-        return this.episodeListFactory.episodesComparator();
-    }
-
-    private void reloadData() {
+    private void setUpData() {
         this.clear();
 
-        List<Episode> episodes = this.episodes();
-
-        for (Episode e : episodes) {
+        for (Episode e : this.episodes()) {
             e.register(this);
             this.add(e);
         }
 
-        this.sort(this.episodesComparator());
         this.notifyDataSetChanged();
     }
 
@@ -89,8 +73,8 @@ public class EpisodeListAdapter extends ArrayAdapter<Episode> implements Episode
         View itemView = this.itemViewFrom(convertView);
 
         Episode episode = this.getItem(position);
-        Series series = SERIES_PROVIDER.getSeries(episode.seriesId());
-        Season season = series.seasons().season(episode.seasonNumber());
+        Series series = App.getSeries(episode.seriesId());
+        Season season = series.season(episode.seasonNumber());
 
         this.showData(episode, season, series, itemView);
         this.setUpSeenEpisodeCheckBoxListener(episode, itemView);
@@ -147,7 +131,7 @@ public class EpisodeListAdapter extends ArrayAdapter<Episode> implements Episode
 
     @Override
     public void onMarkAsNotSeen(Episode e) {
-        this.reloadData();
+        this.setUpData();
     }
 
     @Override

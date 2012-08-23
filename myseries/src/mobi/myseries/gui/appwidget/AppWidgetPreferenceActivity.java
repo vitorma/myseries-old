@@ -15,10 +15,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
-public class SchedulePreferenceActivity extends SherlockActivity {
+public class AppWidgetPreferenceActivity extends SherlockActivity {
 
     /* CLASS MEMBERS */
 
@@ -27,7 +28,7 @@ public class SchedulePreferenceActivity extends SherlockActivity {
     private static final String PREF_SORT_MODE_KEY = "sortMode_";
 
     public static Intent newIntent(Context context, int appWidgetId) {
-        Intent intent = new Intent(context, SchedulePreferenceActivity.class);
+        Intent intent = new Intent(context, AppWidgetPreferenceActivity.class);
 
         intent.putExtra(Extra.APPWIDGET_ID, appWidgetId);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -95,10 +96,19 @@ public class SchedulePreferenceActivity extends SherlockActivity {
     }
 
     private void setupViews() {
+        this.setUpSortModeLabel();
         this.setupScheduleModeRadioGroup();
         this.setupSortModeRadioGroup();
         this.setupCancelButton();
         this.setupSaveButton();
+    }
+
+    private void setUpSortModeLabel() {
+        TextView sortModeLabel = (TextView) this.findViewById(R.id.sortMode);
+        String format = this.getString(R.string.sort_by_format);
+        String episodes = this.getString(R.string.episodes);
+
+        sortModeLabel.setText(String.format(format, episodes).toUpperCase());
     }
 
     private void setupScheduleModeRadioGroup() {
@@ -135,7 +145,7 @@ public class SchedulePreferenceActivity extends SherlockActivity {
 
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SchedulePreferenceActivity.this.finish();
+                AppWidgetPreferenceActivity.this.finish();
             }
         });
     }
@@ -145,7 +155,7 @@ public class SchedulePreferenceActivity extends SherlockActivity {
 
         this.saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SchedulePreferenceActivity.this.onSave();
+                AppWidgetPreferenceActivity.this.onSave();
             }
         });
     }

@@ -6,4 +6,4 @@
     android:updatePeriodMillis="3600000"
     android:minWidth="250dp"
     android:minHeight="250dp"
-    android:configure="mobi.myseries.gui.appwidget.SchedulePreferenceActivity"/>
+    android:configure="mobi.myseries.gui.appwidget.AppWidgetPreferenceActivity"/>
