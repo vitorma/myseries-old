@@ -5,6 +5,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.episodes.EpisodesActivity;
+import mobi.myseries.gui.shared.Extra;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import android.widget.ExpandableListView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeasonsFragment extends SherlockFragment {
-    private static final String SERIES_ID = "seriesId";
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
     private int seriesId;
@@ -26,7 +26,7 @@ public class SeasonsFragment extends SherlockFragment {
         SeasonsFragment seasonsFragment = new SeasonsFragment();
 
         Bundle arguments = new Bundle();
-        arguments.putInt(SERIES_ID, seriesId);
+        arguments.putInt(Extra.SERIES_ID, seriesId);
         seasonsFragment.setArguments(arguments);
 
         return seasonsFragment;
@@ -36,12 +36,12 @@ public class SeasonsFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.seriesId = this.getArguments().getInt(SERIES_ID);
+        this.seriesId = this.getArguments().getInt(Extra.SERIES_ID);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(SERIES_ID, this.seriesId);
+        outState.putInt(Extra.SERIES_ID, this.seriesId);
         super.onSaveInstanceState(outState);
     }
 

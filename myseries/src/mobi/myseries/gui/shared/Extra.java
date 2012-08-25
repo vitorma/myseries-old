@@ -25,4 +25,5 @@ public interface Extra {
     public static final String APPWIDGET_ID = "appWidgetId";
     public static final String SCHEDULE_MODE = "scheduleMode";
     public static final String SORT_MODE = "sortMode";
+    public static final String SERIES_ID = "seriesId";
 }

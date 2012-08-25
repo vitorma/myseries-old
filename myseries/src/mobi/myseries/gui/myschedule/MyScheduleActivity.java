@@ -121,10 +121,10 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     }
 
     private void setUpNavigationFor(ActionBar actionBar) {
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
         ViewPager viewPager = (ViewPager) this.findViewById(R.id.viewPager);
         TabsAdapter tabsAdapter = new TabsAdapter(this, actionBar, viewPager);
-
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         tabsAdapter.addTab(this.newTab(R.string.recent), RecentFragment.class, null, ScheduleMode.RECENT, false);
         tabsAdapter.addTab(this.newTab(R.string.today), TodayFragment.class, null, ScheduleMode.TODAY, false);

@@ -2,77 +2,83 @@ package mobi.myseries.gui.series;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.myseries.MySeriesActivity;
+import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.TabsAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 public class SeriesActivity extends SherlockFragmentActivity {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final String SERIES_ID = "seriesId";
-    private static final String CURRENT_TAB = "currentTab";
-    private static final int SEASONS = 0;
+    private static final String SELECTED_TAB = "selectedTab";
+    private static final int DETAILS = 0;
+    private static final int SEASONS = 1;
 
     private int seriesId;
-    private int currentTab;
-
-    private Series series;
-
-    private ActionBar.Tab seasonsTab;
-    private ActionBar.Tab detailsTab;
+    private int selectedTab;
 
     public static Intent newIntent(Context context, int seriesId) {
         Intent intent = new Intent(context, SeriesActivity.class);
-        intent.putExtra(SERIES_ID, seriesId);
+        intent.putExtra(Extra.SERIES_ID, seriesId);
         return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         this.setContentView(R.layout.series);
+        this.setUpAttributesFrom(savedInstanceState);
+        this.setUpActionBar();
+    }
 
+    private void setUpAttributesFrom(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            this.seriesId = this.getIntent().getExtras().getInt(SERIES_ID);
-            this.currentTab = SEASONS;
+            this.seriesId = this.getIntent().getExtras().getInt(Extra.SERIES_ID);
+            this.selectedTab = SEASONS;
         } else {
-            this.seriesId = savedInstanceState.getInt(SERIES_ID);
-            this.currentTab = savedInstanceState.getInt(CURRENT_TAB);
+            this.seriesId = savedInstanceState.getInt(Extra.SERIES_ID);
+            this.selectedTab = savedInstanceState.getInt(SELECTED_TAB);
         }
+    }
 
-        this.series = SERIES_PROVIDER.getSeries(this.seriesId);
+    private void setUpActionBar() {
+        ActionBar actionBar = this.getSupportActionBar();
 
-        ActionBar ab = this.getSupportActionBar();
-        ab.setTitle(this.series.name());
-        ab.setDisplayShowTitleEnabled(true);
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setTitle(App.getSeries(this.seriesId).name());
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-        this.seasonsTab = ab.newTab().setText(R.string.seasons);
-        this.seasonsTab.setTabListener(new SeriesOverviewTabListener(SeasonsFragment.newInstance(this.seriesId)));
+        this.setUpNavigationFor(actionBar);
+    }
 
-        this.detailsTab = ab.newTab().setText(R.string.details);
-        this.detailsTab.setTabListener(new SeriesOverviewTabListener(DetailsFragment.newInstance(this.seriesId)));
+    private void setUpNavigationFor(ActionBar actionBar) {
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        ab.addTab(this.seasonsTab, false);
-        ab.addTab(this.detailsTab, false);
+        ViewPager viewPager = (ViewPager) this.findViewById(R.id.viewPager);
+        TabsAdapter tabsAdapter = new TabsAdapter(this, actionBar, viewPager);
 
-        ab.setSelectedNavigationItem(this.currentTab);
+        ActionBar.Tab detailsTab = actionBar.newTab().setText(R.string.details);
+        ActionBar.Tab seasonsTab = actionBar.newTab().setText(R.string.seasons);
+
+        Bundle extras = new Bundle();
+        extras.putInt(Extra.SERIES_ID, this.seriesId);
+
+        tabsAdapter.addTab(detailsTab, DetailsFragment.class, extras, DETAILS, false);
+        tabsAdapter.addTab(seasonsTab, SeasonsFragment.class, extras, SEASONS, false);
+
+        actionBar.setSelectedNavigationItem(this.selectedTab);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(SERIES_ID, this.seriesId);
-        outState.putInt(CURRENT_TAB, this.currentTab);
+        outState.putInt(Extra.SERIES_ID, this.seriesId);
+        outState.putInt(SELECTED_TAB, this.selectedTab);
         super.onSaveInstanceState(outState);
     }
 
@@ -80,34 +86,10 @@ public class SeriesActivity extends SherlockFragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this, MySeriesActivity.class);
-                this.startActivity(intent);
-                this.finish();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public class SeriesOverviewTabListener implements ActionBar.TabListener {
-        private SherlockFragment fragment;
-
-        public SeriesOverviewTabListener(SherlockFragment fragment) {
-            this.fragment = fragment;
-        }
-
-        @Override
-        public void onTabReselected(Tab tab, FragmentTransaction ft) { }
-
-        @Override
-        public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            SeriesActivity.this.currentTab = tab.getPosition();
-            ft.replace(R.id.overview_container, this.fragment);
-        }
-
-        @Override
-        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-            ft.remove(this.fragment);
         }
     }
 }

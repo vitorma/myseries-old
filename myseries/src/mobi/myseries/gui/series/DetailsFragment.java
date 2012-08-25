@@ -6,6 +6,7 @@ import mobi.myseries.application.ImageLoadSupplicant;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.Extra;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class DetailsFragment extends SherlockFragment {
-    private static final String SERIES_ID = "seriesId";
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
 
@@ -28,7 +28,7 @@ public class DetailsFragment extends SherlockFragment {
         DetailsFragment seriesDetailsFragment = new DetailsFragment();
 
         Bundle arguments = new Bundle();
-        arguments.putInt(SERIES_ID, seriesId);
+        arguments.putInt(Extra.SERIES_ID, seriesId);
         seriesDetailsFragment.setArguments(arguments);
 
         return seriesDetailsFragment;
@@ -38,7 +38,7 @@ public class DetailsFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.seriesId = this.getArguments().getInt(SERIES_ID);
+        this.seriesId = this.getArguments().getInt(Extra.SERIES_ID);
     }
 
     @Override
