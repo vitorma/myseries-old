@@ -32,11 +32,8 @@ import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
@@ -55,24 +52,18 @@ public abstract class ScheduleFragment extends SherlockListFragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.list, container, false);
-    }
-
     @Override  
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.setUpContentView();
+        this.setUpEmptyText();
         this.setUpListAdapter();
         this.setUpItemClickListener();
         this.setHasOptionsMenu(true);
     }
 
-    private void setUpContentView() {
-        TextView empty = (TextView) this.getActivity().findViewById(android.R.id.empty);
-        empty.setText(this.getString(R.string.no_episodes_to_see));
+    private void setUpEmptyText() {
+        this.setEmptyText(this.getString(R.string.no_episodes_to_see));
     }
 
     private void setUpListAdapter() {

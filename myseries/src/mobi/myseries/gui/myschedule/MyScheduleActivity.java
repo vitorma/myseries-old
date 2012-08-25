@@ -28,16 +28,16 @@ import mobi.myseries.gui.myschedule.ScheduleFragment.RecentFragment;
 import mobi.myseries.gui.myschedule.ScheduleFragment.TodayFragment;
 import mobi.myseries.gui.myschedule.ScheduleFragment.UpcomingFragment;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.TabsAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MyScheduleActivity extends SherlockFragmentActivity {
@@ -82,13 +82,13 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.myschedule);
-        this.setUpScheduleModeFromExtras();
+        this.setUpScheduleModeFromExtras(savedInstanceState);
         this.setUpActionBar();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        this.getIntent().putExtra(Extra.SCHEDULE_MODE, this.scheduleMode);
+        outState.putInt(Extra.SCHEDULE_MODE, this.getSupportActionBar().getSelectedNavigationIndex());
     }
 
     @Override
@@ -102,50 +102,38 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         }
     }
 
-    private void setUpScheduleModeFromExtras() {
-        this.scheduleMode = this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
+    private void setUpScheduleModeFromExtras(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            this.scheduleMode = savedInstanceState.getInt(Extra.SCHEDULE_MODE);
+        } else {
+            this.scheduleMode = this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
+        }
     }
 
     private void setUpActionBar() {
-        ActionBar ab = this.getSupportActionBar();
+        ActionBar actionBar = this.getSupportActionBar();
 
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowTitleEnabled(true);
-        ab.setTitle(R.string.my_schedule);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(R.string.my_schedule);
 
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        ab.addTab(this.newTab(R.string.recent, new RecentFragment()), ScheduleMode.RECENT, false);
-        ab.addTab(this.newTab(R.string.today, new TodayFragment()), ScheduleMode.TODAY, false);
-        ab.addTab(this.newTab(R.string.upcoming, new UpcomingFragment()), ScheduleMode.UPCOMING, false);
-        ab.setSelectedNavigationItem(this.scheduleMode);
+        this.setUpNavigationFor(actionBar);
     }
 
-    private ActionBar.Tab newTab(int tabNameResource, SherlockListFragment fragment) {
-        return this.getSupportActionBar().newTab()
-            .setText(tabNameResource)
-            .setTabListener(new ScheduleTabListener(fragment));
+    private void setUpNavigationFor(ActionBar actionBar) {
+        ViewPager viewPager = (ViewPager) this.findViewById(R.id.viewPager);
+        TabsAdapter tabsAdapter = new TabsAdapter(this, actionBar, viewPager);
+
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        tabsAdapter.addTab(this.newTab(R.string.recent), RecentFragment.class, null, ScheduleMode.RECENT, false);
+        tabsAdapter.addTab(this.newTab(R.string.today), TodayFragment.class, null, ScheduleMode.TODAY, false);
+        tabsAdapter.addTab(this.newTab(R.string.upcoming), UpcomingFragment.class, null, ScheduleMode.UPCOMING, false);
+
+        actionBar.setSelectedNavigationItem(this.scheduleMode);
     }
 
-    private class ScheduleTabListener implements ActionBar.TabListener {
-        private SherlockListFragment fragment;
-
-        private ScheduleTabListener(SherlockListFragment fragment) {
-            this.fragment = fragment;
-        }
-
-        @Override
-        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) { }
-
-        @Override
-        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-            MyScheduleActivity.this.scheduleMode = tab.getPosition();
-
-            ft.replace(R.id.container, this.fragment);
-        }
-
-        @Override
-        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            ft.remove(this.fragment);
-        }
+    private ActionBar.Tab newTab(int tabNameResource) {
+        return this.getSupportActionBar().newTab().setText(tabNameResource);
     }
 }
