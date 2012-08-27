@@ -63,8 +63,8 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     }
 
     private void setUpPadding() {
-        int p = this.getActivity().getResources().getDimensionPixelSize(R.dimen.gap_large);
-        this.getListView().setPadding(p, 0, p, 0);
+        int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.gap_large);
+        this.getListView().setPadding(padding, 0, padding, 0);
     }
 
     private void setUpEmptyText() {
@@ -141,8 +141,8 @@ public abstract class ScheduleFragment extends SherlockListFragment {
         }
     }
 
-    public static class TodayFragment extends ScheduleFragment {
-        public TodayFragment() {
+    public static class NextFragment extends ScheduleFragment {
+        public NextFragment() {
             super(ScheduleMode.NEXT);
         }
     }
