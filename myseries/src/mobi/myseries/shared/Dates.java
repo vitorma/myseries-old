@@ -83,4 +83,8 @@ public class Dates {
 
         return c.getTime();
     }
+
+    public static Date now() {
+        return new Date();
+    }
 }

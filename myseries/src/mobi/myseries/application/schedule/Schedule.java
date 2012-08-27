@@ -59,8 +59,8 @@ public class Schedule {
             case ScheduleMode.RECENT:
                 episodes.addAll(this.recent());
                 break;
-            case ScheduleMode.TODAY:
-                episodes.addAll(this.today());
+            case ScheduleMode.NEXT:
+                episodes.addAll(this.next());
                 break;
             case ScheduleMode.UPCOMING:
                 episodes.addAll(this.upcoming());
@@ -74,8 +74,8 @@ public class Schedule {
         switch(scheduleMode) {
             case ScheduleMode.RECENT:
                 return this.daysBy(recentEpisodeSpecification(), sortMode);
-            case ScheduleMode.TODAY:
-                return this.daysBy(todayEpisodeSpecification(), sortMode);
+            case ScheduleMode.NEXT:
+                return this.next(sortMode);
             case ScheduleMode.UPCOMING:
                 return this.daysBy(upcomingEpisodeSpecification(), sortMode);
             default:
@@ -87,8 +87,48 @@ public class Schedule {
         return this.episodesBy(recentEpisodeSpecification());
     }
 
-    public List<Episode> today() {
-        return this.episodesBy(todayEpisodeSpecification());
+    public List<Episode> next() {
+        List<Episode> days = new ArrayList<Episode>();
+
+        for (Series s : this.seriesCollection()) {
+            if (isUpToDate(s)) {
+                continue;
+            }
+
+            Episode e = s.nextEpisodeToSee(true);
+
+            if (e.airDate() == null) {
+                continue;
+            }
+
+            days.add(e);
+        }
+
+        return days;
+    }
+
+    public ScheduleDays next(int sortMode) {
+        ScheduleDays days = new ScheduleDays(sortMode);
+
+        for (Series s : this.seriesCollection()) {
+            if (isUpToDate(s)) {
+                continue;
+            }
+
+            Episode e = s.nextEpisodeToSee(true);
+
+            if (e.airDate() == null) {
+                continue;
+            }
+
+            days.add(e);
+        }
+
+        return days;
+    }
+
+    private boolean isUpToDate(Series s) {
+        return s.nextEpisodeToSee(true) == null;
     }
 
     public List<Episode> upcoming() {
@@ -120,15 +160,11 @@ public class Schedule {
     }
 
     private static Specification<Episode> recentEpisodeSpecification() {
-        return AirdateSpecification.before(Dates.today());
-    }
-
-    private static Specification<Episode> todayEpisodeSpecification() {
-        return AirdateSpecification.on(Dates.today());
+        return AirdateSpecification.before(Dates.now());
     }
 
     private static Specification<Episode> upcomingEpisodeSpecification() {
-        return AirdateSpecification.after(Dates.today());
+        return AirdateSpecification.after(Dates.now());
     }
 
     private Comparator<Episode> episodeComparator(int sortMode) {

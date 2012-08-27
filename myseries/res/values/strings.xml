@@ -8,7 +8,8 @@
     <string name="widget_preferences">Widget Preferences</string>
     <string name="schedule_mode">SCHEDULE MODE</string>
     <string name="recent_episodes">Recent episodes</string>
-    <string name="today_episodes">Today episodes</string>
+    <string name="next_episodes">Next episodes to see</string>
+    <string name="next">Next</string>
     <string name="upcoming_episodes">Upcoming episodes</string>
     <string name="sorting">SORTING</string>
     <string name="sort_by_format" formatted="false">Sort %s by…</string>
@@ -19,6 +20,8 @@
     <string name="unavailable_date">UNAVAILABLE DATE</string>
     <string name="page_info_format" formatted="false">Page %d of %d</string>
     <string name="episodes">episodes</string>
+    
+    
 
     <!-- Labels -->
 
@@ -48,7 +51,6 @@
     <string name="special_episodes">Special Episodes</string>
     <string name="stop_following">Stop following</string>
     <string name="to_be_announced">To be announced</string>
-    <string name="today">Today</string>
     <string name="up_to_date">UP-TO-DATE</string>
     <string name="upcoming">Upcoming</string>
     <string name="update_series_data">Update series data</string>

@@ -127,7 +127,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         TabsAdapter tabsAdapter = new TabsAdapter(this, actionBar, viewPager);
 
         tabsAdapter.addTab(this.newTab(R.string.recent), RecentFragment.class, null, ScheduleMode.RECENT, false);
-        tabsAdapter.addTab(this.newTab(R.string.today), TodayFragment.class, null, ScheduleMode.TODAY, false);
+        tabsAdapter.addTab(this.newTab(R.string.next), TodayFragment.class, null, ScheduleMode.NEXT, false);
         tabsAdapter.addTab(this.newTab(R.string.upcoming), UpcomingFragment.class, null, ScheduleMode.UPCOMING, false);
 
         actionBar.setSelectedNavigationItem(this.scheduleMode);

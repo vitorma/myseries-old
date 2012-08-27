@@ -83,7 +83,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(SCHEDULE)
-            .setIntent(MyScheduleActivity.newIntent(this, ScheduleMode.TODAY))
+            .setIntent(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT))
             .setIcon(R.drawable.actionbar_calendar)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 

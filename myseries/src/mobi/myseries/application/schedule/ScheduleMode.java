@@ -23,6 +23,6 @@ package mobi.myseries.application.schedule;
 
 public interface ScheduleMode {
     public static final int RECENT = 0;
-    public static final int TODAY = 1;
+    public static final int NEXT = 1;
     public static final int UPCOMING = 2;
 }

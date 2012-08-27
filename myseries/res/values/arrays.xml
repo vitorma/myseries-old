@@ -4,7 +4,7 @@
 
     <string-array name="schedule_mode_names">
         <item>@string/recent</item>
-        <item>@string/today</item>
+        <item>@string/next</item>
         <item>@string/upcoming</item>
     </string-array>
 

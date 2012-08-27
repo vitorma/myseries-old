@@ -143,7 +143,7 @@ public abstract class ScheduleFragment extends SherlockListFragment {
 
     public static class TodayFragment extends ScheduleFragment {
         public TodayFragment() {
-            super(ScheduleMode.TODAY);
+            super(ScheduleMode.NEXT);
         }
     }
 

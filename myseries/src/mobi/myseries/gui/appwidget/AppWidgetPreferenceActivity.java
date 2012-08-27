@@ -38,7 +38,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     }
 
     public static int scheduleModeBy(Context context, int appWidgetId) {
-        return getIntPreference(context, appWidgetId, PREF_SCHEDULE_MODE_KEY, ScheduleMode.TODAY);
+        return getIntPreference(context, appWidgetId, PREF_SCHEDULE_MODE_KEY, ScheduleMode.NEXT);
     }
 
     public static int sortModeBy(Context context, int appWidgetId) {
@@ -118,8 +118,8 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
             case ScheduleMode.RECENT:
                 this.scheduleModeRadioGroup.check(R.id.recent);
                 break;
-            case ScheduleMode.TODAY:
-                this.scheduleModeRadioGroup.check(R.id.today);
+            case ScheduleMode.NEXT:
+                this.scheduleModeRadioGroup.check(R.id.next);
                 break;
             case ScheduleMode.UPCOMING:
                 this.scheduleModeRadioGroup.check(R.id.upcoming);
@@ -172,8 +172,8 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
             case R.id.recent:
                 saveIntPreference(this, this.appWidgetId, PREF_SCHEDULE_MODE_KEY, ScheduleMode.RECENT);
                 break;
-            case R.id.today:
-                saveIntPreference(this, this.appWidgetId, PREF_SCHEDULE_MODE_KEY, ScheduleMode.TODAY);
+            case R.id.next:
+                saveIntPreference(this, this.appWidgetId, PREF_SCHEDULE_MODE_KEY, ScheduleMode.NEXT);
                 break;
             case R.id.upcoming:
                 saveIntPreference(this, this.appWidgetId, PREF_SCHEDULE_MODE_KEY, ScheduleMode.UPCOMING);

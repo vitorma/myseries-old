@@ -60,8 +60,8 @@ public class ActionBar {
         switch (scheduleMode) {
             case ScheduleMode.RECENT:
                 return this.context.getText(R.string.recent);
-            case ScheduleMode.TODAY:
-                return this.context.getText(R.string.today);
+            case ScheduleMode.NEXT:
+                return this.context.getText(R.string.next);
             case ScheduleMode.UPCOMING:
                 return this.context.getText(R.string.upcoming);
             default:
