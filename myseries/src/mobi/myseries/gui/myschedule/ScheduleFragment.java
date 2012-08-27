@@ -26,7 +26,6 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.SortMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.episodes.EpisodesActivity;
-import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.SortingDialogBuilder;
 import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
 import android.content.Context;
@@ -52,14 +51,20 @@ public abstract class ScheduleFragment extends SherlockListFragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override  
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        this.setUpPadding();
         this.setUpEmptyText();
         this.setUpListAdapter();
         this.setUpItemClickListener();
         this.setHasOptionsMenu(true);
+    }
+
+    private void setUpPadding() {
+        int p = this.getActivity().getResources().getDimensionPixelSize(R.dimen.gap_large);
+        this.getListView().setPadding(p, 0, p, 0);
     }
 
     private void setUpEmptyText() {
@@ -116,14 +121,14 @@ public abstract class ScheduleFragment extends SherlockListFragment {
                 @Override
                 public void onClick() {
                     MyScheduleActivity.saveSortMode(context, scheduleMode, SortMode.NEWEST_FIRST);
-                    adapter.sort(EpisodeComparator.byNewestFirst());
+                    adapter.reload();
                 }
             })
             .setOldestFirstOptionListener(new OptionListener() {
                 @Override
                 public void onClick() {
                     MyScheduleActivity.saveSortMode(context, scheduleMode, SortMode.OLDEST_FIRST);
-                    adapter.sort(EpisodeComparator.byOldestFirst());
+                    adapter.reload();
                 }
             })
             .build()

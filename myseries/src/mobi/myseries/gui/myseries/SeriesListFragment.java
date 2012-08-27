@@ -25,16 +25,11 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListAdapter;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
 public class SeriesListFragment extends SherlockListFragment {
-    private static final int LAYOUT = R.layout.list;
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
     @Override
@@ -42,22 +37,16 @@ public class SeriesListFragment extends SherlockListFragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(LAYOUT, container, false);
-    }
-
     @Override  
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.setUpContentView();
+        this.setUpEmptyTextView();
         this.setUpListAdapter();
     }
 
-    private void setUpContentView() {
-        TextView empty = (TextView) this.getActivity().findViewById(android.R.id.empty);
-        empty.setText(this.getString(R.string.no_followed_series));
+    private void setUpEmptyTextView() {
+        this.setEmptyText(this.getString(R.string.no_followed_series));
     }
 
     private void setUpListAdapter() {

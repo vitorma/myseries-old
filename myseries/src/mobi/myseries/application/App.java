@@ -135,20 +135,12 @@ public class App extends Application {
 
     /* SCHEDULE */
 
+    public static Schedule schedule() {
+        return schedule;
+    }
+
     public static List<Episode> scheduledEpisodes(int scheduleMode, int sortMode) {
         return schedule.episodes(scheduleMode, sortMode);
-    }
-
-    public static List<Episode> recentSchedule() {
-        return schedule.recent();
-    }
-
-    public static List<Episode> todaySchedule() {
-        return schedule.today();
-    }
-
-    public static List<Episode> upcomingSchedule() {
-        return schedule.upcoming();
     }
 
     /* LOCALIZATION */

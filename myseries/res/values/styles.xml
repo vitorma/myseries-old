@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- TextView -->
 
@@ -48,6 +48,12 @@
 
     <style name="TextView.Label.Medium.Bold">
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.Section">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="TextView.Translucent">
@@ -162,8 +168,11 @@
 
     <style name="ListView" parent="android:Widget.ListView">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
-        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:drawSelectorOnTop">true</item>
         <item name="android:divider">@drawable/list_divider_holo_light</item>
+        <item name="android:dividerHeight">0.5dp</item>
+        <item name="android:headerDividersEnabled">true</item>
+        <item name="android:footerDividersEnabled">true</item>
         <item name="android:showDividers">beginning|middle|end</item>
         <item name="android:fastScrollEnabled">true</item>
     </style>

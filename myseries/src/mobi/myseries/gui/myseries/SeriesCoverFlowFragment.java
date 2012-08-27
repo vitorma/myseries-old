@@ -65,12 +65,16 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
         @Override
         public void onFollowing(Series followedSeries) {
-            SeriesCoverFlowFragment.this.reload();
+            if (SeriesCoverFlowFragment.this.getActivity() != null) {
+                SeriesCoverFlowFragment.this.reload();
+            }
         }
 
         @Override
         public void onStopFollowing(Series unfollowedSeries) {
-            SeriesCoverFlowFragment.this.reload();
+            if (SeriesCoverFlowFragment.this.getActivity() != null) {
+                SeriesCoverFlowFragment.this.reload();
+            }
         }
     };
 
@@ -84,7 +88,9 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
         @Override
         public void onDownloadPosterOf(Series series) {
-            SeriesCoverFlowFragment.this.reload();
+            if (SeriesCoverFlowFragment.this.getActivity() != null) {
+                SeriesCoverFlowFragment.this.reload();
+            }
         }
 
         @Override

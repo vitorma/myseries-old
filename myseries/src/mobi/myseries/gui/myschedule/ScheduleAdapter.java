@@ -1,141 +1,203 @@
 package mobi.myseries.gui.myschedule;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.schedule.ScheduleDays;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
-import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Dates;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-public class ScheduleAdapter extends ArrayAdapter<Episode> implements EpisodeListener {
+public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
+    private static final int VIEW_TYPE_DATE = 0;
+    private static final int VIEW_TYPE_EPISODE = 1;
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final int EPISODE_ITEM_RESOURCE_ID = R.layout.myschedule_item;
 
+    private Context context;
     private int scheduleMode;
-    private LayoutInflater layoutInflater;
+    private List<Object> items;
     private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
         @Override
         public void onFollowing(Series followedSeries) {
-            ScheduleAdapter.this.setUpData();
+            ScheduleAdapter.this.reload();
         }
 
         @Override
         public void onStopFollowing(Series unfollowedSeries) {
-            for (Episode e : unfollowedSeries.episodes()) {
-                ScheduleAdapter.this.remove(e);
-            }
+            ScheduleAdapter.this.reload();
         }
     };
 
     public ScheduleAdapter(Context context, int scheduleMode) {
-        super(context, R.layout.myschedule_item);
-
+        this.context = context;
         this.scheduleMode = scheduleMode;
-        this.layoutInflater = LayoutInflater.from(context);
 
         App.registerSeriesFollowingListener(this.seriesFollowingListener);
 
-        this.setUpData();
+        this.reload();
     }
 
-    private List<Episode> episodes() {
-        int sortMode = MyScheduleActivity.sortModeBy(this.getContext(), this.scheduleMode);
-
-        return App.scheduledEpisodes(this.scheduleMode, sortMode);
+    @Override
+    public int getCount() {
+        return this.items.size();
     }
 
-    private void setUpData() {
-        this.clear();
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
 
-        for (Episode e : this.episodes()) {
-            e.register(this);
-            this.add(e);
-        }
+    @Override
+    public Object getItem(int position) {
+        return this.items.get(position);
+    }
 
-        this.notifyDataSetChanged();
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return this.items.get(position) instanceof Episode ?
+               VIEW_TYPE_EPISODE :
+               VIEW_TYPE_DATE;
+    }
+
+    @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return this.getItemViewType(position) == VIEW_TYPE_EPISODE;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View itemView = this.itemViewFrom(convertView);
-
-        Episode episode = this.getItem(position);
-        Series series = App.getSeries(episode.seriesId());
-        Season season = series.season(episode.seasonNumber());
-
-        this.showData(episode, season, series, itemView);
-        this.setUpSeenEpisodeCheckBoxListener(episode, itemView);
-
-        return itemView;
+        switch (this.getItemViewType(position)) {
+            case VIEW_TYPE_DATE:
+                return this.getDateView((Date) this.getItem(position), convertView, parent);
+            case VIEW_TYPE_EPISODE:
+                return this.getEpisodeView((Episode) this.getItem(position), convertView, parent);
+            default:
+                return null;
+        }
     }
 
-    private View itemViewFrom(View convertView) {
-        View itemView = convertView;
+    private View getDateView(Date date, View convertView, ViewGroup parent) {
+        View view = convertView;
+        DateViewHolder viewHolder = null;
 
-        if (itemView == null) {
-            itemView = this.layoutInflater.inflate(EPISODE_ITEM_RESOURCE_ID, null);
+        if(view == null) {
+            view = View.inflate(this.context, R.layout.myschedule_section, null);
+            viewHolder = new DateViewHolder();
+            viewHolder.dateTextView = (TextView) view.findViewById(R.id.title);
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (DateViewHolder) view.getTag();
         }
 
-        return itemView;
+        DateFormat format = App.dateFormat();
+        String unavailable = this.context.getString(R.string.unavailable_date);
+        String dateText = Dates.toString(date, format, unavailable);
+
+        viewHolder.dateTextView.setText(dateText);
+
+        return view;
     }
 
-    private void showData(Episode episode, Season season, Series series, View itemView) {
-        TextView seriesTextView = (TextView) itemView.findViewById(R.id.episodeSeriesTextView);
-        TextView seasonTextView = (TextView) itemView.findViewById(R.id.episodeSeasonEpisodeTextView);
-        TextView dateTextView = (TextView) itemView.findViewById(R.id.episodeDateTextView);
-        CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
+    private View getEpisodeView(Episode episode, View convertView, ViewGroup parent) {
+        View view = convertView;
+        EpisodeViewHolder viewHolder = null;
 
-        seriesTextView.setText(series.name());
+        if (view == null) {
+            view = View.inflate(this.context, R.layout.myschedule_item, null);
+            viewHolder = new EpisodeViewHolder();
+            viewHolder.seriesNameTextView = (TextView) view.findViewById(R.id.episodeSeriesTextView);
+            viewHolder.episodeNumberTextView = (TextView) view.findViewById(R.id.episodeSeasonEpisodeTextView);
+            viewHolder.seenMarkCheckBox = (CheckBox) view.findViewById(R.id.episodeIsViewedCheckBox);
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (EpisodeViewHolder) view.getTag();
+        }
 
-        String format = this.getContext().getString(R.string.episode_number_format);
-        seasonTextView.setText(String.format(format, season.number(), episode.number()));
+        Series series = App.getSeries(episode.seriesId());
+        String format = this.context.getString(R.string.episode_number_format);
 
-        java.text.DateFormat dateFormat = App.environment().localization().dateFormat();
-        dateTextView.setText(Dates.toString(episode.airDate(), dateFormat, ""));
+        viewHolder.seriesNameTextView.setText(series.name());
+        viewHolder.episodeNumberTextView.setText(String.format(format, episode.seasonNumber(), episode.number()));
+        viewHolder.seenMarkCheckBox.setChecked(episode.wasSeen());
+        viewHolder.seenMarkCheckBox.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
 
-        isViewedCheckBox.setChecked(episode.wasSeen());
+        return view;
     }
 
-    private void setUpSeenEpisodeCheckBoxListener(final Episode episode, View itemView) {
-        final CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
+    //------------------------------------------------------------------------------------------------------------------
 
-        isViewedCheckBox.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                if (isViewedCheckBox.isChecked()) {
-                    SERIES_PROVIDER.markEpisodeAsSeen(episode);
-                } else {
-                    SERIES_PROVIDER.markEpisodeAsNotSeen(episode);
-                }
-            }
-        });
+    public void reload() {
+        int sortMode = MyScheduleActivity.sortModeBy(this.context, this.scheduleMode);
+        ScheduleDays scheduleDays = App.schedule().days(this.scheduleMode, sortMode);
+        this.items = scheduleDays.toList();
+
+        for (Episode e : scheduleDays.getEpisodes()) {
+            e.register(this);
+        }
+
+        this.notifyDataSetChanged();
     }
 
     @Override
     public void onMarkAsSeen(Episode e) {
-        this.remove(e);
+        this.notifyDataSetChanged();
     }
 
     @Override
     public void onMarkAsNotSeen(Episode e) {
-        this.setUpData();
+        this.notifyDataSetChanged();
     }
 
     @Override
     public void onMerge(Episode e) {
-        this.notifyDataSetChanged();
+        //It's not my problem
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    private static class DateViewHolder {
+        private TextView dateTextView;
+    }
+
+    private static class EpisodeViewHolder {
+        private TextView seriesNameTextView;
+        private TextView episodeNumberTextView;
+        private CheckBox seenMarkCheckBox;
+
+        private OnClickListener seenMarkCheckBoxListener(final Episode episode) {
+            return new OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    if (EpisodeViewHolder.this.seenMarkCheckBox.isChecked()) {
+                        SERIES_PROVIDER.markEpisodeAsSeen(episode);
+                    } else {
+                        SERIES_PROVIDER.markEpisodeAsNotSeen(episode);
+                    }
+                }
+            };
+        }
     }
 }

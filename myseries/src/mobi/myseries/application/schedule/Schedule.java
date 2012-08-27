@@ -45,6 +45,14 @@ public class Schedule {
     }
 
     public List<Episode> episodes(int scheduleMode, int sortMode) {
+        List<Episode> episodes = this.episodes(scheduleMode);
+
+        Collections.sort(episodes, this.episodeComparator(sortMode));
+
+        return episodes;
+    }
+
+    public List<Episode> episodes(int scheduleMode) {
         ArrayList<Episode> episodes = new ArrayList<Episode>();
 
         switch(scheduleMode) {
@@ -59,21 +67,32 @@ public class Schedule {
                 break;
         }
 
-        Collections.sort(episodes, this.episodeComparator(sortMode));
-
         return episodes;
     }
 
+    public ScheduleDays days(int scheduleMode, int sortMode) {
+        switch(scheduleMode) {
+            case ScheduleMode.RECENT:
+                return this.daysBy(recentEpisodeSpecification(), sortMode);
+            case ScheduleMode.TODAY:
+                return this.daysBy(todayEpisodeSpecification(), sortMode);
+            case ScheduleMode.UPCOMING:
+                return this.daysBy(upcomingEpisodeSpecification(), sortMode);
+            default:
+                return null;
+        }
+    }
+
     public List<Episode> recent() {
-        return this.episodesBy(recentNotSeenEpisodeSpecification());
+        return this.episodesBy(recentEpisodeSpecification());
     }
 
     public List<Episode> today() {
-        return this.episodesBy(todayNotSeenEpisodeSpecification());
+        return this.episodesBy(todayEpisodeSpecification());
     }
 
     public List<Episode> upcoming() {
-        return this.episodesBy(upcomingNotSeenEpisodeSpecification());
+        return this.episodesBy(upcomingEpisodeSpecification());
     }
 
     private List<Episode> episodesBy(Specification<Episode> specification) {
@@ -86,20 +105,18 @@ public class Schedule {
         return episodes;
     }
 
+    private ScheduleDays daysBy(Specification<Episode> specification, int sortMode) {
+        ScheduleDays days = new ScheduleDays(sortMode);
+
+        for (Series s : this.seriesCollection()) {
+            days.addAll(s.episodesBy(specification));
+        }
+
+        return days;
+    }
+
     private Collection<Series> seriesCollection() {
         return this.seriesRepository.getAll();
-    }
-
-    private static Specification<Episode> recentNotSeenEpisodeSpecification() {
-        return recentEpisodeSpecification().and(notSeenEpisodeSpecification());
-    }
-
-    private static Specification<Episode> todayNotSeenEpisodeSpecification() {
-        return todayEpisodeSpecification().and(notSeenEpisodeSpecification());
-    }
-
-    private static Specification<Episode> upcomingNotSeenEpisodeSpecification() {
-        return upcomingEpisodeSpecification().and(notSeenEpisodeSpecification());
     }
 
     private static Specification<Episode> recentEpisodeSpecification() {
@@ -112,10 +129,6 @@ public class Schedule {
 
     private static Specification<Episode> upcomingEpisodeSpecification() {
         return AirdateSpecification.after(Dates.today());
-    }
-
-    private static Specification<Episode> notSeenEpisodeSpecification() {
-        return SeenMarkSpecification.asNotSeen();
     }
 
     private Comparator<Episode> episodeComparator(int sortMode) {
