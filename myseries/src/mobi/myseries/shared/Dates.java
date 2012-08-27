@@ -51,6 +51,13 @@ public class Dates {
         return new Date(date);
     }
 
+    public static String toString(Date date, DateFormat format) {
+        Validate.isNonNull(date, "date");
+        Validate.isNonNull(format, "format");
+
+        return format.format(date);
+    }
+
     public static String toString(Date date, DateFormat format, String alternative) {
         Validate.isNonNull(format, "format");
 

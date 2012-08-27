@@ -25,7 +25,6 @@ import java.util.Date;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.shared.AbstractSpecification;
-import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
@@ -35,7 +34,7 @@ public abstract class AirdateSpecification extends AbstractSpecification<Episode
         return new AirdateSpecification() {
             @Override
             protected boolean isSatisfiedByNonNull(Episode episode) {
-                return Dates.compareByNullLast(episode.airDate(), date) == 0;
+                return episode.airDate().compareTo(date) == 0;
             }
         };
     }
@@ -44,7 +43,7 @@ public abstract class AirdateSpecification extends AbstractSpecification<Episode
         return new AirdateSpecification() {
             @Override
             protected boolean isSatisfiedByNonNull(Episode episode) {
-                return Dates.compareByNullLast(episode.airDate(), date) < 0;
+                return episode.airDate().compareTo(date) < 0;
             }
         };
     }
@@ -53,7 +52,7 @@ public abstract class AirdateSpecification extends AbstractSpecification<Episode
         return new AirdateSpecification() {
             @Override
             protected boolean isSatisfiedByNonNull(Episode episode) {
-                return Dates.compareByNullLast(episode.airDate(), date) > 0;
+                return episode.airDate().compareTo(date) > 0;
             }
         };
     }
@@ -62,7 +61,7 @@ public abstract class AirdateSpecification extends AbstractSpecification<Episode
     public boolean isSatisfiedBy(Episode episode) {
         Validate.isNonNull(episode, "episode");
 
-        return this.isSatisfiedByNonNull(episode);
+        return episode.airDate() != null && this.isSatisfiedByNonNull(episode);
     }
 
     protected abstract boolean isSatisfiedByNonNull(Episode episode);

@@ -113,10 +113,9 @@ public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
         }
 
         DateFormat format = App.dateFormat();
-        String unavailable = this.context.getString(R.string.unavailable_date);
-        String dateText = Dates.toString(date, format, unavailable);
+        String formattedDate = Dates.toString(date, format);
 
-        viewHolder.dateTextView.setText(dateText);
+        viewHolder.dateTextView.setText(formattedDate);
 
         return view;
     }
