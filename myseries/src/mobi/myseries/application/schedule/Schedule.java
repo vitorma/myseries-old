@@ -23,158 +23,256 @@ package mobi.myseries.application.schedule;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
-import mobi.myseries.gui.shared.EpisodeComparator;
+import mobi.myseries.domain.repository.SeriesRepositoryListener;
 import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.HasDate;
+import mobi.myseries.shared.SortedList;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
-public class Schedule {
+public class Schedule implements SeriesRepositoryListener {
     private SeriesRepository seriesRepository;
+    private ScheduleElements recent;
+    private ScheduleElements upcoming;
+    private ScheduleElements next;
 
     public Schedule(SeriesRepository seriesRepository) {
         Validate.isNonNull(seriesRepository, "seriesRepository");
 
         this.seriesRepository = seriesRepository;
+        this.recent = new ScheduleElements();
+        this.upcoming = new ScheduleElements();
+        this.next = new ScheduleElements();
+
+        this.load();
     }
 
-    public List<Episode> episodes(int scheduleMode, int sortMode) {
-        List<Episode> episodes = this.episodes(scheduleMode);
-
-        Collections.sort(episodes, this.episodeComparator(sortMode));
-
-        return episodes;
+    public ScheduleElements recent() {
+        return this.recent;
     }
 
-    public List<Episode> episodes(int scheduleMode) {
-        ArrayList<Episode> episodes = new ArrayList<Episode>();
-
-        switch(scheduleMode) {
-            case ScheduleMode.RECENT:
-                episodes.addAll(this.recent());
-                break;
-            case ScheduleMode.NEXT:
-                episodes.addAll(this.next());
-                break;
-            case ScheduleMode.UPCOMING:
-                episodes.addAll(this.upcoming());
-                break;
-        }
-
-        return episodes;
+    public ScheduleElements upcoming() {
+        return this.upcoming;
     }
 
-    public ScheduleDays days(int scheduleMode, int sortMode) {
-        switch(scheduleMode) {
-            case ScheduleMode.RECENT:
-                return this.daysBy(recentEpisodeSpecification(), sortMode);
-            case ScheduleMode.NEXT:
-                return this.next(sortMode);
-            case ScheduleMode.UPCOMING:
-                return this.daysBy(upcomingEpisodeSpecification(), sortMode);
-            default:
-                return null;
-        }
+    public ScheduleElements next() {
+        return this.next;
     }
 
-    public List<Episode> recent() {
-        return this.episodesBy(recentEpisodeSpecification());
+    private void load() {
+        this.extractRecent();
+        this.extractUpcoming();
+        this.extractNext();
     }
 
-    public List<Episode> next() {
-        List<Episode> days = new ArrayList<Episode>();
-
+    private void extractRecent() {
         for (Series s : this.seriesCollection()) {
-            if (isUpToDate(s)) {
-                continue;
-            }
-
-            Episode e = s.nextEpisodeToSee(true);
-
-            if (e.airDate() == null) {
-                continue;
-            }
-
-            days.add(e);
+            this.extractRecentFrom(s);
         }
-
-        return days;
     }
 
-    public ScheduleDays next(int sortMode) {
-        ScheduleDays days = new ScheduleDays(sortMode);
+    private void extractRecentFrom(Series s) {
+        this.recent.addAll(s.episodesBy(recentSpecification()));
+    }
 
+    private void extractUpcoming() {
         for (Series s : this.seriesCollection()) {
-            if (isUpToDate(s)) {
-                continue;
-            }
-
-            Episode e = s.nextEpisodeToSee(true);
-
-            if (e.airDate() == null) {
-                continue;
-            }
-
-            days.add(e);
+            this.extractUpcomingFrom(s);
         }
-
-        return days;
     }
 
-    private boolean isUpToDate(Series s) {
-        return s.nextEpisodeToSee(true) == null;
+    private void extractUpcomingFrom(Series s) {
+        this.upcoming.addAll(s.episodesBy(upcomingSpecification()));
     }
 
-    public List<Episode> upcoming() {
-        return this.episodesBy(upcomingEpisodeSpecification());
-    }
-
-    private List<Episode> episodesBy(Specification<Episode> specification) {
-        List<Episode> episodes = new ArrayList<Episode>();
-
+    private void extractNext() {
         for (Series s : this.seriesCollection()) {
-            episodes.addAll(s.episodesBy(specification));
+            this.extractNextFrom(s);
         }
-
-        return episodes;
     }
 
-    private ScheduleDays daysBy(Specification<Episode> specification, int sortMode) {
-        ScheduleDays days = new ScheduleDays(sortMode);
+    private void extractNextFrom(Series s) {
+        Episode e = s.nextEpisodeToSee(true);
 
-        for (Series s : this.seriesCollection()) {
-            days.addAll(s.episodesBy(specification));
+        if (e != null && e.airDate() != null) {
+            this.next.add(e);
         }
-
-        return days;
     }
 
     private Collection<Series> seriesCollection() {
         return this.seriesRepository.getAll();
     }
 
-    private static Specification<Episode> recentEpisodeSpecification() {
-        return AirdateSpecification.before(Dates.now());
+    //Listening and notifying------------------------------------------------------------------------------------------
+
+    @Override
+    public void onInsert(Series s) {
+        // TODO Extract methods
+        
     }
 
-    private static Specification<Episode> upcomingEpisodeSpecification() {
-        return AirdateSpecification.after(Dates.now());
+    @Override
+    public void onUpdate(Series s) {
+        // TODO Extract methods
+        
     }
 
-    private Comparator<Episode> episodeComparator(int sortMode) {
+    @Override
+    public void onUpdate(Collection<Series> s) {
+        // TODO Extract methods
+        
+    }
+
+    @Override
+    public void onDelete(Series s) {
+        // TODO Extract methods
+        
+    }
+
+    @Override
+    public void onDelete(Collection<Series> s) {
+        // TODO Extract methods
+        
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    public static class ScheduleElements {
+        private static final Comparator<HasDate> DEFAULT_COMPARATOR = comparator(SortMode.OLDEST_FIRST);
+
+        private SortedList<HasDate> elements;
+
+        private ScheduleElements() {
+            this.elements = new SortedList<HasDate>(DEFAULT_COMPARATOR);
+        }
+
+        public int size() {
+            return this.elements.size();
+        }
+
+        public boolean contains(HasDate element) {
+            return this.elements.contains(element);
+        }
+
+        public HasDate get(int index) {
+            return this.elements.get(index);
+        }
+
+        public boolean add(Episode element) {
+            Day day = new Day(element.airDate());
+
+            return (this.contains(day) || this.elements.add(day)) &&
+                   (!this.contains(element) && this.elements.add(element));
+        }
+
+        public boolean remove(Episode element) {
+            Day day = new Day(element.getDate());
+
+            return (this.elements.remove(element)) &&
+                   (this.containsEpisodesOn(day) || this.elements.remove(day));
+        }
+
+        public List<Episode> getEpisodes() {
+            List<Episode> episodes = new ArrayList<Episode>();
+
+            for (HasDate element : this.elements) {
+                if (element instanceof Episode) {
+                    episodes.add((Episode) element);
+                }
+            }
+
+            return episodes;
+        }
+
+        private void addAll(Collection<Episode> collection) {
+            for (Episode e : collection) {
+                this.add(e);
+            }
+        }
+
+        private void removeAll(Collection<Episode> collection) {
+            for (Episode e : collection) {
+                this.remove(e);
+            };
+        }
+
+        private boolean containsEpisodesOn(Day day) {
+            int i = this.elements.indexOf(day) + 1;
+
+            return i < this.size() && this.get(i).hasSameDateAs(day);
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    private static Comparator<HasDate> comparator(int sortMode) {
         switch(sortMode) {
-            case SortMode.NEWEST_FIRST:
-                return EpisodeComparator.byNewestFirst();
             case SortMode.OLDEST_FIRST:
-                return EpisodeComparator.byOldestFirst();
+                return naturalComparator();
+            case SortMode.NEWEST_FIRST:
+                return reversedComparator();
             default:
                 return null;
         }
+    }
+
+    private static Comparator<HasDate> naturalComparator() {
+        return new Comparator<HasDate>() {
+            @Override
+            public int compare(HasDate left, HasDate right) {
+                int dateComparation = left.getDate().compareTo(right.getDate());
+
+                if (dateComparation != 0) {return dateComparation;}
+
+                return typeComparator().compare(left, right);
+            }
+        };
+    }
+
+    private static Comparator<HasDate> reversedComparator() {
+        return new Comparator<HasDate>() {
+            @Override
+            public int compare(HasDate left, HasDate right) {
+                int dateComparation = right.getDate().compareTo(left.getDate());
+
+                if (dateComparation != 0) {return dateComparation;}
+
+                return typeComparator().compare(left, right);
+            }
+        };
+    }
+
+    private static Comparator<HasDate> typeComparator() {
+        return new Comparator<HasDate>() {
+            private static final int TYPE_DAY = 0;
+            private static final int TYPE_EPISODE = 1;
+
+            @Override
+            public int compare(HasDate left, HasDate right) {
+                return typeOf(left) - typeOf(right);
+            }
+
+            private int typeOf(HasDate object) {
+                return object.getClass() == Day.class ?
+                       TYPE_DAY :
+                       TYPE_EPISODE;
+            }
+        };
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    private static Specification<Episode> recentSpecification() {
+        return AirdateSpecification.before(Dates.now());
+    }
+
+    private static Specification<Episode> upcomingSpecification() {
+        return AirdateSpecification.after(Dates.now());
     }
 }

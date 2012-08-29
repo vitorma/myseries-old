@@ -25,7 +25,6 @@ import java.text.DateFormat;
 import java.util.List;
 
 import mobi.myseries.application.schedule.Schedule;
-import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
 import android.app.Application;
@@ -139,9 +138,9 @@ public class App extends Application {
         return schedule;
     }
 
-    public static List<Episode> scheduledEpisodes(int scheduleMode, int sortMode) {
-        return schedule.episodes(scheduleMode, sortMode);
-    }
+//    public static List<Episode> scheduledEpisodes(int scheduleMode, int sortMode) {
+//        return schedule.episodes(scheduleMode, sortMode);
+//    }
 
     /* LOCALIZATION */
 

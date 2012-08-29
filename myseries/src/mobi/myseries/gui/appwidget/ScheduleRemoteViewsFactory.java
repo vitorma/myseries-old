@@ -21,10 +21,10 @@
 
 package mobi.myseries.gui.appwidget;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mobi.myseries.application.App;
+import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
@@ -86,9 +86,20 @@ public class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteView
     }
 
     private void loadEpisodes() {
+        //FIXME
         int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this.context, this.appWidgetId);
         int sortMode = AppWidgetPreferenceActivity.sortModeBy(this.context, this.appWidgetId);
 
-        this.episodes = new ArrayList<Episode>(App.scheduledEpisodes(scheduleMode, sortMode));
+        switch(scheduleMode) {
+            case ScheduleMode.RECENT:
+                this.episodes = App.schedule().recent().getEpisodes();
+                break;
+            case ScheduleMode.NEXT:
+                this.episodes = App.schedule().next().getEpisodes();
+                break;
+            case ScheduleMode.UPCOMING:
+                this.episodes = App.schedule().upcoming().getEpisodes();
+                break;
+        }
     }
 }

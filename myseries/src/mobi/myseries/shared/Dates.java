@@ -24,6 +24,7 @@ package mobi.myseries.shared;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 
 public class Dates {
@@ -86,5 +87,24 @@ public class Dates {
 
     public static Date now() {
         return new Date();
+    }
+
+    public static Comparator<Date> naturalComparator() {
+        return new Comparator<Date>() {
+            @Override
+            public int compare(Date d1, Date d2) {
+                return d1.compareTo(d2);
+            }
+            
+        };
+    }
+
+    public static Comparator<Date> reversedComparator() {
+        return new Comparator<Date>() {
+            @Override
+            public int compare(Date d1, Date d2) {
+                return d2.compareTo(d1);
+            }
+        };
     }
 }

@@ -363,4 +363,19 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withSeenMark(Boolean.valueOf(c.getString(c.getColumnIndex(EPISODE_SEENMARK))))
             .build();
     }
+
+    /*
+     * TODO SeriesRepositoryListener methods:
+     * discuss whether notifications should be sent from here instead of from SeriesCache.
+     */
+
+    @Override
+    public boolean register(SeriesRepositoryListener listener) {
+        return false;
+    }
+
+    @Override
+    public boolean deregister(SeriesRepositoryListener listener) {
+        return false;
+    }
 }

@@ -28,6 +28,7 @@ import java.util.TreeMap;
 
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 

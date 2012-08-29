@@ -24,8 +24,9 @@ package mobi.myseries.domain.repository;
 import java.util.Collection;
 
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.Publisher;
 
-public interface SeriesRepository {
+public interface SeriesRepository extends Publisher<SeriesRepositoryListener> {
     public void insert(Series series);
     public void update(Series series);
     public void updateAll(Collection<Series> seriesCollection);

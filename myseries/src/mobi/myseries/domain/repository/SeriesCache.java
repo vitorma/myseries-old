@@ -22,19 +22,20 @@
 package mobi.myseries.domain.repository;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
+import android.util.SparseArray;
 
 public class SeriesCache implements SeriesRepository {
     private SeriesRepository sourceRepository;
     private SeriesSet seriesSet;
     private ExecutorService threadExecutor;
+    private ListenerSet<SeriesRepositoryListener> listeners;
 
     public SeriesCache(SeriesRepository sourceRepository) {
         Validate.isNonNull(sourceRepository, "sourceRepository");
@@ -42,6 +43,7 @@ public class SeriesCache implements SeriesRepository {
         this.sourceRepository = sourceRepository;
         this.seriesSet = new SeriesSet().includingAll(this.sourceRepository.getAll());
         this.threadExecutor = Executors.newSingleThreadExecutor();
+        this.listeners = new ListenerSet<SeriesRepositoryListener>();
     }
 
     @Override
@@ -51,6 +53,7 @@ public class SeriesCache implements SeriesRepository {
         if (this.seriesSet.contains(series)) {return;}
 
         this.seriesSet.including(series);
+        this.notifyThatWasInserted(series);
         this.threadExecutor.execute(this.insertSeriesInSourceRepository(series));
     }
 
@@ -70,6 +73,7 @@ public class SeriesCache implements SeriesRepository {
         if (!this.seriesSet.contains(series)) {return;}
 
         this.seriesSet.excluding(series).including(series);
+        this.notifyThatWasUpdated(series);
         this.threadExecutor.execute(this.updateSeriesInSourceRepository(series));
     }
 
@@ -87,8 +91,8 @@ public class SeriesCache implements SeriesRepository {
         Validate.isNonNull(seriesCollection, "seriesCollection");
 
         if (!this.seriesSet.containsAll(seriesCollection)) {return;}
-
         this.seriesSet.excludingAll(seriesCollection).includingAll(seriesCollection);
+        this.notifyThatWasUpdated(seriesCollection);
         this.threadExecutor.execute(this.updateAllSeriesInSourceRepository(seriesCollection));
     }
 
@@ -108,6 +112,7 @@ public class SeriesCache implements SeriesRepository {
         if (!this.seriesSet.contains(series)) {return;}
 
         this.seriesSet.excluding(series);
+        this.notifyThatWasDeleted(series);
         this.threadExecutor.execute(this.deleteSeriesFromSourceRepository(series));
     }
 
@@ -127,6 +132,7 @@ public class SeriesCache implements SeriesRepository {
         if (!this.seriesSet.containsAll(seriesCollection)) {return;}
 
         this.seriesSet.excludingAll(seriesCollection);
+        this.notifyThatWasDeleted(seriesCollection);
         this.threadExecutor.execute(this.deleteAllSeriesFromSourceRepository(seriesCollection));
     }
 
@@ -171,19 +177,69 @@ public class SeriesCache implements SeriesRepository {
         return this.seriesSet.all();
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean register(SeriesRepositoryListener listener) {
+        return this.listeners.register(listener);
+    }
+
+    @Override
+    public boolean deregister(SeriesRepositoryListener listener) {
+        return this.listeners.deregister(listener);
+    }
+
+    private void notifyThatWasInserted(Series s) {
+        for (SeriesRepositoryListener l : this.listeners) {
+            l.onInsert(s);
+        }
+    }
+
+    private void notifyThatWasUpdated(Series s) {
+        for (SeriesRepositoryListener l : this.listeners) {
+            l.onUpdate(s);
+        }
+    }
+
+    private void notifyThatWasUpdated(Collection<Series> s) {
+        for (SeriesRepositoryListener l : this.listeners) {
+            l.onUpdate(s);
+        }
+    }
+
+    private void notifyThatWasDeleted(Series s) {
+        for (SeriesRepositoryListener l : this.listeners) {
+            l.onDelete(s);
+        }
+    }
+
+    private void notifyThatWasDeleted(Collection<Series> s) {
+        for (SeriesRepositoryListener l : this.listeners) {
+            l.onDelete(s);
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
     private static class SeriesSet {
-        private Map<Integer, Series> series;
+        private SparseArray<Series> series;
 
         private SeriesSet() {
-            this.series = new HashMap<Integer, Series>();
+            this.series = new SparseArray<Series>();
         }
 
         private boolean contains(Series series) {
-             return this.series.containsValue(series);
+             return this.get(series.id()) != null;
         }
 
         private boolean containsAll(Collection<Series> seriesCollection) {
-            return this.series.values().containsAll(seriesCollection);
+            for (Series s : seriesCollection) {
+                if (!this.contains(s)) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private Series get(int seriesId) {
@@ -191,7 +247,14 @@ public class SeriesCache implements SeriesRepository {
         }
 
         private Collection<Series> all() {
-            return Collections.unmodifiableCollection(this.series.values());
+            LinkedList<Series> all = new LinkedList<Series>();
+
+            for (int i = 0; i < this.series.size(); i++) {
+                int id = this.series.keyAt(i);
+                all.add(this.get(id));
+            }
+
+            return all;
         }
 
         private SeriesSet including(Series series) {
@@ -213,7 +276,7 @@ public class SeriesCache implements SeriesRepository {
 
         private SeriesSet excludingAll(Collection<Series> seriesCollection) {
             for (Series s : seriesCollection) {
-                this.including(s);
+                this.excluding(s);
             }
             return this;
         }

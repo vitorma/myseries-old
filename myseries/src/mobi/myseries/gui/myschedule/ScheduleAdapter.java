@@ -1,14 +1,14 @@
 package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.schedule.ScheduleDays;
+import mobi.myseries.application.schedule.Day;
+import mobi.myseries.application.schedule.Schedule.ScheduleElements;
+import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Series;
@@ -22,13 +22,13 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
-    private static final int VIEW_TYPE_DATE = 0;
+    private static final int VIEW_TYPE_DAY = 0;
     private static final int VIEW_TYPE_EPISODE = 1;
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
     private Context context;
     private int scheduleMode;
-    private List<Object> items;
+    private ScheduleElements items;
     private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
         @Override
         public void onFollowing(Series followedSeries) {
@@ -72,9 +72,9 @@ public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
 
     @Override
     public int getItemViewType(int position) {
-        return this.items.get(position) instanceof Episode ?
+        return this.items.get(position).getClass() == Episode.class ?
                VIEW_TYPE_EPISODE :
-               VIEW_TYPE_DATE;
+               VIEW_TYPE_DAY;
     }
 
     @Override
@@ -90,8 +90,8 @@ public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         switch (this.getItemViewType(position)) {
-            case VIEW_TYPE_DATE:
-                return this.getDateView((Date) this.getItem(position), convertView, parent);
+            case VIEW_TYPE_DAY:
+                return this.getDateView((Day) this.getItem(position), convertView, parent);
             case VIEW_TYPE_EPISODE:
                 return this.getEpisodeView((Episode) this.getItem(position), convertView, parent);
             default:
@@ -99,7 +99,7 @@ public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
         }
     }
 
-    private View getDateView(Date date, View convertView, ViewGroup parent) {
+    private View getDateView(Day day, View convertView, ViewGroup parent) {
         View view = convertView;
         DateViewHolder viewHolder = null;
 
@@ -113,7 +113,7 @@ public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
         }
 
         DateFormat format = App.dateFormat();
-        String formattedDate = Dates.toString(date, format);
+        String formattedDate = Dates.toString(day.getDate(), format);
 
         viewHolder.dateTextView.setText(formattedDate);
 
@@ -150,24 +150,39 @@ public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
 
     public void reload() {
         int sortMode = MyScheduleActivity.sortModeBy(this.context, this.scheduleMode);
-        ScheduleDays scheduleDays = App.schedule().days(this.scheduleMode, sortMode);
-        this.items = scheduleDays.toList();
+        ScheduleElements scheduleDays = null;
 
-        for (Episode e : scheduleDays.getEpisodes()) {
-            e.register(this);
-        }
+        switch(scheduleMode) {
+            case ScheduleMode.RECENT:
+                scheduleDays = App.schedule().recent();
+                break;
+            case ScheduleMode.NEXT:
+                scheduleDays = App.schedule().next();
+                break;
+            case ScheduleMode.UPCOMING:
+                scheduleDays = App.schedule().upcoming();
+                break;
+            default:
+                scheduleDays = null;
+        };
+
+        this.items = scheduleDays;
+
+//        for (Episode e : scheduleDays.getEpisodes()) {
+//            e.register(this);
+//        }
 
         this.notifyDataSetChanged();
     }
 
     @Override
     public void onMarkAsSeen(Episode e) {
-        this.notifyDataSetChanged();
+        this.reload();
     }
 
     @Override
     public void onMarkAsNotSeen(Episode e) {
-        this.notifyDataSetChanged();
+        this.reload();
     }
 
     @Override

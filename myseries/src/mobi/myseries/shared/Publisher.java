@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.model;
+package mobi.myseries.shared;
 
 public interface Publisher<L> {
 

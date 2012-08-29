@@ -13,22 +13,47 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.shared.Dates;
 
 public class ScheduleDays {
+    private static final int DEFAULT_SORT_MODE = SortMode.OLDEST_FIRST;
+
     private TreeMap<Date, Set<Episode>> days;
+    private TreeMap<Date, Set<Episode>> hidden;
+    private int sortMode;
+
+    public ScheduleDays() {
+        this(DEFAULT_SORT_MODE);
+    }
 
     public ScheduleDays(int sortMode) {
+        this.sortMode = sortMode;
         this.days = new TreeMap<Date, Set<Episode>>(comparator(sortMode));
+        this.hidden = new TreeMap<Date, Set<Episode>>(comparator(sortMode));
     }
 
-    public void add(Episode episode) {
-        Date day = episode.airDate();
-
-        this.get(day).add(episode);
+    public ScheduleDays copy() {
+        ScheduleDays copy = new ScheduleDays(this.sortMode);
+        copy.days.putAll(this.days);
+        copy.hidden.putAll(this.hidden);
+        return copy;
     }
 
-    public void addAll(Collection<Episode> episodes) {
+    public ScheduleDays including(Episode episode) {
+        this.add(episode);
+
+        return this;
+    }
+
+    public ScheduleDays includingAll(Collection<Episode> episodes) {
         for (Episode e : episodes) {
             this.add(e);
         }
+
+        return this;
+    }
+
+    private void add(Episode episode) {
+        Date day = episode.airDate();
+
+        this.get(day).add(episode);
     }
 
     private Set<Episode> get(Date day) {

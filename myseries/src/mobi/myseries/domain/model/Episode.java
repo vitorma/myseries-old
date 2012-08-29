@@ -24,10 +24,12 @@ package mobi.myseries.domain.model;
 import java.util.Date;
 
 import mobi.myseries.domain.constant.Invalid;
+import mobi.myseries.shared.HasDate;
 import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
 
-public class Episode implements Publisher<EpisodeListener> {
+public class Episode implements Publisher<EpisodeListener>, HasDate {
     private int id;
     private int seriesId;
     private int number;
@@ -170,13 +172,23 @@ public class Episode implements Publisher<EpisodeListener> {
     }
 
     @Override
+    public Date getDate() {
+        return this.airDate;
+    }
+
+    @Override
+    public boolean hasSameDateAs(HasDate other) {
+        return this.getDate() != null && other != null && this.getDate().equals(other.getDate());
+    }
+
+    @Override
     public int hashCode() {
         return this.id;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Episode && ((Episode) obj).id == this.id;
+        return obj != null && obj.getClass() == Episode.class && ((Episode) obj).id == this.id;
     }
 
     public static class Builder {

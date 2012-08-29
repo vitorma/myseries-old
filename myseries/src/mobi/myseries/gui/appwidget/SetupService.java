@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
@@ -75,7 +76,18 @@ public class SetupService extends IntentService {
         int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this, this.appWidgetId);
         int sortMode = AppWidgetPreferenceActivity.sortModeBy(this, this.appWidgetId);
 
-        this.episodes = new ArrayList<Episode>(App.scheduledEpisodes(scheduleMode, sortMode));
+        //FIXME
+        switch(scheduleMode) {
+            case ScheduleMode.RECENT:
+                this.episodes = new ArrayList<Episode>(App.schedule().recent().getEpisodes());
+                break;
+            case ScheduleMode.NEXT:
+                this.episodes = new ArrayList<Episode>(App.schedule().next().getEpisodes());
+                break;
+            case ScheduleMode.UPCOMING:
+                this.episodes = new ArrayList<Episode>(App.schedule().upcoming().getEpisodes());
+                break;
+        }
     }
 
     private void setupItemPageBrowser() {
