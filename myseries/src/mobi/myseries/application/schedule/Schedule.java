@@ -24,12 +24,14 @@ package mobi.myseries.application.schedule;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.repository.SeriesRepositoryListener;
+import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.HasDate;
 import mobi.myseries.shared.SortedList;
@@ -66,38 +68,38 @@ public class Schedule implements SeriesRepositoryListener {
     }
 
     private void load() {
-        this.extractRecent();
-        this.extractUpcoming();
-        this.extractNext();
+        this.extractRecentEpisodesFrom(this.seriesCollection());
+        this.extractUpcomingEpisodesFrom(this.seriesCollection());
+        this.extractNextEpisodesFrom(this.seriesCollection());
     }
 
-    private void extractRecent() {
-        for (Series s : this.seriesCollection()) {
-            this.extractRecentFrom(s);
+    private void extractRecentEpisodesFrom(Collection<Series> collection) {
+        for (Series s : collection) {
+            this.extractRecentEpisodesFrom(s);
         }
     }
 
-    private void extractRecentFrom(Series s) {
+    private void extractRecentEpisodesFrom(Series s) {
         this.recent.addAll(s.episodesBy(recentSpecification()));
     }
 
-    private void extractUpcoming() {
-        for (Series s : this.seriesCollection()) {
-            this.extractUpcomingFrom(s);
+    private void extractUpcomingEpisodesFrom(Collection<Series> collection) {
+        for (Series s : collection) {
+            this.extractUpcomingEpisodesFrom(s);
         }
     }
 
-    private void extractUpcomingFrom(Series s) {
+    private void extractUpcomingEpisodesFrom(Series s) {
         this.upcoming.addAll(s.episodesBy(upcomingSpecification()));
     }
 
-    private void extractNext() {
-        for (Series s : this.seriesCollection()) {
-            this.extractNextFrom(s);
+    private void extractNextEpisodesFrom(Collection<Series> collection) {
+        for (Series s : collection) {
+            this.extractNextEpisodeFrom(s);
         }
     }
 
-    private void extractNextFrom(Series s) {
+    private void extractNextEpisodeFrom(Series s) {
         Episode e = s.nextEpisodeToSee(true);
 
         if (e != null && e.airDate() != null) {
@@ -113,14 +115,21 @@ public class Schedule implements SeriesRepositoryListener {
 
     @Override
     public void onInsert(Series s) {
-        // TODO Extract methods
-        
+        // TODO Run asynchronously and notify specified listeners
+        this.extractRecentEpisodesFrom(s);
+        this.extractUpcomingEpisodesFrom(s);
+        this.extractNextEpisodeFrom(s);
     }
 
     @Override
     public void onUpdate(Series s) {
-        // TODO Extract methods
-        
+        // TODO Run asynchronously and notify specified listeners
+        List<Episode> recentOfSeries = s.episodesBy(recentSpecification());
+        final int seriesId = s.id();
+        this.recent.removeBy(seriesIdSpecification(seriesId));
+        this.recent.addAll(recentOfSeries);
+
+        // TODO Implement for upcoming and next
     }
 
     @Override
@@ -164,6 +173,14 @@ public class Schedule implements SeriesRepositoryListener {
             return this.elements.get(index);
         }
 
+        public boolean isEpisode(int index) {
+            return this.isEpisode(this.get(index));
+        }
+
+        public boolean isEpisode(HasDate element) {
+            return element != null && element.getClass() == Episode.class;
+        }
+
         public boolean add(Episode element) {
             Day day = new Day(element.airDate());
 
@@ -178,11 +195,31 @@ public class Schedule implements SeriesRepositoryListener {
                    (this.containsEpisodesOn(day) || this.elements.remove(day));
         }
 
+        public void removeBy(Specification<Episode> specification) {
+            this.removeAll(this.episodesBy(specification));
+        }
+
+        public List<Episode> episodesBy(Specification<Episode> specification) {
+            List<Episode> episodes = new LinkedList<Episode>();
+
+            for (HasDate element : this.elements) {
+                if (!this.isEpisode(element)) {continue;}
+
+                Episode episode = (Episode) element;
+
+                if (specification.isSatisfiedBy(episode)) {
+                    episodes.add(episode);
+                }
+            }
+
+            return episodes;
+        }
+
         public List<Episode> getEpisodes() {
             List<Episode> episodes = new ArrayList<Episode>();
 
             for (HasDate element : this.elements) {
-                if (element instanceof Episode) {
+                if (this.isEpisode(element)) {
                     episodes.add((Episode) element);
                 }
             }
@@ -274,5 +311,14 @@ public class Schedule implements SeriesRepositoryListener {
 
     private static Specification<Episode> upcomingSpecification() {
         return AirdateSpecification.after(Dates.now());
+    }
+
+    private static Specification<Episode> seriesIdSpecification(final int seriesId) {
+        return new AbstractSpecification<Episode>() {
+            @Override
+            public boolean isSatisfiedBy(Episode e) {
+                return e.seriesId() == seriesId;
+            }
+        };
     }
 }

@@ -26,6 +26,7 @@ import java.util.Collection;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Publisher;
 
+//TODO update(Episode episode)
 public interface SeriesRepository extends Publisher<SeriesRepositoryListener> {
     public void insert(Series series);
     public void update(Series series);
