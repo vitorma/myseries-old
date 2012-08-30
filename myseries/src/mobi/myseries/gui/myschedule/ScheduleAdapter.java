@@ -7,7 +7,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.Day;
-import mobi.myseries.application.schedule.Schedule.ScheduleElements;
+import mobi.myseries.application.schedule.ScheduleElements;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;

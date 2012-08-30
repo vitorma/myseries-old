@@ -21,25 +21,26 @@
 
 package mobi.myseries.application.schedule;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.repository.SeriesRepositoryListener;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.Dates;
-import mobi.myseries.shared.HasDate;
-import mobi.myseries.shared.SortedList;
+import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
-public class Schedule implements SeriesRepositoryListener {
+public class Schedule implements SeriesRepositoryListener, SeriesListener, EpisodeListener {
     private SeriesRepository seriesRepository;
+    private ExecutorService threadExecutor;
+
     private ScheduleElements recent;
     private ScheduleElements upcoming;
     private ScheduleElements next;
@@ -48,11 +49,14 @@ public class Schedule implements SeriesRepositoryListener {
         Validate.isNonNull(seriesRepository, "seriesRepository");
 
         this.seriesRepository = seriesRepository;
+        this.threadExecutor = Executors.newSingleThreadExecutor();
+
         this.recent = new ScheduleElements();
         this.upcoming = new ScheduleElements();
         this.next = new ScheduleElements();
 
         this.load();
+        this.registerForListening();
     }
 
     public ScheduleElements recent() {
@@ -66,6 +70,12 @@ public class Schedule implements SeriesRepositoryListener {
     public ScheduleElements next() {
         return this.next;
     }
+
+    private Collection<Series> seriesCollection() {
+        return this.seriesRepository.getAll();
+    }
+
+    //Loading-----------------------------------------------------------------------------------------------------------
 
     private void load() {
         this.extractRecentEpisodesFrom(this.seriesCollection());
@@ -107,203 +117,7 @@ public class Schedule implements SeriesRepositoryListener {
         }
     }
 
-    private Collection<Series> seriesCollection() {
-        return this.seriesRepository.getAll();
-    }
-
-    //Listening and notifying------------------------------------------------------------------------------------------
-
-    @Override
-    public void onInsert(Series s) {
-        // TODO Run asynchronously and notify specified listeners
-        this.extractRecentEpisodesFrom(s);
-        this.extractUpcomingEpisodesFrom(s);
-        this.extractNextEpisodeFrom(s);
-    }
-
-    @Override
-    public void onUpdate(Series s) {
-        // TODO Run asynchronously and notify specified listeners
-        List<Episode> recentOfSeries = s.episodesBy(recentSpecification());
-        final int seriesId = s.id();
-        this.recent.removeBy(seriesIdSpecification(seriesId));
-        this.recent.addAll(recentOfSeries);
-
-        // TODO Implement for upcoming and next
-    }
-
-    @Override
-    public void onUpdate(Collection<Series> s) {
-        // TODO Extract methods
-        
-    }
-
-    @Override
-    public void onDelete(Series s) {
-        // TODO Extract methods
-        
-    }
-
-    @Override
-    public void onDelete(Collection<Series> s) {
-        // TODO Extract methods
-        
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-
-    public static class ScheduleElements {
-        private static final Comparator<HasDate> DEFAULT_COMPARATOR = comparator(SortMode.OLDEST_FIRST);
-
-        private SortedList<HasDate> elements;
-
-        private ScheduleElements() {
-            this.elements = new SortedList<HasDate>(DEFAULT_COMPARATOR);
-        }
-
-        public int size() {
-            return this.elements.size();
-        }
-
-        public boolean contains(HasDate element) {
-            return this.elements.contains(element);
-        }
-
-        public HasDate get(int index) {
-            return this.elements.get(index);
-        }
-
-        public boolean isEpisode(int index) {
-            return this.isEpisode(this.get(index));
-        }
-
-        public boolean isEpisode(HasDate element) {
-            return element != null && element.getClass() == Episode.class;
-        }
-
-        public boolean add(Episode element) {
-            Day day = new Day(element.airDate());
-
-            return (this.contains(day) || this.elements.add(day)) &&
-                   (!this.contains(element) && this.elements.add(element));
-        }
-
-        public boolean remove(Episode element) {
-            Day day = new Day(element.getDate());
-
-            return (this.elements.remove(element)) &&
-                   (this.containsEpisodesOn(day) || this.elements.remove(day));
-        }
-
-        public void removeBy(Specification<Episode> specification) {
-            this.removeAll(this.episodesBy(specification));
-        }
-
-        public List<Episode> episodesBy(Specification<Episode> specification) {
-            List<Episode> episodes = new LinkedList<Episode>();
-
-            for (HasDate element : this.elements) {
-                if (!this.isEpisode(element)) {continue;}
-
-                Episode episode = (Episode) element;
-
-                if (specification.isSatisfiedBy(episode)) {
-                    episodes.add(episode);
-                }
-            }
-
-            return episodes;
-        }
-
-        public List<Episode> getEpisodes() {
-            List<Episode> episodes = new ArrayList<Episode>();
-
-            for (HasDate element : this.elements) {
-                if (this.isEpisode(element)) {
-                    episodes.add((Episode) element);
-                }
-            }
-
-            return episodes;
-        }
-
-        private void addAll(Collection<Episode> collection) {
-            for (Episode e : collection) {
-                this.add(e);
-            }
-        }
-
-        private void removeAll(Collection<Episode> collection) {
-            for (Episode e : collection) {
-                this.remove(e);
-            };
-        }
-
-        private boolean containsEpisodesOn(Day day) {
-            int i = this.elements.indexOf(day) + 1;
-
-            return i < this.size() && this.get(i).hasSameDateAs(day);
-        }
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-
-    private static Comparator<HasDate> comparator(int sortMode) {
-        switch(sortMode) {
-            case SortMode.OLDEST_FIRST:
-                return naturalComparator();
-            case SortMode.NEWEST_FIRST:
-                return reversedComparator();
-            default:
-                return null;
-        }
-    }
-
-    private static Comparator<HasDate> naturalComparator() {
-        return new Comparator<HasDate>() {
-            @Override
-            public int compare(HasDate left, HasDate right) {
-                int dateComparation = left.getDate().compareTo(right.getDate());
-
-                if (dateComparation != 0) {return dateComparation;}
-
-                return typeComparator().compare(left, right);
-            }
-        };
-    }
-
-    private static Comparator<HasDate> reversedComparator() {
-        return new Comparator<HasDate>() {
-            @Override
-            public int compare(HasDate left, HasDate right) {
-                int dateComparation = right.getDate().compareTo(left.getDate());
-
-                if (dateComparation != 0) {return dateComparation;}
-
-                return typeComparator().compare(left, right);
-            }
-        };
-    }
-
-    private static Comparator<HasDate> typeComparator() {
-        return new Comparator<HasDate>() {
-            private static final int TYPE_DAY = 0;
-            private static final int TYPE_EPISODE = 1;
-
-            @Override
-            public int compare(HasDate left, HasDate right) {
-                return typeOf(left) - typeOf(right);
-            }
-
-            private int typeOf(HasDate object) {
-                return object.getClass() == Day.class ?
-                       TYPE_DAY :
-                       TYPE_EPISODE;
-            }
-        };
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
+    //Episode specification---------------------------------------------------------------------------------------------
 
     private static Specification<Episode> recentSpecification() {
         return AirdateSpecification.before(Dates.now());
@@ -320,5 +134,119 @@ public class Schedule implements SeriesRepositoryListener {
                 return e.seriesId() == seriesId;
             }
         };
+    }
+
+    //Listening and notifying------------------------------------------------------------------------------------------
+
+    private void registerForListening() {
+        this.seriesRepository.register(this);
+
+        for (Series s : this.seriesCollection()) {
+            s.register(this);
+
+            for (Episode e : s.episodes()) {
+                e.register(this);
+            }
+        }
+    }
+
+    @Override
+    public void onInsert(Series s) {
+        // TODO Run asynchronously and notify specified listeners
+        this.extractRecentEpisodesFrom(s);
+        this.extractUpcomingEpisodesFrom(s);
+        this.extractNextEpisodeFrom(s);
+        
+    }
+
+    @Override
+    public void onUpdate(Series s) {
+        // TODO Run asynchronously and notify specified listeners
+        this.recent.removeBy(seriesIdSpecification(s.id()));
+        this.upcoming.removeBy(seriesIdSpecification(s.id()));
+        this.next.removeBy(seriesIdSpecification(s.id()));
+
+        this.extractRecentEpisodesFrom(s);
+        this.extractUpcomingEpisodesFrom(s);
+        this.extractNextEpisodeFrom(s);
+    }
+
+    @Override
+    public void onUpdate(Episode e) {}
+
+    @Override
+    public void onUpdate(Collection<Series> collection) {
+        // TODO Run asynchronously and notify specified listeners
+        for (Series s : collection) {
+            this.recent.removeBy(seriesIdSpecification(s.id()));
+            this.upcoming.removeBy(seriesIdSpecification(s.id()));
+            this.next.removeBy(seriesIdSpecification(s.id()));
+
+            this.extractRecentEpisodesFrom(s);
+            this.extractUpcomingEpisodesFrom(s);
+            this.extractNextEpisodeFrom(s);
+        }
+    }
+
+    @Override
+    public void onDelete(Series s) {
+        // TODO Run asynchronously and notify specified listeners
+        this.recent.removeBy(seriesIdSpecification(s.id()));
+        this.upcoming.removeBy(seriesIdSpecification(s.id()));
+        this.next.removeBy(seriesIdSpecification(s.id()));
+    }
+
+    @Override
+    public void onDelete(Collection<Series> collection) {
+        // TODO Run asynchronously and notify specified listeners
+        for (Series s : collection) {
+            this.recent.removeBy(seriesIdSpecification(s.id()));
+            this.upcoming.removeBy(seriesIdSpecification(s.id()));
+            this.next.removeBy(seriesIdSpecification(s.id()));
+        }
+    }
+
+    @Override
+    public void onChangeNumberOfSeenEpisodes(Series series) {}
+
+    @Override
+    public void onChangeNextEpisodeToSee(Series series) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void onChangeNextNonSpecialEpisodeToSee(Series series) {}
+
+    @Override
+    public void onMerge(Series series) {}
+
+    @Override
+    public void onMarkAsSeen(Episode episode) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void onMarkAsNotSeen(Episode episode) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void onMerge(Episode episode) {}
+
+    private static class RecentNotifier {
+        private ListenerSet<RecentListener> listeners;
+    }
+
+    private static interface EpisodeCollectionListener {
+        public void onRemove(Collection<Episode> e);
+        public void onAdd(Collection<Episode> e);
+    }
+
+    public static interface RecentListener extends EpisodeListener, EpisodeCollectionListener {}
+
+    public static interface UpcomingListener extends EpisodeListener, EpisodeCollectionListener {}
+
+    public static interface NextListener extends EpisodeCollectionListener {
+        public void onChange(int index, Episode e);
     }
 }

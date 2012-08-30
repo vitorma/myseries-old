@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
@@ -82,6 +83,25 @@ public class SeriesCache implements SeriesRepository {
             @Override
             public void run() {
                 SeriesCache.this.sourceRepository.update(series);
+            }
+        };
+    }
+
+    @Override
+    public void update(Episode episode) {
+        Validate.isNonNull(episode, "series");
+
+        if (!this.seriesSet.contains(episode)) {return;}
+
+        this.notifyThatWasUpdated(episode);
+        this.threadExecutor.execute(this.updateEpisodeInSourceRepository(episode));
+    }
+
+    private Runnable updateEpisodeInSourceRepository(final Episode episode) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                SeriesCache.this.sourceRepository.update(episode);
             }
         };
     }
@@ -201,6 +221,12 @@ public class SeriesCache implements SeriesRepository {
         }
     }
 
+    private void notifyThatWasUpdated(Episode e) {
+        for (SeriesRepositoryListener l : this.listeners) {
+            l.onUpdate(e);
+        }
+    }
+
     private void notifyThatWasUpdated(Collection<Series> s) {
         for (SeriesRepositoryListener l : this.listeners) {
             l.onUpdate(s);
@@ -230,6 +256,10 @@ public class SeriesCache implements SeriesRepository {
 
         private boolean contains(Series series) {
              return this.get(series.id()) != null;
+        }
+
+        private boolean contains(Episode e) {
+            return this.get(e.seriesId()).season(e.seasonNumber()).episode(e.number()) != null;
         }
 
         private boolean containsAll(Collection<Series> seriesCollection) {
