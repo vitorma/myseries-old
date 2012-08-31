@@ -1,3 +1,24 @@
+/*
+ *   ScheduleAdapter.java
+ *
+ *   Copyright 2012 MySeries Team.
+ *
+ *   This file is part of MySeries.
+ *
+ *   MySeries is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   MySeries is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
@@ -20,6 +41,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
@@ -119,6 +141,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
             viewHolder.seriesNameTextView = (TextView) view.findViewById(R.id.episodeSeriesTextView);
             viewHolder.episodeNumberTextView = (TextView) view.findViewById(R.id.episodeSeasonEpisodeTextView);
             viewHolder.seenMarkCheckBox = (CheckBox) view.findViewById(R.id.episodeIsViewedCheckBox);
+            viewHolder.seriesPosterImageView = (ImageView) view.findViewById(R.id.seriesPoster);
             view.setTag(viewHolder);
         } else {
             viewHolder = (EpisodeViewHolder) view.getTag();
@@ -129,6 +152,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
         viewHolder.seriesNameTextView.setText(series.name());
         viewHolder.episodeNumberTextView.setText(String.format(format, episode.seasonNumber(), episode.number()));
+        viewHolder.seriesPosterImageView.setImageBitmap(App.seriesPoster(series.id()));
         viewHolder.seenMarkCheckBox.setChecked(episode.wasSeen());
         viewHolder.seenMarkCheckBox.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
 
@@ -137,24 +161,29 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    public void setUpData() {
+    private void setUpData() {
         int sortMode = MyScheduleActivity.sortModeBy(this.context, this.scheduleMode);
 
         switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
-                this.items = SCHEDULE.recent();
+                this.items = SCHEDULE.recent().sortBy(sortMode);
                 SCHEDULE.registerAsRecentListener(this);
                 break;
             case ScheduleMode.NEXT:
-                this.items = SCHEDULE.next();
+                this.items = SCHEDULE.next().sortBy(sortMode);
                 SCHEDULE.registerAsNextListener(this);
                 break;
             case ScheduleMode.UPCOMING:
-                this.items = SCHEDULE.upcoming();
+                this.items = SCHEDULE.upcoming().sortBy(sortMode);
                 SCHEDULE.registerAsUpcomingListener(this);
                 break;
         };
 
+        this.notifyDataSetChanged();
+    }
+
+    public void sortBy(int sortMode) {
+        this.items.sortBy(sortMode);
         this.notifyDataSetChanged();
     }
 
@@ -167,6 +196,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     private static class EpisodeViewHolder {
         private TextView seriesNameTextView;
         private TextView episodeNumberTextView;
+        private ImageView seriesPosterImageView;
         private CheckBox seenMarkCheckBox;
 
         private OnClickListener seenMarkCheckBoxListener(final Episode episode) {

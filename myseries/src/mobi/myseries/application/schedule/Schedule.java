@@ -39,12 +39,29 @@ import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
-//FIXME Behavior of Series#nextToSee.
-//      Episodes with null airDate must be disregarded.
-//      It allways must return the oldest not seen episode.
-//      Special episodes will may be hidden.
-//      (How to get the next if the actual next is hidden? Currently, Series#nextToSee(false).)
-public class Schedule implements SeriesRepositoryListener, SeriesListener, EpisodeListener, SeasonListener {
+/*
+ * FIXME Handling null dates.
+ *
+ *       Currently, episodes with null date are not added to the schedule.
+ *       This approach is ok for the Recent and Upcomig modes but it does not work for the Next mode.
+ *       Once Series#nextToSee has a lenient behavior in case Episode#getDate return null (comparing episodes by their
+ *       numbers and by the numbers of their seasons), the next episode to see is allways added to the schedule.
+ *       When such situation occurs, the application breaks [rule: Validate#isNonNull(date)].
+ *
+ *           Behavior of Series#nextToSee.
+ *
+ *               Should episodes with null date be disregarded?
+ *               Should this method allways return the oldest not seen episode?
+ *               Special episodes will may be hidden.
+ *               How to get the next if the actual next is hidden? Currently, Series#nextToSee(false).
+ *
+ *           Showing null dates as UNNAVAILABLE DATE is an alternative for all schedule modes if the lenient behavior of
+ *           Series#nextToSee is the standard behavior.
+ *
+ *               What is the mode for special episodes with null date? Upcoming or Recent? 
+ */
+
+public class Schedule implements SeriesRepositoryListener, SeriesListener, SeasonListener, EpisodeListener {
     private SeriesRepository seriesRepository;
 
     private ScheduleElements recent;
@@ -163,15 +180,6 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Episo
             @Override
             public boolean isSatisfiedBy(Episode e) {
                 return e.seriesId() == seriesId;
-            }
-        };
-    }
-
-    private static Specification<Episode> seasonNumberSpecification(final int seasonNumber) {
-        return new AbstractSpecification<Episode>() {
-            @Override
-            public boolean isSatisfiedBy(Episode e) {
-                return e.seasonNumber() == seasonNumber;
             }
         };
     }

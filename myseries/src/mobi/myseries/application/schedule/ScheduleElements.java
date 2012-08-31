@@ -32,13 +32,17 @@ import mobi.myseries.shared.HasDate;
 import mobi.myseries.shared.SortedList;
 import mobi.myseries.shared.Specification;
 
+//TODO Validate
 public class ScheduleElements {
+    private static final int DEFAULT_SORT_MODE = SortMode.OLDEST_FIRST;
     private static final Comparator<HasDate> DEFAULT_COMPARATOR = comparator(SortMode.OLDEST_FIRST);
 
     private SortedList<HasDate> elements;
+    private int sortMode;
 
     public ScheduleElements() {
         this.elements = new SortedList<HasDate>(DEFAULT_COMPARATOR);
+        this.sortMode = DEFAULT_SORT_MODE;
     }
 
     public int size() {
@@ -59,30 +63,6 @@ public class ScheduleElements {
 
     public boolean isEpisode(HasDate element) {
         return element != null && element.getClass() == Episode.class;
-    }
-
-    public boolean add(Episode element) {
-        Day day = new Day(element.airDate());
-
-        return (this.contains(day) || this.elements.add(day)) &&
-               (!this.contains(element) && this.elements.add(element));
-    }
-
-    public boolean remove(Episode element) {
-        Day day = new Day(element.getDate());
-
-        return (this.elements.remove(element)) &&
-               (this.containsEpisodesOn(day) || this.elements.remove(day));
-    }
-
-    public void removeBy(Specification<Episode> specification) {
-        this.removeAll(this.episodesBy(specification));
-    }
-
-    public ScheduleElements copy() {
-        ScheduleElements copy = new ScheduleElements();
-        copy.elements.addAll(this.elements);
-        return copy;
     }
 
     public Episode firstEpisodeBy(Specification<Episode> specification) {
@@ -129,10 +109,24 @@ public class ScheduleElements {
         return episodes;
     }
 
+    public boolean add(Episode element) {
+        Day day = new Day(element.getDate());
+
+        return (this.contains(day) || this.elements.add(day)) &&
+               (!this.contains(element) && this.elements.add(element));
+    }
+
     public void addAll(Collection<Episode> collection) {
         for (Episode e : collection) {
             this.add(e);
         }
+    }
+
+    public boolean remove(Episode element) {
+        Day day = new Day(element.getDate());
+
+        return (this.elements.remove(element)) &&
+               (this.containsEpisodesOn(day) || this.elements.remove(day));
     }
 
     public List<Episode> removeAll(Collection<Episode> collection) {
@@ -145,6 +139,28 @@ public class ScheduleElements {
         };
 
         return removed;
+    }
+
+    public void removeBy(Specification<Episode> specification) {
+        this.removeAll(this.episodesBy(specification));
+    }
+
+    public ScheduleElements copy() {
+        ScheduleElements copy = new ScheduleElements();
+        copy.elements.addAll(this.elements);
+        return copy;
+    }
+
+    public ScheduleElements sortBy(int sortMode) {
+        if (this.sortMode != sortMode) {
+            this.sortMode = sortMode;
+            SortedList<HasDate> reversed = new SortedList<HasDate>(comparator(this.sortMode));
+
+            reversed.addAll(this.elements);
+            this.elements = reversed;
+        }
+
+        return this;
     }
 
     private boolean containsEpisodesOn(Day day) {
