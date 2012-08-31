@@ -121,14 +121,14 @@ public abstract class ScheduleFragment extends SherlockListFragment {
                 @Override
                 public void onClick() {
                     MyScheduleActivity.saveSortMode(context, scheduleMode, SortMode.NEWEST_FIRST);
-                    adapter.reload();
+                    adapter.setUpData();
                 }
             })
             .setOldestFirstOptionListener(new OptionListener() {
                 @Override
                 public void onClick() {
                     MyScheduleActivity.saveSortMode(context, scheduleMode, SortMode.OLDEST_FIRST);
-                    adapter.reload();
+                    adapter.setUpData();
                 }
             })
             .build()

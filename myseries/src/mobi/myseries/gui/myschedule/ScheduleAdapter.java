@@ -1,16 +1,17 @@
 package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
+import java.util.Collection;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.Day;
+import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.schedule.ScheduleElements;
+import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Dates;
 import android.content.Context;
@@ -21,33 +22,21 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
+public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     private static final int VIEW_TYPE_DAY = 0;
     private static final int VIEW_TYPE_EPISODE = 1;
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final Schedule SCHEDULE = App.schedule();
 
     private Context context;
     private int scheduleMode;
     private ScheduleElements items;
-    private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
-        @Override
-        public void onFollowing(Series followedSeries) {
-            ScheduleAdapter.this.reload();
-        }
-
-        @Override
-        public void onStopFollowing(Series unfollowedSeries) {
-            ScheduleAdapter.this.reload();
-        }
-    };
 
     public ScheduleAdapter(Context context, int scheduleMode) {
         this.context = context;
         this.scheduleMode = scheduleMode;
 
-        App.registerSeriesFollowingListener(this.seriesFollowingListener);
-
-        this.reload();
+        this.setUpData();
     }
 
     @Override
@@ -148,46 +137,25 @@ public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    public void reload() {
+    public void setUpData() {
         int sortMode = MyScheduleActivity.sortModeBy(this.context, this.scheduleMode);
-        ScheduleElements scheduleDays = null;
 
-        switch(scheduleMode) {
+        switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
-                scheduleDays = App.schedule().recent();
+                this.items = SCHEDULE.recent();
+                SCHEDULE.registerAsRecentListener(this);
                 break;
             case ScheduleMode.NEXT:
-                scheduleDays = App.schedule().next();
+                this.items = SCHEDULE.next();
+                SCHEDULE.registerAsNextListener(this);
                 break;
             case ScheduleMode.UPCOMING:
-                scheduleDays = App.schedule().upcoming();
+                this.items = SCHEDULE.upcoming();
+                SCHEDULE.registerAsUpcomingListener(this);
                 break;
-            default:
-                scheduleDays = null;
         };
 
-        this.items = scheduleDays;
-
-//        for (Episode e : scheduleDays.getEpisodes()) {
-//            e.register(this);
-//        }
-
         this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMarkAsSeen(Episode e) {
-        this.reload();
-    }
-
-    @Override
-    public void onMarkAsNotSeen(Episode e) {
-        this.reload();
-    }
-
-    @Override
-    public void onMerge(Episode e) {
-        //It's not my problem
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -213,5 +181,29 @@ public class ScheduleAdapter extends BaseAdapter implements EpisodeListener {
                 }
             };
         }
+    }
+
+    @Override
+    public void onAdd(Episode e) {
+        this.items.add(e);
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onAdd(Collection<Episode> c) {
+        this.items.addAll(c);
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRemove(Episode e) {
+        this.items.remove(e);
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRemove(Collection<Episode> c) {
+        this.items.removeAll(c);
+        this.notifyDataSetChanged();
     }
 }

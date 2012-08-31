@@ -44,6 +44,7 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
 
     private boolean seenMark;
     private ListenerSet<EpisodeListener> listeners;
+    private boolean beingMarkedBySeason;
 
     private Episode(int id, int seriesId, int number, int seasonNumber) {
         Validate.isTrue(id >= 0, "id should be non-negative");
@@ -111,6 +112,10 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
         return this.seenMark;
     }
 
+    public boolean wasNotSeen() {
+        return !this.seenMark;
+    }
+
     public void markAsSeen() {
         if (!this.seenMark) {
             this.seenMark = true;
@@ -123,6 +128,10 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
             this.seenMark = false;
             this.notifyThatWasMarkedAsNotSeen();
         }
+    }
+
+    void setBeingMarkedBySeason(boolean b) {
+        this.beingMarkedBySeason = b;
     }
 
     public void mergeWith(Episode other) {
@@ -155,13 +164,21 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
 
     private void notifyThatWasMarkedAsSeen() {
         for (EpisodeListener listener : this.listeners) {
-            listener.onMarkAsSeen(this);
+            if (this.beingMarkedBySeason) {
+                listener.onMarkAsSeenBySeason(this);
+            } else {
+                listener.onMarkAsSeen(this);
+            }
         }
     }
 
     private void notifyThatWasMarkedAsNotSeen() {
         for (EpisodeListener listener : this.listeners) {
-            listener.onMarkAsNotSeen(this);
+            if (this.beingMarkedBySeason) {
+                listener.onMarkAsNotSeenBySeason(this);
+            } else {
+                listener.onMarkAsNotSeen(this);
+            }
         }
     }
 

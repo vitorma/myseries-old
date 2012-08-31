@@ -37,37 +37,19 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
         }
     }
 
-    public int seasonNumber(int groupPosition) {
-        int ascPosition = this.series.hasSpecialEpisodes() ? groupPosition : groupPosition + 1;
-
-        int descPosition = this.series.hasSpecialEpisodes() ? this.series.seasons().numberOfSeasons() - ascPosition - 1
-                                                            : this.series.seasons().numberOfSeasons() - ascPosition + 1;
-
-        return descPosition;
-    }
-
-    public int episodeNumber(int childPosition, int numberOfEpisodesOfItsSeason) {
-        int ascPosition = childPosition + 1;
-        int descPosition = numberOfEpisodesOfItsSeason - ascPosition + 1;
-        return descPosition;
+    private int descendingPosition(int position, int numberOfPositions) {
+        return numberOfPositions - 1 - position;
     }
 
     public Season season(int groupPosition) {
-        return this.series.season(this.seasonNumber(groupPosition));
+        int numberOfSeasons = this.series.seasons().numberOfSeasons();
+        return this.series.seasons().seasonAt(this.descendingPosition(groupPosition, numberOfSeasons));
     }
 
-    private Episode episode(int groupPosition, int childPosition) {
+    public Episode episode(int groupPosition, int childPosition) {
         Season season = this.season(groupPosition);
-        return season.episode(this.episodeNumber(childPosition, season.numberOfEpisodes()));
+        return season.episodeAt(this.descendingPosition(childPosition, season.numberOfEpisodes()));
     }
-
-//    private int groupPosition(Episode episode) {
-//        return this.series.hasSpecialEpisodes() ? episode.seasonNumber() : episode.seasonNumber() - 1;
-//    }
-//
-//    private int childPosition(Episode episode) {
-//        return episode.number() - 1;
-//    }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
@@ -209,6 +191,16 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
 
     @Override
     public void onMarkAsNotSeen(Episode episode) {
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMarkAsSeenBySeason(Episode episode) {
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMarkAsNotSeenBySeason(Episode episode) {
         this.notifyDataSetChanged();
     }
 

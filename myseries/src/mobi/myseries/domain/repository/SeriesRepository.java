@@ -30,8 +30,9 @@ import mobi.myseries.shared.Publisher;
 public interface SeriesRepository extends Publisher<SeriesRepositoryListener> {
     public void insert(Series series);
     public void update(Series series);
-    public void update(Episode e);
-    public void updateAll(Collection<Series> seriesCollection);
+    public void updateAll(Collection<Series> series);
+    public void update(Episode episode);
+    public void updateAllEpisodes(Collection<Episode> episodes);
     public void delete(Series series);
     public void deleteAll(Collection<Series> seriesCollection);
     public void clear();

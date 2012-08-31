@@ -92,8 +92,6 @@ public class SeriesCache implements SeriesRepository {
         Validate.isNonNull(episode, "series");
 
         if (!this.seriesSet.contains(episode)) {return;}
-
-        this.notifyThatWasUpdated(episode);
         this.threadExecutor.execute(this.updateEpisodeInSourceRepository(episode));
     }
 
@@ -121,6 +119,23 @@ public class SeriesCache implements SeriesRepository {
             @Override
             public void run() {
                 SeriesCache.this.sourceRepository.updateAll(seriesCollection);
+            }
+        };
+    }
+
+    @Override
+    public void updateAllEpisodes(Collection<Episode> episodeCollection) {
+        Validate.isNonNull(episodeCollection, "episodeCollection");
+
+        if (!this.seriesSet.containsAllEpisodes(episodeCollection)) {return;}
+        this.threadExecutor.execute(this.updateAllEpisodesInSourceRepository(episodeCollection));
+    }
+
+    private Runnable updateAllEpisodesInSourceRepository(final Collection<Episode> episodeCollection) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                SeriesCache.this.sourceRepository.updateAllEpisodes(episodeCollection);
             }
         };
     }
@@ -221,12 +236,6 @@ public class SeriesCache implements SeriesRepository {
         }
     }
 
-    private void notifyThatWasUpdated(Episode e) {
-        for (SeriesRepositoryListener l : this.listeners) {
-            l.onUpdate(e);
-        }
-    }
-
     private void notifyThatWasUpdated(Collection<Series> s) {
         for (SeriesRepositoryListener l : this.listeners) {
             l.onUpdate(s);
@@ -265,6 +274,16 @@ public class SeriesCache implements SeriesRepository {
         private boolean containsAll(Collection<Series> seriesCollection) {
             for (Series s : seriesCollection) {
                 if (!this.contains(s)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private boolean containsAllEpisodes(Collection<Episode> episodeCollection) {
+            for (Episode e : episodeCollection) {
+                if (!this.contains(e)) {
                     return false;
                 }
             }

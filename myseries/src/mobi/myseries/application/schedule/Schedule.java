@@ -22,11 +22,12 @@
 package mobi.myseries.application.schedule;
 
 import java.util.Collection;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
+import mobi.myseries.domain.model.Season;
+import mobi.myseries.domain.model.SeasonListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.domain.repository.SeriesRepository;
@@ -34,41 +35,53 @@ import mobi.myseries.domain.repository.SeriesRepositoryListener;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
-public class Schedule implements SeriesRepositoryListener, SeriesListener, EpisodeListener {
+//FIXME Behavior of Series#nextToSee.
+//      Episodes with null airDate must be disregarded.
+//      It allways must return the oldest not seen episode.
+//      Special episodes will may be hidden.
+//      (How to get the next if the actual next is hidden? Currently, Series#nextToSee(false).)
+public class Schedule implements SeriesRepositoryListener, SeriesListener, EpisodeListener, SeasonListener {
     private SeriesRepository seriesRepository;
-    private ExecutorService threadExecutor;
 
     private ScheduleElements recent;
     private ScheduleElements upcoming;
     private ScheduleElements next;
 
+    private Notifier recentListenerNotifier;
+    private Notifier upcomingListenerNotifier;
+    private Notifier nextListenerNotifier;
+
     public Schedule(SeriesRepository seriesRepository) {
         Validate.isNonNull(seriesRepository, "seriesRepository");
 
         this.seriesRepository = seriesRepository;
-        this.threadExecutor = Executors.newSingleThreadExecutor();
 
         this.recent = new ScheduleElements();
         this.upcoming = new ScheduleElements();
         this.next = new ScheduleElements();
 
+        this.recentListenerNotifier = new Notifier();
+        this.upcomingListenerNotifier = new Notifier();
+        this.nextListenerNotifier = new Notifier();
+
         this.load();
-        this.registerForListening();
+        this.registerItselfForListening();
     }
 
     public ScheduleElements recent() {
-        return this.recent;
+        return this.recent.copy();
     }
 
     public ScheduleElements upcoming() {
-        return this.upcoming;
+        return this.upcoming.copy();
     }
 
     public ScheduleElements next() {
-        return this.next;
+        return this.next.copy();
     }
 
     private Collection<Series> seriesCollection() {
@@ -90,7 +103,8 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Episo
     }
 
     private void extractRecentEpisodesFrom(Series s) {
-        this.recent.addAll(s.episodesBy(recentSpecification()));
+        List<Episode> r = s.episodesBy(recentNotSeenSpecification());
+        this.recent.addAll(r);
     }
 
     private void extractUpcomingEpisodesFrom(Collection<Series> collection) {
@@ -100,7 +114,7 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Episo
     }
 
     private void extractUpcomingEpisodesFrom(Series s) {
-        this.upcoming.addAll(s.episodesBy(upcomingSpecification()));
+        this.upcoming.addAll(s.episodesBy(upcomingNotSeenSpecification()));
     }
 
     private void extractNextEpisodesFrom(Collection<Series> collection) {
@@ -119,12 +133,29 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Episo
 
     //Episode specification---------------------------------------------------------------------------------------------
 
+    private static Specification<Episode> recentNotSeenSpecification() {
+        return recentSpecification().and(notSeenSpecification());
+    }
+
+    private static Specification<Episode> upcomingNotSeenSpecification() {
+        return upcomingSpecification().and(notSeenSpecification());
+    }
+
     private static Specification<Episode> recentSpecification() {
         return AirdateSpecification.before(Dates.now());
     }
 
     private static Specification<Episode> upcomingSpecification() {
         return AirdateSpecification.after(Dates.now());
+    }
+
+    private static Specification<Episode> notSeenSpecification() {
+        return new AbstractSpecification<Episode>() {
+            @Override
+            public boolean isSatisfiedBy(Episode e) {
+                return e.wasNotSeen();
+            }
+        };
     }
 
     private static Specification<Episode> seriesIdSpecification(final int seriesId) {
@@ -136,117 +167,258 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Episo
         };
     }
 
-    //Listening and notifying------------------------------------------------------------------------------------------
+    private static Specification<Episode> seasonNumberSpecification(final int seasonNumber) {
+        return new AbstractSpecification<Episode>() {
+            @Override
+            public boolean isSatisfiedBy(Episode e) {
+                return e.seasonNumber() == seasonNumber;
+            }
+        };
+    }
 
-    private void registerForListening() {
+    //Registering its listeners and itself as listener-----------------------------------------------------------------
+
+    public boolean registerAsRecentListener(ScheduleListener listener) {
+        return this.recentListenerNotifier.register(listener);
+    }
+
+    public boolean registerAsUpcomingListener(ScheduleListener listener) {
+        return this.upcomingListenerNotifier.register(listener);
+    }
+
+    public boolean registerAsNextListener(ScheduleListener listener) {
+        return this.nextListenerNotifier.register(listener);
+    }
+
+    private void registerItselfForListening() {
         this.seriesRepository.register(this);
 
-        for (Series s : this.seriesCollection()) {
-            s.register(this);
+        for (Series series : this.seriesCollection()) {
+            series.register(this);
 
-            for (Episode e : s.episodes()) {
-                e.register(this);
+            for (Season season : series.seasons().seasons()) {
+                season.register(this);
+            }
+
+            for (Episode episode : series.episodes()) {
+                episode.register(this);
             }
         }
     }
 
-    @Override
-    public void onInsert(Series s) {
-        // TODO Run asynchronously and notify specified listeners
-        this.extractRecentEpisodesFrom(s);
-        this.extractUpcomingEpisodesFrom(s);
-        this.extractNextEpisodeFrom(s);
-        
-    }
+    //TODO Listening SeriesRepository-----------------------------------------------------------------------------------
 
     @Override
-    public void onUpdate(Series s) {
-        // TODO Run asynchronously and notify specified listeners
-        this.recent.removeBy(seriesIdSpecification(s.id()));
-        this.upcoming.removeBy(seriesIdSpecification(s.id()));
-        this.next.removeBy(seriesIdSpecification(s.id()));
+    public void onInsert(Series series) {
+        List<Episode> recentEpisodes = series.episodesBy(recentNotSeenSpecification());
+        List<Episode> upcomingEpisodes = series.episodesBy(upcomingNotSeenSpecification());
+        Episode nextToSee = series.nextEpisodeToSee(true);
 
-        this.extractRecentEpisodesFrom(s);
-        this.extractUpcomingEpisodesFrom(s);
-        this.extractNextEpisodeFrom(s);
-    }
+        if (!recentEpisodes.isEmpty()) {
+            this.recent.addAll(recentEpisodes);
+            this.recentListenerNotifier.notifyThatWereAdded(recentEpisodes);
+        }
 
-    @Override
-    public void onUpdate(Episode e) {}
+        if (!upcomingEpisodes.isEmpty()) {
+            this.upcoming.addAll(upcomingEpisodes);
+            this.upcomingListenerNotifier.notifyThatWereAdded(upcomingEpisodes);
+        }
 
-    @Override
-    public void onUpdate(Collection<Series> collection) {
-        // TODO Run asynchronously and notify specified listeners
-        for (Series s : collection) {
-            this.recent.removeBy(seriesIdSpecification(s.id()));
-            this.upcoming.removeBy(seriesIdSpecification(s.id()));
-            this.next.removeBy(seriesIdSpecification(s.id()));
-
-            this.extractRecentEpisodesFrom(s);
-            this.extractUpcomingEpisodesFrom(s);
-            this.extractNextEpisodeFrom(s);
+        if (nextToSee != null) {
+            this.next.add(nextToSee);
+            this.nextListenerNotifier.notifyThatWasAdded(nextToSee);
         }
     }
 
     @Override
-    public void onDelete(Series s) {
-        // TODO Run asynchronously and notify specified listeners
-        this.recent.removeBy(seriesIdSpecification(s.id()));
-        this.upcoming.removeBy(seriesIdSpecification(s.id()));
-        this.next.removeBy(seriesIdSpecification(s.id()));
+    public void onUpdate(Series series) {
+        // TODO Implement me after implement update(series)
+    }
+
+    @Override
+    public void onUpdate(Collection<Series> collection) {
+        // TODO Implement me after implement update(collection)
+    }
+
+    @Override
+    public void onDelete(Series series) {
+        List<Episode> recentEpisodes = series.episodesBy(recentNotSeenSpecification());
+        List<Episode> upcomingEpisodes = series.episodesBy(upcomingNotSeenSpecification());
+        Episode nextToSee = series.nextEpisodeToSee(true);
+
+        if (!recentEpisodes.isEmpty()) {
+            this.recent.removeAll(recentEpisodes);
+            this.recentListenerNotifier.notifyThatWereRemoved(recentEpisodes);
+        }
+
+        if (!upcomingEpisodes.isEmpty()) {
+            this.upcoming.removeAll(upcomingEpisodes);
+            this.upcomingListenerNotifier.notifyThatWereRemoved(upcomingEpisodes);
+        }
+
+        if (nextToSee != null) {
+            this.next.remove(nextToSee);
+            this.nextListenerNotifier.notifyThatWasRemoved(nextToSee);
+        }
     }
 
     @Override
     public void onDelete(Collection<Series> collection) {
-        // TODO Run asynchronously and notify specified listeners
-        for (Series s : collection) {
-            this.recent.removeBy(seriesIdSpecification(s.id()));
-            this.upcoming.removeBy(seriesIdSpecification(s.id()));
-            this.next.removeBy(seriesIdSpecification(s.id()));
-        }
+        // TODO Implement me after implement stopFollowing(collection)
     }
 
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Series series) {}
+    //Listening Series--------------------------------------------------------------------------------------------------
 
     @Override
     public void onChangeNextEpisodeToSee(Series series) {
-        // TODO Auto-generated method stub
+        Episode oldNextToSee = this.next.firstEpisodeBy(seriesIdSpecification(series.id()));
+
+        if (oldNextToSee != null) {
+            this.next.remove(oldNextToSee);
+            this.nextListenerNotifier.notifyThatWasRemoved(oldNextToSee);
+        }
+
+        Episode newNextToSee = series.nextEpisodeToSee(true);
+
+        if (newNextToSee != null) {
+            this.next.add(newNextToSee);
+            this.nextListenerNotifier.notifyThatWasAdded(newNextToSee);
+        }
     }
 
     @Override
     public void onChangeNextNonSpecialEpisodeToSee(Series series) {}
 
     @Override
-    public void onMerge(Series series) {}
+    public void onChangeNumberOfSeenEpisodes(Series series) {}
+
+    //Listening Season--------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onMarkAsSeen(Season season) {
+        List<Episode> recentEpisodes = season.episodesBy(recentSpecification());
+        List<Episode> upcomingEpisodes = season.episodesBy(upcomingSpecification());
+
+        if (!recentEpisodes.isEmpty()) {
+            this.recent.removeAll(recentEpisodes);
+            this.recentListenerNotifier.notifyThatWereRemoved(recentEpisodes);
+        }
+
+        if (!upcomingEpisodes.isEmpty()) {
+            this.upcoming.removeAll(upcomingEpisodes);
+            this.upcomingListenerNotifier.notifyThatWereRemoved(upcomingEpisodes);
+        }
+    }
+
+    @Override
+    public void onMarkAsNotSeen(Season season) {
+        List<Episode> recentEpisodes = season.episodesBy(recentSpecification());
+        List<Episode> upcomingEpisodes = season.episodesBy(upcomingSpecification());
+
+        if (!recentEpisodes.isEmpty()) {
+            this.recent.addAll(recentEpisodes);
+            this.recentListenerNotifier.notifyThatWereAdded(recentEpisodes);
+        }
+
+        if (!upcomingEpisodes.isEmpty()) {
+            this.upcoming.addAll(upcomingEpisodes);
+            this.upcomingListenerNotifier.notifyThatWereAdded(upcomingEpisodes);
+        }
+    }
+
+    @Override
+    public void onChangeNumberOfSeenEpisodes(Season season) {}
+
+    @Override
+    public void onChangeNextEpisodeToSee(Season season) {}
+
+    //Listening Episode-------------------------------------------------------------------------------------------------
 
     @Override
     public void onMarkAsSeen(Episode episode) {
-        // TODO Auto-generated method stub
+        if (recentSpecification().isSatisfiedBy(episode)) {
+            this.recent.remove(episode);
+            this.recentListenerNotifier.notifyThatWasRemoved(episode);
+        }
+
+        if (upcomingSpecification().isSatisfiedBy(episode)) {
+            this.upcoming.remove(episode);
+            this.upcomingListenerNotifier.notifyThatWasRemoved(episode);
+        }
     }
 
     @Override
     public void onMarkAsNotSeen(Episode episode) {
-        // TODO Auto-generated method stub
+        if (recentSpecification().isSatisfiedBy(episode)) {
+            this.recent.add(episode);
+            this.recentListenerNotifier.notifyThatWasAdded(episode);
+            return;
+        }
+
+        if (upcomingSpecification().isSatisfiedBy(episode)) {
+            this.upcoming.add(episode);
+            this.upcomingListenerNotifier.notifyThatWasAdded(episode);
+        }
     }
+
+    @Override
+    public void onMarkAsSeenBySeason(Episode episode) {}
+
+    @Override
+    public void onMarkAsNotSeenBySeason(Episode episode) {}
+
+    //Notifier----------------------------------------------------------------------------------------------------------
+
+    private static class Notifier implements Publisher<ScheduleListener> {
+        private ListenerSet<ScheduleListener> listeners;
+
+        private Notifier() {
+            this.listeners = new ListenerSet<ScheduleListener>();
+        }
+
+        private void notifyThatWasAdded(Episode episode) {
+            for (ScheduleListener listener : this.listeners) {
+                listener.onAdd(episode);
+            }
+        }
+
+        private void notifyThatWereAdded(Collection<Episode> episodes) {
+            for (ScheduleListener listener : this.listeners) {
+                listener.onAdd(episodes);
+            }
+        }
+
+        private void notifyThatWasRemoved(Episode episode) {
+            for (ScheduleListener listener : this.listeners) {
+                listener.onRemove(episode);
+            }
+        }
+
+        private void notifyThatWereRemoved(Collection<Episode> episodes) {
+            for (ScheduleListener listener : this.listeners) {
+                listener.onRemove(episodes);
+            }
+        }
+
+        @Override
+        public boolean register(ScheduleListener listener) {
+            return this.listeners.register(listener);
+        }
+
+        @Override
+        public boolean deregister(ScheduleListener listener) {
+            return this.listeners.deregister(listener);
+        }
+    }
+
+    //TODO Delete me ASAP-----------------------------------------------------------------------------------------------
 
     @Override
     public void onMerge(Episode episode) {}
 
-    private static class RecentNotifier {
-        private ListenerSet<RecentListener> listeners;
-    }
+    @Override
+    public void onMerge(Series series) {}
 
-    private static interface EpisodeCollectionListener {
-        public void onRemove(Collection<Episode> e);
-        public void onAdd(Collection<Episode> e);
-    }
-
-    public static interface RecentListener extends EpisodeListener, EpisodeCollectionListener {}
-
-    public static interface UpcomingListener extends EpisodeListener, EpisodeCollectionListener {}
-
-    public static interface NextListener extends EpisodeCollectionListener {
-        public void onChange(int index, Episode e);
-    }
+    @Override
+    public void onMerge(Season season) {}
 }

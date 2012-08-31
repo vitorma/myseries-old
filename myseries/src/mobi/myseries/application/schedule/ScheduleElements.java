@@ -1,3 +1,24 @@
+/*
+ *   ScheduleElements.java
+ *
+ *   Copyright 2012 MySeries Team.
+ *
+ *   This file is part of MySeries.
+ *
+ *   MySeries is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   MySeries is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package mobi.myseries.application.schedule;
 
 import java.util.ArrayList;
@@ -58,6 +79,28 @@ public class ScheduleElements {
         this.removeAll(this.episodesBy(specification));
     }
 
+    public ScheduleElements copy() {
+        ScheduleElements copy = new ScheduleElements();
+        copy.elements.addAll(this.elements);
+        return copy;
+    }
+
+    public Episode firstEpisodeBy(Specification<Episode> specification) {
+        for (HasDate element : this.elements) {
+            if (this.isEpisode(element)) {
+                if (!this.isEpisode(element)) {continue;}
+
+                Episode episode = (Episode) element;
+
+                if (specification.isSatisfiedBy(episode)) {
+                    return episode;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public List<Episode> episodesBy(Specification<Episode> specification) {
         List<Episode> episodes = new LinkedList<Episode>();
 
@@ -92,10 +135,16 @@ public class ScheduleElements {
         }
     }
 
-    public void removeAll(Collection<Episode> collection) {
+    public List<Episode> removeAll(Collection<Episode> collection) {
+        List<Episode> removed = new LinkedList<Episode>();
+
         for (Episode e : collection) {
-            this.remove(e);
+            if (this.remove(e)) {
+                removed.add(e);
+            }
         };
+
+        return removed;
     }
 
     private boolean containsEpisodesOn(Day day) {

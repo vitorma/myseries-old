@@ -203,6 +203,21 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     @Override
+    public void updateAllEpisodes(Collection<Episode> episodeCollection) {
+        Validate.allNonNull(episodeCollection, "episodeCollection");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        this.updateAllEpisodes(episodeCollection, db);
+        db.close();
+    }
+
+    private void updateAllEpisodes(Collection<Episode> episodeCollection, SQLiteDatabase db) {
+        for (Episode episode : episodeCollection) {
+            this.update(episode, db);
+        }
+    }
+
+    @Override
     public void delete(Series series) {
         Validate.isNonNull(series, "series");
 
