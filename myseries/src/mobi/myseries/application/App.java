@@ -40,10 +40,17 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         environment = Environment.newEnvironment(this);
+
         searchService = new SearchSeriesService(environment.theTVDB());
         imageLoadService = new ImageloaderService();
-        schedule = new Schedule(environment.repository());
+        followSeriesService = new FollowSeriesService(
+                environment.theTVDB(),
+                environment.repository(),
+                environment.localization(),
+                environment.imageProvider());
+        schedule = new Schedule(environment.repository(), followSeriesService);
     }
 
     public static Environment environment() {
@@ -75,13 +82,6 @@ public class App extends Application {
     // Follow Series
 
     private static FollowSeriesService followSeriesService() {
-        if (followSeriesService == null) {
-            followSeriesService = new FollowSeriesService(environment.theTVDB(),
-                                                          environment.repository(),
-                                                          environment.localization(),
-                                                          environment.imageProvider());
-        }
-
         return followSeriesService;
     }
 
@@ -137,10 +137,6 @@ public class App extends Application {
     public static Schedule schedule() {
         return schedule;
     }
-
-//    public static List<Episode> scheduledEpisodes(int scheduleMode, int sortMode) {
-//        return schedule.episodes(scheduleMode, sortMode);
-//    }
 
     /* LOCALIZATION */
 

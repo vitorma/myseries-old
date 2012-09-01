@@ -28,7 +28,6 @@ import java.util.concurrent.Executors;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
 import android.util.SparseArray;
 
@@ -36,7 +35,6 @@ public class SeriesCache implements SeriesRepository {
     private SeriesRepository sourceRepository;
     private SeriesSet seriesSet;
     private ExecutorService threadExecutor;
-    private ListenerSet<SeriesRepositoryListener> listeners;
 
     public SeriesCache(SeriesRepository sourceRepository) {
         Validate.isNonNull(sourceRepository, "sourceRepository");
@@ -44,7 +42,6 @@ public class SeriesCache implements SeriesRepository {
         this.sourceRepository = sourceRepository;
         this.seriesSet = new SeriesSet().includingAll(this.sourceRepository.getAll());
         this.threadExecutor = Executors.newSingleThreadExecutor();
-        this.listeners = new ListenerSet<SeriesRepositoryListener>();
     }
 
     @Override
@@ -54,7 +51,6 @@ public class SeriesCache implements SeriesRepository {
         if (this.seriesSet.contains(series)) {return;}
 
         this.seriesSet.including(series);
-        this.notifyThatWasInserted(series);
         this.threadExecutor.execute(this.insertSeriesInSourceRepository(series));
     }
 
@@ -74,7 +70,6 @@ public class SeriesCache implements SeriesRepository {
         if (!this.seriesSet.contains(series)) {return;}
 
         this.seriesSet.excluding(series).including(series);
-        this.notifyThatWasUpdated(series);
         this.threadExecutor.execute(this.updateSeriesInSourceRepository(series));
     }
 
@@ -110,7 +105,6 @@ public class SeriesCache implements SeriesRepository {
 
         if (!this.seriesSet.containsAll(seriesCollection)) {return;}
         this.seriesSet.excludingAll(seriesCollection).includingAll(seriesCollection);
-        this.notifyThatWasUpdated(seriesCollection);
         this.threadExecutor.execute(this.updateAllSeriesInSourceRepository(seriesCollection));
     }
 
@@ -147,7 +141,6 @@ public class SeriesCache implements SeriesRepository {
         if (!this.seriesSet.contains(series)) {return;}
 
         this.seriesSet.excluding(series);
-        this.notifyThatWasDeleted(series);
         this.threadExecutor.execute(this.deleteSeriesFromSourceRepository(series));
     }
 
@@ -167,7 +160,6 @@ public class SeriesCache implements SeriesRepository {
         if (!this.seriesSet.containsAll(seriesCollection)) {return;}
 
         this.seriesSet.excludingAll(seriesCollection);
-        this.notifyThatWasDeleted(seriesCollection);
         this.threadExecutor.execute(this.deleteAllSeriesFromSourceRepository(seriesCollection));
     }
 
@@ -210,48 +202,6 @@ public class SeriesCache implements SeriesRepository {
     @Override
     public Collection<Series> getAll() {
         return this.seriesSet.all();
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean register(SeriesRepositoryListener listener) {
-        return this.listeners.register(listener);
-    }
-
-    @Override
-    public boolean deregister(SeriesRepositoryListener listener) {
-        return this.listeners.deregister(listener);
-    }
-
-    private void notifyThatWasInserted(Series s) {
-        for (SeriesRepositoryListener l : this.listeners) {
-            l.onInsert(s);
-        }
-    }
-
-    private void notifyThatWasUpdated(Series s) {
-        for (SeriesRepositoryListener l : this.listeners) {
-            l.onUpdate(s);
-        }
-    }
-
-    private void notifyThatWasUpdated(Collection<Series> s) {
-        for (SeriesRepositoryListener l : this.listeners) {
-            l.onUpdate(s);
-        }
-    }
-
-    private void notifyThatWasDeleted(Series s) {
-        for (SeriesRepositoryListener l : this.listeners) {
-            l.onDelete(s);
-        }
-    }
-
-    private void notifyThatWasDeleted(Collection<Series> s) {
-        for (SeriesRepositoryListener l : this.listeners) {
-            l.onDelete(s);
-        }
     }
 
     //------------------------------------------------------------------------------------------------------------------

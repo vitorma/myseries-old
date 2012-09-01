@@ -24,6 +24,8 @@ package mobi.myseries.application.schedule;
 import java.util.Collection;
 import java.util.List;
 
+import mobi.myseries.application.FollowSeriesService;
+import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Season;
@@ -31,7 +33,6 @@ import mobi.myseries.domain.model.SeasonListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.domain.repository.SeriesRepository;
-import mobi.myseries.domain.repository.SeriesRepositoryListener;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.ListenerSet;
@@ -61,8 +62,9 @@ import mobi.myseries.shared.Validate;
  *               What is the mode for special episodes with null date? Upcoming or Recent? 
  */
 
-public class Schedule implements SeriesRepositoryListener, SeriesListener, SeasonListener, EpisodeListener {
+public class Schedule implements SeriesFollowingListener, SeriesListener, SeasonListener, EpisodeListener {
     private SeriesRepository seriesRepository;
+    private FollowSeriesService followSeriesService;
 
     private ScheduleElements recent;
     private ScheduleElements upcoming;
@@ -72,10 +74,12 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Seaso
     private Notifier upcomingListenerNotifier;
     private Notifier nextListenerNotifier;
 
-    public Schedule(SeriesRepository seriesRepository) {
+    public Schedule(SeriesRepository seriesRepository, FollowSeriesService followSeriesService) {
         Validate.isNonNull(seriesRepository, "seriesRepository");
+        Validate.isNonNull(followSeriesService, "followSeriesService");
 
         this.seriesRepository = seriesRepository;
+        this.followSeriesService = followSeriesService;
 
         this.recent = new ScheduleElements();
         this.upcoming = new ScheduleElements();
@@ -199,7 +203,7 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Seaso
     }
 
     private void registerItselfForListening() {
-        this.seriesRepository.register(this);
+        this.followSeriesService.registerSeriesFollowingListener(this);
 
         for (Series series : this.seriesCollection()) {
             series.register(this);
@@ -214,10 +218,20 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Seaso
         }
     }
 
-    //TODO Listening SeriesRepository-----------------------------------------------------------------------------------
+    //TODO Listening SeriesFollowing------------------------------------------------------------------------------------
 
     @Override
-    public void onInsert(Series series) {
+    public void onFollowing(Series series) {
+        series.register(this);
+
+        for (Season season : series.seasons().seasons()) {
+            season.register(this);
+        }
+
+        for (Episode episode : series.episodes()) {
+            episode.register(this);
+        }
+
         List<Episode> recentEpisodes = series.episodesBy(recentNotSeenSpecification());
         List<Episode> upcomingEpisodes = series.episodesBy(upcomingNotSeenSpecification());
         Episode nextToSee = series.nextEpisodeToSee(true);
@@ -232,24 +246,24 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Seaso
             this.upcomingListenerNotifier.notifyThatWereAdded(upcomingEpisodes);
         }
 
-        if (nextToSee != null) {
+        if (nextToSee != null && nextToSee.getDate() != null) {
             this.next.add(nextToSee);
             this.nextListenerNotifier.notifyThatWasAdded(nextToSee);
         }
     }
 
     @Override
-    public void onUpdate(Series series) {
-        // TODO Implement me after implement update(series)
-    }
+    public void onStopFollowing(Series series) {
+        series.deregister(this);
 
-    @Override
-    public void onUpdate(Collection<Series> collection) {
-        // TODO Implement me after implement update(collection)
-    }
+        for (Season season : series.seasons().seasons()) {
+            season.deregister(this);
+        }
 
-    @Override
-    public void onDelete(Series series) {
+        for (Episode episode : series.episodes()) {
+            episode.deregister(this);
+        }
+
         List<Episode> recentEpisodes = series.episodesBy(recentNotSeenSpecification());
         List<Episode> upcomingEpisodes = series.episodesBy(upcomingNotSeenSpecification());
         Episode nextToSee = series.nextEpisodeToSee(true);
@@ -264,15 +278,10 @@ public class Schedule implements SeriesRepositoryListener, SeriesListener, Seaso
             this.upcomingListenerNotifier.notifyThatWereRemoved(upcomingEpisodes);
         }
 
-        if (nextToSee != null) {
+        if (nextToSee != null && nextToSee.getDate() != null) {
             this.next.remove(nextToSee);
             this.nextListenerNotifier.notifyThatWasRemoved(nextToSee);
         }
-    }
-
-    @Override
-    public void onDelete(Collection<Series> collection) {
-        // TODO Implement me after implement stopFollowing(collection)
     }
 
     //Listening Series--------------------------------------------------------------------------------------------------
