@@ -122,10 +122,11 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.seasons.season(number);
     }
 
-    public Season lastSeason() {
-        int lastNumber = this.hasSpecialEpisodes() ? this.seasons.numberOfSeasons() - 1 : this.seasons.numberOfSeasons();
-        return this.season(lastNumber);
-    }
+    //Wrong! get lastSeason with seasons().seasonAt(seasons().numberOfSeasons() - 1)
+//    public Season lastSeason() {
+//        int lastNumber = this.hasSpecialEpisodes() ? this.seasons.numberOfSeasons() - 1 : this.seasons.numberOfSeasons();
+//        return this.season(lastNumber);
+//    }
 
     public boolean hasSpecialEpisodes() {
         return this.seasons.hasSpecialEpisodes();
@@ -139,10 +140,11 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.seasons.episodesBy(specification);
     }
 
-    public Episode lastEpisode() {
-        int lastNumber = this.lastSeason().numberOfEpisodes();
-        return this.lastSeason().episode(lastNumber);
-    }
+    //Wrong! get lastEpisode with seasons().seasonAt(seasons().numberOfSeasons() - 1).episodeAt(...)
+//    public Episode lastEpisode() {
+//        int lastNumber = this.lastSeason().numberOfEpisodes();
+//        return this.lastSeason().episode(lastNumber);
+//    }
 
     public int numberOfEpisodes() {
         return this.seasons.numberOfEpisodes();

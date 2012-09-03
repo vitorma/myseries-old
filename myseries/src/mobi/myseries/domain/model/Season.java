@@ -38,7 +38,6 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     private int numberOfSeenEpisodes;
     private Episode nextEpisodeToSee;
     private ListenerSet<SeasonListener> listeners;
-    private boolean listening;
 
     public Season(int seriesId, int number) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
@@ -49,7 +48,6 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
 
         this.episodes = new TreeMap<Integer, Episode>();
         this.listeners = new ListenerSet<SeasonListener>();
-        this.listening = true;
     }
 
     public int seriesId() {
@@ -70,6 +68,21 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
 
     public Episode episode(int number) {
         return this.episodes.get(number);
+    }
+
+    public Episode episodeAt(int position) {
+        int i = 0;
+
+        for (Integer episodeNumber : this.episodes.keySet()) {
+            if (i == position) {
+                return this.episode(episodeNumber);
+            }
+
+            i++;
+        }
+
+        throw new IndexOutOfBoundsException(
+                "invalid position, " + position + ", should be in the range [0, " + this.numberOfEpisodes() + ")");
     }
 
     public List<Episode> episodes() {
@@ -129,34 +142,32 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     }
 
     public Season markAsSeen() {
-        this.listening = false;
-
         for (Episode e : this.episodes.values()) {
+            e.setBeingMarkedBySeason(true);
             e.markAsSeen();
+            e.setBeingMarkedBySeason(false);
         }
 
         this.numberOfSeenEpisodes = this.numberOfEpisodes();
         this.notifyThatNumberOfSeenEpisodesChanged();
         this.nextEpisodeToSee = null;
         this.notifyThatNextToSeeChanged();
-        this.listening = true;
         this.notifyThatWasMarkedAsSeen();
 
         return this;
     }
 
     public Season markAsNotSeen() {
-        this.listening = false;
-
         for (Episode e : this.episodes.values()) {
+            e.setBeingMarkedBySeason(true);
             e.markAsNotSeen();
+            e.setBeingMarkedBySeason(false);
         }
 
         this.numberOfSeenEpisodes = 0;
         this.notifyThatNumberOfSeenEpisodesChanged();
         this.nextEpisodeToSee = this.episodes.get(this.episodes.firstKey());
         this.notifyThatNextToSeeChanged();
-        this.listening = true;
         this.notifyThatWasMarkedAsNotSeen();
 
         return this;
@@ -236,8 +247,6 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
 
     @Override
     public void onMarkAsSeen(Episode episode) {
-        if (!this.listening) return;
-
         this.numberOfSeenEpisodes++;
         this.notifyThatNumberOfSeenEpisodesChanged();
 
@@ -255,8 +264,6 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
 
     @Override
     public void onMarkAsNotSeen(Episode episode) {
-        if (!this.listening) return;
-
         if (this.wasSeen()) {
             this.notifyThatWasMarkedAsNotSeen();
         }
@@ -269,6 +276,12 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         this.numberOfSeenEpisodes--;
         this.notifyThatNumberOfSeenEpisodesChanged();
     }
+
+    @Override
+    public void onMarkAsSeenBySeason(Episode episode) {}
+
+    @Override
+    public void onMarkAsNotSeenBySeason(Episode episode) {}
 
     @Override
     public void onMerge(Episode episode) {

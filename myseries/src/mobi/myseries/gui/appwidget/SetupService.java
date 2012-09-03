@@ -22,11 +22,14 @@
 package mobi.myseries.gui.appwidget;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.application.schedule.SortMode;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
@@ -76,7 +79,6 @@ public class SetupService extends IntentService {
         int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this, this.appWidgetId);
         int sortMode = AppWidgetPreferenceActivity.sortModeBy(this, this.appWidgetId);
 
-        //FIXME
         switch(scheduleMode) {
             case ScheduleMode.RECENT:
                 this.episodes = new ArrayList<Episode>(App.schedule().recent().getEpisodes());
@@ -86,6 +88,15 @@ public class SetupService extends IntentService {
                 break;
             case ScheduleMode.UPCOMING:
                 this.episodes = new ArrayList<Episode>(App.schedule().upcoming().getEpisodes());
+                break;
+        }
+
+        switch(sortMode) {
+            case SortMode.OLDEST_FIRST:
+                Collections.sort(this.episodes, EpisodeComparator.byOldestFirst());
+                break;
+            case SortMode.NEWEST_FIRST:
+                Collections.sort(this.episodes, EpisodeComparator.byNewestFirst());
                 break;
         }
     }

@@ -168,6 +168,16 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
     }
 
     @Override
+    public void onMarkAsSeenBySeason(Episode episode) {
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMarkAsNotSeenBySeason(Episode episode) {
+        this.notifyDataSetChanged();
+    }
+
+    @Override
     public void onMerge(Episode episode) {
         //TODO This method should be removed from the interface EpisodeListener
     }

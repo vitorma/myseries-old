@@ -21,11 +21,14 @@
 
 package mobi.myseries.gui.appwidget;
 
+import java.util.Collections;
 import java.util.List;
 
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.application.schedule.SortMode;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
@@ -86,7 +89,6 @@ public class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteView
     }
 
     private void loadEpisodes() {
-        //FIXME
         int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this.context, this.appWidgetId);
         int sortMode = AppWidgetPreferenceActivity.sortModeBy(this.context, this.appWidgetId);
 
@@ -99,6 +101,15 @@ public class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteView
                 break;
             case ScheduleMode.UPCOMING:
                 this.episodes = App.schedule().upcoming().getEpisodes();
+                break;
+        }
+
+        switch(sortMode) {
+            case SortMode.OLDEST_FIRST:
+                Collections.sort(this.episodes, EpisodeComparator.byOldestFirst());
+                break;
+            case SortMode.NEWEST_FIRST:
+                Collections.sort(this.episodes, EpisodeComparator.byNewestFirst());
                 break;
         }
     }

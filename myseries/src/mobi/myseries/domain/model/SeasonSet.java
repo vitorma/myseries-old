@@ -64,6 +64,21 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         return this.seasons.get(number);
     }
 
+    public Season seasonAt(int position) {
+        int i = 0;
+
+        for (Integer seasonNumber : this.seasons.keySet()) {
+            if (i == position) {
+                return this.season(seasonNumber);
+            }
+
+            i++;
+        }
+
+        throw new IndexOutOfBoundsException(
+                "invalid position, " + position + ", should be in the range [0, " + this.numberOfSeasons() + ")");
+    }
+
     private Season ensuredSeason(int number) {
         if (!this.seasons.containsKey(number)) {
             Season season = new Season(this.seriesId, number);

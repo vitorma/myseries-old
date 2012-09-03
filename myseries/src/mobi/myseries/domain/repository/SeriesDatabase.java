@@ -203,6 +203,21 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     @Override
+    public void updateAllEpisodes(Collection<Episode> episodeCollection) {
+        Validate.allNonNull(episodeCollection, "episodeCollection");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        this.updateAllEpisodes(episodeCollection, db);
+        db.close();
+    }
+
+    private void updateAllEpisodes(Collection<Episode> episodeCollection, SQLiteDatabase db) {
+        for (Episode episode : episodeCollection) {
+            this.update(episode, db);
+        }
+    }
+
+    @Override
     public void delete(Series series) {
         Validate.isNonNull(series, "series");
 
@@ -375,20 +390,5 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withImageFileName(c.getString(c.getColumnIndex(EPISODE_IMAGE)))
             .withSeenMark(Boolean.valueOf(c.getString(c.getColumnIndex(EPISODE_SEENMARK))))
             .build();
-    }
-
-    /*
-     * TODO SeriesRepositoryListener methods:
-     * discuss whether notifications should be sent from here instead of from SeriesCache.
-     */
-
-    @Override
-    public boolean register(SeriesRepositoryListener listener) {
-        return false;
-    }
-
-    @Override
-    public boolean deregister(SeriesRepositoryListener listener) {
-        return false;
     }
 }

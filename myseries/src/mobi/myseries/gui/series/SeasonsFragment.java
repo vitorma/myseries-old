@@ -83,16 +83,13 @@ public class SeasonsFragment extends SherlockFragment {
                         SeasonsFragment.this.list.collapseGroup(i);
                     }
                 }
-
-//                SeasonsFragment.this.list.setSelectedGroup(groupPosition);
-//                SeasonsFragment.this.list.scrollTo(0, groupPosition);
             }
         });
     }
 
-    private void showDetailsOf(int currentGroupPosition, int childPosition) {
-        int seasonNumber = this.adapter.seasonNumber(currentGroupPosition);
-        int episodeNumber = this.adapter.episodeNumber(childPosition, this.adapter.season(currentGroupPosition).numberOfEpisodes());
+    private void showDetailsOf(int groupPosition, int childPosition) {
+        int seasonNumber = this.adapter.season(groupPosition).number();
+        int episodeNumber = this.adapter.episode(groupPosition, childPosition).number();
 
         Intent intent = EpisodesActivity.newIntent(this.getActivity(), this.seriesId, seasonNumber, episodeNumber);
         this.startActivity(intent);

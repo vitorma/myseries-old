@@ -1,5 +1,5 @@
 /*
- *   SeasonListener.java
+ *   ScheduleListener.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,13 +19,15 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.model;
+package mobi.myseries.application.schedule;
 
-public interface SeasonListener {
-    public void onMarkAsSeen(Season season);
-    public void onMarkAsNotSeen(Season season);
-    public void onChangeNumberOfSeenEpisodes(Season season);
-    public void onChangeNextEpisodeToSee(Season season);
-    @Deprecated
-    public void onMerge(Season season);
+import java.util.Collection;
+
+import mobi.myseries.domain.model.Episode;
+
+public interface ScheduleListener {
+    public void onAdd(Episode e);
+    public void onAdd(Collection<Episode> c);
+    public void onRemove(Episode e);
+    public void onRemove(Collection<Episode> c);
 }
