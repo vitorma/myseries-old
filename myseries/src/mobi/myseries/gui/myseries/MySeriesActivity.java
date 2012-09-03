@@ -26,6 +26,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
@@ -48,13 +49,10 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
 
-    private static final SeriesProvider seriesProvider = App.environment().seriesProvider();
-
     private SeriesListFragment seriesListFragment;
     private SeriesCoverFlowFragment seriesCoverFlowFragment;
 
     public MySeriesActivity() {
-        seriesProvider.addListener(this);
     }
 
     @Override
@@ -113,25 +111,11 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
             this.updateMenuItem = item;
-            seriesProvider.updateData();
+            App.updateSeriesData();
         }
 
         return super.onMenuItemSelected(featureId, item);
     }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.addSeriesMenuItem:
-//                this.showSearchActivity();
-//                return true;
-//            case R.id.updateMenuItem:
-//                seriesProvider.updateData();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 
     @Override
     public boolean onSearchRequested() {
@@ -139,14 +123,11 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         return true;
     }
 
-    //Update------------------------------------------------------------------------------------------------------------
-
-    //private UpdateNotificationLauncher updateNotificationLauncher;
     private MenuItem updateMenuItem;
     private ImageView spinner = null;
 
     @Override
-    public void onUpdateStart() {        
+    public void onUpdateStart() {
         this.spinner = new ImageView(this);
         this.spinner.setImageResource(R.drawable.actionbar_spinner);
         try {
@@ -154,7 +135,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                     .getResources().getDimension(R.dimen.action_button_min_width));
         } catch (Exception e) { // can't find? live with it.
         }
-        
+
         Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotate);
         rotation.setRepeatCount(Animation.INFINITE);
         this.spinner.startAnimation(rotation);

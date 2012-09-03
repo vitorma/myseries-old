@@ -36,6 +36,7 @@ public class App extends Application {
     private static FollowSeriesService followSeriesService;
     private static ImageloaderService imageLoadService;
     private static Schedule schedule;
+    private static UpdateSeriesService updateService;
 
     @Override
     public void onCreate() {
@@ -71,6 +72,7 @@ public class App extends Application {
     private static String localLanguage() {
         return environment.localization().language();
     }
+    
 
     // Follow Series
 
@@ -100,8 +102,26 @@ public class App extends Application {
     public static boolean follows(Series series) {
         return followSeriesService().follows(series);
     }
+    
+    // Update Series
+    
+    public static void updateSeriesData() {
+        updateSeriesService().updateSeriesData();
+    }
+    
+    private static UpdateSeriesService updateSeriesService() {
+        if (updateService == null) {
+            updateService = new UpdateSeriesService(environment.theTVDB(),
+                                                    environment.repository(),
+                                                    environment.localization(),
+                                                    environment.imageProvider());
+        }
+        
+        return updateService;
+    }
 
     /* SERIES */
+
 
     public static Series getSeries(int seriesId) {
         return environment.seriesProvider().getSeries(seriesId);
