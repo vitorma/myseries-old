@@ -21,6 +21,7 @@ public class UpdateSeriesService {
     private LocalizationProvider localizationProvider;
     private ImageProvider imageProvider;
     private SeriesUpdater seriesUpdater;
+    private final List<UpdateListener> updateListeners;
 
     public UpdateSeriesService(SeriesSource seriesSource, SeriesRepository seriesRepository,
             LocalizationProvider localizationProvider, ImageProvider imageProvider) {
@@ -35,6 +36,25 @@ public class UpdateSeriesService {
         this.localizationProvider = localizationProvider;
         this.imageProvider = imageProvider;
         this.seriesUpdater = new SeriesUpdater();
+        this.updateListeners = new LinkedList<UpdateListener>();
+
+        this.registerSeriesUpdateListener(new UpdateListener() {
+
+            @Override
+            public void onUpdateSuccess() {
+                Log.d("UpdateListener", "Update success.");
+            }
+
+            @Override
+            public void onUpdateStart() {
+                Log.d("UpdateListener", "Update started.");
+            }
+
+            @Override
+            public void onUpdateFailure() {
+                Log.d("UpdateListener", "Update failure.");
+            }
+        });
     }
 
     public void update(Series series) {
@@ -50,8 +70,8 @@ public class UpdateSeriesService {
         this.seriesUpdater.update(seriesRepository.getAll());
     }
 
-    public void registerSeriesUpdateListener(Object obj) {
-        // TODO
+    public void registerSeriesUpdateListener(UpdateListener listener) {
+        this.updateListeners.add(listener);
     }
 
     private enum UpdateResult {
@@ -59,16 +79,14 @@ public class UpdateSeriesService {
     };
 
     private class SeriesUpdater {
-        private UpdateResult result = UpdateResult.SUCCESS;
-
         private void update(Collection<Series> series) {
             Validate.isNonNull(series, "series");
 
             final List<Series> seriesToUpdate = new ArrayList<Series>(series);
 
-            new AsyncTask<Void, Void, Void>() {
+            new AsyncTask<Void, Void, UpdateResult>() {
                 @Override
-                protected Void doInBackground(Void... params) {
+                protected UpdateResult doInBackground(Void... params) {
                     for (final Series s : seriesToUpdate) {
                         Series downloadedSeries;
 
@@ -77,33 +95,55 @@ public class UpdateSeriesService {
                             downloadedSeries =
                                     seriesSource.fetchSeries(s.id(),
                                             localizationProvider.language());
+
                             downloadedSeries.mergeWith(s);
                             seriesRepository.update(s);
-                            
+
                             Log.d("SeriesUpdater", "Downloading poster of " + s.name());
                             imageProvider.downloadPosterOf(s);
 
                             Log.d("SeriesUpdater", s.name() + " updated.");
+
                         } catch (ParsingFailedException e) {
-                            result = UpdateResult.UNKNOWN_ERROR;
-                            // TODO: Anything to do?
                             e.printStackTrace();
+                            return UpdateResult.UNKNOWN_ERROR;
+
                         } catch (ConnectionFailedException e) {
-                            result = UpdateResult.CONNECTION_FAILED;
                             e.printStackTrace();
-                            return null;
+                            return UpdateResult.CONNECTION_FAILED;
+
                         } catch (SeriesNotFoundException e) {
-                            result = UpdateResult.UNKNOWN_ERROR;
                             e.printStackTrace();
-                            // TODO: Anything to do?
+                            return UpdateResult.UNKNOWN_ERROR;
+
                         }
                     }
 
-                    return null;
+                    Log.d("SeriesUpdater", "Update complete.");
+
+                    return UpdateResult.SUCCESS;
                 }
 
-                protected void onPostExecute(Void result) {
-                    Log.d("SeriesUpdater", "Update complete.");
+                @Override
+                protected void onPostExecute(UpdateResult result) {
+                    if (UpdateResult.SUCCESS.equals(result)) {
+                        for (UpdateListener listener : updateListeners) {
+                            listener.onUpdateSuccess();
+                        }
+                    }
+
+                    else {
+                        for (UpdateListener listener : updateListeners) {
+                            listener.onUpdateFailure();
+                        }
+                    }
+                }
+
+                @Override
+                protected void onPreExecute() {
+                    for (UpdateListener listener : updateListeners) {
+                        listener.onUpdateStart();
+                    }
                 };
 
             }.execute();
