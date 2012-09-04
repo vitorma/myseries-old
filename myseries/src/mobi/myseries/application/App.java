@@ -163,4 +163,13 @@ public class App extends Application {
     public static DateFormat dateFormat() {
         return environment.localization().dateFormat();
     }
+
+    public static void registerSeriesUpdateListener(UpdateListener listener) {
+        updateSeriesService().registerSeriesUpdateListener(listener);       
+    }
+    
+    public static void deregisterSeriesUpdateListener(UpdateListener listener) {
+        updateSeriesService().deregisterSeriesUpdateListener(listener);       
+    }
+
 }

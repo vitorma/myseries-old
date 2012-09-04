@@ -22,6 +22,7 @@ public class UpdateSeriesService {
     private ImageProvider imageProvider;
     private SeriesUpdater seriesUpdater;
     private final List<UpdateListener> updateListeners;
+    private boolean updateRunning = false;
 
     public UpdateSeriesService(SeriesSource seriesSource, SeriesRepository seriesRepository,
             LocalizationProvider localizationProvider, ImageProvider imageProvider) {
@@ -42,17 +43,17 @@ public class UpdateSeriesService {
 
             @Override
             public void onUpdateSuccess() {
-                Log.d("UpdateListener", "Update success.");
+                updateRunning = false;
             }
 
             @Override
             public void onUpdateStart() {
-                Log.d("UpdateListener", "Update started.");
+                updateRunning = true;
             }
 
             @Override
             public void onUpdateFailure() {
-                Log.d("UpdateListener", "Update failure.");
+                updateRunning = false;
             }
         });
     }
@@ -67,11 +68,18 @@ public class UpdateSeriesService {
     }
 
     public void updateSeriesData() {
+        if (updateRunning) {
+            Log.d("UpdateSeriesService", "Update already running");
+            return;
+        }
+
         this.seriesUpdater.update(seriesRepository.getAll());
     }
 
     public void registerSeriesUpdateListener(UpdateListener listener) {
-        this.updateListeners.add(listener);
+        if (!this.updateListeners.contains(listener)) {
+            this.updateListeners.add(listener);
+        }
     }
 
     private enum UpdateResult {
@@ -148,5 +156,9 @@ public class UpdateSeriesService {
 
             }.execute();
         }
+    }
+
+    public void deregisterSeriesUpdateListener(UpdateListener listener) {
+        this.updateListeners.remove(listener);
     }
 }

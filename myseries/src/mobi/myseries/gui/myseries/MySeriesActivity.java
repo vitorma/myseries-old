@@ -23,23 +23,19 @@ package mobi.myseries.gui.myseries;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
-import mobi.myseries.gui.shared.FailureDialogBuilder;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
+import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
     //TODO Menu from xml
@@ -48,6 +44,9 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String UPDATE = "UPDATE";
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
+    private static final String UPDATING_KEY = "updating";
+    
+    private boolean updating = false;
 
     private SeriesListFragment seriesListFragment;
     private SeriesCoverFlowFragment seriesCoverFlowFragment;
@@ -58,11 +57,13 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         this.setContentView(R.layout.myseries);
-
+        setSupportProgressBarIndeterminateVisibility(false);
+        
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_series);
-
+        
         if (savedInstanceState == null) {
             this.seriesListFragment = new SeriesListFragment();
             this.getSupportFragmentManager()
@@ -73,9 +74,24 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             this.getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.seriesCoverFlowFragment, this.seriesCoverFlowFragment);
+            updating = false;
         }
+        else
+        {
+            updating = savedInstanceState.getBoolean(UPDATING_KEY);
+            setSupportProgressBarIndeterminateVisibility(updating);
+        }
+
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        
+        updating = savedInstanceState.getBoolean(UPDATING_KEY);
+        setSupportProgressBarIndeterminateVisibility(updating);
+    }
+    
     //Menu--------------------------------------------------------------------------------------------------------------
 
     @Override
@@ -106,11 +122,18 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
         return true;
     }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(UPDATING_KEY, updating);
+    }
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
-            this.updateMenuItem = item;
+            //this.updateMenuItem = item;
+            App.registerSeriesUpdateListener(this);
             App.updateSeriesData();
         }
 
@@ -123,11 +146,16 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         return true;
     }
 
-    private MenuItem updateMenuItem;
-    private ImageView spinner = null;
+    //private MenuItem updateMenuItem;
+    //private ImageView spinner = null;
 
     @Override
     public void onUpdateStart() {
+        Log.d("MySeriesActivity", "update started");
+        setSupportProgressBarIndeterminateVisibility(true);
+        updating = true;
+
+        /*
         this.spinner = new ImageView(this);
         this.spinner.setImageResource(R.drawable.actionbar_spinner);
         try {
@@ -140,10 +168,16 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         rotation.setRepeatCount(Animation.INFINITE);
         this.spinner.startAnimation(rotation);
         this.updateMenuItem.setActionView(this.spinner);
+        */
     }
 
     @Override
     public void onUpdateFailure() {
+        Log.d("MySeriesActivity", "update failure");
+        setSupportProgressBarIndeterminateVisibility(false);
+        updating = false;
+
+        /*
         this.spinner.setAnimation(null);
         this.updateMenuItem.setActionView(null);
 
@@ -152,12 +186,19 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             .setMessage(R.string.update_failed_message)
             .build()
             .show();
+            */
     }
 
     @Override
     public void onUpdateSuccess() {
+        Log.d("MySeriesActivity", "update complete");
+        setSupportProgressBarIndeterminateVisibility(false);
+        updating = false;
+
+        /*
         this.spinner.setAnimation(null);
         this.updateMenuItem.setActionView(null);
+        */
     }
 
     //Search------------------------------------------------------------------------------------------------------------
