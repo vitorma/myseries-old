@@ -8,4 +8,12 @@
         android:icon="@drawable/ic_action_sort"
         android:showAsAction="always"/>
 
+    <item
+        android:id="@+id/hideShowSpecialEpisodes"
+        android:showAsAction="never"/>
+
+    <item
+        android:id="@+id/hideShowSeenEpisodes"
+        android:showAsAction="never"/>
+
 </menu>

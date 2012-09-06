@@ -94,7 +94,12 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
         inflater.inflate(R.menu.myschedule, menu);
+
+        //TODO Set the title according to the preference
+        menu.findItem(R.id.hideShowSpecialEpisodes).setTitle(R.string.hideSpecialEpisodes);
+        menu.findItem(R.id.hideShowSeenEpisodes).setTitle(R.string.hideSeenEpisodes);
     }
 
     @Override
@@ -102,6 +107,12 @@ public abstract class ScheduleFragment extends SherlockListFragment {
         switch (item.getItemId()) {
             case R.id.sorting:
                 this.showSortDialog();
+                return true;
+            case R.id.hideShowSpecialEpisodes:
+                //TODO Handle
+                return true;
+            case R.id.hideShowSeenEpisodes:
+                //TODO Handle
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
