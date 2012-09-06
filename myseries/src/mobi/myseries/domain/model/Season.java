@@ -31,6 +31,8 @@ import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
 public class Season implements EpisodeListener, Publisher<SeasonListener> {
+    public static int SPECIAL_EPISODES_SEASON_NUMBER = 0;
+
     private int seriesId;
     private int number;
 

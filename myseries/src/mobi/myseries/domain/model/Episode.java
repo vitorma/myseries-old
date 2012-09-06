@@ -80,6 +80,14 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
         return this.seasonNumber;
     }
 
+    public boolean isSpecial() {
+        return this.seasonNumber == Season.SPECIAL_EPISODES_SEASON_NUMBER;
+    }
+
+    public boolean isNotSpecial() {
+        return !this.isSpecial();
+    }
+
     public String name() {
         return this.name;
     }
@@ -191,11 +199,6 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
     @Override
     public Date getDate() {
         return this.airDate;
-    }
-
-    @Override
-    public boolean hasSameDateAs(HasDate other) {
-        return this.getDate() != null && other != null && this.getDate().equals(other.getDate());
     }
 
     @Override

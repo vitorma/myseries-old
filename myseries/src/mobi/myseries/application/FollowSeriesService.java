@@ -21,6 +21,7 @@
 
 package mobi.myseries.application;
 
+import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -91,6 +92,13 @@ public class FollowSeriesService {
         Validate.isNonNull(series, "series");
 
         this.seriesRepository.delete(series);
+
+        //TODO This should be performed asynchronously by the imageRepository
+        imageProvider.removePosterOf(series);
+        for (Episode e : series.episodes()) {
+            imageProvider.removeImageOf(e);
+        }
+
         this.notifyListenersOfUnfollowedSeries(series);
     }
 

@@ -81,13 +81,13 @@ public class SetupService extends IntentService {
 
         switch(scheduleMode) {
             case ScheduleMode.RECENT:
-                this.episodes = new ArrayList<Episode>(App.schedule().recent().getEpisodes());
+                this.episodes = new ArrayList<Episode>(App.schedule().recent().episodes());
                 break;
             case ScheduleMode.NEXT:
-                this.episodes = new ArrayList<Episode>(App.schedule().next().getEpisodes());
+                this.episodes = new ArrayList<Episode>(App.schedule().next().episodes());
                 break;
             case ScheduleMode.UPCOMING:
-                this.episodes = new ArrayList<Episode>(App.schedule().upcoming().getEpisodes());
+                this.episodes = new ArrayList<Episode>(App.schedule().upcoming().episodes());
                 break;
         }
 

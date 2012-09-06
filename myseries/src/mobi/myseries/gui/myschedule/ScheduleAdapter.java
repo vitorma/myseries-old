@@ -22,20 +22,20 @@
 package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
-import java.util.Collection;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.Day;
 import mobi.myseries.application.schedule.Schedule;
-import mobi.myseries.application.schedule.ScheduleElements;
+import mobi.myseries.application.schedule.ScheduleList;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Dates;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -52,17 +52,32 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
     private Context context;
     private int scheduleMode;
-    private ScheduleElements items;
+    private ScheduleList items;
 
     public ScheduleAdapter(Context context, int scheduleMode) {
         this.context = context;
         this.scheduleMode = scheduleMode;
 
-        this.setUpData();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                ScheduleAdapter.this.setUpData();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                ScheduleAdapter.this.notifyDataSetChanged();
+            }
+        }.execute();
     }
 
     @Override
     public int getCount() {
+        if (this.items == null) {
+            return 0;
+        }
+
         return this.items.size();
     }
 
@@ -83,7 +98,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
     @Override
     public int getItemViewType(int position) {
-        return this.items.get(position).getClass() == Episode.class ?
+        return this.items.isEpisode(position) ?
                VIEW_TYPE_EPISODE :
                VIEW_TYPE_DAY;
     }
@@ -124,7 +139,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         }
 
         DateFormat format = App.dateFormat();
-        String formattedDate = Dates.toString(day.getDate(), format);
+        String formattedDate = Dates.toString(day.getDate(), format, this.context.getString(R.string.unavailable_date));
 
         viewHolder.dateTextView.setText(formattedDate);
 
@@ -163,23 +178,33 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
     private void setUpData() {
         int sortMode = MyScheduleActivity.sortModeBy(this.context, this.scheduleMode);
+        boolean includingSpecialEpisodes = true;
+        boolean includingSeenEpisodes = false;
 
         switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
-                this.items = SCHEDULE.recent().sortBy(sortMode);
-                SCHEDULE.registerAsRecentListener(this);
+                this.items = SCHEDULE.recentBuilder()
+                    .includingSpecialEpisodes(includingSpecialEpisodes)
+                    .includingSeenEpisodes(includingSeenEpisodes)
+                    .sortingBy(sortMode)
+                    .build();
                 break;
             case ScheduleMode.NEXT:
-                this.items = SCHEDULE.next().sortBy(sortMode);
-                SCHEDULE.registerAsNextListener(this);
+                this.items = SCHEDULE.nextBuilder()
+                    .includingSpecialEpisodes(includingSpecialEpisodes)
+                    .sortingBy(sortMode)
+                    .build();
                 break;
             case ScheduleMode.UPCOMING:
-                this.items = SCHEDULE.upcoming().sortBy(sortMode);
-                SCHEDULE.registerAsUpcomingListener(this);
+                this.items = SCHEDULE.upcomingBuilder()
+                    .includingSpecialEpisodes(includingSpecialEpisodes)
+                    .includingSeenEpisodes(includingSeenEpisodes)
+                    .sortingBy(sortMode)
+                    .build();
                 break;
-        };
+        }
 
-        this.notifyDataSetChanged();
+        this.items.register(this);
     }
 
     public void sortBy(int sortMode) {
@@ -187,7 +212,14 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         this.notifyDataSetChanged();
     }
 
-    //------------------------------------------------------------------------------------------------------------------
+    //Listening---------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onStateChanged() {
+        this.notifyDataSetChanged();
+    }
+
+    //ViewHolder--------------------------------------------------------------------------------------------------------
 
     private static class DateViewHolder {
         private TextView dateTextView;
@@ -211,29 +243,5 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
                 }
             };
         }
-    }
-
-    @Override
-    public void onAdd(Episode e) {
-        this.items.add(e);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onAdd(Collection<Episode> c) {
-        this.items.addAll(c);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onRemove(Episode e) {
-        this.items.remove(e);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onRemove(Collection<Episode> c) {
-        this.items.removeAll(c);
-        this.notifyDataSetChanged();
     }
 }
