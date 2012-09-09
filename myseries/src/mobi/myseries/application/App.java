@@ -109,6 +109,10 @@ public class App extends Application {
         updateSeriesService().updateSeriesData();
     }
     
+    public static void updateSeriesDataIfNeeded() {
+        updateSeriesService().updateSeriesDataIfNeeded();        
+    }
+    
     private static UpdateSeriesService updateSeriesService() {
         if (updateService == null) {
             updateService = new UpdateSeriesService(environment.theTVDB(),
