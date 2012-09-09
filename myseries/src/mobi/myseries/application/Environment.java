@@ -68,7 +68,7 @@ public class Environment {
     }
 
     private SeriesProvider defaultSeriesProvider() {
-        return SeriesProvider.newInstance(this.theTVDB(), this.repository());
+        return SeriesProvider.newInstance(this.repository());
     }
 
     public void setSeriesProvider(SeriesProvider newSeriesProvider) {
