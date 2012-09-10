@@ -23,9 +23,10 @@ package mobi.myseries.application.schedule;
 
 import java.util.Date;
 
+import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.HasDate;
 
-public class Day implements HasDate {
+public class Day implements HasDate, Comparable<Day> {
     private Date date;
 
     public Day(Date date) {
@@ -44,8 +45,21 @@ public class Day implements HasDate {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null &&
-               obj.getClass() == Day.class &&
-               this.date == null ? ((Day) obj).date == null : this.date.equals(((Day) obj).date);
+        if (obj == null || obj.getClass() != Day.class) {
+            return false;
+        }
+
+        Day other = (Day) obj;
+
+        if (this.date == null) {
+            return other.date == null;
+        }
+
+        return this.date.equals(other.date);
+    }
+
+    @Override
+    public int compareTo(Day another) {
+        return Dates.compareByNullLast(this.date, another.date);
     }
 }

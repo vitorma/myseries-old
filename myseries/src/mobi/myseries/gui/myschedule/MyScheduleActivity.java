@@ -24,8 +24,8 @@ package mobi.myseries.gui.myschedule;
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.SortMode;
-import mobi.myseries.gui.myschedule.ScheduleFragment.RecentFragment;
 import mobi.myseries.gui.myschedule.ScheduleFragment.NextFragment;
+import mobi.myseries.gui.myschedule.ScheduleFragment.RecentFragment;
 import mobi.myseries.gui.myschedule.ScheduleFragment.UpcomingFragment;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.TabsAdapter;
@@ -43,6 +43,8 @@ import com.actionbarsherlock.view.MenuItem;
 public class MyScheduleActivity extends SherlockFragmentActivity {
     private static final String PREFS_NAME = "mobi.myseries.gui.schedule.SchedulePreferences";
     private static final String PREF_SORT_MODE_KEY = "sortMode_";
+    private static final String PREF_INCLUSION_OF_SPECIAL_EPISODES_KEY = "includesSpecialEpisodes_";
+    private static final String PREF_INCLUSION_OF_SEEN_EPISODES_KEY = "includesSeenEpisodes_";
 
     private int scheduleMode;
 
@@ -54,12 +56,28 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         return intent;
     }
 
-    public static int sortModeBy(Context context, int scheduleMode) {
+    public static int sortMode(Context context, int scheduleMode) {
         return getIntPreference(context, scheduleMode, PREF_SORT_MODE_KEY, SortMode.OLDEST_FIRST);
+    }
+
+    public static boolean inclusionOfSpecialEpisodes(Context context, int scheduleMode) {
+        return getBooleanPreference(context, scheduleMode, PREF_INCLUSION_OF_SPECIAL_EPISODES_KEY, false);
+    }
+
+    public static boolean inclusionOfSeenEpisodes(Context context, int scheduleMode) {
+        return getBooleanPreference(context, scheduleMode, PREF_INCLUSION_OF_SEEN_EPISODES_KEY, false);
     }
 
     public static boolean saveSortMode(Context context, int scheduleMode, int sortMode) {
         return saveIntPreference(context, scheduleMode, PREF_SORT_MODE_KEY, sortMode);
+    }
+
+    public static boolean saveInclusionOfSpecialEpisodes(Context context, int scheduleMode, boolean includingSpecialEpisodes) {
+        return saveBooleanPreference(context, scheduleMode, PREF_INCLUSION_OF_SPECIAL_EPISODES_KEY, includingSpecialEpisodes);
+    }
+
+    public static boolean saveInclusionOfSeenEpisodes(Context context, int scheduleMode, boolean includingSeenEpisodes) {
+        return saveBooleanPreference(context, scheduleMode, PREF_INCLUSION_OF_SEEN_EPISODES_KEY, includingSeenEpisodes);
     }
 
     private static int getIntPreference(Context context, int scheduleMode, String key, int defaultValue) {
@@ -67,10 +85,22 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
             .getInt(key + scheduleMode, defaultValue);
     }
 
-    private static boolean saveIntPreference(Context context, int appWidgetId, String key, int value) {
+    private static boolean getBooleanPreference(Context context, int scheduleMode, String key, boolean defaultValue) {
+        return getPreferences(context)
+            .getBoolean(key + scheduleMode, defaultValue);
+    }
+
+    private static boolean saveIntPreference(Context context, int scheduleMode, String key, int value) {
         return getPreferences(context)
             .edit()
-            .putInt(key + appWidgetId, value)
+            .putInt(key + scheduleMode, value)
+            .commit();
+    }
+
+    private static boolean saveBooleanPreference(Context context, int scheduleMode, String key, boolean value) {
+        return getPreferences(context)
+            .edit()
+            .putBoolean(key + scheduleMode, value)
             .commit();
     }
 

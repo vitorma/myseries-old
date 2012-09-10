@@ -34,6 +34,7 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.HasDate;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
@@ -58,6 +59,10 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         this.context = context;
         this.scheduleMode = scheduleMode;
 
+        this.reload();
+    }
+
+    public void reload() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -98,7 +103,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
     @Override
     public int getItemViewType(int position) {
-        return this.items.isEpisode(position) ?
+        HasDate element = this.items.get(position);
+        return this.items.isEpisode(element) ?
                VIEW_TYPE_EPISODE :
                VIEW_TYPE_DAY;
     }
@@ -174,12 +180,10 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         return view;
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-
     private void setUpData() {
-        int sortMode = MyScheduleActivity.sortModeBy(this.context, this.scheduleMode);
-        boolean includingSpecialEpisodes = true;
-        boolean includingSeenEpisodes = false;
+        int sortMode = MyScheduleActivity.sortMode(this.context, this.scheduleMode);
+        boolean includingSpecialEpisodes = MyScheduleActivity.inclusionOfSpecialEpisodes(this.context, this.scheduleMode);
+        boolean includingSeenEpisodes = MyScheduleActivity.inclusionOfSeenEpisodes(this.context, this.scheduleMode);
 
         switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
@@ -205,11 +209,6 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         }
 
         this.items.register(this);
-    }
-
-    public void sortBy(int sortMode) {
-        this.items.sortBy(sortMode);
-        this.notifyDataSetChanged();
     }
 
     //Listening---------------------------------------------------------------------------------------------------------

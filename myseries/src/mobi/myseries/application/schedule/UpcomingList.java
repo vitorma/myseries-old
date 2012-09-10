@@ -37,37 +37,53 @@ public class UpcomingList extends ScheduleList implements EpisodeListener {
 
     @Override
     public void onMarkAsSeen(Episode episode) {
-        if (upcomingSpecification(this.parameters()).isSatisfiedBy(episode)) {return;}
+        if (upcomingSpecification(this.parameters()).isSatisfiedBy(episode)) {
+            this.add(episode);
+            episode.register(this);
+        } else {
+            this.remove(episode);
+            episode.deregister(this);
+        }
 
-        this.remove(episode);
-        episode.deregister(this);
         this.notifyListeners();
     }
 
     @Override
     public void onMarkAsNotSeen(Episode episode) {
-        if (upcomingSpecification(this.parameters()).not().isSatisfiedBy(episode)) {return;}
+        if (upcomingSpecification(this.parameters()).isSatisfiedBy(episode)) {
+            this.add(episode);
+            episode.register(this);
+        } else {
+            this.remove(episode);
+            episode.deregister(this);
+        }
 
-        this.add(episode);
-        episode.register(this);
         this.notifyListeners();
     }
 
     @Override
     public void onMarkAsSeenBySeason(Episode episode) {
-        if (upcomingSpecification(this.parameters()).isSatisfiedBy(episode)) {return;}
+        if (upcomingSpecification(this.parameters()).isSatisfiedBy(episode)) {
+            this.add(episode);
+            episode.register(this);
+        } else {
+            this.remove(episode);
+            episode.deregister(this);
+        }
 
-        this.remove(episode);
-        episode.deregister(this);
         this.notifyListeners();
     }
 
     @Override
     public void onMarkAsNotSeenBySeason(Episode episode) {
-        if (upcomingSpecification(this.parameters()).not().isSatisfiedBy(episode)) {return;}
+        if (upcomingSpecification(this.parameters()).isSatisfiedBy(episode)) {
+            this.add(episode);
+            episode.register(this);
+        } else {
+            this.remove(episode);
+            episode.deregister(this);
+        }
 
-        this.add(episode);
-        episode.register(this);
         this.notifyListeners();
     }
 

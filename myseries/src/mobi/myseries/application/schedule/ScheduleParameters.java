@@ -38,10 +38,10 @@ public class ScheduleParameters {
         return this;
     }
 
-    public ScheduleParameters copy() {
-        return new ScheduleParameters()
-            .setSortMode(this.sortMode)
-            .setInclusionOfSpecialEpisodes(this.includingSpecialEpisodes)
-            .setInclusionOfSeenEpisodes(this.includingSeenEpisodes);
-    }
+//    public ScheduleParameters copy() {
+//        return new ScheduleParameters()
+//            .setSortMode(this.sortMode)
+//            .setInclusionOfSpecialEpisodes(this.includingSpecialEpisodes)
+//            .setInclusionOfSeenEpisodes(this.includingSeenEpisodes);
+//    }
 }

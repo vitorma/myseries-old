@@ -23,8 +23,8 @@ package mobi.myseries.application.schedule;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.SeriesFollowingListener;
@@ -40,13 +40,13 @@ import mobi.myseries.shared.Validate;
 public abstract class ScheduleList implements Publisher<ScheduleListener>, SeriesFollowingListener {
     private ScheduleParameters parameters;
     private SortedList<HasDate> elements;
-    private HashMap<Day, Integer> numberOfEpisodesPerDay;
+    private TreeMap<Day, Integer> numberOfEpisodesByDay;
     private ListenerSet<ScheduleListener> listeners;
 
     protected ScheduleList(ScheduleParameters parameters, FollowSeriesService following) {
         this.parameters = parameters;
-        this.elements = new SortedList<HasDate>(comparator());
-        this.numberOfEpisodesPerDay = new HashMap<Day, Integer>();
+        this.elements = new SortedList<HasDate>(comparator(parameters.sortMode()));
+        this.numberOfEpisodesByDay = new TreeMap<Day, Integer>();
         this.listeners = new ListenerSet<ScheduleListener>();
 
         following.registerSeriesFollowingListener(this);
@@ -65,24 +65,10 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
     }
 
     public HasDate get(int index) {
-        HasDate element = this.elements.get(index);
-
-        if (this.parameters().sortMode() == SortMode.OLDEST_FIRST) {
-            return element;
-        }
-
-        if (this.isEpisode(element)) {
-            return this.elements.get(this.size() - index);
-        }
-
-        return this.elements.get(this.size() - 1 - index - this.numberOfEpisodesPerDay.get(element));
+        return this.elements.get(index);
     }
 
-    public boolean isEpisode(int index) {
-        return this.isEpisode(this.get(index));
-    }
-
-    protected boolean isEpisode(HasDate element) {
+    public boolean isEpisode(HasDate element) {
         return element != null && element.getClass() == Episode.class;
     }
 
@@ -98,46 +84,40 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
         return episodes;
     }
 
-    protected boolean add(Episode element) {
-        Day day = new Day(element.getDate());
+    protected boolean add(Episode episode) {
+        if (this.elements.contains(episode)) {
+            return false;
+        }
 
-        if (!this.numberOfEpisodesPerDay.containsKey(day)) {
-            this.numberOfEpisodesPerDay.put(day, 0);
+        Day day = new Day(episode.getDate());
+
+        if (this.numberOfEpisodesByDay.containsKey(day)) {
+            int numberOfEpisodesOfTheDay = this.numberOfEpisodesByDay.get(day);
+            this.numberOfEpisodesByDay.put(day, numberOfEpisodesOfTheDay + 1);
+        } else {
+            this.numberOfEpisodesByDay.put(day, 1);
             this.elements.add(day);
         }
 
-        if (!this.elements.contains(element)) {
-            this.numberOfEpisodesPerDay.put(day, this.numberOfEpisodesPerDay.get(day) + 1);
-            this.elements.add(element);
-            return true;
-        }
-
-        return false;
+        return this.elements.add(episode);
     }
 
-    protected boolean remove(Episode element) {
-        Day day = new Day(element.getDate());
-
-        boolean removed = this.elements.remove(element);
-
-        if (removed) {
-            this.numberOfEpisodesPerDay.put(day, this.numberOfEpisodesPerDay.get(day) - 1);
+    protected boolean remove(Episode episode) {
+        if (!this.elements.remove(episode)) {
+            return false;
         }
 
-        if (removed && this.numberOfEpisodesPerDay.get(day) == 0) {
-            this.numberOfEpisodesPerDay.remove(day);
+        Day day = new Day(episode.getDate());
+        int numberOfEpisodesOfTheDay = this.numberOfEpisodesByDay.get(day);
+
+        this.numberOfEpisodesByDay.put(day, numberOfEpisodesOfTheDay - 1);
+
+        if (this.numberOfEpisodesByDay.get(day) == 0) {
+            this.numberOfEpisodesByDay.remove(day);
             this.elements.remove(day);
         }
 
-        return removed;
-    }
-
-    public ScheduleList sortBy(int sortMode) {
-        if (this.parameters.sortMode() != sortMode) {
-            this.parameters.setSortMode(sortMode);
-        }
-
-        return this;
+        return true;
     }
 
     //Publisher---------------------------------------------------------------------------------------------------------
@@ -160,7 +140,18 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
 
     //Comparator--------------------------------------------------------------------------------------------------------
 
-    private static Comparator<HasDate> comparator() {
+    private static Comparator<HasDate> comparator(int sortMode) {
+        switch (sortMode) {
+            case SortMode.OLDEST_FIRST:
+                return naturalComparator();
+            case SortMode.NEWEST_FIRST:
+                return reversedComparator();
+            default:
+                return null;
+        }
+    }
+
+    private static Comparator<HasDate> naturalComparator() {
         return new Comparator<HasDate>() {
             private static final int TYPE_DAY = 0;
             private static final int TYPE_EPISODE = 1;
@@ -169,9 +160,87 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
             public int compare(HasDate left, HasDate right) {
                 int dateComparation = Dates.compareByNullLast(left.getDate(), right.getDate());
 
-                if (dateComparation != 0) {return dateComparation;}
+                if (dateComparation != 0) {
+                    return dateComparation;
+                }
 
-                return typeOf(left) - typeOf(right);
+                int typeComparation = typeOf(left) - typeOf(right);
+
+                if (typeComparation != 0) {
+                    return typeComparation;
+                }
+
+                if (typeOf(left) == TYPE_DAY) {
+                    return 0;
+                }
+
+                //Episode comparation
+
+                Episode e1 = (Episode) left;
+                Episode e2 = (Episode) right;
+
+                int seriesIdComparation = e1.seriesId() - e2.seriesId();
+
+                if (seriesIdComparation != 0) {
+                    return seriesIdComparation;
+                }
+
+                int seasonNumberComparation = e1.seasonNumber() - e2.seasonNumber();
+
+                if (seasonNumberComparation != 0) {
+                    return seasonNumberComparation;
+                }
+
+                return e1.number() - e2.number();
+            }
+
+            private int typeOf(HasDate object) {
+                return object.getClass() == Day.class ? TYPE_DAY : TYPE_EPISODE;
+            }
+        };
+    }
+
+    private static Comparator<HasDate> reversedComparator() {
+        return new Comparator<HasDate>() {
+            private static final int TYPE_DAY = 0;
+            private static final int TYPE_EPISODE = 1;
+
+            @Override
+            public int compare(HasDate left, HasDate right) {
+                int dateComparation = Dates.compareByNullLast(right.getDate(), left.getDate());
+
+                if (dateComparation != 0) {
+                    return dateComparation;
+                }
+
+                int typeComparation = typeOf(left) - typeOf(right);
+
+                if (typeComparation != 0) {
+                    return typeComparation;
+                }
+
+                if (typeOf(left) == TYPE_DAY) {
+                    return 0;
+                }
+
+                //Episode comparation
+
+                Episode e2 = (Episode) left;
+                Episode e1 = (Episode) right;
+
+                int seriesIdComparation = e1.seriesId() - e2.seriesId();
+
+                if (seriesIdComparation != 0) {
+                    return seriesIdComparation;
+                }
+
+                int seasonNumberComparation = e1.seasonNumber() - e2.seasonNumber();
+
+                if (seasonNumberComparation != 0) {
+                    return seasonNumberComparation;
+                }
+
+                return e1.number() - e2.number();
             }
 
             private int typeOf(HasDate object) {

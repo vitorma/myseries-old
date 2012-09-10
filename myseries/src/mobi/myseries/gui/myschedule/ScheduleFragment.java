@@ -72,9 +72,7 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     }
 
     private void setUpListAdapter() {
-        ScheduleAdapter adapter = new ScheduleAdapter(this.getActivity(), this.scheduleMode);
-
-        this.setListAdapter(adapter);
+        this.setListAdapter(new ScheduleAdapter(this.getActivity(), this.scheduleMode));
     }
 
     private void setUpItemClickListener() {
@@ -92,14 +90,30 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        boolean showSpecialEpisodes = MyScheduleActivity.inclusionOfSpecialEpisodes(this.getActivity(), this.scheduleMode);
+        boolean showSeenEpisodes = MyScheduleActivity.inclusionOfSeenEpisodes(this.getActivity(), this.scheduleMode);
+
+        if (showSpecialEpisodes) {
+            menu.findItem(R.id.hideShowSpecialEpisodes).setTitle(R.string.hideSpecialEpisodes);
+        } else {
+            menu.findItem(R.id.hideShowSpecialEpisodes).setTitle(R.string.showSpecialEpisodes);
+        }
+
+        if (showSeenEpisodes) {
+            menu.findItem(R.id.hideShowSeenEpisodes).setTitle(R.string.hideSeenEpisodes);
+        } else {
+            menu.findItem(R.id.hideShowSeenEpisodes).setTitle(R.string.showSeenEpisodes);
+        }
+    }
+ 
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.myschedule, menu);
-
-        //TODO Set the title according to the preference
-        menu.findItem(R.id.hideShowSpecialEpisodes).setTitle(R.string.hideSpecialEpisodes);
-        menu.findItem(R.id.hideShowSeenEpisodes).setTitle(R.string.hideSeenEpisodes);
     }
 
     @Override
@@ -109,10 +123,14 @@ public abstract class ScheduleFragment extends SherlockListFragment {
                 this.showSortDialog();
                 return true;
             case R.id.hideShowSpecialEpisodes:
-                //TODO Handle
+                boolean showSpecialEpisodes = MyScheduleActivity.inclusionOfSpecialEpisodes(this.getActivity(), this.scheduleMode);
+                MyScheduleActivity.saveInclusionOfSpecialEpisodes(this.getActivity(), this.scheduleMode, !showSpecialEpisodes);
+                ((ScheduleAdapter) this.getListAdapter()).reload();
                 return true;
             case R.id.hideShowSeenEpisodes:
-                //TODO Handle
+                boolean showSeenEpisodes = MyScheduleActivity.inclusionOfSeenEpisodes(this.getActivity(), this.scheduleMode);
+                MyScheduleActivity.saveInclusionOfSeenEpisodes(this.getActivity(), this.scheduleMode, !showSeenEpisodes);
+                ((ScheduleAdapter) this.getListAdapter()).reload();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -122,7 +140,7 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     private void showSortDialog() {
         final Context context = this.getActivity();
         final int scheduleMode = this.scheduleMode;
-        final int sortMode = MyScheduleActivity.sortModeBy(context, scheduleMode);
+        final int sortMode = MyScheduleActivity.sortMode(context, scheduleMode);
         final ScheduleAdapter adapter = (ScheduleAdapter) this.getListAdapter();
 
         new SortingDialogBuilder(context)
@@ -132,14 +150,14 @@ public abstract class ScheduleFragment extends SherlockListFragment {
                 @Override
                 public void onClick() {
                     MyScheduleActivity.saveSortMode(context, scheduleMode, SortMode.NEWEST_FIRST);
-                    adapter.sortBy(SortMode.NEWEST_FIRST);
+                    adapter.reload();
                 }
             })
             .setOldestFirstOptionListener(new OptionListener() {
                 @Override
                 public void onClick() {
                     MyScheduleActivity.saveSortMode(context, scheduleMode, SortMode.OLDEST_FIRST);
-                    adapter.sortBy(SortMode.OLDEST_FIRST);
+                    adapter.reload();
                 }
             })
             .build()

@@ -208,7 +208,13 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null && obj.getClass() == Episode.class && ((Episode) obj).id == this.id;
+        if (obj == null || obj.getClass() != Episode.class) {
+            return false;
+        }
+
+        Episode other = (Episode) obj;
+
+        return this.id == other.id;
     }
 
     public static class Builder {
