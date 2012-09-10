@@ -16,4 +16,9 @@
         android:id="@+id/hideShowSeenEpisodes"
         android:showAsAction="never"/>
 
+    <item
+        android:id="@+id/filterSeries"
+        android:title="@string/filterSeries"
+        android:showAsAction="never"/>
+
 </menu>

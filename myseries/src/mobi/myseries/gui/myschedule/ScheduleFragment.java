@@ -26,6 +26,7 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.SortMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.episodes.EpisodesActivity;
+import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
 import mobi.myseries.gui.shared.SortingDialogBuilder;
 import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
 import android.content.Context;
@@ -120,7 +121,7 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sorting:
-                this.showSortDialog();
+                this.showSortingDialog();
                 return true;
             case R.id.hideShowSpecialEpisodes:
                 boolean showSpecialEpisodes = MyScheduleActivity.inclusionOfSpecialEpisodes(this.getActivity(), this.scheduleMode);
@@ -132,19 +133,27 @@ public abstract class ScheduleFragment extends SherlockListFragment {
                 MyScheduleActivity.saveInclusionOfSeenEpisodes(this.getActivity(), this.scheduleMode, !showSeenEpisodes);
                 ((ScheduleAdapter) this.getListAdapter()).reload();
                 return true;
+            case R.id.filterSeries:
+                this.showFilterDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void showSortDialog() {
+    private void showFilterDialog() {
+        //TODO Implement me
+        new SeriesFilterDialogBuilder(this.getActivity()).build().show();
+    }
+
+    private void showSortingDialog() {
         final Context context = this.getActivity();
         final int scheduleMode = this.scheduleMode;
         final int sortMode = MyScheduleActivity.sortMode(context, scheduleMode);
         final ScheduleAdapter adapter = (ScheduleAdapter) this.getListAdapter();
 
         new SortingDialogBuilder(context)
-            .setCategoryTitle(R.string.episodes)
+            .setTitleArgument(R.string.episodes)
             .setDefaultSortMode(sortMode)
             .setNewestFirstOptionListener(new OptionListener() {
                 @Override

@@ -20,7 +20,7 @@ public class SortingDialogBuilder {
         this.context = context;
     }
 
-    public SortingDialogBuilder setCategoryTitle(int stringResourceId) {
+    public SortingDialogBuilder setTitleArgument(int stringResourceId) {
         String format = this.context.getString(R.string.sort_by_format);
         String elementsName = this.context.getString(stringResourceId);
 

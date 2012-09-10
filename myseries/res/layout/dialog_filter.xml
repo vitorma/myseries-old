@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_full_holo_light">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextView.Dialog.Title"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/titleDivider"
+        android:background="@color/blue"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"/>
+
+    <ScrollView
+        android:id="@+id/scrollPanel"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingBottom="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/itemPanel"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/buttonBar"
+        android:padding="0dp"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="48.5dp">
+
+        <View
+            android:id="@+id/buttonDividerHorizontal"
+            android:background="@drawable/list_divider_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentTop="true"/>
+
+        <View
+            android:id="@+id/buttonDividerVertical"
+            android:background="@drawable/list_divider_holo_light" 
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/negativeButton"
+            style="@style/DialogButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/buttonDividerHorizontal"
+            android:layout_toLeftOf="@id/buttonDividerVertical"/>
+
+        <Button
+            android:id="@+id/positiveButton"
+            style="@style/DialogButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/buttonDividerHorizontal"
+            android:layout_toRightOf="@id/buttonDividerVertical"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
