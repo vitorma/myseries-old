@@ -45,6 +45,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     private static final String PREF_SORT_MODE_KEY = "sortMode_";
     private static final String PREF_INCLUSION_OF_SPECIAL_EPISODES_KEY = "includesSpecialEpisodes_";
     private static final String PREF_INCLUSION_OF_SEEN_EPISODES_KEY = "includesSeenEpisodes_";
+    private static final String PREF_INCLUSION_OF_EPISODES_OF_SERIES_KEY = "includesEpisodesOfSeries_";
 
     private int scheduleMode;
 
@@ -68,6 +69,10 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         return getBooleanPreference(context, scheduleMode, PREF_INCLUSION_OF_SEEN_EPISODES_KEY, false);
     }
 
+    public static boolean inclusionOfEpisodesOfSeries(Context context, int scheduleMode, int seriesId) {
+        return getBooleanPreference(context, scheduleMode, PREF_INCLUSION_OF_EPISODES_OF_SERIES_KEY + seriesId, true);
+    }
+
     public static boolean saveSortMode(Context context, int scheduleMode, int sortMode) {
         return saveIntPreference(context, scheduleMode, PREF_SORT_MODE_KEY, sortMode);
     }
@@ -78,6 +83,10 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
 
     public static boolean saveInclusionOfSeenEpisodes(Context context, int scheduleMode, boolean includingSeenEpisodes) {
         return saveBooleanPreference(context, scheduleMode, PREF_INCLUSION_OF_SEEN_EPISODES_KEY, includingSeenEpisodes);
+    }
+
+    public static boolean saveInclusionOfEpisodesOfSeries(Context context, int scheduleMode, int seriesId, boolean includingEpisodesOfSeries) {
+        return saveBooleanPreference(context, scheduleMode, PREF_INCLUSION_OF_EPISODES_OF_SERIES_KEY + seriesId, includingEpisodesOfSeries);
     }
 
     private static int getIntPreference(Context context, int scheduleMode, String key, int defaultValue) {
@@ -107,6 +116,8 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     private static SharedPreferences getPreferences(Context context) {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
