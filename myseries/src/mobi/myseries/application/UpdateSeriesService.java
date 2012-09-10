@@ -96,6 +96,8 @@ public class UpdateSeriesService {
                 @Override
                 protected UpdateResult doInBackground(Void... params) {
                     for (final Series s : seriesToUpdate) {
+                        Log.d(this.getClass().toString(), "Updating series: " + s.name());
+                        Log.d(this.getClass().toString(), "Last updated: " + s.lastUpdate());
                         Series downloadedSeries;
 
                         try {
@@ -105,6 +107,7 @@ public class UpdateSeriesService {
                                             localizationProvider.language());
 
                             downloadedSeries.mergeWith(s);
+                            downloadedSeries.setLastUpdate(System.currentTimeMillis());
                             seriesRepository.update(s);
 
                             Log.d("SeriesUpdater", "Downloading poster of " + s.name());
@@ -160,5 +163,25 @@ public class UpdateSeriesService {
 
     public void deregisterSeriesUpdateListener(UpdateListener listener) {
         this.updateListeners.remove(listener);
+    }
+
+    public void updateSeriesDataIfNeeded() {
+        for (Series s : seriesRepository.getAll()) {
+            if (System.currentTimeMillis() - s.lastUpdate() > this.automaticUpdateInterval()) {
+                Log.d(this.getClass().toString(), s.name()
+                        + " is outdated. Launching automatic update...");
+                this.updateSeriesData();
+                return;
+            }
+            
+            Log.d(this.getClass().toString(), s.name() + " is up-to-date.");
+            
+        }        
+        
+        Log.d(this.getClass().toString(), "Update is not needed");
+    }
+
+    private Long automaticUpdateInterval() {
+        return 24L * 60L * 60L * 1000L;
     }
 }

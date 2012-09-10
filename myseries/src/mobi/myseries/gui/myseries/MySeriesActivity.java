@@ -82,6 +82,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             setSupportProgressBarIndeterminateVisibility(updating);
         }
 
+        App.updateSeriesDataIfNeeded();
     }
 
     @Override

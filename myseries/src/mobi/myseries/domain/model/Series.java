@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import mobi.myseries.domain.constant.Invalid;
+import mobi.myseries.domain.model.Series.Builder;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
@@ -49,6 +50,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     private SeasonSet seasons;
 
     private ListenerSet<SeriesListener> listeners;
+    private Long lastUpdate;
 
     private Series(int id, String name) {
         Validate.isTrue(id >= 0, "id should be non-negative");
@@ -262,6 +264,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         private String posterFileName;
 
         private Set<Episode> episodes;
+        private Long lastUpdate;
 
         private Builder() {
             this.id = Invalid.SERIES_ID;
@@ -346,8 +349,30 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             series.genres = this.genres;
             series.actors = this.actors;
             series.posterFileName = this.posterFileName;
+            
+            if (this.lastUpdate == null) {
+                series.lastUpdate = System.currentTimeMillis();
+                
+            } else {
+                series.lastUpdate = this.lastUpdate;
+                
+            }
 
             return series.includingAll(this.episodes);
         }
+
+        public Builder withLastUpdate(long lastUpdate) {
+            this.lastUpdate = lastUpdate;
+            return this;
+        }
+    }
+
+    public Long lastUpdate() {
+        return this.lastUpdate;
+    }
+    
+    public Series setLastUpdate(Long lastUpdate) {
+        this.lastUpdate = lastUpdate;
+        return this;
     }
 }
