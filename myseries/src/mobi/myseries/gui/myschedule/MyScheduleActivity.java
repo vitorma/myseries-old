@@ -57,6 +57,8 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         return intent;
     }
 
+    //TODO Extract class SchedulePreferences----------------------------------------------------------------------------
+
     public static int sortMode(Context context, int scheduleMode) {
         return getIntPreference(context, scheduleMode, PREF_SORT_MODE_KEY, SortMode.OLDEST_FIRST);
     }
@@ -134,7 +136,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;

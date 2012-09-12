@@ -28,7 +28,7 @@
         android:layout_weight="1">
 
         <LinearLayout
-            android:id="@+id/itemPanel"
+            android:id="@+id/optionPanel"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -59,7 +59,7 @@
             android:layout_centerHorizontal="true"/>
 
         <Button
-            android:id="@+id/negativeButton"
+            android:id="@+id/showAllButton"
             style="@style/DialogButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toucharea_minimum_side"
@@ -69,7 +69,7 @@
             android:layout_toLeftOf="@id/buttonDividerVertical"/>
 
         <Button
-            android:id="@+id/positiveButton"
+            android:id="@+id/showSelectedButton"
             style="@style/DialogButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toucharea_minimum_side"

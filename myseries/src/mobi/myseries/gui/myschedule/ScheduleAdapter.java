@@ -22,6 +22,8 @@
 package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -104,6 +106,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     @Override
     public int getItemViewType(int position) {
         HasDate element = this.items.get(position);
+
         return this.items.isEpisode(element) ?
                VIEW_TYPE_EPISODE :
                VIEW_TYPE_DAY;
@@ -184,18 +187,29 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         int sortMode = MyScheduleActivity.sortMode(this.context, this.scheduleMode);
         boolean includingSpecialEpisodes = MyScheduleActivity.inclusionOfSpecialEpisodes(this.context, this.scheduleMode);
         boolean includingSeenEpisodes = MyScheduleActivity.inclusionOfSeenEpisodes(this.context, this.scheduleMode);
+        List<Series> allSeriesToShow = new ArrayList<Series>();
+
+        for (Series s : SERIES_PROVIDER.followedSeries()) {
+            boolean includingEpisodesOfSeries = MyScheduleActivity.inclusionOfEpisodesOfSeries(this.context, this.scheduleMode, s.id());
+
+            if (includingEpisodesOfSeries) {
+                allSeriesToShow.add(s);
+            }
+        }
 
         switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
                 this.items = SCHEDULE.recentBuilder()
                     .includingSpecialEpisodes(includingSpecialEpisodes)
                     .includingSeenEpisodes(includingSeenEpisodes)
+                    .includingEpisodesOfAllSeries(allSeriesToShow)
                     .sortingBy(sortMode)
                     .build();
                 break;
             case ScheduleMode.NEXT:
                 this.items = SCHEDULE.nextBuilder()
                     .includingSpecialEpisodes(includingSpecialEpisodes)
+                    .includingEpisodesOfAllSeries(allSeriesToShow)
                     .sortingBy(sortMode)
                     .build();
                 break;
@@ -203,6 +217,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
                 this.items = SCHEDULE.upcomingBuilder()
                     .includingSpecialEpisodes(includingSpecialEpisodes)
                     .includingSeenEpisodes(includingSeenEpisodes)
+                    .includingEpisodesOfAllSeries(allSeriesToShow)
                     .sortingBy(sortMode)
                     .build();
                 break;

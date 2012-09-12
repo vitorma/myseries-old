@@ -21,12 +21,19 @@
 
 package mobi.myseries.gui.myschedule;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import mobi.myseries.R;
+import mobi.myseries.application.App;
+import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.SortMode;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
+import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
 import mobi.myseries.gui.shared.SortingDialogBuilder;
 import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
 import android.content.Context;
@@ -41,6 +48,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 public abstract class ScheduleFragment extends SherlockListFragment {
+    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+
     private int scheduleMode;
 
     public ScheduleFragment(int scheduleMode) {
@@ -109,7 +118,7 @@ public abstract class ScheduleFragment extends SherlockListFragment {
             menu.findItem(R.id.hideShowSeenEpisodes).setTitle(R.string.showSeenEpisodes);
         }
     }
- 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -142,8 +151,29 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     }
 
     private void showFilterDialog() {
-        //TODO Implement me
-        new SeriesFilterDialogBuilder(this.getActivity()).build().show();
+        final Context context = this.getActivity();
+        final int scheduleMode = this.scheduleMode;
+        final Map<Series, Boolean> filterOptions = new HashMap<Series, Boolean>();
+        final ScheduleAdapter adapter = (ScheduleAdapter) this.getListAdapter();
+
+        for (Series s : SERIES_PROVIDER.followedSeries()) {
+            boolean checked = MyScheduleActivity.inclusionOfEpisodesOfSeries(context, scheduleMode, s.id());
+            filterOptions.put(s, checked);
+        }
+
+        new SeriesFilterDialogBuilder(context)
+            .setDefaultFilterOptions(filterOptions)
+            .setOnFilterListener(new OnFilterListener() {
+                @Override
+                public void onFilter() {
+                    for (Series s : filterOptions.keySet()) {
+                        MyScheduleActivity.saveInclusionOfEpisodesOfSeries(context, scheduleMode, s.id(), filterOptions.get(s));
+                    }
+                    adapter.reload();
+                }
+            })
+            .build()
+            .show();
     }
 
     private void showSortingDialog() {

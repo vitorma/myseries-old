@@ -22,6 +22,7 @@
 package mobi.myseries.application.schedule;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
@@ -29,6 +30,7 @@ import java.util.TreeMap;
 import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.HasDate;
@@ -85,6 +87,10 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
     }
 
     protected boolean add(Episode episode) {
+        if (!this.parameters.includesEpisodesOfSeries(episode.seriesId())) {
+            return false;
+        }
+
         if (this.elements.contains(episode)) {
             return false;
         }
@@ -272,6 +278,11 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
 
         public Builder includingSeenEpisodes(boolean includingSeenEpisodes) {
             this.parameters.setInclusionOfSeenEpisodes(includingSeenEpisodes);
+            return this;
+        }
+
+        public Builder includingEpisodesOfAllSeries(Collection<Series> collection) {
+            this.parameters.setInclusionOfEpisodesOfAllSeries(collection);
             return this;
         }
 

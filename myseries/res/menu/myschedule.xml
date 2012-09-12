@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/filterSeries"
-        android:title="@string/filterSeries"
+        android:title="@string/seriesToShow"
         android:showAsAction="never"/>
 
 </menu>

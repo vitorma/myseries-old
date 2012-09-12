@@ -24,7 +24,9 @@
     <string name="showSpecialEpisodes">Show special episodes</string>
     <string name="hideSeenEpisodes">Hide seen episodes</string>
     <string name="showSeenEpisodes">Show seen episodes</string>
-    <string name="filterSeries">Filter series</string>
+    <string name="seriesToShow">Series to show</string>
+    <string name="showAll">Show all</string>
+    <string name="showSelected">Show selected</string>
 
     <!-- Labels -->
 
