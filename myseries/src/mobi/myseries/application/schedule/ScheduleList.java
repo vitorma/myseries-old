@@ -29,6 +29,8 @@ import java.util.TreeMap;
 
 import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.SeriesFollowingListener;
+import mobi.myseries.application.UpdateListener;
+import mobi.myseries.application.UpdateSeriesService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
@@ -39,23 +41,34 @@ import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.SortedList;
 import mobi.myseries.shared.Validate;
 
-public abstract class ScheduleList implements Publisher<ScheduleListener>, SeriesFollowingListener {
+public abstract class ScheduleList implements Publisher<ScheduleListener>, SeriesFollowingListener, UpdateListener {
     private ScheduleParameters parameters;
+    private SeriesRepository repository;
+
     private SortedList<HasDate> elements;
     private TreeMap<Day, Integer> numberOfEpisodesByDay;
+
     private ListenerSet<ScheduleListener> listeners;
 
-    protected ScheduleList(ScheduleParameters parameters, FollowSeriesService following) {
+    protected ScheduleList(ScheduleParameters parameters, SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
         this.parameters = parameters;
+        this.repository = repository;
         this.elements = new SortedList<HasDate>(comparator(parameters.sortMode()));
         this.numberOfEpisodesByDay = new TreeMap<Day, Integer>();
         this.listeners = new ListenerSet<ScheduleListener>();
 
         following.registerSeriesFollowingListener(this);
+        update.registerSeriesUpdateListener(this);
+
+        this.load();
     }
 
     protected ScheduleParameters parameters() {
         return this.parameters;
+    }
+
+    protected SeriesRepository repository() {
+        return this.repository;
     }
 
     protected SortedList<HasDate> elements() {
@@ -126,6 +139,11 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
         return true;
     }
 
+    private void clear() {
+        this.elements.clear();
+        this.numberOfEpisodesByDay.clear();
+    }
+
     //Publisher---------------------------------------------------------------------------------------------------------
 
     @Override
@@ -143,6 +161,23 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
             listener.onStateChanged();
         }
     }
+
+    //UpdateListener----------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onUpdateStart() {}
+
+    @Override
+    public void onUpdateFailure() {}
+
+    @Override
+    public void onUpdateSuccess() {
+        this.clear();
+        this.load();
+        this.notifyListeners();
+    }
+
+    protected abstract void load();
 
     //Comparator--------------------------------------------------------------------------------------------------------
 
@@ -261,13 +296,15 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
         protected SeriesRepository repository;
         protected FollowSeriesService following;
         protected ScheduleParameters parameters;
+        protected UpdateSeriesService update;
 
-        public Builder(SeriesRepository repository, FollowSeriesService following) {
+        public Builder(SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
             Validate.isNonNull(repository, "repository");
             Validate.isNonNull(following, "following");
 
             this.repository = repository;
             this.following = following;
+            this.update = update;
             this.parameters = new ScheduleParameters();
         }
 

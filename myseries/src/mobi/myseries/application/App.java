@@ -43,7 +43,6 @@ public class App extends Application {
         super.onCreate();
 
         environment = Environment.newEnvironment(this);
-
         searchService = new SearchSeriesService(environment.theTVDB());
         imageLoadService = new ImageloaderService();
         followSeriesService = new FollowSeriesService(
@@ -51,7 +50,15 @@ public class App extends Application {
                 environment.repository(),
                 environment.localization(),
                 environment.imageProvider());
-        schedule = new Schedule(environment.repository(), followSeriesService);
+        updateService = new UpdateSeriesService(
+                environment.theTVDB(),
+                environment.repository(),
+                environment.localization(),
+                environment.imageProvider());
+        schedule = new Schedule(
+                environment.repository(),
+                followSeriesService,
+                updateService);
     }
 
     public static Environment environment() {
@@ -110,17 +117,10 @@ public class App extends Application {
     }
     
     public static void updateSeriesDataIfNeeded() {
-        updateSeriesService().updateSeriesDataIfNeeded();        
+        updateSeriesService().updateSeriesDataIfNeeded();
     }
-    
+
     private static UpdateSeriesService updateSeriesService() {
-        if (updateService == null) {
-            updateService = new UpdateSeriesService(environment.theTVDB(),
-                                                    environment.repository(),
-                                                    environment.localization(),
-                                                    environment.imageProvider());
-        }
-        
         return updateService;
     }
 

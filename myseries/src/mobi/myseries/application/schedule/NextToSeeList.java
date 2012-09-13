@@ -1,6 +1,7 @@
 package mobi.myseries.application.schedule;
 
 import mobi.myseries.application.FollowSeriesService;
+import mobi.myseries.application.UpdateSeriesService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
@@ -11,11 +12,14 @@ import mobi.myseries.shared.Specification;
 
 public class NextToSeeList extends ScheduleList implements SeriesListener {
 
-    private NextToSeeList(ScheduleParameters parameters, FollowSeriesService following, SeriesRepository repository) {
-        super(parameters, following);
+    private NextToSeeList(ScheduleParameters parameters, SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
+        super(parameters, repository, following, update);
+    }
 
-        for (Series s : repository.getAll()) {
-            Episode nextToSee = s.nextEpisodeToSee(parameters.includesSpecialEpisodes());
+    @Override
+    protected void load() {
+        for (Series s : this.repository().getAll()) {
+            Episode nextToSee = s.nextEpisodeToSee(this.parameters().includesSpecialEpisodes());
 
             if (nextToSee != null) {
                 this.add(nextToSee);
@@ -109,12 +113,12 @@ public class NextToSeeList extends ScheduleList implements SeriesListener {
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder extends ScheduleList.Builder {
-        public Builder(SeriesRepository repository, FollowSeriesService following) {
-            super(repository, following);
+        public Builder(SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
+            super(repository, following, update);
         }
 
         public ScheduleList build() {
-            return new NextToSeeList(this.parameters, this.following, this.repository);
+            return new NextToSeeList(parameters, repository, following, update);
         }
     }
 }

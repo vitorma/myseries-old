@@ -22,31 +22,35 @@
 package mobi.myseries.application.schedule;
 
 import mobi.myseries.application.FollowSeriesService;
+import mobi.myseries.application.UpdateSeriesService;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.shared.Validate;
 
 public class Schedule {
-    private SeriesRepository seriesRepository;
-    private FollowSeriesService followSeriesService;
+    private SeriesRepository repository;
+    private FollowSeriesService following;
+    private UpdateSeriesService update;
 
-    public Schedule(SeriesRepository seriesRepository, FollowSeriesService followSeriesService) {
-        Validate.isNonNull(seriesRepository, "seriesRepository");
-        Validate.isNonNull(followSeriesService, "followSeriesService");
+    public Schedule(SeriesRepository seriesRepository, FollowSeriesService following, UpdateSeriesService update) {
+        Validate.isNonNull(seriesRepository, "repository");
+        Validate.isNonNull(following, "following");
+        Validate.isNonNull(update, "update");
 
-        this.seriesRepository = seriesRepository;
-        this.followSeriesService = followSeriesService;
+        this.repository = seriesRepository;
+        this.following = following;
+        this.update = update;
     }
 
     public NextToSeeList.Builder nextBuilder() {
-        return new NextToSeeList.Builder(this.seriesRepository, this.followSeriesService);
+        return new NextToSeeList.Builder(this.repository, this.following, this.update);
     }
 
     public RecentList.Builder recentBuilder() {
-        return new RecentList.Builder(this.seriesRepository, this.followSeriesService);
+        return new RecentList.Builder(this.repository, this.following, this.update);
     }
 
     public UpcomingList.Builder upcomingBuilder() {
-        return new UpcomingList.Builder(this.seriesRepository, this.followSeriesService);
+        return new UpcomingList.Builder(this.repository, this.following, this.update);
     }
 
     //TODO Delete the methods below ASAP--------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 package mobi.myseries.application.schedule;
 
 import mobi.myseries.application.FollowSeriesService;
+import mobi.myseries.application.UpdateSeriesService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Series;
@@ -11,12 +12,15 @@ import mobi.myseries.shared.Specification;
 
 public class RecentList extends ScheduleList implements EpisodeListener {
 
-    private RecentList(ScheduleParameters parameters, FollowSeriesService following, SeriesRepository repository) {
-        super(parameters, following);
+    private RecentList(ScheduleParameters parameters, SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
+        super(parameters, repository, following, update);
+    }
 
-        for (Series s : repository.getAll()) {
+    @Override
+    protected void load() {
+        for (Series s : this.repository().getAll()) {
             for (Episode e : s.episodes()) {
-                if (recentSpecification(parameters).isSatisfiedBy(e)) {
+                if (recentSpecification(this.parameters()).isSatisfiedBy(e)) {
                     this.add(e);
                     e.register(this);
                 }
@@ -118,12 +122,12 @@ public class RecentList extends ScheduleList implements EpisodeListener {
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder extends ScheduleList.Builder {
-        public Builder(SeriesRepository repository, FollowSeriesService following) {
-            super(repository, following);
+        public Builder(SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
+            super(repository, following, update);
         }
 
         public ScheduleList build() {
-            return new RecentList(this.parameters, this.following, this.repository);
+            return new RecentList(parameters, repository, following, update);
         }
     }
 }

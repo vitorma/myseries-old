@@ -255,6 +255,7 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
 
     @Override
     public void onChangeNextEpisodeToSee(Season season) {
+        //FIXME Notify only if the general next to see change
         this.notifyThatNextEpisodeToSeeChanged();
     }
 
