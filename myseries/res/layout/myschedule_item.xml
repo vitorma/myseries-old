@@ -3,42 +3,40 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:padding="@dimen/gap_medium">
+    android:layout_height="50dp">
 
     <ImageView
         android:id="@+id/seriesPoster"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
-        android:layout_width="22dp"
-        android:layout_height="34dp"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="38dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"/>
 
-    <CheckBox
+    <mobi.myseries.gui.shared.SeenMark
         android:id="@+id/episodeIsViewedCheckBox"
-        android:layout_width="@dimen/checkbox_width"
-        android:layout_height="@dimen/checkbox_height"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
+        android:gravity="center"
+        android:layout_width="48dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"/>
 
     <TextView
         android:id="@+id/episodeSeriesTextView"
-        style="@style/TextView.Label.Small"
-        android:gravity="top"
-        android:paddingLeft="@dimen/gap_medium"
+        style="@style/TextView.Data.Small"
+        android:paddingTop="@dimen/gap_medium"
         android:layout_width="match_parent"
-        android:layout_height="16dp"
+        android:layout_height="24dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/seriesPoster"
         android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
 
     <TextView
         android:id="@+id/episodeSeasonEpisodeTextView"
-        style="@style/TextView.Data.Medium"
-        android:gravity="bottom"
-        android:paddingLeft="@dimen/gap_medium"
+        style="@style/TextView.Label.Medium"
+        android:paddingBottom="@dimen/gap_medium"
         android:layout_width="wrap_content"
-        android:layout_height="18dp"
+        android:layout_height="26dp"
         android:layout_below="@id/episodeSeriesTextView"
         android:layout_toRightOf="@id/seriesPoster"
         android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>

@@ -35,6 +35,7 @@ import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.HasDate;
 import android.content.Context;
@@ -43,7 +44,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -164,7 +164,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
             viewHolder = new EpisodeViewHolder();
             viewHolder.seriesNameTextView = (TextView) view.findViewById(R.id.episodeSeriesTextView);
             viewHolder.episodeNumberTextView = (TextView) view.findViewById(R.id.episodeSeasonEpisodeTextView);
-            viewHolder.seenMarkCheckBox = (CheckBox) view.findViewById(R.id.episodeIsViewedCheckBox);
+            viewHolder.seenMarkCheckBox = (SeenMark) view.findViewById(R.id.episodeIsViewedCheckBox);
             viewHolder.seriesPosterImageView = (ImageView) view.findViewById(R.id.seriesPoster);
             view.setTag(viewHolder);
         } else {
@@ -243,7 +243,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         private TextView seriesNameTextView;
         private TextView episodeNumberTextView;
         private ImageView seriesPosterImageView;
-        private CheckBox seenMarkCheckBox;
+        private SeenMark seenMarkCheckBox;
 
         private OnClickListener seenMarkCheckBoxListener(final Episode episode) {
             return new OnClickListener() {
