@@ -38,6 +38,7 @@ import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MyScheduleActivity extends SherlockFragmentActivity {
@@ -132,6 +133,13 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(Extra.SCHEDULE_MODE, this.getSupportActionBar().getSelectedNavigationIndex());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.getSupportMenuInflater().inflate(R.menu.myschedule, menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

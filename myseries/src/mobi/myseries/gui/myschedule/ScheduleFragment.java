@@ -44,7 +44,6 @@ import android.widget.AdapterView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 public abstract class ScheduleFragment extends SherlockListFragment {
@@ -59,6 +58,8 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.setHasOptionsMenu(true);
     }
 
     @Override
@@ -69,7 +70,6 @@ public abstract class ScheduleFragment extends SherlockListFragment {
         this.setUpEmptyText();
         this.setUpListAdapter();
         this.setUpItemClickListener();
-        this.setHasOptionsMenu(true);
     }
 
     private void setUpPadding() {
@@ -103,27 +103,16 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        boolean showSpecialEpisodes = MyScheduleActivity.inclusionOfSpecialEpisodes(this.getActivity(), this.scheduleMode);
-        boolean showSeenEpisodes = MyScheduleActivity.inclusionOfSeenEpisodes(this.getActivity(), this.scheduleMode);
+        boolean isShowingSpecialEpisodes = MyScheduleActivity.inclusionOfSpecialEpisodes(this.getActivity(), this.scheduleMode);
+        boolean isShowingSeenEpisodes = MyScheduleActivity.inclusionOfSeenEpisodes(this.getActivity(), this.scheduleMode);
 
-        if (showSpecialEpisodes) {
-            menu.findItem(R.id.hideShowSpecialEpisodes).setTitle(R.string.hideSpecialEpisodes);
-        } else {
-            menu.findItem(R.id.hideShowSpecialEpisodes).setTitle(R.string.showSpecialEpisodes);
-        }
+        MenuItem hideShowSpecialEpisodes = menu.findItem(R.id.hideShowSpecialEpisodes);
+        MenuItem hideShowSeenEpisodes = menu.findItem(R.id.hideShowSeenEpisodes);
 
-        if (showSeenEpisodes) {
-            menu.findItem(R.id.hideShowSeenEpisodes).setTitle(R.string.hideSeenEpisodes);
-        } else {
-            menu.findItem(R.id.hideShowSeenEpisodes).setTitle(R.string.showSeenEpisodes);
-        }
-    }
+        hideShowSpecialEpisodes.setTitle(isShowingSpecialEpisodes ? R.string.hideSpecialEpisodes : R.string.showSpecialEpisodes);
+        hideShowSeenEpisodes.setTitle(isShowingSeenEpisodes ? R.string.hideSeenEpisodes : R.string.showSeenEpisodes);
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        inflater.inflate(R.menu.myschedule, menu);
+        hideShowSeenEpisodes.setVisible(this.scheduleMode == ScheduleMode.NEXT ? false : true);
     }
 
     @Override
@@ -202,6 +191,8 @@ public abstract class ScheduleFragment extends SherlockListFragment {
             .build()
             .show();
     }
+
+    //Concrete schedule fragments---------------------------------------------------------------------------------------
 
     public static class RecentFragment extends ScheduleFragment {
         public RecentFragment() {

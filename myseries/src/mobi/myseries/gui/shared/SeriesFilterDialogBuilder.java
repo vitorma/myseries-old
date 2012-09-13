@@ -52,7 +52,7 @@ public class SeriesFilterDialogBuilder {
     private void setUpTitleFor(Dialog dialog) {
         TextView titleView = (TextView) dialog.findViewById(R.id.title);
 
-        titleView.setText(this.context.getText(R.string.filterSeries));
+        titleView.setText(this.context.getText(R.string.seriesToShow));
     }
 
     private void setUpOptionsFor(Dialog dialog) {
