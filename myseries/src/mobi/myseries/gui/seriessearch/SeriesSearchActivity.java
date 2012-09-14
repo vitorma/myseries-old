@@ -25,6 +25,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.SearchSeriesException;
 import mobi.myseries.application.SearchSeriesListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
@@ -56,10 +57,10 @@ public class SeriesSearchActivity extends SherlockListActivity {
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        this.setContentView(R.layout.seriessearch);
+        this.setContentView(R.layout.add_series);
         
         ActionBar ab = this.getSupportActionBar();
-        ab.setTitle(R.string.search_series);
+        ab.setTitle(R.string.add_series);
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
         setSupportProgressBarIndeterminateVisibility(false);
@@ -135,11 +136,11 @@ public class SeriesSearchActivity extends SherlockListActivity {
             }
         });
     }
-    
+
     private void setUpSearchListener(){
         final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
         final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
-       
+
         this.listener =  new SearchSeriesListener() {
 
             @Override
@@ -150,9 +151,13 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
             @Override
             public void onFaluire(Throwable exception) {
-                Dialog dialog = new FailureDialogBuilder(SeriesSearchActivity.this)
-                    .setMessage(exception.getMessage())
-                    .build();
+                SearchSeriesException e = ((SearchSeriesException) exception);
+
+                FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(SeriesSearchActivity.this);
+                dialogBuilder.setTitle(e.getTitle());
+                dialogBuilder.setMessage(e.getMessage());
+
+                Dialog dialog = dialogBuilder.build();
                 dialog.show();
                 state.dialog = dialog;
             }

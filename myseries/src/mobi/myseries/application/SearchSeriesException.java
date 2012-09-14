@@ -23,13 +23,22 @@ package mobi.myseries.application;
 
 public class SearchSeriesException extends Exception {
     private static final long serialVersionUID = 1L;
+    private String title;
 
-    public SearchSeriesException(String message) {
+    public SearchSeriesException(String title, String message) {
         super(message);
+        this.title = title;
     }
 
-    public SearchSeriesException(String message, Throwable cause) {
+    public SearchSeriesException(String title, String message, Throwable cause) {
         super(message, cause);
+        this.title = title;
     }
+    
+    public String getTitle(){
+        return this.title;
+    }
+   
+    
 }
 

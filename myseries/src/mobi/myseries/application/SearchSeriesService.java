@@ -24,6 +24,7 @@ package mobi.myseries.application;
 import java.util.Collections;
 import java.util.List;
 
+import mobi.myseries.R;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
@@ -33,6 +34,7 @@ import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class SearchSeriesService {
     private SeriesSource seriesSource;
@@ -85,17 +87,19 @@ public class SearchSeriesService {
             String language = params[1];
 
             try {
+                Log.d("Series Search", "trying to search for " + seriesName + "...");
                 List<Series> seriesList = this.seriesSource.searchFor(seriesName, language);
-                if (!seriesList.isEmpty())
+                if (!seriesList.isEmpty()) {
+                    Log.d("Series Search", "found " + seriesList.size() + " results");
                     return new AsyncTaskResult<List<Series>>(seriesList);
-
-                return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.NO_RESULTS_FOUND_FOR_CRITERIA));
+                }
+                return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.NO_RESULTS_FOUND_FOR_CRITERIA_TITLE, Message.NO_RESULTS_FOUND_FOR_CRITERIA_MESSAGE));
             } catch (InvalidSearchCriteriaException e) {
-                return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.INVALID_SEARCH_CRITERIA, e));
+                return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.INVALID_SEARCH_CRITERIA_TITLE, Message.INVALID_SEARCH_CRITERIA_MESSAGE, e));
             } catch (ConnectionFailedException e) {
-                return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.CONNECTION_FAILED, e));
+                return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.CONNECTION_FAILED_TITLE, Message.CONNECTION_FAILED_MESSAGE, e));
             } catch (ParsingFailedException e) {
-                return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.PARSING_FAILED, e));
+                return new AsyncTaskResult<List<Series>>(new SearchSeriesException(Message.PARSING_FAILED_TITLE, Message.PARSING_FAILED_MESSAGE, e));
             }
         }
 
@@ -106,6 +110,7 @@ public class SearchSeriesService {
                 if (taskResult.error() == null){
                     l.onSucess(Collections.unmodifiableList(taskResult.result()));
                 }else{
+                    Log.d("Series Search", "the search has falied: " + taskResult.error().getMessage());
                     l.onFaluire(taskResult.error());
                 }
                 l.onFinish();

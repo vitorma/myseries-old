@@ -47,9 +47,10 @@
     <string name="ok">OK</string>
     <string name="overview">Overview</string>
     <string name="overview_unavailable">Overview is unavailable.</string>
-    <string name="powered_by_thetvdb">Powered by www.thetvdb.com</string>
+    <string name="powered_by_thetvdb">Powered by TheTVDB.com</string>
     <string name="recent">Recent</string>
-    <string name="search_series">Search Series</string>
+    <string name="add_series">Add Series</string>
+    <string name="search_series">Search series</string>
     <string name="seasons">Seasons</string>
     <string name="series_name">Series name</string>
     <string name="settings">Settings</string>
@@ -71,15 +72,15 @@
 
     <!-- Messages -->
 
-    <string name="connection_failed_title">Connection failed.</string>
+    <string name="connection_failed_title">Connection failed</string>
     <string name="connection_failed_message">Check your connection and try again.</string>
-    <string name="invalid_criteria_title">Invalid series name.</string>
+    <string name="invalid_criteria_title">Invalid series name</string>
     <string name="invalid_criteria_message">Type at least one word.</string>
-    <string name="no_results_title">No series found.</string>
+    <string name="no_results_title">No series found</string>
     <string name="no_results_message">Try searching another name.</string>
-    <string name="parsing_failed_title">Error reading file from the web.</string>
+    <string name="parsing_failed_title">Error reading file from the web</string>
     <string name="parsing_failed_message">Your connection may be too slow.</string>
-    <string name="update_failed_title">Data update has failed.</string>
+    <string name="update_failed_title">Data update has failed</string>
     <string name="update_failed_message">Check your connection and try again.</string>
 
     <!-- Message formats -->
