@@ -2,6 +2,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
     android:layout_height="50dp">
 
@@ -23,20 +24,20 @@
 
     <TextView
         android:id="@+id/episodeSeriesTextView"
-        style="@style/TextView.Data.Small"
+        style="@style/TextView.Data.Medium"
         android:paddingTop="@dimen/gap_medium"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
+        android:layout_height="26dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/seriesPoster"
         android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
 
     <TextView
         android:id="@+id/episodeSeasonEpisodeTextView"
-        style="@style/TextView.Label.Medium"
+        style="@style/TextView.Label.Small"
         android:paddingBottom="@dimen/gap_medium"
         android:layout_width="wrap_content"
-        android:layout_height="26dp"
+        android:layout_height="24dp"
         android:layout_below="@id/episodeSeriesTextView"
         android:layout_toRightOf="@id/seriesPoster"
         android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>

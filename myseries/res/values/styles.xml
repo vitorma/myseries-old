@@ -56,6 +56,11 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="TextView.Section.Small">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
     <style name="TextView.Translucent">
         <item name="android:background">@color/translucent</item>
     </style>
