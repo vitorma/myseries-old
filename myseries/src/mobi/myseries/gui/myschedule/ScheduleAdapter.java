@@ -22,7 +22,9 @@
 package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import mobi.myseries.R;
@@ -40,6 +42,7 @@ import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.HasDate;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -141,16 +144,19 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         if(view == null) {
             view = View.inflate(this.context, R.layout.myschedule_section, null);
             viewHolder = new DateViewHolder();
-            viewHolder.dateTextView = (TextView) view.findViewById(R.id.title);
+            viewHolder.dateTextView = (TextView) view.findViewById(R.id.date);
+            viewHolder.relativeTimeTextView = (TextView) view.findViewById(R.id.relativeDate);
             view.setTag(viewHolder);
         } else {
             viewHolder = (DateViewHolder) view.getTag();
         }
 
-        DateFormat format = App.dateFormat();
-        String formattedDate = Dates.toString(day.getDate(), format, this.context.getString(R.string.unavailable_date));
+        DateFormat format = new SimpleDateFormat(this.context.getString(R.string.date_format_with_weekday));
+        String unavailable = this.context.getString(R.string.unavailable_date);
+        String formattedDate = Dates.toString(day.getDate(), format, unavailable).toUpperCase();
 
         viewHolder.dateTextView.setText(formattedDate);
+        viewHolder.relativeTimeTextView.setText(relativeTimeFor(day.getDate()));
 
         return view;
     }
@@ -237,6 +243,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
     private static class DateViewHolder {
         private TextView dateTextView;
+        private TextView relativeTimeTextView;
     }
 
     private static class EpisodeViewHolder {
@@ -257,5 +264,20 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
                 }
             };
         }
+    }
+
+    public static String relativeTimeFor(Date date) {
+        if (date == null) {return "";}
+
+        long time = date.getTime();
+        long now = System.currentTimeMillis();
+        long duration = Math.abs(now - time);
+
+        if (duration >= DateUtils.WEEK_IN_MILLIS) {return "";}
+
+        long minResolution = DateUtils.MINUTE_IN_MILLIS;
+        int flag = DateUtils.FORMAT_ABBREV_RELATIVE;
+
+        return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
     }
 }

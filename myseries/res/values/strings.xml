@@ -65,6 +65,7 @@
     <!-- Label formats -->
 
     <string name="date_format">yyyy-MM-dd</string>
+    <string name="date_format_with_weekday">MM/dd/yyyy (EEE)</string>
     <string name="episode_number_format" formatted="false">S%02dE%02d</string>
     <string name="runtime_minutes_format" formatted="false">%s minutes</string>
     <string name="season_number_format" formatted="false">Season %02d</string>
