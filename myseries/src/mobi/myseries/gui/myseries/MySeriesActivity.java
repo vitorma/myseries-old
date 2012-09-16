@@ -60,13 +60,13 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_series);
 
-        updating = App.isUpdatingData();
+        updating = App.updateSeriesService().isUpdating();
         setSupportProgressBarIndeterminateVisibility(updating);
 
         if (!updating) {
-            App.updateSeriesDataIfNeeded();
+            App.updateSeriesService().updateSeriesDataIfNeeded();
         } else {
-            App.registerSeriesUpdateListener(this);
+            App.updateSeriesService().registerSeriesUpdateListener(this);
         }
     }
     
@@ -104,8 +104,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
-            App.registerSeriesUpdateListener(this);
-            App.updateSeriesData();
+            App.updateSeriesService().registerSeriesUpdateListener(this);
+            App.updateSeriesService().updateSeriesData();
         }
 
         return super.onMenuItemSelected(featureId, item);

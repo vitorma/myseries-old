@@ -80,16 +80,13 @@ public class App extends Application {
     
     public static List<Series> getLastValidSearchResult(){
         return SearchSeriesService.getLastSearchResult();
-  
     }
     
     private static String localLanguage() {
         return environment.localization().language();
-    }
-    
+    }    
 
     // Follow Series
-
     private static FollowSeriesService followSeriesService() {
         return followSeriesService;
     }
@@ -111,20 +108,7 @@ public class App extends Application {
     }
     
     // Update Series
-    
-    public static void updateSeriesData() {
-        updateSeriesService().updateSeriesData();
-    }
-    
-    public static void updateSeriesDataIfNeeded() {
-        updateSeriesService().updateSeriesDataIfNeeded();
-    }
-    
-    public static boolean isUpdatingData() {
-        return updateSeriesService().isUpdating();
-    }
-
-    private static UpdateSeriesService updateSeriesService() {
+    public static UpdateSeriesService updateSeriesService() {
         return updateService;
     }
 
@@ -171,13 +155,4 @@ public class App extends Application {
     public static DateFormat dateFormat() {
         return environment.localization().dateFormat();
     }
-
-    public static void registerSeriesUpdateListener(UpdateListener listener) {
-        updateSeriesService().registerSeriesUpdateListener(listener);       
-    }
-    
-    public static void deregisterSeriesUpdateListener(UpdateListener listener) {
-        updateSeriesService().deregisterSeriesUpdateListener(listener);       
-    }
-
 }
