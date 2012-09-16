@@ -65,6 +65,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
         if (!updating) {
             App.updateSeriesDataIfNeeded();
+        } else {
+            App.registerSeriesUpdateListener(this);
         }
     }
     
