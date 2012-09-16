@@ -119,6 +119,10 @@ public class App extends Application {
     public static void updateSeriesDataIfNeeded() {
         updateSeriesService().updateSeriesDataIfNeeded();
     }
+    
+    public static boolean isUpdatingData() {
+        return updateSeriesService().isUpdating();
+    }
 
     private static UpdateSeriesService updateSeriesService() {
         return updateService;

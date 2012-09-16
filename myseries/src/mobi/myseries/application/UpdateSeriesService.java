@@ -81,6 +81,10 @@ public class UpdateSeriesService {
             this.updateListeners.add(listener);
         }
     }
+    
+    public boolean isUpdating() {
+        return updateRunning;
+    }
 
     private enum UpdateResult {
         SUCCESS, CONNECTION_FAILED, UNKNOWN_ERROR

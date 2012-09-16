@@ -44,12 +44,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String UPDATE = "UPDATE";
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
-    private static final String UPDATING_KEY = "updating";
     
     private boolean updating = false;
-
-    private SeriesListFragment seriesListFragment;
-    private SeriesCoverFlowFragment seriesCoverFlowFragment;
 
     public MySeriesActivity() {
     }
@@ -63,34 +59,13 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_series);
-        
-        if (savedInstanceState == null) {
-            this.seriesListFragment = new SeriesListFragment();
-            this.getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.seriesListFragment, this.seriesListFragment);
 
-            this.seriesCoverFlowFragment = new SeriesCoverFlowFragment();
-            this.getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.seriesCoverFlowFragment, this.seriesCoverFlowFragment);
-            updating = false;
-        }
-        else
-        {
-            updating = savedInstanceState.getBoolean(UPDATING_KEY);
-            setSupportProgressBarIndeterminateVisibility(updating);
-        }
-
-        App.updateSeriesDataIfNeeded();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        
-        updating = savedInstanceState.getBoolean(UPDATING_KEY);
+        updating = App.isUpdatingData();
         setSupportProgressBarIndeterminateVisibility(updating);
+
+        if (!updating) {
+            App.updateSeriesDataIfNeeded();
+        }
     }
     
     //Menu--------------------------------------------------------------------------------------------------------------
@@ -124,12 +99,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         return true;
     }
     
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(UPDATING_KEY, updating);
-    }
-
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
