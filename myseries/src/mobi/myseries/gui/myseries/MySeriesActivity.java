@@ -102,7 +102,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
-            //this.updateMenuItem = item;
             App.registerSeriesUpdateListener(this);
             App.updateSeriesData();
         }
@@ -116,29 +115,11 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         return true;
     }
 
-    //private MenuItem updateMenuItem;
-    //private ImageView spinner = null;
-
     @Override
     public void onUpdateStart() {
         Log.d("MySeriesActivity", "update started");
         setSupportProgressBarIndeterminateVisibility(true);
         updating = true;
-
-        /*
-        this.spinner = new ImageView(this);
-        this.spinner.setImageResource(R.drawable.actionbar_spinner);
-        try {
-            this.spinner.setMinimumWidth((int) this.getSupportActionBar().getThemedContext()
-                    .getResources().getDimension(R.dimen.action_button_min_width));
-        } catch (Exception e) { // can't find? live with it.
-        }
-
-        Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotate);
-        rotation.setRepeatCount(Animation.INFINITE);
-        this.spinner.startAnimation(rotation);
-        this.updateMenuItem.setActionView(this.spinner);
-        */
     }
 
     @Override
@@ -146,17 +127,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d("MySeriesActivity", "update failure");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;
-
-        /*
-        this.spinner.setAnimation(null);
-        this.updateMenuItem.setActionView(null);
-
-        new FailureDialogBuilder(this)
-            .setTitle(R.string.update_failed_title)
-            .setMessage(R.string.update_failed_message)
-            .build()
-            .show();
-            */
     }
 
     @Override
@@ -164,11 +134,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d("MySeriesActivity", "update complete");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;
-
-        /*
-        this.spinner.setAnimation(null);
-        this.updateMenuItem.setActionView(null);
-        */
     }
 
     //Search------------------------------------------------------------------------------------------------------------
