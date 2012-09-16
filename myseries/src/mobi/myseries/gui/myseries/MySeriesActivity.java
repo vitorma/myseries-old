@@ -109,7 +109,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
         menu.add(UPDATE)
             .setIcon(R.drawable.actionbar_update)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         //TODO add intent
         menu.add(SETTINGS)
