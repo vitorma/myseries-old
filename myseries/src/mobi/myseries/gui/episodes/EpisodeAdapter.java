@@ -20,14 +20,47 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImageDownloadListener, EpisodeListener {
+public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
-	private static final Resources RESOURCES = App.environment().context().getResources();
+
+    private static final Resources RESOURCES = App.environment().context().getResources();
     private static final Bitmap GENERIC_IMAGE = BitmapFactory.decodeResource(RESOURCES, R.drawable.clapperboard);
     private static final int ITEM_LAYOUT = R.layout.episodes_item;
+
+    private final EpisodeImageDownloadListener downloadListener = new EpisodeImageDownloadListener() {
+
+        @Override
+        public void onStartDownloadingImageOf(Episode episode) {
+            if (episode.equals(EpisodeAdapter.this.episode)) {
+                EpisodeAdapter.this.startedLoadingImage();
+            }
+        }
+
+        @Override
+        public void onDownloadImageOf(Episode episode) {
+            if (episode.equals(EpisodeAdapter.this.episode)) {
+                EpisodeAdapter.this.loadEpisodeImage();
+            }
+        }
+
+        @Override
+        public void onFailureWhileSavingImageOf(Episode episode) {
+            if (episode.equals(EpisodeAdapter.this.episode)) {
+                EpisodeAdapter.this.setUpForUnavailableImage();
+            }
+        }
+
+        @Override
+        public void onConnectionFailureWhileDownloadingImageOf(Episode episode) {
+            if (episode.equals(EpisodeAdapter.this.episode)) {
+                EpisodeAdapter.this.setUpForUnavailableImage();
+            }
+        }
+    };
 
     private Episode episode;
     private TextView episodeDirector;
@@ -39,7 +72,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
     private Bitmap image;
     private ImageView imageView;
     private CheckBox isViewed;
-//    private ProgressBar progressBar;
+    private ProgressBar progressSpinner;
 
     private LayoutInflater layoutInflater;
 
@@ -48,7 +81,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
 
         this.layoutInflater = LayoutInflater.from(context);
 
-        IMAGE_PROVIDER.register(this);
+        IMAGE_PROVIDER.register(this.downloadListener);
         e.register(this);
     }
 
@@ -68,7 +101,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
         this.episodeGuestStars = (TextView) itemView.findViewById(R.id.episodeGuestStarsTextView);
         this.isViewed = (CheckBox) itemView.findViewById(R.id.isEpisodeViewedCheckBox);
         this.imageView = (ImageView) itemView.findViewById(R.id.imageView);
-//        this.progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+        this.progressSpinner = (ProgressBar) itemView.findViewById(R.id.imageProgressSpinner);
 
         this.episode = this.getItem(position);
 
@@ -100,61 +133,32 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeImag
         return itemView;
     }
 
-    @Override
-    public void onConnectionFailureWhileDownloadingImageOf(Episode episode) {
-        if (episode.equals(this.episode)) {
-            this.setupForUnavailableImage();
-        }
+    private void startedLoadingImage() {
+        this.progressSpinner.setVisibility(View.VISIBLE);
+        this.imageView.setImageBitmap(null);
     }
 
-    @Override
-    public void onDownloadImageOf(Episode episode) {
-        if (episode.equals(this.episode)) {
-            this.loadEpisodeImage();
-            this.setupForLoadedImage();
-        }
-    }
-
-    @Override
-    public void onFailureWhileSavingImageOf(Episode episode) {
-        if (episode.equals(this.episode)) {
-            this.setupForUnavailableImage();
-        }
-    }
-
-    @Override
-    public void onStartDownloadingImageOf(Episode episode) {
-        if (episode.equals(this.episode)) {
-            this.setupForLoadingImage();
-        }
+    private void finishedLoadingImage() {
+        this.progressSpinner.setVisibility(View.GONE);
     }
 
     private void loadEpisodeImage() {
         this.image = IMAGE_PROVIDER.getImageOf(episode);
 
-        this.imageView.setImageBitmap(this.image);
-
         if (this.image != null) {
-            this.setupForLoadedImage();
+            this.setUpForAvailableImage();
         } else {
-            this.imageView.setImageBitmap(GENERIC_IMAGE);
-            this.setupForUnavailableImage();
+            this.setUpForUnavailableImage();
         }
     }
 
-    private void setupForLoadedImage() {
-//        this.progressBar.setVisibility(View.GONE);
-        this.imageView.setVisibility(View.VISIBLE);
+    private void setUpForAvailableImage() {
+        this.imageView.setImageBitmap(this.image);
+        this.finishedLoadingImage();
     }
-
-    private void setupForLoadingImage() {
-//        this.progressBar.setVisibility(View.VISIBLE);
-//        this.imageView.setVisibility(View.GONE);
-    }
-
-    private void setupForUnavailableImage() {
-//        this.progressBar.setVisibility(View.GONE);
-        this.imageView.setVisibility(View.VISIBLE);
+    private void setUpForUnavailableImage() {
+        this.imageView.setImageBitmap(GENERIC_IMAGE);
+        this.finishedLoadingImage();
     }
 
     @Override

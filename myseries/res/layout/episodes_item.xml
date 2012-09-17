@@ -20,23 +20,35 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"/>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:src="@drawable/clapperboard"
-            android:background="@color/gray"
-            android:layout_width="300dp"
-            android:layout_height="168dp"
-            android:layout_marginTop="@dimen/gap_medium"
-            android:layout_below="@id/episodeFirstAiredTextView"
-            android:layout_centerHorizontal="true"/>
+        <FrameLayout
+            android:id="@+id/imageFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/episodeFirstAiredTextView">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:background="@color/gray"
+                android:layout_width="300dp"
+                android:layout_height="168dp"
+                android:layout_marginTop="@dimen/gap_medium"
+                android:layout_gravity="center_horizontal"/>
+
+            <ProgressBar
+                android:id="@+id/imageProgressSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
 
         <CheckBox
             android:id="@+id/isEpisodeViewedCheckBox"
             android:layout_width="@dimen/checkbox_width"
             android:layout_height="@dimen/checkbox_height"
             android:layout_marginTop="@dimen/gap_medium"
-            android:layout_below="@id/imageView"
-            android:layout_alignLeft="@id/imageView"/>
+            android:layout_below="@id/imageFrame"
+            android:layout_alignLeft="@id/imageFrame"/>
 
         <TextView
             android:id="@+id/episodeNameTextView"
@@ -47,7 +59,7 @@
             android:layout_marginTop="@dimen/gap_medium"
             android:layout_marginLeft="@dimen/gap_medium"
             android:layout_marginRight="@dimen/gap_medium"
-            android:layout_below="@id/imageView"
+            android:layout_below="@id/imageFrame"
             android:layout_toRightOf="@id/isEpisodeViewedCheckBox"/>
 
         <TextView
