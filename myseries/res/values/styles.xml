@@ -23,7 +23,6 @@
     </style>
 
     <style name="TextView.Data.Medium.Bold">
-        <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">bold</item>
     </style>
 
