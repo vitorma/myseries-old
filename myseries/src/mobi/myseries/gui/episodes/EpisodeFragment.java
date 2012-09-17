@@ -44,7 +44,6 @@ public class EpisodeFragment extends SherlockListFragment {
         this.seriesId = arguments.getInt(SERIES_ID);
         this.seasonNumber = arguments.getInt(SEASON_NUMBER);
         this.episodeNumber = arguments.getInt(EPISODE_NUMBER);
-
     }
 
     @Override
