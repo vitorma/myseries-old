@@ -64,7 +64,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         setSupportProgressBarIndeterminateVisibility(updating);
 
         if (!updating) {
-            App.updateSeriesService().updateSeriesDataIfNeeded();
+            App.updateSeriesService().updateDataIfNeeded();
         } else {
             App.updateSeriesService().registerSeriesUpdateListener(this);
         }
@@ -105,7 +105,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
             App.updateSeriesService().registerSeriesUpdateListener(this);
-            App.updateSeriesService().updateSeriesData();
+            App.updateSeriesService().updateDataIfNeeded();
         }
 
         return super.onMenuItemSelected(featureId, item);

@@ -1,7 +1,7 @@
 package mobi.myseries.application.schedule;
 
 import mobi.myseries.application.FollowSeriesService;
-import mobi.myseries.application.UpdateSeriesService;
+import mobi.myseries.application.UpdateService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
@@ -12,7 +12,7 @@ import mobi.myseries.shared.Specification;
 
 public class NextToSeeList extends ScheduleList implements SeriesListener {
 
-    private NextToSeeList(ScheduleParameters parameters, SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
+    private NextToSeeList(ScheduleParameters parameters, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
         super(parameters, repository, following, update);
     }
 
@@ -113,7 +113,7 @@ public class NextToSeeList extends ScheduleList implements SeriesListener {
     //Builder-----------------------------------------------------------------------------------------------------------
 
     public static class Builder extends ScheduleList.Builder {
-        public Builder(SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
+        public Builder(SeriesRepository repository, FollowSeriesService following, UpdateService update) {
             super(repository, following, update);
         }
 

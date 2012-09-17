@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.zip.ZipInputStream;
+
+import android.util.Log;
 
 public class TheTVDBStreamFactory implements StreamFactory {
     private UrlFactory urlFactory;
@@ -89,5 +92,47 @@ public class TheTVDBStreamFactory implements StreamFactory {
         }
 
         return connection;
+    }
+
+    @Override
+    public ZipInputStream streamForUpdatesSince(long dateInMiliseconds) throws StreamCreationFailedException, ConnectionFailedException {
+        long currentTime = System.currentTimeMillis();
+        
+        URL url;
+        
+        if (currentTime - dateInMiliseconds < oneDay()) {
+            url = this.urlFactory.urlForLastDayUpdates();
+            Log.d(getClass().getName(), "Downloading update metadata for LAST DAY");
+
+        } else if (currentTime - dateInMiliseconds < oneWeek()) {
+            url = this.urlFactory.urlForLastWeekUpdates();
+            Log.d(getClass().getName(), "Downloading update metadata for LAST WEEK");
+            
+        } else if (currentTime - dateInMiliseconds < oneMonth()) {
+            url = this.urlFactory.urlForLastMonthUpdates();
+            Log.d(getClass().getName(), "Downloading update metadata for LAST MONTH");
+            
+        } else {
+            url = this.urlFactory.urlForAllAvailableUpdates();
+            Log.d(getClass().getName(), "Downloading update metadata for EVER");
+        }
+        
+        return this.zipped(this.buffered(this.streamFrom(this.connectionTo(url))));
+    }
+    
+    private long oneWeek() {
+        return 7L * oneDay();
+    }
+
+    private long oneDay() {
+        return 24L * 60L * 60L * 1000L;
+    }
+    
+    private long oneMonth() {
+        return 30L * oneDay();
+    }
+
+    private ZipInputStream zipped(InputStream stream) {
+        return new ZipInputStream(stream);
     }
 }

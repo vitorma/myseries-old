@@ -22,12 +22,16 @@
 package mobi.myseries.domain.source;
 
 import java.io.InputStream;
+import java.util.zip.ZipInputStream;
 
 public interface StreamFactory {
     public InputStream streamForSeries(int seriesId, Language language)
             throws StreamCreationFailedException, ConnectionFailedException;
 
     public InputStream streamForSeriesSearch(String seriesName, Language language)
+            throws StreamCreationFailedException, ConnectionFailedException;
+    
+    public ZipInputStream streamForUpdatesSince(long dateInMiliseconds) 
             throws StreamCreationFailedException, ConnectionFailedException;
 
     public InputStream streamForSeriesPoster(String fileName)

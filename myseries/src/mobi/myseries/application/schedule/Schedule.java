@@ -22,16 +22,16 @@
 package mobi.myseries.application.schedule;
 
 import mobi.myseries.application.FollowSeriesService;
-import mobi.myseries.application.UpdateSeriesService;
+import mobi.myseries.application.UpdateService;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.shared.Validate;
 
 public class Schedule {
     private SeriesRepository repository;
     private FollowSeriesService following;
-    private UpdateSeriesService update;
+    private UpdateService update;
 
-    public Schedule(SeriesRepository seriesRepository, FollowSeriesService following, UpdateSeriesService update) {
+    public Schedule(SeriesRepository seriesRepository, FollowSeriesService following, UpdateService update) {
         Validate.isNonNull(seriesRepository, "repository");
         Validate.isNonNull(following, "following");
         Validate.isNonNull(update, "update");

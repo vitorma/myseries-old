@@ -30,7 +30,7 @@ import java.util.TreeMap;
 import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.UpdateListener;
-import mobi.myseries.application.UpdateSeriesService;
+import mobi.myseries.application.UpdateService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
@@ -50,7 +50,7 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
 
     private ListenerSet<ScheduleListener> listeners;
 
-    protected ScheduleList(ScheduleParameters parameters, SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
+    protected ScheduleList(ScheduleParameters parameters, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
         this.parameters = parameters;
         this.repository = repository;
         this.elements = new SortedList<HasDate>(comparator(parameters.sortMode()));
@@ -296,9 +296,9 @@ public abstract class ScheduleList implements Publisher<ScheduleListener>, Serie
         protected SeriesRepository repository;
         protected FollowSeriesService following;
         protected ScheduleParameters parameters;
-        protected UpdateSeriesService update;
+        protected UpdateService update;
 
-        public Builder(SeriesRepository repository, FollowSeriesService following, UpdateSeriesService update) {
+        public Builder(SeriesRepository repository, FollowSeriesService following, UpdateService update) {
             Validate.isNonNull(repository, "repository");
             Validate.isNonNull(following, "following");
 
