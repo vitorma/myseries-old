@@ -40,7 +40,7 @@
 
         <TextView
             android:id="@+id/episodeNameTextView"
-            style="@style/TextView.Data.Small.Bold"
+            style="@style/TextView.Data.Medium.Bold"
             android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="@dimen/checkbox_height"
