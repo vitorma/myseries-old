@@ -36,7 +36,7 @@ public class App extends Application {
     private static FollowSeriesService followSeriesService;
     private static ImageloaderService imageLoadService;
     private static Schedule schedule;
-    private static UpdateSeriesService updateService;
+    private static UpdateService updateService;
 
     @Override
     public void onCreate() {
@@ -50,7 +50,7 @@ public class App extends Application {
                 environment.repository(),
                 environment.localization(),
                 environment.imageProvider());
-        updateService = new UpdateSeriesService(
+        updateService = new UpdateService(
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
@@ -108,7 +108,7 @@ public class App extends Application {
     }
     
     // Update Series
-    public static UpdateSeriesService updateSeriesService() {
+    public static UpdateService updateSeriesService() {
         return updateService;
     }
 

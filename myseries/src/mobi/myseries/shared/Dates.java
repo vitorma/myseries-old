@@ -27,6 +27,8 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
+import android.text.format.DateUtils;
+
 public class Dates {
     private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
 
@@ -106,5 +108,20 @@ public class Dates {
                 return d2.compareTo(d1);
             }
         };
+    }
+
+    public static String relativeTimeFor(Date date) {
+        if (date == null) {return "";}
+
+        long time = date.getTime();
+        long now = System.currentTimeMillis();
+        long duration = Math.abs(now - time);
+
+        if (duration >= DateUtils.WEEK_IN_MILLIS) {return "";}
+
+        long minResolution = DateUtils.MINUTE_IN_MILLIS;
+        int flag = DateUtils.FORMAT_ABBREV_RELATIVE;
+
+        return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
     }
 }

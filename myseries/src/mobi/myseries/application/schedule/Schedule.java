@@ -22,16 +22,16 @@
 package mobi.myseries.application.schedule;
 
 import mobi.myseries.application.FollowSeriesService;
-import mobi.myseries.application.UpdateSeriesService;
+import mobi.myseries.application.UpdateService;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.shared.Validate;
 
 public class Schedule {
     private SeriesRepository repository;
     private FollowSeriesService following;
-    private UpdateSeriesService update;
+    private UpdateService update;
 
-    public Schedule(SeriesRepository seriesRepository, FollowSeriesService following, UpdateSeriesService update) {
+    public Schedule(SeriesRepository seriesRepository, FollowSeriesService following, UpdateService update) {
         Validate.isNonNull(seriesRepository, "repository");
         Validate.isNonNull(following, "following");
         Validate.isNonNull(update, "update");
@@ -39,31 +39,38 @@ public class Schedule {
         this.repository = seriesRepository;
         this.following = following;
         this.update = update;
+        
     }
 
-    public NextToSeeList.Builder nextBuilder() {
-        return new NextToSeeList.Builder(this.repository, this.following, this.update);
+    public ScheduleMode next(ScheduleSpecification specification) {
+        Validate.isNonNull(specification, "specification");
+
+        return new Next(specification, this.repository, this.following, this.update);
     }
 
-    public RecentList.Builder recentBuilder() {
-        return new RecentList.Builder(this.repository, this.following, this.update);
+    public ScheduleMode recent(ScheduleSpecification specification) {
+        Validate.isNonNull(specification, "specification");
+
+        return new Recent(specification, this.repository, this.following, this.update);
     }
 
-    public UpcomingList.Builder upcomingBuilder() {
-        return new UpcomingList.Builder(this.repository, this.following, this.update);
+    public ScheduleMode upcoming(ScheduleSpecification specification) {
+        Validate.isNonNull(specification, "specification");
+
+        return new Upcoming(specification, this.repository, this.following, this.update);
     }
 
     //TODO Delete the methods below ASAP--------------------------------------------------------------------------------
 
-    public ScheduleList recent() {
-        return this.recentBuilder().build();
+    public ScheduleMode recent() {
+        return this.next(new ScheduleSpecification());
     }
 
-    public ScheduleList upcoming() {
-        return this.upcomingBuilder().build();
+    public ScheduleMode upcoming() {
+        return this.upcoming(new ScheduleSpecification());
     }
 
-    public ScheduleList next() {
-        return this.nextBuilder().build();
+    public ScheduleMode next() {
+        return this.next(new ScheduleSpecification());
     }
 }

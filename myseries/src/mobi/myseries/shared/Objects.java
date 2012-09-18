@@ -30,4 +30,16 @@ public class Objects {
 
         return actual != null ? actual : safe;
     }
+
+    public static <T> boolean areDifferent(T left, T right) {
+        if (left == null) {
+            return right != null;
+        }
+
+        if (right == null) {
+            return true;
+        }
+
+        return !left.equals(right);
+    }
 }
