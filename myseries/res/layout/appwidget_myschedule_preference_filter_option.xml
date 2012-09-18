@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<CheckedTextView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/seriesCheck"
-    style = "@style/TextView.Dialog.Message"
-    android:checkMark="@drawable/checkbox"
-    android:clickable="true"
-    android:focusable="true"
-    android:gravity="center_vertical"
-    android:padding="@dimen/gap_medium"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="48dp"/>
+    android:layout_height="wrap_content">
+
+    <CheckedTextView
+        android:id="@+id/seriesCheck"
+        style = "@style/TextView.Dialog.Message"
+        android:background="@drawable/list_selector_holo_light"
+        android:checkMark="@drawable/checkbox"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
+
+    <View
+        android:background="@drawable/list_divider_holo_light"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+
+</LinearLayout>
