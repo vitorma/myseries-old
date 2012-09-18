@@ -113,6 +113,71 @@
 
             </RadioGroup>
 
+            <TextView
+                android:text="CREATE STRING : SPECIAL EPISODES"
+                style="@style/TextView.Label.Medium.Bold"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <CheckedTextView
+                android:id="@+id/showSpecialEpisodes"
+                android:text="@string/showSpecialEpisodes"
+                style = "@style/TextView.Dialog.Message"
+                android:checkMark="@drawable/checkbox"
+                android:gravity="center_vertical"
+                android:padding="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:text="CREATE STRING : SEEN EPISODES"
+                style="@style/TextView.Label.Medium.Bold"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <CheckedTextView
+                android:id="@+id/showSeenEpisodes"
+                android:text="@string/showSeenEpisodes"
+                style = "@style/TextView.Dialog.Message"
+                android:checkMark="@drawable/checkbox"
+                android:gravity="center_vertical"
+                android:padding="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:text="@string/seriesToShow"
+                style="@style/TextView.Label.Medium.Bold"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <LinearLayout
+                android:id="@+id/seriesToShowPanel"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         </LinearLayout>
 
     </ScrollView>
