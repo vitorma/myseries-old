@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.zip.ZipInputStream;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
@@ -216,6 +217,13 @@ public class SeriesParserTest extends TestCase {
 
         @Override
         public InputStream streamForEpisodeImage(String fileName) {return null;}
+
+        @Override
+        public ZipInputStream streamForUpdatesSince(long dateInMiliseconds)
+                throws StreamCreationFailedException, ConnectionFailedException {
+            // TODO (Reul) Implement me 
+            return null;
+        }
     }
 
     /* Parser to test */

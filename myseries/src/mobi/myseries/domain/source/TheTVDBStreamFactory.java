@@ -95,7 +95,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
     }
 
     @Override
-    public ZipInputStream streamForUpdatesSince(long dateInMiliseconds) throws StreamCreationFailedException, ConnectionFailedException {
+    public InputStream streamForUpdatesSince(long dateInMiliseconds) throws StreamCreationFailedException, ConnectionFailedException {
         long currentTime = System.currentTimeMillis();
         
         URL url;
@@ -117,7 +117,15 @@ public class TheTVDBStreamFactory implements StreamFactory {
             Log.d(getClass().getName(), "Downloading update metadata for EVER");
         }
         
-        return this.zipped(this.buffered(this.streamFrom(this.connectionTo(url))));
+        ZipInputStream iStream = zipped(buffered(streamFrom(connectionTo(url))));
+        
+        try {
+            iStream.getNextEntry();
+        } catch (IOException e) {
+            throw new StreamCreationFailedException(e);
+        }
+        
+        return iStream;
     }
     
     private long oneWeek() {

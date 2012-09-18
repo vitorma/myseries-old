@@ -20,9 +20,9 @@ import mobi.myseries.shared.Validate;
 
 public class UpdateParser {
 
-    private ZipInputStream streamForUpdate;
+    private InputStream streamForUpdate;
 
-    public UpdateParser(ZipInputStream streamForUpdate) {
+    public UpdateParser(InputStream streamForUpdate) {
         Validate.isNonNull(streamForUpdate, "inputStream");
 
         this.streamForUpdate = streamForUpdate;
@@ -59,21 +59,17 @@ public class UpdateParser {
         }
     }
 
-    public Set<Integer> parse() throws StreamCreationFailedException, ConnectionFailedException,
+    public Set<Integer> parse() throws ConnectionFailedException,
             ParsingFailedException {
-        ZipInputStream stream = this.streamForUpdate;
+        InputStream stream = this.streamForUpdate;
         
         StringBuffer buf = new StringBuffer();
 
         Content content = new Content();
         
         try {
-        
-        // XXX(gabriel) move this to the place where the stream is created. This function should receive an InputStream.
-        stream.getNextEntry();    
-        
-        Log.d(getClass().getName(), buf.toString());
-            Xml.parse(stream,Encoding.UTF_8 , content.handler());
+            Log.d(getClass().getName(), buf.toString());
+            Xml.parse(stream, Encoding.UTF_8, content.handler());
         } catch (SAXException e) {
             throw new ParsingFailedException(e);
         } catch (IOException e) {

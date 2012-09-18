@@ -37,5 +37,6 @@ public interface SeriesSource {
             throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException;
     
     public Set<Integer> fetchUpdatesSince(long dateInMiliseconds) 
-            throws StreamCreationFailedException, ConnectionFailedException, ParsingFailedException;
+            throws ConnectionFailedException, ParsingFailedException, 
+                   UpdateMetadataUnavailableException;
 }
