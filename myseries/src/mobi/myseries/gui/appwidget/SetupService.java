@@ -27,10 +27,10 @@ import java.util.Collections;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.application.schedule.SortMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.SortMode;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -93,10 +93,10 @@ public class SetupService extends IntentService {
 
         switch(sortMode) {
             case SortMode.OLDEST_FIRST:
-                Collections.sort(this.episodes, EpisodeComparator.byOldestFirst());
+                Collections.sort(this.episodes, EpisodeComparator.comparingByOldestFirst());
                 break;
             case SortMode.NEWEST_FIRST:
-                Collections.sort(this.episodes, EpisodeComparator.byNewestFirst());
+                Collections.sort(this.episodes, EpisodeComparator.comparingByNewestFirst());
                 break;
         }
     }

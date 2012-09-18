@@ -2,8 +2,8 @@ package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.application.schedule.SortMode;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.Android;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;

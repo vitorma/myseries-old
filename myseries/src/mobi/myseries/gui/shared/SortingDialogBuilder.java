@@ -1,7 +1,6 @@
 package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
-import mobi.myseries.application.schedule.SortMode;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
