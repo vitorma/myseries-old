@@ -56,9 +56,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     private static final String SHOW_SERIES_KEY = "showSeries_";
 
     private int currentMode;
-    private ScheduleAdapter adapterForModeRecent;
-    private ScheduleAdapter adapterForModeUpcoming;
-    private ScheduleAdapter adapterForModeNext;
+    private AdapterHolder adapterHolder;
 
     public static Intent newIntent(Context context, int scheduleMode) {
         Intent intent = new Intent(context, MyScheduleActivity.class);
@@ -157,7 +155,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.myschedule);
         this.setUpCurrentModeFromExtras(savedInstanceState);
-        this.setUpAdapters();
+        this.setUpAdapterHolder();
         this.setUpActionBar();
     }
 
@@ -169,14 +167,14 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
 
         switch (scheduleFragment.scheduleMode()) {
             case ScheduleMode.RECENT:
-                scheduleFragment.setListAdapter(this.adapterForModeRecent);
+                scheduleFragment.setListAdapter(this.adapterHolder.adapterForModeRecent);
                 break;
             case ScheduleMode.UPCOMING:
-                scheduleFragment.setListAdapter(this.adapterForModeUpcoming);
+                scheduleFragment.setListAdapter(this.adapterHolder.adapterForModeUpcoming);
                 break;
             case ScheduleMode.NEXT:
             default:
-                scheduleFragment.setListAdapter(this.adapterForModeNext);
+                scheduleFragment.setListAdapter(this.adapterHolder.adapterForModeNext);
                 break;
         }
     }
@@ -184,6 +182,11 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(Extra.SCHEDULE_MODE, this.getSupportActionBar().getSelectedNavigationIndex());
+    }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+       return this.adapterHolder;
     }
 
     @Override
@@ -214,10 +217,19 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         }
     }
 
-    private void setUpAdapters() {
-        this.adapterForModeRecent = this.adapterForMode(ScheduleMode.RECENT);
-        this.adapterForModeUpcoming = this.adapterForMode(ScheduleMode.UPCOMING);
-        this.adapterForModeNext = this.adapterForMode(ScheduleMode.NEXT);
+    private void setUpAdapterHolder() {
+        Object retainedAdapterHolder = this.getLastCustomNonConfigurationInstance();
+
+        if (retainedAdapterHolder != null) {
+            this.adapterHolder = (AdapterHolder) retainedAdapterHolder;
+            return;
+        }
+
+        this.adapterHolder = new AdapterHolder();
+
+        this.adapterHolder.adapterForModeRecent = this.adapterForMode(ScheduleMode.RECENT);
+        this.adapterHolder.adapterForModeUpcoming = this.adapterForMode(ScheduleMode.UPCOMING);
+        this.adapterHolder.adapterForModeNext = this.adapterForMode(ScheduleMode.NEXT);
     }
 
     private ScheduleAdapter adapterForMode(int scheduleMode) {
@@ -251,5 +263,11 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
 
     private ActionBar.Tab newTab(int tabNameResource) {
         return this.getSupportActionBar().newTab().setText(tabNameResource);
+    }
+
+    private static class AdapterHolder {
+        private ScheduleAdapter adapterForModeRecent;
+        private ScheduleAdapter adapterForModeUpcoming;
+        private ScheduleAdapter adapterForModeNext;
     }
 }
