@@ -6,7 +6,11 @@
 
     <string name="loading">Loading…</string>
     <string name="widget_preferences">Widget Preferences</string>
-    <string name="schedule_mode">SCHEDULE MODE</string>
+    <string name="schedule_mode_upper">SCHEDULE MODE</string>
+    <string name="sort_episodes_by_upper">SORT EPISODES BY…</string>
+    <string name="special_episodes_upper">SPECIAL EPISODES</string>
+    <string name="seen_episodes_upper">SEEN EPISODES</string>
+    <string name="series_to_show_upper">SERIES TO SHOW</string>
     <string name="recent_episodes">Recent episodes</string>
     <string name="next_episodes">Next episodes to see</string>
     <string name="next">Next</string>

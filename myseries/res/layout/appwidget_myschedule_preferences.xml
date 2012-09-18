@@ -19,7 +19,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="@string/schedule_mode"
+                android:text="@string/schedule_mode_upper"
                 style="@style/TextView.Label.Medium.Bold"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
@@ -72,6 +72,7 @@
 
             <TextView
                 android:id="@+id/sortMode"
+                android:text="@string/sort_episodes_by_upper"
                 style="@style/TextView.Label.Medium.Bold"
                 android:gravity="bottom|left"
                 android:paddingLeft="@dimen/gap_medium"
@@ -114,12 +115,13 @@
             </RadioGroup>
 
             <TextView
-                android:text="CREATE STRING : SPECIAL EPISODES"
+                android:text="@string/special_episodes_upper"
                 style="@style/TextView.Label.Medium.Bold"
+                android:gravity="bottom|left"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="48dp"/>
 
             <View
                 android:background="@drawable/list_divider_holo_light"
@@ -137,12 +139,13 @@
                 android:layout_height="48dp"/>
 
             <TextView
-                android:text="CREATE STRING : SEEN EPISODES"
+                android:text="@string/seen_episodes_upper"
                 style="@style/TextView.Label.Medium.Bold"
+                android:gravity="bottom|left"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="48dp"/>
 
             <View
                 android:background="@drawable/list_divider_holo_light"
@@ -160,12 +163,13 @@
                 android:layout_height="48dp"/>
 
             <TextView
-                android:text="@string/seriesToShow"
+                android:text="@string/series_to_show_upper"
                 style="@style/TextView.Label.Medium.Bold"
+                android:gravity="bottom|left"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="48dp"/>
 
             <View
                 android:background="@drawable/list_divider_holo_light"
