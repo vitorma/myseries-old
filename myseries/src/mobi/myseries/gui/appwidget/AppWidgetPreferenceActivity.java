@@ -26,6 +26,9 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     private static final String PREFS_NAME = "mobi.myseries.gui.appwidget.MyScheduleWidgetPreference";
     private static final String PREF_SCHEDULE_MODE_KEY = "scheduleMode_";
     private static final String PREF_SORT_MODE_KEY = "sortMode_";
+    private static final String SHOW_SPECIAL_EPISODES_KEY = "showSpecialEpisodes_";
+    private static final String SHOW_SEEN_EPISODES_KEY = "showSeenEpisodes_";
+    private static final String SHOW_SERIES_KEY = "showSeries_";
 
     public static Intent newIntent(Context context, int appWidgetId) {
         Intent intent = new Intent(context, AppWidgetPreferenceActivity.class);
@@ -45,15 +48,39 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         return getIntPreference(context, appWidgetId, PREF_SORT_MODE_KEY, SortMode.OLDEST_FIRST);
     }
 
+    public static boolean showSpecialEpisodes(Context context, int appWidgetId) {
+        return getBooleanPreference(context, appWidgetId, SHOW_SPECIAL_EPISODES_KEY, false);
+    }
+
+    public static boolean showSeenEpisodes(Context context, int appWidgetId) {
+        return getBooleanPreference(context, appWidgetId, SHOW_SEEN_EPISODES_KEY, false);
+    }
+
+    public static boolean showSeries(Context context, int appWidgetId, int seriesId) {
+        return getBooleanPreference(context, appWidgetId, SHOW_SERIES_KEY + seriesId, true);
+    }
+
     public static int getIntPreference(Context context, int appWidgetId, String key, int defaultValue) {
         return getPreferences(context)
             .getInt(key + appWidgetId, defaultValue);
+    }
+
+    private static boolean getBooleanPreference(Context context, int appWidgetId, String key, boolean defaultValue) {
+        return getPreferences(context)
+            .getBoolean(key + appWidgetId, defaultValue);
     }
 
     public static boolean saveIntPreference(Context context, int appWidgetId, String key, int value) {
         return getPreferences(context)
             .edit()
             .putInt(key + appWidgetId, value)
+            .commit();
+    }
+
+    private static boolean saveBooleanPreference(Context context, int appWidgetId, String key, boolean value) {
+        return getPreferences(context)
+            .edit()
+            .putBoolean(key + appWidgetId, value)
             .commit();
     }
 
