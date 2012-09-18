@@ -76,8 +76,8 @@ public class SetupService extends IntentService {
     }
 
     private void loadEpisodes() {
-        int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this, this.appWidgetId);
-        int sortMode = AppWidgetPreferenceActivity.sortModeBy(this, this.appWidgetId);
+        int scheduleMode = AppWidgetPreferenceActivity.scheduleMode(this, this.appWidgetId);
+        int sortMode = AppWidgetPreferenceActivity.sortMode(this, this.appWidgetId);
 
         switch(scheduleMode) {
             case ScheduleMode.RECENT:

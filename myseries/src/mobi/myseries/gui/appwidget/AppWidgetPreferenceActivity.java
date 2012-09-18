@@ -1,7 +1,11 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
+import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.application.schedule.ScheduleSpecification;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.Android;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 
 public class AppWidgetPreferenceActivity extends SherlockActivity {
+    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
     /* CLASS MEMBERS */
 
@@ -40,11 +45,33 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         return intent;
     }
 
-    public static int scheduleModeBy(Context context, int appWidgetId) {
+    //TODO (Cleber) Extract class SchedulePreferences-------------------------------------------------------------------
+
+    public static ScheduleSpecification scheduleSpecification(Context context, int appWidgetId) {
+        ScheduleSpecification specification = new ScheduleSpecification();
+
+        boolean showSpecialEpisodes = showSpecialEpisodes(context, appWidgetId);
+        specification.specifyInclusionOfSpecialEpisodes(showSpecialEpisodes);
+
+        boolean showSeenEpisodes = showSeenEpisodes(context, appWidgetId);
+        specification.specifyInclusionOfSeenEpisodes(showSeenEpisodes);
+
+        for (Series s : SERIES_PROVIDER.followedSeries()) {
+            boolean showSeries = showSeries(context, appWidgetId, s.id());
+            specification.specifyInclusionOf(s, showSeries);
+        }
+
+        int sortMode = sortMode(context, appWidgetId);
+        specification.specifySortMode(sortMode);
+
+        return specification;
+    }
+
+    public static int scheduleMode(Context context, int appWidgetId) {
         return getIntPreference(context, appWidgetId, PREF_SCHEDULE_MODE_KEY, ScheduleMode.NEXT);
     }
 
-    public static int sortModeBy(Context context, int appWidgetId) {
+    public static int sortMode(Context context, int appWidgetId) {
         return getIntPreference(context, appWidgetId, PREF_SORT_MODE_KEY, SortMode.OLDEST_FIRST);
     }
 
@@ -141,7 +168,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     private void setupScheduleModeRadioGroup() {
         this.scheduleModeRadioGroup = (RadioGroup) this.findViewById(R.id.scheduleModeRadioGroup);
 
-        switch (scheduleModeBy(this, this.appWidgetId)) {
+        switch (scheduleMode(this, this.appWidgetId)) {
             case ScheduleMode.RECENT:
                 this.scheduleModeRadioGroup.check(R.id.recent);
                 break;
@@ -157,7 +184,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     private void setupSortModeRadioGroup() {
         this.sortModeRadioGroup = (RadioGroup) this.findViewById(R.id.sortModeRadioGroup);
 
-        switch (sortModeBy(this, this.appWidgetId)) {
+        switch (sortMode(this, this.appWidgetId)) {
             case SortMode.OLDEST_FIRST:
                 this.sortModeRadioGroup.check(R.id.oldest_first);
                 break;

@@ -89,8 +89,8 @@ public class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteView
     }
 
     private void loadEpisodes() {
-        int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this.context, this.appWidgetId);
-        int sortMode = AppWidgetPreferenceActivity.sortModeBy(this.context, this.appWidgetId);
+        int scheduleMode = AppWidgetPreferenceActivity.scheduleMode(this.context, this.appWidgetId);
+        int sortMode = AppWidgetPreferenceActivity.sortMode(this.context, this.appWidgetId);
 
         switch(scheduleMode) {
             case ScheduleMode.RECENT:
