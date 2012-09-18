@@ -27,6 +27,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.zip.ZipInputStream;
 
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -139,6 +140,13 @@ public class SeriesSearchParserTest extends TestCase {
 
         @Override
         public InputStream streamForEpisodeImage(String fileName) {return null;}
+
+        @Override
+        public ZipInputStream streamForUpdatesSince(long dateInMiliseconds)
+                throws StreamCreationFailedException, ConnectionFailedException {
+            // TODO (Reul) Implement me 
+            return null;
+        }
     }
 
     /* Parser to test */

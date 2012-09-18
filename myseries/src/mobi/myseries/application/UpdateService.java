@@ -14,7 +14,7 @@ import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
-import mobi.myseries.domain.source.StreamCreationFailedException;
+import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.Android;
 import mobi.myseries.shared.Validate;
 
@@ -88,7 +88,7 @@ public class UpdateService {
     }
 
     private enum UpdateResult {
-        SUCCESS, CONNECTION_FAILED, UNKNOWN_ERROR
+        SUCCESS, CONNECTION_FAILED, UPDATE_METADATA_UNAVAILABLE, UNKNOWN_ERROR
     };
 
     public class ComparatorByLastUpdate implements Comparator<Series> {
@@ -143,11 +143,9 @@ public class UpdateService {
                             } catch (SeriesNotFoundException e) {
                                 e.printStackTrace();
                                 return UpdateResult.UNKNOWN_ERROR;
-
-                            } catch (Exception e) {
+                            } catch (UpdateMetadataUnavailableException e) {
                                 e.printStackTrace();
-                                Log.d(getClass().getName(), "MULESTA!");
-                                // XXX: REMOVE urgently!!!
+                                return UpdateResult.UPDATE_METADATA_UNAVAILABLE;
                             }
 
                             Log.d("SeriesUpdater", "Update complete.");
@@ -156,8 +154,8 @@ public class UpdateService {
                         }
 
                         private List<Series> filterUpToDateFrom(Collection<Series> seriesToFilter)
-                                throws StreamCreationFailedException, ConnectionFailedException,
-                                ParsingFailedException {
+                                throws ConnectionFailedException, ParsingFailedException,
+                                UpdateMetadataUnavailableException {
 
                             long earliestUpdateTime = earliestUpdatedDateOf(seriesToFilter);
 

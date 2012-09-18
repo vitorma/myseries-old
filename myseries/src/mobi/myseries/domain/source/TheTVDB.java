@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.zip.ZipInputStream;
 
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
@@ -50,7 +49,8 @@ public class TheTVDB implements SeriesSource, ImageSource {
 
     @Override
     public List<Series> searchFor(String seriesName, String languageAbbreviation)
-            throws InvalidSearchCriteriaException, ParsingFailedException, ConnectionFailedException {
+            throws InvalidSearchCriteriaException, ParsingFailedException,
+            ConnectionFailedException {
         Validate.isNonBlank(seriesName, new InvalidSearchCriteriaException());
 
         SeriesSearchParser parser = new SeriesSearchParser(this.streamFactory);
@@ -98,11 +98,18 @@ public class TheTVDB implements SeriesSource, ImageSource {
     }
 
     @Override
-    public Set<Integer> fetchUpdatesSince(long dateInMiliseconds)
-            throws StreamCreationFailedException, ConnectionFailedException, ParsingFailedException {
+    public Set<Integer> fetchUpdatesSince(long dateInMiliseconds) throws ConnectionFailedException,
+            ParsingFailedException, UpdateMetadataUnavailableException {
 
-        Log.d(getClass().getName(),"Fetching update metadata");
-        ZipInputStream streamForUpdate = streamFactory.streamForUpdatesSince(dateInMiliseconds);
+        Log.d(getClass().getName(), "Fetching update metadata");
+        
+        InputStream streamForUpdate = null;
+        try {
+            streamForUpdate = streamFactory.streamForUpdatesSince(dateInMiliseconds);
+        } catch (StreamCreationFailedException e) {
+            throw new UpdateMetadataUnavailableException(e);
+        }
+        
         UpdateParser parser = new UpdateParser(streamForUpdate);
 
         Log.d(getClass().getName(),"Parsing update metadata");
@@ -117,7 +124,8 @@ public class TheTVDB implements SeriesSource, ImageSource {
     }
 
     @Override
-    public Bitmap fetchSeriesPoster(String filename) throws ConnectionFailedException, ImageNotFoundException {
+    public Bitmap fetchSeriesPoster(String filename) throws ConnectionFailedException,
+            ImageNotFoundException {
         try {
             return this.bitmapFrom(this.streamFactory.streamForSeriesPoster(filename));
         } catch (StreamCreationFailedException e) {
@@ -126,7 +134,8 @@ public class TheTVDB implements SeriesSource, ImageSource {
     }
 
     @Override
-    public Bitmap fetchEpisodeImage(String filename) throws ConnectionFailedException, ImageNotFoundException {
+    public Bitmap fetchEpisodeImage(String filename) throws ConnectionFailedException,
+            ImageNotFoundException {
         try {
             return this.bitmapFrom(this.streamFactory.streamForEpisodeImage(filename));
         } catch (StreamCreationFailedException e) {
