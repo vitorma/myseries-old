@@ -147,7 +147,7 @@ public class UpdateService {
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.d(getClass().getName(), "MULESTA!");
-                                // TODO: REMOVE
+                                // XXX: REMOVE urgently!!!
                             }
 
                             Log.d("SeriesUpdater", "Update complete.");

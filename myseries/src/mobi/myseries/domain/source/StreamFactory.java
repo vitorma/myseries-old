@@ -30,7 +30,8 @@ public interface StreamFactory {
 
     public InputStream streamForSeriesSearch(String seriesName, Language language)
             throws StreamCreationFailedException, ConnectionFailedException;
-    
+
+    // XXX(gabriel) Remove ZipInputStream, keep InputStream. The parser must not care about zip files.
     public ZipInputStream streamForUpdatesSince(long dateInMiliseconds) 
             throws StreamCreationFailedException, ConnectionFailedException;
 

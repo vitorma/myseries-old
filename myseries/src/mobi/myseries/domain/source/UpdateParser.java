@@ -69,6 +69,7 @@ public class UpdateParser {
         
         try {
         
+        // XXX(gabriel) move this to the place where the stream is created. This function should receive an InputStream.
         stream.getNextEntry();    
         
         Log.d(getClass().getName(), buf.toString());
