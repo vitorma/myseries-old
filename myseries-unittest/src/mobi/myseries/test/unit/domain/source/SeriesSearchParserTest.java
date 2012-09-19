@@ -31,6 +31,7 @@ import java.util.zip.ZipInputStream;
 
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.Language;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesSearchParser;
@@ -165,7 +166,7 @@ public class SeriesSearchParserTest extends TestCase {
     /* Parse */
 
     public void testBlankSeriesNameCausesIllegalArgumentExceptionAtTheParsing()
-            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException {
+            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         try {
             this.seriesSearchParser.parse("", Language.ENGLISH);
             fail("Should have thrown an IllegalArgumentException");
@@ -173,7 +174,7 @@ public class SeriesSearchParserTest extends TestCase {
     }
 
     public void testNullLanguageCausesIllegalArgumentExceptionAtTheParsing()
-            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException {
+            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         try {
             this.seriesSearchParser.parse(MATCHED_SERIES_NAME, null);
             fail("Should have thrown an IllegalArgumentException");
@@ -181,7 +182,7 @@ public class SeriesSearchParserTest extends TestCase {
     }
 
     public void testParsingInvalidXmlCausesParsingFailedException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         try {
             this.seriesSearchParser.parse(SERIES_NAME_FOR_INVALID_XML, Language.ENGLISH);
             fail("Should have thrown an ParsingFailedException");
@@ -189,14 +190,14 @@ public class SeriesSearchParserTest extends TestCase {
     }
 
     public void testSeriesParserParsesEmptySearchXml()
-            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException {
+            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         List<Series> searchResult = this.seriesSearchParser.parse(UNMATCHED_SERIES_NAME, Language.ENGLISH);
 
         assertThat(searchResult.size(), equalTo(0));
     }
 
     public void testSeriesParserParsesNonEmptySearchXml()
-            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException {
+            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         List<Series> searchResult = this.seriesSearchParser.parse(MATCHED_SERIES_NAME, Language.ENGLISH);
 
         assertThat(searchResult.size(), equalTo(3));

@@ -50,7 +50,7 @@ public class TheTVDB implements SeriesSource, ImageSource {
     @Override
     public List<Series> searchFor(String seriesName, String languageAbbreviation)
             throws InvalidSearchCriteriaException, ParsingFailedException,
-            ConnectionFailedException {
+            ConnectionFailedException, ConnectionTimeoutException {
         Validate.isNonBlank(seriesName, new InvalidSearchCriteriaException());
 
         SeriesSearchParser parser = new SeriesSearchParser(this.streamFactory);
@@ -65,7 +65,7 @@ public class TheTVDB implements SeriesSource, ImageSource {
 
     @Override
     public Series fetchSeries(int seriesId, String languageAbbreviation)
-            throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException {
+            throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException, ConnectionTimeoutException {
         SeriesParser parser = new SeriesParser(this.streamFactory);
         Language language = this.languageFrom(languageAbbreviation);
 
@@ -78,7 +78,7 @@ public class TheTVDB implements SeriesSource, ImageSource {
 
     @Override
     public List<Series> fetchAllSeries(int[] seriesIds, String languageAbbreviation)
-            throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException {
+            throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException, ConnectionTimeoutException {
         Validate.isNonNull(seriesIds, "seriesIds");
 
         SeriesParser parser = new SeriesParser(this.streamFactory);
@@ -99,7 +99,7 @@ public class TheTVDB implements SeriesSource, ImageSource {
 
     @Override
     public Set<Integer> fetchUpdatesSince(long dateInMiliseconds) throws ConnectionFailedException,
-            ParsingFailedException, UpdateMetadataUnavailableException {
+            ParsingFailedException, UpdateMetadataUnavailableException, ConnectionTimeoutException {
 
         Log.d(getClass().getName(), "Fetching update metadata");
         
@@ -125,7 +125,7 @@ public class TheTVDB implements SeriesSource, ImageSource {
 
     @Override
     public Bitmap fetchSeriesPoster(String filename) throws ConnectionFailedException,
-            ImageNotFoundException {
+            ImageNotFoundException, ConnectionTimeoutException {
         try {
             return this.bitmapFrom(this.streamFactory.streamForSeriesPoster(filename));
         } catch (StreamCreationFailedException e) {
@@ -135,7 +135,7 @@ public class TheTVDB implements SeriesSource, ImageSource {
 
     @Override
     public Bitmap fetchEpisodeImage(String filename) throws ConnectionFailedException,
-            ImageNotFoundException {
+            ImageNotFoundException, ConnectionTimeoutException {
         try {
             return this.bitmapFrom(this.streamFactory.streamForEpisodeImage(filename));
         } catch (StreamCreationFailedException e) {

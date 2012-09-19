@@ -24,6 +24,8 @@ package mobi.myseries.domain.source;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.ZipInputStream;
@@ -31,6 +33,8 @@ import java.util.zip.ZipInputStream;
 import android.util.Log;
 
 public class TheTVDBStreamFactory implements StreamFactory {
+	final int CONNECTION_TIMEOUT_IN_MILLIS = 7000;
+	
     private UrlFactory urlFactory;
 
     public TheTVDBStreamFactory(String apiKey) {
@@ -39,28 +43,28 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
     @Override
     public InputStream streamForSeries(int seriesId, Language language)
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         URL url = this.urlFactory.urlForSeries(seriesId, language);
         return this.buffered(this.streamFrom(this.connectionTo(url)));
     }
 
     @Override
     public InputStream streamForSeriesSearch(String seriesName, Language language)
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         URL url = this.urlFactory.urlForSeriesSearch(seriesName, language);
         return this.buffered(this.streamFrom(this.connectionTo(url)));
     }
 
     @Override
     public InputStream streamForSeriesPoster(String fileName)
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         URL url = this.urlFactory.urlForSeriesPoster(fileName);
         return this.buffered(this.streamFrom(this.connectionTo(url)));
     }
 
     @Override
     public InputStream streamForEpisodeImage(String fileName)
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         URL url = this.urlFactory.urlForEpisodeImage(fileName);
         return this.buffered(this.streamFrom(this.connectionTo(url)));
     }
@@ -81,21 +85,26 @@ public class TheTVDBStreamFactory implements StreamFactory {
         return stream;
     }
 
-    private URLConnection connectionTo(URL url) throws ConnectionFailedException {
+    private URLConnection connectionTo(URL url) throws ConnectionFailedException, ConnectionTimeoutException {
         URLConnection connection = null;
 
         try {
             connection = url.openConnection();
+            connection.setConnectTimeout(CONNECTION_TIMEOUT_IN_MILLIS);
             connection.connect();
+        } catch (SocketTimeoutException e) {
+			throw new ConnectionTimeoutException(e);
+
         } catch (IOException e) {
             throw new ConnectionFailedException(e);
-        }
+        
+		}
 
         return connection;
     }
 
     @Override
-    public InputStream streamForUpdatesSince(long dateInMiliseconds) throws StreamCreationFailedException, ConnectionFailedException {
+    public InputStream streamForUpdatesSince(long dateInMiliseconds) throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         long currentTime = System.currentTimeMillis();
         
         URL url;

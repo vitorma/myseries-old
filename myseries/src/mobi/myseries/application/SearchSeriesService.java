@@ -26,6 +26,7 @@ import java.util.List;
 
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
@@ -105,7 +106,10 @@ public class SearchSeriesService {
             } catch (ParsingFailedException e) {
                 Log.d("Series Search", "the search has falied, the parsing has failed.");
                 return new AsyncTaskResult<List<Series>>(new SeriesSearchException(e));
-            }
+            } catch (ConnectionTimeoutException e) {
+            	Log.d("Series Search", "the search has falied, the connection has timed out.");
+            	return new AsyncTaskResult<List<Series>>(new SeriesSearchException(e));
+			}
         }
 
         @Override

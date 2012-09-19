@@ -22,6 +22,7 @@
 package mobi.myseries.test.unit.domain.source;
 
 import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.Language;
 import mobi.myseries.domain.source.StreamCreationFailedException;
 import mobi.myseries.domain.source.TheTVDBStreamFactory;
@@ -49,25 +50,25 @@ public class TheTVDBStreamFactoryTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesWithNullLanguageCausesIllegalArgumentException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         new TheTVDBStreamFactory(API_KEY).streamForSeries(1, null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesSearchWithNullNameCausesIllegalArgumentException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         new TheTVDBStreamFactory(API_KEY).streamForSeriesSearch(null, Language.ENGLISH);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesSearchWithBlankNameCausesIllegalArgumentException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         new TheTVDBStreamFactory(API_KEY).streamForSeriesSearch(BLANK_STRING, Language.ENGLISH);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesSearchWithNullLanguageCausesIllegalArgumentException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         new TheTVDBStreamFactory(API_KEY).streamForSeriesSearch(NON_BLANK_STRING, null);
     }
 
@@ -75,25 +76,25 @@ public class TheTVDBStreamFactoryTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesPosterWithNullFileNameCausesIllegalArgumentException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         new TheTVDBStreamFactory(API_KEY).streamForSeriesPoster(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForSeriesPosterWithBlankFileNameCausesIllegalArgumentException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         new TheTVDBStreamFactory(API_KEY).streamForSeriesPoster(BLANK_STRING);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForEpisodeImageWithNullFileNameCausesIllegalArgumentException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         new TheTVDBStreamFactory(API_KEY).streamForEpisodeImage(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void gettingStreamForEpisodeImageWithBlankFileNameCausesIllegalArgumentException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         new TheTVDBStreamFactory(API_KEY).streamForEpisodeImage(BLANK_STRING);
     }
 }

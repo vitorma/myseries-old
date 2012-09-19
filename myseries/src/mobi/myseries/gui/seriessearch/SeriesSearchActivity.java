@@ -31,6 +31,7 @@ import mobi.myseries.application.SearchSeriesListener;
 import mobi.myseries.application.SeriesSearchException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
@@ -200,15 +201,12 @@ public class SeriesSearchActivity extends SherlockListActivity {
                             SeriesSearchActivity.this);
 
                     if (exception.getCause() instanceof ConnectionFailedException) {
-                        dialogBuilder
-                                .setTitle(R.string.connection_failed_title);
-                        dialogBuilder
-                                .setMessage(R.string.connection_failed_message);
+                        dialogBuilder.setTitle(R.string.connection_failed_title);
+                        dialogBuilder.setMessage(R.string.connection_failed_message);
 
                     } else if (exception.getCause() instanceof InvalidSearchCriteriaException) {
                         dialogBuilder.setTitle(R.string.invalid_criteria_title);
-                        dialogBuilder
-                                .setMessage(R.string.invalid_criteria_message);
+                        dialogBuilder.setMessage(R.string.invalid_criteria_message);
 
                     } else if (exception.getCause() instanceof SeriesNotFoundException) {
                         dialogBuilder.setTitle(R.string.no_results_title);
@@ -216,10 +214,10 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
                     } else if (exception.getCause() instanceof ParsingFailedException) {
                         dialogBuilder.setTitle(R.string.parsing_failed_title);
-                        dialogBuilder
-                                .setMessage(R.string.parsing_failed_message);
-                    } else {
-                        dialogBuilder.setMessage(exception.getMessage());
+                        dialogBuilder.setMessage(R.string.parsing_failed_message);
+                    } else if (exception.getCause() instanceof ConnectionTimeoutException){
+                    	dialogBuilder.setTitle(R.string.connection_timeout_title);
+                        dialogBuilder.setMessage(R.string.connection_timeout_message);
                     }
                     Dialog dialog = dialogBuilder.build();
                     dialog.show();
@@ -315,11 +313,9 @@ public class SeriesSearchActivity extends SherlockListActivity {
                                 SeriesSearchActivity.this)
                                 .setTitle(this.selectedItem.name())
                                 .setMessage(this.selectedItem.overview())
-                                .setSurrogateMessage(
-                                        R.string.overview_unavailable)
-                                .setPositiveButton(
-                                        this.followButtonTextResourceId(),
-                                        this.followButtonClickListener())
+                                .setSurrogateMessage(R.string.overview_unavailable)
+                                .setPositiveButton(this.followButtonTextResourceId(),
+                                        		   this.followButtonClickListener())
                                 .setNegativeButton(R.string.back, null).build();
 
                         this.dialog.show();

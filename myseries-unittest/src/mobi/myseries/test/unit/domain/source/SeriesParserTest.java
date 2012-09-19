@@ -33,6 +33,7 @@ import java.util.zip.ZipInputStream;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.Language;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesParser;
@@ -242,7 +243,7 @@ public class SeriesParserTest extends TestCase {
     /* Parse */
 
     public void testNullLanguageCausesIllegalArgumentExceptionAtTheParsing()
-            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException {
+            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         try {
             this.seriesParser.parse(Integer.valueOf(BASE_SERIES_ID), null);
             fail("Should have thrown an IllegalArgumentException");
@@ -250,7 +251,7 @@ public class SeriesParserTest extends TestCase {
     }
 
     public void testParsingInvalidXmlCausesParsingFailedException()
-            throws StreamCreationFailedException, ConnectionFailedException {
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         try {
             this.seriesParser.parse(SERIES_ID_FOR_INVALID_XML, Language.ENGLISH);
             fail("Should have thrown a ParsingFailedException");
@@ -258,7 +259,7 @@ public class SeriesParserTest extends TestCase {
     }
 
     public void testSeriesParserParsesBaseSeriesXml()
-            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException {
+            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException, NumberFormatException, ConnectionTimeoutException {
         Series baseSeries = this.seriesParser.parse(Integer.valueOf(BASE_SERIES_ID), Language.ENGLISH);
 
         assertThat(baseSeries.id(), equalTo(Integer.valueOf(BASE_SERIES_ID)));
@@ -278,7 +279,7 @@ public class SeriesParserTest extends TestCase {
     }
 
     public void testSeriesParserParsesFullSeriesXml()
-            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException {
+            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException, NumberFormatException, ConnectionTimeoutException {
         Series fullSeries = this.seriesParser.parse(Integer.valueOf(FULL_SERIES_ID), Language.ENGLISH);
 
         assertThat(fullSeries.id(), equalTo(Integer.valueOf(FULL_SERIES_ID)));

@@ -25,17 +25,17 @@ import java.io.InputStream;
 
 public interface StreamFactory {
     public InputStream streamForSeries(int seriesId, Language language)
-            throws StreamCreationFailedException, ConnectionFailedException;
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
 
     public InputStream streamForSeriesSearch(String seriesName, Language language)
-            throws StreamCreationFailedException, ConnectionFailedException;
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
 
     public InputStream streamForUpdatesSince(long dateInMiliseconds) 
-            throws StreamCreationFailedException, ConnectionFailedException;
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
 
     public InputStream streamForSeriesPoster(String fileName)
-            throws StreamCreationFailedException, ConnectionFailedException;
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
 
     public InputStream streamForEpisodeImage(String fileName)
-            throws StreamCreationFailedException, ConnectionFailedException;
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
 }

@@ -25,8 +25,8 @@ import android.graphics.Bitmap;
 
 public interface ImageSource {
     Bitmap fetchSeriesPoster(String filename)
-            throws ConnectionFailedException, ImageNotFoundException;
+            throws ConnectionFailedException, ConnectionTimeoutException, ImageNotFoundException;
 
     Bitmap fetchEpisodeImage(String filename)
-            throws ConnectionFailedException, ImageNotFoundException;
+            throws ConnectionFailedException, ConnectionTimeoutException, ImageNotFoundException;
 }

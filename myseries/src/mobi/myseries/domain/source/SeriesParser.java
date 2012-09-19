@@ -45,7 +45,7 @@ public class SeriesParser {
     }
 
     public Series parse(int seriesId, Language language)
-            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException {
+            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         InputStream stream = this.streamFactory.streamForSeries(seriesId, language);
 
         Content content = new Content();

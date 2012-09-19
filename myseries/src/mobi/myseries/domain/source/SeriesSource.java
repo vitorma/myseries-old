@@ -28,15 +28,15 @@ import mobi.myseries.domain.model.Series;
 
 public interface SeriesSource {
     public List<Series> searchFor(String seriesName, String languageAbbreviation)
-            throws InvalidSearchCriteriaException, ParsingFailedException, ConnectionFailedException;
+            throws InvalidSearchCriteriaException, ParsingFailedException, ConnectionFailedException, ConnectionTimeoutException;
 
     public Series fetchSeries(int seriesId, String languageAbbreviation)
-            throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException;
+            throws ParsingFailedException, ConnectionFailedException, ConnectionTimeoutException, SeriesNotFoundException;
 
     public List<Series> fetchAllSeries(int[] seriesIds, String languageAbbreviation)
-            throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException;
+            throws ParsingFailedException, ConnectionFailedException, ConnectionTimeoutException, SeriesNotFoundException;
     
     public Set<Integer> fetchUpdatesSince(long dateInMiliseconds) 
-            throws ConnectionFailedException, ParsingFailedException, 
+            throws ConnectionFailedException, ConnectionTimeoutException, ParsingFailedException, 
                    UpdateMetadataUnavailableException;
 }

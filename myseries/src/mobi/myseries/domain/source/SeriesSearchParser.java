@@ -44,7 +44,7 @@ public class SeriesSearchParser {
     }
 
     public List<Series> parse(String seriesName, Language language)
-            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException {
+            throws ParsingFailedException, StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
         InputStream stream = this.streamFactory.streamForSeriesSearch(seriesName, language);
 
         Content content = new Content();

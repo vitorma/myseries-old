@@ -25,6 +25,7 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
@@ -143,7 +144,7 @@ public class FollowSeriesService {
 
         private boolean failed;
 
-        protected void followSeries(Series seriesToFollow) throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException {
+        protected void followSeries(Series seriesToFollow) throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException, ConnectionTimeoutException {
             this.failed = true; // it will only be considered successful
                                 // after actually being successful
 
@@ -191,7 +192,9 @@ public class FollowSeriesService {
                 return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
             } catch (ParsingFailedException e) {
                 return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
-            }
+            } catch (ConnectionTimeoutException e) {
+            	return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
+			}
             return new AsyncTaskResult<Series>(series);
         }
         @Override
@@ -214,7 +217,9 @@ public class FollowSeriesService {
                 errorService.notifyError(new FollowSeriesException(e, series));
             } catch (ParsingFailedException e) {
                 errorService.notifyError(new FollowSeriesException(e, series));
-            }
+            } catch (ConnectionTimeoutException e) {
+            	errorService.notifyError(new FollowSeriesException(e, series));
+			}
             afterFollowingActions();
         };
     }

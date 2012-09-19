@@ -42,6 +42,7 @@ import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
@@ -149,7 +150,8 @@ public class FollowSeriesServiceTests {
     @Test
     public void shouldNotFollowNonexistentSeries() throws ParsingFailedException,
                                                           ConnectionFailedException,
-                                                          SeriesNotFoundException {
+                                                          SeriesNotFoundException, 
+                                                          ConnectionTimeoutException {
         when(this.seriesSource.fetchSeries(anyInt(), anyString()))
             .thenThrow(new SeriesNotFoundException());
 
@@ -164,7 +166,8 @@ public class FollowSeriesServiceTests {
     @Test
     public void errorsMustBeDetectedAfterSuccessfulFollowing() throws ParsingFailedException,
                                                                       ConnectionFailedException,
-                                                                      SeriesNotFoundException {
+                                                                      SeriesNotFoundException, 
+                                                                      ConnectionTimeoutException {
         Series seriesToBeFollowed = mock(Series.class);
 
         when(this.seriesSource.fetchSeries(anyInt(), anyString()))
@@ -184,7 +187,8 @@ public class FollowSeriesServiceTests {
     @Test
     public void followedSeriesMustBeSaved() throws ParsingFailedException,
                                                    ConnectionFailedException,
-                                                   SeriesNotFoundException {
+                                                   SeriesNotFoundException, 
+                                                   ConnectionTimeoutException {
         Series seriesToBeFollowed = mock(Series.class);
 
         doReturn(seriesToBeFollowed).when(this.seriesSource).fetchSeries(anyInt(), anyString());
@@ -197,7 +201,8 @@ public class FollowSeriesServiceTests {
     @Test
     public void seriesFollowingListenersMustBeNotifiedOfFollow() throws ParsingFailedException,
                                                                         ConnectionFailedException,
-                                                                        SeriesNotFoundException {
+                                                                        SeriesNotFoundException, 
+                                                                        ConnectionTimeoutException {
         Series seriesToBeFollowed = mock(Series.class);
 
         doReturn(seriesToBeFollowed).when(this.seriesSource).fetchSeries(anyInt(), anyString());
@@ -210,10 +215,12 @@ public class FollowSeriesServiceTests {
     @Test
     public void whenASeriesIsFollowedTwiceItMustBeNotifiedEachTime() throws ParsingFailedException,
                                                                             ConnectionFailedException,
-                                                                            SeriesNotFoundException {
+                                                                            SeriesNotFoundException, 
+                                                                            ConnectionTimeoutException {
         Series searchResultSeries = mock(Series.class);
         Series seriesToBeFollowed1 = mock(Series.class);
         Series seriesToBeFollowed2 = mock(Series.class);
+        
 
         when(this.seriesSource.fetchSeries(anyInt(), anyString()))
             .thenReturn(seriesToBeFollowed1,

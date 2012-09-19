@@ -79,6 +79,8 @@
 
     <string name="connection_failed_title">Connection failed</string>
     <string name="connection_failed_message">Check your connection and try again.</string>
+    <string name="connection_timeout_title">Connection timeout</string>
+    <string name="connection_timeout_message">Connection time limit exceeded. Check your connection and try again.</string>
     <string name="invalid_criteria_title">Invalid series name</string>
     <string name="invalid_criteria_message">Type at least one word.</string>
     <string name="no_results_title">No series found</string>

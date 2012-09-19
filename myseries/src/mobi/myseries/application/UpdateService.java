@@ -11,6 +11,7 @@ import android.util.Log;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
@@ -88,7 +89,7 @@ public class UpdateService {
     }
 
     private enum UpdateResult {
-        SUCCESS, CONNECTION_FAILED, UPDATE_METADATA_UNAVAILABLE, UNKNOWN_ERROR
+        SUCCESS, CONNECTION_FAILED, UPDATE_METADATA_UNAVAILABLE, UNKNOWN_ERROR, CONNECTION_TIMEOUT
     };
 
     public class ComparatorByLastUpdate implements Comparator<Series> {
@@ -146,7 +147,10 @@ public class UpdateService {
                             } catch (UpdateMetadataUnavailableException e) {
                                 e.printStackTrace();
                                 return UpdateResult.UPDATE_METADATA_UNAVAILABLE;
-                            }
+                            } catch (ConnectionTimeoutException e) {
+								e.printStackTrace();
+								return UpdateResult.CONNECTION_TIMEOUT;
+							}
 
                             Log.d("SeriesUpdater", "Update complete.");
 
@@ -155,7 +159,7 @@ public class UpdateService {
 
                         private List<Series> filterUpToDateFrom(Collection<Series> seriesToFilter)
                                 throws ConnectionFailedException, ParsingFailedException,
-                                UpdateMetadataUnavailableException {
+                                UpdateMetadataUnavailableException, ConnectionTimeoutException {
 
                             long earliestUpdateTime = earliestUpdatedDateOf(seriesToFilter);
 
