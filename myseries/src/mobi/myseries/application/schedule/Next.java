@@ -71,18 +71,6 @@ public class Next extends ScheduleMode implements SeriesListener {
         return null;
     }
 
-    private int indexOfEpisodeOf(Series series) {
-        Specification<Episode> specification = seriesIdSpecification(series.id());
-
-        for (int i = 0; i < this.episodes.size(); i++) {
-            if (specification.isSatisfiedBy(this.episodes.get(i))) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
     private static Specification<Episode> seriesIdSpecification(final int seriesId) {
         return new AbstractSpecification<Episode>() {
             @Override
