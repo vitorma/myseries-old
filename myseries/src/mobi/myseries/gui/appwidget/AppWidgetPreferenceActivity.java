@@ -1,5 +1,8 @@
 package mobi.myseries.gui.appwidget;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
@@ -16,10 +19,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -45,7 +51,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         return intent;
     }
 
-    //TODO (Cleber) Extract class SchedulePreferences-------------------------------------------------------------------
+    /* TODO (Cleber) Extract class SchedulePreferences */
 
     public static ScheduleSpecification scheduleSpecification(Context context, int appWidgetId) {
         ScheduleSpecification specification = new ScheduleSpecification();
@@ -120,6 +126,9 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     private int appWidgetId;
     private RadioGroup scheduleModeRadioGroup;
     private RadioGroup sortModeRadioGroup;
+    private CheckedTextView showSpecialEpisodes;
+    private CheckedTextView showSeenEpisodes;
+    private Map<Series, CheckedTextView> seriesToShow;
     private Button cancelButton;
     private Button saveButton;
 
@@ -129,7 +138,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         this.setContentView(R.layout.appwidget_myschedule_preferences);
         this.setResult(Activity.RESULT_CANCELED);
         this.getExtraAppWidgetIdOrFinish();
-        this.setupViews();
+        this.setUpViews();
         this.getSupportActionBar().setTitle(R.string.widget_preferences);
     }
 
@@ -149,23 +158,17 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
                AppWidgetManager.INVALID_APPWIDGET_ID;
     }
 
-    private void setupViews() {
-        this.setUpSortModeLabel();
-        this.setupScheduleModeRadioGroup();
-        this.setupSortModeRadioGroup();
-        this.setupCancelButton();
-        this.setupSaveButton();
+    private void setUpViews() {
+        this.setUpScheduleModeOptions();
+        this.setUpSortModeOptions();
+        this.setUpSpecialEpisodesOptions();
+        this.setUpSeenEpisodesOptions();
+        this.setUpSeriesToShowOptions();
+        this.setUpCancelButton();
+        this.setUpSaveButton();
     }
 
-    private void setUpSortModeLabel() {
-        TextView sortModeLabel = (TextView) this.findViewById(R.id.sortMode);
-        String format = this.getString(R.string.sort_by_format);
-        String episodes = this.getString(R.string.episodes);
-
-        sortModeLabel.setText(String.format(format, episodes).toUpperCase());
-    }
-
-    private void setupScheduleModeRadioGroup() {
+    private void setUpScheduleModeOptions() {
         this.scheduleModeRadioGroup = (RadioGroup) this.findViewById(R.id.scheduleModeRadioGroup);
 
         switch (scheduleMode(this, this.appWidgetId)) {
@@ -181,7 +184,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         }
     }
 
-    private void setupSortModeRadioGroup() {
+    private void setUpSortModeOptions() {
         this.sortModeRadioGroup = (RadioGroup) this.findViewById(R.id.sortModeRadioGroup);
 
         switch (sortMode(this, this.appWidgetId)) {
@@ -194,7 +197,54 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         }
     }
 
-    private void setupCancelButton() {
+    private void setUpSpecialEpisodesOptions() {
+        this.showSpecialEpisodes = (CheckedTextView) this.findViewById(R.id.showSpecialEpisodes);
+
+        this.showSpecialEpisodes.setChecked(showSpecialEpisodes(this, this.appWidgetId));
+        this.showSpecialEpisodes.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSpecialEpisodes.toggle();
+            }
+        });
+    }
+
+    private void setUpSeenEpisodesOptions() {
+        this.showSeenEpisodes = (CheckedTextView) this.findViewById(R.id.showSeenEpisodes);
+
+        this.showSeenEpisodes.setChecked(showSeenEpisodes(this, this.appWidgetId));
+        this.showSeenEpisodes.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSeenEpisodes.toggle();
+            }
+        });
+    }
+
+    private void setUpSeriesToShowOptions() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        LinearLayout seriesToShowPanel = (LinearLayout) this.findViewById(R.id.seriesToShowPanel);
+        this.seriesToShow = new HashMap<Series, CheckedTextView>();
+
+        for (Series s : SERIES_PROVIDER.followedSeries()) {
+            View v = inflater.inflate(R.layout.appwidget_myschedule_preference_filter_option, null);
+            final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.seriesCheck);
+
+            seriesCheck.setText(s.name());
+            seriesCheck.setChecked(showSeries(this, this.appWidgetId, s.id()));
+            seriesCheck.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    seriesCheck.toggle();
+                }
+            });
+
+            seriesToShowPanel.addView(v);
+            this.seriesToShow.put(s, seriesCheck);
+        }
+    }
+
+    private void setUpCancelButton() {
         this.cancelButton = (Button) this.findViewById(R.id.cancelButton);
 
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -204,7 +254,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         });
     }
 
-    private void setupSaveButton() {
+    private void setUpSaveButton() {
         this.saveButton = (Button) this.findViewById(R.id.saveButton);
 
         this.saveButton.setOnClickListener(new View.OnClickListener() {
@@ -217,6 +267,9 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     private void onSave() {
         this.saveScheduleModePreference();
         this.saveSortModePreference();
+        this.saveSpecialEpisodesPreference();
+        this.saveSeenEpisodesPreference();
+        this.saveSeriesToShowPreference();
         this.updateAppWidget();
         this.finishOk();
     }
@@ -243,6 +296,20 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
             case R.id.newest_first:
                 saveIntPreference(this, this.appWidgetId, PREF_SORT_MODE_KEY, SortMode.NEWEST_FIRST);
                 break;
+        }
+    }
+
+    private void saveSpecialEpisodesPreference() {
+        saveBooleanPreference(this, this.appWidgetId, SHOW_SPECIAL_EPISODES_KEY, this.showSpecialEpisodes.isChecked());
+    }
+
+    private void saveSeenEpisodesPreference() {
+        saveBooleanPreference(this, this.appWidgetId, SHOW_SEEN_EPISODES_KEY, this.showSeenEpisodes.isChecked());
+    }
+
+    private void saveSeriesToShowPreference() {
+        for (Series s : this.seriesToShow.keySet()) {
+            saveBooleanPreference(this, this.appWidgetId, SHOW_SERIES_KEY + s.id(), this.seriesToShow.get(s).isChecked());
         }
     }
 

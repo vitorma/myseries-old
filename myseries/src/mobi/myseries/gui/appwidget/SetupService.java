@@ -21,16 +21,14 @@
 
 package mobi.myseries.gui.appwidget;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.Extra;
-import mobi.myseries.gui.shared.SortMode;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -45,7 +43,7 @@ public class SetupService extends IntentService {
     private int appWidgetId;
     private RemoteViews appWidgetView;
     private String action;
-    private ArrayList<Episode> episodes;
+    private List<Episode> episodes;
     private ItemPageBrowser itemPageBrowser;
 
     public SetupService() {
@@ -77,26 +75,17 @@ public class SetupService extends IntentService {
 
     private void loadEpisodes() {
         int scheduleMode = AppWidgetPreferenceActivity.scheduleMode(this, this.appWidgetId);
-        int sortMode = AppWidgetPreferenceActivity.sortMode(this, this.appWidgetId);
+        ScheduleSpecification specification = AppWidgetPreferenceActivity.scheduleSpecification(this, this.appWidgetId);
 
         switch(scheduleMode) {
             case ScheduleMode.RECENT:
-                this.episodes = new ArrayList<Episode>(App.schedule().recent().episodes());
+                this.episodes = App.schedule().recent(specification).episodes();
                 break;
             case ScheduleMode.NEXT:
-                this.episodes = new ArrayList<Episode>(App.schedule().next().episodes());
+                this.episodes = App.schedule().next(specification).episodes();
                 break;
             case ScheduleMode.UPCOMING:
-                this.episodes = new ArrayList<Episode>(App.schedule().upcoming().episodes());
-                break;
-        }
-
-        switch(sortMode) {
-            case SortMode.OLDEST_FIRST:
-                Collections.sort(this.episodes, EpisodeComparator.comparingByOldestFirst());
-                break;
-            case SortMode.NEWEST_FIRST:
-                Collections.sort(this.episodes, EpisodeComparator.comparingByNewestFirst());
+                this.episodes = App.schedule().upcoming(specification).episodes();
                 break;
         }
     }

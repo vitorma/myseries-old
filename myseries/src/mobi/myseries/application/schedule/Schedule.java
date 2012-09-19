@@ -39,7 +39,6 @@ public class Schedule {
         this.repository = seriesRepository;
         this.following = following;
         this.update = update;
-        
     }
 
     public ScheduleMode next(ScheduleSpecification specification) {
@@ -58,19 +57,5 @@ public class Schedule {
         Validate.isNonNull(specification, "specification");
 
         return new Upcoming(specification, this.repository, this.following, this.update);
-    }
-
-    //TODO Delete the methods below ASAP--------------------------------------------------------------------------------
-
-    public ScheduleMode recent() {
-        return this.next(new ScheduleSpecification());
-    }
-
-    public ScheduleMode upcoming() {
-        return this.upcoming(new ScheduleSpecification());
-    }
-
-    public ScheduleMode next() {
-        return this.next(new ScheduleSpecification());
     }
 }

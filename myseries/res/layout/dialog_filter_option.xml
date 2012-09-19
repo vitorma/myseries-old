@@ -10,5 +10,6 @@
     android:focusable="true"
     android:gravity="center_vertical"
     android:padding="@dimen/gap_medium"
+    android:minHeight="48dp"
     android:layout_width="match_parent"
-    android:layout_height="48dp"/>
+    android:layout_height="wrap_content"/>
