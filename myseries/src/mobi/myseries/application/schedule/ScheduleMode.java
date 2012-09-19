@@ -76,7 +76,7 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
         return new ArrayList<Episode>(this.episodes);
     }
 
-    private void sortEpisodes() {
+    protected void sortEpisodes() {
         Collections.sort(this.episodes, this.comparator(this.specification.sortMode()));
     }
 

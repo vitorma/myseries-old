@@ -247,6 +247,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
     @Override
     public void onScheduleStateChanged() {
+        this.cellStates = new int[this.items.numberOfEpisodes()];
         this.notifyDataSetChanged();
     }
 

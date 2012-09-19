@@ -34,23 +34,18 @@ public class Next extends ScheduleMode implements SeriesListener {
     public void onChangeNextEpisodeToSee(Series series) {
         Episode oldNextToSee = this.includedEpisodeOf(series);
 
-        boolean needNotify = false;
-
         if (oldNextToSee != null) {
             this.episodes.remove(oldNextToSee);
-            needNotify = true;
         }
 
         Episode newNextToSee = series.nextEpisodeToSee(this.specification.isSatisfiedBySpecialEpisodes());
 
         if (newNextToSee != null && this.specification.isSatisfiedBy(newNextToSee)) {
             this.episodes.add(newNextToSee);
-            needNotify = true;
         }
 
-        if (needNotify) {
-            this.notifyOnScheduleStateChanged();
-        }
+        this.sortEpisodes();
+        this.notifyOnScheduleStateChanged();
     }
 
     @Override
@@ -74,6 +69,18 @@ public class Next extends ScheduleMode implements SeriesListener {
         }
 
         return null;
+    }
+
+    private int indexOfEpisodeOf(Series series) {
+        Specification<Episode> specification = seriesIdSpecification(series.id());
+
+        for (int i = 0; i < this.episodes.size(); i++) {
+            if (specification.isSatisfiedBy(this.episodes.get(i))) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     private static Specification<Episode> seriesIdSpecification(final int seriesId) {
