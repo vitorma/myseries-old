@@ -83,8 +83,8 @@ public class Item {
     }
 
     private void setupEpisodeAirdate(RemoteViews item, Episode episode) {
-        String unavailableDate = this.context.getString(R.string.unavailable_date);
-        String episodeAirdate = Dates.toString(episode.airDate(), App.dateFormat(), unavailableDate);
+        String unknownDate = this.context.getString(R.string.unknown_date);
+        String episodeAirdate = Dates.relativeTimeStringFor(episode.airDate(), unknownDate);
 
         item.setTextViewText(R.id.episodeAirDate, episodeAirdate);
     }

@@ -155,7 +155,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
             viewHolder.section.setVisibility(View.VISIBLE);
             viewHolder.dateTextView.setText(formattedDate);
-            viewHolder.relativeTimeTextView.setText(Dates.relativeTimeFor(episode.airDate()));
+            viewHolder.relativeTimeTextView.setText(Dates.relativeTimeStringForNear(episode.airDate()));
         } else {
             viewHolder.section.setVisibility(View.GONE);
         }

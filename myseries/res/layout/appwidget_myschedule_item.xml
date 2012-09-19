@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/seriesName"
-        style="@style/TextView.Label.Small"
+        style="@style/TextView.Data.Small"
         android:gravity="top"
         android:paddingLeft="@dimen/gap_medium"
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
 
     <TextView
         android:id="@+id/episodeNumber"
-        style="@style/TextView.Data.Small"
+        style="@style/TextView.Label.Small"
         android:gravity="bottom"
         android:paddingLeft="@dimen/gap_medium"
         android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
 
     <TextView
         android:id="@+id/episodeAirDate"
-        style="@style/TextView.Data.Small"
+        style="@style/TextView.Label.Small"
         android:gravity="bottom"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
