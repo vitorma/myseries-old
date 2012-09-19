@@ -34,23 +34,18 @@ public class Next extends ScheduleMode implements SeriesListener {
     public void onChangeNextEpisodeToSee(Series series) {
         Episode oldNextToSee = this.includedEpisodeOf(series);
 
-        boolean needNotify = false;
-
         if (oldNextToSee != null) {
             this.episodes.remove(oldNextToSee);
-            needNotify = true;
         }
 
         Episode newNextToSee = series.nextEpisodeToSee(this.specification.isSatisfiedBySpecialEpisodes());
 
         if (newNextToSee != null && this.specification.isSatisfiedBy(newNextToSee)) {
             this.episodes.add(newNextToSee);
-            needNotify = true;
         }
 
-        if (needNotify) {
-            this.notifyOnScheduleStateChanged();
-        }
+        this.sortEpisodes();
+        this.notifyOnScheduleStateChanged();
     }
 
     @Override
