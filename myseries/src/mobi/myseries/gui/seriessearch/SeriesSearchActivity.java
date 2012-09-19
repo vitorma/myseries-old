@@ -37,6 +37,7 @@ import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
+import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -338,8 +339,19 @@ public class SeriesSearchActivity extends SherlockListActivity {
                                     App.stopFollowing(selectedItem);
                                 } else {
                                     App.follow(selectedItem);
+                                    String toastMessage = String.format(SeriesSearchActivity.this
+                                            .getString(R.string.follow_toast_message_format), selectedItem.name());
+
+                                    this.showToastWith(toastMessage);
                                 }
                                 dialog.dismiss();
+                            }
+                            
+                            private void showToastWith(String message) {
+                                new ToastBuilder(App.environment().context())
+                                    .setMessage(message)
+                                    .build()
+                                    .show();
                             }
                         };
                     }
