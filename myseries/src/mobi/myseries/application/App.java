@@ -37,19 +37,22 @@ public class App extends Application {
     private static ImageloaderService imageLoadService;
     private static Schedule schedule;
     private static UpdateService updateService;
+    private static ErrorService errorService;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         environment = Environment.newEnvironment(this);
+        errorService = new ErrorService();
         searchService = new SearchSeriesService(environment.theTVDB());
         imageLoadService = new ImageloaderService();
         followSeriesService = new FollowSeriesService(
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
-                environment.imageProvider());
+                environment.imageProvider(),
+                errorService());
         updateService = new UpdateService(
                 environment.theTVDB(),
                 environment.repository(),
@@ -63,6 +66,10 @@ public class App extends Application {
 
     public static Environment environment() {
         return environment;
+    }
+    
+    public static ErrorService errorService(){
+        return errorService;
     }
 
     // Search Series

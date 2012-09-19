@@ -34,6 +34,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
+import mobi.myseries.application.ErrorService;
 import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.LocalizationProvider;
@@ -66,11 +67,13 @@ public class FollowSeriesServiceTests {
     private ImageProvider imageProvider;
 
     private SeriesFollowingListener seriesFollowingListener;
+    private ErrorService errorService;
 
     @Before
     public void setUp() {
         this.seriesSource = mock(SeriesSource.class);
         this.seriesRepository = mock(SeriesRepository.class);
+        this.errorService = mock(ErrorService.class);
 
         this.localizationProvider = mock(LocalizationProvider.class);
         when(this.localizationProvider.language()).thenReturn("en");
@@ -83,6 +86,7 @@ public class FollowSeriesServiceTests {
                                                            this.seriesRepository,
                                                            this.localizationProvider,
                                                            this.imageProvider,
+                                                           this.errorService,
                                                            false);
 
         this.followSeriesService.registerSeriesFollowingListener(this.seriesFollowingListener);
@@ -104,7 +108,8 @@ public class FollowSeriesServiceTests {
         new FollowSeriesService(null,
                                 this.seriesRepository,
                                 this.localizationProvider,
-                                this.imageProvider);
+                                this.imageProvider,
+                                this.errorService);
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -112,7 +117,8 @@ public class FollowSeriesServiceTests {
         new FollowSeriesService(this.seriesSource,
                                 null,
                                 this.localizationProvider,
-                                this.imageProvider);
+                                this.imageProvider,
+                                this.errorService);
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -120,7 +126,8 @@ public class FollowSeriesServiceTests {
         new FollowSeriesService(this.seriesSource,
                                 this.seriesRepository,
                                 null,
-                                this.imageProvider);
+                                this.imageProvider,
+                                this.errorService);
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -128,7 +135,8 @@ public class FollowSeriesServiceTests {
         new FollowSeriesService(this.seriesSource,
                                 this.seriesRepository,
                                 this.localizationProvider,
-                                null);
+                                null,
+                                this.errorService);
     }
 
     // Follow
