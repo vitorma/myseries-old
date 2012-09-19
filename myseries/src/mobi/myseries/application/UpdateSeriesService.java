@@ -23,20 +23,23 @@ public class UpdateSeriesService {
     private SeriesUpdater seriesUpdater;
     private final List<UpdateListener> updateListeners;
     private boolean updateRunning = false;
+    private ErrorService errorService;
 
     public UpdateSeriesService(SeriesSource seriesSource, SeriesRepository seriesRepository,
-            LocalizationProvider localizationProvider, ImageProvider imageProvider) {
+            LocalizationProvider localizationProvider, ImageProvider imageProvider, ErrorService errorService) {
 
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
         Validate.isNonNull(imageProvider, "imageProvider");
+        Validate.isNonNull(errorService, "errorService");
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
         this.localizationProvider = localizationProvider;
         this.imageProvider = imageProvider;
         this.seriesUpdater = new SeriesUpdater();
+        this.errorService = new ErrorService();
         this.updateListeners = new LinkedList<UpdateListener>();
 
         this.registerSeriesUpdateListener(new UpdateListener() {

@@ -25,13 +25,18 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SearchSeriesException;
+import mobi.myseries.application.ErrorServiceListener;
+import mobi.myseries.application.FollowSeriesException;
 import mobi.myseries.application.SearchSeriesListener;
+import mobi.myseries.application.SeriesSearchException;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.InvalidSearchCriteriaException;
+import mobi.myseries.domain.source.ParsingFailedException;
+import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
-import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -52,82 +57,118 @@ import com.actionbarsherlock.view.Window;
 public class SeriesSearchActivity extends SherlockListActivity {
     private StateHolder state;
     private SearchSeriesListener listener;
-    
+    private ErrorServiceListener errorListener;
+
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         this.setContentView(R.layout.add_series);
-        
+
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.add_series);
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
         setSupportProgressBarIndeterminateVisibility(false);
-        
-        this.setUpSearchListener();
+
+        this.setupSearchListener();
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
         this.setupSearchFieldActionListeners();
+        this.setupErrorServiceListener();
 
         Object retained = getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
-          state = (StateHolder) retained;
-          loadState();
+            state = (StateHolder) retained;
+            loadState();
         } else {
-          state = new StateHolder();
+            state = new StateHolder();
         }
     }
 
-    private void loadState() {
-        
-        if(state.isSearching){
-              if(App.getLastValidSearchResult() != null){
-                  setupListOnAdapter(App.getLastValidSearchResult());
-              }
-              listener.onStart();
-              App.registerSearchSeriesListener(listener);
-              
-              } else {
-                  if(state.seriesFound != null)
-                      setupListOnAdapter(state.seriesFound);
-          
-                  if(state.isShowingDialog)
-                      state.dialog.show();
-                  }
+    private void setupErrorServiceListener() {
+        this.errorListener = new ErrorServiceListener() {
+
+            @Override
+            public void onError(Exception e) {
+                if (e instanceof FollowSeriesException) {
+                    FollowSeriesException followException = ((FollowSeriesException) e);
+                    Series series = followException.series();
+                    FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(
+                                                         SeriesSearchActivity.this);
+                    dialogBuilder.setTitle(R.string.add_failed_title);
+                    if (followException.getCause() instanceof ConnectionFailedException) {
+                        dialogBuilder.setMessage(String.format(SeriesSearchActivity.this
+                        .getString(R.string.add_connection_failed_message), series.name()));
+
+                    } else if (followException.getCause() instanceof SeriesNotFoundException) {
+                        dialogBuilder.setMessage(String.format(SeriesSearchActivity.this
+                        .getString(R.string.add_series_not_found), series.name()));
+
+                    } else if (followException.getCause() instanceof ParsingFailedException) {
+                        dialogBuilder.setMessage(String.format(SeriesSearchActivity.this
+                        .getString(R.string.parsing_failed_message), series.name()));
+                    }
+                    Dialog dialog = dialogBuilder.build();
+                    dialog.show();
+                    state.dialog = dialog;
+                }
+            }
+        };
+        App.errorService().registerListener(errorListener);
     }
-    
+
+    private void loadState() {
+
+        if (state.isSearching) {
+            if (App.getLastValidSearchResult() != null) {
+                setupListOnAdapter(App.getLastValidSearchResult());
+            }
+            listener.onStart();
+            App.registerSearchSeriesListener(listener);
+
+        } else {
+            if (state.seriesFound != null)
+                setupListOnAdapter(state.seriesFound);
+
+            if (state.isShowingDialog)
+                state.dialog.show();
+        }
+    }
+
     @Override
     public Object onRetainNonConfigurationInstance() {
-       return state;
+        return state;
     }
-    
+
     @Override
     protected void onStop() {
         super.onStop();
         App.deregisterSearchSeriesListener(listener);
-        if(state.dialog != null && state.dialog.isShowing()) {
+        App.errorService().deregisterListener(errorListener);
+        if (state.dialog != null && state.dialog.isShowing()) {
             state.dialog.dismiss();
             state.isShowingDialog = true;
-          }else{
-              state.isShowingDialog = false;
-          }
-        
-   }
+        } else {
+            state.isShowingDialog = false;
+        }
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            this.finish();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
     private void setupSearchButtonClickListener() {
-        final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
+        final ImageButton searchButton = (ImageButton) this
+                .findViewById(R.id.searchButton);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,11 +178,13 @@ public class SeriesSearchActivity extends SherlockListActivity {
         });
     }
 
-    private void setUpSearchListener(){
-        final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
-        final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
+    private void setupSearchListener() {
+        final EditText searchField = (EditText) SeriesSearchActivity.this
+                .findViewById(R.id.searchField);
+        final ImageButton searchButton = (ImageButton) this
+                .findViewById(R.id.searchButton);
 
-        this.listener =  new SearchSeriesListener() {
+        this.listener = new SearchSeriesListener() {
 
             @Override
             public void onSucess(List<Series> series) {
@@ -151,23 +194,44 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
             @Override
             public void onFaluire(Throwable exception) {
-                SearchSeriesException e = ((SearchSeriesException) exception);
+                if (exception instanceof SeriesSearchException) {
+                    FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(
+                            SeriesSearchActivity.this);
 
-                FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(SeriesSearchActivity.this);
-                dialogBuilder.setTitle(e.getTitle());
-                dialogBuilder.setMessage(e.getMessage());
+                    if (exception.getCause() instanceof ConnectionFailedException) {
+                        dialogBuilder
+                                .setTitle(R.string.connection_failed_title);
+                        dialogBuilder
+                                .setMessage(R.string.connection_failed_message);
 
-                Dialog dialog = dialogBuilder.build();
-                dialog.show();
-                state.dialog = dialog;
+                    } else if (exception.getCause() instanceof InvalidSearchCriteriaException) {
+                        dialogBuilder.setTitle(R.string.invalid_criteria_title);
+                        dialogBuilder
+                                .setMessage(R.string.invalid_criteria_message);
+
+                    } else if (exception.getCause() instanceof SeriesNotFoundException) {
+                        dialogBuilder.setTitle(R.string.no_results_title);
+                        dialogBuilder.setMessage(R.string.no_results_message);
+
+                    } else if (exception.getCause() instanceof ParsingFailedException) {
+                        dialogBuilder.setTitle(R.string.parsing_failed_title);
+                        dialogBuilder
+                                .setMessage(R.string.parsing_failed_message);
+                    } else {
+                        dialogBuilder.setMessage(exception.getMessage());
+                    }
+                    Dialog dialog = dialogBuilder.build();
+                    dialog.show();
+                    state.dialog = dialog;
+                }
             }
 
             @Override
             public void onStart() {
-               state.isSearching = true;
-               setSupportProgressBarIndeterminateVisibility(true);
-               searchField.setEnabled(false);
-               searchButton.setEnabled(false);
+                state.isSearching = true;
+                setSupportProgressBarIndeterminateVisibility(true);
+                searchField.setEnabled(false);
+                searchButton.setEnabled(false);
             }
 
             @Override
@@ -181,21 +245,22 @@ public class SeriesSearchActivity extends SherlockListActivity {
     }
 
     private void performSearch() {
-        final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
-        
+        final EditText searchField = (EditText) SeriesSearchActivity.this
+                .findViewById(R.id.searchField);
+
         SeriesSearchActivity.this.setListAdapter(null);
         state.seriesFound = null;
-        
+
         App.registerSearchSeriesListener(listener);
         App.searchSeries(searchField.getText().toString());
     }
-    
+
     private void setupListOnAdapter(List<Series> series) {
-        ArrayAdapter<Series> adapter = new SeriesSearchItemAdapter(//TODO Use a simple ArrayAdapter<String> and use StateHolder#seriesFound to recover series
-                SeriesSearchActivity.this,
-                SeriesSearchActivity.this,
-                R.layout.seriessearch_item,
-                series);
+        ArrayAdapter<Series> adapter = new SeriesSearchItemAdapter(
+                // TODO Use a simple ArrayAdapter<String> and use
+                // StateHolder#seriesFound to recover series
+                SeriesSearchActivity.this, SeriesSearchActivity.this,
+                R.layout.seriessearch_item, series);
         SeriesSearchActivity.this.setListAdapter(adapter);
     }
 
@@ -204,7 +269,8 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
         searchField.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            public boolean onEditorAction(TextView v, int actionId,
+                    KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     performSearch();
                     return true;
@@ -231,65 +297,59 @@ public class SeriesSearchActivity extends SherlockListActivity {
      * Sets up a listener to item click events.
      */
     private void setupItemClickListener() {
-        this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            private Series selectedItem;
-            private boolean userFollowsSeries;
-            private Dialog dialog;
+        this.getListView().setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    private Series selectedItem;
+                    private boolean userFollowsSeries;
+                    private Dialog dialog;
 
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view,
-                    final int position, final long id) {
-                this.selectedItem = (Series) parent.getItemAtPosition(position);
-                this.userFollowsSeries = App.follows(this.selectedItem);
-
-                this.dialog = new ConfirmationDialogBuilder(SeriesSearchActivity.this)
-                    .setTitle(this.selectedItem.name())
-                    .setMessage(this.selectedItem.overview())
-                    .setSurrogateMessage(R.string.overview_unavailable)
-                    .setPositiveButton(this.followButtonTextResourceId(), this.followButtonClickListener())
-                    .setNegativeButton(R.string.back, null)
-                    .build();
-
-                this.dialog.show();
-                state.dialog = this.dialog;
-            }
-
-            private int followButtonTextResourceId() {
-                return this.userFollowsSeries ? R.string.stop_following : R.string.follow;
-            }
-
-            private ButtonOnClickListener followButtonClickListener() {
-                return new ButtonOnClickListener() {
                     @Override
-                    public void onClick(Dialog dialog) {
-                        if (userFollowsSeries) {
-                            App.stopFollowing(selectedItem);
-                        } else {
-                            App.follow(selectedItem);
+                    public void onItemClick(final AdapterView<?> parent,
+                            final View view, final int position, final long id) {
+                        this.selectedItem = (Series) parent
+                                .getItemAtPosition(position);
+                        this.userFollowsSeries = App.follows(this.selectedItem);
 
-                            String toastMessage = String.format(SeriesSearchActivity.this
-                                    .getString(R.string.follow_successfull_message_format), selectedItem.name());
+                        this.dialog = new ConfirmationDialogBuilder(
+                                SeriesSearchActivity.this)
+                                .setTitle(this.selectedItem.name())
+                                .setMessage(this.selectedItem.overview())
+                                .setSurrogateMessage(
+                                        R.string.overview_unavailable)
+                                .setPositiveButton(
+                                        this.followButtonTextResourceId(),
+                                        this.followButtonClickListener())
+                                .setNegativeButton(R.string.back, null).build();
 
-                            this.showToastWith(toastMessage);
-                        }
-
-                        dialog.dismiss();
+                        this.dialog.show();
+                        state.dialog = this.dialog;
                     }
 
-                    private void showToastWith(String message) {
-                        new ToastBuilder(App.environment().context())
-                            .setMessage(message)
-                            .build()
-                            .show();
+                    private int followButtonTextResourceId() {
+                        return this.userFollowsSeries ? R.string.stop_following
+                                : R.string.follow;
                     }
-                };
-            }
-        });
+
+                    private ButtonOnClickListener followButtonClickListener() {
+                        return new ButtonOnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                if (userFollowsSeries) {
+                                    App.stopFollowing(selectedItem);
+                                } else {
+                                    App.follow(selectedItem);
+                                }
+                                dialog.dismiss();
+                            }
+                        };
+                    }
+                });
     }
 
     @Override
     public final boolean onSearchRequested() {
-        final EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
+        final EditText searchField = (EditText) SeriesSearchActivity.this
+                .findViewById(R.id.searchField);
         searchField.requestFocus();
         return true;
     }
@@ -305,6 +365,9 @@ public class SeriesSearchActivity extends SherlockListActivity {
         Dialog dialog;
         boolean isShowingDialog;
         List<Series> seriesFound;
-        public StateHolder() {}
-      }
+
+        public StateHolder() {
+        }
+    }
+
 }

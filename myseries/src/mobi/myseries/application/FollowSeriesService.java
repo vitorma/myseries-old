@@ -28,6 +28,7 @@ import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
+import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
 import android.os.AsyncTask;
@@ -38,6 +39,7 @@ public class FollowSeriesService {
     private SeriesRepository seriesRepository;
     private LocalizationProvider localizationProvider;
     private ImageProvider imageProvider;
+    private ErrorService errorService;
 
     private SeriesFollower seriesFollower;
     private final ListenerSet<SeriesFollowingListener> seriesFollowingListeners;
@@ -52,8 +54,8 @@ public class FollowSeriesService {
     public FollowSeriesService(SeriesSource seriesSource,
                                SeriesRepository seriesRepository,
                                LocalizationProvider localizationProvider,
-                               ImageProvider imageProvider) {
-        this(seriesSource, seriesRepository, localizationProvider, imageProvider, true);
+                               ImageProvider imageProvider, ErrorService errorService) {
+        this(seriesSource, seriesRepository, localizationProvider, imageProvider, errorService, true);
     }
 
     /**
@@ -63,17 +65,19 @@ public class FollowSeriesService {
     public FollowSeriesService(SeriesSource seriesSource,
                                SeriesRepository seriesRepository,
                                LocalizationProvider localizationProvider,
-                               ImageProvider imageProvider,
+                               ImageProvider imageProvider, ErrorService errorService,
                                boolean asyncFollowing) {
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
         Validate.isNonNull(imageProvider, "imageProvider");
+        Validate.isNonNull(errorService, "errorService");
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
         this.localizationProvider = localizationProvider;
         this.imageProvider = imageProvider;
+        this.errorService = errorService;
 
         this.seriesFollower = (asyncFollowing ? new AsynchronousFollower()
                                               : new SynchronousFollower());
@@ -139,27 +143,16 @@ public class FollowSeriesService {
 
         private boolean failed;
 
-        protected void followSeries(Series seriesToFollow) {
+        protected void followSeries(Series seriesToFollow) throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException {
             this.failed = true; // it will only be considered successful
                                 // after actually being successful
 
             // TODO is there anything to do about any SeriesNotFoundException that may be thrown
             // here?
-            try {
-                this.followedSeries = seriesSource.fetchSeries(
-                        seriesToFollow.id(),
-                        localizationProvider.language());
-            } catch (SeriesNotFoundException e) {
-                //TODO: notify someone?
-                return;
-            } catch (ConnectionFailedException e) {
-                //TODO: notify someone?
-                return;
-            } catch (ParsingFailedException e) {
-                //TODO: notify someone?
-                return;
-            }
-
+            this.followedSeries = seriesSource.fetchSeries(
+                            seriesToFollow.id(),
+                            localizationProvider.language());
+ 
             seriesRepository.insert(this.followedSeries);
             this.failed = false;
         }
@@ -175,25 +168,53 @@ public class FollowSeriesService {
     private class AsynchronousFollower extends SeriesFollower {
         @Override
         public void follow(final Series series) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    followSeries(series);
-                    return null;
-                }
-    
-                @Override
-                protected void onPostExecute(Void result) {
-                    afterFollowingActions();
-                }
-            }.execute();
+            new FollowSeriesTask(series, errorService).execute();
         };
     }
+    private class FollowSeriesTask extends AsyncTask<Series, Void, AsyncTaskResult<Series>> {
+        
+        private Series series;
+        private ErrorService errorService;
 
+        public FollowSeriesTask(Series series, ErrorService errorService) {
+            this.series = series;
+            this.errorService = errorService;
+        }
+
+        @Override
+        protected AsyncTaskResult<Series> doInBackground(Series... params) {
+            try {
+                seriesFollower.followSeries(series);
+            } catch (SeriesNotFoundException e) {
+                return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
+            } catch (ConnectionFailedException e) {
+                return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
+            } catch (ParsingFailedException e) {
+                return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
+            }
+            return new AsyncTaskResult<Series>(series);
+        }
+        @Override
+        protected void onPostExecute(AsyncTaskResult<Series> result) {
+            if(result.error() != null){
+                errorService.notifyError(result.error());
+            }
+            seriesFollower.afterFollowingActions();
+        }
+
+    }
     private class SynchronousFollower extends SeriesFollower {
         @Override
         public void follow(final Series series) {
-            followSeries(series);
+            try {
+                followSeries(series);
+            } catch (SeriesNotFoundException e) {
+                errorService.notifyError(new FollowSeriesException(e, series));
+            } catch (ConnectionFailedException e) {
+                errorService.notifyError(new FollowSeriesException(e, series));
+            } catch (ParsingFailedException e) {
+                errorService.notifyError(new FollowSeriesException(e, series));
+            }
             afterFollowingActions();
         };
     }

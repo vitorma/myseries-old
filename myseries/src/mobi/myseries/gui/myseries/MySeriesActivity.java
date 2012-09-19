@@ -23,10 +23,18 @@ package mobi.myseries.gui.myseries;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.ErrorServiceListener;
+import mobi.myseries.application.FollowSeriesException;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ParsingFailedException;
+import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
+import mobi.myseries.gui.shared.FailureDialogBuilder;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +54,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String HELP = "HELP";
     
     private boolean updating = false;
+    private StateHolder state;
+    private ErrorServiceListener errorListener;
 
     public MySeriesActivity() {
     }
@@ -60,6 +70,16 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_series);
 
+        this.setupErrorServiceListener();
+
+        Object retained = getLastCustomNonConfigurationInstance();
+        if (retained != null && retained instanceof StateHolder) {
+            state = (StateHolder) retained;
+            loadState();
+        } else {
+            state = new StateHolder();
+        }
+
         updating = App.updateSeriesService().isUpdating();
         setSupportProgressBarIndeterminateVisibility(updating);
 
@@ -68,6 +88,31 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         } else {
             App.updateSeriesService().registerSeriesUpdateListener(this);
         }
+    }
+    
+    private void loadState() {
+
+        if (state.isShowingDialog){
+            state.dialog.show();
+        }
+    }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return state;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        App.errorService().deregisterListener(errorListener);
+        if (state.dialog != null && state.dialog.isShowing()) {
+            state.dialog.dismiss();
+            state.isShowingDialog = true;
+        } else {
+            state.isShowingDialog = false;
+        }
+
     }
     
     //Menu--------------------------------------------------------------------------------------------------------------
@@ -143,5 +188,44 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private void showSearchActivity() {
         final Intent intent = new Intent(this, SeriesSearchActivity.class);
         this.startActivity(intent);
+    }
+    
+    private void setupErrorServiceListener() {
+        this.errorListener = new ErrorServiceListener() {
+
+            @Override
+            public void onError(Exception e) {
+                if (e instanceof FollowSeriesException) {
+                    FollowSeriesException followException = ((FollowSeriesException) e);
+                    Series series = followException.series();
+                    FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(
+                                                         MySeriesActivity.this);
+                    dialogBuilder.setTitle(R.string.add_failed_title);
+                    if (followException.getCause() instanceof ConnectionFailedException) {
+                        dialogBuilder.setMessage(String.format(MySeriesActivity.this
+                        .getString(R.string.add_connection_failed_message), series.name()));
+
+                    } else if (followException.getCause() instanceof SeriesNotFoundException) {
+                        dialogBuilder.setMessage(String.format(MySeriesActivity.this
+                        .getString(R.string.add_series_not_found), series.name()));
+
+                    } else if (followException.getCause() instanceof ParsingFailedException) {
+                        dialogBuilder.setMessage(String.format(MySeriesActivity.this
+                        .getString(R.string.parsing_failed_message), series.name()));
+                    }
+                    Dialog dialog = dialogBuilder.build();
+                    dialog.show();
+                }
+            }
+        };
+        App.errorService().registerListener(errorListener);
+    }
+
+    private static class StateHolder {
+        Dialog dialog;
+        boolean isShowingDialog;
+
+        public StateHolder() {
+        }
     }
 }

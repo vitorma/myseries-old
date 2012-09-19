@@ -84,7 +84,12 @@
     <string name="update_failed_title">Data update has failed</string>
     <string name="update_failed_message">Check your connection and try again.</string>
 
-    <!-- Message formats -->
+    <!-- Adding Error Messages -->
+    <string name="add_failed_title">Adding failed</string>
+    <string name="add_connection_failed_message">The connection has failed while adding %s. Check your connection and try again.</string>
+    <string name="add_series_not_found">The database has returned "series not found" while adding %s. Check your connection and configurations then try again.</string>
+    <string name="add_parsing_failed">Error reading file from the web while adding %s. Your connection may be too slow.</string>
+
 
     <string name="stop_follow_message_format" formatted="false">Do you want to stop following %s?</string>
     <string name="follow_successfull_message_format" formatted="false">The series %s will be added to your list soon.</string>
