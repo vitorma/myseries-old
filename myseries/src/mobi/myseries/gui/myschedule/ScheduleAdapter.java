@@ -23,26 +23,22 @@ package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.Map;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.schedule.Day;
 import mobi.myseries.application.schedule.Schedule;
-import mobi.myseries.application.schedule.ScheduleList;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.Dates;
-import mobi.myseries.shared.HasDate;
+import mobi.myseries.shared.Objects;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -51,54 +47,42 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
-    private static final int VIEW_TYPE_DAY = 0;
-    private static final int VIEW_TYPE_EPISODE = 1;
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final Schedule SCHEDULE = App.schedule();
 
+    private static final int STATE_UNKNOWN = 0;
+    private static final int STATE_SECTIONED_CELL = 1;
+    private static final int STATE_REGULAR_CELL = 2;
+
     private Context context;
     private int scheduleMode;
-    private ScheduleList items;
+    private ScheduleSpecification specification;
+    private ScheduleMode items;
+    private int[] cellStates;
 
-    public ScheduleAdapter(Context context, int scheduleMode) {
+    public ScheduleAdapter(Context context, int scheduleMode, ScheduleSpecification specification) {
         this.context = context;
         this.scheduleMode = scheduleMode;
+        this.specification = specification;
 
         this.reload();
     }
 
-    public void reload() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                ScheduleAdapter.this.setUpData();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                ScheduleAdapter.this.notifyDataSetChanged();
-            }
-        }.execute();
-    }
-
     @Override
     public int getCount() {
-        if (this.items == null) {
-            return 0;
-        }
+        if (this.items == null) {return 0;}
 
-        return this.items.size();
+        return this.items.numberOfEpisodes();
     }
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 1;
     }
 
     @Override
     public Object getItem(int position) {
-        return this.items.get(position);
+        return this.items.episodeAt(position);
     }
 
     @Override
@@ -107,67 +91,51 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     }
 
     @Override
-    public int getItemViewType(int position) {
-        HasDate element = this.items.get(position);
-
-        return this.items.isEpisode(element) ?
-               VIEW_TYPE_EPISODE :
-               VIEW_TYPE_DAY;
-    }
-
-    @Override
     public boolean areAllItemsEnabled() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return this.getItemViewType(position) == VIEW_TYPE_EPISODE;
+        return true;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        switch (this.getItemViewType(position)) {
-            case VIEW_TYPE_DAY:
-                return this.getDateView((Day) this.getItem(position), convertView, parent);
-            case VIEW_TYPE_EPISODE:
-                return this.getEpisodeView((Episode) this.getItem(position), convertView, parent);
-            default:
-                return null;
-        }
-    }
-
-    private View getDateView(Day day, View convertView, ViewGroup parent) {
-        View view = convertView;
-        DateViewHolder viewHolder = null;
-
-        if(view == null) {
-            view = View.inflate(this.context, R.layout.myschedule_section, null);
-            viewHolder = new DateViewHolder();
-            viewHolder.dateTextView = (TextView) view.findViewById(R.id.date);
-            viewHolder.relativeTimeTextView = (TextView) view.findViewById(R.id.relativeDate);
-            view.setTag(viewHolder);
-        } else {
-            viewHolder = (DateViewHolder) view.getTag();
-        }
-
-        DateFormat format = new SimpleDateFormat(this.context.getString(R.string.date_format_with_weekday));
-        String unavailable = this.context.getString(R.string.unavailable_date);
-        String formattedDate = Dates.toString(day.getDate(), format, unavailable).toUpperCase();
-
-        viewHolder.dateTextView.setText(formattedDate);
-        viewHolder.relativeTimeTextView.setText(relativeTimeFor(day.getDate()));
-
-        return view;
-    }
-
-    private View getEpisodeView(Episode episode, View convertView, ViewGroup parent) {
         View view = convertView;
         EpisodeViewHolder viewHolder = null;
+
+        //TODO (Cleber) Extract method needSeparator(position)
+
+        boolean needSeparator = false;
+
+        switch (cellStates[position]) {
+            case STATE_SECTIONED_CELL:
+                needSeparator = true;
+                break;
+            case STATE_REGULAR_CELL:
+                needSeparator = false;
+                break;
+            case STATE_UNKNOWN:
+            default:
+                if (position == 0) {
+                    needSeparator = true;
+                } else {
+                    Episode current = this.items.episodeAt(position);
+                    Episode previous = this.items.episodeAt(position - 1);
+
+                    if (Objects.areDifferent(current.airDate(), previous.airDate())) {
+                        needSeparator = true;
+                    }
+                }
+
+                cellStates[position] = needSeparator ? STATE_SECTIONED_CELL : STATE_REGULAR_CELL;
+                break;
+        }
+
+        //TODO (Cleber) Extract method or override newView() ?
 
         if (view == null) {
             view = View.inflate(this.context, R.layout.myschedule_item, null);
             viewHolder = new EpisodeViewHolder();
+            viewHolder.section = view.findViewById(R.id.section);
+            viewHolder.dateTextView = (TextView) view.findViewById(R.id.date);
+            viewHolder.relativeTimeTextView = (TextView) view.findViewById(R.id.relativeDate);
             viewHolder.seriesNameTextView = (TextView) view.findViewById(R.id.episodeSeriesTextView);
             viewHolder.episodeNumberTextView = (TextView) view.findViewById(R.id.episodeSeasonEpisodeTextView);
             viewHolder.seenMarkCheckBox = (SeenMark) view.findViewById(R.id.episodeIsViewedCheckBox);
@@ -177,11 +145,25 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
             viewHolder = (EpisodeViewHolder) view.getTag();
         }
 
+        Episode episode = this.items.episodeAt(position);
         Series series = App.getSeries(episode.seriesId());
-        String format = this.context.getString(R.string.episode_number_format);
+
+        if (needSeparator) {
+            DateFormat dateformat = new SimpleDateFormat(this.context.getString(R.string.date_format_with_weekday));
+            String unavailable = this.context.getString(R.string.unavailable_date);
+            String formattedDate = Dates.toString(episode.airDate(), dateformat, unavailable);
+
+            viewHolder.section.setVisibility(View.VISIBLE);
+            viewHolder.dateTextView.setText(formattedDate);
+            viewHolder.relativeTimeTextView.setText(Dates.relativeTimeFor(episode.airDate()));
+        } else {
+            viewHolder.section.setVisibility(View.GONE);
+        }
+
+        String numberFormat = this.context.getString(R.string.episode_number_format);
 
         viewHolder.seriesNameTextView.setText(series.name());
-        viewHolder.episodeNumberTextView.setText(String.format(format, episode.seasonNumber(), episode.number()));
+        viewHolder.episodeNumberTextView.setText(String.format(numberFormat, episode.seasonNumber(), episode.number()));
         viewHolder.seriesPosterImageView.setImageBitmap(App.seriesPoster(series.id()));
         viewHolder.seenMarkCheckBox.setChecked(episode.wasSeen());
         viewHolder.seenMarkCheckBox.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
@@ -189,64 +171,96 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         return view;
     }
 
+    private void reload() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                setUpData();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                notifyDataSetChanged();
+            }
+        }.execute();
+    }
+
     private void setUpData() {
-        int sortMode = MyScheduleActivity.sortMode(this.context, this.scheduleMode);
-        boolean includingSpecialEpisodes = MyScheduleActivity.inclusionOfSpecialEpisodes(this.context, this.scheduleMode);
-        boolean includingSeenEpisodes = MyScheduleActivity.inclusionOfSeenEpisodes(this.context, this.scheduleMode);
-        List<Series> allSeriesToShow = new ArrayList<Series>();
+        switch(this.scheduleMode) {
+            case ScheduleMode.RECENT:
+                this.items = SCHEDULE.recent(this.specification);
+                break;
+            case ScheduleMode.NEXT:
+                this.items = SCHEDULE.next(this.specification);
+                break;
+            case ScheduleMode.UPCOMING:
+                this.items = SCHEDULE.upcoming(this.specification);
+                break;
+        }
 
-        for (Series s : SERIES_PROVIDER.followedSeries()) {
-            boolean includingEpisodesOfSeries = MyScheduleActivity.inclusionOfEpisodesOfSeries(this.context, this.scheduleMode, s.id());
+        this.cellStates = new int[this.items.numberOfEpisodes()];
+        this.items.register(this);
+    }
 
-            if (includingEpisodesOfSeries) {
-                allSeriesToShow.add(s);
+    public void sortBy(final int sortMode) {
+        if (this.specification.sortMode() == sortMode) {return;}
+
+        this.specification.specifySortMode(sortMode);
+        this.reload();
+    }
+
+    public void hideOrShowSpecialEpisodes(boolean show) {
+        if (this.specification.isSatisfiedBySpecialEpisodes() == show) {
+            return;
+        }
+
+        this.specification.specifyInclusionOfSpecialEpisodes(show);
+        this.reload();
+    }
+
+    public void hideOrShowSeenEpisodes(boolean show) {
+        if (this.specification.isSatisfiedBySeenEpisodes() == show) {
+            return;
+        }
+
+        this.specification.specifyInclusionOfSeenEpisodes(show);
+        this.reload();
+    }
+
+    public void hideOrShowSeries(Map<Series, Boolean> filterOptions) {
+        boolean needReload = false;
+
+        for (Series s: filterOptions.keySet()) {
+            if (this.specification.isSatisfiedByEpisodesOfSeries(s.id()) != filterOptions.get(s)) {
+                this.specification.specifyInclusionOf(s, filterOptions.get(s));
+                needReload = true;
             }
         }
 
-        switch(this.scheduleMode) {
-            case ScheduleMode.RECENT:
-                this.items = SCHEDULE.recentBuilder()
-                    .includingSpecialEpisodes(includingSpecialEpisodes)
-                    .includingSeenEpisodes(includingSeenEpisodes)
-                    .includingEpisodesOfAllSeries(allSeriesToShow)
-                    .sortingBy(sortMode)
-                    .build();
-                break;
-            case ScheduleMode.NEXT:
-                this.items = SCHEDULE.nextBuilder()
-                    .includingSpecialEpisodes(includingSpecialEpisodes)
-                    .includingEpisodesOfAllSeries(allSeriesToShow)
-                    .sortingBy(sortMode)
-                    .build();
-                break;
-            case ScheduleMode.UPCOMING:
-                this.items = SCHEDULE.upcomingBuilder()
-                    .includingSpecialEpisodes(includingSpecialEpisodes)
-                    .includingSeenEpisodes(includingSeenEpisodes)
-                    .includingEpisodesOfAllSeries(allSeriesToShow)
-                    .sortingBy(sortMode)
-                    .build();
-                break;
-        }
+        if (!needReload) {return;}
 
-        this.items.register(this);
+        this.reload();
     }
 
     //Listening---------------------------------------------------------------------------------------------------------
 
     @Override
-    public void onStateChanged() {
+    public void onScheduleStateChanged() {
         this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onScheduleStructureChanged() {
+        this.reload();
     }
 
     //ViewHolder--------------------------------------------------------------------------------------------------------
 
-    private static class DateViewHolder {
+    private static class EpisodeViewHolder {
+        private View section;
         private TextView dateTextView;
         private TextView relativeTimeTextView;
-    }
-
-    private static class EpisodeViewHolder {
         private TextView seriesNameTextView;
         private TextView episodeNumberTextView;
         private ImageView seriesPosterImageView;
@@ -264,20 +278,5 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
                 }
             };
         }
-    }
-
-    public static String relativeTimeFor(Date date) {
-        if (date == null) {return "";}
-
-        long time = date.getTime();
-        long now = System.currentTimeMillis();
-        long duration = Math.abs(now - time);
-
-        if (duration >= DateUtils.WEEK_IN_MILLIS) {return "";}
-
-        long minResolution = DateUtils.MINUTE_IN_MILLIS;
-        int flag = DateUtils.FORMAT_ABBREV_RELATIVE;
-
-        return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
     }
 }

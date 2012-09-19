@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.application.schedule;
+package mobi.myseries.gui.shared;
 
 public interface SortMode {
     public static final int OLDEST_FIRST = 0;

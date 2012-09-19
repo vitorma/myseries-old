@@ -30,6 +30,10 @@ import mobi.myseries.shared.Validate;
 
 public class UrlFactory {
     private static final String MIRROR = "http://thetvdb.com";
+    private static final String DAY = "day";
+    private static final String WEEK = "week";
+    private static final String MONTH = "month";
+    private static final String ALL = "all";
 
     private String apiKey;
 
@@ -74,7 +78,7 @@ public class UrlFactory {
 
         return this.urlFrom(url);
     }
-
+    
     private String buildUrlForSeriesSearch(String seriesName, String language) {
         return this.mirrorXml()
             .append("GetSeries.php?seriesname=")
@@ -82,6 +86,15 @@ public class UrlFactory {
             .append("&language=")
             .append(language)
             .toString();
+    }
+
+    private String buildUrlForUpdates(String timespan) {
+        return this.mirrorXml()
+                .append(this.apiKey)
+                .append("/updates/")
+                .append("updates_" + timespan)
+                .append(".zip")
+                .toString();        
     }
 
     public URL urlForSeriesPoster(String fileName) {
@@ -122,5 +135,21 @@ public class UrlFactory {
         } catch (MalformedURLException e) {
             throw new RuntimeException("MalformedURLException should never be thrown by UrlFactory", e);
         }
+    }
+
+    public URL urlForLastDayUpdates() {
+        return urlFrom(buildUrlForUpdates(DAY));
+    }
+
+    public URL urlForLastWeekUpdates() {
+        return urlFrom(buildUrlForUpdates(WEEK));
+    }
+
+    public URL urlForLastMonthUpdates() {
+        return urlFrom(buildUrlForUpdates(MONTH));
+    }
+
+    public URL urlForAllAvailableUpdates() {
+        return urlFrom(buildUrlForUpdates(ALL));
     }
 }

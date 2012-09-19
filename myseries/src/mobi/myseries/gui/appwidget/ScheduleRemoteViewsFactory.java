@@ -21,14 +21,12 @@
 
 package mobi.myseries.gui.appwidget;
 
-import java.util.Collections;
 import java.util.List;
 
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.application.schedule.SortMode;
+import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
@@ -89,27 +87,18 @@ public class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteView
     }
 
     private void loadEpisodes() {
-        int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this.context, this.appWidgetId);
-        int sortMode = AppWidgetPreferenceActivity.sortModeBy(this.context, this.appWidgetId);
+        int scheduleMode = AppWidgetPreferenceActivity.scheduleMode(this.context, this.appWidgetId);
+        ScheduleSpecification specification = AppWidgetPreferenceActivity.scheduleSpecification(this.context, this.appWidgetId);
 
         switch(scheduleMode) {
             case ScheduleMode.RECENT:
-                this.episodes = App.schedule().recent().episodes();
+                this.episodes = App.schedule().recent(specification).episodes();
                 break;
             case ScheduleMode.NEXT:
-                this.episodes = App.schedule().next().episodes();
+                this.episodes = App.schedule().next(specification).episodes();
                 break;
             case ScheduleMode.UPCOMING:
-                this.episodes = App.schedule().upcoming().episodes();
-                break;
-        }
-
-        switch(sortMode) {
-            case SortMode.OLDEST_FIRST:
-                Collections.sort(this.episodes, EpisodeComparator.byOldestFirst());
-                break;
-            case SortMode.NEWEST_FIRST:
-                Collections.sort(this.episodes, EpisodeComparator.byNewestFirst());
+                this.episodes = App.schedule().upcoming(specification).episodes();
                 break;
         }
     }

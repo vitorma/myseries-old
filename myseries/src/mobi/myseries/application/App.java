@@ -27,9 +27,6 @@ import java.util.List;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
-import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.ParsingFailedException;
-import mobi.myseries.domain.source.SeriesNotFoundException;
 import android.app.Application;
 import android.graphics.Bitmap;
 
@@ -39,7 +36,7 @@ public class App extends Application {
     private static FollowSeriesService followSeriesService;
     private static ImageloaderService imageLoadService;
     private static Schedule schedule;
-    private static UpdateSeriesService updateService;
+    private static UpdateService updateService;
     private static ErrorService errorService;
 
     @Override
@@ -56,12 +53,11 @@ public class App extends Application {
                 environment.localization(),
                 environment.imageProvider(),
                 errorService());
-        updateService = new UpdateSeriesService(
+        updateService = new UpdateService(
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
-                environment.imageProvider(),
-                errorService());
+                environment.imageProvider());
         schedule = new Schedule(
                 environment.repository(),
                 followSeriesService,
@@ -119,7 +115,7 @@ public class App extends Application {
     }
     
     // Update Series
-    public static UpdateSeriesService updateSeriesService() {
+    public static UpdateService updateSeriesService() {
         return updateService;
     }
 

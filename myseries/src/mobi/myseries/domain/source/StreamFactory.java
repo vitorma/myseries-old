@@ -30,6 +30,9 @@ public interface StreamFactory {
     public InputStream streamForSeriesSearch(String seriesName, Language language)
             throws StreamCreationFailedException, ConnectionFailedException;
 
+    public InputStream streamForUpdatesSince(long dateInMiliseconds) 
+            throws StreamCreationFailedException, ConnectionFailedException;
+
     public InputStream streamForSeriesPoster(String fileName)
             throws StreamCreationFailedException, ConnectionFailedException;
 

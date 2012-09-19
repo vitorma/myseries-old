@@ -21,8 +21,122 @@
 
 package mobi.myseries.application.schedule;
 
-public interface ScheduleMode {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import mobi.myseries.application.FollowSeriesService;
+import mobi.myseries.application.SeriesFollowingListener;
+import mobi.myseries.application.UpdateListener;
+import mobi.myseries.application.UpdateService;
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.repository.SeriesRepository;
+import mobi.myseries.gui.shared.EpisodeComparator;
+import mobi.myseries.gui.shared.SortMode;
+import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.shared.Publisher;
+
+public abstract class ScheduleMode implements Publisher<ScheduleListener>, SeriesFollowingListener, UpdateListener {
     public static final int RECENT = 0;
     public static final int NEXT = 1;
     public static final int UPCOMING = 2;
+
+    protected ScheduleSpecification specification;
+    protected List<Episode> episodes;
+    protected SeriesRepository repository;
+    private ListenerSet<ScheduleListener> listeners;
+
+    protected ScheduleMode(ScheduleSpecification specification, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
+        this.specification = specification;
+        this.episodes = new ArrayList<Episode>();
+
+        this.repository = repository;
+        this.listeners = new ListenerSet<ScheduleListener>();
+
+        following.registerSeriesFollowingListener(this);
+        update.registerSeriesUpdateListener(this);
+
+        this.loadEpisodes();
+        this.sortEpisodes();
+    }
+
+    protected abstract void loadEpisodes();
+
+    public int numberOfEpisodes() {
+        return this.episodes.size();
+    }
+
+    public Episode episodeAt(int position) {
+        return this.episodes.get(position);
+    }
+
+    public List<Episode> episodes() {
+        return new ArrayList<Episode>(this.episodes);
+    }
+
+    private void sortEpisodes() {
+        Collections.sort(this.episodes, this.comparator(this.specification.sortMode()));
+    }
+
+    private Comparator<Episode> comparator(int sortMode) {
+        switch (sortMode) {
+            case SortMode.OLDEST_FIRST:
+                return EpisodeComparator.comparingByOldestFirst();
+            case SortMode.NEWEST_FIRST:
+                return EpisodeComparator.comparingByNewestFirst();
+            default:
+                return null;
+        }
+    }
+
+    /* Publisher */
+
+    @Override
+    public boolean register(ScheduleListener listener) {
+        return this.listeners.register(listener);
+    }
+
+    @Override
+    public boolean deregister(ScheduleListener listener) {
+        return this.listeners.deregister(listener);
+    }
+
+    protected void notifyOnScheduleStateChanged() {
+        for (ScheduleListener listener : this.listeners) {
+            listener.onScheduleStateChanged();
+        }
+    }
+
+    protected void notifyOnScheduleStructureChanged() {
+        for (ScheduleListener listener : this.listeners) {
+            listener.onScheduleStructureChanged();
+        }
+    }
+
+    /* SeriesFollowingListener */
+
+    @Override
+    public final void onFollowing(Series series) {
+        this.notifyOnScheduleStructureChanged();
+    }
+
+    @Override
+    public final void onStopFollowing(Series series) {
+        this.notifyOnScheduleStructureChanged();
+    }
+
+    /* UpdateListener */
+
+    @Override
+    public final void onUpdateStart() {}
+
+    @Override
+    public final void onUpdateFailure() {}
+
+    @Override
+    public final void onUpdateSuccess() {
+        this.notifyOnScheduleStructureChanged();
+    }
 }

@@ -29,7 +29,7 @@ import mobi.myseries.shared.Validate;
 
 public class EpisodeComparator {
 
-    public static Comparator<Episode> byNumber() {
+    public static Comparator<Episode> comparingByNumber() {
         return new Comparator<Episode>() {
             @Override
             public int compare(Episode episode1, Episode episode2) {
@@ -40,7 +40,7 @@ public class EpisodeComparator {
         };
     }
 
-    public static Comparator<Episode> byOldestFirst() {
+    public static Comparator<Episode> comparingByOldestFirst() {
         return new Comparator<Episode>() {
             @Override
             public int compare(Episode episode1, Episode episode2) {
@@ -52,7 +52,13 @@ public class EpisodeComparator {
                     return byAirdate;
                 }
 
-                int bySeason = compareBySeason(episode1, episode2);
+                int bySeriesId = compareBySeriesId(episode1, episode2);
+
+                if (bySeriesId != 0) {
+                    return bySeriesId;
+                }
+
+                int bySeason = compareBySeasonNumber(episode1, episode2);
 
                 if (bySeason != 0) {
                     return bySeason;
@@ -63,11 +69,11 @@ public class EpisodeComparator {
         };
     }
 
-    public static Comparator<Episode> byNewestFirst() {
+    public static Comparator<Episode> comparingByNewestFirst() {
         return new Comparator<Episode>() {
             @Override
             public int compare(Episode episode1, Episode episode2) {
-                return byOldestFirst().compare(episode2, episode1);
+                return comparingByOldestFirst().compare(episode2, episode1);
             }
         };
     }
@@ -83,8 +89,12 @@ public class EpisodeComparator {
         return episode1.number() - episode2.number();
     }
 
-    private static int compareBySeason(Episode episode1, Episode episode2) {
+    private static int compareBySeasonNumber(Episode episode1, Episode episode2) {
         return episode1.seasonNumber() - episode2.seasonNumber();
+    }
+
+    private static int compareBySeriesId(Episode episode1, Episode episode2) {
+        return episode1.seriesId() - episode2.seriesId();
     }
 
     private static int compareByAirdate(Episode episode1, Episode episode2) {

@@ -55,7 +55,7 @@ public class ActionBar {
     }
 
     private CharSequence titleFrom(int appWidgetId) {
-        int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this.context, appWidgetId);
+        int scheduleMode = AppWidgetPreferenceActivity.scheduleMode(this.context, appWidgetId);
 
         switch (scheduleMode) {
             case ScheduleMode.RECENT:
@@ -77,7 +77,7 @@ public class ActionBar {
     }
 
     private PendingIntent scheduleIntentFrom(int appWidgetId) {
-        int scheduleMode = AppWidgetPreferenceActivity.scheduleModeBy(this.context, appWidgetId);
+        int scheduleMode = AppWidgetPreferenceActivity.scheduleMode(this.context, appWidgetId);
 
         Intent intent = MyScheduleActivity.newIntent(this.context, scheduleMode);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
