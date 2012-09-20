@@ -45,23 +45,17 @@
 
         <CheckBox
             android:id="@+id/isEpisodeViewedCheckBox"
-            android:layout_width="@dimen/checkbox_width"
-            android:layout_height="@dimen/checkbox_height"
-            android:layout_marginTop="@dimen/gap_medium"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/gap_small"
+            android:paddingLeft="40dp"
+            android:paddingRight="@dimen/gap_medium"
+            android:minHeight="@dimen/toucharea_minimum_side"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/imageFrame"
             android:layout_alignLeft="@id/imageFrame"/>
-
-        <TextView
-            android:id="@+id/episodeNameTextView"
-            style="@style/TextView.Data.Medium.Bold"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/checkbox_height"
-            android:layout_marginTop="@dimen/gap_medium"
-            android:layout_marginLeft="@dimen/gap_medium"
-            android:layout_marginRight="@dimen/gap_medium"
-            android:layout_below="@id/imageFrame"
-            android:layout_toRightOf="@id/isEpisodeViewedCheckBox"/>
 
         <TextView
             android:id="@+id/episodeGuestStarsLabel"
