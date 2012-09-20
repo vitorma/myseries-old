@@ -92,7 +92,7 @@ public class UpdateParser {
         this.parsedPosters = content.handledPosters();
         this.parsedSeries = content.handledSeries();
         
-        return true;
+        return (this.parsedPosters.size() > 0) || (this.parsedSeries.size() > 0);
     }
 
     public Map<Integer, String> parsedPosters() {
