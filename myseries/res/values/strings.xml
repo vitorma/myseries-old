@@ -93,9 +93,11 @@
     <string name="no_results_message">Try searching another name.</string>
     <string name="parsing_failed_title">Error reading file from the web</string>
     <string name="parsing_failed_message">Your connection may be too slow.</string>
-    <string name="update_failed_title">Data update has failed</string>
-    <string name="update_failed_message">Check your connection and try again.</string>
-
+    <string name="update_failed_title">Data update has failed</string> <!-- TODO (Reul): Remove this one -->
+    <string name="update_failed_message">Data update has failed. Check your connection and try again.</string>
+    <string name="update_started_message">Checking for updates...</string>
+    <string name="update_success_message">Update complete.</string>
+    
     <!-- Adding Error Messages -->
     <string name="add_failed_title">Adding failed</string>
     <string name="add_connection_failed_message">The connection has failed while adding %s. Check your connection and try again.</string>
