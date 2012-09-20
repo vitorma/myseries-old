@@ -47,8 +47,10 @@ import com.actionbarsherlock.view.Window;
 
 public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
     //TODO Menu from xml
+    //TODO Internationalized string
     private static final String SCHEDULE = "SCHEDULE";
-    private static final String SEARCH = "SEARCH";
+    private static final String ADD = "ADD SERIES";
+    private static final String REMOVE = "REMOVE SERIES";
     private static final String UPDATE = "UPDATE";
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
@@ -124,10 +126,14 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             .setIcon(R.drawable.actionbar_calendar)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(SEARCH)
-            .setIcon(R.drawable.actionbar_search)
+        menu.add(ADD)
+            .setIcon(R.drawable.actionbar_add)
             .setIntent(new Intent(this, SeriesSearchActivity.class))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(REMOVE)
+        .setIcon(R.drawable.actionbar_remove)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(UPDATE)
             .setIcon(R.drawable.actionbar_update)
