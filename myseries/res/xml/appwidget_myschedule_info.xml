@@ -8,6 +8,6 @@
     android:minResizeWidth="250dp"
     android:minResizeHeight="88dp"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="0"
+    android:updatePeriodMillis="21600000"
     android:configure="mobi.myseries.gui.appwidget.AppWidgetPreferenceActivity"
     android:previewImage="@drawable/appwidget_myschedule_preview"/>

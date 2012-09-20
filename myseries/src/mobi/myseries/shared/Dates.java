@@ -110,7 +110,7 @@ public class Dates {
         };
     }
 
-    public static String relativeTimeFor(Date date) {
+    public static String relativeTimeStringForNear(Date date) {
         if (date == null) {return "";}
 
         long time = date.getTime();
@@ -119,8 +119,21 @@ public class Dates {
 
         if (duration >= DateUtils.WEEK_IN_MILLIS) {return "";}
 
-        long minResolution = DateUtils.MINUTE_IN_MILLIS;
+        long minResolution = DateUtils.DAY_IN_MILLIS;
         int flag = DateUtils.FORMAT_ABBREV_RELATIVE;
+
+        return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
+    }
+
+    public static String relativeTimeStringFor(Date date, String defaultReturn) {
+        Validate.isNonNull(defaultReturn, "defaultReturn");
+
+        if (date == null) {return defaultReturn;}
+
+        long time = date.getTime();
+        long now = System.currentTimeMillis();
+        long minResolution = DateUtils.DAY_IN_MILLIS;
+        int flag = DateUtils.FORMAT_ABBREV_ALL;
 
         return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
     }
