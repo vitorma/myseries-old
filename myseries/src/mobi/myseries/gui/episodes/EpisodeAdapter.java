@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeListener {
+public class EpisodeAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
 
@@ -62,6 +62,33 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeList
         }
     };
 
+    private EpisodeListener seenMarkListener = new EpisodeListener() {
+
+        @Override
+        @Deprecated
+        public void onMerge(Episode episode) {}  // TODO remove this deprecated method
+
+        @Override
+        public void onMarkAsSeenBySeason(Episode episode) {
+            EpisodeAdapter.this.updateSeenCheckbox();
+        }
+
+        @Override
+        public void onMarkAsSeen(Episode episode) {
+            EpisodeAdapter.this.updateSeenCheckbox();
+        }
+
+        @Override
+        public void onMarkAsNotSeenBySeason(Episode episode) {
+            EpisodeAdapter.this.updateSeenCheckbox();
+        }
+
+        @Override
+        public void onMarkAsNotSeen(Episode episode) {
+            EpisodeAdapter.this.updateSeenCheckbox();
+        }
+    };
+
     private Episode episode;
     private TextView episodeDirector;
     private TextView episodeFirstAired;
@@ -82,7 +109,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeList
         this.layoutInflater = LayoutInflater.from(context);
 
         IMAGE_PROVIDER.register(this.downloadListener);
-        e.register(this);
+        e.register(this.seenMarkListener);
     }
 
     @Override
@@ -111,7 +138,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeList
         this.episodeWriter.setText(episode.writers());
         this.episodeGuestStars.setText(episode.guestStars());
         this.episodeOverview.setText(episode.overview());
-        this.isViewed.setChecked(episode.wasSeen());
+        this.updateSeenCheckbox();
 
         this.loadEpisodeImage();
 
@@ -156,33 +183,13 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> implements EpisodeList
         this.imageView.setImageBitmap(this.image);
         this.finishedLoadingImage();
     }
+
     private void setUpForUnavailableImage() {
         this.imageView.setImageBitmap(GENERIC_IMAGE);
         this.finishedLoadingImage();
     }
 
-    @Override
-    public void onMarkAsSeen(Episode episode) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMarkAsNotSeen(Episode episode) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMarkAsSeenBySeason(Episode episode) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMarkAsNotSeenBySeason(Episode episode) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMerge(Episode episode) {
-        //TODO This method should be removed from the interface EpisodeListener
+    private void updateSeenCheckbox() {
+        this.isViewed.setChecked(this.episode.wasSeen());
     }
 }
