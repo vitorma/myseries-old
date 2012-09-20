@@ -21,7 +21,9 @@
 
 package mobi.myseries.gui.myseries;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -195,15 +197,20 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                 new ConfirmationDialogBuilder(context)
                 .setTitle(R.string.are_you_sure)
                 .setMessage(R.string.cannot_be_undone)
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton(R.string.no, null)
                 .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
+                        List<Series> seriesToRemove = new ArrayList<Series>();
+
                         for (Series s : removalOptions.keySet()) {
                             if (removalOptions.get(s)) {
-                                App.stopFollowing(s);
+                                seriesToRemove.add(s);
                             }
                         }
+
+                        App.followSeriesService().stopFollowingAll(seriesToRemove);
+
                         dialog.dismiss();
                     }
                 })
