@@ -32,6 +32,11 @@
     <string name="showAll">Show all</string>
     <string name="showSelected">Show selected</string>
     <string name="unknown_date">Unknown date</string>
+    <string name="series_to_remove">Series to remove</string>
+    <string name="remove_all">Remove all</string>
+    <string name="remove_selected">Remove selected</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="cannot_be_undone">This removal cannot be undone.</string>
 
     <!-- Labels -->
 

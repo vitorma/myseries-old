@@ -21,10 +21,14 @@
 
 package mobi.myseries.gui.myseries;
 
+import java.util.HashMap;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.ErrorServiceListener;
 import mobi.myseries.application.FollowSeriesException;
+import mobi.myseries.application.FollowSeriesService;
+import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
@@ -33,8 +37,15 @@ import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
+import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
+import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
+import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
+import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
+import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
+import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +57,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
+    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+
     //TODO Menu from xml
     //TODO Internationalized string
     private static final String SCHEDULE = "SCHEDULE";
@@ -159,7 +172,47 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             App.updateSeriesService().updateDataIfNeeded();
         }
 
+        if (item.getTitle().equals(REMOVE)) {
+            this.showRemoveDialog();
+        }
+
         return super.onMenuItemSelected(featureId, item);
+    }
+
+    private void showRemoveDialog() {
+        final Context context = this;
+        final HashMap<Series, Boolean> removalOptions = new HashMap<Series, Boolean>();
+
+        for (Series s : SERIES_PROVIDER.followedSeries()) {
+            removalOptions.put(s, false);
+        }
+
+        new RemovingSeriesDialogBuilder(this)
+            .setDefaultRemovalOptions(removalOptions)
+            .setOnRequestRemovalListener(new OnRequestRemovalListener() {
+                @Override
+                public void onRequestRemoval() {
+                    new ConfirmationDialogBuilder(context)
+                        .setTitle(R.string.are_you_sure)
+                        .setMessage(R.string.cannot_be_undone)
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                for (Series s : removalOptions.keySet()) {
+                                    if (removalOptions.get(s)) {
+                                        App.stopFollowing(s);
+                                    }
+                                }
+                                dialog.dismiss();
+                            }
+                        })
+                        .build()
+                        .show();
+                }
+            })
+            .build()
+            .show();
     }
 
     @Override
