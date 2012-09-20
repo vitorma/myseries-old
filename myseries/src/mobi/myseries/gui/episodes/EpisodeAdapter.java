@@ -120,7 +120,8 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
             itemView = this.layoutInflater.inflate(ITEM_LAYOUT, null);
         }
 
-        this.episodeName = (TextView) itemView.findViewById(R.id.episodeNameTextView);
+        // The episode name TextBox is the one that belongs to the seen mark CheckBox
+        this.episodeName = (TextView) itemView.findViewById(R.id.isEpisodeViewedCheckBox);
         this.episodeFirstAired = (TextView) itemView.findViewById(R.id.episodeFirstAiredTextView);
         this.episodeOverview = (TextView) itemView.findViewById(R.id.episodeOverviewTextView);
         this.episodeDirector = (TextView) itemView.findViewById(R.id.episodeDirectorsTextView);
