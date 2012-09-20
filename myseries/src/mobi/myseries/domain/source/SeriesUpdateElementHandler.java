@@ -33,7 +33,6 @@ import android.sax.Element;
 import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
-import android.util.Log;
 
 public class SeriesUpdateElementHandler {
     private static final String SERIES = "Series";

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -103,34 +104,63 @@ public class UpdateService {
         private void update() {
             final AsyncTask<Void, Void, UpdateResult> updateTask =
                     new AsyncTask<Void, Void, UpdateResult>() {
+                        private void updateDataOf(Series series) throws ParsingFailedException,
+                                ConnectionFailedException, SeriesNotFoundException,
+                                ConnectionTimeoutException {
+
+                            Log.d(getClass().getName(),
+                                    "Updating series: " + series.name());
+
+                            Log.d(getClass().getName(),
+                                    "Last updated: " + series.lastUpdate());
+
+                            Series downloadedSeries;
+
+                            Log.d(getClass().getName(), "Updating " + series.name());
+
+                            downloadedSeries = seriesSource.fetchSeries(series.id(),
+                                    localizationProvider.language());
+
+                            downloadedSeries.mergeWith(series);
+                            downloadedSeries.setLastUpdate(System.currentTimeMillis());
+                            seriesRepository.update(downloadedSeries);
+
+                            Log.d(getClass().getName(), "Data of " + series.name() + " updated.");
+                        }
+
+                        private void updatePosterOf(Series series) {
+                            Log.d(getClass().getName(), "Downloading poster of " + series.name());
+                            imageProvider.downloadPosterOf(series);
+
+                            Log.d(getClass().getName(), "Poster of " + series.name() + " updated.");
+                        }
+
+                        private void fetchUpdateMetadataSince(long dateInMiliseconds)
+                                throws ConnectionFailedException, ConnectionTimeoutException,
+                                ParsingFailedException, UpdateMetadataUnavailableException {
+                            seriesSource.fetchUpdateMetadataSince(dateInMiliseconds);
+
+                        }
+
                         @Override
                         protected UpdateResult doInBackground(Void... params) {
 
                             try {
-                                List<Series> seriesToUpdate = filterUpToDateFrom(followedSeries());
+
+                                fetchUpdateMetadataSince(earliestUpdatedDateOf(followedSeries()));
+                                List<Series> seriesToUpdate =
+                                        seriesWithObsoleteDataIn(followedSeries());
+                                List<Series> imagesToUpdate =
+                                        seriesWithObsoletePosterIn(followedSeries());
 
                                 Collections.sort(seriesToUpdate, new ComparatorByLastUpdate());
 
                                 for (final Series s : seriesToUpdate) {
-                                    Log.d(this.getClass().toString(),
-                                            "Updating series: " + s.name());
-                                    Log.d(this.getClass().toString(),
-                                            "Last updated: " + s.lastUpdate());
-                                    Series downloadedSeries;
+                                    updateDataOf(s);
+                                }
 
-                                    Log.d("SeriesUpdater", "Updating " + s.name());
-                                    downloadedSeries =
-                                            seriesSource.fetchSeries(s.id(),
-                                                    localizationProvider.language());
-
-                                    downloadedSeries.mergeWith(s);
-                                    downloadedSeries.setLastUpdate(System.currentTimeMillis());
-                                    seriesRepository.update(downloadedSeries);
-
-                                    Log.d("SeriesUpdater", "Downloading poster of " + s.name());
-                                    imageProvider.downloadPosterOf(s);
-
-                                    Log.d("SeriesUpdater", s.name() + " updated.");
+                                for (final Series s : imagesToUpdate) {
+                                    updatePosterOf(s);
                                 }
 
                             } catch (ParsingFailedException e) {
@@ -144,22 +174,53 @@ public class UpdateService {
                             } catch (SeriesNotFoundException e) {
                                 e.printStackTrace();
                                 return UpdateResult.UNKNOWN_ERROR;
+
                             } catch (UpdateMetadataUnavailableException e) {
                                 e.printStackTrace();
                                 return UpdateResult.UPDATE_METADATA_UNAVAILABLE;
-                            } catch (ConnectionTimeoutException e) {
-								e.printStackTrace();
-								return UpdateResult.CONNECTION_TIMEOUT;
-							}
 
-                            Log.d("SeriesUpdater", "Update complete.");
+                            } catch (ConnectionTimeoutException e) {
+                                e.printStackTrace();
+                                return UpdateResult.CONNECTION_TIMEOUT;
+
+                            }
+
+                            Log.d(getClass().getName(), "Update complete.");
 
                             return UpdateResult.SUCCESS;
                         }
 
-                        private List<Series> filterUpToDateFrom(Collection<Series> seriesToFilter)
-                                throws ConnectionFailedException, ParsingFailedException,
-                                UpdateMetadataUnavailableException, ConnectionTimeoutException {
+                        private List<Series> seriesWithObsoletePosterIn(
+                                Collection<Series> seriesToFilter) {
+                            List<Series> filtered = new LinkedList<Series>();
+
+                            Map<Integer, String> availableUpdates =
+                                    seriesSource.posterUpdateMetadata();
+
+                            for (Series series : seriesToFilter) {
+                                if (availableUpdates.containsKey(series.id())) {
+                                    Log.d(getClass().getName(),
+                                            "Update available for poster of " + series.name());
+                                    
+                                    series.setPosterFilename(availableUpdates.get(series.id()));
+                                    seriesRepository.update(series);
+
+                                    filtered.add(series);
+                                } else {
+                                    Log.d(getClass().getName(),
+                                            "No updates found for poster of " + series.name()
+                                                    + ". Refreshing last update time.\n");
+
+                                    series.setLastUpdate(System.currentTimeMillis());
+                                    seriesRepository.update(series);
+                                }
+                            }
+
+                            return filtered;
+                        }
+
+                        private List<Series> seriesWithObsoleteDataIn(
+                                Collection<Series> seriesToFilter) {
 
                             long earliestUpdateTime = earliestUpdatedDateOf(seriesToFilter);
 
@@ -173,7 +234,7 @@ public class UpdateService {
                             List<Series> filtered = new LinkedList<Series>();
 
                             Collection<Integer> availableUpdates =
-                                    seriesSource.fetchUpdatesSince(earliestUpdateTime);
+                                    seriesSource.seriesUpdateMetadata();
 
                             for (Series series : seriesToFilter) {
                                 if (availableUpdates.contains(series.id())) {

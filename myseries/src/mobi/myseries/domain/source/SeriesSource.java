@@ -21,8 +21,9 @@
 
 package mobi.myseries.domain.source;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import mobi.myseries.domain.model.Series;
 
@@ -36,7 +37,10 @@ public interface SeriesSource {
     public List<Series> fetchAllSeries(int[] seriesIds, String languageAbbreviation)
             throws ParsingFailedException, ConnectionFailedException, ConnectionTimeoutException, SeriesNotFoundException;
     
-    public Set<Integer> fetchUpdatesSince(long dateInMiliseconds) 
+    public boolean fetchUpdateMetadataSince(long dateInMiliseconds) 
             throws ConnectionFailedException, ConnectionTimeoutException, ParsingFailedException, 
                    UpdateMetadataUnavailableException;
+
+    public Collection<Integer> seriesUpdateMetadata();
+    public Map<Integer, String> posterUpdateMetadata();
 }
