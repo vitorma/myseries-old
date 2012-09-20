@@ -27,7 +27,6 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.ErrorServiceListener;
 import mobi.myseries.application.FollowSeriesException;
-import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.application.schedule.ScheduleMode;
@@ -38,12 +37,11 @@ import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
+import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
-import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
-import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
-import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
+import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -67,10 +65,12 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String UPDATE = "UPDATE";
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
-    
+
     private boolean updating = false;
     private StateHolder state;
     private ErrorServiceListener errorListener;
+
+    private ToastBuilder toastBuilder;
 
     public MySeriesActivity() {
     }
@@ -81,14 +81,14 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         this.setContentView(R.layout.myseries);
         setSupportProgressBarIndeterminateVisibility(false);
-        
-        ActionBar ab = this.getSupportActionBar();
+
+        ActionBar ab = getSupportActionBar();
         ab.setTitle(R.string.my_series);
 
-        this.setupErrorServiceListener();
+        setupErrorServiceListener();
 
         Object retained = getLastCustomNonConfigurationInstance();
-        if (retained != null && retained instanceof StateHolder) {
+        if ((retained != null) && (retained instanceof StateHolder)) {
             state = (StateHolder) retained;
             loadState();
         } else {
@@ -98,13 +98,13 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         updating = App.updateSeriesService().isUpdating();
         setSupportProgressBarIndeterminateVisibility(updating);
 
+        App.updateSeriesService().registerSeriesUpdateListener(this);
+
         if (!updating) {
             App.updateSeriesService().updateDataIfNeeded();
-        } else {
-            App.updateSeriesService().registerSeriesUpdateListener(this);
         }
     }
-    
+
     private void loadState() {
 
         if (state.isShowingDialog){
@@ -121,7 +121,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     protected void onStop() {
         super.onStop();
         App.errorService().deregisterListener(errorListener);
-        if (state.dialog != null && state.dialog.isShowing()) {
+        if ((state.dialog != null) && state.dialog.isShowing()) {
             state.dialog.dismiss();
             state.isShowingDialog = true;
         } else {
@@ -129,42 +129,42 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         }
 
     }
-    
+
     //Menu--------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(SCHEDULE)
-            .setIntent(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT))
-            .setIcon(R.drawable.actionbar_calendar)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        .setIntent(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT))
+        .setIcon(R.drawable.actionbar_calendar)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(ADD)
-            .setIcon(R.drawable.actionbar_add)
-            .setIntent(new Intent(this, SeriesSearchActivity.class))
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        .setIcon(R.drawable.actionbar_add)
+        .setIntent(new Intent(this, SeriesSearchActivity.class))
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(REMOVE)
         .setIcon(R.drawable.actionbar_remove)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(UPDATE)
-            .setIcon(R.drawable.actionbar_update)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        .setIcon(R.drawable.actionbar_update)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         //TODO add intent
         menu.add(SETTINGS)
-            .setIcon(R.drawable.actionbar_settings)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        .setIcon(R.drawable.actionbar_settings)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         //TODO add intent
         menu.add(HELP)
-            .setIcon(R.drawable.actionbar_help)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        .setIcon(R.drawable.actionbar_help)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         return true;
     }
-    
+
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
@@ -173,7 +173,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         }
 
         if (item.getTitle().equals(REMOVE)) {
-            this.showRemoveDialog();
+            showRemoveDialog();
         }
 
         return super.onMenuItemSelected(featureId, item);
@@ -188,36 +188,36 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         }
 
         new RemovingSeriesDialogBuilder(this)
-            .setDefaultRemovalOptions(removalOptions)
-            .setOnRequestRemovalListener(new OnRequestRemovalListener() {
-                @Override
-                public void onRequestRemoval() {
-                    new ConfirmationDialogBuilder(context)
-                        .setTitle(R.string.are_you_sure)
-                        .setMessage(R.string.cannot_be_undone)
-                        .setNegativeButton(R.string.cancel, null)
-                        .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                for (Series s : removalOptions.keySet()) {
-                                    if (removalOptions.get(s)) {
-                                        App.stopFollowing(s);
-                                    }
-                                }
-                                dialog.dismiss();
+        .setDefaultRemovalOptions(removalOptions)
+        .setOnRequestRemovalListener(new OnRequestRemovalListener() {
+            @Override
+            public void onRequestRemoval() {
+                new ConfirmationDialogBuilder(context)
+                .setTitle(R.string.are_you_sure)
+                .setMessage(R.string.cannot_be_undone)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        for (Series s : removalOptions.keySet()) {
+                            if (removalOptions.get(s)) {
+                                App.stopFollowing(s);
                             }
-                        })
-                        .build()
-                        .show();
-                }
-            })
-            .build()
-            .show();
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
+            }
+        })
+        .build()
+        .show();
     }
 
     @Override
     public boolean onSearchRequested() {
-        this.showSearchActivity();
+        showSearchActivity();
         return true;
     }
 
@@ -226,6 +226,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d("MySeriesActivity", "update started");
         setSupportProgressBarIndeterminateVisibility(true);
         updating = true;
+        toastBuilder().setMessage(R.string.update_started_message).build().show();
     }
 
     @Override
@@ -233,6 +234,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d("MySeriesActivity", "update failure");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;
+        toastBuilder().setMessage(R.string.update_failed_message).build().show();
     }
 
     @Override
@@ -240,17 +242,18 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d("MySeriesActivity", "update complete");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;
+        toastBuilder().setMessage(R.string.update_success_message).build().show();
     }
 
     //Search------------------------------------------------------------------------------------------------------------
 
     private void showSearchActivity() {
         final Intent intent = new Intent(this, SeriesSearchActivity.class);
-        this.startActivity(intent);
+        startActivity(intent);
     }
-    
+
     private void setupErrorServiceListener() {
-        this.errorListener = new ErrorServiceListener() {
+        errorListener = new ErrorServiceListener() {
 
             @Override
             public void onError(Exception e) {
@@ -258,19 +261,19 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                     FollowSeriesException followException = ((FollowSeriesException) e);
                     Series series = followException.series();
                     FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(
-                                                         MySeriesActivity.this);
+                            MySeriesActivity.this);
                     dialogBuilder.setTitle(R.string.add_failed_title);
                     if (followException.getCause() instanceof ConnectionFailedException) {
                         dialogBuilder.setMessage(String.format(MySeriesActivity.this
-                        .getString(R.string.add_connection_failed_message), series.name()));
+                                .getString(R.string.add_connection_failed_message), series.name()));
 
                     } else if (followException.getCause() instanceof SeriesNotFoundException) {
                         dialogBuilder.setMessage(String.format(MySeriesActivity.this
-                        .getString(R.string.add_series_not_found), series.name()));
+                                .getString(R.string.add_series_not_found), series.name()));
 
                     } else if (followException.getCause() instanceof ParsingFailedException) {
                         dialogBuilder.setMessage(String.format(MySeriesActivity.this
-                        .getString(R.string.parsing_failed_message), series.name()));
+                                .getString(R.string.parsing_failed_message), series.name()));
                     }
                     Dialog dialog = dialogBuilder.build();
                     dialog.show();
@@ -278,6 +281,14 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             }
         };
         App.errorService().registerListener(errorListener);
+    }
+
+    private ToastBuilder toastBuilder() {
+        if (toastBuilder == null) {
+            toastBuilder = new ToastBuilder(App.environment().context());
+        }
+
+        return toastBuilder;
     }
 
     private static class StateHolder {
