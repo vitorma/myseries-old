@@ -235,11 +235,6 @@ public class FollowSeriesServiceTests {
 
     // Stop Following
 
-    @Test(expected=IllegalArgumentException.class)
-    public void cannotStopFollowingNullSeries() {
-        this.followSeriesService.stopFollowing(null);
-    }
-
     @Test
     public void whenStopFollowingTheSeriesShouldBeRemovedFromTheRepository() {
         Series followedSeries = mock(Series.class);
