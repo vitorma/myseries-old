@@ -22,8 +22,6 @@
 package mobi.myseries.domain.source;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import mobi.myseries.domain.constant.Invalid;
@@ -35,10 +33,9 @@ import android.sax.Element;
 import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
-import android.util.Log;
 
 public class EpisodeUpdateElementHandler {
-    private static final String SERIES = "Episode";
+    private static final String EPISODE = "Episode";
     private static final String SERIES_ID = "Series";
 
     private Element seriesElement;
@@ -48,7 +45,7 @@ public class EpisodeUpdateElementHandler {
     private EpisodeUpdateElementHandler(RootElement rootElement) {
         Validate.isNonNull(rootElement, "rootElement");
 
-        this.seriesElement = rootElement.getChild(SERIES);
+        this.seriesElement = rootElement.getChild(EPISODE);
         this.results = new HashSet<Integer>();
 
         this.storeTheCurrentResultAtTheEndOfEachSeriesElement();

@@ -23,8 +23,10 @@ package mobi.myseries.domain.source;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import mobi.myseries.domain.model.Series;
@@ -36,6 +38,8 @@ import android.util.Log;
 
 public class TheTVDB implements SeriesSource, ImageSource {
     private StreamFactory streamFactory;
+    private Set<Integer> fetchedSeriesUpdateMetadata;
+    private Map<Integer, String> fetchedPosterUpdateMetadata;
 
     public TheTVDB(String apiKey) {
         this(new TheTVDBStreamFactory(apiKey));
@@ -98,7 +102,7 @@ public class TheTVDB implements SeriesSource, ImageSource {
     }
 
     @Override
-    public Set<Integer> fetchUpdatesSince(long dateInMiliseconds) throws ConnectionFailedException,
+    public boolean fetchUpdateMetadataSince(long dateInMiliseconds) throws ConnectionFailedException,
             ParsingFailedException, UpdateMetadataUnavailableException, ConnectionTimeoutException {
 
         Log.d(getClass().getName(), "Fetching update metadata");
@@ -113,10 +117,15 @@ public class TheTVDB implements SeriesSource, ImageSource {
         UpdateParser parser = new UpdateParser(streamForUpdate);
 
         Log.d(getClass().getName(),"Parsing update metadata");
-        Set<Integer> fetchedUpdateMetadata = parser.parse(); 
+        
+        parser.parse(); 
+        
         Log.d(getClass().getName(),"Update metadata ready");
         
-        return fetchedUpdateMetadata;
+        this.fetchedSeriesUpdateMetadata = parser.parsedSeries(); 
+        this.fetchedPosterUpdateMetadata = parser.parsedPosters(); 
+        
+        return true;
     }
     
     private Language languageFrom(String languageAbbreviation) {
@@ -145,5 +154,15 @@ public class TheTVDB implements SeriesSource, ImageSource {
 
     private Bitmap bitmapFrom(InputStream inputStream) {
         return BitmapFactory.decodeStream(inputStream);
+    }
+
+    @Override
+    public Collection<Integer> seriesUpdateMetadata() {
+        return fetchedSeriesUpdateMetadata;
+    }
+
+    @Override
+    public Map<Integer, String> posterUpdateMetadata() {
+        return fetchedPosterUpdateMetadata;
     }
 }

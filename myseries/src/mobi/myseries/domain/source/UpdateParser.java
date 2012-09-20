@@ -6,10 +6,8 @@ import java.io.InputStream;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import android.sax.RootElement;
 import android.util.Log;
@@ -21,6 +19,8 @@ import mobi.myseries.shared.Validate;
 public class UpdateParser {
 
     private InputStream streamForUpdate;
+    private Map<Integer, String> parsedPosters;
+    private Set<Integer> parsedSeries;
 
     public UpdateParser(InputStream streamForUpdate) {
         Validate.isNonNull(streamForUpdate, "inputStream");
@@ -35,6 +35,7 @@ public class UpdateParser {
 
         private SeriesUpdateElementHandler seriesElementHandler;
         private EpisodeUpdateElementHandler episodeElementHandler;
+        private PosterUpdateElementHandler posterElementHandler;
 
         public Content() {
             this.seriesElementHandler = SeriesUpdateElementHandler.from(this.rootElement)
@@ -42,24 +43,33 @@ public class UpdateParser {
             
             this.episodeElementHandler = EpisodeUpdateElementHandler.from(this.rootElement)
                     .handlingSeriesId();
+            
+            this.posterElementHandler = PosterUpdateElementHandler.from(this.rootElement)
+                    .handlingImageType().handlingSeriesId().handlingPosterPath();
         }
         
         public ContentHandler handler() {
             return this.rootElement.getContentHandler();
         }
         
-        public Set<Integer> handled() {
+        public Set<Integer> handledSeries() {
             Set<Integer> series = this.seriesElementHandler.allResults();
 
             for (int seriesId: this.episodeElementHandler.allResults()) {
                 series.add(seriesId);
-            }
+            }            
             
             return series;
         }
+        
+        public Map<Integer, String> handledPosters() {
+            Map<Integer, String> posters = this.posterElementHandler.allResults();
+
+            return posters;
+        }
     }
 
-    public Set<Integer> parse() throws ConnectionFailedException,
+    public boolean parse() throws ConnectionFailedException,
             ParsingFailedException {
         InputStream stream = this.streamForUpdate;
         
@@ -77,9 +87,19 @@ public class UpdateParser {
             throw new ParsingFailedException(e);
         }
         
-        Log.d(getClass().getName(), "series read: " + content.handled().size());
+        Log.d(getClass().getName(), "series read: " + content.handledSeries().size());
+
+        this.parsedPosters = content.handledPosters();
+        this.parsedSeries = content.handledSeries();
         
-        return content.handled();
+        return true;
     }
 
+    public Map<Integer, String> parsedPosters() {
+        return parsedPosters;
+    }
+    
+    public Set<Integer> parsedSeries() {
+        return parsedSeries;
+    }
 }

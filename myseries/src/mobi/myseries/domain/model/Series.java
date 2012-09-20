@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Set;
 
 import mobi.myseries.domain.constant.Invalid;
-import mobi.myseries.domain.model.Series.Builder;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
@@ -114,6 +113,12 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
     public String posterFileName() {
         return this.posterFileName;
+    }
+    
+    public Series setPosterFilename(String posterFileName) {
+        this.posterFileName = posterFileName;
+        
+        return this;
     }
 
     public SeasonSet seasons() {
