@@ -199,6 +199,13 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
     }
 
     @Override
+    public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
+        for (Series s : allUnfollowedSeries) {
+            this.onStopFollowing(s);
+        }
+    }
+
+    @Override
     public void onChangeNumberOfSeenEpisodes(Series series) {
         this.notifyDataSetChanged();
     }

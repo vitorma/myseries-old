@@ -21,6 +21,7 @@
 
 package mobi.myseries.gui.myseries;
 
+import java.util.Collection;
 import java.util.Comparator;
 
 import mobi.myseries.R;
@@ -72,6 +73,13 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
         @Override
         public void onStopFollowing(Series unfollowedSeries) {
+            if (SeriesCoverFlowFragment.this.getActivity() != null) {
+                SeriesCoverFlowFragment.this.reload();
+            }
+        }
+
+        @Override
+        public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
             if (SeriesCoverFlowFragment.this.getActivity() != null) {
                 SeriesCoverFlowFragment.this.reload();
             }

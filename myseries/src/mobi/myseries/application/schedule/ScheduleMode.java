@@ -22,6 +22,7 @@
 package mobi.myseries.application.schedule;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -124,6 +125,11 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
 
     @Override
     public final void onStopFollowing(Series series) {
+        this.notifyOnScheduleStructureChanged();
+    }
+
+    @Override
+    public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
         this.notifyOnScheduleStructureChanged();
     }
 

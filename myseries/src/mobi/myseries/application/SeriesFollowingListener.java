@@ -21,9 +21,12 @@
 
 package mobi.myseries.application;
 
+import java.util.Collection;
+
 import mobi.myseries.domain.model.Series;
 
 public interface SeriesFollowingListener {
-    void onFollowing(Series followedSeries);
-    void onStopFollowing(Series unfollowedSeries);
+    public void onFollowing(Series followedSeries);
+    public void onStopFollowing(Series unfollowedSeries);
+    public void onStopFollowingAll(Collection<Series> allUnfollowedSeries);
 }
