@@ -216,6 +216,18 @@
         <item name="selectedBold">true</item>
     </style>
 
+    <!-- ProgressBar -->
+
+    <style name="ProgressBar" parent="android:Widget.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/progress_medium_holo</item>
+        <item name="android:animationResolution">33</item>
+    </style>
+
+    <style name="ProgressBar.Large" parent="android:Widget.ProgressBar.Large">
+        <item name="android:indeterminateDrawable">@drawable/progress_large_holo</item>
+        <item name="android:animationResolution">33</item>
+    </style>
+
     <!-- Animation -->
     <style name="DialogAnimation" parent="android:Animation.Dialog"/>
 

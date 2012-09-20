@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="MySeriesTheme" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
         <item name="android:windowContentOverlay">@null</item>
@@ -12,6 +12,8 @@
         <item name="android:expandableListViewStyle">@style/ExpandableListView</item>
         <item name="android:scrollViewStyle">@style/ScrollView</item>
         <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
+        <item name="android:progressBarStyle">@style/ProgressBar</item>
+        <item name="android:progressBarStyleLarge">@style/ProgressBar.Large</item>
 
         <!-- Scroll -->
 
