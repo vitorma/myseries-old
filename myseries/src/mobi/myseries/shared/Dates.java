@@ -119,7 +119,7 @@ public class Dates {
 
         if (duration >= DateUtils.WEEK_IN_MILLIS) {return "";}
 
-        long minResolution = DateUtils.MINUTE_IN_MILLIS;
+        long minResolution = DateUtils.DAY_IN_MILLIS;
         int flag = DateUtils.FORMAT_ABBREV_RELATIVE;
 
         return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
@@ -132,7 +132,7 @@ public class Dates {
 
         long time = date.getTime();
         long now = System.currentTimeMillis();
-        long minResolution = DateUtils.MINUTE_IN_MILLIS;
+        long minResolution = DateUtils.DAY_IN_MILLIS;
         int flag = DateUtils.FORMAT_ABBREV_ALL;
 
         return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
