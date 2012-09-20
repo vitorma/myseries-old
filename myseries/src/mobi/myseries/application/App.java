@@ -93,23 +93,28 @@ public class App extends Application {
         return environment.localization().language();
     }    
 
-    // Follow Series
-    private static FollowSeriesService followSeriesService() {
+    /* SERIES FOLLOWING */
+
+    public static FollowSeriesService followSeriesService() {
         return followSeriesService;
     }
 
+    @Deprecated
     public static void registerSeriesFollowingListener(SeriesFollowingListener listener) {
         followSeriesService().registerSeriesFollowingListener(listener);
     }
 
+    @Deprecated
     public static void follow(Series series) {
         followSeriesService().follow(series);
     }
 
+    @Deprecated
     public static void stopFollowing(Series series) {
         followSeriesService().stopFollowing(series);
     }
 
+    @Deprecated
     public static boolean follows(Series series) {
         return followSeriesService().follows(series);
     }
