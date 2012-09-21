@@ -2,9 +2,10 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="@dimen/gap_medium"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/myseries_item_height"
-    android:padding="@dimen/gap_medium">
+    android:layout_height="@dimen/myseries_item_height">
 
     <include
         layout="@layout/myseries_item_data_title"

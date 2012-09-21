@@ -22,6 +22,7 @@
 package mobi.myseries.gui.myseries;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -184,42 +185,53 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private void showRemoveDialog() {
         final Context context = this;
         final HashMap<Series, Boolean> removalOptions = new HashMap<Series, Boolean>();
+        final Collection<Series> followedSeries = SERIES_PROVIDER.followedSeries();
 
-        for (Series s : SERIES_PROVIDER.followedSeries()) {
+        if (followedSeries.isEmpty()) {
+            new ToastBuilder(context).setMessage(R.string.no_series_to_remove).build().show();
+            return;
+        }
+
+        for (Series s : followedSeries) {
             removalOptions.put(s, false);
         }
 
         new RemovingSeriesDialogBuilder(this)
-        .setDefaultRemovalOptions(removalOptions)
-        .setOnRequestRemovalListener(new OnRequestRemovalListener() {
-            @Override
-            public void onRequestRemoval() {
-                new ConfirmationDialogBuilder(context)
-                .setTitle(R.string.are_you_sure)
-                .setMessage(R.string.cannot_be_undone)
-                .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        List<Series> seriesToRemove = new ArrayList<Series>();
+            .setDefaultRemovalOptions(removalOptions)
+            .setOnRequestRemovalListener(new OnRequestRemovalListener() {
+                @Override
+                public void onRequestRemoval() {
+                    final List<Series> allSeriesToRemove = new ArrayList<Series>();
 
-                        for (Series s : removalOptions.keySet()) {
-                            if (removalOptions.get(s)) {
-                                seriesToRemove.add(s);
-                            }
+                    for (Series s : removalOptions.keySet()) {
+                        if (removalOptions.get(s)) {
+                            allSeriesToRemove.add(s);
                         }
-
-                        App.followSeriesService().stopFollowingAll(seriesToRemove);
-
-                        dialog.dismiss();
                     }
-                })
-                .build()
-                .show();
-            }
-        })
-        .build()
-        .show();
+
+                    if (allSeriesToRemove.isEmpty()) {
+                        new ToastBuilder(context).setMessage(R.string.no_series_selected_to_remove).build().show();
+                        return;
+                    }
+
+                    new ConfirmationDialogBuilder(context)
+                        .setTitle(R.string.are_you_sure)
+                        .setMessage(R.string.cannot_be_undone)
+                        .setNegativeButton(R.string.no, null)
+                        .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                App.followSeriesService().stopFollowingAll(allSeriesToRemove);
+
+                                dialog.dismiss();
+                            }
+                        })
+                        .build()
+                        .show();
+                }
+            })
+            .build()
+            .show();
     }
 
     @Override
