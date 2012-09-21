@@ -341,7 +341,7 @@ public class SeriesSearchActivity extends  SherlockListActivity {
                                     App.stopFollowing(selectedItem);
                                 } else {
                                     App.follow(selectedItem);
-                                    String toastMessage = String.format(SeriesSearchActivity.this
+                                    String toastMessage = String.format(App.environment().context()
                                             .getString(R.string.follow_toast_message_format), selectedItem.name());
 
                                     showToastWith(toastMessage);
