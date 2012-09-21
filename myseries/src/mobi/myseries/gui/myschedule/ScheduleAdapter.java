@@ -187,6 +187,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     }
 
     private void setUpData() {
+        this.specification = MyScheduleActivity.scheduleSpecification(this.context, this.scheduleMode);
+
         switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
                 this.items = SCHEDULE.recent(this.specification);

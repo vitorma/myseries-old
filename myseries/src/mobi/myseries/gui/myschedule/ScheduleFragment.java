@@ -193,6 +193,8 @@ public abstract class ScheduleFragment extends SherlockListFragment {
     }
 
     private void showFilterDialog() {
+        this.specification = MyScheduleActivity.scheduleSpecification(this.getActivity(), this.scheduleMode);
+
         final Context context = this.getActivity();
         final int scheduleMode = this.scheduleMode;
         final ScheduleSpecification specification = this.specification;
