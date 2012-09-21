@@ -37,6 +37,8 @@
     <string name="remove_selected">Remove selected</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="cannot_be_undone">This removal cannot be undone.</string>
+    <string name="add_success">%s successfully added.</string>
+    
 
     <!-- Labels -->
 

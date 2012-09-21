@@ -21,13 +21,16 @@
 
 package mobi.myseries.gui.seriessearch;
 
+import java.util.Collection;
 import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.ErrorServiceListener;
 import mobi.myseries.application.FollowSeriesException;
+import mobi.myseries.application.FollowSeriesServiceListener;
 import mobi.myseries.application.SearchSeriesListener;
+import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesSearchException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -41,6 +44,7 @@ import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -56,10 +60,11 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-public class SeriesSearchActivity extends SherlockListActivity {
+public class SeriesSearchActivity extends  SherlockListActivity {
     private StateHolder state;
     private SearchSeriesListener listener;
     private ErrorServiceListener errorListener;
+    private SeriesFollowingListener seriesListener;
 
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
@@ -78,6 +83,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
         this.setupItemClickListener();
         this.setupSearchFieldActionListeners();
         this.setupErrorServiceListener();
+        this.setupSeriesFollowingListener();
 
         Object retained = getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
@@ -338,16 +344,9 @@ public class SeriesSearchActivity extends SherlockListActivity {
                                     String toastMessage = String.format(SeriesSearchActivity.this
                                             .getString(R.string.follow_toast_message_format), selectedItem.name());
 
-                                    this.showToastWith(toastMessage);
+                                    showToastWith(toastMessage);
                                 }
                                 dialog.dismiss();
-                            }
-                            
-                            private void showToastWith(String message) {
-                                new ToastBuilder(App.environment().context())
-                                    .setMessage(message)
-                                    .build()
-                                    .show();
                             }
                         };
                     }
@@ -367,6 +366,34 @@ public class SeriesSearchActivity extends SherlockListActivity {
         super.onWindowFocusChanged(hasFocus);
         this.onSearchRequested();
     }
+    
+    private void setupSeriesFollowingListener(){
+    	this.seriesListener = new SeriesFollowingListener() {
+			
+			@Override
+			public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onStopFollowing(Series unfollowedSeries) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onFollowing(Series followedSeries) {
+				Log.d("adding series", "showing the success toast");
+				String toastMessage = String.format(App.environment().context()
+    	                .getString(R.string.add_success), followedSeries.name());
+    			showToastWith(toastMessage);
+				
+			}
+		}; 
+		
+		App.followSeriesService().registerSeriesFollowingListener(this.seriesListener);
+    }
 
     private static class StateHolder {
         public boolean isSearching;
@@ -376,6 +403,13 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
         public StateHolder() {
         }
+    }
+	
+	private void showToastWith(String message) {
+        new ToastBuilder(App.environment().context())
+            .setMessage(message)
+            .build()
+            .show();
     }
 
 }
