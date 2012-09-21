@@ -41,12 +41,17 @@ public class SeriesListFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        this.setUpSelector();
         this.setUpEmptyTextView();
         this.setUpListAdapter();
     }
 
     private void setUpEmptyTextView() {
         this.setEmptyText(this.getString(R.string.no_followed_series));
+    }
+
+    private void setUpSelector() {
+        this.getListView().setSelector(R.color.transparent);
     }
 
     private void setUpListAdapter() {

@@ -2,6 +2,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/list_selector_holo_light"
     android:layout_width="match_parent"
     android:layout_height="@dimen/myseries_item_height">
 
