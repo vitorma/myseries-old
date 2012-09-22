@@ -29,12 +29,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.ZipInputStream;
 
+import mobi.myseries.shared.Dates;
 import android.util.Log;
 
 public class TheTVDBStreamFactory implements StreamFactory {
     final int CONNECTION_TIMEOUT_IN_MILLIS = 7000;
 
-    private UrlFactory urlFactory;
+    private final UrlFactory urlFactory;
 
     public TheTVDBStreamFactory(String apiKey) {
         this.urlFactory = new UrlFactory(apiKey);
@@ -68,6 +69,42 @@ public class TheTVDBStreamFactory implements StreamFactory {
         return this.buffered(this.streamFrom(this.connectionTo(url)));
     }
 
+    @Override
+    public InputStream streamForUpdatesSince(long dateInMiliseconds)
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
+        long currentTime = System.currentTimeMillis();
+
+        URL url;
+
+        if (currentTime - dateInMiliseconds < Dates.DAY_IN_MILLIS) {
+            url = this.urlFactory.urlForLastDayUpdates();
+            Log.d(getClass().getName(), "Downloading update metadata for LAST DAY");
+        } else if (currentTime - dateInMiliseconds < Dates.WEEK_IN_MILLIS) {
+            url = this.urlFactory.urlForLastWeekUpdates();
+            Log.d(getClass().getName(), "Downloading update metadata for LAST WEEK");
+        } else if (currentTime - dateInMiliseconds < Dates.MONTH_IN_MILLIS) {
+            url = this.urlFactory.urlForLastMonthUpdates();
+            Log.d(getClass().getName(), "Downloading update metadata for LAST MONTH");
+        } else {
+            url = this.urlFactory.urlForAllAvailableUpdates();
+            Log.d(getClass().getName(), "Downloading update metadata for EVER");
+        }
+
+        ZipInputStream stream = this.zipped(this.buffered(this.streamFrom(this.connectionTo(url))));
+
+        try {
+            stream.getNextEntry();
+        } catch (IOException e) {
+            throw new StreamCreationFailedException(e);
+        }
+
+        return stream;
+    }
+
+    private ZipInputStream zipped(InputStream stream) {
+        return new ZipInputStream(stream);
+    }
+
     private BufferedInputStream buffered(InputStream stream) {
         return new BufferedInputStream(stream);
     }
@@ -98,60 +135,5 @@ public class TheTVDBStreamFactory implements StreamFactory {
         }
 
         return connection;
-    }
-
-    @Override
-    public InputStream streamForUpdatesSince(long dateInMiliseconds) throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException {
-        long currentTime = System.currentTimeMillis();
-
-        URL url;
-
-        if (currentTime - dateInMiliseconds < oneDay()) {
-            url = this.urlFactory.urlForLastDayUpdates();
-            Log.d(getClass().getName(), "Downloading update metadata for LAST DAY");
-
-        } else if (currentTime - dateInMiliseconds < oneWeek()) {
-            url = this.urlFactory.urlForLastWeekUpdates();
-            Log.d(getClass().getName(), "Downloading update metadata for LAST WEEK");
-
-        } else if (currentTime - dateInMiliseconds < oneMonth()) {
-            url = this.urlFactory.urlForLastMonthUpdates();
-            Log.d(getClass().getName(), "Downloading update metadata for LAST MONTH");
-
-        } else {
-            url = this.urlFactory.urlForAllAvailableUpdates();
-            Log.d(getClass().getName(), "Downloading update metadata for EVER");
-        }
-
-        ZipInputStream iStream = zipped(buffered(streamFrom(connectionTo(url))));
-
-        try {
-            iStream.getNextEntry();
-        } catch (IOException e) {
-            throw new StreamCreationFailedException(e);
-        }
-
-        return iStream;
-    }
-
-    //TODO (Cleber) Create reusable constants:
-    //     Dates#WEEK_IN_MILLIS
-    //     Dates#DAY_IN_MILLIS
-    //     Dates#MONTH_IN_MILLIS
-
-    private long oneWeek() {
-        return 7L * oneDay();
-    }
-
-    private long oneDay() {
-        return 24L * 60L * 60L * 1000L;
-    }
-
-    private long oneMonth() {
-        return 30L * oneDay();
-    }
-
-    private ZipInputStream zipped(InputStream stream) {
-        return new ZipInputStream(stream);
     }
 }

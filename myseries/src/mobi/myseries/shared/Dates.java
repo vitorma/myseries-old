@@ -30,6 +30,10 @@ import java.util.Date;
 import android.text.format.DateUtils;
 
 public class Dates {
+    public static final long DAY_IN_MILLIS = 24L * 60L * 60L * 1000L;
+    public static final long WEEK_IN_MILLIS = 7L * DAY_IN_MILLIS;
+    public static final long MONTH_IN_MILLIS = 30L * DAY_IN_MILLIS;
+
     private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
 
     public static Date parseDate(String date, DateFormat format, Date alternative) {
@@ -97,7 +101,6 @@ public class Dates {
             public int compare(Date d1, Date d2) {
                 return d1.compareTo(d2);
             }
-            
         };
     }
 
@@ -111,15 +114,19 @@ public class Dates {
     }
 
     public static String relativeTimeStringForNear(Date date) {
-        if (date == null) {return "";}
+        if (date == null) {
+            return "";
+        }
 
         long time = date.getTime();
         long now = System.currentTimeMillis();
         long duration = Math.abs(now - time);
 
-        if (duration >= DateUtils.WEEK_IN_MILLIS) {return "";}
+        if (duration >= WEEK_IN_MILLIS) {
+            return "";
+        }
 
-        long minResolution = DateUtils.DAY_IN_MILLIS;
+        long minResolution = DAY_IN_MILLIS;
         int flag = DateUtils.FORMAT_ABBREV_RELATIVE;
 
         return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
@@ -128,11 +135,13 @@ public class Dates {
     public static String relativeTimeStringFor(Date date, String defaultReturn) {
         Validate.isNonNull(defaultReturn, "defaultReturn");
 
-        if (date == null) {return defaultReturn;}
+        if (date == null) {
+            return defaultReturn;
+        }
 
         long time = date.getTime();
         long now = System.currentTimeMillis();
-        long minResolution = DateUtils.DAY_IN_MILLIS;
+        long minResolution = DAY_IN_MILLIS;
         int flag = DateUtils.FORMAT_ABBREV_ALL;
 
         return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();

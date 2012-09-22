@@ -35,20 +35,12 @@ public class UrlFactory {
     private static final String MONTH = "month";
     private static final String ALL = "all";
 
-    private String apiKey;
+    private final String apiKey;
 
     public UrlFactory(String apiKey) {
         Validate.isNonBlank(apiKey, "apiKey");
 
         this.apiKey = apiKey;
-    }
-
-    private StringBuilder mirrorXml() {
-        return new StringBuilder(MIRROR).append("/api/");
-    }
-
-    private StringBuilder mirrorBanners() {
-        return new StringBuilder(MIRROR).append("/banners/");
     }
 
     public URL urlForSeries(int seriesId, Language language) {
@@ -59,17 +51,6 @@ public class UrlFactory {
         return this.urlFrom(url);
     }
 
-    private String buildUrlForSeries(int seriesId, String language) {
-        return this.mirrorXml()
-            .append(this.apiKey)
-            .append("/series/")
-            .append(seriesId)
-            .append("/all/")
-            .append(language)
-            .append(".xml")
-            .toString();
-    }
-
     public URL urlForSeriesSearch(String seriesName, Language language) {
         Validate.isNonBlank(seriesName, "seriesName");
         Validate.isNonNull(language, "language");
@@ -77,24 +58,6 @@ public class UrlFactory {
         String url = this.buildUrlForSeriesSearch(seriesName, language.abbreviation());
 
         return this.urlFrom(url);
-    }
-    
-    private String buildUrlForSeriesSearch(String seriesName, String language) {
-        return this.mirrorXml()
-            .append("GetSeries.php?seriesname=")
-            .append(this.encode(seriesName))
-            .append("&language=")
-            .append(language)
-            .toString();
-    }
-
-    private String buildUrlForUpdates(String timespan) {
-        return this.mirrorXml()
-                .append(this.apiKey)
-                .append("/updates/")
-                .append("updates_" + timespan)
-                .append(".zip")
-                .toString();        
     }
 
     public URL urlForSeriesPoster(String fileName) {
@@ -105,10 +68,6 @@ public class UrlFactory {
         return this.urlFrom(url);
     }
 
-    private String buildUrlForSeriesPoster(String fileName) {
-        return this.mirrorBanners().append("_cache/").append(this.encode(fileName)).toString();
-    }
-
     public URL urlForEpisodeImage(String fileName) {
         Validate.isNonBlank(fileName, "fileName");
 
@@ -117,8 +76,67 @@ public class UrlFactory {
         return this.urlFrom(url);
     }
 
+    public URL urlForLastDayUpdates() {
+        return this.urlFrom(buildUrlForUpdates(DAY));
+    }
+
+    public URL urlForLastWeekUpdates() {
+        return this.urlFrom(buildUrlForUpdates(WEEK));
+    }
+
+    public URL urlForLastMonthUpdates() {
+        return this.urlFrom(buildUrlForUpdates(MONTH));
+    }
+
+    public URL urlForAllAvailableUpdates() {
+        return this.urlFrom(buildUrlForUpdates(ALL));
+    }
+
+    private StringBuilder mirrorXml() {
+        return new StringBuilder(MIRROR).append("/api/");
+    }
+
+    private StringBuilder mirrorBanners() {
+        return new StringBuilder(MIRROR).append("/banners/");
+    }
+
+    private String buildUrlForSeries(int seriesId, String language) {
+        return this.mirrorXml()
+                .append(this.apiKey)
+                .append("/series/")
+                .append(seriesId)
+                .append("/all/")
+                .append(language)
+                .append(".xml")
+                .toString();
+    }
+
+    private String buildUrlForSeriesSearch(String seriesName, String language) {
+        return this.mirrorXml()
+                .append("GetSeries.php?seriesname=")
+                .append(this.encode(seriesName))
+                .append("&language=")
+                .append(language)
+                .toString();
+    }
+
+    private String buildUrlForSeriesPoster(String fileName) {
+        return this.mirrorBanners()
+                .append("_cache/")
+                .append(this.encode(fileName))
+                .toString();
+    }
+
     private String buildUrlForEpisodeImage(String fileName) {
-        return this.mirrorBanners().append("_cache/").append(this.encode(fileName)).toString();
+        return this.mirrorBanners()
+                .append("_cache/")
+                .append(this.encode(fileName))
+                .toString();
+    }
+
+    private String buildUrlForUpdates(String timespan) {
+        return this.mirrorXml().append(this.apiKey).append("/updates/")
+                .append("updates_" + timespan).append(".zip").toString();
     }
 
     private String encode(String string) {
@@ -135,21 +153,5 @@ public class UrlFactory {
         } catch (MalformedURLException e) {
             throw new RuntimeException("MalformedURLException should never be thrown by UrlFactory", e);
         }
-    }
-
-    public URL urlForLastDayUpdates() {
-        return urlFrom(buildUrlForUpdates(DAY));
-    }
-
-    public URL urlForLastWeekUpdates() {
-        return urlFrom(buildUrlForUpdates(WEEK));
-    }
-
-    public URL urlForLastMonthUpdates() {
-        return urlFrom(buildUrlForUpdates(MONTH));
-    }
-
-    public URL urlForAllAvailableUpdates() {
-        return urlFrom(buildUrlForUpdates(ALL));
     }
 }
