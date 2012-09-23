@@ -57,7 +57,7 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     }
 
     public boolean includes(Season season) {
-        return season != null && this.seasons.containsKey(season.number());
+        return (season != null) && this.seasons.containsKey(season.number());
     }
 
     public Season season(int number) {
@@ -174,8 +174,8 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         if (nextSpecialEpisodeToSee == null) return nextNonSpecialEpisodeToSee;
 
         return Dates.compareByNullLast(nextNonSpecialEpisodeToSee.airDate(), nextSpecialEpisodeToSee.airDate()) < 1
-               ? nextNonSpecialEpisodeToSee
-               : nextSpecialEpisodeToSee;
+                ? nextNonSpecialEpisodeToSee
+                        : nextSpecialEpisodeToSee;
     }
 
     private Episode nextSpecialEpisodeToSee() {
@@ -205,8 +205,6 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
             if (!this.includes(s)) this.including(s);
         }
 
-        this.notifyThatWasMerged();
-
         return this;
     }
 
@@ -229,12 +227,6 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     private void notifyThatNextEpisodeToSeeChanged() {
         for (SeasonSetListener l : this.listeners) {
             l.onChangeNextEpisodeToSee(this);
-        }
-    }
-
-    private void notifyThatWasMerged() {
-        for (SeasonSetListener l : this.listeners) {
-            l.onMerge(this);
         }
     }
 

@@ -145,4 +145,7 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
     public final void onUpdateSuccess() {
         this.notifyOnScheduleStructureChanged();
     }
+    
+    @Override
+    public final void onUpdateNotNecessary() {}
 }

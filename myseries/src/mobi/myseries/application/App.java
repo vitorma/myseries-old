@@ -29,7 +29,6 @@ import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.application.image.ImageloaderService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
 import mobi.myseries.domain.repository.ImageDirectory;
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -64,7 +63,8 @@ public class App extends Application {
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
-                imageProvider);
+                imageProvider,
+                errorService());
         schedule = new Schedule(
                 environment.repository(),
                 followSeriesService,
@@ -155,12 +155,7 @@ public class App extends Application {
 
         Bitmap poster = null;
 
-        try {
-            poster = environment.imageRepository().getSeriesPoster(seriesId);
-        } catch (ExternalStorageNotAvailableException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        poster = environment.imageRepository().getSeriesPoster(seriesId);
 
         if (poster == null) {
             poster = imageProvider.genericPosterImage();

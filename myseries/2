@@ -31,15 +31,13 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.ErrorServiceListener;
 import mobi.myseries.application.FollowSeriesException;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.UpdateException;
 import mobi.myseries.application.UpdateListener;
+import mobi.myseries.application.UpdateSeriesException;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
-import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
@@ -200,41 +198,41 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         }
 
         new RemovingSeriesDialogBuilder(this)
-        .setDefaultRemovalOptions(removalOptions)
-        .setOnRequestRemovalListener(new OnRequestRemovalListener() {
-            @Override
-            public void onRequestRemoval() {
-                final List<Series> allSeriesToRemove = new ArrayList<Series>();
+            .setDefaultRemovalOptions(removalOptions)
+            .setOnRequestRemovalListener(new OnRequestRemovalListener() {
+                @Override
+                public void onRequestRemoval() {
+                    final List<Series> allSeriesToRemove = new ArrayList<Series>();
 
-                for (Series s : removalOptions.keySet()) {
-                    if (removalOptions.get(s)) {
-                        allSeriesToRemove.add(s);
+                    for (Series s : removalOptions.keySet()) {
+                        if (removalOptions.get(s)) {
+                            allSeriesToRemove.add(s);
+                        }
                     }
-                }
 
-                if (allSeriesToRemove.isEmpty()) {
-                    new ToastBuilder(context).setMessage(R.string.no_series_selected_to_remove).build().show();
-                    return;
-                }
-
-                new ConfirmationDialogBuilder(context)
-                .setTitle(R.string.are_you_sure)
-                .setMessage(R.string.cannot_be_undone)
-                .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        App.followSeriesService().stopFollowingAll(allSeriesToRemove);
-
-                        dialog.dismiss();
+                    if (allSeriesToRemove.isEmpty()) {
+                        new ToastBuilder(context).setMessage(R.string.no_series_selected_to_remove).build().show();
+                        return;
                     }
-                })
-                .build()
-                .show();
-            }
-        })
-        .build()
-        .show();
+
+                    new ConfirmationDialogBuilder(context)
+                        .setTitle(R.string.are_you_sure)
+                        .setMessage(R.string.cannot_be_undone)
+                        .setNegativeButton(R.string.no, null)
+                        .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                App.followSeriesService().stopFollowingAll(allSeriesToRemove);
+
+                                dialog.dismiss();
+                            }
+                        })
+                        .build()
+                        .show();
+                }
+            })
+            .build()
+            .show();
     }
 
     @Override
@@ -248,8 +246,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d(getClass().getName(), "update started");
         setSupportProgressBarIndeterminateVisibility(true);
         updating = true;
-        toastBuilder().setMessage(R.string.update_started_message);
-        toastBuilder().build().show();
+        toastBuilder().setMessage(R.string.update_started_message).build().show();
     }
 
     @Override
@@ -257,6 +254,9 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d(getClass().getName(), "update failure");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;
+        /* TODO(Reul) Remove: use ErrorService instead
+        toastBuilder().setMessage(R.string.update_failed_message).build().show();
+        */
     }
 
     @Override
@@ -264,8 +264,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d(getClass().getName(), "update complete");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;
-        toastBuilder().setMessage(R.string.update_success_message);
-        toastBuilder().build().show();
+        toastBuilder().setMessage(R.string.update_success_message).build().show();
     }
 
     @Override
@@ -273,8 +272,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d(getClass().getName(), "update not necessary yet");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;
-        //TODO (Reul) Notify only on manual update
-        toastBuilder().setMessage(R.string.up_to_date_message).build().show();
+        //TODO (Reul) Which message?
+        toastBuilder().setMessage(R.string.data_up_to_date_message).build().show();
     }
 
     //Search------------------------------------------------------------------------------------------------------------
@@ -309,41 +308,34 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                     }
                     Dialog dialog = dialogBuilder.build();
                     dialog.show();
-
                 } else if (e instanceof UpdateException) {
-                    Log.d(getClass().getName(), "Update Failure. Cause: "
-                            + e.getCause().getClass().getName());
+                    UpdateException updateException = ((UpdateException) e);
 
                     FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(
-                            MySeriesActivity.this);
+                            App.environment().context());
 
                     dialogBuilder.setTitle(R.string.update_failed_title);
 
-                    Throwable cause = e.getCause();
+                    Exception cause = followException.getCause()
 
                     if (cause instanceof ConnectionFailedException) {
-                        dialogBuilder.setMessage(R.string.update_connection_failed);
-                        Log.d(getClass().getName(), "Update: connection failure");
+                        dialogBuilder.setMessage(R.string.update_series_connection_failed);
 
                     } else if (cause instanceof ConnectionTimeoutException) {
-                        dialogBuilder.setMessage(R.string.update_connection_timeout);
-                        Log.d(getClass().getName(), "Update: connection timeout");
+                        dialogBuilder.setMessage(R.string.update_series_connection_timeout);
 
                     } else if (cause instanceof ParsingFailedException) {
                         dialogBuilder.setMessage(R.string.parsing_failed_message);
-                        Log.d(getClass().getName(), "Update: parsing failed");
 
                     } else if (cause instanceof SeriesNotFoundException) {
                         dialogBuilder.setMessage(R.string.update_series_not_found);
-                        Log.d(getClass().getName(), "Update: series not found");
 
                     } else if (cause instanceof UpdateMetadataUnavailableException) {
                         dialogBuilder.setMessage(R.string.update_metadata_unavailable);
-                        Log.d(getClass().getName(), "Update: metadata unavailable");
+
                     }
 
-                    Dialog dialog = dialogBuilder.build();
-                    dialog.show();
+                    dialogBuilder.build().show();
                 }
             }
         };

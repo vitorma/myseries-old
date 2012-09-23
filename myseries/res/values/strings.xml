@@ -97,10 +97,6 @@
     <string name="no_results_message">Try searching another name.</string>
     <string name="parsing_failed_title">Error reading file from the web</string>
     <string name="parsing_failed_message">Your connection may be too slow.</string>
-    <string name="update_failed_title">Data update has failed</string> <!-- TODO (Reul): Remove this one -->
-    <string name="update_failed_message">Data update has failed. Check your connection and try again.</string>
-    <string name="update_started_message">Checking for updates...</string>
-    <string name="update_success_message">Update complete.</string>
     
     <!-- Adding Error Messages -->
     <string name="add_failed_title">Adding failed</string>
@@ -108,7 +104,16 @@
     <string name="add_series_not_found">The database has returned "series not found" while adding %s. Check your connection and configurations then try again.</string>
     <string name="add_parsing_failed">Error reading file from the web while adding %s. Your connection may be too slow.</string>
 
-
+    <!-- Update  Messages -->
+    <string name="up_to_date_message">Data is up-to-date.</string>
+    <string name="update_connection_failed">The connection has failed while updating. Check your connection and try again.</string>
+    <string name="update_connection_timeout">The connection has timed out while updating. Check your connection and try again.</string>
+    <string name="update_failed_title">Update failed</string>
+    <string name="update_started_message">Checking for updates…</string>
+    <string name="update_metadata_unavailable">The update metadata is unavailable. The server may be down. Please try again later.</string>
+    <string name="update_series_not_found">The database has returned "series not found" while updating. Check your connection and configurations then try again.</string>
+    <string name="update_success_message">Update complete.</string>
+    
     <string name="stop_follow_message_format" formatted="false">Do you want to stop following %s?</string>
     <string name="follow_toast_message_format" formatted="false">The series %s will be added to your list soon.</string>
 

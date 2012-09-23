@@ -156,8 +156,6 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
         this.writers = other.writers;
         this.guestStars = other.guestStars;
         this.imageFileName = other.imageFileName;
-
-        this.notifyThatWasMerged();
     }
 
     @Override
@@ -190,12 +188,6 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
         }
     }
 
-    private void notifyThatWasMerged() {
-        for (EpisodeListener listener : this.listeners) {
-            listener.onMerge(this);
-        }
-    }
-
     @Override
     public Date getDate() {
         return this.airDate;
@@ -208,7 +200,7 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || obj.getClass() != Episode.class) {
+        if ((obj == null) || (obj.getClass() != Episode.class)) {
             return false;
         }
 
