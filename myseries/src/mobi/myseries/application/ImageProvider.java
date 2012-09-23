@@ -39,7 +39,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 public final class ImageProvider {
-    
+
     private class DownloadEpisodeTask extends AsyncTask<Void, Void, Void> {
         private Episode episode;
         private Failure failure;
@@ -363,9 +363,9 @@ public final class ImageProvider {
         return this.posterDownloadListeners.add(listener);
     }
 
-    public void removeImageOf(Episode episode) {
+    public void removeImagesOf(Series series) {
         try {
-            this.imageRepository.deleteEpisodeImage(episode.id());
+            this.imageRepository.deleteImagesOfSeries(series.id());
         } catch (ImageIoException e) {
             //TODO: Just ignore it if not found, do something if sdcard was removed
         } catch (ExternalStorageNotAvailableException e) {
@@ -373,16 +373,4 @@ public final class ImageProvider {
             e.printStackTrace();
         }
     }
-
-    public void removePosterOf(Series series) {
-        try {
-            this.imageRepository.deleteSeriesPoster(series.id());
-        } catch (ImageIoException e) {
-            //TODO: Just ignore it if not found, do something if sdcard was removed
-        } catch (ExternalStorageNotAvailableException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
 }

@@ -78,7 +78,7 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void deleteSeriesPoster(int seriesId) throws ExternalStorageNotAvailableException {
+    public void deleteImagesOfSeries(int seriesId) throws ExternalStorageNotAvailableException {
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
         File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
         if (!poster.delete()) {
@@ -86,8 +86,7 @@ public class ImageDirectory implements ImageRepository {
         }
     }
 
-    @Override
-    public void deleteEpisodeImage(int episodeId) throws ExternalStorageNotAvailableException {
+    private void deleteEpisodeImage(int episodeId) throws ExternalStorageNotAvailableException {
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
         File episodeImage = new File(episodeImagesFolder, episodeId + IMAGE_EXTENSION);
         if (!episodeImage.delete()) {
@@ -137,7 +136,7 @@ public class ImageDirectory implements ImageRepository {
     }
 
     private File imageFolder(String folderName) throws ExternalStorageNotAvailableException {
-       return ensuredDirectory(rootDirectory().getPath() + FILE_SEPARATOR + folderName);
+       return ensuredDirectory(this.rootDirectory().getPath() + FILE_SEPARATOR + folderName);
     }
 
     private File rootDirectory() throws ExternalStorageNotAvailableException {
@@ -145,16 +144,16 @@ public class ImageDirectory implements ImageRepository {
             throw new ExternalStorageNotAvailableException();
         //TODO create a shared preference to select internal or external storage
         //if(App.environment().context().getSharedPreferences("STORAGE_MODE", 0).equals(EXTERNAL))
-        return context.getExternalFilesDir(null);
+        return this.context.getExternalFilesDir(null);
         //return App.environment().context().getFilesDir();
     }
 
     private boolean isAvaliable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
-    
+
     public static String getPathForPoster(int series) {
         return App.environment().context().getExternalFilesDir(null) + FILE_SEPARATOR + SERIES_POSTERS +FILE_SEPARATOR + series + IMAGE_EXTENSION;
-        
+
     }
 }
