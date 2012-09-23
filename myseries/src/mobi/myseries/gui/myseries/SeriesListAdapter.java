@@ -49,8 +49,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener,
-                                                                       SeriesFollowingListener,
-                                                                       PosterDownloadListener {
+SeriesFollowingListener, PosterDownloadListener {
 
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
@@ -93,16 +92,16 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
             final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
             App.loadPoster(series, new ImageLoadSupplicant() {
 
-				@Override
-				public ImageView getImageView() {
-					return image;
-				}
+                @Override
+                public ImageView getImageView() {
+                    return image;
+                }
 
-				@Override
-				public int getDefaultResource() {
-					return R.drawable.generic_poster;
-				}
-			});
+                @Override
+                public int getDefaultResource() {
+                    return R.drawable.generic_poster;
+                }
+            });
         }
 
         private void setNameTo(String name, View itemView) {
@@ -164,19 +163,19 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
     private SeriesListItemFactory listItemFactory;
 
     public SeriesListAdapter(Context context, Collection<Series> objects) {
-       super(context, ITEM_LAYOUT, new ArrayList<Series>(objects));
+        super(context, ITEM_LAYOUT, new ArrayList<Series>(objects));
 
-       this.listItemFactory = new SeriesListItemFactory(context);
+        this.listItemFactory = new SeriesListItemFactory(context);
 
-       IMAGE_PROVIDER.register(this);
+        IMAGE_PROVIDER.register(this);
 
-       App.registerSeriesFollowingListener(this);
+        App.registerSeriesFollowingListener(this);
 
-       for (Series series : objects) {
-           series.register(this);
-       }
+        for (Series series : objects) {
+            series.register(this);
+        }
 
-       this.sort(COMPARATOR);
+        this.sort(COMPARATOR);
     }
 
     @Override
@@ -221,10 +220,12 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         //TODO This behavior will depend on the user's settings (SharedPreference)
     }
 
+    /* TODO (Reul): Listen to update instead
     @Override
     public void onMerge(Series series) {
         this.notifyDataSetChanged();
     }
+     */
 
     @Override
     public void onDownloadPosterOf(Series series) {

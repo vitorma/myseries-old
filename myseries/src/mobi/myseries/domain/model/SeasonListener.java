@@ -26,6 +26,4 @@ public interface SeasonListener {
     public void onMarkAsNotSeen(Season season);
     public void onChangeNumberOfSeenEpisodes(Season season);
     public void onChangeNextEpisodeToSee(Season season);
-    @Deprecated
-    public void onMerge(Season season);
 }

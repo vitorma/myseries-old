@@ -180,11 +180,6 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
     }
 
     @Override
-    public void onMerge(Season season) {
-        //It's not my problem
-    }
-
-    @Override
     public void onMarkAsSeen(Episode episode) {
         this.notifyDataSetChanged();
     }
@@ -202,10 +197,5 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
     @Override
     public void onMarkAsNotSeenBySeason(Episode episode) {
         this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMerge(Episode episode) {
-        //It's not my problem
     }
 }

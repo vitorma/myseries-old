@@ -278,11 +278,6 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     public void onMarkAsNotSeenBySeason(Episode episode) {}
 
     @Override
-    public void onMerge(Episode episode) {
-        //Season is not interested in this event
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         return (prime * (prime + this.seriesId)) + this.number;

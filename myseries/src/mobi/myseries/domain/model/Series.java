@@ -232,11 +232,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     }
 
     @Override
-    public void onMerge(SeasonSet seasonSet) {
-        //Series is not interested in this event
-    }
-
-    @Override
     public int hashCode() {
         return this.id;
     }

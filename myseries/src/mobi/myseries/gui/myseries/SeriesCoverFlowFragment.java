@@ -235,12 +235,14 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         }
     }
 
+    /* TODO (Reul) Listen to update instead
     @Override
     public void onMerge(Series series) {
         if (this.isSelected(series)) {
             this.downloadDescription(series);
         }
     }
+     */
 
     private static class SeriesItemViewHolder {
         private TextView name;
