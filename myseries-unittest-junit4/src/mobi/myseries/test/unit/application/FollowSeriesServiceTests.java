@@ -36,9 +36,9 @@ import java.util.Arrays;
 
 import mobi.myseries.application.ErrorService;
 import mobi.myseries.application.FollowSeriesService;
-import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.SeriesFollowingListener;
+import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;

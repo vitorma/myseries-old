@@ -26,11 +26,11 @@ import java.util.Collection;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.ImageLoadSupplicant;
-import mobi.myseries.application.ImageProvider;
-import mobi.myseries.application.PosterDownloadListener;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.image.ImageLoadSupplicant;
+import mobi.myseries.application.image.ImageProvider;
+import mobi.myseries.application.image.PosterDownloadListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;

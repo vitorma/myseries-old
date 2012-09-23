@@ -2,9 +2,9 @@ package mobi.myseries.gui.series;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.ImageLoadSupplicant;
-import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.image.ImageLoadSupplicant;
+import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
 import android.graphics.Bitmap;

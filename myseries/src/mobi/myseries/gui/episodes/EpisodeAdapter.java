@@ -2,9 +2,9 @@ package mobi.myseries.gui.episodes;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.EpisodeImageDownloadListener;
-import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.image.EpisodeImageDownloadListener;
+import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.shared.Dates;

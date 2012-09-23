@@ -1,5 +1,5 @@
 /*
- *   PosterDownloadListener.java
+ *   EpisodeImageDownloadListener.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,13 +19,13 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.application;
+package mobi.myseries.application.image;
 
-import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.model.Episode;
 
-public interface PosterDownloadListener {
-    void onDownloadPosterOf(Series series);
-    void onStartDownloadingPosterOf(Series series);
-    void onConnectionFailureWhileDownloadingPosterOf(Series series);
-    void onFailureWhileSavingPosterOf(Series series);
+public interface EpisodeImageDownloadListener {
+    public void onDownloadImageOf(Episode episode);
+    public void onStartDownloadingImageOf(Episode episode);
+    public void onConnectionFailureWhileDownloadingImageOf(Episode episode);
+    public void onFailureWhileSavingImageOf(Episode episode);
 }

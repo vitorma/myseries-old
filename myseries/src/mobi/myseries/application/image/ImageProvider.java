@@ -19,12 +19,13 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.application;
+package mobi.myseries.application.image;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
@@ -50,11 +51,6 @@ public final class ImageProvider {
         this.imageRepository = imageRepository;
         this.posterDownloadListeners = new LinkedList<PosterDownloadListener>();
         this.episodeImageDownloadListeners = new LinkedList<EpisodeImageDownloadListener>();
-    }
-
-    //TODO (Cleber) Remove this method and use constructor
-    public static ImageProvider newInstance(ImageSource imageSource, ImageRepository imageRepository) {
-        return new ImageProvider(imageSource, imageRepository);
     }
 
     /* Current interface */

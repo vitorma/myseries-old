@@ -27,8 +27,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import mobi.myseries.application.App;
-import mobi.myseries.application.ImageProvider;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.shared.CoverFlowAdapter;

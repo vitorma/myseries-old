@@ -1,4 +1,4 @@
-package mobi.myseries.application;
+package mobi.myseries.application.image;
 
 import android.widget.ImageView;
 

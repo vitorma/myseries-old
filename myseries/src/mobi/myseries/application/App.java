@@ -24,6 +24,8 @@ package mobi.myseries.application;
 import java.text.DateFormat;
 import java.util.List;
 
+import mobi.myseries.application.image.ImageLoadSupplicant;
+import mobi.myseries.application.image.ImageloaderService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;

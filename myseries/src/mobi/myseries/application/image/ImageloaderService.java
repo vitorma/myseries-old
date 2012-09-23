@@ -1,5 +1,7 @@
-package mobi.myseries.application;
+package mobi.myseries.application.image;
 
+import mobi.myseries.application.App;
+import mobi.myseries.application.Environment;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ImageDirectory;
 

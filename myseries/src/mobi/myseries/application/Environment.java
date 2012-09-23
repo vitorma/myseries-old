@@ -21,6 +21,7 @@
 
 package mobi.myseries.application;
 
+import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.repository.ImageCache;
 import mobi.myseries.domain.repository.ImageDirectory;
 import mobi.myseries.domain.repository.ImageRepository;
@@ -107,9 +108,10 @@ public class Environment {
         this.localization = newLocalization;
     }
 
+    //TODO (Cleber) ImageProvider should be created by App using ImageCache instead of ImageDirectory
     public ImageProvider imageProvider() {
         if (this.imageProvider == null) {
-            this.imageProvider = ImageProvider.newInstance(theTVDB(), new ImageDirectory(context));
+            this.imageProvider = new ImageProvider(this.theTVDB(), new ImageDirectory(this.context));
        }
 
         return this.imageProvider;
