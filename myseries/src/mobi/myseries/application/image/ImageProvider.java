@@ -28,8 +28,6 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
-import mobi.myseries.domain.repository.ImageIoException;
 import mobi.myseries.domain.repository.ImageRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ImageSource;
@@ -57,6 +55,7 @@ public final class ImageProvider {
 
     /* Current interface */
 
+    //TODO Return null instead of a generic poster
     public Bitmap getPosterOf(Series series) {
         Validate.isNonNull(series, "series");
 
@@ -64,27 +63,15 @@ public final class ImageProvider {
             return this.genericPosterImage();
         }
 
-        try {
-            Bitmap poster = this.imageRepository.getSeriesPoster(series.id());
-            return poster != null ? poster : this.genericPosterImage();
-        } catch (ExternalStorageNotAvailableException e) {
-            return this.genericPosterImage();
-        }
+        Bitmap poster = this.imageRepository.getSeriesPoster(series.id());
+        return poster != null ? poster : this.genericPosterImage();
     }
 
     public Bitmap getImageOf(Episode episode) {
         Validate.isNonNull(episode, "episode");
 
         if (episode.imageFileName() != null && !episode.imageFileName().equals("")) {
-            Bitmap image;
-
-            try {
-                image = this.imageRepository.getEpisodeImage(episode.id());
-            } catch (ExternalStorageNotAvailableException e) {
-                return null;
-            }
-
-            return image;
+            return this.imageRepository.getEpisodeImage(episode.id());
         }
 
         return null;
@@ -99,11 +86,7 @@ public final class ImageProvider {
     };
 
     public void removeImagesOf(Series series) {
-        try {
-            this.imageRepository.deleteImagesOfSeries(series.id());
-        } catch (ExternalStorageNotAvailableException e) {
-            e.printStackTrace();
-        }
+        this.imageRepository.deleteImagesOfSeries(series.id());
     }
 
     //TODO (Cleber) Remove this method and avoid call App methods here
@@ -143,24 +126,7 @@ public final class ImageProvider {
                 this.failure = Failure.UNKNOWN;
             }
 
-            try {
-                ImageProvider.this.imageRepository.insertSeriesPoster(this.series.id(), fetchedPoster);
-            } catch (ImageIoException e) {
-                // TODO notify someone?
-                e.printStackTrace();
-                this.failure = Failure.IMAGE_IO;
-                this.cancel(true);
-                return null;
-            } catch (ExternalStorageNotAvailableException e) {
-                // TODO notify someone?
-                e.printStackTrace();
-                this.failure = Failure.EXTERNAL_STORAGE_UNAVAILABLE;
-                this.cancel(true);
-                return null;
-            } catch (Exception e) {
-                e.printStackTrace();
-                this.failure = Failure.UNKNOWN;
-            }
+            ImageProvider.this.imageRepository.insertSeriesPoster(this.series.id(), fetchedPoster);
 
             return null;
         }
@@ -221,24 +187,7 @@ public final class ImageProvider {
                 this.failure = Failure.UNKNOWN;
             }
 
-            try {
-                ImageProvider.this.imageRepository.insertEpisodeImage(this.episode.id(), fetchedImage);
-            } catch (ImageIoException e) {
-                // TODO notify someone?
-                e.printStackTrace();
-                this.failure = Failure.IMAGE_IO;
-                this.cancel(true);
-                return null;
-            } catch (ExternalStorageNotAvailableException e) {
-                // TODO notify someone?
-                e.printStackTrace();
-                this.failure = Failure.EXTERNAL_STORAGE_UNAVAILABLE;
-                this.cancel(true);
-                return null;
-            } catch (Exception e) {
-                e.printStackTrace();
-                this.failure = Failure.UNKNOWN;
-            }
+            ImageProvider.this.imageRepository.insertEpisodeImage(this.episode.id(), fetchedImage);
 
             return null;
         }

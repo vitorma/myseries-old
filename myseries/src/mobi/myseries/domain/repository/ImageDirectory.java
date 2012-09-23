@@ -50,7 +50,7 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void insertSeriesPoster(int seriesId, Bitmap file) throws ExternalStorageNotAvailableException {
+    public void insertSeriesPoster(int seriesId, Bitmap file) {
         Validate.isNonNull(file, "series poster");
 
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
@@ -59,7 +59,7 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void insertEpisodeImage(int episodeId, Bitmap file) throws ExternalStorageNotAvailableException {
+    public void insertEpisodeImage(int episodeId, Bitmap file) {
         Validate.isNonNull(file, "episode image");
 
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
@@ -68,17 +68,17 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void updateSeriesPoster(int seriesId, Bitmap file) throws ExternalStorageNotAvailableException {
+    public void updateSeriesPoster(int seriesId, Bitmap file) {
         this.insertSeriesPoster(seriesId, file);
     }
 
     @Override
-    public void updateEpisodeImage(int episodeId, Bitmap file) throws ExternalStorageNotAvailableException {
+    public void updateEpisodeImage(int episodeId, Bitmap file) {
         this.insertEpisodeImage(episodeId, file);
     }
 
     @Override
-    public void deleteImagesOfSeries(int seriesId) throws ExternalStorageNotAvailableException {
+    public void deleteImagesOfSeries(int seriesId) {
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
         File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
         if (!poster.delete()) {
@@ -86,7 +86,7 @@ public class ImageDirectory implements ImageRepository {
         }
     }
 
-    private void deleteEpisodeImage(int episodeId) throws ExternalStorageNotAvailableException {
+    private void deleteEpisodeImage(int episodeId) {
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
         File episodeImage = new File(episodeImagesFolder, episodeId + IMAGE_EXTENSION);
         if (!episodeImage.delete()) {
@@ -95,13 +95,13 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public Bitmap getSeriesPoster(int seriesId) throws ExternalStorageNotAvailableException {
+    public Bitmap getSeriesPoster(int seriesId) {
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
         return BitmapFactory.decodeFile(seriesPostersFolder + FILE_SEPARATOR + seriesId + IMAGE_EXTENSION);
     }
 
     @Override
-    public Bitmap getEpisodeImage(int episodeId) throws ExternalStorageNotAvailableException {
+    public Bitmap getEpisodeImage(int episodeId) {
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
         return BitmapFactory.decodeFile(episodeImagesFolder + FILE_SEPARATOR + episodeId + IMAGE_EXTENSION);
     }
@@ -135,13 +135,13 @@ public class ImageDirectory implements ImageRepository {
         return directory;
     }
 
-    private File imageFolder(String folderName) throws ExternalStorageNotAvailableException {
+    private File imageFolder(String folderName) {
        return ensuredDirectory(this.rootDirectory().getPath() + FILE_SEPARATOR + folderName);
     }
 
-    private File rootDirectory() throws ExternalStorageNotAvailableException {
-        if(!this.isAvaliable())
-            throw new ExternalStorageNotAvailableException();
+    private File rootDirectory() {
+//        if(!this.isAvaliable())
+//            throw new ExternalStorageNotAvailableException();
         //TODO create a shared preference to select internal or external storage
         //if(App.environment().context().getSharedPreferences("STORAGE_MODE", 0).equals(EXTERNAL))
         return this.context.getExternalFilesDir(null);

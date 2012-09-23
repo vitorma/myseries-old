@@ -24,11 +24,11 @@ package mobi.myseries.domain.repository;
 import android.graphics.Bitmap;
 
 public interface ImageRepository {
-    public void insertSeriesPoster(int seriesId, Bitmap file) throws ExternalStorageNotAvailableException;
-    public void insertEpisodeImage(int episodeId, Bitmap file) throws ExternalStorageNotAvailableException;
-    public void updateSeriesPoster(int seriesId, Bitmap file) throws ExternalStorageNotAvailableException;
-    public void updateEpisodeImage(int episodeId, Bitmap file) throws ExternalStorageNotAvailableException;
-    public void deleteImagesOfSeries(int seriesId) throws ExternalStorageNotAvailableException;
-    public Bitmap getSeriesPoster(int seriesId) throws ExternalStorageNotAvailableException;
-    public Bitmap getEpisodeImage(int episodeId) throws ExternalStorageNotAvailableException;
+    public void insertSeriesPoster(int seriesId, Bitmap file);
+    public void insertEpisodeImage(int episodeId, Bitmap file);
+    public void updateSeriesPoster(int seriesId, Bitmap file);
+    public void updateEpisodeImage(int episodeId, Bitmap file);
+    public void deleteImagesOfSeries(int seriesId);
+    public Bitmap getSeriesPoster(int seriesId);
+    public Bitmap getEpisodeImage(int episodeId);
 }
