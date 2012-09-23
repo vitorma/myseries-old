@@ -29,7 +29,6 @@ import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.application.image.ImageloaderService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
 import mobi.myseries.domain.repository.ImageDirectory;
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -153,14 +152,7 @@ public class App extends Application {
     public static Bitmap seriesPoster(int seriesId) {
         //TODO Delegate
 
-        Bitmap poster = null;
-
-        try {
-            poster = environment.imageRepository().getSeriesPoster(seriesId);
-        } catch (ExternalStorageNotAvailableException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        Bitmap poster = environment.imageRepository().getSeriesPoster(seriesId);
 
         if (poster == null) {
             poster = imageProvider.genericPosterImage();
