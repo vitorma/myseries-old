@@ -31,7 +31,6 @@ import java.util.Set;
 
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -53,8 +52,7 @@ public class TheTVDB implements SeriesSource, ImageSource {
 
     @Override
     public List<Series> searchFor(String seriesName, String languageAbbreviation)
-            throws InvalidSearchCriteriaException, ParsingFailedException,
-            ConnectionFailedException, ConnectionTimeoutException {
+            throws InvalidSearchCriteriaException, ParsingFailedException, ConnectionFailedException, ConnectionTimeoutException {
         Validate.isNonBlank(seriesName, new InvalidSearchCriteriaException());
 
         SeriesSearchParser parser = new SeriesSearchParser(this.streamFactory);
@@ -102,39 +100,39 @@ public class TheTVDB implements SeriesSource, ImageSource {
     }
 
     @Override
-    public boolean fetchUpdateMetadataSince(long dateInMiliseconds) throws ConnectionFailedException,
-            ParsingFailedException, UpdateMetadataUnavailableException, ConnectionTimeoutException {
+    public boolean fetchUpdateMetadataSince(long dateInMiliseconds)
+            throws ConnectionFailedException, ParsingFailedException, UpdateMetadataUnavailableException, ConnectionTimeoutException {
+        Log.d(this.getClass().getName(), "Fetching update metadata");
 
-        Log.d(getClass().getName(), "Fetching update metadata");
-        
         InputStream streamForUpdate = null;
+
         try {
-            streamForUpdate = streamFactory.streamForUpdatesSince(dateInMiliseconds);
+            streamForUpdate = this.streamFactory.streamForUpdatesSince(dateInMiliseconds);
         } catch (StreamCreationFailedException e) {
             throw new UpdateMetadataUnavailableException(e);
         }
-        
+
         UpdateParser parser = new UpdateParser(streamForUpdate);
 
-        Log.d(getClass().getName(),"Parsing update metadata");
-        
-        parser.parse(); 
-        
-        Log.d(getClass().getName(),"Update metadata ready");
-        
-        this.fetchedSeriesUpdateMetadata = parser.parsedSeries(); 
-        this.fetchedPosterUpdateMetadata = parser.parsedPosters(); 
-        
+        Log.d(this.getClass().getName(), "Parsing update metadata");
+
+        parser.parse();
+
+        Log.d(this.getClass().getName(), "Update metadata ready");
+
+        this.fetchedSeriesUpdateMetadata = parser.parsedSeries();
+        this.fetchedPosterUpdateMetadata = parser.parsedPosters();
+
         return true;
     }
-    
+
     private Language languageFrom(String languageAbbreviation) {
         return Language.from(languageAbbreviation, TheTVDBConstants.DEFAULT_LANGUAGE);
     }
 
     @Override
-    public Bitmap fetchSeriesPoster(String filename) throws ConnectionFailedException,
-            ImageNotFoundException, ConnectionTimeoutException {
+    public Bitmap fetchSeriesPoster(String filename)
+            throws ConnectionFailedException, ImageNotFoundException, ConnectionTimeoutException {
         try {
             return this.bitmapFrom(this.streamFactory.streamForSeriesPoster(filename));
         } catch (StreamCreationFailedException e) {
@@ -143,8 +141,8 @@ public class TheTVDB implements SeriesSource, ImageSource {
     }
 
     @Override
-    public Bitmap fetchEpisodeImage(String filename) throws ConnectionFailedException,
-            ImageNotFoundException, ConnectionTimeoutException {
+    public Bitmap fetchEpisodeImage(String filename)
+            throws ConnectionFailedException, ImageNotFoundException, ConnectionTimeoutException {
         try {
             return this.bitmapFrom(this.streamFactory.streamForEpisodeImage(filename));
         } catch (StreamCreationFailedException e) {
@@ -158,11 +156,11 @@ public class TheTVDB implements SeriesSource, ImageSource {
 
     @Override
     public Collection<Integer> seriesUpdateMetadata() {
-        return fetchedSeriesUpdateMetadata;
+        return this.fetchedSeriesUpdateMetadata;
     }
 
     @Override
     public Map<Integer, String> posterUpdateMetadata() {
-        return fetchedPosterUpdateMetadata;
+        return this.fetchedPosterUpdateMetadata;
     }
 }
