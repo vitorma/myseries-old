@@ -610,26 +610,6 @@ public class SeasonTest {
     }
 
     @Test
-    public void listenersAreNotifiedWhenASeasonIsMergedWithAnother() {
-        Season season1 = new Season(1, 1);
-        Season season2 = new Season(1, 1);
-
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Assert.assertTrue(season1.register(listener1));
-        Assert.assertTrue(season2.register(listener2));
-
-        season1.mergeWith(season2);
-
-        Mockito.verify(listener1, Mockito.times(1)).onMerge(season1);
-
-        season2.mergeWith(season1);
-
-        Mockito.verify(listener2, Mockito.times(1)).onMerge(season2);
-    }
-
-    @Test
     public final void listenersAreNotifiedWhenTheNumberOfSeenEpisodesIncreasesBecauseAnEpisodeWasMarkedAsSeen() {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2 = mockEpisode(2, 1, 2, 1);

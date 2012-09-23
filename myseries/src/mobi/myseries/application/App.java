@@ -63,7 +63,8 @@ public class App extends Application {
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
-                imageProvider);
+                imageProvider,
+                errorService());
         schedule = new Schedule(
                 environment.repository(),
                 followSeriesService,
@@ -150,8 +151,6 @@ public class App extends Application {
 
     //TODO Remove ASAP
     public static Bitmap seriesPoster(int seriesId) {
-        //TODO Delegate
-
         Bitmap poster = environment.imageRepository().getSeriesPoster(seriesId);
 
         if (poster == null) {

@@ -23,8 +23,10 @@ package mobi.myseries.application;
 
 public interface UpdateListener {
     void onUpdateStart();
-    
+
+    void onUpdateNotNecessary();
+
     void onUpdateFailure();
-    
+
     void onUpdateSuccess();
 }

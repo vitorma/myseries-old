@@ -24,7 +24,6 @@ package mobi.myseries.test.unit.domain.model;
 import java.util.Date;
 
 import junit.framework.Assert;
-
 import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
@@ -508,42 +507,6 @@ public class EpisodeTest {
 
         Mockito.verify(l1, Mockito.times(1)).onMarkAsNotSeen(episode);
         Mockito.verify(l2, Mockito.times(1)).onMarkAsNotSeen(episode);
-    }
-
-    @Test
-    public void listenersAreNotifiedWheneverAnEpisodeIsMergedWithAnother() {
-        Episode episode1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
-
-        Episode episode2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
-
-        EpisodeListener l1 = mockListener();
-        EpisodeListener l2 = mockListener();
-        EpisodeListener l3 = mockListener();
-        EpisodeListener l4 = mockListener();
-
-        Assert.assertTrue(episode1.register(l1));
-        Assert.assertTrue(episode1.register(l2));
-        Assert.assertTrue(episode2.register(l3));
-        Assert.assertTrue(episode2.register(l4));
-
-        for (int i = 1; i <= 1000; i++) {
-            episode1.mergeWith(episode2);
-        }
-
-        Mockito.verify(l1, Mockito.times(1000)).onMerge(episode1);
-        Mockito.verify(l2, Mockito.times(1000)).onMerge(episode1);
-        Mockito.verify(l3, Mockito.times(0)).onMerge(episode2);
-        Mockito.verify(l4, Mockito.times(0)).onMerge(episode2);
     }
 
     //Equals and hashCode-----------------------------------------------------------------------------------------------

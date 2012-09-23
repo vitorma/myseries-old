@@ -114,10 +114,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     public String posterFileName() {
         return this.posterFileName;
     }
-    
+
     public Series setPosterFilename(String posterFileName) {
         this.posterFileName = posterFileName;
-        
+
         return this;
     }
 
@@ -130,10 +130,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     }
 
     //Wrong! get lastSeason with seasons().seasonAt(seasons().numberOfSeasons() - 1)
-//    public Season lastSeason() {
-//        int lastNumber = this.hasSpecialEpisodes() ? this.seasons.numberOfSeasons() - 1 : this.seasons.numberOfSeasons();
-//        return this.season(lastNumber);
-//    }
+    //    public Season lastSeason() {
+    //        int lastNumber = this.hasSpecialEpisodes() ? this.seasons.numberOfSeasons() - 1 : this.seasons.numberOfSeasons();
+    //        return this.season(lastNumber);
+    //    }
 
     public boolean hasSpecialEpisodes() {
         return this.seasons.hasSpecialEpisodes();
@@ -148,10 +148,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     }
 
     //Wrong! get lastEpisode with seasons().seasonAt(seasons().numberOfSeasons() - 1).episodeAt(...)
-//    public Episode lastEpisode() {
-//        int lastNumber = this.lastSeason().numberOfEpisodes();
-//        return this.lastSeason().episode(lastNumber);
-//    }
+    //    public Episode lastEpisode() {
+    //        int lastNumber = this.lastSeason().numberOfEpisodes();
+    //        return this.lastSeason().episode(lastNumber);
+    //    }
 
     public int numberOfEpisodes() {
         return this.seasons.numberOfEpisodes();
@@ -186,8 +186,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         this.actors = other.actors;
         this.posterFileName = other.posterFileName;
         this.seasons.mergeWith(other.seasons);
-
-        this.notifyThatWasMerged();
     }
 
     @Override
@@ -218,12 +216,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         }
     }
 
-    private void notifyThatWasMerged() {
-        for (SeriesListener l : this.listeners) {
-            l.onMerge(this);
-        }
-    }
-
     @Override
     public void onChangeNumberOfSeenEpisodes(SeasonSet seasonSet) {
         this.notifyThatNumberOfSeenEpisodesChanged();
@@ -251,7 +243,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Series && ((Series) obj).id == this.id;
+        return (obj instanceof Series) && (((Series) obj).id == this.id);
     }
 
     public static class Builder {
@@ -354,13 +346,13 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             series.genres = this.genres;
             series.actors = this.actors;
             series.posterFileName = this.posterFileName;
-            
+
             if (this.lastUpdate == null) {
                 series.lastUpdate = System.currentTimeMillis();
-                
+
             } else {
                 series.lastUpdate = this.lastUpdate;
-                
+
             }
 
             return series.includingAll(this.episodes);
@@ -375,7 +367,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     public Long lastUpdate() {
         return this.lastUpdate;
     }
-    
+
     public Series setLastUpdate(Long lastUpdate) {
         this.lastUpdate = lastUpdate;
         return this;

@@ -17,6 +17,7 @@ import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.Android;
+import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.Validate;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -29,19 +30,23 @@ public class UpdateService {
     private SeriesUpdater seriesUpdater;
     private final List<UpdateListener> updateListeners;
     private boolean updateRunning = false;
+    private ErrorService errorService;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
-            LocalizationProvider localizationProvider, ImageProvider imageProvider) {
+            LocalizationProvider localizationProvider, ImageProvider imageProvider,
+            ErrorService errorService) {
 
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
         Validate.isNonNull(imageProvider, "imageProvider");
+        Validate.isNonNull(errorService, "errorService");
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
         this.localizationProvider = localizationProvider;
         this.imageProvider = imageProvider;
+        this.errorService = errorService;
         seriesUpdater = new SeriesUpdater();
         updateListeners = new LinkedList<UpdateListener>();
 
@@ -61,6 +66,11 @@ public class UpdateService {
             public void onUpdateFailure() {
                 updateRunning = false;
             }
+
+            @Override
+            public void onUpdateNotNecessary() {
+                // I don't care.
+            }
         });
     }
 
@@ -74,6 +84,10 @@ public class UpdateService {
 
         if ((System.currentTimeMillis() - earliestUpdateTime) < automaticUpdateInterval()) {
             Log.d(getClass().getName(), "Update ran recently. Not running now.");
+
+            for (UpdateListener listener : updateListeners) {
+                listener.onUpdateNotNecessary();
+            }
         } else {
             Log.d(getClass().getName(), "Launching update.");
             seriesUpdater.update();
@@ -90,15 +104,6 @@ public class UpdateService {
         return updateRunning;
     }
 
-    private enum UpdateResult {
-        SUCCESS,
-        CONNECTION_FAILED,
-        UPDATE_METADATA_UNAVAILABLE,
-        UNKNOWN_ERROR,
-        CONNECTION_TIMEOUT,
-        NO_UPDATES_AVAILABLE
-    };
-
     public class ComparatorByLastUpdate implements Comparator<Series> {
         @Override
         public int compare(Series series1, Series series2) {
@@ -106,13 +111,15 @@ public class UpdateService {
         }
     }
 
+    private static enum UpdateResult { NO_UPDATES_AVAILABLE, SUCCESS };
     private class SeriesUpdater {
-        private void update() {
-            final AsyncTask<Void, Void, UpdateResult> updateTask =
-                    new AsyncTask<Void, Void, UpdateResult>() {
-                @Override
-                protected UpdateResult doInBackground(Void... params) {
 
+        private void update() {
+            final AsyncTask<Void, Void, AsyncTaskResult<UpdateResult>> updateTask =
+                    new AsyncTask<Void, Void, AsyncTaskResult<UpdateResult>>() {
+
+                @Override
+                protected AsyncTaskResult<UpdateResult> doInBackground(Void... params) {
                     try {
 
                         boolean updateAvailable =
@@ -125,55 +132,73 @@ public class UpdateService {
 
                         if (!updateAvailable
                                 || ((seriesToUpdate.size() == 0) && (imagesToUpdate.size() == 0))) {
-                            return UpdateResult.NO_UPDATES_AVAILABLE;
+                            return new AsyncTaskResult<UpdateService.UpdateResult>(
+                                    UpdateResult.NO_UPDATES_AVAILABLE);
                         }
 
                         Collections.sort(seriesToUpdate, new ComparatorByLastUpdate());
 
-                        for (final Series s : seriesToUpdate) {
-                            updateDataOf(s);
-                        }
+                        for (final Series s : followedSeries()) {
 
-                        for (final Series s : imagesToUpdate) {
-                            updatePosterOf(s);
+                            if (seriesToUpdate.contains(s)) {
+                                updateDataOf(s);
+                                Log.d(getClass().getName(), "Data of " + s.name() + " updated.");
+                            }
+
+
+                            if (imagesToUpdate.contains(s)) {
+                                updatePosterOf(s);
+                                Log.d(getClass().getName(), "Poster of " + s.name()
+                                        + " updated.");
+
+                                imagesToUpdate.remove(s);
+                            }
+
+                            s.setLastUpdate(System.currentTimeMillis());
+                            seriesRepository.update(s);
                         }
 
                     } catch (ParsingFailedException e) {
                         e.printStackTrace();
-                        return UpdateResult.UNKNOWN_ERROR;
+                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
 
                     } catch (ConnectionFailedException e) {
                         e.printStackTrace();
-                        return UpdateResult.CONNECTION_FAILED;
+                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
 
                     } catch (SeriesNotFoundException e) {
                         e.printStackTrace();
-                        return UpdateResult.UNKNOWN_ERROR;
+                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
 
                     } catch (UpdateMetadataUnavailableException e) {
                         e.printStackTrace();
-                        return UpdateResult.UPDATE_METADATA_UNAVAILABLE;
+                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
 
                     } catch (ConnectionTimeoutException e) {
                         e.printStackTrace();
-                        return UpdateResult.CONNECTION_TIMEOUT;
-
+                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
                     }
 
                     Log.d(getClass().getName(), "Update complete.");
 
-                    return UpdateResult.SUCCESS;
+                    return new AsyncTaskResult<UpdateService.UpdateResult>(UpdateResult.SUCCESS);
                 }
 
                 @Override
-                protected void onPostExecute(UpdateResult result) {
-                    if (UpdateResult.SUCCESS.equals(result)) {
+                protected void onPostExecute(AsyncTaskResult<UpdateResult> result) {
+                    if (result.error() != null) {
+                        errorService.notifyError(result.error());
+                    }
+
+                    if (UpdateResult.SUCCESS.equals(result.result())) {
                         for (UpdateListener listener : updateListeners) {
                             listener.onUpdateSuccess();
                         }
-                    }
-
-                    else {
+                    } else if (UpdateResult.NO_UPDATES_AVAILABLE.equals(result.result())) {
+                        for (UpdateListener listener : updateListeners) {
+                            listener.onUpdateNotNecessary();
+                        }
+                    } else {
                         for (UpdateListener listener : updateListeners) {
                             listener.onUpdateFailure();
                         }
@@ -204,25 +229,18 @@ public class UpdateService {
                     downloadedSeries = seriesSource.fetchSeries(series.id(),
                             localizationProvider.language());
 
-                    downloadedSeries.mergeWith(series);
-                    downloadedSeries.setLastUpdate(System.currentTimeMillis());
-                    seriesRepository.update(downloadedSeries);
-
-                    Log.d(getClass().getName(), "Data of " + series.name() + " updated.");
+                    series.mergeWith(downloadedSeries);
                 }
 
                 private void updatePosterOf(Series series) {
                     Log.d(getClass().getName(), "Downloading poster of " + series.name());
                     imageProvider.downloadPosterOf(series);
-
-                    Log.d(getClass().getName(), "Poster of " + series.name() + " updated.");
                 }
 
                 private boolean fetchUpdateMetadataSince(long dateInMiliseconds)
                         throws ConnectionFailedException, ConnectionTimeoutException,
                         ParsingFailedException, UpdateMetadataUnavailableException {
                     return seriesSource.fetchUpdateMetadataSince(dateInMiliseconds);
-
                 }
 
                 private List<Series> seriesWithObsoletePosterIn(
@@ -243,11 +261,7 @@ public class UpdateService {
                             filtered.add(series);
                         } else {
                             Log.d(getClass().getName(),
-                                    "No updates found for poster of " + series.name()
-                                    + ". Refreshing last update time.\n");
-
-                            series.setLastUpdate(System.currentTimeMillis());
-                            seriesRepository.update(series);
+                                    "No updates found for poster of " + series.name());
                         }
                     }
 
@@ -279,11 +293,7 @@ public class UpdateService {
                             filtered.add(series);
                         } else {
                             Log.d(getClass().getName(),
-                                    "No updates found for " + series.name()
-                                    + ". Refreshing last update time");
-
-                            series.setLastUpdate(System.currentTimeMillis());
-                            seriesRepository.update(series);
+                                    "No updates found for " + series.name());
                         }
                     }
 

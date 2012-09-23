@@ -65,7 +65,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     }
 
     public boolean includes(Episode episode) {
-        return episode != null && this.episodes.containsKey(episode.number());
+        return (episode != null) && this.episodes.containsKey(episode.number());
     }
 
     public Episode episode(int number) {
@@ -178,7 +178,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     private boolean nextEpisodeToSeeShouldBe(Episode candidate) {
         Episode current = this.nextEpisodeToSee;
 
-        return !candidate.wasSeen() && (current == null || current.number() > candidate.number());
+        return !candidate.wasSeen() && ((current == null) || (current.number() > candidate.number()));
     }
 
     private Episode findNextEpisodeToSee() {
@@ -201,8 +201,6 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         for (Episode e : other.episodes.values()) {
             if (!this.includes(e)) this.including(e);
         }
-
-        this.notifyThatWasMerged();
 
         return this;
     }
@@ -238,12 +236,6 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     private void notifyThatNextToSeeChanged() {
         for (SeasonListener l : this.listeners) {
             l.onChangeNextEpisodeToSee(this);
-        }
-    }
-
-    private void notifyThatWasMerged() {
-        for (SeasonListener l : this.listeners) {
-            l.onMerge(this);
         }
     }
 
@@ -293,13 +285,13 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     @Override
     public int hashCode() {
         final int prime = 31;
-        return prime * (prime + this.seriesId) + this.number;
+        return (prime * (prime + this.seriesId)) + this.number;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Season)) return false;
         Season other = (Season) obj;
-        return other.seriesId == this.seriesId && other.number == this.number;
+        return (other.seriesId == this.seriesId) && (other.number == this.number);
     }
 }
