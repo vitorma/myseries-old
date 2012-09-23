@@ -20,7 +20,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class DetailsFragment extends SherlockFragment {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
+    private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
 
     private int seriesId;
 
@@ -88,8 +88,8 @@ public class DetailsFragment extends SherlockFragment {
             }
         });
 
-        ImageView background = (ImageView) getActivity().findViewById(R.id.background);
-        BitmapDrawable drawable = new BitmapDrawable(getResources(), bmp);
+        ImageView background = (ImageView) this.getActivity().findViewById(R.id.background);
+        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), bmp);
         drawable.setAlpha(30);
         background.setImageDrawable(drawable);
     }

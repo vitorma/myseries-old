@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 public class EpisodeAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
+    private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
 
     private static final Resources RESOURCES = App.environment().context().getResources();
     private static final Bitmap GENERIC_IMAGE = BitmapFactory.decodeResource(RESOURCES, R.drawable.clapperboard);
@@ -133,12 +133,12 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
 
         this.episode = this.getItem(position);
 
-        this.episodeName.setText(Objects.nullSafe(episode.name(), this.getContext().getString(R.string.to_be_announced)));
-        this.episodeFirstAired.setText(Dates.toString(episode.airDate(), App.environment().localization().dateFormat(), ""));
-        this.episodeDirector.setText(episode.directors());
-        this.episodeWriter.setText(episode.writers());
-        this.episodeGuestStars.setText(episode.guestStars());
-        this.episodeOverview.setText(episode.overview());
+        this.episodeName.setText(Objects.nullSafe(this.episode.name(), this.getContext().getString(R.string.to_be_announced)));
+        this.episodeFirstAired.setText(Dates.toString(this.episode.airDate(), App.environment().localization().dateFormat(), ""));
+        this.episodeDirector.setText(this.episode.directors());
+        this.episodeWriter.setText(this.episode.writers());
+        this.episodeGuestStars.setText(this.episode.guestStars());
+        this.episodeOverview.setText(this.episode.overview());
         this.updateSeenCheckbox();
 
         this.loadEpisodeImage();
@@ -171,7 +171,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
     }
 
     private void loadEpisodeImage() {
-        this.image = IMAGE_PROVIDER.getImageOf(episode);
+        this.image = IMAGE_PROVIDER.getImageOf(this.episode);
 
         if (this.image != null) {
             this.setUpForAvailableImage();

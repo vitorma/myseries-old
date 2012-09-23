@@ -108,15 +108,6 @@ public class Environment {
         this.localization = newLocalization;
     }
 
-    //TODO (Cleber) ImageProvider should be created by App using ImageCache instead of ImageDirectory
-    public ImageProvider imageProvider() {
-        if (this.imageProvider == null) {
-            this.imageProvider = new ImageProvider(this.theTVDB(), new ImageDirectory(this.context));
-       }
-
-        return this.imageProvider;
-    }
-
     public SeriesRepository repository() {
         if (this.seriesRepository == null) {
             this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context()));

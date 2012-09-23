@@ -25,10 +25,12 @@ import java.text.DateFormat;
 import java.util.List;
 
 import mobi.myseries.application.image.ImageLoadSupplicant;
+import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.application.image.ImageloaderService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ExternalStorageNotAvailableException;
+import mobi.myseries.domain.repository.ImageDirectory;
 import android.app.Application;
 import android.graphics.Bitmap;
 
@@ -40,12 +42,15 @@ public class App extends Application {
     private static Schedule schedule;
     private static UpdateService updateService;
     private static ErrorService errorService;
+    private static ImageProvider imageProvider;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         environment = Environment.newEnvironment(this);
+        //TODO Use Environment#imageRepository (when ImageCache is implemented) instead of ImageDirectory
+        imageProvider = new ImageProvider(environment.theTVDB(), new ImageDirectory(this));
         errorService = new ErrorService();
         searchService = new SearchSeriesService(environment.theTVDB());
         imageLoadService = new ImageloaderService();
@@ -53,13 +58,13 @@ public class App extends Application {
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
-                environment.imageProvider(),
+                imageProvider,
                 errorService());
         updateService = new UpdateService(
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
-                environment.imageProvider());
+                imageProvider);
         schedule = new Schedule(
                 environment.repository(),
                 followSeriesService,
@@ -69,7 +74,7 @@ public class App extends Application {
     public static Environment environment() {
         return environment;
     }
-    
+
     public static ErrorService errorService(){
         return errorService;
     }
@@ -78,22 +83,22 @@ public class App extends Application {
     public static void searchSeries(String seriesName) {
         searchService.search(seriesName, localLanguage());
     }
-    
+
     public static void registerSearchSeriesListener(SearchSeriesListener listener){
         searchService.registerListener(listener);
     }
-    
+
     public static void deregisterSearchSeriesListener(SearchSeriesListener listener){
         searchService.deregisterListener(listener);
     }
-    
+
     public static List<Series> getLastValidSearchResult(){
         return SearchSeriesService.getLastSearchResult();
     }
-    
+
     private static String localLanguage() {
         return environment.localization().language();
-    }    
+    }
 
     /* SERIES FOLLOWING */
 
@@ -120,7 +125,7 @@ public class App extends Application {
     public static boolean follows(Series series) {
         return followSeriesService().follows(series);
     }
-    
+
     // Update Series
     public static UpdateService updateSeriesService() {
         return updateService;
@@ -135,10 +140,16 @@ public class App extends Application {
 
     /* IMAGES */
 
+    public static ImageProvider imageProvider() {
+        return imageProvider;
+    }
+
+    //TODO Remove ASAP
     public static void loadPoster(Series series, ImageLoadSupplicant suplicant) {
         imageLoadService.loadPoster(series, suplicant);
     }
 
+    //TODO Remove ASAP
     public static Bitmap seriesPoster(int seriesId) {
         //TODO Delegate
 
@@ -152,7 +163,7 @@ public class App extends Application {
         }
 
         if (poster == null) {
-            poster = environment.imageProvider().genericPosterImage();
+            poster = imageProvider.genericPosterImage();
         }
 
         return poster;

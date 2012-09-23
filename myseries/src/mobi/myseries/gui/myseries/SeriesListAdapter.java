@@ -53,7 +53,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
                                                                        PosterDownloadListener {
 
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
+    private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
     private static final int ITEM_LAYOUT = R.layout.myseries_item;
 
@@ -67,7 +67,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         }
 
         public View draw(Series item, View oldView) {
-            View itemView = prepareViewFrom(oldView);
+            View itemView = this.prepareViewFrom(oldView);
 
             this.setPosterTo(item, itemView);
             this.setNameTo(item.name(), itemView);
@@ -83,7 +83,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
             View itemView = oldView;
 
             if (oldView == null) {
-                itemView = layoutInflater.inflate(ITEM_LAYOUT, null);
+                itemView = this.layoutInflater.inflate(ITEM_LAYOUT, null);
             }
 
             return itemView;
@@ -92,12 +92,12 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         private void setPosterTo(Series series, View itemView) {
             final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
             App.loadPoster(series, new ImageLoadSupplicant() {
-				
+
 				@Override
 				public ImageView getImageView() {
 					return image;
 				}
-				
+
 				@Override
 				public int getDefaultResource() {
 					return R.drawable.generic_poster;
@@ -143,8 +143,8 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
                 @Override
                 public void onClick(View v) {
-                    Intent intent = SeriesActivity.newIntent(context, series.id());
-                    context.startActivity(intent);
+                    Intent intent = SeriesActivity.newIntent(SeriesListItemFactory.this.context, series.id());
+                    SeriesListItemFactory.this.context.startActivity(intent);
                 }
             });
         }
@@ -154,7 +154,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
                 @Override
                 public boolean onLongClick(View v) {
-                    new StopFollowingDialogBuilder(series, context).build().show();
+                    new StopFollowingDialogBuilder(series, SeriesListItemFactory.this.context).build().show();
                     return true;
                 }
             });

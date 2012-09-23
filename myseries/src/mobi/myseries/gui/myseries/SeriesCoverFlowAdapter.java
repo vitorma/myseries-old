@@ -36,7 +36,7 @@ import android.graphics.Bitmap;
 
 public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageProvider IMAGE_PROVIDER = App.environment().imageProvider();
+    private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
 
     private List<Series> seriesList;
 
@@ -71,6 +71,7 @@ public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
         return this;
     }
 
+    @Override
     public boolean isEmpty() {
         return this.seriesList.isEmpty();
     }
