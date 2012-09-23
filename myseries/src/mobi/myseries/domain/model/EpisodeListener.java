@@ -30,7 +30,4 @@ public interface EpisodeListener {
     public void onMarkAsSeenBySeason(Episode episode);
 
     public void onMarkAsNotSeenBySeason(Episode episode);
-
-    @Deprecated
-    public void onMerge(Episode episode);
 }

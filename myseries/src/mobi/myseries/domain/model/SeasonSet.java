@@ -250,9 +250,4 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         //FIXME Notify only if the general next to see change
         this.notifyThatNextEpisodeToSeeChanged();
     }
-
-    @Override
-    public void onMerge(Season season) {
-        //SeasonSet is not interested in this event
-    }
 }

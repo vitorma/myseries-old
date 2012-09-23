@@ -40,7 +40,7 @@ public class Next extends ScheduleMode implements SeriesListener {
 
         Episode newNextToSee = series.nextEpisodeToSee(this.specification.isSatisfiedBySpecialEpisodes());
 
-        if (newNextToSee != null && this.specification.isSatisfiedBy(newNextToSee)) {
+        if ((newNextToSee != null) && this.specification.isSatisfiedBy(newNextToSee)) {
             this.episodes.add(newNextToSee);
         }
 
@@ -53,9 +53,6 @@ public class Next extends ScheduleMode implements SeriesListener {
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Series series) {}
-
-    @Override
-    public void onMerge(Series series) {}
 
     /* Auxiliary */
 

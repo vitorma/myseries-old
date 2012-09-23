@@ -65,10 +65,6 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
     private EpisodeListener seenMarkListener = new EpisodeListener() {
 
         @Override
-        @Deprecated
-        public void onMerge(Episode episode) {}  // TODO remove this deprecated method
-
-        @Override
         public void onMarkAsSeenBySeason(Episode episode) {
             EpisodeAdapter.this.updateSeenCheckbox();
         }

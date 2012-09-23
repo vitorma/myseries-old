@@ -58,18 +58,15 @@ public class Recent extends ScheduleMode implements EpisodeListener {
         this.onMarkAsSeen(episode);
     }
 
-    @Override
-    public void onMerge(Episode episode) {}
-
     /* Auxiliary */
 
     private static Specification<Episode> recentSpecification(final ScheduleSpecification specification) {
         return new AbstractSpecification<Episode>() {
             @Override
             public boolean isSatisfiedBy(Episode e) {
-                return e.airDate() != null &&
-                       !e.airDate().after(Dates.now()) &&
-                       specification.isSatisfiedBy(e);
+                return (e.airDate() != null) &&
+                        !e.airDate().after(Dates.now()) &&
+                        specification.isSatisfiedBy(e);
             }
         };
     }
