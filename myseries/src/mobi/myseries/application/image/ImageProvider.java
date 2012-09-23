@@ -45,8 +45,10 @@ public final class ImageProvider {
     private List<PosterDownloadListener> posterDownloadListeners;
     private List<EpisodeImageDownloadListener> episodeImageDownloadListeners;
 
-    //TODO (Cleber) Validate parameters
     public ImageProvider(ImageSource imageSource, ImageRepository imageRepository) {
+        Validate.isNonNull(imageSource, "imageSource");
+        Validate.isNonNull(imageRepository, "imageRepository");
+
         this.imageSource = imageSource;
         this.imageRepository = imageRepository;
         this.posterDownloadListeners = new LinkedList<PosterDownloadListener>();
