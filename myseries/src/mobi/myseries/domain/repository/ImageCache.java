@@ -90,18 +90,18 @@ public class ImageCache implements ImageRepository {
     }
 
     @Override
-    public void deleteAllSeriesImages(int seriesId) {
+    public void deleteAllImagesOfSeries(int seriesId) {
         if (this.seriesPosters.indexOfKey(seriesId) == -1) {return;}
 
         this.seriesPosters.remove(seriesId);
-        this.threadExecutor.execute(this.deleteAllSeriesImagesInSourceRepository(seriesId));
+        this.threadExecutor.execute(this.deleteAllImagesOfSeriesInSourceRepository(seriesId));
     }
 
-    private Runnable deleteAllSeriesImagesInSourceRepository(final int seriesId) {
+    private Runnable deleteAllImagesOfSeriesInSourceRepository(final int seriesId) {
         return new Runnable() {
             @Override
             public void run() {
-                ImageCache.this.sourceRepository.deleteAllSeriesImages(seriesId);
+                ImageCache.this.sourceRepository.deleteAllImagesOfSeries(seriesId);
             }
         };
     }

@@ -68,7 +68,7 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void deleteAllSeriesImages(int seriesId) {
+    public void deleteAllImagesOfSeries(int seriesId) {
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
         File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
         if (!poster.delete()) {

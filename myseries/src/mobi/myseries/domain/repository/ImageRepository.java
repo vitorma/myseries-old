@@ -26,7 +26,7 @@ import android.graphics.Bitmap;
 public interface ImageRepository {
     public void saveSeriesPoster(int seriesId, Bitmap file);
     public void saveEpisodeImage(int episodeId, Bitmap file);
-    public void deleteAllSeriesImages(int seriesId);
+    public void deleteAllImagesOfSeries(int seriesId);
     public Bitmap getSeriesPoster(int seriesId);
     public Bitmap getEpisodeImage(int episodeId);
 }

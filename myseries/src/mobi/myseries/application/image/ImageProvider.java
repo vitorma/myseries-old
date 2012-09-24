@@ -75,7 +75,7 @@ public final class ImageProvider {
     public void removeAllImagesOf(Series series) {
         Validate.isNonNull(series, "series");
 
-        this.imageRepository.deleteAllSeriesImages(series.id());
+        this.imageRepository.deleteAllImagesOfSeries(series.id());
     }
 
     public void downloadPosterOf(Series series) {
