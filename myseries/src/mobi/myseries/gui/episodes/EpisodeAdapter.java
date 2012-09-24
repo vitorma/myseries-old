@@ -4,7 +4,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.image.EpisodeImageDownloadListener;
-import mobi.myseries.application.image.ImageProvider;
+import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.gui.shared.Images;
@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 public class EpisodeAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
+    private static final ImageService IMAGE_PROVIDER = App.imageProvider();
 
     private static final Resources RESOURCES = App.resources();
     private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(RESOURCES);

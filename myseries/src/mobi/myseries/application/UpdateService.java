@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import mobi.myseries.application.image.ImageProvider;
+import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -26,14 +26,14 @@ public class UpdateService {
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
     private LocalizationProvider localizationProvider;
-    private ImageProvider imageProvider;
+    private ImageService imageProvider;
     private SeriesUpdater seriesUpdater;
     private final List<UpdateListener> updateListeners;
     private boolean updateRunning = false;
     private ErrorService errorService;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
-            LocalizationProvider localizationProvider, ImageProvider imageProvider,
+            LocalizationProvider localizationProvider, ImageService imageProvider,
             ErrorService errorService) {
 
         Validate.isNonNull(seriesSource, "seriesSource");

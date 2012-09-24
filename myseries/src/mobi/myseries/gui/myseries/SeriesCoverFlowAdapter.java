@@ -28,7 +28,7 @@ import java.util.List;
 
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.image.ImageProvider;
+import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.shared.CoverFlowAdapter;
@@ -38,7 +38,7 @@ import android.graphics.Bitmap;
 
 public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
+    private static final ImageService IMAGE_PROVIDER = App.imageProvider();
 
     private List<Series> seriesList;
 

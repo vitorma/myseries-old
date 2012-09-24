@@ -1,5 +1,5 @@
 /*
- *   ImageProvider.java
+ *   ImageService.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -34,13 +34,13 @@ import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-public final class ImageProvider {
+public final class ImageService {
     private ImageRepository imageRepository;
     private ImageSource imageSource;
     private List<PosterDownloadListener> posterDownloadListeners;
     private List<EpisodeImageDownloadListener> episodeImageDownloadListeners;
 
-    public ImageProvider(ImageSource imageSource, ImageRepository imageRepository) {
+    public ImageService(ImageSource imageSource, ImageRepository imageRepository) {
         Validate.isNonNull(imageSource, "imageSource");
         Validate.isNonNull(imageRepository, "imageRepository");
 
@@ -105,7 +105,7 @@ public final class ImageProvider {
             Bitmap fetchedPoster = null;
 
             try {
-                fetchedPoster = ImageProvider.this.imageSource.fetchSeriesPoster(this.series.posterFileName());
+                fetchedPoster = ImageService.this.imageSource.fetchSeriesPoster(this.series.posterFileName());
             } catch (ConnectionFailedException e) {
                 e.printStackTrace();
                 this.cancel(true);
@@ -116,7 +116,7 @@ public final class ImageProvider {
                 this.failure = Failure.UNKNOWN;
             }
 
-            ImageProvider.this.imageRepository.saveSeriesPoster(this.series.id(), fetchedPoster);
+            ImageService.this.imageRepository.saveSeriesPoster(this.series.id(), fetchedPoster);
 
             return null;
         }
@@ -125,13 +125,13 @@ public final class ImageProvider {
         protected void onCancelled() {
             switch (this.failure) {
                 case CONNECTION_FAILED:
-                    ImageProvider.this.notifyListenersOfConnectionFailureWhileDownloadingPosterOf(this.series);
+                    ImageService.this.notifyListenersOfConnectionFailureWhileDownloadingPosterOf(this.series);
                     break;
                 case EXTERNAL_STORAGE_UNAVAILABLE:
-                    ImageProvider.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
+                    ImageService.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
                     break;
                 case IMAGE_IO:
-                    ImageProvider.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
+                    ImageService.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
                     break;
                 case UNKNOWN:
                     // TODO: PANIC!
@@ -140,12 +140,12 @@ public final class ImageProvider {
 
         @Override
         protected void onPostExecute(Void result) {
-            ImageProvider.this.notifyListenersOfDownloadPosterOf(this.series);
+            ImageService.this.notifyListenersOfDownloadPosterOf(this.series);
         }
 
         @Override
         protected void onPreExecute() {
-            ImageProvider.this.notifyListenersOfStartDownloadingPosterOf(this.series);
+            ImageService.this.notifyListenersOfStartDownloadingPosterOf(this.series);
         }
     }
 
@@ -166,7 +166,7 @@ public final class ImageProvider {
             Bitmap fetchedImage = null;
 
             try {
-                fetchedImage = ImageProvider.this.imageSource.fetchEpisodeImage(this.episode.imageFileName());
+                fetchedImage = ImageService.this.imageSource.fetchEpisodeImage(this.episode.imageFileName());
             } catch (ConnectionFailedException e) {
                 e.printStackTrace();
                 this.cancel(true);
@@ -177,7 +177,7 @@ public final class ImageProvider {
                 this.failure = Failure.UNKNOWN;
             }
 
-            ImageProvider.this.imageRepository.saveEpisodeImage(this.episode.id(), fetchedImage);
+            ImageService.this.imageRepository.saveEpisodeImage(this.episode.id(), fetchedImage);
 
             return null;
         }
@@ -186,14 +186,14 @@ public final class ImageProvider {
         protected void onCancelled() {
             switch (this.failure) {
                 case CONNECTION_FAILED:
-                    ImageProvider.this
+                    ImageService.this
                             .notifyListenersOfConnectionFailureWhileDownloadingImageOf(this.episode);
                     break;
                 case EXTERNAL_STORAGE_UNAVAILABLE:
-                    ImageProvider.this.notifyListenersOfFailureWhileSavingImageOf(this.episode);
+                    ImageService.this.notifyListenersOfFailureWhileSavingImageOf(this.episode);
                     break;
                 case IMAGE_IO:
-                    ImageProvider.this.notifyListenersOfFailureWhileSavingImageOf(this.episode);
+                    ImageService.this.notifyListenersOfFailureWhileSavingImageOf(this.episode);
                     break;
                 case UNKNOWN:
                     // TODO: PANIC!
@@ -203,12 +203,12 @@ public final class ImageProvider {
 
         @Override
         protected void onPostExecute(Void result) {
-            ImageProvider.this.notifyListenersOfDownloadImageOf(this.episode);
+            ImageService.this.notifyListenersOfDownloadImageOf(this.episode);
         }
 
         @Override
         protected void onPreExecute() {
-            ImageProvider.this.notifyListenersOfStartDownloadingImageOf(this.episode);
+            ImageService.this.notifyListenersOfStartDownloadingImageOf(this.episode);
         }
     }
 

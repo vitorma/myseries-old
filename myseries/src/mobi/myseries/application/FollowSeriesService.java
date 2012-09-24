@@ -23,7 +23,7 @@ package mobi.myseries.application;
 
 import java.util.Collection;
 
-import mobi.myseries.application.image.ImageProvider;
+import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -40,7 +40,7 @@ public class FollowSeriesService {
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
     private LocalizationProvider localizationProvider;
-    private ImageProvider imageProvider;
+    private ImageService imageProvider;
     private ErrorService errorService;
     private SeriesFollower seriesFollower;
     private final ListenerSet<SeriesFollowingListener> seriesFollowingListeners;
@@ -48,7 +48,7 @@ public class FollowSeriesService {
     public FollowSeriesService(SeriesSource seriesSource,
                                SeriesRepository seriesRepository,
                                LocalizationProvider localizationProvider,
-                               ImageProvider imageProvider,
+                               ImageService imageProvider,
                                ErrorService errorService) {
         this(seriesSource, seriesRepository, localizationProvider, imageProvider, errorService, true);
     }
@@ -56,7 +56,7 @@ public class FollowSeriesService {
     public FollowSeriesService(SeriesSource seriesSource,
                                SeriesRepository seriesRepository,
                                LocalizationProvider localizationProvider,
-                               ImageProvider imageProvider,
+                               ImageService imageProvider,
                                ErrorService errorService,
                                boolean asyncFollowing) {
         Validate.isNonNull(seriesSource, "seriesSource");

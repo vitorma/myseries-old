@@ -38,7 +38,7 @@ import mobi.myseries.application.ErrorService;
 import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.SeriesFollowingListener;
-import mobi.myseries.application.image.ImageProvider;
+import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -58,14 +58,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import android.graphics.Bitmap;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bitmap.class, ImageProvider.class})
+@PrepareForTest({Bitmap.class, ImageService.class})
 public class FollowSeriesServiceTests {
 
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
     private FollowSeriesService followSeriesService;
     private LocalizationProvider localizationProvider;
-    private ImageProvider imageProvider;
+    private ImageService imageProvider;
 
     private SeriesFollowingListener seriesFollowingListener;
     private ErrorService errorService;
@@ -79,7 +79,7 @@ public class FollowSeriesServiceTests {
         this.localizationProvider = mock(LocalizationProvider.class);
         when(this.localizationProvider.language()).thenReturn("en");
 
-        this.imageProvider = PowerMockito.mock(ImageProvider.class);
+        this.imageProvider = PowerMockito.mock(ImageService.class);
 
         this.seriesFollowingListener = mock(SeriesFollowingListener.class);
 

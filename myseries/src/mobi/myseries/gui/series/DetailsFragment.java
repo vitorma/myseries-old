@@ -3,7 +3,7 @@ package mobi.myseries.gui.series;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.image.ImageProvider;
+import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.Images;
@@ -21,7 +21,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class DetailsFragment extends SherlockFragment {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
+    private static final ImageService IMAGE_PROVIDER = App.imageProvider();
 
     private int seriesId;
 

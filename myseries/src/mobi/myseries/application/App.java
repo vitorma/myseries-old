@@ -24,7 +24,7 @@ package mobi.myseries.application;
 import java.text.DateFormat;
 import java.util.List;
 
-import mobi.myseries.application.image.ImageProvider;
+import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.image.ImageloaderService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
@@ -40,14 +40,14 @@ public class App extends Application {
     private static Schedule schedule;
     private static UpdateService updateService;
     private static ErrorService errorService;
-    private static ImageProvider imageProvider;
+    private static ImageService imageProvider;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         environment = Environment.newEnvironment(this);
-        imageProvider = new ImageProvider(
+        imageProvider = new ImageService(
                 environment.imageSource(),
                 environment.imageRepository());
         errorService = new ErrorService();
@@ -152,7 +152,7 @@ public class App extends Application {
 
     /* IMAGES */
 
-    public static ImageProvider imageProvider() {
+    public static ImageService imageProvider() {
         return imageProvider;
     }
 

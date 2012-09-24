@@ -28,7 +28,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.image.ImageProvider;
+import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.image.PosterDownloadListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
@@ -54,7 +54,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 SeriesFollowingListener, PosterDownloadListener {
 
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
+    private static final ImageService IMAGE_PROVIDER = App.imageProvider();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
     private static final int ITEM_LAYOUT = R.layout.myseries_item;
 
