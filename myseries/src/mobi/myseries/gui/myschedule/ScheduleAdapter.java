@@ -34,10 +34,12 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.Objects;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -104,7 +106,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
         boolean needSeparator = false;
 
-        switch (cellStates[position]) {
+        switch (this.cellStates[position]) {
             case STATE_SECTIONED_CELL:
                 needSeparator = true;
                 break;
@@ -124,7 +126,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
                     }
                 }
 
-                cellStates[position] = needSeparator ? STATE_SECTIONED_CELL : STATE_REGULAR_CELL;
+                this.cellStates[position] = needSeparator ? STATE_SECTIONED_CELL : STATE_REGULAR_CELL;
                 break;
         }
 
@@ -164,7 +166,11 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
         viewHolder.seriesNameTextView.setText(series.name());
         viewHolder.episodeNumberTextView.setText(String.format(numberFormat, episode.seasonNumber(), episode.number()));
-        viewHolder.seriesPosterImageView.setImageBitmap(App.seriesPoster(series.id()));
+
+        Bitmap seriesPoster = App.seriesPoster(series.id());
+        Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
+        viewHolder.seriesPosterImageView.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
+
         viewHolder.seenMarkCheckBox.setChecked(episode.wasSeen());
         viewHolder.seenMarkCheckBox.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
 
@@ -175,13 +181,13 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                setUpData();
+                ScheduleAdapter.this.setUpData();
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void result) {
-                notifyDataSetChanged();
+                ScheduleAdapter.this.notifyDataSetChanged();
             }
         }.execute();
     }
