@@ -29,7 +29,6 @@ import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.application.image.ImageloaderService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.ImageDirectory;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
@@ -50,8 +49,9 @@ public class App extends Application {
         super.onCreate();
 
         environment = Environment.newEnvironment(this);
-        //TODO Use Environment#imageRepository (when ImageCache is implemented) instead of ImageDirectory
-        imageProvider = new ImageProvider(environment.theTVDB(), new ImageDirectory(this));
+        imageProvider = new ImageProvider(
+                environment.imageSource(),
+                environment.imageRepository());
         errorService = new ErrorService();
         searchService = new SearchSeriesService(environment.theTVDB());
         imageLoadService = new ImageloaderService();

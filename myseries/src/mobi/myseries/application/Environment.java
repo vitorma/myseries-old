@@ -21,13 +21,14 @@
 
 package mobi.myseries.application;
 
-import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.repository.ImageCache;
 import mobi.myseries.domain.repository.ImageDirectory;
 import mobi.myseries.domain.repository.ImageRepository;
 import mobi.myseries.domain.repository.SeriesCache;
 import mobi.myseries.domain.repository.SeriesDatabase;
 import mobi.myseries.domain.repository.SeriesRepository;
+import mobi.myseries.domain.source.ImageSource;
+import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.domain.source.TheTVDB;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
@@ -37,10 +38,7 @@ public class Environment {
     private TheTVDB theTVDB;
     private SeriesProvider seriesProvider;
     private LocalizationProvider localization;
-    private ImageProvider imageProvider;
     private SeriesRepository seriesRepository;
-
-    //At this moment, use it just for getPoster
     private ImageRepository imageRepository;
 
     private static final String apiKey = "6F2B5A871C96FB05";
@@ -53,7 +51,8 @@ public class Environment {
         Validate.isNonNull(context, "context");
 
         this.context = context;
-        this.imageRepository = new ImageCache(new ImageDirectory(context), this.repository());
+        this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
+        this.imageRepository = new ImageCache(new ImageDirectory(this.context), this.seriesRepository);
     }
 
     public Context context() {
@@ -76,6 +75,15 @@ public class Environment {
         this.seriesProvider = newSeriesProvider;
     }
 
+    public SeriesSource seriesSource() {
+        return this.theTVDB();
+    }
+
+    public ImageSource imageSource() {
+        return this.theTVDB();
+    }
+
+    // TODO Remove this method ASAP and use seriesSource() or imageSource()
     public TheTVDB theTVDB() {
         if (this.theTVDB == null) {
             this.theTVDB = this.defaultTheTVDB();

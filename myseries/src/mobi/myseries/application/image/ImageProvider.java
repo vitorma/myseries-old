@@ -62,7 +62,7 @@ public final class ImageProvider {
         return null;
     }
 
-    public Bitmap getImageOf(Episode episode) {
+    public Bitmap getImageOf(Episode episode) {//TODO Let this method be performed asynchronously
         Validate.isNonNull(episode, "episode");
 
         if (episode.imageFileName() != null && !episode.imageFileName().equals("")) {
