@@ -24,8 +24,6 @@ package mobi.myseries.application.image;
 import java.util.LinkedList;
 import java.util.List;
 
-import mobi.myseries.R;
-import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ImageRepository;
@@ -34,7 +32,6 @@ import mobi.myseries.domain.source.ImageSource;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 public final class ImageProvider {
@@ -55,16 +52,14 @@ public final class ImageProvider {
 
     /* Current interface */
 
-    //TODO Return null instead of a generic poster
     public Bitmap getPosterOf(Series series) {
         Validate.isNonNull(series, "series");
 
-        if (series.posterFileName() == null || Strings.isBlank(series.posterFileName())) {
-            return this.genericPosterImage();
+        if (series.posterFileName() != null && !Strings.isBlank(series.posterFileName())) {
+            return this.imageRepository.getSeriesPoster(series.id());
         }
 
-        Bitmap poster = this.imageRepository.getSeriesPoster(series.id());
-        return poster != null ? poster : this.genericPosterImage();
+        return null;
     }
 
     public Bitmap getImageOf(Episode episode) {
@@ -87,13 +82,6 @@ public final class ImageProvider {
 
     public void removeImagesOf(Series series) {
         this.imageRepository.deleteImagesOfSeries(series.id());
-    }
-
-    //TODO (Cleber) Remove this method and avoid call App methods here
-    //              Let getPoster return null
-    //              At the gui, use Objects.nullSafe(poster, genericPoster)
-    public Bitmap genericPosterImage() {
-        return BitmapFactory.decodeResource(App.environment().context().getResources(), R.drawable.generic_poster);
     }
 
     /* Download poster task */
