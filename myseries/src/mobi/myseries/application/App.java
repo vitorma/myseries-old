@@ -165,13 +165,7 @@ public class App extends Application {
 
     //TODO Remove ASAP
     public static Bitmap seriesPoster(int seriesId) {
-        Bitmap poster = environment.imageRepository().getSeriesPoster(seriesId);
-
-        if (poster == null) {
-            poster = imageProvider.genericPosterImage();
-        }
-
-        return poster;
+        return environment.imageRepository().getSeriesPoster(seriesId);
     }
 
     /* SCHEDULE */

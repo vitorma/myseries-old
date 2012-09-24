@@ -26,11 +26,14 @@ import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.episodes.EpisodesActivity;
+import mobi.myseries.gui.shared.Images;
 import mobi.myseries.shared.Android;
 import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.Objects;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
@@ -68,7 +71,10 @@ public class Item {
     }
 
     private void setupSeriesPoster(RemoteViews item, Series series) {
-        item.setImageViewBitmap(R.id.seriesPoster, App.seriesPoster(series.id()));
+        Bitmap seriesPoster = App.seriesPoster(series.id());
+        Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
+
+        item.setImageViewBitmap(R.id.seriesPoster, Objects.nullSafe(seriesPoster, genericPoster));
     }
 
     private void setupSeriesName(RemoteViews item, Series series) {
