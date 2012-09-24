@@ -72,6 +72,12 @@ public final class ImageProvider {
         return null;
     }
 
+    public void removeAllImagesOf(Series series) {
+        Validate.isNonNull(series, "series");
+
+        this.imageRepository.deleteImagesOfSeries(series.id());
+    }
+
     public void downloadPosterOf(Series series) {
         new DownloadPosterTask(series).execute();
     }
@@ -79,10 +85,6 @@ public final class ImageProvider {
     public void downloadImageOf(Episode episode) {
         new DownloadEpisodeTask(episode).execute();
     };
-
-    public void removeImagesOf(Series series) {
-        this.imageRepository.deleteImagesOfSeries(series.id());
-    }
 
     /* Download poster task */
 
