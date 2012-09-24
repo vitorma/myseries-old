@@ -7,12 +7,12 @@ import mobi.myseries.application.image.EpisodeImageDownloadListener;
 import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
+import mobi.myseries.gui.shared.Images;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.Objects;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,8 +27,8 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageProvider IMAGE_PROVIDER = App.imageProvider();
 
-    private static final Resources RESOURCES = App.environment().context().getResources();
-    private static final Bitmap GENERIC_IMAGE = BitmapFactory.decodeResource(RESOURCES, R.drawable.clapperboard);
+    private static final Resources RESOURCES = App.resources();
+    private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(RESOURCES);
     private static final int ITEM_LAYOUT = R.layout.episodes_item;
 
     private final EpisodeImageDownloadListener downloadListener = new EpisodeImageDownloadListener() {
