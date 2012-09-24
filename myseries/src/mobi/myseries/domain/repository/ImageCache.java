@@ -25,10 +25,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
 
-//TODO Implement this class and save the planet!
 public class ImageCache implements ImageRepository {
     private ImageRepository sourceRepository;
     private ExecutorService threadExecutor;
@@ -36,11 +36,18 @@ public class ImageCache implements ImageRepository {
     private SeriesRepository seriesRepository;
 
     public ImageCache(ImageRepository sourceRepository, SeriesRepository seriesRepository) {
+        Validate.isNonNull(sourceRepository, "sourceRepository");
+        Validate.isNonNull(seriesRepository, "seriesRepository");
+
         this.sourceRepository = sourceRepository;
         this.seriesRepository = seriesRepository;
         this.threadExecutor = Executors.newSingleThreadExecutor();
-
         this.seriesPosters = new SparseArray<Bitmap>();
+
+        this.loadPostersFromSourceRepository();
+    }
+
+    private void loadPostersFromSourceRepository() {
         for (Series s :this.seriesRepository.getAll()) {
             this.seriesPosters.put(s.id(), this.sourceRepository.getSeriesPoster(s.id()));
         }
@@ -48,11 +55,15 @@ public class ImageCache implements ImageRepository {
 
     @Override
     public void insertSeriesPoster(int seriesId, Bitmap file) {
-        // TODO Auto-generated method stub
+        Validate.isNonNull(file, "file");
 
+        if (this.seriesPosters.indexOfKey(seriesId) != -1) {return;}
+
+        this.seriesPosters.put(seriesId, file);
+        this.threadExecutor.execute(this.insertSeriesPosterIntoSourceRepository(seriesId, file));
     }
 
-    private Runnable insertSeriesInSourceRepository(final int seriesId, final Bitmap file) {
+    private Runnable insertSeriesPosterIntoSourceRepository(final int seriesId, final Bitmap file) {
         return new Runnable() {
             @Override
             public void run() {
@@ -63,26 +74,70 @@ public class ImageCache implements ImageRepository {
 
     @Override
     public void insertEpisodeImage(int episodeId, Bitmap file) {
-        // TODO Auto-generated method stub
+        Validate.isNonNull(file, "file");
 
+        this.threadExecutor.execute(this.insertEpisodeImageIntoSourceRepository(episodeId, file));
+    }
+
+    private Runnable insertEpisodeImageIntoSourceRepository(final int episodeId, final Bitmap file) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                ImageCache.this.sourceRepository.insertEpisodeImage(episodeId, file);
+            }
+        };
     }
 
     @Override
     public void updateSeriesPoster(int seriesId, Bitmap file) {
-        // TODO Auto-generated method stub
+        Validate.isNonNull(file, "file");
 
+        if (this.seriesPosters.indexOfKey(seriesId) == -1) {return;}
+
+        this.seriesPosters.put(seriesId, file);
+        this.threadExecutor.execute(this.updateSeriesPosterInSourceRepository(seriesId, file));
+    }
+
+    private Runnable updateSeriesPosterInSourceRepository(final int seriesId, final Bitmap file) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                ImageCache.this.sourceRepository.updateSeriesPoster(seriesId, file);
+            }
+        };
     }
 
     @Override
     public void updateEpisodeImage(int episodeId, Bitmap file) {
-        // TODO Auto-generated method stub
+        Validate.isNonNull(file, "file");
 
+        this.updateEpisodeImageInSourceRepository(episodeId, file);
+    }
+
+    private Runnable updateEpisodeImageInSourceRepository(final int episodeId, final Bitmap file) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                ImageCache.this.sourceRepository.updateEpisodeImage(episodeId, file);
+            }
+        };
     }
 
     @Override
     public void deleteImagesOfSeries(int seriesId) {
-        // TODO Auto-generated method stub
+        if (this.seriesPosters.indexOfKey(seriesId) == -1) {return;}
 
+        this.seriesPosters.remove(seriesId);
+        this.threadExecutor.execute(this.deleteImagesOfSeriesInSourceRepository(seriesId));
+    }
+
+    private Runnable deleteImagesOfSeriesInSourceRepository(final int seriesId) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                ImageCache.this.sourceRepository.deleteImagesOfSeries(seriesId);
+            }
+        };
     }
 
     @Override
@@ -92,7 +147,6 @@ public class ImageCache implements ImageRepository {
 
     @Override
     public Bitmap getEpisodeImage(int episodeId) {
-        // TODO Auto-generated method stub
-        return null;
+        return this.sourceRepository.getEpisodeImage(episodeId);
     }
 }
