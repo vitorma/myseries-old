@@ -167,7 +167,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         viewHolder.seriesNameTextView.setText(series.name());
         viewHolder.episodeNumberTextView.setText(String.format(numberFormat, episode.seasonNumber(), episode.number()));
 
-        Bitmap seriesPoster = App.seriesPoster(series.id());
+        Bitmap seriesPoster = App.imageProvider().getPosterOf(series);
         Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
         viewHolder.seriesPosterImageView.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
 

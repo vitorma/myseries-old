@@ -24,7 +24,6 @@ package mobi.myseries.application;
 import java.text.DateFormat;
 import java.util.List;
 
-import mobi.myseries.application.image.ImageLoadSupplicant;
 import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.application.image.ImageloaderService;
 import mobi.myseries.application.schedule.Schedule;
@@ -32,7 +31,6 @@ import mobi.myseries.domain.model.Series;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 
 public class App extends Application {
     private static Environment environment;
@@ -156,16 +154,6 @@ public class App extends Application {
 
     public static ImageProvider imageProvider() {
         return imageProvider;
-    }
-
-    //TODO Remove ASAP
-    public static void loadPoster(Series series, ImageLoadSupplicant suplicant) {
-        imageLoadService.loadPoster(series, suplicant);
-    }
-
-    //TODO Remove ASAP
-    public static Bitmap seriesPoster(int seriesId) {
-        return environment.imageRepository().getSeriesPoster(seriesId);
     }
 
     /* SCHEDULE */
