@@ -175,7 +175,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
-            App.updateSeriesService().updateDataIfNeeded();
+            App.updateSeriesService().updateData();
         }
 
         if (item.getTitle().equals(REMOVE)) {

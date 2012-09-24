@@ -74,6 +74,15 @@ public class UpdateService {
         });
     }
 
+    public void updateData() {
+        if (updateRunning) {
+            Log.d(getClass().getName(), "Update already running");
+            return;
+        }
+
+        seriesUpdater.update();
+    }
+
     public void updateDataIfNeeded() {
         if (updateRunning) {
             Log.d(getClass().getName(), "Update already running");
@@ -150,8 +159,6 @@ public class UpdateService {
                                 updatePosterOf(s);
                                 Log.d(getClass().getName(), "Poster of " + s.name()
                                         + " updated.");
-
-                                imagesToUpdate.remove(s);
                             }
 
                             s.setLastUpdate(System.currentTimeMillis());
