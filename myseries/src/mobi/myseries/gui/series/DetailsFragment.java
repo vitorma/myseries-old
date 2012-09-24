@@ -7,6 +7,8 @@ import mobi.myseries.application.image.ImageLoadSupplicant;
 import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.Images;
+import mobi.myseries.shared.Objects;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -73,8 +75,6 @@ public class DetailsFragment extends SherlockFragment {
         seriesActors.setText(series.actors());
         seriesOverview.setText(series.overview());
 
-        Bitmap bmp = IMAGE_PROVIDER.getPosterOf(series);
-
         final ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
         App.loadPoster(series, new ImageLoadSupplicant() {
             @Override
@@ -88,8 +88,11 @@ public class DetailsFragment extends SherlockFragment {
             }
         });
 
+        Bitmap poster = IMAGE_PROVIDER.getPosterOf(series);
+        Bitmap generic = Images.genericSeriesPosterFrom(this.getResources());
+
         ImageView background = (ImageView) this.getActivity().findViewById(R.id.background);
-        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), bmp);
+        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), Objects.nullSafe(poster, generic));
         drawable.setAlpha(30);
         background.setImageDrawable(drawable);
     }
