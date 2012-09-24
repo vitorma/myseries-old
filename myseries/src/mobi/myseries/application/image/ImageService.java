@@ -62,7 +62,7 @@ public final class ImageService {
         return null;
     }
 
-    public Bitmap getImageOf(Episode episode) {//TODO Let this method be performed asynchronously
+    public Bitmap getImageOf(Episode episode) {//TODO Let this method be performed asynchronously (?)
         Validate.isNonNull(episode, "episode");
 
         if (episode.imageFileName() != null && !episode.imageFileName().equals("")) {
@@ -70,6 +70,18 @@ public final class ImageService {
         }
 
         return null;
+    }
+
+    public void saveSeriesPoster(Series series, Bitmap poster) {
+        Validate.isNonNull(series, "series");
+
+        this.imageRepository.saveSeriesPoster(series.id(), poster);
+    }
+
+    public void saveEpisodeImage(Episode episode, Bitmap poster) {
+        Validate.isNonNull(episode, "episode");
+
+        this.imageRepository.saveEpisodeImage(episode.id(), poster);
     }
 
     public void removeAllImagesOf(Series series) {
