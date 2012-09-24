@@ -3,7 +3,6 @@ package mobi.myseries.gui.series;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.image.ImageLoadSupplicant;
 import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
@@ -75,24 +74,15 @@ public class DetailsFragment extends SherlockFragment {
         seriesActors.setText(series.actors());
         seriesOverview.setText(series.overview());
 
-        final ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
-        App.loadPoster(series, new ImageLoadSupplicant() {
-            @Override
-            public ImageView getImageView() {
-                return seriesPoster;
-            }
+        Bitmap poster = App.imageProvider().getPosterOf(series);
+        Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
+        Bitmap ensuredPoster = Objects.nullSafe(poster, genericPoster);
 
-            @Override
-            public int getDefaultResource() {
-                return R.drawable.generic_poster;
-            }
-        });
-
-        Bitmap poster = IMAGE_PROVIDER.getPosterOf(series);
-        Bitmap generic = Images.genericSeriesPosterFrom(this.getResources());
+        ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
+        seriesPoster.setImageBitmap(ensuredPoster);
 
         ImageView background = (ImageView) this.getActivity().findViewById(R.id.background);
-        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), Objects.nullSafe(poster, generic));
+        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), ensuredPoster);
         drawable.setAlpha(30);
         background.setImageDrawable(drawable);
     }

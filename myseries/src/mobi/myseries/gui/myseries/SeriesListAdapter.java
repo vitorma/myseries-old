@@ -28,17 +28,19 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.image.ImageLoadSupplicant;
 import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.application.image.PosterDownloadListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.series.SeriesActivity;
+import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
+import mobi.myseries.shared.Objects;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -90,18 +92,11 @@ SeriesFollowingListener, PosterDownloadListener {
 
         private void setPosterTo(Series series, View itemView) {
             final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
-            App.loadPoster(series, new ImageLoadSupplicant() {
 
-                @Override
-                public ImageView getImageView() {
-                    return image;
-                }
+            Bitmap seriesPoster = App.imageProvider().getPosterOf(series);
+            Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
 
-                @Override
-                public int getDefaultResource() {
-                    return R.drawable.generic_poster;
-                }
-            });
+            image.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
         }
 
         private void setNameTo(String name, View itemView) {
