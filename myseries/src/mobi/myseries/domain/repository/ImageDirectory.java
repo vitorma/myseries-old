@@ -56,8 +56,11 @@ public class ImageDirectory implements ImageRepository {
         Validate.isNonNull(series, "series");
         Validate.isNonNull(file, "file");
 
+        if(!this.isExternalStorageAvaliable()) {return;}
+
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
         File poster = new File(seriesPostersFolder, series.id() + IMAGE_EXTENSION);
+
         this.saveImageFile(file, poster);
     }
 
@@ -66,13 +69,20 @@ public class ImageDirectory implements ImageRepository {
         Validate.isNonNull(episode, "episode");
         Validate.isNonNull(file, "file");
 
+        if(!this.isExternalStorageAvaliable()) {return;}
+
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
         File episodeImage = new File(episodeImagesFolder, episode.id() + IMAGE_EXTENSION);
+
         this.saveImageFile(file, episodeImage);
     }
 
     @Override
     public void deleteAllImagesOf(Series series) {
+        Validate.isNonNull(series, "series");
+
+        if(!this.isExternalStorageAvaliable()) {return;}
+
         //FIXME Remove episodes
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
         File poster = new File(seriesPostersFolder, series.id() + IMAGE_EXTENSION);
@@ -92,13 +102,22 @@ public class ImageDirectory implements ImageRepository {
 
     @Override
     public Bitmap getPosterOf(Series series) {
+        Validate.isNonNull(series, "series");
+
+        if(!this.isExternalStorageAvaliable()) {return null;}
+
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
         return BitmapFactory.decodeFile(seriesPostersFolder + FILE_SEPARATOR + series.id() + IMAGE_EXTENSION);
     }
 
     @Override
     public Bitmap getImageOf(Episode episode) {
+        Validate.isNonNull(episode, "episode");
+
+        if(!this.isExternalStorageAvaliable()) {return null;}
+
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
+
         return BitmapFactory.decodeFile(episodeImagesFolder + FILE_SEPARATOR + episode.id() + IMAGE_EXTENSION);
     }
 
@@ -132,24 +151,23 @@ public class ImageDirectory implements ImageRepository {
     }
 
     private File imageFolder(String folderName) {
-       return ensuredDirectory(this.rootDirectory().getPath() + FILE_SEPARATOR + folderName);
+        return ensuredDirectory(this.rootDirectory().getPath() + FILE_SEPARATOR + folderName);
     }
 
     private File rootDirectory() {
-//        if(!this.isAvaliable())
-//            throw new ExternalStorageNotAvailableException();
-        //TODO create a shared preference to select internal or external storage
-        //if(App.environment().context().getSharedPreferences("STORAGE_MODE", 0).equals(EXTERNAL))
         return this.context.getExternalFilesDir(null);
-        //return App.environment().context().getFilesDir();
     }
 
-    private boolean isAvaliable() {
+    private boolean isExternalStorageAvaliable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 
-    public static String getPathForPoster(int series) {
-        return App.environment().context().getExternalFilesDir(null) + FILE_SEPARATOR + SERIES_POSTERS +FILE_SEPARATOR + series + IMAGE_EXTENSION;
-
+    public static String getPathForPoster(int seriesId) {
+        return App.environment().context().getExternalFilesDir(null) +
+               FILE_SEPARATOR +
+               SERIES_POSTERS +
+               FILE_SEPARATOR +
+               seriesId +
+               IMAGE_EXTENSION;
     }
 }
