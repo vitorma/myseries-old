@@ -50,7 +50,7 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void insertSeriesPoster(int seriesId, Bitmap file) {
+    public void saveSeriesPoster(int seriesId, Bitmap file) {
         Validate.isNonNull(file, "series poster");
 
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
@@ -59,7 +59,7 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void insertEpisodeImage(int episodeId, Bitmap file) {
+    public void saveEpisodeImage(int episodeId, Bitmap file) {
         Validate.isNonNull(file, "episode image");
 
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
@@ -68,17 +68,7 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void updateSeriesPoster(int seriesId, Bitmap file) {
-        this.insertSeriesPoster(seriesId, file);
-    }
-
-    @Override
-    public void updateEpisodeImage(int episodeId, Bitmap file) {
-        this.insertEpisodeImage(episodeId, file);
-    }
-
-    @Override
-    public void deleteImagesOfSeries(int seriesId) {
+    public void deleteAllSeriesImages(int seriesId) {
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
         File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
         if (!poster.delete()) {

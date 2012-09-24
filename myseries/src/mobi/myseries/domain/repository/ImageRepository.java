@@ -24,11 +24,9 @@ package mobi.myseries.domain.repository;
 import android.graphics.Bitmap;
 
 public interface ImageRepository {
-    public void insertSeriesPoster(int seriesId, Bitmap file);
-    public void insertEpisodeImage(int episodeId, Bitmap file);
-    public void updateSeriesPoster(int seriesId, Bitmap file);
-    public void updateEpisodeImage(int episodeId, Bitmap file);
-    public void deleteImagesOfSeries(int seriesId);
+    public void saveSeriesPoster(int seriesId, Bitmap file);
+    public void saveEpisodeImage(int episodeId, Bitmap file);
+    public void deleteAllSeriesImages(int seriesId);
     public Bitmap getSeriesPoster(int seriesId);
     public Bitmap getEpisodeImage(int episodeId);
 }

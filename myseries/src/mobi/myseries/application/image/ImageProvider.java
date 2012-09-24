@@ -75,7 +75,7 @@ public final class ImageProvider {
     public void removeAllImagesOf(Series series) {
         Validate.isNonNull(series, "series");
 
-        this.imageRepository.deleteImagesOfSeries(series.id());
+        this.imageRepository.deleteAllSeriesImages(series.id());
     }
 
     public void downloadPosterOf(Series series) {
@@ -116,7 +116,7 @@ public final class ImageProvider {
                 this.failure = Failure.UNKNOWN;
             }
 
-            ImageProvider.this.imageRepository.insertSeriesPoster(this.series.id(), fetchedPoster);
+            ImageProvider.this.imageRepository.saveSeriesPoster(this.series.id(), fetchedPoster);
 
             return null;
         }
@@ -177,7 +177,7 @@ public final class ImageProvider {
                 this.failure = Failure.UNKNOWN;
             }
 
-            ImageProvider.this.imageRepository.insertEpisodeImage(this.episode.id(), fetchedImage);
+            ImageProvider.this.imageRepository.saveEpisodeImage(this.episode.id(), fetchedImage);
 
             return null;
         }

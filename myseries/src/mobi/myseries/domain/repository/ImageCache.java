@@ -54,88 +54,54 @@ public class ImageCache implements ImageRepository {
     }
 
     @Override
-    public void insertSeriesPoster(int seriesId, Bitmap file) {
-        Validate.isNonNull(file, "file");
-
-        if (this.seriesPosters.indexOfKey(seriesId) != -1) {return;}
+    public void saveSeriesPoster(int seriesId, Bitmap file) {
+        if (file == null && this.seriesPosters.get(seriesId) != null) {return;}
 
         this.seriesPosters.put(seriesId, file);
-        this.threadExecutor.execute(this.insertSeriesPosterIntoSourceRepository(seriesId, file));
+
+        if (file == null) {return;}
+
+        this.threadExecutor.execute(this.saveSeriesPosterInSourceRepository(seriesId, file));
     }
 
-    private Runnable insertSeriesPosterIntoSourceRepository(final int seriesId, final Bitmap file) {
+    private Runnable saveSeriesPosterInSourceRepository(final int seriesId, final Bitmap file) {
         return new Runnable() {
             @Override
             public void run() {
-                ImageCache.this.sourceRepository.insertSeriesPoster(seriesId, file);
+                ImageCache.this.sourceRepository.saveSeriesPoster(seriesId, file);
             }
         };
     }
 
     @Override
-    public void insertEpisodeImage(int episodeId, Bitmap file) {
-        Validate.isNonNull(file, "file");
+    public void saveEpisodeImage(int episodeId, Bitmap file) {
+        if (file == null) {return;}
 
-        this.threadExecutor.execute(this.insertEpisodeImageIntoSourceRepository(episodeId, file));
+        this.threadExecutor.execute(this.saveEpisodeImageInSourceRepository(episodeId, file));
     }
 
-    private Runnable insertEpisodeImageIntoSourceRepository(final int episodeId, final Bitmap file) {
+    private Runnable saveEpisodeImageInSourceRepository(final int episodeId, final Bitmap file) {
         return new Runnable() {
             @Override
             public void run() {
-                ImageCache.this.sourceRepository.insertEpisodeImage(episodeId, file);
+                ImageCache.this.sourceRepository.saveEpisodeImage(episodeId, file);
             }
         };
     }
 
     @Override
-    public void updateSeriesPoster(int seriesId, Bitmap file) {
-        Validate.isNonNull(file, "file");
-
-        if (this.seriesPosters.indexOfKey(seriesId) == -1) {return;}
-
-        this.seriesPosters.put(seriesId, file);
-        this.threadExecutor.execute(this.updateSeriesPosterInSourceRepository(seriesId, file));
-    }
-
-    private Runnable updateSeriesPosterInSourceRepository(final int seriesId, final Bitmap file) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                ImageCache.this.sourceRepository.updateSeriesPoster(seriesId, file);
-            }
-        };
-    }
-
-    @Override
-    public void updateEpisodeImage(int episodeId, Bitmap file) {
-        Validate.isNonNull(file, "file");
-
-        this.updateEpisodeImageInSourceRepository(episodeId, file);
-    }
-
-    private Runnable updateEpisodeImageInSourceRepository(final int episodeId, final Bitmap file) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                ImageCache.this.sourceRepository.updateEpisodeImage(episodeId, file);
-            }
-        };
-    }
-
-    @Override
-    public void deleteImagesOfSeries(int seriesId) {
+    public void deleteAllSeriesImages(int seriesId) {
         if (this.seriesPosters.indexOfKey(seriesId) == -1) {return;}
 
         this.seriesPosters.remove(seriesId);
-        this.threadExecutor.execute(this.deleteImagesOfSeriesInSourceRepository(seriesId));
+        this.threadExecutor.execute(this.deleteAllSeriesImagesInSourceRepository(seriesId));
     }
 
-    private Runnable deleteImagesOfSeriesInSourceRepository(final int seriesId) {
+    private Runnable deleteAllSeriesImagesInSourceRepository(final int seriesId) {
         return new Runnable() {
             @Override
             public void run() {
-                ImageCache.this.sourceRepository.deleteImagesOfSeries(seriesId);
+                ImageCache.this.sourceRepository.deleteAllSeriesImages(seriesId);
             }
         };
     }
