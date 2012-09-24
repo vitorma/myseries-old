@@ -32,6 +32,8 @@ import mobi.myseries.application.image.ImageProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.shared.CoverFlowAdapter;
+import mobi.myseries.gui.shared.Images;
+import mobi.myseries.shared.Objects;
 import android.graphics.Bitmap;
 
 public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
@@ -51,8 +53,10 @@ public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
 
     @Override
     protected Bitmap createBitmap(int position) {
-        Bitmap bitmap = IMAGE_PROVIDER.getPosterOf(this.seriesList.get(position));
-        return bitmap;
+        Bitmap poster = IMAGE_PROVIDER.getPosterOf(this.seriesList.get(position));
+        Bitmap generic = Images.genericSeriesPosterFrom(App.resources());
+
+        return Objects.nullSafe(poster, generic);
     }
 
     public Series itemOf(int position) {
