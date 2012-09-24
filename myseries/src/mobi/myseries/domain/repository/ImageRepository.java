@@ -21,12 +21,14 @@
 
 package mobi.myseries.domain.repository;
 
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Series;
 import android.graphics.Bitmap;
 
 public interface ImageRepository {
-    public void saveSeriesPoster(int seriesId, Bitmap file);
-    public void saveEpisodeImage(int episodeId, Bitmap file);
-    public void deleteAllImagesOfSeries(int seriesId);
-    public Bitmap getSeriesPoster(int seriesId);
-    public Bitmap getEpisodeImage(int episodeId);
+    public void saveSeriesPoster(Series series, Bitmap file);
+    public void saveEpisodeImage(Episode episode, Bitmap file);
+    public void deleteAllImagesOf(Series series);
+    public Bitmap getPosterOf(Series series);
+    public Bitmap getImageOf(Episode episode);
 }

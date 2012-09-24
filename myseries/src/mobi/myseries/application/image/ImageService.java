@@ -29,7 +29,6 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ImageRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ImageSource;
-import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -53,41 +52,23 @@ public final class ImageService {
     /* Current interface */
 
     public Bitmap getPosterOf(Series series) {
-        Validate.isNonNull(series, "series");
-
-        if (series.posterFileName() != null && !Strings.isBlank(series.posterFileName())) {
-            return this.imageRepository.getSeriesPoster(series.id());
-        }
-
-        return null;
+        return this.imageRepository.getPosterOf(series);
     }
 
-    public Bitmap getImageOf(Episode episode) {//TODO Let this method be performed asynchronously (?)
-        Validate.isNonNull(episode, "episode");
-
-        if (episode.imageFileName() != null && !episode.imageFileName().equals("")) {
-            return this.imageRepository.getEpisodeImage(episode.id());
-        }
-
-        return null;
+    public Bitmap getImageOf(Episode episode) {
+        return this.imageRepository.getImageOf(episode);
     }
 
     public void saveSeriesPoster(Series series, Bitmap poster) {
-        Validate.isNonNull(series, "series");
-
-        this.imageRepository.saveSeriesPoster(series.id(), poster);
+        this.imageRepository.saveSeriesPoster(series, poster);
     }
 
     public void saveEpisodeImage(Episode episode, Bitmap poster) {
-        Validate.isNonNull(episode, "episode");
-
-        this.imageRepository.saveEpisodeImage(episode.id(), poster);
+        this.imageRepository.saveEpisodeImage(episode, poster);
     }
 
     public void removeAllImagesOf(Series series) {
-        Validate.isNonNull(series, "series");
-
-        this.imageRepository.deleteAllImagesOfSeries(series.id());
+        this.imageRepository.deleteAllImagesOf(series);
     }
 
     public void downloadPosterOf(Series series) {
@@ -128,7 +109,7 @@ public final class ImageService {
                 this.failure = Failure.UNKNOWN;
             }
 
-            ImageService.this.imageRepository.saveSeriesPoster(this.series.id(), fetchedPoster);
+            ImageService.this.imageRepository.saveSeriesPoster(this.series, fetchedPoster);
 
             return null;
         }
@@ -189,7 +170,7 @@ public final class ImageService {
                 this.failure = Failure.UNKNOWN;
             }
 
-            ImageService.this.imageRepository.saveEpisodeImage(this.episode.id(), fetchedImage);
+            ImageService.this.imageRepository.saveEpisodeImage(this.episode, fetchedImage);
 
             return null;
         }

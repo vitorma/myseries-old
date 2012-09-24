@@ -26,6 +26,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import mobi.myseries.application.App;
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -50,27 +52,31 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void saveSeriesPoster(int seriesId, Bitmap file) {
-        Validate.isNonNull(file, "series poster");
+    public void saveSeriesPoster(Series series, Bitmap file) {
+        Validate.isNonNull(series, "series");
+        Validate.isNonNull(file, "file");
 
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
-        File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
+        File poster = new File(seriesPostersFolder, series.id() + IMAGE_EXTENSION);
         this.saveImageFile(file, poster);
     }
 
     @Override
-    public void saveEpisodeImage(int episodeId, Bitmap file) {
-        Validate.isNonNull(file, "episode image");
+    public void saveEpisodeImage(Episode episode, Bitmap file) {
+        Validate.isNonNull(episode, "episode");
+        Validate.isNonNull(file, "file");
 
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
-        File episodeImage = new File(episodeImagesFolder, episodeId + IMAGE_EXTENSION);
+        File episodeImage = new File(episodeImagesFolder, episode.id() + IMAGE_EXTENSION);
         this.saveImageFile(file, episodeImage);
     }
 
     @Override
-    public void deleteAllImagesOfSeries(int seriesId) {
+    public void deleteAllImagesOf(Series series) {
+        //FIXME Remove episodes
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
-        File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
+        File poster = new File(seriesPostersFolder, series.id() + IMAGE_EXTENSION);
+
         if (!poster.delete()) {
             throw new ImageIoException("write", poster.toString());
         }
@@ -85,15 +91,15 @@ public class ImageDirectory implements ImageRepository {
     }
 
     @Override
-    public Bitmap getSeriesPoster(int seriesId) {
+    public Bitmap getPosterOf(Series series) {
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
-        return BitmapFactory.decodeFile(seriesPostersFolder + FILE_SEPARATOR + seriesId + IMAGE_EXTENSION);
+        return BitmapFactory.decodeFile(seriesPostersFolder + FILE_SEPARATOR + series.id() + IMAGE_EXTENSION);
     }
 
     @Override
-    public Bitmap getEpisodeImage(int episodeId) {
+    public Bitmap getImageOf(Episode episode) {
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
-        return BitmapFactory.decodeFile(episodeImagesFolder + FILE_SEPARATOR + episodeId + IMAGE_EXTENSION);
+        return BitmapFactory.decodeFile(episodeImagesFolder + FILE_SEPARATOR + episode.id() + IMAGE_EXTENSION);
     }
 
     private void saveImageFile(Bitmap image, File file) {

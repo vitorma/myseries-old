@@ -24,6 +24,7 @@ package mobi.myseries.domain.repository;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
@@ -48,71 +49,79 @@ public class ImageCache implements ImageRepository {
     }
 
     private void loadPostersFromSourceRepository() {
-        for (Series s :this.seriesRepository.getAll()) {
-            this.seriesPosters.put(s.id(), this.sourceRepository.getSeriesPoster(s.id()));
+        for (Series series : this.seriesRepository.getAll()) {
+            this.seriesPosters.put(series.id(), this.sourceRepository.getPosterOf(series));
         }
     }
 
     @Override
-    public void saveSeriesPoster(int seriesId, Bitmap file) {
-        if (file == null && this.seriesPosters.get(seriesId) != null) {return;}
+    public void saveSeriesPoster(Series series, Bitmap file) {
+        Validate.isNonNull(series, "series");
 
-        this.seriesPosters.put(seriesId, file);
+        if (file == null && this.seriesPosters.get(series.id()) != null) {return;}
+
+        this.seriesPosters.put(series.id(), file);
 
         if (file == null) {return;}
 
-        this.threadExecutor.execute(this.saveSeriesPosterInSourceRepository(seriesId, file));
+        this.threadExecutor.execute(this.saveSeriesPosterInSourceRepository(series, file));
     }
 
-    private Runnable saveSeriesPosterInSourceRepository(final int seriesId, final Bitmap file) {
+    private Runnable saveSeriesPosterInSourceRepository(final Series series, final Bitmap file) {
         return new Runnable() {
             @Override
             public void run() {
-                ImageCache.this.sourceRepository.saveSeriesPoster(seriesId, file);
+                ImageCache.this.sourceRepository.saveSeriesPoster(series, file);
             }
         };
     }
 
     @Override
-    public void saveEpisodeImage(int episodeId, Bitmap file) {
+    public void saveEpisodeImage(Episode episode, Bitmap file) {
+        Validate.isNonNull(episode, "episode");
+
         if (file == null) {return;}
 
-        this.threadExecutor.execute(this.saveEpisodeImageInSourceRepository(episodeId, file));
+        this.threadExecutor.execute(this.saveEpisodeImageInSourceRepository(episode, file));
     }
 
-    private Runnable saveEpisodeImageInSourceRepository(final int episodeId, final Bitmap file) {
+    private Runnable saveEpisodeImageInSourceRepository(final Episode episode, final Bitmap file) {
         return new Runnable() {
             @Override
             public void run() {
-                ImageCache.this.sourceRepository.saveEpisodeImage(episodeId, file);
+                ImageCache.this.sourceRepository.saveEpisodeImage(episode, file);
             }
         };
     }
 
     @Override
-    public void deleteAllImagesOfSeries(int seriesId) {
-        if (this.seriesPosters.indexOfKey(seriesId) == -1) {return;}
+    public void deleteAllImagesOf(Series series) {
+        Validate.isNonNull(series, "series");
 
-        this.seriesPosters.remove(seriesId);
-        this.threadExecutor.execute(this.deleteAllImagesOfSeriesInSourceRepository(seriesId));
+        if (this.seriesPosters.indexOfKey(series.id()) == -1) {return;}
+
+        this.seriesPosters.remove(series.id());
+        this.threadExecutor.execute(this.deleteAllImagesOfSeriesInSourceRepository(series));
     }
 
-    private Runnable deleteAllImagesOfSeriesInSourceRepository(final int seriesId) {
+    private Runnable deleteAllImagesOfSeriesInSourceRepository(final Series series) {
         return new Runnable() {
             @Override
             public void run() {
-                ImageCache.this.sourceRepository.deleteAllImagesOfSeries(seriesId);
+                ImageCache.this.sourceRepository.deleteAllImagesOf(series);
             }
         };
     }
 
     @Override
-    public Bitmap getSeriesPoster(int seriesId) {
-        return this.seriesPosters.get(seriesId);
+    public Bitmap getPosterOf(Series series) {
+        Validate.isNonNull(series, "series");
+
+        return this.seriesPosters.get(series.id());
     }
 
     @Override
-    public Bitmap getEpisodeImage(int episodeId) {
-        return this.sourceRepository.getEpisodeImage(episodeId);
+    public Bitmap getImageOf(Episode episode) {
+        return this.sourceRepository.getImageOf(episode);
     }
 }
