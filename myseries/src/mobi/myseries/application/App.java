@@ -31,6 +31,8 @@ import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ImageDirectory;
 import android.app.Application;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 
 public class App extends Application {
@@ -71,8 +73,21 @@ public class App extends Application {
                 updateService);
     }
 
+    //TODO (Cleber) Turn this method private or delete it
     public static Environment environment() {
         return environment;
+    }
+
+    /* Use context() instead of environment().context() */
+
+    public static Context context() {
+        return environment.context();
+    }
+
+    /* Use resources() instead of environment().context().resources() */
+
+    public static Resources resources() {
+        return context().getResources();
     }
 
     public static ErrorService errorService(){
@@ -132,7 +147,6 @@ public class App extends Application {
     }
 
     /* SERIES */
-
 
     public static Series getSeries(int seriesId) {
         return environment.seriesProvider().getSeries(seriesId);
