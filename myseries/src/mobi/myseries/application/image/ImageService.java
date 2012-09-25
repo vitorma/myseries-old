@@ -25,6 +25,8 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ImageRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
+import mobi.myseries.domain.source.ImageNotFoundException;
 import mobi.myseries.domain.source.ImageSource;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
@@ -47,8 +49,6 @@ public final class ImageService {
         this.episodeImageDownloadListeners = new ListenerSet<EpisodeImageDownloadListener>();
     }
 
-    /* Current interface */
-
     public Bitmap getPosterOf(Series series) {
         return this.imageRepository.getPosterOf(series);
     }
@@ -62,139 +62,16 @@ public final class ImageService {
     }
 
     public void downloadPosterOf(Series series) {
-        new DownloadPosterTask(series).execute();
+        Validate.isNonNull(series, "series");
+
+        new SeriesPosterDownload(series).execute();
     }
 
     public void downloadImageOf(Episode episode) {
-        new DownloadEpisodeTask(episode).execute();
+        Validate.isNonNull(episode, "episode");
+
+        new EpisodeImageDownload(episode).execute();
     };
-
-    /* Download poster task */
-
-    private class DownloadPosterTask extends AsyncTask<Void, Void, Void> {
-        private Failure failure;
-        private Series series;
-
-        public DownloadPosterTask(Series series) {
-            super();
-            Validate.isNonNull(series, "series");
-
-            this.series = series;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            // TODO: improve the treatment of these exception
-            Bitmap fetchedPoster = null;
-
-            try {
-                fetchedPoster = ImageService.this.imageSource.fetchSeriesPoster(this.series.posterFileName());
-            } catch (ConnectionFailedException e) {
-                e.printStackTrace();
-                this.cancel(true);
-                this.failure = Failure.CONNECTION_FAILED;
-                return null;
-            } catch (Exception e) {
-                e.printStackTrace();
-                this.failure = Failure.UNKNOWN;
-            }
-
-            ImageService.this.imageRepository.saveSeriesPoster(this.series, fetchedPoster);
-
-            return null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            switch (this.failure) {
-                case CONNECTION_FAILED:
-                    break;
-                case EXTERNAL_STORAGE_UNAVAILABLE:
-                    break;
-                case IMAGE_IO:
-                    break;
-                case UNKNOWN:
-                    // TODO: PANIC!
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            ImageService.this.notifyListenersOfFinishDownloadingPosterOf(this.series);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            ImageService.this.notifyListenersOfStartDownloadingPosterOf(this.series);
-        }
-    }
-
-    /* Download episode image task */
-
-    private class DownloadEpisodeTask extends AsyncTask<Void, Void, Void> {
-        private Episode episode;
-        private Failure failure;
-
-        public DownloadEpisodeTask(Episode episode) {
-            Validate.isNonNull(episode, "episode");
-            this.episode = episode;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            // TODO: improve the treatment of these exceptions
-            Bitmap fetchedImage = null;
-
-            try {
-                fetchedImage = ImageService.this.imageSource.fetchEpisodeImage(this.episode.imageFileName());
-            } catch (ConnectionFailedException e) {
-                e.printStackTrace();
-                this.cancel(true);
-                this.failure = Failure.CONNECTION_FAILED;
-                return null;
-            } catch (Exception e) {
-                e.printStackTrace();
-                this.failure = Failure.UNKNOWN;
-            }
-
-            ImageService.this.imageRepository.saveEpisodeImage(this.episode, fetchedImage);
-
-            return null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            switch (this.failure) {
-                case CONNECTION_FAILED:
-                    break;
-                case EXTERNAL_STORAGE_UNAVAILABLE:
-                    break;
-                case IMAGE_IO:
-                    break;
-                case UNKNOWN:
-                    // TODO: PANIC!
-                    throw new RuntimeException();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            ImageService.this.notifyListenersOfFinishDownloadingImageOf(this.episode);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            ImageService.this.notifyListenersOfStartDownloadingImageOf(this.episode);
-        }
-    }
-
-    /* Failure (used by the tasks above) */
-
-    private enum Failure {
-        CONNECTION_FAILED, EXTERNAL_STORAGE_UNAVAILABLE, IMAGE_IO, UNKNOWN
-    }
-
-    /* Listeners */
 
     public boolean register(PosterDownloadListener listener) {
         return this.posterDownloadListeners.register(listener);
@@ -218,21 +95,95 @@ public final class ImageService {
         }
     }
 
-    public void notifyListenersOfFinishDownloadingImageOf(Episode episode) {
+    private void notifyListenersOfFinishDownloadingImageOf(Episode episode) {
         for (EpisodeImageDownloadListener listener : this.episodeImageDownloadListeners) {
             listener.onFinishDownloadingImageOf(episode);
         }
     }
 
-    public void notifyListenersOfStartDownloadingPosterOf(Series series) {
+    private void notifyListenersOfStartDownloadingPosterOf(Series series) {
         for (PosterDownloadListener listener : this.posterDownloadListeners) {
             listener.onStartDownloadingPosterOf(series);
         }
     }
 
-    public void notifyListenersOfStartDownloadingImageOf(Episode episode) {
+    private void notifyListenersOfStartDownloadingImageOf(Episode episode) {
         for (EpisodeImageDownloadListener l : this.episodeImageDownloadListeners) {
             l.onStartDownloadingImageOf(episode);
+        }
+    }
+
+    private class SeriesPosterDownload extends AsyncTask<Void, Void, Void> {
+        private Series series;
+
+        private SeriesPosterDownload(Series series) {
+            this.series = series;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            ImageService.this.notifyListenersOfStartDownloadingPosterOf(this.series);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Bitmap fetchedPoster = null;
+
+            try {
+                fetchedPoster = ImageService.this.imageSource.fetchSeriesPoster(this.series.posterFileName());
+            } catch (ConnectionFailedException e) {
+                return null;
+            } catch (ConnectionTimeoutException e) {
+                return null;
+            } catch (ImageNotFoundException e) {
+                return null;
+            }
+
+            ImageService.this.imageRepository.saveSeriesPoster(this.series, fetchedPoster);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            ImageService.this.notifyListenersOfFinishDownloadingPosterOf(this.series);
+        }
+    }
+
+    private class EpisodeImageDownload extends AsyncTask<Void, Void, Void> {
+        private Episode episode;
+
+        private EpisodeImageDownload(Episode episode) {
+            this.episode = episode;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            ImageService.this.notifyListenersOfStartDownloadingImageOf(this.episode);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Bitmap fetchedImage = null;
+
+            try {
+                fetchedImage = ImageService.this.imageSource.fetchEpisodeImage(this.episode.imageFileName());
+            } catch (ConnectionFailedException e) {
+                return null;
+            } catch (ConnectionTimeoutException e) {
+                return null;
+            } catch (ImageNotFoundException e) {
+                return null;
+            }
+
+            ImageService.this.imageRepository.saveEpisodeImage(this.episode, fetchedImage);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            ImageService.this.notifyListenersOfFinishDownloadingImageOf(this.episode);
         }
     }
 }
