@@ -29,7 +29,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.image.ImageService;
-import mobi.myseries.application.image.PosterDownloadListener;
+import mobi.myseries.application.image.SeriesPosterDownloadListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
@@ -51,7 +51,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener,
-SeriesFollowingListener, PosterDownloadListener {
+SeriesFollowingListener, SeriesPosterDownloadListener {
 
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageService IMAGE_PROVIDER = App.imageProvider();

@@ -23,7 +23,7 @@ package mobi.myseries.application.image;
 
 import mobi.myseries.domain.model.Series;
 
-public interface PosterDownloadListener {
+public interface SeriesPosterDownloadListener {
     void onStartDownloadingPosterOf(Series series);
     void onFinishDownloadingPosterOf(Series series);
 }

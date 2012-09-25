@@ -29,7 +29,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.image.ImageService;
-import mobi.myseries.application.image.PosterDownloadListener;
+import mobi.myseries.application.image.SeriesPosterDownloadListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
@@ -86,7 +86,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         }
     };
 
-    private PosterDownloadListener posterDownloadListener = new PosterDownloadListener() {
+    private SeriesPosterDownloadListener posterDownloadListener = new SeriesPosterDownloadListener() {
 
         @Override
         public void onStartDownloadingPosterOf(Series series) {}

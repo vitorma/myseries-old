@@ -36,7 +36,7 @@ import android.os.AsyncTask;
 public final class ImageService {
     private ImageRepository imageRepository;
     private ImageSource imageSource;
-    private ListenerSet<PosterDownloadListener> posterDownloadListeners;
+    private ListenerSet<SeriesPosterDownloadListener> posterDownloadListeners;
     private ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
 
     public ImageService(ImageSource imageSource, ImageRepository imageRepository) {
@@ -45,7 +45,7 @@ public final class ImageService {
 
         this.imageSource = imageSource;
         this.imageRepository = imageRepository;
-        this.posterDownloadListeners = new ListenerSet<PosterDownloadListener>();
+        this.posterDownloadListeners = new ListenerSet<SeriesPosterDownloadListener>();
         this.episodeImageDownloadListeners = new ListenerSet<EpisodeImageDownloadListener>();
     }
 
@@ -73,7 +73,7 @@ public final class ImageService {
         new EpisodeImageDownload(episode).execute();
     };
 
-    public boolean register(PosterDownloadListener listener) {
+    public boolean register(SeriesPosterDownloadListener listener) {
         return this.posterDownloadListeners.register(listener);
     }
 
@@ -81,7 +81,7 @@ public final class ImageService {
         return this.episodeImageDownloadListeners.register(listener);
     }
 
-    public boolean deregister(PosterDownloadListener listener) {
+    public boolean deregister(SeriesPosterDownloadListener listener) {
         return this.posterDownloadListeners.deregister(listener);
     }
 
@@ -90,7 +90,7 @@ public final class ImageService {
     }
 
     private void notifyListenersOfFinishDownloadingPosterOf(Series series) {
-        for (PosterDownloadListener listener : this.posterDownloadListeners) {
+        for (SeriesPosterDownloadListener listener : this.posterDownloadListeners) {
             listener.onFinishDownloadingPosterOf(series);
         }
     }
@@ -102,7 +102,7 @@ public final class ImageService {
     }
 
     private void notifyListenersOfStartDownloadingPosterOf(Series series) {
-        for (PosterDownloadListener listener : this.posterDownloadListeners) {
+        for (SeriesPosterDownloadListener listener : this.posterDownloadListeners) {
             listener.onStartDownloadingPosterOf(series);
         }
     }
