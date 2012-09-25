@@ -11,7 +11,6 @@ import mobi.myseries.gui.shared.Images;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.Objects;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +25,6 @@ import android.widget.TextView;
 public class EpisodeAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final ImageService IMAGE_PROVIDER = App.imageProvider();
-
-    private static final Resources RESOURCES = App.resources();
-    private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(RESOURCES);
     private static final int ITEM_LAYOUT = R.layout.episodes_item;
 
     private final EpisodeImageDownloadListener downloadListener = new EpisodeImageDownloadListener() {
@@ -41,23 +37,9 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
         }
 
         @Override
-        public void onDownloadImageOf(Episode episode) {
+        public void onFinishDownloadingImageOf(Episode episode) {
             if (episode.equals(EpisodeAdapter.this.episode)) {
                 EpisodeAdapter.this.loadEpisodeImage();
-            }
-        }
-
-        @Override
-        public void onFailureWhileSavingImageOf(Episode episode) {
-            if (episode.equals(EpisodeAdapter.this.episode)) {
-                EpisodeAdapter.this.setUpForUnavailableImage();
-            }
-        }
-
-        @Override
-        public void onConnectionFailureWhileDownloadingImageOf(Episode episode) {
-            if (episode.equals(EpisodeAdapter.this.episode)) {
-                EpisodeAdapter.this.setUpForUnavailableImage();
             }
         }
     };
@@ -167,22 +149,11 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
     }
 
     private void loadEpisodeImage() {
-        this.image = IMAGE_PROVIDER.getImageOf(this.episode);
+        Bitmap episodeImage = IMAGE_PROVIDER.getImageOf(this.episode);
+        Bitmap genericImage = Images.genericEpisodeImageFrom(App.resources());
+        this.image = Objects.nullSafe(episodeImage, genericImage);
 
-        if (this.image != null) {
-            this.setUpForAvailableImage();
-        } else {
-            this.setUpForUnavailableImage();
-        }
-    }
-
-    private void setUpForAvailableImage() {
         this.imageView.setImageBitmap(this.image);
-        this.finishedLoadingImage();
-    }
-
-    private void setUpForUnavailableImage() {
-        this.imageView.setImageBitmap(GENERIC_IMAGE);
         this.finishedLoadingImage();
     }
 

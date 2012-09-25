@@ -92,17 +92,11 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         public void onStartDownloadingPosterOf(Series series) {}
 
         @Override
-        public void onFailureWhileSavingPosterOf(Series series) {}
-
-        @Override
-        public void onDownloadPosterOf(Series series) {
+        public void onFinishDownloadingPosterOf(Series series) {
             if (SeriesCoverFlowFragment.this.getActivity() != null) {
                 SeriesCoverFlowFragment.this.reload();
             }
         }
-
-        @Override
-        public void onConnectionFailureWhileDownloadingPosterOf(Series series) {}
     };
 
     @Override

@@ -118,13 +118,10 @@ public final class ImageService {
         protected void onCancelled() {
             switch (this.failure) {
                 case CONNECTION_FAILED:
-                    ImageService.this.notifyListenersOfConnectionFailureWhileDownloadingPosterOf(this.series);
                     break;
                 case EXTERNAL_STORAGE_UNAVAILABLE:
-                    ImageService.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
                     break;
                 case IMAGE_IO:
-                    ImageService.this.notifyListenersOfFailureWhileSavingPosterOf(this.series);
                     break;
                 case UNKNOWN:
                     // TODO: PANIC!
@@ -179,14 +176,10 @@ public final class ImageService {
         protected void onCancelled() {
             switch (this.failure) {
                 case CONNECTION_FAILED:
-                    ImageService.this
-                            .notifyListenersOfConnectionFailureWhileDownloadingImageOf(this.episode);
                     break;
                 case EXTERNAL_STORAGE_UNAVAILABLE:
-                    ImageService.this.notifyListenersOfFailureWhileSavingImageOf(this.episode);
                     break;
                 case IMAGE_IO:
-                    ImageService.this.notifyListenersOfFailureWhileSavingImageOf(this.episode);
                     break;
                 case UNKNOWN:
                     // TODO: PANIC!
@@ -267,40 +260,15 @@ public final class ImageService {
         return false;
     }
 
-    public void notifyListenersOfConnectionFailureWhileDownloadingImageOf(Episode episode) {
-        for (EpisodeImageDownloadListener l : this.episodeImageDownloadListeners) {
-            l.onConnectionFailureWhileDownloadingImageOf(episode);
-        }
-    }
-
-    private void notifyListenersOfConnectionFailureWhileDownloadingPosterOf(Series series) {
-        for (PosterDownloadListener listener : this.posterDownloadListeners) {
-            listener.onConnectionFailureWhileDownloadingPosterOf(series);
-        }
-    }
-
     public void notifyListenersOfDownloadImageOf(Episode episode) {
         for (EpisodeImageDownloadListener listener : this.episodeImageDownloadListeners) {
-            listener.onDownloadImageOf(episode);
+            listener.onFinishDownloadingImageOf(episode);
         }
     }
 
     private void notifyListenersOfDownloadPosterOf(Series series) {
         for (PosterDownloadListener listener : this.posterDownloadListeners) {
-            listener.onDownloadPosterOf(series);
-        }
-    }
-
-    public void notifyListenersOfFailureWhileSavingImageOf(Episode episode) {
-        for (EpisodeImageDownloadListener l : this.episodeImageDownloadListeners) {
-            l.onFailureWhileSavingImageOf(episode);
-        }
-
-    }
-
-    private void notifyListenersOfFailureWhileSavingPosterOf(Series series) {
-        for (PosterDownloadListener listener : this.posterDownloadListeners) {
-            listener.onFailureWhileSavingPosterOf(series);
+            listener.onFinishDownloadingPosterOf(series);
         }
     }
 

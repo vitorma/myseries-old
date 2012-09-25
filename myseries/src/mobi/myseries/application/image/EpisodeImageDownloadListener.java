@@ -24,8 +24,6 @@ package mobi.myseries.application.image;
 import mobi.myseries.domain.model.Episode;
 
 public interface EpisodeImageDownloadListener {
-    public void onDownloadImageOf(Episode episode);
     public void onStartDownloadingImageOf(Episode episode);
-    public void onConnectionFailureWhileDownloadingImageOf(Episode episode);
-    public void onFailureWhileSavingImageOf(Episode episode);
+    public void onFinishDownloadingImageOf(Episode episode);
 }

@@ -223,16 +223,10 @@ SeriesFollowingListener, PosterDownloadListener {
      */
 
     @Override
-    public void onDownloadPosterOf(Series series) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
     public void onStartDownloadingPosterOf(Series series) {}
 
     @Override
-    public void onConnectionFailureWhileDownloadingPosterOf(Series series) {}
-
-    @Override
-    public void onFailureWhileSavingPosterOf(Series series) {}
+    public void onFinishDownloadingPosterOf(Series series) {
+        this.notifyDataSetChanged();
+    }
 }
