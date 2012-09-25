@@ -273,8 +273,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d(getClass().getName(), "update not necessary yet");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;
-        //TODO (Reul) Notify only on manual update
-        toastBuilder().setMessage(R.string.up_to_date_message).build().show();
     }
 
     //Search------------------------------------------------------------------------------------------------------------
