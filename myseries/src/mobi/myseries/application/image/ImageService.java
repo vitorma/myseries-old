@@ -57,14 +57,6 @@ public final class ImageService {
         return this.imageRepository.getImageOf(episode);
     }
 
-    public void saveSeriesPoster(Series series, Bitmap poster) {
-        this.imageRepository.saveSeriesPoster(series, poster);
-    }
-
-    public void saveEpisodeImage(Episode episode, Bitmap poster) {
-        this.imageRepository.saveEpisodeImage(episode, poster);
-    }
-
     public void removeAllImagesOf(Series series) {
         this.imageRepository.deleteAllImagesOf(series);
     }
