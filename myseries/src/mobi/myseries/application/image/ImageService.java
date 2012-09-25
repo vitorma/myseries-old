@@ -21,14 +21,12 @@
 
 package mobi.myseries.application.image;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.ImageRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ImageSource;
+import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -36,8 +34,8 @@ import android.os.AsyncTask;
 public final class ImageService {
     private ImageRepository imageRepository;
     private ImageSource imageSource;
-    private List<PosterDownloadListener> posterDownloadListeners;
-    private List<EpisodeImageDownloadListener> episodeImageDownloadListeners;
+    private ListenerSet<PosterDownloadListener> posterDownloadListeners;
+    private ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
 
     public ImageService(ImageSource imageSource, ImageRepository imageRepository) {
         Validate.isNonNull(imageSource, "imageSource");
@@ -45,8 +43,8 @@ public final class ImageService {
 
         this.imageSource = imageSource;
         this.imageRepository = imageRepository;
-        this.posterDownloadListeners = new LinkedList<PosterDownloadListener>();
-        this.episodeImageDownloadListeners = new LinkedList<EpisodeImageDownloadListener>();
+        this.posterDownloadListeners = new ListenerSet<PosterDownloadListener>();
+        this.episodeImageDownloadListeners = new ListenerSet<EpisodeImageDownloadListener>();
     }
 
     /* Current interface */
@@ -130,7 +128,7 @@ public final class ImageService {
 
         @Override
         protected void onPostExecute(Void result) {
-            ImageService.this.notifyListenersOfDownloadPosterOf(this.series);
+            ImageService.this.notifyListenersOfFinishDownloadingPosterOf(this.series);
         }
 
         @Override
@@ -189,7 +187,7 @@ public final class ImageService {
 
         @Override
         protected void onPostExecute(Void result) {
-            ImageService.this.notifyListenersOfDownloadImageOf(this.episode);
+            ImageService.this.notifyListenersOfFinishDownloadingImageOf(this.episode);
         }
 
         @Override
@@ -206,81 +204,43 @@ public final class ImageService {
 
     /* Listeners */
 
-    // TODO (Cleber) Check if currently all these notifications are being used:
-    // if true, use ListenerSet
-    // if false, remove those unused
-
     public boolean register(PosterDownloadListener listener) {
-        Validate.isNonNull(listener, "listener");
-
-        for (PosterDownloadListener l : this.posterDownloadListeners) {
-            if (l == listener) {
-                return false;
-            }
-        }
-
-        return this.posterDownloadListeners.add(listener);
+        return this.posterDownloadListeners.register(listener);
     }
 
     public boolean register(EpisodeImageDownloadListener listener) {
-        Validate.isNonNull(listener, "listener");
-
-        for (EpisodeImageDownloadListener l : this.episodeImageDownloadListeners) {
-            if (l == listener) {
-                return false;
-            }
-        }
-
-        return this.episodeImageDownloadListeners.add(listener);
+        return this.episodeImageDownloadListeners.register(listener);
     }
 
     public boolean deregister(PosterDownloadListener listener) {
-        Validate.isNonNull(listener, "listener");
-
-        for (int i = 0; i < this.posterDownloadListeners.size(); ++i) {
-            if (this.posterDownloadListeners.get(i) == listener) {
-                this.posterDownloadListeners.remove(i);
-                return true;
-            }
-        }
-
-        return false;
+        return this.posterDownloadListeners.deregister(listener);
     }
 
     public boolean deregister(EpisodeImageDownloadListener listener) {
-        Validate.isNonNull(listener, "listener");
-
-        for (int i = 0; i < this.episodeImageDownloadListeners.size(); ++i) {
-            if (this.episodeImageDownloadListeners.get(i) == listener) {
-                this.episodeImageDownloadListeners.remove(i);
-                return true;
-            }
-        }
-
-        return false;
+        return this.episodeImageDownloadListeners.deregister(listener);
     }
 
-    public void notifyListenersOfDownloadImageOf(Episode episode) {
-        for (EpisodeImageDownloadListener listener : this.episodeImageDownloadListeners) {
-            listener.onFinishDownloadingImageOf(episode);
-        }
-    }
-
-    private void notifyListenersOfDownloadPosterOf(Series series) {
+    private void notifyListenersOfFinishDownloadingPosterOf(Series series) {
         for (PosterDownloadListener listener : this.posterDownloadListeners) {
             listener.onFinishDownloadingPosterOf(series);
         }
     }
 
-    public void notifyListenersOfStartDownloadingImageOf(Episode episode) {
-        for (EpisodeImageDownloadListener l : this.episodeImageDownloadListeners) {
-            l.onStartDownloadingImageOf(episode);
+    public void notifyListenersOfFinishDownloadingImageOf(Episode episode) {
+        for (EpisodeImageDownloadListener listener : this.episodeImageDownloadListeners) {
+            listener.onFinishDownloadingImageOf(episode);
         }
     }
 
     public void notifyListenersOfStartDownloadingPosterOf(Series series) {
         for (PosterDownloadListener listener : this.posterDownloadListeners) {
             listener.onStartDownloadingPosterOf(series);
+        }
+    }
+
+    public void notifyListenersOfStartDownloadingImageOf(Episode episode) {
+        for (EpisodeImageDownloadListener l : this.episodeImageDownloadListeners) {
+            l.onStartDownloadingImageOf(episode);
         }
     }
 }
