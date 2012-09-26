@@ -63,14 +63,15 @@ public class UpdateService {
             }
 
             @Override
-            public void onUpdateFailure() {
-                updateRunning = false;
-            }
-
-            @Override
             public void onUpdateNotNecessary() {
                 // I don't care.
             }
+
+            @Override
+            public void onUpdateFailure(Exception e) {
+                	updateRunning = false;
+
+			}
         });
     }
 
@@ -194,9 +195,10 @@ public class UpdateService {
                 @Override
                 protected void onPostExecute(AsyncTaskResult<UpdateResult> result) {
                     if (result.error() != null) {
-                        errorService.notifyError(result.error());
+                    	for (UpdateListener listener : updateListeners) {
+                            listener.onUpdateFailure(result.error());
+                        }
                     }
-
                     if (UpdateResult.SUCCESS.equals(result.result())) {
                         for (UpdateListener listener : updateListeners) {
                             listener.onUpdateSuccess();
@@ -204,10 +206,6 @@ public class UpdateService {
                     } else if (UpdateResult.NO_UPDATES_AVAILABLE.equals(result.result())) {
                         for (UpdateListener listener : updateListeners) {
                             listener.onUpdateNotNecessary();
-                        }
-                    } else {
-                        for (UpdateListener listener : updateListeners) {
-                            listener.onUpdateFailure();
                         }
                     }
                 }

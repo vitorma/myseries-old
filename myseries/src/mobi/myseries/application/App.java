@@ -41,6 +41,7 @@ public class App extends Application {
     private static UpdateService updateService;
     private static ErrorService errorService;
     private static ImageService imageProvider;
+	private static MessageService messageService;
 
     @Override
     public void onCreate() {
@@ -69,6 +70,7 @@ public class App extends Application {
                 environment.repository(),
                 followSeriesService,
                 updateService);
+        messageService = new MessageService();
     }
 
     //TODO (Cleber) Turn this method private or delete it
@@ -166,5 +168,9 @@ public class App extends Application {
 
     public static DateFormat dateFormat() {
         return environment.localization().dateFormat();
+    }
+    
+    public static MessageService messageService() {
+    	return messageService;
     }
 }

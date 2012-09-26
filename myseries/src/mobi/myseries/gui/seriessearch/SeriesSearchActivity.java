@@ -21,16 +21,11 @@
 
 package mobi.myseries.gui.seriessearch;
 
-import java.util.Collection;
 import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.ErrorServiceListener;
-import mobi.myseries.application.FollowSeriesException;
-import mobi.myseries.application.FollowSeriesServiceListener;
 import mobi.myseries.application.SearchSeriesListener;
-import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesSearchException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -41,10 +36,10 @@ import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
+import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -63,8 +58,7 @@ import com.actionbarsherlock.view.Window;
 public class SeriesSearchActivity extends  SherlockListActivity {
     private StateHolder state;
     private SearchSeriesListener listener;
-    private ErrorServiceListener errorListener;
-    private SeriesFollowingListener seriesListener;
+    private MessageLauncher messageLauncher;
 
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
@@ -82,8 +76,6 @@ public class SeriesSearchActivity extends  SherlockListActivity {
         this.setupSearchButtonClickListener();
         this.setupItemClickListener();
         this.setupSearchFieldActionListeners();
-        this.setupErrorServiceListener();
-        this.setupSeriesFollowingListener();
 
         Object retained = getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
@@ -91,42 +83,17 @@ public class SeriesSearchActivity extends  SherlockListActivity {
             loadState();
         } else {
             state = new StateHolder();
+            this.setupMessageLauncher();
         }
     }
 
-    private void setupErrorServiceListener() {
-        this.errorListener = new ErrorServiceListener() {
-
-            @Override
-            public void onError(Exception e) {
-                if (e instanceof FollowSeriesException) {
-                    FollowSeriesException followException = ((FollowSeriesException) e);
-                    Series series = followException.series();
-                    FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(
-                                                         SeriesSearchActivity.this);
-                    dialogBuilder.setTitle(R.string.add_failed_title);
-                    if (followException.getCause() instanceof ConnectionFailedException) {
-                        dialogBuilder.setMessage(String.format(SeriesSearchActivity.this
-                        .getString(R.string.add_connection_failed_message), series.name()));
-
-                    } else if (followException.getCause() instanceof SeriesNotFoundException) {
-                        dialogBuilder.setMessage(String.format(SeriesSearchActivity.this
-                        .getString(R.string.add_series_not_found), series.name()));
-
-                    } else if (followException.getCause() instanceof ParsingFailedException) {
-                        dialogBuilder.setMessage(String.format(SeriesSearchActivity.this
-                        .getString(R.string.parsing_failed_message), series.name()));
-                    }
-                    Dialog dialog = dialogBuilder.build();
-                    dialog.show();
-                    state.dialog = dialog;
-                }
-            }
-        };
-        App.errorService().registerListener(errorListener);
-    }
+    private void setupMessageLauncher() {
+		this.messageLauncher = new MessageLauncher(this);
+		state.messageLauncher = this.messageLauncher;
+	}
 
     private void loadState() {
+    	this.messageLauncher = state.messageLauncher;
 
         if (state.isSearching) {
             if (App.getLastValidSearchResult() != null) {
@@ -138,9 +105,11 @@ public class SeriesSearchActivity extends  SherlockListActivity {
         } else {
             if (state.seriesFound != null)
                 setupListOnAdapter(state.seriesFound);
-
-            if (state.isShowingDialog)
-                state.dialog.show();
+            
+            if (this.state.isShowingDialog){
+                	this.state.dialog.show();
+                }
+            this.state.messageLauncher.loadState();
         }
     }
 
@@ -151,16 +120,16 @@ public class SeriesSearchActivity extends  SherlockListActivity {
 
     @Override
     protected void onStop() {
-        super.onStop();
+    	super.onStop();
+        state.messageLauncher.onStop();
         App.deregisterSearchSeriesListener(listener);
-        App.errorService().deregisterListener(errorListener);
         if (state.dialog != null && state.dialog.isShowing()) {
-            state.dialog.dismiss();
-            state.isShowingDialog = true;
+        	state.isShowingDialog = true;
+        	state.dialog.dismiss();
         } else {
-            state.isShowingDialog = false;
+        	state.isSearching = false;
         }
-
+        
     }
 
     @Override
@@ -341,10 +310,6 @@ public class SeriesSearchActivity extends  SherlockListActivity {
                                     App.stopFollowing(selectedItem);
                                 } else {
                                     App.follow(selectedItem);
-                                    String toastMessage = String.format(App.environment().context()
-                                            .getString(R.string.follow_toast_message_format), selectedItem.name());
-
-                                    showToastWith(toastMessage);
                                 }
                                 dialog.dismiss();
                             }
@@ -366,40 +331,13 @@ public class SeriesSearchActivity extends  SherlockListActivity {
         super.onWindowFocusChanged(hasFocus);
         this.onSearchRequested();
     }
-    
-    private void setupSeriesFollowingListener(){
-    	this.seriesListener = new SeriesFollowingListener() {
-			
-			@Override
-			public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onStopFollowing(Series unfollowedSeries) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onFollowing(Series followedSeries) {
-				Log.d("adding series", "showing the success toast");
-				String toastMessage = String.format(App.environment().context()
-    	                .getString(R.string.add_success), followedSeries.name());
-    			showToastWith(toastMessage);
-				
-			}
-		}; 
-		
-		App.followSeriesService().registerSeriesFollowingListener(this.seriesListener);
-    }
 
     private static class StateHolder {
         public boolean isSearching;
         Dialog dialog;
         boolean isShowingDialog;
         List<Series> seriesFound;
+        MessageLauncher messageLauncher;
 
         public StateHolder() {
         }

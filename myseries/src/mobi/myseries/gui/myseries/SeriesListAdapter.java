@@ -229,4 +229,10 @@ SeriesFollowingListener, SeriesPosterDownloadListener {
     public void onFinishDownloadingPosterOf(Series series) {
         this.notifyDataSetChanged();
     }
+
+	@Override
+	public void onFollowingStart(Series seriesToFollow) {}
+
+	@Override
+	public void onFollowingFailure(Series series, Exception e) {}
 }

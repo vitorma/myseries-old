@@ -114,11 +114,24 @@ public class FollowSeriesService {
         this.seriesFollowingListeners.register(listener);
     }
 
+    private void notifyListenersOfStartingToFollowSeries(
+			Series seriesToFollow) {
+    	for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
+            listener.onFollowingStart(seriesToFollow);
+        }
+	}
     private void notifyListenersOfFollowedSeries(Series followedSeries) {
         for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
             listener.onFollowing(followedSeries);
         }
     }
+
+    private void notifyListenersOfFollowingError(Series series, Exception e) {
+        for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
+            listener.onFollowingFailure(series, e);
+        }
+    }
+    
 
     private void notifyListenersOfUnfollowedSeries(Series unfollowedSeries) {
         for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
@@ -148,7 +161,11 @@ public class FollowSeriesService {
             this.failed = false;
         }
 
-        protected void afterFollowingActions() {
+        protected void beforeFollowingActions(Series seriesToFollow) {
+        	notifyListenersOfStartingToFollowSeries(seriesToFollow);
+        }
+
+		protected void afterFollowingActions() {
             if (!failed) {
                 notifyListenersOfFollowedSeries(this.followedSeries);
                 imageProvider.downloadPosterOf(this.followedSeries); //TODO: move me elsewhere
@@ -171,28 +188,25 @@ public class FollowSeriesService {
             this.series = series;
             this.errorService = errorService;
         }
-
+        
+        @Override
+        protected void onPreExecute() {
+        	seriesFollower.beforeFollowingActions(series);
+        }
         @Override
         protected AsyncTaskResult<Series> doInBackground(Series... params) {
             try {
                 seriesFollower.followSeries(series);
-            } catch (SeriesNotFoundException e) {
-                return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
-            } catch (ConnectionFailedException e) {
-                return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
-            } catch (ParsingFailedException e) {
-                return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
-            } catch (ConnectionTimeoutException e) {
-                return new AsyncTaskResult<Series>(new FollowSeriesException(e, series));
+            } catch (Exception e) {
+                return new AsyncTaskResult<Series>(e);
             }
-
             return new AsyncTaskResult<Series>(series);
         }
 
         @Override
         protected void onPostExecute(AsyncTaskResult<Series> result) {
             if(result.error() != null){
-                errorService.notifyError(result.error());
+                notifyListenersOfFollowingError(series, result.error());
             }
 
             seriesFollower.afterFollowingActions();
@@ -204,16 +218,9 @@ public class FollowSeriesService {
         public void follow(final Series series) {
             try {
                 followSeries(series);
-            } catch (SeriesNotFoundException e) {
-                errorService.notifyError(new FollowSeriesException(e, series));
-            } catch (ConnectionFailedException e) {
-                errorService.notifyError(new FollowSeriesException(e, series));
-            } catch (ParsingFailedException e) {
-                errorService.notifyError(new FollowSeriesException(e, series));
-            } catch (ConnectionTimeoutException e) {
-                errorService.notifyError(new FollowSeriesException(e, series));
+            } catch (Exception e) {
+                notifyListenersOfFollowingError(series, e);
             }
-
             afterFollowingActions();
         };
     }

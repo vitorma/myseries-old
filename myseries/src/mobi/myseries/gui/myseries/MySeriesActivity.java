@@ -253,7 +253,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     }
 
     @Override
-    public void onUpdateFailure() {
+    public void onUpdateFailure(Exception e) {
         Log.d(getClass().getName(), "update failure");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;

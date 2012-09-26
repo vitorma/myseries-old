@@ -29,4 +29,6 @@ public interface SeriesFollowingListener {
     public void onFollowing(Series followedSeries);
     public void onStopFollowing(Series unfollowedSeries);
     public void onStopFollowingAll(Collection<Series> allUnfollowedSeries);
+	public void onFollowingStart(Series seriesToFollow);
+	public void onFollowingFailure(Series series, Exception e);
 }

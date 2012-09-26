@@ -84,6 +84,12 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
                 SeriesCoverFlowFragment.this.reload();
             }
         }
+
+		@Override
+		public void onFollowingStart(Series seriesToFollow) {}
+
+		@Override
+		public void onFollowingFailure(Series series, Exception e) {}
     };
 
     private SeriesPosterDownloadListener posterDownloadListener = new SeriesPosterDownloadListener() {

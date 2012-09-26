@@ -26,7 +26,7 @@ public interface UpdateListener {
 
     void onUpdateNotNecessary();
 
-    void onUpdateFailure();
-
     void onUpdateSuccess();
+
+	void onUpdateFailure(Exception e);
 }
