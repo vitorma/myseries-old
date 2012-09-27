@@ -29,6 +29,7 @@ import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ImageNotFoundException;
 import mobi.myseries.domain.source.ImageSource;
 import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -64,11 +65,15 @@ public final class ImageService {
     public void downloadPosterOf(Series series) {
         Validate.isNonNull(series, "series");
 
+        if (Strings.isNullOrBlank(series.posterFileName())) {return;}
+
         new SeriesPosterDownload(series).execute();
     }
 
     public void downloadImageOf(Episode episode) {
         Validate.isNonNull(episode, "episode");
+
+        if (Strings.isNullOrBlank(episode.imageFileName())) {return;}
 
         new EpisodeImageDownload(episode).execute();
     };
