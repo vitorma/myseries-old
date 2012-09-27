@@ -34,6 +34,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.support.v4.util.LruCache;
 
 public class ImageDirectory implements ImageRepository {
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -43,12 +44,34 @@ public class ImageDirectory implements ImageRepository {
     private static final String SERIES_POSTERS = "series_posters";
     private static final String EPISODE_IMAGES = "episode_images";
 
+    private class EpisodeImagesQueue extends LruCache<Integer, Integer> {
+        private static final int KiB = 1024;
+        private static final int MiB = 1024 * KiB;
+        private static final int EPISODE_IMAGE_SIZE = 14 * KiB;  // the approximate size of an episode image
+        private static final int CACHE_SIZE = 1 * MiB;
+        private static final int NUMBER_OF_CACHE_ENTRIES = 3; //CACHE_SIZE / EPISODE_IMAGE_SIZE;
+
+        public EpisodeImagesQueue() {
+            super(NUMBER_OF_CACHE_ENTRIES);
+        }
+
+        @Override
+        protected void entryRemoved(boolean evicted, Integer key, Integer oldValue, Integer newValue) {
+            if (evicted) {
+                ImageDirectory.this.deleteEpisodeImage(key);
+            }
+        }
+    }
+
+    private EpisodeImagesQueue episodeImagesQueue;
+
     private Context context;
 
     public ImageDirectory(Context context) {
         Validate.isNonNull(context, "context");
 
         this.context = context;
+        this.episodeImagesQueue = new EpisodeImagesQueue();
     }
 
     @Override
@@ -102,6 +125,7 @@ public class ImageDirectory implements ImageRepository {
         File episodeImage = new File(episodeImagesFolder, episodeId + IMAGE_EXTENSION);
 
         episodeImage.delete();
+        this.episodeImagesQueue.remove(episodeId);
     }
 
     @Override
@@ -123,7 +147,15 @@ public class ImageDirectory implements ImageRepository {
 
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
 
-        return BitmapFactory.decodeFile(episodeImagesFolder + FILE_SEPARATOR + episode.id() + IMAGE_EXTENSION);
+        Bitmap episodeImage = BitmapFactory.decodeFile(
+                episodeImagesFolder + FILE_SEPARATOR + episode.id() + IMAGE_EXTENSION);
+
+        if (episodeImage != null) {  // to avoid putting in the queue episodes without images and whose images cannot be
+                                     // opened.
+            this.episodeImagesQueue.put(episode.id(), episode.id());
+        }
+
+        return episodeImage;
     }
 
     private void saveImageFile(Bitmap image, File file) {
