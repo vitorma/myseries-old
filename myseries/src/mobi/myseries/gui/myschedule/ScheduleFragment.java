@@ -47,7 +47,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public abstract class ScheduleFragment extends SherlockListFragment {
+public abstract class ScheduleFragment extends SherlockListFragment implements ScheduleAdapter.LoadingListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final Context APPLICATION_CONTEXT = App.environment().context();
 
@@ -239,5 +239,20 @@ public abstract class ScheduleFragment extends SherlockListFragment {
         public UpcomingFragment() {
             super(ScheduleMode.UPCOMING);
         }
+    }
+
+    @Override
+    public void onStartLoading() {
+        this.setListShown(false);
+    }
+
+    @Override
+    public void onFinishLoading() {
+        this.setListShown(true);
+    }
+
+    public void setListAdapter(ScheduleAdapter adapter) {
+        super.setListAdapter(adapter);
+        adapter.register(this);
     }
 }
