@@ -36,6 +36,10 @@ public abstract class Strings {
         return Strings.isEmpty(string.trim());
     }
 
+    public static boolean isNullOrBlank(String string) {
+        return string == null || isBlank(string);
+    }
+
     public static String normalizePipeSeparated(String string) {
         Validate.isNonNull(string, "string");
 

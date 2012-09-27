@@ -24,7 +24,8 @@ import android.widget.TextView;
 
 public class EpisodeAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageService IMAGE_PROVIDER = App.imageProvider();
+    private static final ImageService IMAGE_SERVICE = App.imageProvider();
+    private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
     private static final int ITEM_LAYOUT = R.layout.episodes_item;
 
     private final EpisodeImageDownloadListener downloadListener = new EpisodeImageDownloadListener() {
@@ -86,7 +87,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
 
         this.layoutInflater = LayoutInflater.from(context);
 
-        IMAGE_PROVIDER.register(this.downloadListener);
+        IMAGE_SERVICE.register(this.downloadListener);
         e.register(this.seenMarkListener);
     }
 
@@ -122,7 +123,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
         this.loadEpisodeImage();
 
         if (this.image == null) {
-            IMAGE_PROVIDER.downloadImageOf(this.episode);
+            IMAGE_SERVICE.downloadImageOf(this.episode);
         }
 
         this.isViewed.setOnClickListener(new OnClickListener() {
@@ -149,11 +150,9 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
     }
 
     private void loadEpisodeImage() {
-        Bitmap episodeImage = IMAGE_PROVIDER.getImageOf(this.episode);
-        Bitmap genericImage = Images.genericEpisodeImageFrom(App.resources());
-        this.image = Objects.nullSafe(episodeImage, genericImage);
+        this.image = IMAGE_SERVICE.getImageOf(this.episode);
 
-        this.imageView.setImageBitmap(this.image);
+        this.imageView.setImageBitmap(Objects.nullSafe(this.image, GENERIC_IMAGE));
         this.finishedLoadingImage();
     }
 

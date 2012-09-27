@@ -83,7 +83,7 @@ public class FollowSeriesService {
     public void stopFollowing(Series series) {
         this.seriesRepository.delete(series);
 
-        //TODO (Cleber) Remove, asynchronously, the images related to the unfollowed series.
+        this.imageProvider.removeAllImagesOf(series);
 
         this.notifyListenersOfUnfollowedSeries(series);
     }
@@ -91,7 +91,9 @@ public class FollowSeriesService {
     public void stopFollowingAll(Collection<Series> seriesCollection) {
         this.seriesRepository.deleteAll(seriesCollection);
 
-        //TODO (Cleber) Remove, asynchronously, the images related to all the unfollowed series.
+        for (Series series : seriesCollection) {
+            this.imageProvider.removeAllImagesOf(series);
+        }
 
         this.notifyListenersOfUnfollowedSeries(seriesCollection);
     }
@@ -114,12 +116,12 @@ public class FollowSeriesService {
         this.seriesFollowingListeners.register(listener);
     }
 
-    private void notifyListenersOfStartingToFollowSeries(
-			Series seriesToFollow) {
-    	for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
+    private void notifyListenersOfStartingToFollowSeries(Series seriesToFollow) {
+        for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
             listener.onFollowingStart(seriesToFollow);
         }
-	}
+    }
+
     private void notifyListenersOfFollowedSeries(Series followedSeries) {
         for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
             listener.onFollowing(followedSeries);
@@ -131,7 +133,6 @@ public class FollowSeriesService {
             listener.onFollowingFailure(series, e);
         }
     }
-    
 
     private void notifyListenersOfUnfollowedSeries(Series unfollowedSeries) {
         for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
@@ -152,23 +153,29 @@ public class FollowSeriesService {
 
         private boolean failed;
 
-        protected void followSeries(Series seriesToFollow) throws ParsingFailedException, ConnectionFailedException, SeriesNotFoundException, ConnectionTimeoutException {
+        protected void followSeries(Series seriesToFollow) throws ParsingFailedException, ConnectionFailedException,
+                SeriesNotFoundException, ConnectionTimeoutException {
             this.failed = true;
 
-            this.followedSeries = seriesSource.fetchSeries(seriesToFollow.id(), localizationProvider.language());
-            seriesRepository.insert(this.followedSeries);
+            this.followedSeries =
+                    FollowSeriesService.this.seriesSource.fetchSeries(seriesToFollow.id(), FollowSeriesService.this.localizationProvider
+                            .language());
+            FollowSeriesService.this.seriesRepository.insert(this.followedSeries);
 
             this.failed = false;
         }
 
         protected void beforeFollowingActions(Series seriesToFollow) {
-        	notifyListenersOfStartingToFollowSeries(seriesToFollow);
+            FollowSeriesService.this.notifyListenersOfStartingToFollowSeries(seriesToFollow);
         }
 
-		protected void afterFollowingActions() {
-            if (!failed) {
-                notifyListenersOfFollowedSeries(this.followedSeries);
-                imageProvider.downloadPosterOf(this.followedSeries); //TODO: move me elsewhere
+        protected void afterFollowingActions() {
+            if (!this.failed) {
+                FollowSeriesService.this.notifyListenersOfFollowedSeries(this.followedSeries);
+                FollowSeriesService.this.imageProvider.downloadPosterOf(this.followedSeries); // TODO:
+                                                                                              // move
+                                                                                              // me
+                                                                                              // elsewhere
             }
         }
     }
@@ -176,7 +183,7 @@ public class FollowSeriesService {
     private class AsynchronousFollower extends SeriesFollower {
         @Override
         public void follow(final Series series) {
-            new FollowSeriesTask(series, errorService).execute();
+            new FollowSeriesTask(series, FollowSeriesService.this.errorService).execute();
         };
     }
 
@@ -188,28 +195,29 @@ public class FollowSeriesService {
             this.series = series;
             this.errorService = errorService;
         }
-        
+
         @Override
         protected void onPreExecute() {
-        	seriesFollower.beforeFollowingActions(series);
+            FollowSeriesService.this.seriesFollower.beforeFollowingActions(this.series);
         }
+
         @Override
         protected AsyncTaskResult<Series> doInBackground(Series... params) {
             try {
-                seriesFollower.followSeries(series);
+                FollowSeriesService.this.seriesFollower.followSeries(this.series);
             } catch (Exception e) {
                 return new AsyncTaskResult<Series>(e);
             }
-            return new AsyncTaskResult<Series>(series);
+            return new AsyncTaskResult<Series>(this.series);
         }
 
         @Override
         protected void onPostExecute(AsyncTaskResult<Series> result) {
-            if(result.error() != null){
-                notifyListenersOfFollowingError(series, result.error());
+            if (result.error() != null) {
+                FollowSeriesService.this.notifyListenersOfFollowingError(this.series, result.error());
             }
 
-            seriesFollower.afterFollowingActions();
+            FollowSeriesService.this.seriesFollower.afterFollowingActions();
         }
     }
 
@@ -217,11 +225,11 @@ public class FollowSeriesService {
         @Override
         public void follow(final Series series) {
             try {
-                followSeries(series);
+                this.followSeries(series);
             } catch (Exception e) {
-                notifyListenersOfFollowingError(series, e);
+                FollowSeriesService.this.notifyListenersOfFollowingError(series, e);
             }
-            afterFollowingActions();
+            this.afterFollowingActions();
         };
     }
 }

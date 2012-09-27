@@ -83,21 +83,25 @@ public class ImageDirectory implements ImageRepository {
 
         if(!this.isExternalStorageAvaliable()) {return;}
 
-        //FIXME Remove episodes
-        File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
-        File poster = new File(seriesPostersFolder, series.id() + IMAGE_EXTENSION);
+        this.deleteSeriesPoster(series.id());
 
-        if (!poster.delete()) {
-            throw new ImageIoException("write", poster.toString());
+        for (Episode e : series.episodes()) {
+            this.deleteEpisodeImage(e.id());
         }
+    }
+
+    private void deleteSeriesPoster(int seriesId) {
+        File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
+        File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
+
+        poster.delete();
     }
 
     private void deleteEpisodeImage(int episodeId) {
         File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
         File episodeImage = new File(episodeImagesFolder, episodeId + IMAGE_EXTENSION);
-        if (!episodeImage.delete()) {
-            throw new ImageIoException("delete", episodeImage.toString());
-        }
+
+        episodeImage.delete();
     }
 
     @Override
@@ -107,6 +111,7 @@ public class ImageDirectory implements ImageRepository {
         if(!this.isExternalStorageAvaliable()) {return null;}
 
         File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
+
         return BitmapFactory.decodeFile(seriesPostersFolder + FILE_SEPARATOR + series.id() + IMAGE_EXTENSION);
     }
 
@@ -122,9 +127,8 @@ public class ImageDirectory implements ImageRepository {
     }
 
     private void saveImageFile(Bitmap image, File file) {
-        FileOutputStream os;
         try {
-            os = new FileOutputStream(file);
+            FileOutputStream os = new FileOutputStream(file);
             image.compress(IMAGE_FORMAT, COMPRESS_QUALITY, os);
             os.close();
         } catch (IOException e) {
