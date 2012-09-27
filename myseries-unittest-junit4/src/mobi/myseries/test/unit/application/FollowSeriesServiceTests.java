@@ -51,6 +51,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.internal.verification.Times;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -152,15 +153,16 @@ public class FollowSeriesServiceTests {
                                                           ConnectionFailedException,
                                                           SeriesNotFoundException, 
                                                           ConnectionTimeoutException {
+    	Exception seriesNotFound = new SeriesNotFoundException();
         when(this.seriesSource.fetchSeries(anyInt(), anyString()))
-            .thenThrow(new SeriesNotFoundException());
+            .thenThrow(seriesNotFound);
 
         Series seriesToBeFollowed = mock(Series.class);
 
         this.followSeriesService.follow(seriesToBeFollowed);
         assertThat(this.followSeriesService.follows(seriesToBeFollowed), is(false));
 
-        verifyZeroInteractions(this.seriesFollowingListener);
+        verify(this.seriesFollowingListener, only()).onFollowingFailure(seriesToBeFollowed, seriesNotFound);
     }
 
     @Test
@@ -169,10 +171,11 @@ public class FollowSeriesServiceTests {
                                                                       SeriesNotFoundException, 
                                                                       ConnectionTimeoutException {
         Series seriesToBeFollowed = mock(Series.class);
+        Exception seriesNotFound = new SeriesNotFoundException();
 
         when(this.seriesSource.fetchSeries(anyInt(), anyString()))
             .thenReturn(seriesToBeFollowed)
-            .thenThrow(new SeriesNotFoundException());
+            .thenThrow(seriesNotFound);
 
         Series seriesToBeFollowed2 = mock(Series.class);
 
@@ -181,7 +184,8 @@ public class FollowSeriesServiceTests {
 
         assertThat(this.followSeriesService.follows(seriesToBeFollowed2), is(false));
 
-        verify(this.seriesFollowingListener, only()).onFollowing(seriesToBeFollowed);
+        verify(this.seriesFollowingListener, new Times(1)).onFollowingFailure(seriesToBeFollowed2, seriesNotFound);
+        verify(this.seriesFollowingListener, new Times(1)).onFollowing(seriesToBeFollowed);
     }
 
     @Test
