@@ -21,67 +21,68 @@
 
 package mobi.myseries.domain.repository;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
-import android.os.Environment;
+import android.support.v4.util.LruCache;
 
 public class ImageDirectory implements ImageRepository {
-    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final CompressFormat IMAGE_FORMAT = CompressFormat.JPEG;
-    private static final String IMAGE_EXTENSION = "." + IMAGE_FORMAT.toString().toLowerCase();
-    private static final int COMPRESS_QUALITY = 85;
     private static final String SERIES_POSTERS = "series_posters";
     private static final String EPISODE_IMAGES = "episode_images";
 
-    private Context context;
+    private class EpisodeImagesQueue extends LruCache<Integer, Integer> {
+        private static final int KiB = 1024;
+        private static final int MiB = 1024 * KiB;
+        private static final int EPISODE_IMAGE_AVERAGE_SIZE = 14 * KiB;
+        private static final int CACHE_SIZE = 1 * MiB;
+        private static final int NUMBER_OF_CACHE_ENTRIES = CACHE_SIZE / EPISODE_IMAGE_AVERAGE_SIZE;
+
+        public EpisodeImagesQueue() {
+            super(NUMBER_OF_CACHE_ENTRIES);
+        }
+
+        @Override
+        protected void entryRemoved(boolean evicted, Integer key, Integer oldValue, Integer newValue) {
+            if (evicted) {
+                ImageDirectory.this.deleteEpisodeImage(key);
+            }
+        }
+    }
+
+    private final ExternalStorageImageDirectory posterDirectory;
+    private final ExternalStorageImageDirectory episodeDirectory;
+
+    private final EpisodeImagesQueue episodeImagesQueue;
 
     public ImageDirectory(Context context) {
         Validate.isNonNull(context, "context");
 
-        this.context = context;
+        this.posterDirectory = new ExternalStorageImageDirectory(context, SERIES_POSTERS);
+        this.episodeDirectory = new ExternalStorageImageDirectory(context, EPISODE_IMAGES);
+
+        this.episodeImagesQueue = new EpisodeImagesQueue();
     }
 
     @Override
     public void saveSeriesPoster(Series series, Bitmap file) {
         Validate.isNonNull(series, "series");
-        Validate.isNonNull(file, "file");
 
-        if(!this.isExternalStorageAvaliable()) {return;}
-
-        File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
-        File poster = new File(seriesPostersFolder, series.id() + IMAGE_EXTENSION);
-
-        this.saveImageFile(file, poster);
+        this.posterDirectory.save(series.id(), file);
     }
 
     @Override
     public void saveEpisodeImage(Episode episode, Bitmap file) {
         Validate.isNonNull(episode, "episode");
-        Validate.isNonNull(file, "file");
 
-        if(!this.isExternalStorageAvaliable()) {return;}
-
-        File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
-        File episodeImage = new File(episodeImagesFolder, episode.id() + IMAGE_EXTENSION);
-
-        this.saveImageFile(file, episodeImage);
+        this.episodeDirectory.save(episode.id(), file);
+        this.episodeImagesQueue.put(episode.id(), episode.id());
     }
 
     @Override
     public void deleteAllImagesOf(Series series) {
         Validate.isNonNull(series, "series");
-
-        if(!this.isExternalStorageAvaliable()) {return;}
 
         this.deleteSeriesPoster(series.id());
 
@@ -91,87 +92,32 @@ public class ImageDirectory implements ImageRepository {
     }
 
     private void deleteSeriesPoster(int seriesId) {
-        File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
-        File poster = new File(seriesPostersFolder, seriesId + IMAGE_EXTENSION);
-
-        poster.delete();
+        this.posterDirectory.delete(seriesId);
     }
 
     private void deleteEpisodeImage(int episodeId) {
-        File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
-        File episodeImage = new File(episodeImagesFolder, episodeId + IMAGE_EXTENSION);
-
-        episodeImage.delete();
+        this.episodeDirectory.delete(episodeId);
+        this.episodeImagesQueue.remove(episodeId);
     }
 
     @Override
     public Bitmap getPosterOf(Series series) {
         Validate.isNonNull(series, "series");
 
-        if(!this.isExternalStorageAvaliable()) {return null;}
-
-        File seriesPostersFolder = this.imageFolder(SERIES_POSTERS);
-
-        return BitmapFactory.decodeFile(seriesPostersFolder + FILE_SEPARATOR + series.id() + IMAGE_EXTENSION);
+        return this.posterDirectory.fetch(series.id());
     }
 
     @Override
     public Bitmap getImageOf(Episode episode) {
         Validate.isNonNull(episode, "episode");
 
-        if(!this.isExternalStorageAvaliable()) {return null;}
+        Bitmap episodeImage = this.episodeDirectory.fetch(episode.id());
 
-        File episodeImagesFolder = this.imageFolder(EPISODE_IMAGES);
-
-        return BitmapFactory.decodeFile(episodeImagesFolder + FILE_SEPARATOR + episode.id() + IMAGE_EXTENSION);
-    }
-
-    private void saveImageFile(Bitmap image, File file) {
-        try {
-            FileOutputStream os = new FileOutputStream(file);
-            image.compress(IMAGE_FORMAT, COMPRESS_QUALITY, os);
-            os.close();
-        } catch (IOException e) {
-            throw new ImageIoException("create", file.toString());
-        }
-    }
-
-    private static File ensuredDirectory(String path) {
-        File directory = new File(path);
-
-        try {
-            if (!directory.exists()) {
-                directory.mkdirs();
-                File nomedia = new File(directory, ".nomedia");
-                nomedia.createNewFile();
-            }
-        } catch (SecurityException e) {
-            throw new RuntimeException("can't create the given directory: " + path);
-        } catch (IOException e) {
-            throw new RuntimeException("can't write/read the on given directory: " + path);
+        if (episodeImage != null) {  // to avoid putting in the queue episodes without images and whose images cannot be
+                                     // opened.
+            this.episodeImagesQueue.put(episode.id(), episode.id());
         }
 
-        return directory;
-    }
-
-    private File imageFolder(String folderName) {
-        return ensuredDirectory(this.rootDirectory().getPath() + FILE_SEPARATOR + folderName);
-    }
-
-    private File rootDirectory() {
-        return this.context.getExternalFilesDir(null);
-    }
-
-    private boolean isExternalStorageAvaliable() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
-    }
-
-    public static String getPathForPoster(int seriesId) {
-        return App.environment().context().getExternalFilesDir(null) +
-               FILE_SEPARATOR +
-               SERIES_POSTERS +
-               FILE_SEPARATOR +
-               seriesId +
-               IMAGE_EXTENSION;
+        return episodeImage;
     }
 }

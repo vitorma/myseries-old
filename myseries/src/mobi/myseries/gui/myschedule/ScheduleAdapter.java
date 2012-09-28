@@ -37,6 +37,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Objects;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -62,10 +63,38 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     private ScheduleMode items;
     private int[] cellStates;
 
+    ListenerSet<LoadingListener> listeners;
+
+    public boolean register(LoadingListener listener) {
+        return this.listeners.register(listener);
+    }
+
+    public boolean deregister(LoadingListener listener) {
+        return this.listeners.deregister(listener);
+    }
+
+    private void notifyStartLoading() {
+        for (LoadingListener listener : this.listeners) {
+            listener.onStartLoading();
+        }
+    }
+
+    private void notifyFinishLoading() {
+        for (LoadingListener listener : this.listeners) {
+            listener.onFinishLoading();
+        }
+    }
+
+    public static interface LoadingListener {
+        public void onStartLoading();
+        public void onFinishLoading();
+    }
+
     public ScheduleAdapter(Context context, int scheduleMode, ScheduleSpecification specification) {
         this.context = context;
         this.scheduleMode = scheduleMode;
         this.specification = specification;
+        this.listeners = new ListenerSet<ScheduleAdapter.LoadingListener>();
 
         this.reload();
     }
@@ -180,6 +209,11 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     private void reload() {
         new AsyncTask<Void, Void, Void>() {
             @Override
+            protected void onPreExecute() {
+                ScheduleAdapter.this.notifyStartLoading();
+            }
+
+            @Override
             protected Void doInBackground(Void... params) {
                 ScheduleAdapter.this.setUpData();
                 return null;
@@ -188,6 +222,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
             @Override
             protected void onPostExecute(Void result) {
                 ScheduleAdapter.this.notifyDataSetChanged();
+                ScheduleAdapter.this.notifyFinishLoading();
             }
         }.execute();
     }
