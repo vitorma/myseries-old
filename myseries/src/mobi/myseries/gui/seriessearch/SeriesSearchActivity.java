@@ -109,7 +109,7 @@ public class SeriesSearchActivity extends  SherlockListActivity {
             if (this.state.isShowingDialog){
                 	this.state.dialog.show();
                 }
-            this.state.messageLauncher.loadState();
+            this.messageLauncher.loadState();
         }
     }
 
@@ -121,7 +121,7 @@ public class SeriesSearchActivity extends  SherlockListActivity {
     @Override
     protected void onStop() {
     	super.onStop();
-        state.messageLauncher.onStop();
+        this.messageLauncher.onStop();
         App.deregisterSearchSeriesListener(listener);
         if (state.dialog != null && state.dialog.isShowing()) {
         	state.isShowingDialog = true;
@@ -341,13 +341,6 @@ public class SeriesSearchActivity extends  SherlockListActivity {
 
         public StateHolder() {
         }
-    }
-	
-	private void showToastWith(String message) {
-        new ToastBuilder(App.environment().context())
-            .setMessage(message)
-            .build()
-            .show();
     }
 
 }
