@@ -21,30 +21,33 @@
 
 package mobi.myseries.test.unit.domain.repository;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+
 import mobi.myseries.domain.repository.ImageStorage;
 import mobi.myseries.domain.repository.LruRepositoryManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import android.graphics.Bitmap;
 
-import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bitmap.class})
+@PrepareForTest(Bitmap.class)
 public class LruRepositoryManagerTest {
 
     private static int DEFAULT_CACHE_SIZE = 3;
 
     private static int NOT_USED_IMAGE_ID = 0;
     private static int ID_OF_THE_FIRST_SAVED_IMAGE = 1;
-    private static Bitmap DEFAULT_IMAGE = mock(Bitmap.class);
+    private Bitmap DEFAULT_IMAGE = PowerMockito.mock(Bitmap.class);  // This is not static because of a PowerMockito
+                                                                     // issue when the tests are run from ant.
 
 	private ImageStorage managedRepository;
 	private LruRepositoryManager manager;
