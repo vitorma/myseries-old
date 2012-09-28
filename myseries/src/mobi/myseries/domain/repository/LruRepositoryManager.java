@@ -28,7 +28,7 @@ import android.support.v4.util.LruCache;
 public class LruRepositoryManager implements ImageStorage {
 
     private class ImagesQueue extends LruCache<Integer, Integer> {
-    	// TODO(gabriel) put these declarations at the place where the RepositoryManager is going to be instantiated.
+    // TODO(gabriel) put these declarations at the place where the RepositoryManager is going to be instantiated.
         private static final int KiB = 1024;
         private static final int MiB = 1024 * KiB;
         private static final int EPISODE_IMAGE_AVERAGE_SIZE = 14 * KiB;
@@ -42,13 +42,13 @@ public class LruRepositoryManager implements ImageStorage {
         @Override
         protected void entryRemoved(boolean evicted, Integer key, Integer oldValue, Integer newValue) {
             if (evicted) {
-            	LruRepositoryManager.this.delete(key);
+            LruRepositoryManager.this.delete(key);
             }
         }
     }
 
-	ImagesQueue imagesQueue;
-	ImageStorage managedRepository;
+ImagesQueue imagesQueue;
+ImageStorage managedRepository;
 
     public LruRepositoryManager(ImageStorage managedRepository, int numberOfKeptImages) {
         Validate.isNonNull(managedRepository, "managedRepository");
@@ -67,19 +67,18 @@ public class LruRepositoryManager implements ImageStorage {
 
     @Override
     public Bitmap fetch(int id) {
-    	Bitmap fetchedImage = this.managedRepository.fetch(id);
+    Bitmap fetchedImage = this.managedRepository.fetch(id);
 
-    	if (fetchedImage != null) {
-    		this.imagesQueue.put(id, id);
-    	}
+    if (fetchedImage != null) {
+    this.imagesQueue.put(id, id);
+    }
 
-    	return fetchedImage;
+    return fetchedImage;
     }
 
     @Override
     public void delete(int id) {
-    	this.managedRepository.delete(id);
-    	this.imagesQueue.remove(id);
+    this.managedRepository.delete(id);
+    this.imagesQueue.remove(id);
     }
-
 }
