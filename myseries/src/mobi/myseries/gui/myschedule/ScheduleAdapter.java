@@ -62,6 +62,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     private ScheduleSpecification specification;
     private ScheduleMode items;
     private int[] cellStates;
+    private boolean isLoading;
 
     ListenerSet<LoadingListener> listeners;
 
@@ -97,6 +98,10 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         this.listeners = new ListenerSet<ScheduleAdapter.LoadingListener>();
 
         this.reload();
+    }
+
+    public boolean isLoading() {
+        return this.isLoading;
     }
 
     @Override
@@ -210,6 +215,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
+                ScheduleAdapter.this.isLoading = true;
                 ScheduleAdapter.this.notifyStartLoading();
             }
 
@@ -221,6 +227,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
 
             @Override
             protected void onPostExecute(Void result) {
+                ScheduleAdapter.this.isLoading = false;
                 ScheduleAdapter.this.notifyDataSetChanged();
                 ScheduleAdapter.this.notifyFinishLoading();
             }

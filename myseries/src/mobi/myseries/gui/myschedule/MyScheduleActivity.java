@@ -207,6 +207,19 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         }
     }
 
+    public ScheduleAdapter getAdapterForScheduleMode(int scheduleMode) {
+        switch (scheduleMode) {
+            case ScheduleMode.RECENT:
+                return this.adapterHolder.adapterForModeRecent;
+            case ScheduleMode.UPCOMING:
+                return this.adapterHolder.adapterForModeUpcoming;
+            case ScheduleMode.NEXT:
+                return this.adapterHolder.adapterForModeNext;
+            default:
+                return null;
+        }
+    }
+
     /* Auxiliary */
 
     private void setUpCurrentModeFromExtras(Bundle savedInstanceState) {
@@ -227,12 +240,12 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
 
         this.adapterHolder = new AdapterHolder();
 
-        this.adapterHolder.adapterForModeRecent = this.adapterForMode(ScheduleMode.RECENT);
-        this.adapterHolder.adapterForModeUpcoming = this.adapterForMode(ScheduleMode.UPCOMING);
-        this.adapterHolder.adapterForModeNext = this.adapterForMode(ScheduleMode.NEXT);
+        this.adapterHolder.adapterForModeRecent = this.newAdapterForScheduleMode(ScheduleMode.RECENT);
+        this.adapterHolder.adapterForModeUpcoming = this.newAdapterForScheduleMode(ScheduleMode.UPCOMING);
+        this.adapterHolder.adapterForModeNext = this.newAdapterForScheduleMode(ScheduleMode.NEXT);
     }
 
-    private ScheduleAdapter adapterForMode(int scheduleMode) {
+    private ScheduleAdapter newAdapterForScheduleMode(int scheduleMode) {
         ScheduleSpecification specification = scheduleSpecification(this, scheduleMode);
 
         return new ScheduleAdapter(this, scheduleMode, specification);

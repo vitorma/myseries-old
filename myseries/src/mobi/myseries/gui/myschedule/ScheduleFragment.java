@@ -78,6 +78,7 @@ public abstract class ScheduleFragment extends SherlockListFragment implements S
         this.setUpSelector();
         this.setUpEmptyText();
         this.setUpItemClickListener();
+        this.setListAdapter(((MyScheduleActivity) this.getActivity()).getAdapterForScheduleMode(this.scheduleMode));
     }
 
     @Override
@@ -251,8 +252,13 @@ public abstract class ScheduleFragment extends SherlockListFragment implements S
         this.setListShown(true);
     }
 
-    public void setListAdapter(ScheduleAdapter adapter) {
+    private void setListAdapter(ScheduleAdapter adapter) {
         super.setListAdapter(adapter);
+
         adapter.register(this);
+
+        if (adapter.isLoading()) {
+            this.onStartLoading();
+        }
     }
 }
