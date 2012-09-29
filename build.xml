@@ -119,8 +119,7 @@
 
     <target name="build" depends="build-myseries-release,
                                   build-myseries-debug,
-                                  build-jvm-unittests, build-android-unittests,
-                                  build-acceptancetests"/>
+                                  build-jvm-unittests, build-android-unittests"/>
 
     <target name="unit-tests">
         <parallel>
@@ -129,12 +128,12 @@
         </parallel>
     </target>
 
-    <target name="acceptance-tests" depends="run-acceptancetests"/>
+    <target name="acceptance-tests" depends="build-acceptancetests, run-acceptancetests"/>
 
 
     <!-- Deployment Pipeline Targets -->
 
-    <target name="commit-stage" depends="clean, build, unit-tests, acceptance-tests"/>
+    <target name="commit-stage" depends="clean, build, unit-tests"/>
     <target name="acceptance-stage" depends="acceptance-tests"/>
 
 </project>

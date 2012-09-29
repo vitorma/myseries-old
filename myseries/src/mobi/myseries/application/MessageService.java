@@ -38,7 +38,6 @@ public class MessageService implements SeriesFollowingListener, UpdateListener{
 	}
 
 	private void notifyFollowingError(Series series, Exception e) {
-		Log.d(getClass().getName(), "erro notificado");
 		for (MessageServiceListener l : listeners) {
 			l.onFollowingError(series, e);
 		}

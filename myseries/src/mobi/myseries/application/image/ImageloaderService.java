@@ -33,6 +33,9 @@ public class ImageloaderService {
     }
 
     public void loadPoster(Series series, ImageLoadSupplicant suplicant) {
+        /* TODO(cleber) extract what we can learn from this class to improve the quality of the images and then wipe it
+         *  out.
+
         String filepath = "file://" + ImageDirectory.getPathForPoster(series.id()) ;
 
         // Creates display image options for custom display task
@@ -45,5 +48,6 @@ public class ImageloaderService {
                                          .build();
 
         imageLoader.displayImage(filepath, suplicant.getImageView(), options);
+        */
     }
 }

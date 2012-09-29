@@ -64,7 +64,10 @@ public class MessageLauncher implements MessageServiceListener {
 		} else if (e instanceof ParsingFailedException) {
 			this.dialogBuilder.setMessage(String.format(this.activity.getString(R.string.parsing_failed_message),
 					                                        series.name()));
-		}
+		} else if (e instanceof ConnectionTimeoutException)
+			this.dialogBuilder.setMessage(String.format(this.activity.getString(R.string.connection_timeout_message),
+                    series.name()));
+		
 		Dialog dialog = this.dialogBuilder.build();
 		dialog.show();
 		this.currentDialog = dialog;
