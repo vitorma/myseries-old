@@ -235,8 +235,6 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     }
 
     private void setUpData() {
-        this.specification = MyScheduleActivity.scheduleSpecification(this.context, this.scheduleMode);
-
         switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
                 this.items = SCHEDULE.recent(this.specification);
@@ -253,7 +251,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         this.items.register(this);
     }
 
-    public void sortBy(final int sortMode) {
+    public void sortBy(int sortMode) {
         if (this.specification.sortMode() == sortMode) {return;}
 
         this.specification.specifySortMode(sortMode);

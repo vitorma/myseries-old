@@ -23,19 +23,14 @@ package mobi.myseries.gui.myschedule;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.application.schedule.ScheduleSpecification;
-import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.ScheduleFragment.NextFragment;
 import mobi.myseries.gui.myschedule.ScheduleFragment.RecentFragment;
 import mobi.myseries.gui.myschedule.ScheduleFragment.UpcomingFragment;
 import mobi.myseries.gui.shared.Extra;
-import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.gui.shared.TabsAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -47,13 +42,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MyScheduleActivity extends SherlockFragmentActivity {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-
-    private static final String PREFS_NAME = "mobi.myseries.gui.schedule.SchedulePreferences";
-    private static final String SORT_MODE_KEY = "sortMode_";
-    private static final String SHOW_SPECIAL_EPISODES_KEY = "showSpecialEpisodes_";
-    private static final String SHOW_SEEN_EPISODES_KEY = "showSeenEpisodes_";
-    private static final String SHOW_SERIES_KEY = "showSeries_";
+    private static final String TAG = MyScheduleActivity.class.getName();
 
     private int currentMode;
     private StateHolder stateHolder;
@@ -64,88 +53,6 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         intent.putExtra(Extra.SCHEDULE_MODE, scheduleMode);
 
         return intent;
-    }
-
-    //TODO (Cleber) Extract class SchedulePreferences-------------------------------------------------------------------
-
-    public static ScheduleSpecification scheduleSpecification(Context context, int scheduleMode) {
-        ScheduleSpecification specification = new ScheduleSpecification();
-
-        boolean showSpecialEpisodes = showSpecialEpisodes(context, scheduleMode);
-        specification.specifyInclusionOfSpecialEpisodes(showSpecialEpisodes);
-
-        boolean showSeenEpisodes = showSeenEpisodes(context, scheduleMode);
-        specification.specifyInclusionOfSeenEpisodes(showSeenEpisodes);
-
-        for (Series s : SERIES_PROVIDER.followedSeries()) {
-            boolean showSeries = showSeries(context, scheduleMode, s.id());
-            specification.specifyInclusionOf(s, showSeries);
-        }
-
-        int sortMode = sortMode(context, scheduleMode);
-        specification.specifySortMode(sortMode);
-
-        return specification;
-    }
-
-    public static int sortMode(Context context, int scheduleMode) {
-        return getIntPreference(context, scheduleMode, SORT_MODE_KEY, SortMode.OLDEST_FIRST);
-    }
-
-    public static boolean showSpecialEpisodes(Context context, int scheduleMode) {
-        return getBooleanPreference(context, scheduleMode, SHOW_SPECIAL_EPISODES_KEY, false);
-    }
-
-    public static boolean showSeenEpisodes(Context context, int scheduleMode) {
-        return getBooleanPreference(context, scheduleMode, SHOW_SEEN_EPISODES_KEY, false);
-    }
-
-    public static boolean showSeries(Context context, int scheduleMode, int seriesId) {
-        return getBooleanPreference(context, scheduleMode, SHOW_SERIES_KEY + seriesId, true);
-    }
-
-    public static boolean saveSortMode(Context context, int scheduleMode, int sortMode) {
-        return saveIntPreference(context, scheduleMode, SORT_MODE_KEY, sortMode);
-    }
-
-    public static boolean setIfShowSpecialEpisodes(Context context, int scheduleMode, boolean show) {
-        return saveBooleanPreference(context, scheduleMode, SHOW_SPECIAL_EPISODES_KEY, show);
-    }
-
-    public static boolean setIfShowSeenEpisodes(Context context, int scheduleMode, boolean show) {
-        return saveBooleanPreference(context, scheduleMode, SHOW_SEEN_EPISODES_KEY, show);
-    }
-
-    public static boolean setIfShowSeries(Context context, int scheduleMode, int seriesId, boolean show) {
-        return saveBooleanPreference(context, scheduleMode, SHOW_SERIES_KEY + seriesId, show);
-    }
-
-    private static int getIntPreference(Context context, int scheduleMode, String key, int defaultValue) {
-        return getPreferences(context)
-            .getInt(key + scheduleMode, defaultValue);
-    }
-
-    private static boolean getBooleanPreference(Context context, int scheduleMode, String key, boolean defaultValue) {
-        return getPreferences(context)
-            .getBoolean(key + scheduleMode, defaultValue);
-    }
-
-    private static boolean saveIntPreference(Context context, int scheduleMode, String key, int value) {
-        return getPreferences(context)
-            .edit()
-            .putInt(key + scheduleMode, value)
-            .commit();
-    }
-
-    private static boolean saveBooleanPreference(Context context, int scheduleMode, String key, boolean value) {
-        return getPreferences(context)
-            .edit()
-            .putBoolean(key + scheduleMode, value)
-            .commit();
-    }
-
-    private static SharedPreferences getPreferences(Context context) {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     /* Interface */
@@ -246,9 +153,13 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
     }
 
     private ScheduleAdapter newAdapterForScheduleMode(int scheduleMode) {
-        ScheduleSpecification specification = scheduleSpecification(this, scheduleMode);
+        SchedulePreferences preferences = getSchedulePreferences(scheduleMode);
 
-        return new ScheduleAdapter(this, scheduleMode, specification);
+        return new ScheduleAdapter(this, scheduleMode, preferences.fullSpecification());
+    }
+
+    public static SchedulePreferences getSchedulePreferences(int scheduleMode) {
+        return SchedulePreferences.from(App.context(), TAG + scheduleMode);
     }
 
     private void setUpActionBar() {

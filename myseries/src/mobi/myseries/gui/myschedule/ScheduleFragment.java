@@ -28,7 +28,6 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.episodes.EpisodesActivity;
@@ -49,14 +48,13 @@ import com.actionbarsherlock.view.MenuItem;
 
 public abstract class ScheduleFragment extends SherlockListFragment implements ScheduleAdapter.LoadingListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final Context APPLICATION_CONTEXT = App.environment().context();
 
     private int scheduleMode;
-    private ScheduleSpecification specification;
+    private SchedulePreferences preferences;
 
     public ScheduleFragment(int scheduleMode) {
         this.scheduleMode = scheduleMode;
-        this.specification = MyScheduleActivity.scheduleSpecification(APPLICATION_CONTEXT, scheduleMode);
+        this.preferences = MyScheduleActivity.getSchedulePreferences(this.scheduleMode);
     }
 
     public int scheduleMode() {
@@ -85,8 +83,8 @@ public abstract class ScheduleFragment extends SherlockListFragment implements S
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        boolean isShowingSpecialEpisodes = this.specification.isSatisfiedBySpecialEpisodes();
-        boolean isShowingSeenEpisodes = this.specification.isSatisfiedBySeenEpisodes();
+        boolean isShowingSpecialEpisodes = this.preferences.showSpecialEpisodes();
+        boolean isShowingSeenEpisodes = this.preferences.showSeenEpisodes();
 
         MenuItem hideShowSpecialEpisodes = menu.findItem(R.id.hideShowSpecialEpisodes);
         MenuItem hideShowSeenEpisodes = menu.findItem(R.id.hideShowSeenEpisodes);
@@ -149,43 +147,38 @@ public abstract class ScheduleFragment extends SherlockListFragment implements S
     }
 
     private void hideOrShowSpecialEpisodes() {
-        boolean isShowingSpecialEpisodes = this.specification.isSatisfiedBySpecialEpisodes();
+        boolean isShowingSpecialEpisodes = this.preferences.showSpecialEpisodes();
 
-        MyScheduleActivity.setIfShowSpecialEpisodes(this.getActivity(), this.scheduleMode, !isShowingSpecialEpisodes);
-        this.specification.specifyInclusionOfSpecialEpisodes(!isShowingSpecialEpisodes);
+        this.preferences.setIfShowSpecialEpisodes(!isShowingSpecialEpisodes);
         this.scheduleAdapter().hideOrShowSpecialEpisodes(!isShowingSpecialEpisodes);
     }
 
     private void hideOrShowSeenEpisodes() {
-        boolean isShowingSeenEpisodes = this.specification.isSatisfiedBySeenEpisodes();
+        boolean isShowingSeenEpisodes = this.preferences.showSeenEpisodes();
 
-        MyScheduleActivity.setIfShowSeenEpisodes(this.getActivity(), this.scheduleMode, !isShowingSeenEpisodes);
-        this.specification.specifyInclusionOfSeenEpisodes(!isShowingSeenEpisodes);
+        this.preferences.setIfShowSeenEpisodes(!isShowingSeenEpisodes);
         this.scheduleAdapter().hideOrShowSeenEpisodes(!isShowingSeenEpisodes);
     }
 
     private void showSortingDialog() {
         final Context context = this.getActivity();
-        final int scheduleMode = this.scheduleMode;
-        final int sortMode = this.specification.sortMode();
+        final SchedulePreferences preferences = this.preferences;
         final ScheduleAdapter adapter = this.scheduleAdapter();
 
         new SortingDialogBuilder(context)
             .setTitleArgument(R.string.episodes)
-            .setDefaultSortMode(sortMode)
+            .setDefaultSortMode(preferences.sortMode())
             .setNewestFirstOptionListener(new OptionListener() {
                 @Override
                 public void onClick() {
-                    MyScheduleActivity.saveSortMode(context, scheduleMode, SortMode.NEWEST_FIRST);
-                    ScheduleFragment.this.specification.specifySortMode(SortMode.NEWEST_FIRST);
+                    preferences.setSortMode(SortMode.NEWEST_FIRST);
                     adapter.sortBy(SortMode.NEWEST_FIRST);
                 }
             })
             .setOldestFirstOptionListener(new OptionListener() {
                 @Override
                 public void onClick() {
-                    MyScheduleActivity.saveSortMode(context, scheduleMode, SortMode.OLDEST_FIRST);
-                    ScheduleFragment.this.specification.specifySortMode(SortMode.OLDEST_FIRST);
+                    preferences.setSortMode(SortMode.OLDEST_FIRST);
                     adapter.sortBy(SortMode.OLDEST_FIRST);
                 }
             })
@@ -194,16 +187,13 @@ public abstract class ScheduleFragment extends SherlockListFragment implements S
     }
 
     private void showFilterDialog() {
-        this.specification = MyScheduleActivity.scheduleSpecification(this.getActivity(), this.scheduleMode);
-
         final Context context = this.getActivity();
-        final int scheduleMode = this.scheduleMode;
-        final ScheduleSpecification specification = this.specification;
+        final SchedulePreferences preferences = this.preferences;
         final Map<Series, Boolean> filterOptions = new HashMap<Series, Boolean>();
         final ScheduleAdapter adapter = this.scheduleAdapter();
 
         for (Series s : SERIES_PROVIDER.followedSeries()) {
-            filterOptions.put(s, specification.isSatisfiedByEpisodesOfSeries(s.id()));
+            filterOptions.put(s, preferences.showSeries(s.id()));
         }
 
         new SeriesFilterDialogBuilder(context)
@@ -212,8 +202,7 @@ public abstract class ScheduleFragment extends SherlockListFragment implements S
                 @Override
                 public void onFilter() {
                     for (Series s : filterOptions.keySet()) {
-                        MyScheduleActivity.setIfShowSeries(context, scheduleMode, s.id(), filterOptions.get(s));
-                        specification.specifyInclusionOf(s, filterOptions.get(s));
+                        preferences.setIfShowSeries(s.id(), filterOptions.get(s));
                     }
                     adapter.hideOrShowSeries(filterOptions);
                 }
