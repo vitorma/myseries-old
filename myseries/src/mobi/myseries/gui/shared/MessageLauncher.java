@@ -12,6 +12,7 @@ import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.Validate;
 import android.app.Activity;
 import android.app.Dialog;
+import android.util.Log;
 
 public class MessageLauncher implements MessageServiceListener {
 
@@ -64,10 +65,12 @@ public class MessageLauncher implements MessageServiceListener {
 		} else if (e instanceof ParsingFailedException) {
 			this.dialogBuilder.setMessage(String.format(this.activity.getString(R.string.parsing_failed_message),
 					                                        series.name()));
-		} else if (e instanceof ConnectionTimeoutException)
+		} else if (e instanceof ConnectionTimeoutException) {
 			this.dialogBuilder.setMessage(String.format(this.activity.getString(R.string.connection_timeout_message),
                     series.name()));
-		
+		} else {
+			this.dialogBuilder.setMessage(e.getMessage()); 
+		}
 		Dialog dialog = this.dialogBuilder.build();
 		dialog.show();
 		this.currentDialog = dialog;
@@ -102,6 +105,8 @@ public class MessageLauncher implements MessageServiceListener {
 
         } else if (e instanceof UpdateMetadataUnavailableException) {
             dialogBuilder.setMessage(R.string.update_metadata_unavailable);
+        } else {
+        	dialogBuilder.setMessage(e.getMessage());
         }
 		Dialog dialog = this.dialogBuilder.build();
 		dialog.show();
@@ -111,10 +116,11 @@ public class MessageLauncher implements MessageServiceListener {
 	
 	public void onStop(){
 		App.messageService().deregisterListener(this);
-		if(this.currentDialog != null && this.currentDialog.isShowing()){
-			this.isShowingDialog = true;
+		if(this.currentDialog != null){
+			this.isShowingDialog = this.currentDialog.isShowing();
 			this.currentDialog.dismiss();
 		}
+		
 	}
 	
 	public Dialog dialog() {

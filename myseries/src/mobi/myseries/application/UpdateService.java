@@ -168,23 +168,23 @@ public class UpdateService {
 
                     } catch (ParsingFailedException e) {
                         e.printStackTrace();
-                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
+                        return new AsyncTaskResult<UpdateResult>(e);
 
                     } catch (ConnectionFailedException e) {
                         e.printStackTrace();
-                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
+                        return new AsyncTaskResult<UpdateResult>(e);
 
                     } catch (SeriesNotFoundException e) {
                         e.printStackTrace();
-                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
+                        return new AsyncTaskResult<UpdateResult>(e);
 
                     } catch (UpdateMetadataUnavailableException e) {
                         e.printStackTrace();
-                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
+                        return new AsyncTaskResult<UpdateResult>(e);
 
                     } catch (ConnectionTimeoutException e) {
                         e.printStackTrace();
-                        return new AsyncTaskResult<UpdateResult>(new UpdateException(e));
+                        return new AsyncTaskResult<UpdateResult>(e);
                     }
 
                     Log.d(getClass().getName(), "Update complete.");
