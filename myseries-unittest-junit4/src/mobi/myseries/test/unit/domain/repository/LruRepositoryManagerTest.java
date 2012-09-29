@@ -21,33 +21,36 @@
 
 package mobi.myseries.test.unit.domain.repository;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+
 import mobi.myseries.domain.repository.ImageStorage;
 import mobi.myseries.domain.repository.LruRepositoryManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import android.graphics.Bitmap;
 
-import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bitmap.class})
+@PrepareForTest(Bitmap.class)
 public class LruRepositoryManagerTest {
 
     private static int DEFAULT_CACHE_SIZE = 3;
 
     private static int NOT_USED_IMAGE_ID = 0;
     private static int ID_OF_THE_FIRST_SAVED_IMAGE = 1;
-    private static Bitmap DEFAULT_IMAGE = mock(Bitmap.class);
+    private Bitmap DEFAULT_IMAGE = PowerMockito.mock(Bitmap.class);  // This is not static because of a PowerMockito
+                                                                     // issue when the tests are run from ant.
 
-	private ImageStorage managedRepository;
-	private LruRepositoryManager manager;
+    private ImageStorage managedRepository;
+    private LruRepositoryManager manager;
 
     @Before
     public void setUp() {
@@ -109,7 +112,7 @@ public class LruRepositoryManagerTest {
 
     @Test
     public void noImagesShouldBeEvictedAfterUpdatingAnAlreadySavedImage() {
-    	int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
+        int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, firstImageId);
 
         // update the first image
@@ -120,83 +123,83 @@ public class LruRepositoryManagerTest {
 
     @Test
     public void theOldestImageShouldBeEvictedAfterSavingANewImage() {
-    	int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
-    	int lastSavedId = this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, firstImageId);
+        int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
+        int lastSavedId = this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, firstImageId);
 
-    	this.manager.save(lastSavedId + 1, DEFAULT_IMAGE);
+        this.manager.save(lastSavedId + 1, DEFAULT_IMAGE);
 
-    	verify(this.managedRepository).delete(firstImageId);
+        verify(this.managedRepository).delete(firstImageId);
     }
 
     @Test
     public void theLastFetchedImageIsTheLastOneToBeEvicted() {
-    	// Given
-    	int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
-    	int numberOfSavedImages = DEFAULT_CACHE_SIZE;
+        // Given
+        int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
+        int numberOfSavedImages = DEFAULT_CACHE_SIZE;
 
-    	int lastSavedId = this.fillWithTheDefaultImage(this.manager, numberOfSavedImages, firstImageId);
+        int lastSavedId = this.fillWithTheDefaultImage(this.manager, numberOfSavedImages, firstImageId);
 
-    	int fetchedImageId = firstImageId;
-    	this.manager.fetch(fetchedImageId);
-    	
-    	// When-Then
-    	// evict all the images from the repository - 1
-    	lastSavedId = this.fillWithTheDefaultImage(this.manager, numberOfSavedImages - 1, lastSavedId + 1);
-    	verify(this.managedRepository, never()).delete(firstImageId);
+        int fetchedImageId = firstImageId;
+        this.manager.fetch(fetchedImageId);
+        
+        // When-Then
+        // evict all the images from the repository - 1
+        lastSavedId = this.fillWithTheDefaultImage(this.manager, numberOfSavedImages - 1, lastSavedId + 1);
+        verify(this.managedRepository, never()).delete(firstImageId);
 
-    	// now the fetched image should be the next to be evicted
-    	this.manager.save(lastSavedId + 1, DEFAULT_IMAGE);
-    	verify(this.managedRepository).delete(fetchedImageId);
+        // now the fetched image should be the next to be evicted
+        this.manager.save(lastSavedId + 1, DEFAULT_IMAGE);
+        verify(this.managedRepository).delete(fetchedImageId);
     }
 
     @Test
     public void fetchingANonexistentImageShouldNotProduceAnyEviction() {
-    	this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, ID_OF_THE_FIRST_SAVED_IMAGE);
+        this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, ID_OF_THE_FIRST_SAVED_IMAGE);
 
-    	Bitmap fetchedImage = this.manager.fetch(NOT_USED_IMAGE_ID);
+        Bitmap fetchedImage = this.manager.fetch(NOT_USED_IMAGE_ID);
 
-    	assertThat(fetchedImage, is(nullValue()));  // there is no image for that id
-    	verify(this.managedRepository, never()).delete(anyInt());
+        assertThat(fetchedImage, is(nullValue()));  // there is no image for that id
+        verify(this.managedRepository, never()).delete(anyInt());
     }
    
     @Test
     public void theDeletedImagesAreNotEvictedLater() {
-    	// Given
-    	int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
-    	int numberOfImagesToBeSaved = DEFAULT_CACHE_SIZE;
+        // Given
+        int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
+        int numberOfImagesToBeSaved = DEFAULT_CACHE_SIZE;
 
-    	int lastSavedId = this.fillWithTheDefaultImage(this.manager, numberOfImagesToBeSaved, firstImageId);
+        int lastSavedId = this.fillWithTheDefaultImage(this.manager, numberOfImagesToBeSaved, firstImageId);
 
-    	this.manager.delete(firstImageId);
-    	reset(this.managedRepository);  // to forget that the file has been deleted once
-    	
-    	// When
-    	// this will make the manager evict all the already added images
-    	this.fillWithTheDefaultImage(this.manager, numberOfImagesToBeSaved, lastSavedId + 1);
+        this.manager.delete(firstImageId);
+        reset(this.managedRepository);  // to forget that the file has been deleted once
+        
+        // When
+        // this will make the manager evict all the already added images
+        this.fillWithTheDefaultImage(this.manager, numberOfImagesToBeSaved, lastSavedId + 1);
 
-    	// Then
-    	// but the deleted one must not be deleted again.
-    	verify(this.managedRepository, never()).delete(firstImageId);
+        // Then
+        // but the deleted one must not be deleted again.
+        verify(this.managedRepository, never()).delete(firstImageId);
     }
 
     /* Fetch */
 
     @Test
     public void theFetchedImagesAreFetchedFromTheManagedRepository() {
-    	this.manager.fetch(NOT_USED_IMAGE_ID);
-    	verify(this.managedRepository).fetch(NOT_USED_IMAGE_ID);
+        this.manager.fetch(NOT_USED_IMAGE_ID);
+        verify(this.managedRepository).fetch(NOT_USED_IMAGE_ID);
     }
     
     /* Delete */
 
     @Test
     public void theDeletedImagesAreDeletedFromTheManagedRepository() {
-    	int imageId = NOT_USED_IMAGE_ID;
-    	this.manager.save(imageId, DEFAULT_IMAGE);
+        int imageId = NOT_USED_IMAGE_ID;
+        this.manager.save(imageId, DEFAULT_IMAGE);
 
-    	this.manager.delete(imageId);
-    	
-    	verify(this.managedRepository).delete(imageId);
+        this.manager.delete(imageId);
+        
+        verify(this.managedRepository).delete(imageId);
     }
 
     /* Test tools */
@@ -209,9 +212,9 @@ public class LruRepositoryManagerTest {
         int idOfTheLastSavedImage = -1;  // We cannot use null nor a valid image id.
 
         for (int i = 0; i < numberOfImages; ++i) {
-        	int imageId = idOfTheNextImageToBeSaved++;
+            int imageId = idOfTheNextImageToBeSaved++;
 
-        	this.manager.save(imageId, imageToBeSaved);
+            this.manager.save(imageId, imageToBeSaved);
             idOfTheLastSavedImage = imageId;
         }
 

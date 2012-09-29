@@ -2,6 +2,7 @@
 <project name="MySeriesUnitTest" default="run-tests">
     <property name="tested.project.dir" value="../myseries" />
     <property name="tested.project.classes.dir" value="${tested.project.dir}/bin/classes"/>
+    <property name="tested.project.libs.dir" value="${tested.project.dir}/libs"/>
     <property name="src.dir" value="src"/>
     <property name="lib.dir" value="lib"/>
 
@@ -27,6 +28,7 @@
 
         <!-- tested project -->
         <path refid="testedproject.classpath"/>
+        <fileset dir="${tested.project.libs.dir}" includes="**/*.jar"/>
     </path>
 
     <path id="run.classpath">
