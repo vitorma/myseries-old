@@ -338,9 +338,6 @@ public class SeriesSearchActivity extends  SherlockListActivity {
         boolean isShowingDialog;
         List<Series> seriesFound;
         MessageLauncher messageLauncher;
-
-        public StateHolder() {
-        }
     }
 
 }

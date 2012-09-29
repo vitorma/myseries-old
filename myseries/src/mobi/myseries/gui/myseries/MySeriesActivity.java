@@ -45,6 +45,7 @@ import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
+import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
 import mobi.myseries.gui.shared.ToastBuilder;
@@ -53,6 +54,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -74,9 +76,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     private boolean updating = false;
     private StateHolder state;
-    private ErrorServiceListener errorListener;
 
-    private ToastBuilder toastBuilder;
+	private MessageLauncher messageLauncher;
 
     public MySeriesActivity() {
     }
@@ -91,20 +92,24 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         ActionBar ab = getSupportActionBar();
         ab.setTitle(R.string.my_series);
 
-        setupErrorServiceListener();
+        App.updateSeriesService().registerSeriesUpdateListener(this);
 
         Object retained = getLastCustomNonConfigurationInstance();
         if ((retained != null) && (retained instanceof StateHolder)) {
-            state = (StateHolder) retained;
-            loadState();
+            this.state = (StateHolder) retained;
+            this.messageLauncher = state.messageLauncher;
         } else {
-            state = new StateHolder();
+            this.state = new StateHolder();
+            this.messageLauncher = new MessageLauncher(this);
+            this.state.messageLauncher = this.messageLauncher;
         }
-
-        updating = App.updateSeriesService().isUpdating();
-
-        App.updateSeriesService().registerSeriesUpdateListener(this);
-
+    }
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+        loadState();
+    	updating = App.updateSeriesService().isUpdating();
         setSupportProgressBarIndeterminateVisibility(updating);
 
         if (!updating) {
@@ -113,7 +118,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     }
 
     private void loadState() {
-
+    	this.messageLauncher.loadState();
         if (state.isShowingDialog){
             state.dialog.show();
         }
@@ -127,14 +132,13 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     protected void onStop() {
         super.onStop();
-        App.errorService().deregisterListener(errorListener);
+        this.messageLauncher.onStop();
         if ((state.dialog != null) && state.dialog.isShowing()) {
             state.dialog.dismiss();
             state.isShowingDialog = true;
         } else {
             state.isShowingDialog = false;
         }
-
     }
 
     //Menu--------------------------------------------------------------------------------------------------------------
@@ -248,8 +252,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d(getClass().getName(), "update started");
         setSupportProgressBarIndeterminateVisibility(true);
         updating = true;
-        toastBuilder().setMessage(R.string.update_started_message);
-        toastBuilder().build().show();
     }
 
     @Override
@@ -264,8 +266,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         Log.d(getClass().getName(), "update complete");
         setSupportProgressBarIndeterminateVisibility(false);
         updating = false;
-        toastBuilder().setMessage(R.string.update_success_message);
-        toastBuilder().build().show();
     }
 
     @Override
@@ -282,85 +282,9 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         startActivity(intent);
     }
 
-    private void setupErrorServiceListener() {
-        errorListener = new ErrorServiceListener() {
-
-            @Override
-            public void onError(Exception e) {
-                if (e instanceof FollowSeriesException) {
-                    FollowSeriesException followException = ((FollowSeriesException) e);
-                    Series series = followException.series();
-                    FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(
-                            MySeriesActivity.this);
-                    dialogBuilder.setTitle(R.string.add_failed_title);
-                    if (followException.getCause() instanceof ConnectionFailedException) {
-                        dialogBuilder.setMessage(String.format(MySeriesActivity.this
-                                .getString(R.string.add_connection_failed_message), series.name()));
-
-                    } else if (followException.getCause() instanceof SeriesNotFoundException) {
-                        dialogBuilder.setMessage(String.format(MySeriesActivity.this
-                                .getString(R.string.add_series_not_found), series.name()));
-
-                    } else if (followException.getCause() instanceof ParsingFailedException) {
-                        dialogBuilder.setMessage(String.format(MySeriesActivity.this
-                                .getString(R.string.parsing_failed_message), series.name()));
-                    }
-                    Dialog dialog = dialogBuilder.build();
-                    dialog.show();
-
-                } else if (e instanceof UpdateException) {
-                    Log.d(getClass().getName(), "Update Failure. Cause: "
-                            + e.getCause().getClass().getName());
-
-                    FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(
-                            MySeriesActivity.this);
-
-                    dialogBuilder.setTitle(R.string.update_failed_title);
-
-                    Throwable cause = e.getCause();
-
-                    if (cause instanceof ConnectionFailedException) {
-                        dialogBuilder.setMessage(R.string.update_connection_failed);
-                        Log.d(getClass().getName(), "Update: connection failure");
-
-                    } else if (cause instanceof ConnectionTimeoutException) {
-                        dialogBuilder.setMessage(R.string.update_connection_timeout);
-                        Log.d(getClass().getName(), "Update: connection timeout");
-
-                    } else if (cause instanceof ParsingFailedException) {
-                        dialogBuilder.setMessage(R.string.parsing_failed_message);
-                        Log.d(getClass().getName(), "Update: parsing failed");
-
-                    } else if (cause instanceof SeriesNotFoundException) {
-                        dialogBuilder.setMessage(R.string.update_series_not_found);
-                        Log.d(getClass().getName(), "Update: series not found");
-
-                    } else if (cause instanceof UpdateMetadataUnavailableException) {
-                        dialogBuilder.setMessage(R.string.update_metadata_unavailable);
-                        Log.d(getClass().getName(), "Update: metadata unavailable");
-                    }
-
-                    Dialog dialog = dialogBuilder.build();
-                    dialog.show();
-                }
-            }
-        };
-        App.errorService().registerListener(errorListener);
-    }
-
-    private ToastBuilder toastBuilder() {
-        if (toastBuilder == null) {
-            toastBuilder = new ToastBuilder(App.environment().context());
-        }
-
-        return toastBuilder;
-    }
-
     private static class StateHolder {
         Dialog dialog;
         boolean isShowingDialog;
-
-        public StateHolder() {
-        }
+        MessageLauncher messageLauncher;
     }
 }

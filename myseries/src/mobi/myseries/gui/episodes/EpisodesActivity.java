@@ -29,6 +29,7 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.series.SeriesActivity;
+import mobi.myseries.gui.shared.MessageLauncher;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -56,6 +57,10 @@ public class EpisodesActivity extends SherlockFragmentActivity {
     private EpisodePagerAdapter adapter;
     private ViewPager pager;
     private TitlePageIndicator pageIndicator;
+
+	private StateHolder state;
+
+	private MessageLauncher messageLauncher;
 
     public static Intent newIntent(Context context, int seriesId, int seasonNumber, int episodeNumber) {
         Intent intent = new Intent(context, EpisodesActivity.class);
@@ -95,9 +100,40 @@ public class EpisodesActivity extends SherlockFragmentActivity {
         ab.setTitle(series.name());
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
+        
+        Object retained = getLastCustomNonConfigurationInstance();
+        if ((retained != null) && (retained instanceof StateHolder)) {
+            this.state = (StateHolder) retained;
+            this.messageLauncher = state.messageLauncher;
+        } else {
+            this.state = new StateHolder();
+            this.messageLauncher = new MessageLauncher(this);
+            this.state.messageLauncher = this.messageLauncher;
+        }
+        
+    }
+    @Override
+    protected void onResume() {
+    	super.onResume();
+        loadState();
+    }
+
+    private void loadState() {
+    	this.messageLauncher.loadState();
+    }
+    
+    @Override
+    protected void onStop() {
+    	super.onStop();
+    	this.messageLauncher.onStop();
     }
 
     @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return state;
+    }
+
+	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
@@ -108,5 +144,8 @@ public class EpisodesActivity extends SherlockFragmentActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    private static class StateHolder {
+        MessageLauncher messageLauncher;
     }
 }
