@@ -41,7 +41,7 @@ public class App extends Application {
     private static UpdateService updateService;
     private static ErrorService errorService;
     private static ImageService imageProvider;
-	private static MessageService messageService;
+    private static MessageService messageService;
 
     @Override
     public void onCreate() {
@@ -64,8 +64,7 @@ public class App extends Application {
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
-                imageProvider,
-                errorService());
+                imageProvider);
         schedule = new Schedule(
                 environment.repository(),
                 followSeriesService,
@@ -169,8 +168,8 @@ public class App extends Application {
     public static DateFormat dateFormat() {
         return environment.localization().dateFormat();
     }
-    
+
     public static MessageService messageService() {
-    	return messageService;
+        return messageService;
     }
 }

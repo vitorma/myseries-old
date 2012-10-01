@@ -30,23 +30,19 @@ public class UpdateService {
     private SeriesUpdater seriesUpdater;
     private final List<UpdateListener> updateListeners;
     private boolean updateRunning = false;
-    private ErrorService errorService;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
-            LocalizationProvider localizationProvider, ImageService imageProvider,
-            ErrorService errorService) {
+            LocalizationProvider localizationProvider, ImageService imageProvider) {
 
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
         Validate.isNonNull(imageProvider, "imageProvider");
-        Validate.isNonNull(errorService, "errorService");
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
         this.localizationProvider = localizationProvider;
         this.imageProvider = imageProvider;
-        this.errorService = errorService;
         seriesUpdater = new SeriesUpdater();
         updateListeners = new LinkedList<UpdateListener>();
 
@@ -64,14 +60,14 @@ public class UpdateService {
 
             @Override
             public void onUpdateNotNecessary() {
-                // I don't care.
+                updateRunning = false;
             }
 
             @Override
             public void onUpdateFailure(Exception e) {
-                	updateRunning = false;
+                updateRunning = false;
 
-			}
+            }
         });
     }
 
@@ -195,7 +191,7 @@ public class UpdateService {
                 @Override
                 protected void onPostExecute(AsyncTaskResult<UpdateResult> result) {
                     if (result.error() != null) {
-                    	for (UpdateListener listener : updateListeners) {
+                        for (UpdateListener listener : updateListeners) {
                             listener.onUpdateFailure(result.error());
                         }
                     }
