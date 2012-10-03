@@ -32,7 +32,6 @@ import mobi.myseries.gui.shared.TabsAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 
@@ -64,26 +63,6 @@ public class MyScheduleActivity extends SherlockFragmentActivity {
         this.setUpCurrentModeFromExtras(savedInstanceState);
         this.setUpStateHolder();
         this.setUpActionBar();
-    }
-
-    @Override
-    public void onAttachFragment(Fragment fragment) {
-        super.onAttachFragment(fragment);
-
-        ScheduleFragment scheduleFragment = (ScheduleFragment) fragment;
-
-        switch (scheduleFragment.scheduleMode()) {
-            case ScheduleMode.RECENT:
-                scheduleFragment.setListAdapter(this.stateHolder.adapterForModeRecent);
-                break;
-            case ScheduleMode.UPCOMING:
-                scheduleFragment.setListAdapter(this.stateHolder.adapterForModeUpcoming);
-                break;
-            case ScheduleMode.NEXT:
-            default:
-                scheduleFragment.setListAdapter(this.stateHolder.adapterForModeNext);
-                break;
-        }
     }
 
     @Override
