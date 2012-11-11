@@ -39,6 +39,7 @@ import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.Dates;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Objects;
+import mobi.myseries.shared.Publisher;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -49,7 +50,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
+public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Publisher<ScheduleAdapter.Listener> {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
     private static final Schedule SCHEDULE = App.schedule();
 
@@ -63,39 +64,13 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
     private ScheduleMode items;
     private int[] cellStates;
     private boolean isLoading;
-
-    ListenerSet<LoadingListener> listeners;
-
-    public boolean register(LoadingListener listener) {
-        return this.listeners.register(listener);
-    }
-
-    public boolean deregister(LoadingListener listener) {
-        return this.listeners.deregister(listener);
-    }
-
-    private void notifyStartLoading() {
-        for (LoadingListener listener : this.listeners) {
-            listener.onStartLoading();
-        }
-    }
-
-    private void notifyFinishLoading() {
-        for (LoadingListener listener : this.listeners) {
-            listener.onFinishLoading();
-        }
-    }
-
-    public static interface LoadingListener {
-        public void onStartLoading();
-        public void onFinishLoading();
-    }
+    private ListenerSet<ScheduleAdapter.Listener> listeners;
 
     public ScheduleAdapter(Context context, int scheduleMode, ScheduleSpecification specification) {
         this.context = context;
         this.scheduleMode = scheduleMode;
         this.specification = specification;
-        this.listeners = new ListenerSet<ScheduleAdapter.LoadingListener>();
+        this.listeners = new ListenerSet<ScheduleAdapter.Listener>();
 
         this.reload();
     }
@@ -291,6 +266,28 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         this.reload();
     }
 
+    @Override
+    public boolean register(Listener listener) {
+        return this.listeners.register(listener);
+    }
+
+    @Override
+    public boolean deregister(Listener listener) {
+        return this.listeners.deregister(listener);
+    }
+
+    private void notifyStartLoading() {
+        for (Listener listener : this.listeners) {
+            listener.onStartLoading();
+        }
+    }
+
+    private void notifyFinishLoading() {
+        for (Listener listener : this.listeners) {
+            listener.onFinishLoading();
+        }
+    }
+
     //Listening---------------------------------------------------------------------------------------------------------
 
     @Override
@@ -304,15 +301,24 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener {
         this.reload();
     }
 
+    public static interface Listener {
+        public void onStartLoading();
+        public void onFinishLoading();
+    }
+
+    public static interface Holder {
+        public ScheduleAdapter adapterForMode(int scheduleMode);
+    }
+
     //ViewHolder--------------------------------------------------------------------------------------------------------
 
     private static class EpisodeViewHolder {
         private View section;
+        private ImageView seriesPosterImageView;
         private TextView dateTextView;
         private TextView relativeTimeTextView;
         private TextView seriesNameTextView;
         private TextView episodeNumberTextView;
-        private ImageView seriesPosterImageView;
         private SeenMark seenMarkCheckBox;
 
         private OnClickListener seenMarkCheckBoxListener(final Episode episode) {

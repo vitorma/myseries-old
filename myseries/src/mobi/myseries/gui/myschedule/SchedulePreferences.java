@@ -21,6 +21,9 @@
 
 package mobi.myseries.gui.myschedule;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleSpecification;
@@ -70,6 +73,16 @@ public class SchedulePreferences {
         return this.primitive.getBoolean(SHOW_SERIES_KEY + seriesId, SHOW_SERIES_DEFAULT_VALUE);
     }
 
+    public Map<Series, Boolean> seriesFilterOptions() {
+        Map<Series, Boolean> seriesFilterOptions = new HashMap<Series, Boolean>();
+
+        for (Series s : SERIES_PROVIDER.followedSeries()) {
+            seriesFilterOptions.put(s, this.showSeries(s.id()));
+        }
+
+        return seriesFilterOptions;
+    }
+
     public ScheduleSpecification fullSpecification() {
         ScheduleSpecification specification = new ScheduleSpecification()
             .specifySortMode(this.sortMode())
@@ -97,5 +110,11 @@ public class SchedulePreferences {
 
     public boolean setIfShowSeries(int seriesId, boolean show) {
         return this.primitive.putBoolean(SHOW_SERIES_KEY + seriesId, show);
+    }
+
+    public void setIfShowSeries(Map<Series, Boolean> filterOptions) {
+        for (Series s : filterOptions.keySet()) {
+            this.setIfShowSeries(s.id(), filterOptions.get(s));
+        }
     }
 }
