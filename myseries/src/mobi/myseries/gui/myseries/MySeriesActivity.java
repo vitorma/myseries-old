@@ -28,23 +28,15 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.ErrorServiceListener;
-import mobi.myseries.application.FollowSeriesException;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.UpdateException;
 import mobi.myseries.application.UpdateListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.ConnectionTimeoutException;
-import mobi.myseries.domain.source.ParsingFailedException;
-import mobi.myseries.domain.source.SeriesNotFoundException;
-import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
+import mobi.myseries.gui.preferences.PreferencesActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
-import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
@@ -54,7 +46,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -104,7 +95,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             this.state.messageLauncher = this.messageLauncher;
         }
     }
-    
+
     @Override
     protected void onResume() {
     	super.onResume();
@@ -163,7 +154,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         .setIcon(R.drawable.actionbar_update)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-        //TODO add intent
         menu.add(SETTINGS)
         .setIcon(R.drawable.actionbar_settings)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -184,6 +174,10 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
         if (item.getTitle().equals(REMOVE)) {
             showRemoveDialog();
+        }
+
+        if (item.getTitle().equals(SETTINGS)) {
+            showSettingsActivity();
         }
 
         return super.onMenuItemSelected(featureId, item);
@@ -287,4 +281,12 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         boolean isShowingDialog;
         MessageLauncher messageLauncher;
     }
+
+
+    //Settings
+    private void showSettingsActivity() {
+        final Intent intent = new Intent(this, PreferencesActivity.class);
+        startActivity(intent);
+    }
+
 }

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:paddingBottom="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingTop="@dimen/gap_medium"
+            android:paddingBottom="@dimen/gap_medium"
+            android:paddingLeft="@dimen/gap_large"
+            android:paddingRight="@dimen/gap_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/TextView.Label.Medium.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:text="@string/update_data_automatically" />
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <RadioGroup
+                android:id="@+id/automaticUpdatesRadioGroup"
+                style="@style/RadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/wifiOrDataPlanRadioButton"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:text="@string/update_on_wifi_or_data_plan"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <RadioButton
+                    android:id="@+id/wifiOnlyRadioButton"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"
+                    android:checked="true"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:text="@string/update_on_wifi"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <RadioButton
+                    android:id="@+id/doNotUpdateRadioButton"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:text="@string/do_not_update"
+                    android:textSize="@dimen/text_size_medium" />
+
+            </RadioGroup>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_gravity="bottom">
+        
+        <View
+            android:background="@drawable/list_divider_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentTop="true"/>
+        <View
+            android:id="@+id/dividerVertical"
+            android:background="@drawable/list_divider_holo_light"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:text="@string/cancel"
+            android:background="@drawable/item_background_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toLeftOf="@id/dividerVertical"/>
+
+        <Button
+            android:id="@+id/saveButton"
+            android:text="@string/save"
+            android:background="@drawable/item_background_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toRightOf="@id/dividerVertical"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

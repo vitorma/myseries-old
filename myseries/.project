@@ -3,6 +3,11 @@
 	<name>myseries</name>
 	<comment></comment>
 	<projects>
+		<project>actionbarsherlock</project>
+		<project>myseries-acceptancetest</project>
+		<project>myseries-unittest</project>
+		<project>myseries-unittest-junit4</project>
+		<project>viewpagerindicator</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

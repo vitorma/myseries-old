@@ -40,6 +40,12 @@
                 android:value=".gui.myseries.MySeriesActivity"/>
         </activity>
         <activity
+            android:name=".gui.preferences.PreferencesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.myseries.MySeriesActivity"/>
+        </activity>
+        <activity
             android:name=".gui.series.SeriesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
