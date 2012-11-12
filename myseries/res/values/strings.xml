@@ -116,6 +116,14 @@
     
     <string name="stop_follow_message_format" formatted="false">Do you want to stop following %s?</string>
     <string name="follow_toast_message_format" formatted="false">The series %s will be added to your list soon.</string>
+    
+    <!-- Preferences Activity -->
+    
+    <string name="update_data_automatically">UPDATE DATA AUTOMATICALLY</string>
+    <string name="update_on_wifi">Only if a wifi connection is available</string>
+    <string name="update_on_wifi_or_data_plan">When any connection is available</string>
+    <string name="do_not_update">Do not update (not recommended)</string>
+    
 
     <!-- Do not translate -->
 
