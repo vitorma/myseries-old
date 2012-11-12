@@ -33,8 +33,8 @@ import mobi.myseries.application.UpdateListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
-import mobi.myseries.gui.preferences.PreferencesActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
+import mobi.myseries.gui.settings.SettingsActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.MessageLauncher;
@@ -132,7 +132,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         }
     }
 
-    //Menu--------------------------------------------------------------------------------------------------------------
+    //Menu------------------------------------------------------------------------------------------
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -211,7 +211,9 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                 }
 
                 if (allSeriesToRemove.isEmpty()) {
-                    new ToastBuilder(context).setMessage(R.string.no_series_selected_to_remove).build().show();
+                    new ToastBuilder(context)
+                            .setMessage(R.string.no_series_selected_to_remove).build()
+                            .show();
                     return;
                 }
 
@@ -269,7 +271,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         updating = false;
     }
 
-    //Search------------------------------------------------------------------------------------------------------------
+    //Search----------------------------------------------------------------------------------------
 
     private void showSearchActivity() {
         final Intent intent = new Intent(this, SeriesSearchActivity.class);
@@ -283,10 +285,9 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     }
 
 
-    //Settings
+    //Settings--------------------------------------------------------------------------------------
     private void showSettingsActivity() {
-        final Intent intent = new Intent(this, PreferencesActivity.class);
-        startActivity(intent);
+        startActivity(SettingsActivity.newIntent(this));
     }
 
 }
