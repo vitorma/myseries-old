@@ -11,7 +11,7 @@ import mobi.myseries.shared.Specification;
 
 public class Next extends ScheduleMode implements SeriesListener {
 
-    Next(ScheduleSpecification specification, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
+    public Next(ScheduleSpecification specification, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
         super(specification, repository, following, update);
     }
 
