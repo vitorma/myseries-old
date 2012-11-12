@@ -41,19 +41,19 @@ public class Schedule {
         this.update = update;
     }
 
-    public ScheduleMode next(ScheduleSpecification specification) {
+    public ScheduleMode modeNext(ScheduleSpecification specification) {
         Validate.isNonNull(specification, "specification");
 
         return new Next(specification, this.repository, this.following, this.update);
     }
 
-    public ScheduleMode recent(ScheduleSpecification specification) {
+    public ScheduleMode modeRecent(ScheduleSpecification specification) {
         Validate.isNonNull(specification, "specification");
 
         return new Recent(specification, this.repository, this.following, this.update);
     }
 
-    public ScheduleMode upcoming(ScheduleSpecification specification) {
+    public ScheduleMode modeUpcoming(ScheduleSpecification specification) {
         Validate.isNonNull(specification, "specification");
 
         return new Upcoming(specification, this.repository, this.following, this.update);

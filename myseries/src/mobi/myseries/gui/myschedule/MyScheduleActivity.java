@@ -55,7 +55,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
             .putExtra(Extra.SCHEDULE_MODE, scheduleMode);
     }
 
-    public static SchedulePreferences preferences(int scheduleMode) {
+    public static SchedulePreferences preferencesOfMode(int scheduleMode) {
         return SchedulePreferences.from(App.context(), TAG + scheduleMode);
     }
 
@@ -72,7 +72,6 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     protected void onStart() {
         super.onStart();
 
-        //TODO (Cleber) Delegate to State
         if (this.state.isShowingDialog) {
             this.state.dialog.show();
         }
@@ -82,7 +81,6 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     protected void onStop() {
         super.onStop();
 
-        //TODO (Cleber) Delegate to State
         if (this.state.dialog != null && this.state.dialog.isShowing()) {
             this.state.isShowingDialog = true;
             this.state.dialog.dismiss();
@@ -107,8 +105,8 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        boolean isShowingSpecialEpisodes = this.preferences().showSpecialEpisodes();
-        boolean isShowingSeenEpisodes = this.preferences().showSeenEpisodes();
+        boolean isShowingSpecialEpisodes = this.preferencesForCurrentMode().showSpecialEpisodes();
+        boolean isShowingSeenEpisodes = this.preferencesForCurrentMode().showSeenEpisodes();
 
         MenuItem hideShowSpecialEpisodes = menu.findItem(R.id.hideShowSpecialEpisodes);
         MenuItem hideShowSeenEpisodes = menu.findItem(R.id.hideShowSeenEpisodes);
@@ -158,8 +156,6 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         }
     }
 
-    //--------------------------------------------------------------------------------------------------------------------------------------
-
     private void setUpState() {
         Object retainedState = this.getLastCustomNonConfigurationInstance();
 
@@ -168,14 +164,14 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         } else {
             this.state = new State();
             this.state.mode = this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
-            this.state.adapterForModeRecent = this.newAdapterForScheduleMode(ScheduleMode.RECENT);
-            this.state.adapterForModeUpcoming = this.newAdapterForScheduleMode(ScheduleMode.UPCOMING);
-            this.state.adapterForModeNext = this.newAdapterForScheduleMode(ScheduleMode.NEXT);
+            this.state.adapterForModeRecent = this.newAdapterForMode(ScheduleMode.RECENT);
+            this.state.adapterForModeUpcoming = this.newAdapterForMode(ScheduleMode.UPCOMING);
+            this.state.adapterForModeNext = this.newAdapterForMode(ScheduleMode.NEXT);
         }
     }
 
-    private ScheduleAdapter newAdapterForScheduleMode(int scheduleMode) {
-        SchedulePreferences preferences = preferences(scheduleMode);
+    private ScheduleAdapter newAdapterForMode(int scheduleMode) {
+        SchedulePreferences preferences = preferencesOfMode(scheduleMode);
 
         return new ScheduleAdapter(this, scheduleMode, preferences.fullSpecification());
     }
@@ -197,28 +193,25 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         actionBar.setSelectedNavigationItem(this.state.mode);
     }
 
-    //--------------------------------------------------------------------------------------------------------------------------------------
-
     private void hideOrShowSpecialEpisodes() {
-        boolean isShowingSpecialEpisodes = this.preferences().showSpecialEpisodes();
+        boolean isShowingSpecialEpisodes = this.preferencesForCurrentMode().showSpecialEpisodes();
 
-        this.preferences().setIfShowSpecialEpisodes(!isShowingSpecialEpisodes);
-        this.adapter().hideOrShowSpecialEpisodes(!isShowingSpecialEpisodes);
+        this.preferencesForCurrentMode().setIfShowSpecialEpisodes(!isShowingSpecialEpisodes);
+        this.adapterForCurrentMode().hideOrShowSpecialEpisodes(!isShowingSpecialEpisodes);
     }
 
     private void hideOrShowSeenEpisodes() {
-        boolean isShowingSeenEpisodes = this.preferences().showSeenEpisodes();
+        boolean isShowingSeenEpisodes = this.preferencesForCurrentMode().showSeenEpisodes();
 
-        this.preferences().setIfShowSeenEpisodes(!isShowingSeenEpisodes);
-        this.adapter().hideOrShowSeenEpisodes(!isShowingSeenEpisodes);
+        this.preferencesForCurrentMode().setIfShowSeenEpisodes(!isShowingSeenEpisodes);
+        this.adapterForCurrentMode().hideOrShowSeenEpisodes(!isShowingSeenEpisodes);
     }
 
     private void showSortingDialog() {
-        final Context context = this;
-        final SchedulePreferences preferences = this.preferences();
-        final ScheduleAdapter adapter = this.adapter();
+        final SchedulePreferences preferences = this.preferencesForCurrentMode();
+        final ScheduleAdapter adapter = this.adapterForCurrentMode();
 
-        this.state.dialog = new SortingDialogBuilder(context)
+        this.state.dialog = new SortingDialogBuilder(this)
             .setTitleArgument(R.string.episodes)
             .setDefaultSortMode(preferences.sortMode())
             .setNewestFirstOptionListener(new OptionListener() {
@@ -241,12 +234,11 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private void showFilterDialog() {
-        final Context context = this;
-        final SchedulePreferences preferences = this.preferences();
+        final SchedulePreferences preferences = this.preferencesForCurrentMode();
         final Map<Series, Boolean> filterOptions = preferences.seriesFilterOptions();
-        final ScheduleAdapter adapter = this.adapter();
+        final ScheduleAdapter adapter = this.adapterForCurrentMode();
 
-        this.state.dialog = new SeriesFilterDialogBuilder(context)
+        this.state.dialog = new SeriesFilterDialogBuilder(this)
             .setDefaultFilterOptions(filterOptions)
             .setOnFilterListener(new OnFilterListener() {
                 @Override
@@ -260,11 +252,11 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         this.state.dialog.show();
     }
 
-    private ScheduleAdapter adapter() {
+    private ScheduleAdapter adapterForCurrentMode() {
         return this.adapterForMode(this.state.mode);
     }
 
-    private SchedulePreferences preferences() {
+    private SchedulePreferences preferencesForCurrentMode() {
         return SchedulePreferences.from(this, TAG + this.state.mode);
     }
 

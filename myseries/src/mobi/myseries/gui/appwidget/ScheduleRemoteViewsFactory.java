@@ -92,13 +92,13 @@ public class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteView
 
         switch(scheduleMode) {
             case ScheduleMode.RECENT:
-                this.episodes = App.schedule().recent(specification).episodes();
+                this.episodes = App.schedule().modeRecent(specification).episodes();
                 break;
             case ScheduleMode.NEXT:
-                this.episodes = App.schedule().next(specification).episodes();
+                this.episodes = App.schedule().modeNext(specification).episodes();
                 break;
             case ScheduleMode.UPCOMING:
-                this.episodes = App.schedule().upcoming(specification).episodes();
+                this.episodes = App.schedule().modeUpcoming(specification).episodes();
                 break;
         }
     }

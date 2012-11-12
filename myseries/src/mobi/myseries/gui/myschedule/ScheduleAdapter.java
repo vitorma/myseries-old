@@ -23,6 +23,7 @@ package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import mobi.myseries.R;
@@ -63,21 +64,16 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private ScheduleSpecification specification;
     private ScheduleMode items;
     private int[] cellStates;
-    private boolean isLoading;
-    private ListenerSet<ScheduleAdapter.Listener> listeners;
 
     public ScheduleAdapter(Context context, int scheduleMode, ScheduleSpecification specification) {
         this.context = context;
         this.scheduleMode = scheduleMode;
         this.specification = specification;
-        this.listeners = new ListenerSet<ScheduleAdapter.Listener>();
 
         this.reload();
     }
 
-    public boolean isLoading() {
-        return this.isLoading;
-    }
+    /* BaseAdapter */
 
     @Override
     public int getCount() {
@@ -108,82 +104,109 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
-        EpisodeViewHolder viewHolder = null;
-
-        //TODO (Cleber) Extract method needSeparator(position)
-
-        boolean needSeparator = false;
-
-        switch (this.cellStates[position]) {
-            case STATE_SECTIONED_CELL:
-                needSeparator = true;
-                break;
-            case STATE_REGULAR_CELL:
-                needSeparator = false;
-                break;
-            case STATE_UNKNOWN:
-            default:
-                if (position == 0) {
-                    needSeparator = true;
-                } else {
-                    Episode current = this.items.episodeAt(position);
-                    Episode previous = this.items.episodeAt(position - 1);
-
-                    if (Objects.areDifferent(current.airDate(), previous.airDate())) {
-                        needSeparator = true;
-                    }
-                }
-
-                this.cellStates[position] = needSeparator ? STATE_SECTIONED_CELL : STATE_REGULAR_CELL;
-                break;
-        }
-
-        //TODO (Cleber) Extract method or override newView() ?
-
-        if (view == null) {
-            view = View.inflate(this.context, R.layout.myschedule_item, null);
-            viewHolder = new EpisodeViewHolder();
-            viewHolder.section = view.findViewById(R.id.section);
-            viewHolder.dateTextView = (TextView) view.findViewById(R.id.date);
-            viewHolder.relativeTimeTextView = (TextView) view.findViewById(R.id.relativeDate);
-            viewHolder.seriesNameTextView = (TextView) view.findViewById(R.id.episodeSeriesTextView);
-            viewHolder.episodeNumberTextView = (TextView) view.findViewById(R.id.episodeSeasonEpisodeTextView);
-            viewHolder.seenMarkCheckBox = (SeenMark) view.findViewById(R.id.episodeIsViewedCheckBox);
-            viewHolder.seriesPosterImageView = (ImageView) view.findViewById(R.id.seriesPoster);
-            view.setTag(viewHolder);
-        } else {
-            viewHolder = (EpisodeViewHolder) view.getTag();
-        }
+        View view = Objects.nullSafe(convertView, View.inflate(this.context, R.layout.myschedule_item, null));
+        ViewHolder viewHolder = (view == convertView) ? (ViewHolder) view.getTag() : new ViewHolder(view);
 
         Episode episode = this.items.episodeAt(position);
-        Series series = App.getSeries(episode.seriesId());
+        Series series = SERIES_PROVIDER.getSeries(episode.seriesId());
 
-        if (needSeparator) {
+        this.setUpCellSection(position, viewHolder, episode);
+        this.setUpCellBody(viewHolder, series, episode);
+
+        return view;
+    }
+
+    private void setUpCellSection(int position, ViewHolder viewHolder, Episode episode) {
+        this.updateCellStates(position);
+
+        if (this.isCellSectioned(position)) {
             DateFormat dateformat = new SimpleDateFormat(this.context.getString(R.string.date_format_with_weekday));
             String unavailable = this.context.getString(R.string.unavailable_date);
             String formattedDate = Dates.toString(episode.airDate(), dateformat, unavailable);
 
-            viewHolder.section.setVisibility(View.VISIBLE);
             viewHolder.dateTextView.setText(formattedDate);
             viewHolder.relativeTimeTextView.setText(Dates.relativeTimeStringForNear(episode.airDate()));
+            viewHolder.section.setVisibility(View.VISIBLE);
         } else {
             viewHolder.section.setVisibility(View.GONE);
         }
+    }
 
-        String numberFormat = this.context.getString(R.string.episode_number_format);
-
-        viewHolder.seriesNameTextView.setText(series.name());
-        viewHolder.episodeNumberTextView.setText(String.format(numberFormat, episode.seasonNumber(), episode.number()));
-
+    public void setUpCellBody(ViewHolder viewHolder, Series series, Episode episode) {
         Bitmap seriesPoster = App.imageProvider().getPosterOf(series);
         Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
         viewHolder.seriesPosterImageView.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
 
+        viewHolder.seriesNameTextView.setText(series.name());
+
+        String numberFormat = this.context.getString(R.string.episode_number_format);
+        viewHolder.episodeNumberTextView.setText(String.format(numberFormat, episode.seasonNumber(), episode.number()));
+
         viewHolder.seenMarkCheckBox.setChecked(episode.wasSeen());
         viewHolder.seenMarkCheckBox.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
+    }
 
-        return view;
+    private void updateCellStates(int position) {
+        if (this.cellStates[position] == STATE_UNKNOWN) {
+            this.cellStates[position] = this.calculateCellState(position);
+        }
+    }
+
+    private int calculateCellState(int position) {
+        return this.shouldBeSectioned(position) ? STATE_SECTIONED_CELL : STATE_REGULAR_CELL;
+    }
+
+    private boolean shouldBeSectioned(int position) {
+        if (position == 0) {
+            return true;
+        }
+
+        Date current = this.items.episodeAt(position).airDate();
+        Date previous = this.items.episodeAt(position - 1).airDate();
+
+        return Objects.areDifferent(current, previous);
+    }
+
+    private boolean isCellSectioned(int position) {
+        return this.cellStates[position] == STATE_SECTIONED_CELL;
+    }
+
+    /* Specification change */
+
+    public void sortBy(int sortMode) {
+        if (this.specification.sortMode() != sortMode) {
+            this.specification.specifySortMode(sortMode);
+            this.reload();
+        }
+    }
+
+    public void hideOrShowSpecialEpisodes(boolean show) {
+        if (this.specification.isSatisfiedBySpecialEpisodes() != show) {
+            this.specification.specifyInclusionOfSpecialEpisodes(show);
+            this.reload();
+        }
+    }
+
+    public void hideOrShowSeenEpisodes(boolean show) {
+        if (this.specification.isSatisfiedBySeenEpisodes() != show) {
+            this.specification.specifyInclusionOfSeenEpisodes(show);
+            this.reload();
+        }
+    }
+
+    public void hideOrShowSeries(Map<Series, Boolean> seriesFilterOptions) {
+        boolean needReload = false;
+
+        for (Series s: seriesFilterOptions.keySet()) {
+            if (this.specification.isSatisfiedByEpisodesOfSeries(s.id()) != seriesFilterOptions.get(s)) {
+                this.specification.specifyInclusionOf(s, seriesFilterOptions.get(s));
+                needReload = true;
+            }
+        }
+
+        if (needReload) {
+            this.reload();
+        }
     }
 
     private void reload() {
@@ -212,13 +235,13 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private void setUpData() {
         switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
-                this.items = SCHEDULE.recent(this.specification);
+                this.items = SCHEDULE.modeRecent(this.specification);
                 break;
             case ScheduleMode.NEXT:
-                this.items = SCHEDULE.next(this.specification);
+                this.items = SCHEDULE.modeNext(this.specification);
                 break;
             case ScheduleMode.UPCOMING:
-                this.items = SCHEDULE.upcoming(this.specification);
+                this.items = SCHEDULE.modeUpcoming(this.specification);
                 break;
         }
 
@@ -226,69 +249,50 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         this.items.register(this);
     }
 
-    public void sortBy(int sortMode) {
-        if (this.specification.sortMode() == sortMode) {return;}
+    /* ViewHolder */
 
-        this.specification.specifySortMode(sortMode);
-        this.reload();
-    }
+    private static class ViewHolder {
+        private View section;
+        private ImageView seriesPosterImageView;
+        private TextView dateTextView;
+        private TextView relativeTimeTextView;
+        private TextView seriesNameTextView;
+        private TextView episodeNumberTextView;
+        private SeenMark seenMarkCheckBox;
 
-    public void hideOrShowSpecialEpisodes(boolean show) {
-        if (this.specification.isSatisfiedBySpecialEpisodes() == show) {
-            return;
+        private ViewHolder(View view) {
+            this.section = view.findViewById(R.id.section);
+            this.dateTextView = (TextView) view.findViewById(R.id.date);
+            this.relativeTimeTextView = (TextView) view.findViewById(R.id.relativeDate);
+            this.seriesNameTextView = (TextView) view.findViewById(R.id.episodeSeriesTextView);
+            this.episodeNumberTextView = (TextView) view.findViewById(R.id.episodeSeasonEpisodeTextView);
+            this.seenMarkCheckBox = (SeenMark) view.findViewById(R.id.episodeIsViewedCheckBox);
+            this.seriesPosterImageView = (ImageView) view.findViewById(R.id.seriesPoster);
+
+            view.setTag(this);
         }
 
-        this.specification.specifyInclusionOfSpecialEpisodes(show);
-        this.reload();
-    }
-
-    public void hideOrShowSeenEpisodes(boolean show) {
-        if (this.specification.isSatisfiedBySeenEpisodes() == show) {
-            return;
-        }
-
-        this.specification.specifyInclusionOfSeenEpisodes(show);
-        this.reload();
-    }
-
-    public void hideOrShowSeries(Map<Series, Boolean> filterOptions) {
-        boolean needReload = false;
-
-        for (Series s: filterOptions.keySet()) {
-            if (this.specification.isSatisfiedByEpisodesOfSeries(s.id()) != filterOptions.get(s)) {
-                this.specification.specifyInclusionOf(s, filterOptions.get(s));
-                needReload = true;
-            }
-        }
-
-        if (!needReload) {return;}
-
-        this.reload();
-    }
-
-    @Override
-    public boolean register(Listener listener) {
-        return this.listeners.register(listener);
-    }
-
-    @Override
-    public boolean deregister(Listener listener) {
-        return this.listeners.deregister(listener);
-    }
-
-    private void notifyStartLoading() {
-        for (Listener listener : this.listeners) {
-            listener.onStartLoading();
+        private OnClickListener seenMarkCheckBoxListener(final Episode episode) {
+            return new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ViewHolder.this.seenMarkCheckBox.isChecked()) {
+                        SERIES_PROVIDER.markEpisodeAsSeen(episode);
+                    } else {
+                        SERIES_PROVIDER.markEpisodeAsNotSeen(episode);
+                    }
+                }
+            };
         }
     }
 
-    private void notifyFinishLoading() {
-        for (Listener listener : this.listeners) {
-            listener.onFinishLoading();
-        }
+    /* ScheduleAdapter.Holder */
+
+    public static interface Holder {
+        public ScheduleAdapter adapterForMode(int scheduleMode);
     }
 
-    //Listening---------------------------------------------------------------------------------------------------------
+    /* ScheduleListener */
 
     @Override
     public void onScheduleStateChanged() {
@@ -301,37 +305,39 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         this.reload();
     }
 
+    /* ScheduleAdapter.Listener */
+
     public static interface Listener {
         public void onStartLoading();
         public void onFinishLoading();
     }
 
-    public static interface Holder {
-        public ScheduleAdapter adapterForMode(int scheduleMode);
+    private boolean isLoading;
+    private ListenerSet<ScheduleAdapter.Listener> listeners = new ListenerSet<ScheduleAdapter.Listener>();
+
+    public boolean isLoading() {
+        return this.isLoading;
     }
 
-    //ViewHolder--------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean register(ScheduleAdapter.Listener listener) {
+        return this.listeners.register(listener);
+    }
 
-    private static class EpisodeViewHolder {
-        private View section;
-        private ImageView seriesPosterImageView;
-        private TextView dateTextView;
-        private TextView relativeTimeTextView;
-        private TextView seriesNameTextView;
-        private TextView episodeNumberTextView;
-        private SeenMark seenMarkCheckBox;
+    @Override
+    public boolean deregister(ScheduleAdapter.Listener listener) {
+        return this.listeners.deregister(listener);
+    }
 
-        private OnClickListener seenMarkCheckBoxListener(final Episode episode) {
-            return new OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    if (EpisodeViewHolder.this.seenMarkCheckBox.isChecked()) {
-                        SERIES_PROVIDER.markEpisodeAsSeen(episode);
-                    } else {
-                        SERIES_PROVIDER.markEpisodeAsNotSeen(episode);
-                    }
-                }
-            };
+    private void notifyStartLoading() {
+        for (ScheduleAdapter.Listener listener : this.listeners) {
+            listener.onStartLoading();
+        }
+    }
+
+    private void notifyFinishLoading() {
+        for (ScheduleAdapter.Listener listener : this.listeners) {
+            listener.onFinishLoading();
         }
     }
 }
