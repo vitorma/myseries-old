@@ -92,7 +92,7 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
         }
     }
 
-    /* Publisher */
+    /* Publisher<ScheduleListener> */
 
     @Override
     public boolean register(ScheduleListener listener) {
@@ -107,7 +107,6 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
     protected void notifyOnScheduleStateChanged() {
         for (ScheduleListener listener : this.listeners) {
             listener.onScheduleStateChanged();
-			
         }
     }
 
@@ -120,7 +119,7 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
     /* SeriesFollowingListener */
 
     @Override
-    public void onFollowingStart(Series seriesToFollow) {}
+    public void onFollowingStart(Series seriesToFollow) { }
 
     @Override
     public final void onFollowing(Series series) {
@@ -128,7 +127,7 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
     }
 
     @Override
-    public void onFollowingFailure(Series series, Exception e) {}
+    public void onFollowingFailure(Series series, Exception e) { }
 
     @Override
     public final void onStopFollowing(Series series) {
@@ -143,16 +142,16 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
     /* UpdateListener */
 
     @Override
-    public final void onUpdateStart() {}
+    public final void onUpdateStart() { }
 
     @Override
-    public final void onUpdateFailure(Exception e) {}
+    public final void onUpdateFailure(Exception e) { }
 
     @Override
     public final void onUpdateSuccess() {
         this.notifyOnScheduleStructureChanged();
     }
-    
+
     @Override
-    public final void onUpdateNotNecessary() {}
+    public final void onUpdateNotNecessary() { }
 }
