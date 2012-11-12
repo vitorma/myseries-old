@@ -24,12 +24,11 @@ package mobi.myseries.domain.model;
 import java.util.Date;
 
 import mobi.myseries.domain.constant.Invalid;
-import mobi.myseries.shared.HasDate;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
 
-public class Episode implements Publisher<EpisodeListener>, HasDate {
+public class Episode implements Publisher<EpisodeListener> {
     private int id;
     private int seriesId;
     private int number;
@@ -186,11 +185,6 @@ public class Episode implements Publisher<EpisodeListener>, HasDate {
                 listener.onMarkAsNotSeen(this);
             }
         }
-    }
-
-    @Override
-    public Date getDate() {
-        return this.airDate;
     }
 
     @Override
