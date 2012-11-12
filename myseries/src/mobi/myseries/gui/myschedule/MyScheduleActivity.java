@@ -27,22 +27,18 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.myschedule.ScheduleFragment.NextFragment;
-import mobi.myseries.gui.myschedule.ScheduleFragment.RecentFragment;
-import mobi.myseries.gui.myschedule.ScheduleFragment.UpcomingFragment;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.gui.shared.SortingDialogBuilder;
 import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
-import mobi.myseries.gui.shared.TabsAdapter;
+import mobi.myseries.gui.shared.TabPagerAdapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -190,26 +186,15 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(R.string.my_schedule);
-
-        this.setUpNavigationFor(actionBar);
-    }
-
-    private void setUpNavigationFor(ActionBar actionBar) {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        ViewPager viewPager = (ViewPager) this.findViewById(R.id.viewPager);
-        TabsAdapter tabsAdapter = new TabsAdapter(this, actionBar, viewPager);
-
-        tabsAdapter.addTab(this.newTab(R.string.recent), RecentFragment.class, null, ScheduleMode.RECENT, false);
-        tabsAdapter.addTab(this.newTab(R.string.next), NextFragment.class, null, ScheduleMode.NEXT, false);
-        tabsAdapter.addTab(this.newTab(R.string.upcoming), UpcomingFragment.class, null, ScheduleMode.UPCOMING, false);
-        tabsAdapter.register(this.state);
+        new TabPagerAdapter(this)
+            .addTab(R.string.recent, ScheduleFragment.newInstance(ScheduleMode.RECENT))
+            .addTab(R.string.next, ScheduleFragment.newInstance(ScheduleMode.NEXT))
+            .addTab(R.string.upcoming, ScheduleFragment.newInstance(ScheduleMode.UPCOMING))
+            .register(this.state);
 
         actionBar.setSelectedNavigationItem(this.state.mode);
-    }
-
-    private ActionBar.Tab newTab(int tabNameResource) {
-        return this.getSupportActionBar().newTab().setText(tabNameResource);
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------
@@ -283,7 +268,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         return SchedulePreferences.from(this, TAG + this.state.mode);
     }
 
-    private static class State implements TabsAdapter.Listener {
+    private static class State implements TabPagerAdapter.Listener {
         private int mode;
         private Dialog dialog;
         private boolean isShowingDialog;

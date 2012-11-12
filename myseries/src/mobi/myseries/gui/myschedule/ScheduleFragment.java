@@ -22,9 +22,9 @@
 package mobi.myseries.gui.myschedule;
 
 import mobi.myseries.R;
-import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.episodes.EpisodesActivity;
+import mobi.myseries.gui.shared.Extra;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -32,12 +32,25 @@ import android.widget.AdapterView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public abstract class ScheduleFragment extends SherlockListFragment implements ScheduleAdapter.Listener {
+public class ScheduleFragment extends SherlockListFragment implements ScheduleAdapter.Listener {
     private int scheduleMode;
     private ScheduleAdapter adapter;
 
-    public ScheduleFragment(int scheduleMode) {
-        this.scheduleMode = scheduleMode;
+    public static ScheduleFragment newInstance(int scheduleMode) {
+        Bundle arguments = new Bundle();
+        arguments.putInt(Extra.SCHEDULE_MODE, scheduleMode);
+
+        ScheduleFragment instance = new ScheduleFragment();
+        instance.setArguments(arguments);
+
+        return instance;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.scheduleMode = this.getArguments().getInt(Extra.SCHEDULE_MODE);
     }
 
     @Override
@@ -113,26 +126,6 @@ public abstract class ScheduleFragment extends SherlockListFragment implements S
             this.setListAdapter(this.adapter);
         } catch (ClassCastException e) {
             throw new RuntimeException("Activity should implement ScheduleAdapterHolder");
-        }
-    }
-
-    /* Concrete children */
-
-    public static class RecentFragment extends ScheduleFragment {
-        public RecentFragment() {
-            super(ScheduleMode.RECENT);
-        }
-    }
-
-    public static class NextFragment extends ScheduleFragment {
-        public NextFragment() {
-            super(ScheduleMode.NEXT);
-        }
-    }
-
-    public static class UpcomingFragment extends ScheduleFragment {
-        public UpcomingFragment() {
-            super(ScheduleMode.UPCOMING);
         }
     }
 }
