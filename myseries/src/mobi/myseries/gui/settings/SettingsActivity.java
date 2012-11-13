@@ -22,10 +22,10 @@
 package mobi.myseries.gui.settings;
 
 import mobi.myseries.R;
+import mobi.myseries.application.SettingsProvider;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.View;
@@ -37,9 +37,6 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 public class SettingsActivity extends SherlockActivity {
-    public static final String PREFERENCES_NAME = "mobi.myseries.gui.settings.MySeriesPreferences";
-    public static final String ENABLE_AUTOMATIC_UPDATES_KEY = "automaticUpdateEnabled_";
-    public static final String ENABLED_UPDATES_ON_DATAPLAN_KEY = "updateOnDataPlanEnabled_";
     private RadioGroup automaticUpdatesRadioGroup;
     private Button cancelButton;
     private Button saveButton;
@@ -71,11 +68,12 @@ public class SettingsActivity extends SherlockActivity {
     }
 
     private void loadSettings() {
-        SharedPreferences settings = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        if (!settings.getBoolean(ENABLE_AUTOMATIC_UPDATES_KEY, true)) {
+        SettingsProvider settings = settingsProviderFor(this);
+
+        if (!settings.updateAutomatically()) {
             this.automaticUpdatesRadioGroup.check(R.id.doNotUpdateRadioButton);
 
-        } else if (settings.getBoolean(ENABLED_UPDATES_ON_DATAPLAN_KEY, false)) {
+        } else if (settings.updateOnDataPlan()) {
             this.automaticUpdatesRadioGroup.check(R.id.wifiOrDataPlanRadioButton);
 
         } else {
@@ -113,32 +111,21 @@ public class SettingsActivity extends SherlockActivity {
     }
 
     private void saveSettings() {
-
-        SharedPreferences settings =
-                this.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-
         switch (this.automaticUpdatesRadioGroup.getCheckedRadioButtonId()) {
         case R.id.doNotUpdateRadioButton:
-            settings
-                    .edit()
-                    .putBoolean(ENABLE_AUTOMATIC_UPDATES_KEY, false)
-                    .commit();
-
+            settingsProviderFor(this).putUpdateAutomatically(false);
             break;
 
         case R.id.wifiOnlyRadioButton:
-            settings
-                    .edit()
-                    .putBoolean(ENABLE_AUTOMATIC_UPDATES_KEY, true)
-                    .putBoolean(ENABLED_UPDATES_ON_DATAPLAN_KEY, false)
-                    .commit();
+            settingsProviderFor(this).putUpdateAutomatically(true)
+                    .putUpdateOnDataPlan(false);
+
             break;
+
         case R.id.wifiOrDataPlanRadioButton:
-            settings
-                    .edit()
-                    .putBoolean(ENABLE_AUTOMATIC_UPDATES_KEY, true)
-                    .putBoolean(ENABLED_UPDATES_ON_DATAPLAN_KEY, true)
-                    .commit();
+            settingsProviderFor(this).putUpdateAutomatically(true)
+                    .putUpdateOnDataPlan(true);
+
             break;
         }
     }
@@ -162,5 +149,9 @@ public class SettingsActivity extends SherlockActivity {
         Intent intent = new Intent(context, SettingsActivity.class);
 
         return intent;
+    }
+
+    private SettingsProvider settingsProviderFor(Context context) {
+        return new SettingsProvider(context);
     }
 }
