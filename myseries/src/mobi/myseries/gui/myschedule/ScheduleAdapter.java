@@ -226,8 +226,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             @Override
             protected void onPostExecute(Void result) {
                 ScheduleAdapter.this.isLoading = false;
-                ScheduleAdapter.this.notifyDataSetChanged();
                 ScheduleAdapter.this.notifyFinishLoading();
+                ScheduleAdapter.this.notifyDataSetChanged();
             }
         }.execute();
     }
@@ -302,6 +302,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     @Override
     public void onScheduleStructureChanged() {
+        //TODO (Cleber) Find a better place to get preferences from
+        this.specification = MyScheduleActivity.preferencesOfMode(this.scheduleMode).fullSpecification();
         this.reload();
     }
 
