@@ -28,6 +28,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
 import mobi.myseries.gui.shared.SortMode;
@@ -72,21 +73,14 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     protected void onStart() {
         super.onStart();
 
-        if (this.state.isShowingDialog) {
-            this.state.dialog.show();
-        }
+        this.state.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        if (this.state.dialog != null && this.state.dialog.isShowing()) {
-            this.state.isShowingDialog = true;
-            this.state.dialog.dismiss();
-        } else {
-            this.state.isShowingDialog = false;
-        }
+        this.state.onStop();
     }
 
     @Override
@@ -163,6 +157,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
             this.state = (State) retainedState;
         } else {
             this.state = new State();
+            this.state.messageLauncher = new MessageLauncher(this);
             this.state.mode = this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
             this.state.adapterForModeRecent = this.newAdapterForMode(ScheduleMode.RECENT);
             this.state.adapterForModeUpcoming = this.newAdapterForMode(ScheduleMode.UPCOMING);
@@ -264,6 +259,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         private int mode;
         private Dialog dialog;
         private boolean isShowingDialog;
+        private MessageLauncher messageLauncher;
         private ScheduleAdapter adapterForModeRecent;
         private ScheduleAdapter adapterForModeUpcoming;
         private ScheduleAdapter adapterForModeNext;
@@ -271,6 +267,25 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         @Override
         public void onSelected(int position) {
             this.mode = position;
+        }
+
+        private void onStart() {
+            if (this.isShowingDialog) {
+                this.dialog.show();
+            }
+
+            this.messageLauncher.loadState();
+        }
+
+        private void onStop() {
+            if (this.dialog != null && this.dialog.isShowing()) {
+                this.isShowingDialog = true;
+                this.dialog.dismiss();
+            } else {
+                this.isShowingDialog = false;
+            }
+
+            this.messageLauncher.onStop();
         }
     }
 }
