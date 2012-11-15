@@ -19,24 +19,23 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.shared;
+package mobi.myseries.gui.preferences;
 
+import mobi.myseries.application.App;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 public class PrimitivePreferences {
+    private static final Context CONTEXT = App.context();
     private static final String DEFAULT_KEY_SUFFIX = "";
 
-    private Context context;
     private String name;
     private String keySuffix;
 
-    public PrimitivePreferences(Context context, String name) {
-        Validate.isNonNull(context, "context");
+    public PrimitivePreferences(String name) {
         Validate.isNonBlank(name, "name");
 
-        this.context = context;
         this.name = name;
         this.keySuffix = DEFAULT_KEY_SUFFIX;
     }
@@ -84,7 +83,7 @@ public class PrimitivePreferences {
     }
 
     private SharedPreferences getSharedPreferences() {
-        return this.context.getSharedPreferences(this.name, Context.MODE_PRIVATE);
+        return CONTEXT.getSharedPreferences(this.name, Context.MODE_PRIVATE);
     }
 
     private SharedPreferences.Editor getEditor() {

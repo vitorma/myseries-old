@@ -34,6 +34,7 @@ import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.preferences.SchedulePreferences;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.Dates;

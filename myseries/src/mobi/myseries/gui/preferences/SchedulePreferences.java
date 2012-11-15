@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.myschedule;
+package mobi.myseries.gui.preferences;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,9 +29,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.PrimitivePreferences;
 import mobi.myseries.gui.shared.SortMode;
-import android.content.Context;
 
 public class SchedulePreferences {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
@@ -50,12 +48,12 @@ public class SchedulePreferences {
 
     private PrimitivePreferences primitive;
 
-    private SchedulePreferences(Context context, String clientId) {
-        this.primitive = new PrimitivePreferences(context, NAME).setKeySuffix(clientId);
+    private SchedulePreferences(String clientId) {
+        this.primitive = new PrimitivePreferences(NAME).setKeySuffix(clientId);
     }
 
-    public static SchedulePreferences from(Context context, String clientId) {
-        return new SchedulePreferences(context, clientId);
+    public static SchedulePreferences from(String clientId) {
+        return new SchedulePreferences(clientId);
     }
 
     public int sortMode() {

@@ -26,6 +26,7 @@ import java.util.Map;
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.preferences.SchedulePreferences;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
@@ -161,7 +162,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private ScheduleAdapter newAdapterForMode(int scheduleMode) {
-        return new ScheduleAdapter(scheduleMode, SchedulePreferences.from(this, TAG + scheduleMode));
+        return new ScheduleAdapter(scheduleMode, SchedulePreferences.from(TAG + scheduleMode));
     }
 
     private void setUpActionBar() {
@@ -240,7 +241,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private SchedulePreferences preferencesForCurrentMode() {
-        return SchedulePreferences.from(this, TAG + this.state.mode);
+        return SchedulePreferences.from(TAG + this.state.mode);
     }
 
     private static class State implements TabPagerAdapter.Listener {
