@@ -51,21 +51,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Publisher<ScheduleAdapter.Listener> {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final Context CONTEXT = App.context();
     private static final Schedule SCHEDULE = App.schedule();
+    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
     private static final int STATE_UNKNOWN = 0;
     private static final int STATE_SECTIONED_CELL = 1;
     private static final int STATE_REGULAR_CELL = 2;
 
-    private Context context;
     private int scheduleMode;
     private SchedulePreferences preferences;
     private ScheduleMode items;
     private int[] cellStates;
 
-    public ScheduleAdapter(Context context, int scheduleMode, SchedulePreferences preferences) {
-        this.context = context;
+    public ScheduleAdapter(int scheduleMode, SchedulePreferences preferences) {
         this.scheduleMode = scheduleMode;
         this.preferences = preferences;
 
@@ -103,7 +102,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = Objects.nullSafe(convertView, View.inflate(this.context, R.layout.myschedule_item, null));
+        View view = Objects.nullSafe(convertView, View.inflate(CONTEXT, R.layout.myschedule_item, null));
         ViewHolder viewHolder = (view == convertView) ? (ViewHolder) view.getTag() : new ViewHolder(view);
 
         Episode episode = this.items.episodeAt(position);
@@ -119,8 +118,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         this.updateCellStates(position);
 
         if (this.isCellSectioned(position)) {
-            DateFormat dateformat = new SimpleDateFormat(this.context.getString(R.string.date_format_with_weekday));
-            String unavailable = this.context.getString(R.string.unavailable_date);
+            DateFormat dateformat = new SimpleDateFormat(CONTEXT.getString(R.string.date_format_with_weekday));
+            String unavailable = CONTEXT.getString(R.string.unavailable_date);
             String formattedDate = Dates.toString(episode.airDate(), dateformat, unavailable);
 
             viewHolder.dateTextView.setText(formattedDate);
@@ -138,7 +137,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
         viewHolder.seriesNameTextView.setText(series.name());
 
-        String numberFormat = this.context.getString(R.string.episode_number_format);
+        String numberFormat = CONTEXT.getString(R.string.episode_number_format);
         viewHolder.episodeNumberTextView.setText(String.format(numberFormat, episode.seasonNumber(), episode.number()));
 
         viewHolder.seenMarkCheckBox.setChecked(episode.wasSeen());

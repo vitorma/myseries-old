@@ -161,7 +161,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private ScheduleAdapter newAdapterForMode(int scheduleMode) {
-        return new ScheduleAdapter(this, scheduleMode, SchedulePreferences.from(this, TAG + scheduleMode));
+        return new ScheduleAdapter(scheduleMode, SchedulePreferences.from(this, TAG + scheduleMode));
     }
 
     private void setUpActionBar() {
