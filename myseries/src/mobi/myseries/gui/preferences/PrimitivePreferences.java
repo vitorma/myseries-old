@@ -28,7 +28,9 @@ import android.content.SharedPreferences;
 
 public class PrimitivePreferences {
     private static final Context CONTEXT = App.context();
+
     private static final String DEFAULT_KEY_SUFFIX = "";
+    private static final String SUFFIX_SEPARATOR = ".";
 
     private String name;
     private String keySuffix;
@@ -40,10 +42,10 @@ public class PrimitivePreferences {
         this.keySuffix = DEFAULT_KEY_SUFFIX;
     }
 
-    public PrimitivePreferences setKeySuffix(String keySuffix) {
-        Validate.isNonBlank(keySuffix, "keySuffix");
+    public PrimitivePreferences appendingSuffixToKeys(String suffix) {
+        Validate.isNonBlank(suffix, "suffix");
 
-        this.keySuffix = keySuffix;
+        this.keySuffix += SUFFIX_SEPARATOR + suffix;
 
         return this;
     }
@@ -72,7 +74,7 @@ public class PrimitivePreferences {
 
     public boolean remove(String key) {
         return this.getEditor()
-                   .remove(key)
+                   .remove(this.compose(key))
                    .commit();
     }
 

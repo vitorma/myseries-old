@@ -28,6 +28,8 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.gui.preferences.SchedulePreferences;
+import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
 import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
@@ -37,12 +39,12 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 public class SetupService extends IntentService {
-    private static final String PREF_PAGE_KEY = "page_";
     private static final int ITEMS_PER_PAGE = 4;
 
     private int appWidgetId;
-    private RemoteViews appWidgetView;
     private String action;
+    private AppWidgetPreferences preferences;
+    private RemoteViews appWidgetView;
     private List<Episode> episodes;
     private ItemPageBrowser itemPageBrowser;
 
@@ -66,6 +68,7 @@ public class SetupService extends IntentService {
 
         this.appWidgetId = intent.getExtras().getInt(Extra.APPWIDGET_ID);
         this.action = intent.getAction();
+        this.preferences = SchedulePreferences.forAppWidget(this.appWidgetId);
         this.loadEpisodes();
         this.setupItemPageBrowser();
         this.setupAppWidgetView();
@@ -74,8 +77,8 @@ public class SetupService extends IntentService {
     }
 
     private void loadEpisodes() {
-        int scheduleMode = AppWidgetPreferenceActivity.scheduleMode(this, this.appWidgetId);
-        ScheduleSpecification specification = AppWidgetPreferenceActivity.scheduleSpecification(this, this.appWidgetId);
+        int scheduleMode = this.preferences.scheduleMode();
+        ScheduleSpecification specification = this.preferences.fullSpecification();
 
         switch(scheduleMode) {
             case ScheduleMode.RECENT:
@@ -140,12 +143,10 @@ public class SetupService extends IntentService {
     }
 
     private int currentPage() {
-        return AppWidgetPreferenceActivity.getIntPreference(
-                this, this.appWidgetId, PREF_PAGE_KEY, ItemPageBrowser.FIRST_PAGE);
+        return this.preferences.currentPage();
     }
 
     private void saveCurrentPage() {
-        AppWidgetPreferenceActivity.saveIntPreference(
-                this, this.appWidgetId, PREF_PAGE_KEY, this.itemPageBrowser.currentPage());
+        this.preferences.setCurrentPage(this.itemPageBrowser.currentPage());
     }
 }

@@ -47,8 +47,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MyScheduleActivity extends SherlockFragmentActivity implements ScheduleAdapter.Holder {
-    private static final String TAG = MyScheduleActivity.class.getName();
-
     private State state;
 
     public static Intent newIntent(Context context, int scheduleMode) {
@@ -162,7 +160,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private ScheduleAdapter newAdapterForMode(int scheduleMode) {
-        return new ScheduleAdapter(scheduleMode, SchedulePreferences.from(TAG + scheduleMode));
+        return new ScheduleAdapter(scheduleMode, SchedulePreferences.forMySchedule(scheduleMode));
     }
 
     private void setUpActionBar() {
@@ -241,7 +239,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private SchedulePreferences preferencesForCurrentMode() {
-        return SchedulePreferences.from(TAG + this.state.mode);
+        return SchedulePreferences.forMySchedule(this.state.mode);
     }
 
     private static class State implements TabPagerAdapter.Listener {

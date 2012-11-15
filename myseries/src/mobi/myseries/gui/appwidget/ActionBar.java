@@ -25,6 +25,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.myseries.MySeriesActivity;
+import mobi.myseries.gui.preferences.SchedulePreferences;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -55,7 +56,7 @@ public class ActionBar {
     }
 
     private CharSequence titleFrom(int appWidgetId) {
-        int scheduleMode = AppWidgetPreferenceActivity.scheduleMode(this.context, appWidgetId);
+        int scheduleMode = SchedulePreferences.forAppWidget(appWidgetId).scheduleMode();
 
         switch (scheduleMode) {
             case ScheduleMode.RECENT:
@@ -77,7 +78,7 @@ public class ActionBar {
     }
 
     private PendingIntent scheduleIntentFrom(int appWidgetId) {
-        int scheduleMode = AppWidgetPreferenceActivity.scheduleMode(this.context, appWidgetId);
+        int scheduleMode = SchedulePreferences.forAppWidget(appWidgetId).scheduleMode();
 
         Intent intent = MyScheduleActivity.newIntent(this.context, scheduleMode);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

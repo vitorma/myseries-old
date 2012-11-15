@@ -27,33 +27,37 @@ import java.util.Map;
 
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.appwidget.ItemPageBrowser;
 import mobi.myseries.gui.shared.SortMode;
 
-public class SchedulePreferences {
+public abstract class SchedulePreferences {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
-    private static final String NAME = "mobi.myseries.gui.schedule.SchedulePreferences";
-
-    private static final String SORT_MODE_KEY = "sortMode";
-    private static final String SHOW_SPECIAL_EPISODES_KEY = "showSpecialEpisodes";
-    private static final String SHOW_SEEN_EPISODES_KEY = "showSeenEpisodes";
-    private static final String SHOW_SERIES_KEY = "showSeries";
+    private static final String SORT_MODE_KEY = "SortMode";
+    private static final String SHOW_SPECIAL_EPISODES_KEY = "ShowSpecialEpisodes";
+    private static final String SHOW_SEEN_EPISODES_KEY = "ShowSeenEpisodes";
+    private static final String SHOW_SERIES_KEY = "ShowSeries";
 
     private static final int SORT_MODE_DEFAULT_VALUE = SortMode.OLDEST_FIRST;
     private static final boolean SHOW_SPECIAL_EPISODES_DEFAULT_VALUE = false;
     private static final boolean SHOW_SEEN_EPISODES_DEFAULT_VALUE = false;
     private static final boolean SHOW_SERIES_DEFAULT_VALUE = true;
 
-    private PrimitivePreferences primitive;
+    protected PrimitivePreferences primitive;
 
-    private SchedulePreferences(String clientId) {
-        this.primitive = new PrimitivePreferences(NAME).setKeySuffix(clientId);
+    protected SchedulePreferences(String name) {
+        this.primitive = new PrimitivePreferences(name);
     }
 
-    public static SchedulePreferences from(String clientId) {
-        return new SchedulePreferences(clientId);
+    public static MySchedulePreferences forMySchedule(int scheduleMode) {
+        return new MySchedulePreferences(scheduleMode);
+    }
+
+    public static AppWidgetPreferences forAppWidget(int appWidgetId) {
+        return new AppWidgetPreferences(appWidgetId);
     }
 
     public int sortMode() {
@@ -83,16 +87,11 @@ public class SchedulePreferences {
     }
 
     public ScheduleSpecification fullSpecification() {
-        ScheduleSpecification specification = new ScheduleSpecification()
+        return new ScheduleSpecification()
             .specifySortMode(this.sortMode())
             .specifyInclusionOfSpecialEpisodes(this.showSpecialEpisodes())
-            .specifyInclusionOfSeenEpisodes(this.showSeenEpisodes());
-
-        for (Series s : SERIES_PROVIDER.followedSeries()) {
-            specification.specifyInclusionOf(s, this.showSeries(s.id()));
-        }
-
-        return specification;
+            .specifyInclusionOfSeenEpisodes(this.showSeenEpisodes())
+            .specifyInclusionOfAllSeries(this.seriesFilterOptions());
     }
 
     public boolean setSortMode(int sortMode) {
@@ -124,6 +123,48 @@ public class SchedulePreferences {
     public void deletePreferencesRelatedToAll(Collection<Series> series) {
         for (Series s : series) {
             this.deletePreferencesRelatedTo(s);
+        }
+    }
+
+    /* Concrete children */
+
+    public static class MySchedulePreferences extends SchedulePreferences {
+        private static final String NAME = "MySchedulePreferences";
+
+        private MySchedulePreferences(int scheduleMode) {
+            super(NAME);
+
+            this.primitive.appendingSuffixToKeys(String.valueOf(scheduleMode));
+        }
+    }
+
+    public static class AppWidgetPreferences extends SchedulePreferences {
+        private static final String NAME = "AppWidgetPreferences";
+        private static final String SCHEDULE_MODE_KEY = "ScheduleMode";
+        private static final int SCHEDULE_MODE_DEFAULT_VALUE = ScheduleMode.NEXT;
+        private static final String CURRENT_PAGE_KEY = "CurrentPage";
+        private static final int CURRENT_PAGE_DEFAULT_VALUE = ItemPageBrowser.FIRST_PAGE;
+
+        private AppWidgetPreferences(int appWidgetId) {
+            super(NAME);
+
+            this.primitive.appendingSuffixToKeys(String.valueOf(appWidgetId));
+        }
+
+        public int scheduleMode() {
+            return this.primitive.getInt(SCHEDULE_MODE_KEY, SCHEDULE_MODE_DEFAULT_VALUE);
+        }
+
+        public int currentPage() {
+            return this.primitive.getInt(CURRENT_PAGE_KEY, CURRENT_PAGE_DEFAULT_VALUE);
+        }
+
+        public boolean setScheduleMode(int scheduleMode) {
+            return this.primitive.putInt(SCHEDULE_MODE_KEY, scheduleMode);
+        }
+
+        public boolean setCurrentPage(int currentPage) {
+            return this.primitive.putInt(CURRENT_PAGE_KEY, currentPage);
         }
     }
 }
