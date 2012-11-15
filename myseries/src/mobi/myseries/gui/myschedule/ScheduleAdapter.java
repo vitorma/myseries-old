@@ -32,7 +32,6 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Images;
@@ -61,14 +60,14 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     private Context context;
     private int scheduleMode;
-    private ScheduleSpecification specification;
+    private SchedulePreferences preferences;
     private ScheduleMode items;
     private int[] cellStates;
 
-    public ScheduleAdapter(Context context, int scheduleMode, ScheduleSpecification specification) {
+    public ScheduleAdapter(Context context, int scheduleMode, SchedulePreferences preferences) {
         this.context = context;
         this.scheduleMode = scheduleMode;
-        this.specification = specification;
+        this.preferences = preferences;
 
         this.reload();
     }
@@ -171,25 +170,25 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         return this.cellStates[position] == STATE_SECTIONED_CELL;
     }
 
-    /* Specification change */
+    /* Preferences change */
 
     public void sortBy(int sortMode) {
-        if (this.specification.sortMode() != sortMode) {
-            this.specification.specifySortMode(sortMode);
+        if (this.preferences.sortMode() != sortMode) {
+            this.preferences.setSortMode(sortMode);
             this.reload();
         }
     }
 
-    public void hideOrShowSpecialEpisodes(boolean show) {
-        if (this.specification.isSatisfiedBySpecialEpisodes() != show) {
-            this.specification.specifyInclusionOfSpecialEpisodes(show);
+    public void hideOrShowSpecialEpisodes(boolean showSpecialEpisodes) {
+        if (this.preferences.showSpecialEpisodes() != showSpecialEpisodes) {
+            this.preferences.setIfShowSpecialEpisodes(showSpecialEpisodes);
             this.reload();
         }
     }
 
-    public void hideOrShowSeenEpisodes(boolean show) {
-        if (this.specification.isSatisfiedBySeenEpisodes() != show) {
-            this.specification.specifyInclusionOfSeenEpisodes(show);
+    public void hideOrShowSeenEpisodes(boolean showSeenEpisodes) {
+        if (this.preferences.showSeenEpisodes() != showSeenEpisodes) {
+            this.preferences.setIfShowSeenEpisodes(showSeenEpisodes);
             this.reload();
         }
     }
@@ -198,8 +197,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         boolean needReload = false;
 
         for (Series s: seriesFilterOptions.keySet()) {
-            if (this.specification.isSatisfiedByEpisodesOfSeries(s.id()) != seriesFilterOptions.get(s)) {
-                this.specification.specifyInclusionOf(s, seriesFilterOptions.get(s));
+            if (this.preferences.showSeries(s.id()) != seriesFilterOptions.get(s)) {
+                this.preferences.setIfShowSeries(s.id(), seriesFilterOptions.get(s));
                 needReload = true;
             }
         }
@@ -235,13 +234,13 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private void setUpData() {
         switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
-                this.items = SCHEDULE.modeRecent(this.specification);
+                this.items = SCHEDULE.modeRecent(this.preferences.fullSpecification());
                 break;
             case ScheduleMode.NEXT:
-                this.items = SCHEDULE.modeNext(this.specification);
+                this.items = SCHEDULE.modeNext(this.preferences.fullSpecification());
                 break;
             case ScheduleMode.UPCOMING:
-                this.items = SCHEDULE.modeUpcoming(this.specification);
+                this.items = SCHEDULE.modeUpcoming(this.preferences.fullSpecification());
                 break;
         }
 
@@ -302,8 +301,6 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     @Override
     public void onScheduleStructureChanged() {
-        //TODO (Cleber) Find a better place to get preferences from
-        this.specification = MyScheduleActivity.preferencesOfMode(this.scheduleMode).fullSpecification();
         this.reload();
     }
 

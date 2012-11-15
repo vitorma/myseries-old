@@ -24,7 +24,6 @@ package mobi.myseries.gui.myschedule;
 import java.util.Map;
 
 import mobi.myseries.R;
-import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
@@ -54,10 +53,6 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     public static Intent newIntent(Context context, int scheduleMode) {
         return new Intent(context, MyScheduleActivity.class)
             .putExtra(Extra.SCHEDULE_MODE, scheduleMode);
-    }
-
-    public static SchedulePreferences preferencesOfMode(int scheduleMode) {
-        return SchedulePreferences.from(App.context(), TAG + scheduleMode);
     }
 
     @Override
@@ -166,9 +161,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private ScheduleAdapter newAdapterForMode(int scheduleMode) {
-        SchedulePreferences preferences = preferencesOfMode(scheduleMode);
-
-        return new ScheduleAdapter(this, scheduleMode, preferences.fullSpecification());
+        return new ScheduleAdapter(this, scheduleMode, SchedulePreferences.from(this, TAG + scheduleMode));
     }
 
     private void setUpActionBar() {
@@ -191,14 +184,12 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     private void hideOrShowSpecialEpisodes() {
         boolean isShowingSpecialEpisodes = this.preferencesForCurrentMode().showSpecialEpisodes();
 
-        this.preferencesForCurrentMode().setIfShowSpecialEpisodes(!isShowingSpecialEpisodes);
         this.adapterForCurrentMode().hideOrShowSpecialEpisodes(!isShowingSpecialEpisodes);
     }
 
     private void hideOrShowSeenEpisodes() {
         boolean isShowingSeenEpisodes = this.preferencesForCurrentMode().showSeenEpisodes();
 
-        this.preferencesForCurrentMode().setIfShowSeenEpisodes(!isShowingSeenEpisodes);
         this.adapterForCurrentMode().hideOrShowSeenEpisodes(!isShowingSeenEpisodes);
     }
 
@@ -212,14 +203,12 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
             .setNewestFirstOptionListener(new OptionListener() {
                 @Override
                 public void onClick() {
-                    preferences.setSortMode(SortMode.NEWEST_FIRST);
                     adapter.sortBy(SortMode.NEWEST_FIRST);
                 }
             })
             .setOldestFirstOptionListener(new OptionListener() {
                 @Override
                 public void onClick() {
-                    preferences.setSortMode(SortMode.OLDEST_FIRST);
                     adapter.sortBy(SortMode.OLDEST_FIRST);
                 }
             })
@@ -238,7 +227,6 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
             .setOnFilterListener(new OnFilterListener() {
                 @Override
                 public void onFilter() {
-                    preferences.setIfShowSeries(filterOptions);
                     adapter.hideOrShowSeries(filterOptions);
                 }
             })

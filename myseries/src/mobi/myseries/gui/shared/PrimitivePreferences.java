@@ -71,6 +71,18 @@ public class PrimitivePreferences {
                    .commit();
     }
 
+    public boolean remove(String key) {
+        return this.getEditor()
+                   .remove(key)
+                   .commit();
+    }
+
+    public boolean clear() {
+        return this.getEditor()
+                   .clear()
+                   .commit();
+    }
+
     private SharedPreferences getSharedPreferences() {
         return this.context.getSharedPreferences(this.name, Context.MODE_PRIVATE);
     }

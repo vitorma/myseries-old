@@ -204,7 +204,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         this.showSpecialEpisodes.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSpecialEpisodes.toggle();
+                AppWidgetPreferenceActivity.this.showSpecialEpisodes.toggle();
             }
         });
     }
@@ -216,7 +216,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         this.showSeenEpisodes.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSeenEpisodes.toggle();
+                AppWidgetPreferenceActivity.this.showSeenEpisodes.toggle();
             }
         });
     }
@@ -248,6 +248,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         this.cancelButton = (Button) this.findViewById(R.id.cancelButton);
 
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 AppWidgetPreferenceActivity.this.finish();
             }
@@ -258,6 +259,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         this.saveButton = (Button) this.findViewById(R.id.saveButton);
 
         this.saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 AppWidgetPreferenceActivity.this.onSave();
             }

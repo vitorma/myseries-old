@@ -21,6 +21,7 @@
 
 package mobi.myseries.gui.myschedule;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -115,6 +116,16 @@ public class SchedulePreferences {
     public void setIfShowSeries(Map<Series, Boolean> filterOptions) {
         for (Series s : filterOptions.keySet()) {
             this.setIfShowSeries(s.id(), filterOptions.get(s));
+        }
+    }
+
+    public void deletePreferencesRelatedTo(Series series) {
+        this.primitive.remove(SHOW_SERIES_KEY + series.id());
+    }
+
+    public void deletePreferencesRelatedToAll(Collection<Series> series) {
+        for (Series s : series) {
+            this.deletePreferencesRelatedTo(s);
         }
     }
 }
