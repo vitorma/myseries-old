@@ -33,6 +33,7 @@ import mobi.myseries.application.UpdateListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
+import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.settings.SettingsActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
@@ -76,19 +77,19 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         this.setContentView(R.layout.myseries);
-        setSupportProgressBarIndeterminateVisibility(false);
+        this.setSupportProgressBarIndeterminateVisibility(false);
 
-        ActionBar ab = getSupportActionBar();
+        ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_series);
 
         App.updateSeriesService().registerSeriesUpdateListener(this);
 
-        Object retained = getLastCustomNonConfigurationInstance();
+        Object retained = this.getLastCustomNonConfigurationInstance();
         if ((retained != null) && (retained instanceof StateHolder)) {
             this.state = (StateHolder) retained;
-            this.messageLauncher = state.messageLauncher;
+            this.messageLauncher = this.state.messageLauncher;
         } else {
             this.state = new StateHolder();
             this.messageLauncher = new MessageLauncher(this);
@@ -99,36 +100,36 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     protected void onResume() {
     	super.onResume();
-        loadState();
-    	updating = App.updateSeriesService().isUpdating();
-        setSupportProgressBarIndeterminateVisibility(updating);
+        this.loadState();
+    	this.updating = App.updateSeriesService().isUpdating();
+        this.setSupportProgressBarIndeterminateVisibility(this.updating);
 
-        if (!updating) {
+        if (!this.updating) {
             App.updateSeriesService().updateDataIfNeeded();
         }
     }
 
     private void loadState() {
     	this.messageLauncher.loadState();
-        if (state.isShowingDialog){
-            state.dialog.show();
+        if (this.state.isShowingDialog){
+            this.state.dialog.show();
         }
     }
 
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
-        return state;
+        return this.state;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         this.messageLauncher.onStop();
-        if ((state.dialog != null) && state.dialog.isShowing()) {
-            state.dialog.dismiss();
-            state.isShowingDialog = true;
+        if ((this.state.dialog != null) && this.state.dialog.isShowing()) {
+            this.state.dialog.dismiss();
+            this.state.isShowingDialog = true;
         } else {
-            state.isShowingDialog = false;
+            this.state.isShowingDialog = false;
         }
     }
 
@@ -173,11 +174,11 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         }
 
         if (item.getTitle().equals(REMOVE)) {
-            showRemoveDialog();
+            this.showRemoveDialog();
         }
 
         if (item.getTitle().equals(SETTINGS)) {
-            showSettingsActivity();
+            this.showSettingsActivity();
         }
 
         return super.onMenuItemSelected(featureId, item);
@@ -225,6 +226,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                     @Override
                     public void onClick(Dialog dialog) {
                         App.followSeriesService().stopFollowingAll(allSeriesToRemove);
+                        Preferences.removeEntriesRelatedToAll(allSeriesToRemove);
 
                         dialog.dismiss();
                     }
@@ -239,43 +241,43 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     @Override
     public boolean onSearchRequested() {
-        showSearchActivity();
+        this.showSearchActivity();
         return true;
     }
 
     @Override
     public void onUpdateStart() {
-        Log.d(getClass().getName(), "update started");
-        setSupportProgressBarIndeterminateVisibility(true);
-        updating = true;
+        Log.d(this.getClass().getName(), "update started");
+        this.setSupportProgressBarIndeterminateVisibility(true);
+        this.updating = true;
     }
 
     @Override
     public void onUpdateFailure(Exception e) {
-        Log.d(getClass().getName(), "update failure");
-        setSupportProgressBarIndeterminateVisibility(false);
-        updating = false;
+        Log.d(this.getClass().getName(), "update failure");
+        this.setSupportProgressBarIndeterminateVisibility(false);
+        this.updating = false;
     }
 
     @Override
     public void onUpdateSuccess() {
-        Log.d(getClass().getName(), "update complete");
-        setSupportProgressBarIndeterminateVisibility(false);
-        updating = false;
+        Log.d(this.getClass().getName(), "update complete");
+        this.setSupportProgressBarIndeterminateVisibility(false);
+        this.updating = false;
     }
 
     @Override
     public void onUpdateNotNecessary() {
-        Log.d(getClass().getName(), "update not necessary yet");
-        setSupportProgressBarIndeterminateVisibility(false);
-        updating = false;
+        Log.d(this.getClass().getName(), "update not necessary yet");
+        this.setSupportProgressBarIndeterminateVisibility(false);
+        this.updating = false;
     }
 
     //Search----------------------------------------------------------------------------------------
 
     private void showSearchActivity() {
         final Intent intent = new Intent(this, SeriesSearchActivity.class);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     private static class StateHolder {
@@ -287,7 +289,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     //Settings--------------------------------------------------------------------------------------
     private void showSettingsActivity() {
-        startActivity(SettingsActivity.newIntent(this));
+        this.startActivity(SettingsActivity.newIntent(this));
     }
 
 }

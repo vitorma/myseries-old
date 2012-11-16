@@ -21,6 +21,8 @@
 
 package mobi.myseries.gui.preferences;
 
+import java.util.Collection;
+
 import mobi.myseries.application.App;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
@@ -58,6 +60,10 @@ public class PrimitivePreferences {
     public boolean getBoolean(String key, boolean defaultValue) {
         return this.getSharedPreferences()
                    .getBoolean(this.compose(key), defaultValue);
+    }
+
+    public Collection<String> getKeys() {
+        return this.getSharedPreferences().getAll().keySet();
     }
 
     public void putInt(String key, int value) {

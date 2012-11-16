@@ -124,7 +124,13 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
     }
 
     public void removeEntriesRelatedTo(Series series) {
-        this.primitive.remove(SHOW_SERIES_KEY + series.id());
+        String prefix = SHOW_SERIES_KEY + series.id();
+
+        for (String key : this.primitive.getKeys()) {
+            if (key.startsWith(prefix)) {
+                this.primitive.remove(key);
+            }
+        }
     }
 
     public void removeEntriesRelatedToAll(Collection<Series> series) {
