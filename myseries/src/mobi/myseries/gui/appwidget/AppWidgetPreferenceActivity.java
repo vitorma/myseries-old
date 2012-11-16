@@ -8,7 +8,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.preferences.SchedulePreferences;
+import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SortMode;
@@ -68,7 +68,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         if (this.appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             this.finish();
         } else {
-            this.preferences = SchedulePreferences.forAppWidget(this.appWidgetId);
+            this.preferences = Preferences.forAppWidget(this.appWidgetId);
         }
     }
 

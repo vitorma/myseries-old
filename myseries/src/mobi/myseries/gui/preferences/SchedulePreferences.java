@@ -33,7 +33,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.appwidget.ItemPageBrowser;
 import mobi.myseries.gui.shared.SortMode;
 
-public abstract class SchedulePreferences {
+public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
 
     private static final String SORT_MODE_KEY = "SortMode";
@@ -52,12 +52,19 @@ public abstract class SchedulePreferences {
         this.primitive = new PrimitivePreferences(name);
     }
 
-    public static MySchedulePreferences forMySchedule(int scheduleMode) {
-        return new MySchedulePreferences(scheduleMode);
+    public static MySchedulePreferences forMySchedule() {
+        return new MySchedulePreferences();
     }
 
-    public static AppWidgetPreferences forAppWidget(int appWidgetId) {
-        return new AppWidgetPreferences(appWidgetId);
+    public static AppWidgetPreferences forAppWidget() {
+        return new AppWidgetPreferences();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <S> T appendingSuffixToKeys(S suffix) {
+        this.primitive.appendingSuffixToKeys(suffix.toString());
+
+        return (T) this;
     }
 
     public int sortMode() {
@@ -94,20 +101,20 @@ public abstract class SchedulePreferences {
             .specifyInclusionOfAllSeries(this.seriesFilterOptions());
     }
 
-    public boolean setSortMode(int sortMode) {
-        return this.primitive.putInt(SORT_MODE_KEY, sortMode);
+    public void setSortMode(int sortMode) {
+        this.primitive.putInt(SORT_MODE_KEY, sortMode);
     }
 
-    public boolean setIfShowSpecialEpisodes(boolean show) {
-        return this.primitive.putBoolean(SHOW_SPECIAL_EPISODES_KEY, show);
+    public void setIfShowSpecialEpisodes(boolean show) {
+        this.primitive.putBoolean(SHOW_SPECIAL_EPISODES_KEY, show);
     }
 
-    public boolean setIfShowSeenEpisodes(boolean show) {
-        return this.primitive.putBoolean(SHOW_SEEN_EPISODES_KEY, show);
+    public void setIfShowSeenEpisodes(boolean show) {
+        this.primitive.putBoolean(SHOW_SEEN_EPISODES_KEY, show);
     }
 
-    public boolean setIfShowSeries(int seriesId, boolean show) {
-        return this.primitive.putBoolean(SHOW_SERIES_KEY + seriesId, show);
+    public void setIfShowSeries(int seriesId, boolean show) {
+        this.primitive.putBoolean(SHOW_SERIES_KEY + seriesId, show);
     }
 
     public void setIfShowSeries(Map<Series, Boolean> filterOptions) {
@@ -116,39 +123,39 @@ public abstract class SchedulePreferences {
         }
     }
 
-    public void deletePreferencesRelatedTo(Series series) {
+    public void removeEntriesRelatedTo(Series series) {
         this.primitive.remove(SHOW_SERIES_KEY + series.id());
     }
 
-    public void deletePreferencesRelatedToAll(Collection<Series> series) {
+    public void removeEntriesRelatedToAll(Collection<Series> series) {
         for (Series s : series) {
-            this.deletePreferencesRelatedTo(s);
+            this.removeEntriesRelatedTo(s);
         }
+    }
+
+    public void clear() {
+        this.primitive.clear();
     }
 
     /* Concrete children */
 
-    public static class MySchedulePreferences extends SchedulePreferences {
+    public static class MySchedulePreferences extends SchedulePreferences<MySchedulePreferences> {
         private static final String NAME = "MySchedulePreferences";
 
-        private MySchedulePreferences(int scheduleMode) {
+        private MySchedulePreferences() {
             super(NAME);
-
-            this.primitive.appendingSuffixToKeys(String.valueOf(scheduleMode));
         }
     }
 
-    public static class AppWidgetPreferences extends SchedulePreferences {
+    public static class AppWidgetPreferences extends SchedulePreferences<AppWidgetPreferences> {
         private static final String NAME = "AppWidgetPreferences";
         private static final String SCHEDULE_MODE_KEY = "ScheduleMode";
         private static final int SCHEDULE_MODE_DEFAULT_VALUE = ScheduleMode.NEXT;
         private static final String CURRENT_PAGE_KEY = "CurrentPage";
         private static final int CURRENT_PAGE_DEFAULT_VALUE = ItemPageBrowser.FIRST_PAGE;
 
-        private AppWidgetPreferences(int appWidgetId) {
+        private AppWidgetPreferences() {
             super(NAME);
-
-            this.primitive.appendingSuffixToKeys(String.valueOf(appWidgetId));
         }
 
         public int scheduleMode() {
@@ -159,12 +166,12 @@ public abstract class SchedulePreferences {
             return this.primitive.getInt(CURRENT_PAGE_KEY, CURRENT_PAGE_DEFAULT_VALUE);
         }
 
-        public boolean setScheduleMode(int scheduleMode) {
-            return this.primitive.putInt(SCHEDULE_MODE_KEY, scheduleMode);
+        public void setScheduleMode(int scheduleMode) {
+            this.primitive.putInt(SCHEDULE_MODE_KEY, scheduleMode);
         }
 
-        public boolean setCurrentPage(int currentPage) {
-            return this.primitive.putInt(CURRENT_PAGE_KEY, currentPage);
+        public void setCurrentPage(int currentPage) {
+            this.primitive.putInt(CURRENT_PAGE_KEY, currentPage);
         }
     }
 }

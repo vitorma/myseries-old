@@ -27,7 +27,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.preferences.SchedulePreferences;
+import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
 import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
@@ -89,7 +89,7 @@ public class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteView
     }
 
     private void loadEpisodes() {
-        AppWidgetPreferences prefs = SchedulePreferences.forAppWidget(this.appWidgetId);
+        AppWidgetPreferences prefs = Preferences.forAppWidget(this.appWidgetId);
 
         int scheduleMode = prefs.scheduleMode();
         ScheduleSpecification specification = prefs.fullSpecification();

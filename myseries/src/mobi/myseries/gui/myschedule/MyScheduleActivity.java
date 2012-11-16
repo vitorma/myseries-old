@@ -26,7 +26,8 @@ import java.util.Map;
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.preferences.SchedulePreferences;
+import mobi.myseries.gui.preferences.Preferences;
+import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
@@ -160,7 +161,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private ScheduleAdapter newAdapterForMode(int scheduleMode) {
-        return new ScheduleAdapter(scheduleMode, SchedulePreferences.forMySchedule(scheduleMode));
+        return new ScheduleAdapter(scheduleMode, Preferences.forMySchedule(scheduleMode));
     }
 
     private void setUpActionBar() {
@@ -193,7 +194,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private void showSortingDialog() {
-        final SchedulePreferences preferences = this.preferencesForCurrentMode();
+        final MySchedulePreferences preferences = this.preferencesForCurrentMode();
         final ScheduleAdapter adapter = this.adapterForCurrentMode();
 
         this.state.dialog = new SortingDialogBuilder(this)
@@ -217,7 +218,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     }
 
     private void showFilterDialog() {
-        final SchedulePreferences preferences = this.preferencesForCurrentMode();
+        final MySchedulePreferences preferences = this.preferencesForCurrentMode();
         final Map<Series, Boolean> filterOptions = preferences.seriesFilterOptions();
         final ScheduleAdapter adapter = this.adapterForCurrentMode();
 
@@ -238,8 +239,8 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         return this.adapterForMode(this.state.mode);
     }
 
-    private SchedulePreferences preferencesForCurrentMode() {
-        return SchedulePreferences.forMySchedule(this.state.mode);
+    private MySchedulePreferences preferencesForCurrentMode() {
+        return Preferences.forMySchedule(this.state.mode);
     }
 
     private static class State implements TabPagerAdapter.Listener {

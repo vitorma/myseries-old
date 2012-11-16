@@ -60,28 +60,28 @@ public class PrimitivePreferences {
                    .getBoolean(this.compose(key), defaultValue);
     }
 
-    public boolean putInt(String key, int value) {
-        return this.getEditor()
-                   .putInt(this.compose(key), value)
-                   .commit();
+    public void putInt(String key, int value) {
+        this.getEditor()
+            .putInt(this.compose(key), value)
+            .commit();
     }
 
-    public boolean putBoolean(String key, boolean value) {
-        return this.getEditor()
-                   .putBoolean(this.compose(key), value)
-                   .commit();
+    public void putBoolean(String key, boolean value) {
+        this.getEditor()
+            .putBoolean(this.compose(key), value)
+            .commit();
     }
 
-    public boolean remove(String key) {
-        return this.getEditor()
-                   .remove(this.compose(key))
-                   .commit();
+    public void remove(String key) {
+        this.getEditor()
+            .remove(this.compose(key))
+            .commit();
     }
 
-    public boolean clear() {
-        return this.getEditor()
-                   .clear()
-                   .commit();
+    public void clear() {
+        this.getEditor()
+            .clear()
+            .commit();
     }
 
     private SharedPreferences getSharedPreferences() {

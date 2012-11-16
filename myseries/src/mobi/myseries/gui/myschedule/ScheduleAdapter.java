@@ -34,7 +34,7 @@ import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.preferences.SchedulePreferences;
+import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.Dates;
@@ -61,11 +61,11 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private static final int STATE_REGULAR_CELL = 2;
 
     private int scheduleMode;
-    private SchedulePreferences preferences;
+    private MySchedulePreferences preferences;
     private ScheduleMode items;
     private int[] cellStates;
 
-    public ScheduleAdapter(int scheduleMode, SchedulePreferences preferences) {
+    public ScheduleAdapter(int scheduleMode, MySchedulePreferences preferences) {
         this.scheduleMode = scheduleMode;
         this.preferences = preferences;
 

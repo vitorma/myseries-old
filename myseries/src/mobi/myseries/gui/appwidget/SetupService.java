@@ -28,7 +28,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.preferences.SchedulePreferences;
+import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
 import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
@@ -68,7 +68,7 @@ public class SetupService extends IntentService {
 
         this.appWidgetId = intent.getExtras().getInt(Extra.APPWIDGET_ID);
         this.action = intent.getAction();
-        this.preferences = SchedulePreferences.forAppWidget(this.appWidgetId);
+        this.preferences = Preferences.forAppWidget(this.appWidgetId);
         this.loadEpisodes();
         this.setupItemPageBrowser();
         this.setupAppWidgetView();
