@@ -80,11 +80,16 @@ public class SeriesSearchActivity extends  SherlockListActivity {
         Object retained = getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
             state = (StateHolder) retained;
-            loadState();
         } else {
             state = new StateHolder();
             this.setupMessageLauncher();
         }
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadState();
     }
 
     private void setupMessageLauncher() {
@@ -120,7 +125,7 @@ public class SeriesSearchActivity extends  SherlockListActivity {
 
     @Override
     protected void onStop() {
-    	super.onStop();
+        super.onStop();
         this.messageLauncher.onStop();
         App.deregisterSearchSeriesListener(listener);
         if (state.dialog != null && state.dialog.isShowing()) {
