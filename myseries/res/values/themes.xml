@@ -2,7 +2,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="MySeriesTheme" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+    <style name="MySeriesTheme" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowContentOverlay">@null</item>
         <item name="android:checkboxStyle">@style/CheckBox</item>
