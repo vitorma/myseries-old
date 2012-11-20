@@ -1,11 +1,12 @@
 package mobi.myseries.test.unit.domain.repository;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import mobi.myseries.domain.repository.ImageStorage;
 import mobi.myseries.domain.repository.ExternalStorageImageDirectory;
+import mobi.myseries.domain.repository.ImageStorage;
 import mobi.myseries.test.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,10 +24,14 @@ public class ImageRepositoryTest extends InstrumentationTestCase {
                 this.getInstrumentation().getContext().getResources(),
                 R.drawable.icon);
 
-        this.imageRepository = new ExternalStorageImageDirectory(this.getInstrumentation().getContext(), "storage_test_dir");
+        this.imageRepository = new ExternalStorageImageDirectory(this.getInstrumentation().getContext(),
+                                                                 "image_repository_test_dir");
     }
 
     public void tearDown() {
+    	for (int imageId : this.imageRepository.savedImages()) {
+    		this.imageRepository.delete(imageId);
+    	}
         this.imageRepository = null;
     }
 
@@ -45,7 +50,7 @@ public class ImageRepositoryTest extends InstrumentationTestCase {
         } catch (IllegalArgumentException e) {}
     }
 
-	public void testFetchingASavedImageReturnsThatImage() {
+    public void testFetchingASavedImageReturnsThatImage() {
         int imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
 
@@ -55,12 +60,34 @@ public class ImageRepositoryTest extends InstrumentationTestCase {
 
     public void testFetchingADeletedImageReturnsNull() {
         int imageId = NOT_SAVED_IMAGE_ID + 1;
-
         this.imageRepository.save(imageId, this.testImage);
         this.imageRepository.delete(imageId);
 
         assertThat(this.imageRepository.fetch(imageId), is(nullValue()));
     }
 
-    // TODO(gabriel) test forbidden use of negative ids
+    public void testAJustSavedImageIsInTheCollectionOfSavedImages() {
+        int imageId = NOT_SAVED_IMAGE_ID + 1;
+        this.imageRepository.save(imageId, this.testImage);
+
+        assertThat(this.imageRepository.savedImages(), hasItem(imageId));
+    }
+
+    public void testADeletedImageIsNotInTheCollectionOfSavedImagesAnymore() {
+        int imageId = NOT_SAVED_IMAGE_ID + 1;
+        this.imageRepository.save(imageId, this.testImage);
+        this.imageRepository.delete(imageId);
+
+        assertThat(this.imageRepository.savedImages(), not(hasItem(imageId)));
+    }
+
+    public void testTheCollectionOfSavedImagesIsNeverNull() {
+        assertThat(this.imageRepository.savedImages(), not(nullValue()));
+    }
+
+    public void testNotSavedImagesAreNotInTheCollectionOfSavedImages() {
+        assertThat(this.imageRepository.savedImages(), not(hasItem(NOT_SAVED_IMAGE_ID)));
+    }
+
+    // TODO(gabriel) test forbidden use of negative ids?
 }

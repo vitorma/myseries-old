@@ -2,7 +2,12 @@ package mobi.myseries.domain.repository;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import mobi.myseries.shared.Validate;
 
@@ -17,6 +22,9 @@ public class ExternalStorageImageDirectory implements ImageStorage {
     private static final CompressFormat IMAGE_FORMAT = CompressFormat.JPEG;
     private static final String IMAGE_EXTENSION = "." + IMAGE_FORMAT.toString().toLowerCase();
     private static final int COMPRESS_QUALITY = 85;
+    private static final Pattern IMAGE_FILE_REGEX_PATTERN = Pattern.compile("^-?\\d+\\" + IMAGE_EXTENSION + "$");
+      // The "\\" just before IMAGE_EXTENSION is there because the first character of IMAGE_EXTENSION is a "."
+      // which is a meta character in regular expressions.
 
     private final String directoryName;
     private final Context context;
@@ -49,6 +57,26 @@ public class ExternalStorageImageDirectory implements ImageStorage {
     @Override
     public void delete(int id) {
         this.fileFor(id).delete();
+    }
+
+    @Override
+    public Collection<Integer> savedImages() {
+        String[] files = this.imageFolder().list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String filename) {
+                File file = new File(dir, filename);
+                return (IMAGE_FILE_REGEX_PATTERN.matcher(filename).matches() &&
+                        file.isFile());
+            }
+        });
+
+        List<Integer> fileNumbers = new ArrayList<Integer>();
+        for (String s : files) {
+            String numericalPart = s.replace(IMAGE_EXTENSION, "");
+            fileNumbers.add(Integer.valueOf(numericalPart));
+        }
+
+        return fileNumbers;
     }
 
     private File fileFor(int id) {
