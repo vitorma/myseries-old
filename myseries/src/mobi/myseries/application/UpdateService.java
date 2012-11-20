@@ -31,7 +31,7 @@ public class UpdateService {
     private LocalizationProvider localizationProvider;
     private ImageService imageProvider;
     private SeriesUpdater seriesUpdater;
-    private final List<UpdateListener> updateListeners;
+    private final List<UpdateListener> updateListeners;  //< XXX(gabriel) Shouldn't this be a ListenerSet<UpdateListener>?
     private boolean updateRunning = false;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
@@ -88,7 +88,6 @@ public class UpdateService {
             Log.d(getClass().getName(), "Update already running");
             return;
         }
-
         if (!shouldUpdate()) {
             Log.d(getClass().getName(), "Update will not run.");
             return;
@@ -108,6 +107,7 @@ public class UpdateService {
         }
     }
 
+    // XXX(gabriel) This should be something from the Publisher interface or am I missing something?
     public void registerSeriesUpdateListener(UpdateListener listener) {
         if (!updateListeners.contains(listener)) {
             updateListeners.add(listener);
@@ -118,6 +118,7 @@ public class UpdateService {
         return updateRunning;
     }
 
+    // XXX(gabriel) shouldn't this class be private? It is only being used in this file.
     public class ComparatorByLastUpdate implements Comparator<Series> {
         @Override
         public int compare(Series series1, Series series2) {
@@ -125,6 +126,8 @@ public class UpdateService {
         }
     }
 
+    // XXX(gabriel) A quick look shows these results being used only in the async task of SeriesUpdater#update. Why to
+    // keep it here?
     private static enum UpdateResult {
         NO_UPDATES_AVAILABLE, SUCCESS
     };
@@ -134,6 +137,13 @@ public class UpdateService {
         private void update() {
             final AsyncTask<Void, Void, AsyncTaskResult<UpdateResult>> updateTask =
                     new AsyncTask<Void, Void, AsyncTaskResult<UpdateResult>>() {
+
+                        @Override
+                        protected void onPreExecute() {
+                            for (UpdateListener listener : updateListeners) {
+                                listener.onUpdateStart();
+                            }
+                        }
 
                         @Override
                         protected AsyncTaskResult<UpdateResult> doInBackground(Void... params) {
@@ -221,13 +231,6 @@ public class UpdateService {
                                 for (UpdateListener listener : updateListeners) {
                                     listener.onUpdateNotNecessary();
                                 }
-                            }
-                        }
-
-                        @Override
-                        protected void onPreExecute() {
-                            for (UpdateListener listener : updateListeners) {
-                                listener.onUpdateStart();
                             }
                         }
 
@@ -336,10 +339,13 @@ public class UpdateService {
         }
     }
 
+    // XXX(gabriel) This should be something from the Publisher interface or am I missing something?
     public void deregisterSeriesUpdateListener(UpdateListener listener) {
         updateListeners.remove(listener);
     }
 
+    // XXX It would be better if this function was replaced by a static long. Or is the interval going to be changed in
+    // the future by something dynamic?
     private static Long automaticUpdateInterval() {
         return 12L * 60L * 60L * 1000L;
     }
