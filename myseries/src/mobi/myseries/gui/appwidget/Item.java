@@ -38,6 +38,7 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 
 public class Item {
+    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
     private Context context;
 
     private Item(Context context) {
@@ -72,9 +73,8 @@ public class Item {
 
     private void setupSeriesPoster(RemoteViews item, Series series) {
         Bitmap seriesPoster = App.imageProvider().getPosterOf(series);
-        Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
 
-        item.setImageViewBitmap(R.id.seriesPoster, Objects.nullSafe(seriesPoster, genericPoster));
+        item.setImageViewBitmap(R.id.seriesPoster, Objects.nullSafe(seriesPoster, GENERIC_POSTER));
     }
 
     private void setupSeriesName(RemoteViews item, Series series) {
