@@ -26,6 +26,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import mobi.myseries.domain.repository.ImageStorage;
 import mobi.myseries.domain.repository.LruRepositoryManager;
 
@@ -202,6 +205,17 @@ public class LruRepositoryManagerTest {
         verify(this.managedRepository).delete(imageId);
     }
 
+    /* Saved Images */
+
+    @Test
+    public void theCollectionOfSavedImagesIsFetchedNoMatterTheLRUPolicy() {
+    	Collection<Integer> returnedCollection = new ArrayList<Integer>();
+    	when(this.managedRepository.savedImages()).thenReturn(returnedCollection);
+
+    	assertThat(this.manager.savedImages(), sameInstance(returnedCollection));
+    	verify(this.managedRepository).savedImages();
+    }
+
     /* Test tools */
 
     private int fillWithTheDefaultImage(ImageStorage repository, int numberOfImages, int firstImageId) {
@@ -220,6 +234,4 @@ public class LruRepositoryManagerTest {
 
         return idOfTheLastSavedImage;
     }
-
-    // TODO(gabriel) test loading previous images from the repository on construction
 }

@@ -21,6 +21,8 @@
 
 package mobi.myseries.domain.repository;
 
+import java.util.Collection;
+
 import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
@@ -42,7 +44,7 @@ public class LruRepositoryManager implements ImageStorage {
         @Override
         protected void entryRemoved(boolean evicted, Integer key, Integer oldValue, Integer newValue) {
             if (evicted) {
-            LruRepositoryManager.this.delete(key);
+                LruRepositoryManager.this.delete(key);
             }
         }
     }
@@ -67,18 +69,23 @@ ImageStorage managedRepository;
 
     @Override
     public Bitmap fetch(int id) {
-    Bitmap fetchedImage = this.managedRepository.fetch(id);
+        Bitmap fetchedImage = this.managedRepository.fetch(id);
 
-    if (fetchedImage != null) {
-    this.imagesQueue.put(id, id);
-    }
+        if (fetchedImage != null) {
+            this.imagesQueue.put(id, id);
+        }
 
-    return fetchedImage;
+        return fetchedImage;
     }
 
     @Override
     public void delete(int id) {
-    this.managedRepository.delete(id);
-    this.imagesQueue.remove(id);
+        this.managedRepository.delete(id);
+        this.imagesQueue.remove(id);
+    }
+
+    @Override
+    public Collection<Integer> savedImages() {
+        return this.managedRepository.savedImages();
     }
 }
