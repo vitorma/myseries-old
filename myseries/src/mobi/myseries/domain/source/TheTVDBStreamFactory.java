@@ -33,7 +33,8 @@ import mobi.myseries.shared.Dates;
 import android.util.Log;
 
 public class TheTVDBStreamFactory implements StreamFactory {
-    final int CONNECTION_TIMEOUT_IN_MILLIS = 7000;
+    private static final int CONNECTION_TIMEOUT_IN_MILLIS = 7000;
+    private static final int BUFFER_SIZE = 8192;
 
     private final UrlFactory urlFactory;
 
@@ -78,16 +79,16 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
         if (currentTime - dateInMiliseconds < Dates.DAY_IN_MILLIS) {
             url = this.urlFactory.urlForLastDayUpdates();
-            Log.d(getClass().getName(), "Downloading update metadata for LAST DAY");
+            Log.d(this.getClass().getName(), "Downloading update metadata for LAST DAY");
         } else if (currentTime - dateInMiliseconds < Dates.WEEK_IN_MILLIS) {
             url = this.urlFactory.urlForLastWeekUpdates();
-            Log.d(getClass().getName(), "Downloading update metadata for LAST WEEK");
+            Log.d(this.getClass().getName(), "Downloading update metadata for LAST WEEK");
         } else if (currentTime - dateInMiliseconds < Dates.MONTH_IN_MILLIS) {
             url = this.urlFactory.urlForLastMonthUpdates();
-            Log.d(getClass().getName(), "Downloading update metadata for LAST MONTH");
+            Log.d(this.getClass().getName(), "Downloading update metadata for LAST MONTH");
         } else {
             url = this.urlFactory.urlForAllAvailableUpdates();
-            Log.d(getClass().getName(), "Downloading update metadata for EVER");
+            Log.d(this.getClass().getName(), "Downloading update metadata for EVER");
         }
 
         ZipInputStream stream = this.zipped(this.buffered(this.streamFrom(this.connectionTo(url))));
@@ -106,7 +107,7 @@ public class TheTVDBStreamFactory implements StreamFactory {
     }
 
     private BufferedInputStream buffered(InputStream stream) {
-        return new BufferedInputStream(stream);
+        return new BufferedInputStream(stream, BUFFER_SIZE);
     }
 
     private InputStream streamFrom(URLConnection connection) throws StreamCreationFailedException {
