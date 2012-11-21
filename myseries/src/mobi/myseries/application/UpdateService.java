@@ -11,11 +11,6 @@ package mobi.myseries.application;
  */
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
@@ -26,9 +21,12 @@ import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
+import mobi.myseries.shared.CollectionFilter;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
+import mobi.myseries.update.RecentlyUpdatedSpecification;
+import mobi.myseries.update.SeriesIdInCollectionSpecification;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -36,7 +34,7 @@ import android.os.Handler;
 import android.util.Log;
 
 public class UpdateService implements Publisher<UpdateListener> {
-    private static final long AUTOMATIC_UPDATE_INTERVAL = /*12L * 60L * 60L * */1000L;
+    private static final long AUTOMATIC_UPDATE_INTERVAL = /* 12L * 60L * */60L * 1000L;
     private static final long ONE_MONTH = 30L * 24L * 60L * 60L * 1000L;
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
@@ -113,9 +111,9 @@ public class UpdateService implements Publisher<UpdateListener> {
             return;
         }
 
-        long earliestUpdateTime = earliestUpdatedDateOf(seriesRepository.getAll());
+        long lastSuccessfulUpdate = earliestUpdatedDateOf(seriesRepository.getAll());
 
-        if ((System.currentTimeMillis() - earliestUpdateTime) < AUTOMATIC_UPDATE_INTERVAL) {
+        if (timeSince(lastSuccessfulUpdate) < AUTOMATIC_UPDATE_INTERVAL) {
             Log.d(getClass().getName(), "Update ran recently. Not running now.");
 
         } else {
@@ -155,7 +153,6 @@ public class UpdateService implements Publisher<UpdateListener> {
                 }
             }
         });
-
     }
 
     private void notifyListenersOfUpdateFailure(final Exception cause, Handler handler) {
@@ -173,15 +170,12 @@ public class UpdateService implements Publisher<UpdateListener> {
         return updateRunning;
     }
 
-    private class ComparatorByLastUpdate implements Comparator<Series> {
-        @Override
-        public int compare(Series series1, Series series2) {
-            return (int) (series1.lastUpdate() - series2.lastUpdate());
-        }
-    }
-
     private class Update {
         public void run(Handler handler) {
+            run(handler, true);
+        }
+
+        public void run(Handler handler, boolean forceUpdateRecent) {
             notifyListenersOfUpdateStart(handler);
 
             if (!networkAvailable()) {
@@ -189,31 +183,58 @@ public class UpdateService implements Publisher<UpdateListener> {
                 return;
             }
 
-            boolean updateAvailable;
             try {
-                updateAvailable =
-                        fetchUpdateMetadataSince(earliestUpdatedDateOf(followedSeries()));
-                List<Series> seriesToUpdate =
-                        seriesWithObsoleteDataIn(followedSeries());
-                List<Series> imagesToUpdate =
-                        seriesWithObsoletePosterIn(followedSeries());
 
-                if (!updateAvailable
-                        || ((seriesToUpdate.size() == 0) && (imagesToUpdate.size() == 0))) {
+                boolean updateAvailable = false;
+
+                Collection<Series> seriesWithDataToUpdate = followedSeries();
+                Collection<Series> seriesWithPosterToUpdate = followedSeries();
+
+                long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
+                if (timeSince(lastSuccessfulUpdate) < ONE_MONTH) {
+
+                    updateAvailable =
+                            fetchUpdateMetadataSince(lastSuccessfulUpdate);
+
+                    CollectionFilter<Series> withOutdatedData =
+                            new CollectionFilter<Series>(
+                                    new SeriesIdInCollectionSpecification(
+                                            seriesSource.seriesUpdateMetadata()));
+
+                    CollectionFilter<Series> withOutdatedPoster =
+                            new CollectionFilter<Series>(
+                                    new SeriesIdInCollectionSpecification(seriesSource
+                                            .posterUpdateMetadata().keySet()));
+
+                    seriesWithDataToUpdate = withOutdatedData.in(followedSeries());
+                    seriesWithPosterToUpdate =
+                            withOutdatedPoster.in(followedSeries());
+
+                    if (!forceUpdateRecent) {
+                        CollectionFilter<Series> notRecentlyUpdated =
+                                new CollectionFilter<Series>(new RecentlyUpdatedSpecification());
+
+                        seriesWithDataToUpdate = notRecentlyUpdated.in(seriesWithDataToUpdate);
+                        seriesWithPosterToUpdate = notRecentlyUpdated.in(seriesWithPosterToUpdate);
+                    }
+                }
+
+                if (!updateAvailable ||
+                        ((seriesWithDataToUpdate.size() == 0)
+                        && (seriesWithPosterToUpdate.size() == 0))) {
                     notifyListenersOfUpdateNotNecessary(handler);
                 }
 
-                Collections.sort(seriesToUpdate, new ComparatorByLastUpdate());
-
                 for (final Series s : followedSeries()) {
 
-                    if (seriesToUpdate.contains(s)) {
+                    if (seriesWithDataToUpdate.contains(s)) {
                         updateDataOf(s);
                         Log.d(getClass().getName(), "Data of " + s.name()
                                 + " updated.");
                     }
 
-                    if ((imageProvider.getPosterOf(s) == null) || imagesToUpdate.contains(s)) {
+                    if ((imageProvider.getPosterOf(s) == null)
+                            || seriesWithPosterToUpdate.contains(s)) {
                         updatePosterOf(s, handler);
                         Log.d(getClass().getName(), "Poster of " + s.name()
                                 + " updated.");
@@ -249,6 +270,10 @@ public class UpdateService implements Publisher<UpdateListener> {
         }
     }
 
+    private static long timeSince(long timestamp) {
+        return System.currentTimeMillis() - timestamp;
+    }
+
     private void updateDataOf(Series series) throws ParsingFailedException,
             ConnectionFailedException, SeriesNotFoundException,
             ConnectionTimeoutException {
@@ -277,63 +302,6 @@ public class UpdateService implements Publisher<UpdateListener> {
                 imageProvider.downloadPosterOf(series);
             }
         });
-    }
-
-    private List<Series> seriesWithObsoleteDataIn(
-            Collection<Series> seriesToFilter) {
-
-        long earliestUpdateTime = earliestUpdatedDateOf(seriesToFilter);
-
-        if ((System.currentTimeMillis() - earliestUpdateTime) > ONE_MONTH) {
-            Log.d(getClass().getName(),
-                    "Too long since last update, update all forced");
-
-            return new LinkedList<Series>(seriesToFilter);
-        }
-
-        List<Series> filtered = new LinkedList<Series>();
-
-        Collection<Integer> availableUpdates =
-                seriesSource.seriesUpdateMetadata();
-
-        for (Series series : seriesToFilter) {
-            if (availableUpdates.contains(series.id())) {
-                Log.d(getClass().getName(),
-                        "Update available for " + series.name() + "!");
-
-                filtered.add(series);
-            } else {
-                Log.d(getClass().getName(),
-                        "No updates found for " + series.name());
-            }
-        }
-
-        return filtered;
-    }
-
-    private List<Series> seriesWithObsoletePosterIn(
-            Collection<Series> seriesToFilter) {
-        List<Series> filtered = new LinkedList<Series>();
-
-        Map<Integer, String> availableUpdates =
-                seriesSource.posterUpdateMetadata();
-
-        for (Series series : seriesToFilter) {
-            if (availableUpdates.containsKey(series.id())) {
-                Log.d(getClass().getName(),
-                        "Update available for poster of " + series.name());
-
-                series.setPosterFilename(availableUpdates.get(series.id()));
-                seriesRepository.update(series);
-
-                filtered.add(series);
-            } else {
-                Log.d(getClass().getName(),
-                        "No updates found for poster of " + series.name());
-            }
-        }
-
-        return filtered;
     }
 
     private boolean fetchUpdateMetadataSince(long dateInMiliseconds)
@@ -399,6 +367,10 @@ public class UpdateService implements Publisher<UpdateListener> {
     @Override
     public boolean deregister(UpdateListener listener) {
         return updateListeners.deregister(listener);
+    }
+
+    public static long automaticUpdateInterval() {
+        return AUTOMATIC_UPDATE_INTERVAL;
     }
 
 }
