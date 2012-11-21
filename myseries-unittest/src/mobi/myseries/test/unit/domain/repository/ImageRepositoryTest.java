@@ -5,33 +5,42 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import mobi.myseries.domain.repository.ExternalStorageImageDirectory;
 import mobi.myseries.domain.repository.ImageStorage;
 import mobi.myseries.test.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.test.InstrumentationTestCase;
 
-public class ImageRepositoryTest extends InstrumentationTestCase {
-    private static final int NOT_SAVED_IMAGE_ID = 0;
+/**
+ * The set of tests that any ImageRepository must pass.
+ *
+ * This should be derived for each significant way of instantiating ImageRepositories, i.e., all the possible leaves of
+ * ImageRepository trees and the used trees.
+ *
+ * @author Gabriel Assis Bezerra <gabriel@myseries.mobi>
+ */
+public abstract class ImageRepositoryTest extends InstrumentationTestCase {
+
+    private static final int NOT_SAVED_IMAGE_ID = -5;
 
     private Bitmap testImage;
 
     private ImageStorage imageRepository;
+
+    protected abstract ImageStorage newRepository();
 
     public void setUp() {
         this.testImage = BitmapFactory.decodeResource(
                 this.getInstrumentation().getContext().getResources(),
                 R.drawable.icon);
 
-        this.imageRepository = new ExternalStorageImageDirectory(this.getInstrumentation().getContext(),
-                                                                 "image_repository_test_dir");
+        this.imageRepository = this.newRepository();
     }
 
     public void tearDown() {
-    	for (int imageId : this.imageRepository.savedImages()) {
-    		this.imageRepository.delete(imageId);
-    	}
+        for (int imageId : this.imageRepository.savedImages()) {
+            this.imageRepository.delete(imageId);
+        }
         this.imageRepository = null;
     }
 
@@ -89,5 +98,7 @@ public class ImageRepositoryTest extends InstrumentationTestCase {
         assertThat(this.imageRepository.savedImages(), not(hasItem(NOT_SAVED_IMAGE_ID)));
     }
 
-    // TODO(gabriel) test forbidden use of negative ids?
+    public void testTheCollectionOfSavedImagesStartsEmpty() {
+        assertTrue(this.imageRepository.savedImages().isEmpty());
+    }
 }
