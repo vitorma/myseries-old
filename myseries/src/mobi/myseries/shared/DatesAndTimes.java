@@ -1,5 +1,5 @@
 /*
- *   Dates.java
+ *   DatesAndTimes.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -29,7 +29,7 @@ import java.util.Date;
 
 import android.text.format.DateUtils;
 
-public class Dates {
+public class DatesAndTimes {
     public static final long DAY_IN_MILLIS = 24L * 60L * 60L * 1000L;
     public static final long WEEK_IN_MILLIS = 7L * DAY_IN_MILLIS;
     public static final long MONTH_IN_MILLIS = 30L * DAY_IN_MILLIS;

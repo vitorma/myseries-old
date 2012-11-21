@@ -27,7 +27,7 @@ import java.util.List;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Numbers;
 import mobi.myseries.shared.Validate;
 import android.content.ContentValues;
@@ -365,7 +365,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withStatus(c.getString(c.getColumnIndex(SERIES_STATUS)))
             .withAirDay(c.getString(c.getColumnIndex(SERIES_AIRDAY)))
             .withAirTime(c.getString(c.getColumnIndex(SERIES_AIRTIME)))
-            .withAirDate(Dates.parseDate(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), null))
+            .withAirDate(DatesAndTimes.parseDate(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), null))
             .withRuntime(c.getString(c.getColumnIndex(SERIES_RUNTIME)))
             .withNetwork(c.getString(c.getColumnIndex(SERIES_NETWORK)))
             .withOverview(c.getString(c.getColumnIndex(SERIES_OVERVIEW)))
@@ -386,7 +386,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withNumber(c.getInt(c.getColumnIndex(EPISODE_NUMBER)))
             .withSeasonNumber(c.getInt(c.getColumnIndex(EPISODE_SEASON)))
             .withName(c.getString(c.getColumnIndex(EPISODE_NAME)))
-            .withAirDate(Dates.parseDate(airDate, null))
+            .withAirDate(DatesAndTimes.parseDate(airDate, null))
             .withOverview(c.getString(c.getColumnIndex(EPISODE_OVERVIEW)))
             .withDirectors(c.getString(c.getColumnIndex(EPISODE_DIRECTORS)))
             .withWriters(c.getString(c.getColumnIndex(EPISODE_WRITERS)))

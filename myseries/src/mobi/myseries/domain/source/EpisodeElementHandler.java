@@ -27,7 +27,7 @@ import java.util.List;
 
 import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Numbers;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
@@ -153,7 +153,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                Date airDate = Dates.parseDate(body, TheTVDBConstants.DATE_FORMAT, null);
+                Date airDate = DatesAndTimes.parseDate(body, TheTVDBConstants.DATE_FORMAT, null);
                 EpisodeElementHandler.this.episodeBuilder.withAirDate(airDate);
             }
         });
