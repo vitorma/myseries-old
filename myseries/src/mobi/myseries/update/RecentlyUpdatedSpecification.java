@@ -1,6 +1,5 @@
 package mobi.myseries.update;
 
-import mobi.myseries.application.UpdateService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.AbstractSpecification;
 

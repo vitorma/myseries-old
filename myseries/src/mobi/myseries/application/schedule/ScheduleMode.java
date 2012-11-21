@@ -29,8 +29,6 @@ import java.util.List;
 
 import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.SeriesFollowingListener;
-import mobi.myseries.application.UpdateListener;
-import mobi.myseries.application.UpdateService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
@@ -38,6 +36,8 @@ import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
+import mobi.myseries.update.UpdateListener;
+import mobi.myseries.update.UpdateService;
 
 public abstract class ScheduleMode implements Publisher<ScheduleListener>, SeriesFollowingListener, UpdateListener {
     public static final int RECENT = 0;

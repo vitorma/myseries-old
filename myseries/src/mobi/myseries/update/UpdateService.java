@@ -1,4 +1,4 @@
-package mobi.myseries.application;
+package mobi.myseries.update;
 
 /*
  * TODO (Reul): verify if connection is of the right type
@@ -8,6 +8,9 @@ package mobi.myseries.application;
 
 import java.util.Collection;
 
+import mobi.myseries.application.App;
+import mobi.myseries.application.LocalizationProvider;
+import mobi.myseries.application.SettingsProvider;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.SeriesRepository;
@@ -21,8 +24,6 @@ import mobi.myseries.shared.CollectionFilter;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
-import mobi.myseries.update.RecentlyUpdatedSpecification;
-import mobi.myseries.update.SeriesIdInCollectionSpecification;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -295,6 +296,7 @@ public class UpdateService implements Publisher<UpdateListener> {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                series.setPosterFilename(seriesSource.posterUpdateMetadata().get(series.id()));
                 imageProvider.downloadPosterOf(series);
             }
         });
@@ -339,7 +341,6 @@ public class UpdateService implements Publisher<UpdateListener> {
         } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
             Log.d(this.getClass().getName(), "Update on data plan? " + settings.updateOnDataPlan());
             return settings.updateOnDataPlan();
-
         }
 
         return true;

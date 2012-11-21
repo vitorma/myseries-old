@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.update.UpdateListener;
 
 public class MessageService implements SeriesFollowingListener, UpdateListener{
 

@@ -28,6 +28,7 @@ import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.image.ImageloaderService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.update.UpdateService;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
