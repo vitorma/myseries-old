@@ -32,8 +32,8 @@
     </path>
 
     <path id="run.classpath">
-        <path refid="classpath"/>
         <pathelement location="${classes.dir}"/>
+        <path refid="classpath"/>
     </path>
 
     <target name="clean">
@@ -78,7 +78,7 @@
             <jvmarg value="-Demma.coverage.out.merge=true" />
 
             <batchtest todir="${reports.dir}">
-                <fileset dir="${src.dir}" includes="**/*.java"/>
+                <fileset dir="${src.dir}" includes="mobi/myseries/**/*.java"/>
             </batchtest>
         </junit>
 
