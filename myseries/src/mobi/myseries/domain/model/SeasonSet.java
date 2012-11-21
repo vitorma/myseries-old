@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
 
-import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
@@ -173,7 +173,7 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         if (nextNonSpecialEpisodeToSee == null) return nextSpecialEpisodeToSee;
         if (nextSpecialEpisodeToSee == null) return nextNonSpecialEpisodeToSee;
 
-        return Dates.compareByNullLast(nextNonSpecialEpisodeToSee.airDate(), nextSpecialEpisodeToSee.airDate()) < 1
+        return DatesAndTimes.compareByNullLast(nextNonSpecialEpisodeToSee.airDate(), nextSpecialEpisodeToSee.airDate()) < 1
                 ? nextNonSpecialEpisodeToSee
                         : nextSpecialEpisodeToSee;
     }
