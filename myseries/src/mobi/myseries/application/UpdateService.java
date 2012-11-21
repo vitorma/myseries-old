@@ -1,13 +1,9 @@
 package mobi.myseries.application;
 
 /*
- * TODO (Reul): verify if series.lastUpdate > 12h before updating series (automatic update only)
  * TODO (Reul): verify if connection is of the right type
  * TODO (Reul): add a 30s timeout to each series update
  * TODO (Reul): create one AsyncTask per update task
- * TODO (Reul): create class Filter to filter series with a given specification
- * TODO (Reul): create OutdatedSeriesSpecification
- * TODO (Reul): create OutdatedPosterSpecification
  */
 
 import java.util.Collection;
@@ -34,7 +30,7 @@ import android.os.Handler;
 import android.util.Log;
 
 public class UpdateService implements Publisher<UpdateListener> {
-    private static final long AUTOMATIC_UPDATE_INTERVAL = /* 12L * 60L * */60L * 1000L;
+    private static final long AUTOMATIC_UPDATE_INTERVAL =  12L * 60L * 60L * 1000L;
     private static final long ONE_MONTH = 30L * 24L * 60L * 60L * 1000L;
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
