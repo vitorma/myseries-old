@@ -28,6 +28,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class UpdateService implements Publisher<UpdateListener> {
+    private static final long AUTOMATIC_UPDATE_INTERVAL = 12L * 60L * 60L * 1000L;
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
     private LocalizationProvider localizationProvider;
@@ -97,7 +98,7 @@ public class UpdateService implements Publisher<UpdateListener> {
 
         long earliestUpdateTime = earliestUpdatedDateOf(seriesRepository.getAll());
 
-        if ((System.currentTimeMillis() - earliestUpdateTime) < automaticUpdateInterval()) {
+        if ((System.currentTimeMillis() - earliestUpdateTime) < AUTOMATIC_UPDATE_INTERVAL) {
             Log.d(getClass().getName(), "Update ran recently. Not running now.");
 
             for (UpdateListener listener : updateListeners) {
@@ -329,13 +330,6 @@ public class UpdateService implements Publisher<UpdateListener> {
                 updateTask.execute();
             }
         }
-    }
-
-    // XXX It would be better if this function was replaced by a static long. Or is the interval
-    // going to be changed in
-    // the future by something dynamic?
-    private static Long automaticUpdateInterval() {
-        return 12L * 60L * 60L * 1000L;
     }
 
     private static long earliestUpdatedDateOf(Collection<Series> series) {
