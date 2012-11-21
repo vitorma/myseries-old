@@ -296,6 +296,7 @@ public class UpdateService implements Publisher<UpdateListener> {
             @Override
             public void run() {
                 imageProvider.downloadPosterOf(series);
+                series.setPosterFilename(seriesSource.posterUpdateMetadata().get(series.id()));
             }
         });
     }
@@ -339,7 +340,6 @@ public class UpdateService implements Publisher<UpdateListener> {
         } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
             Log.d(this.getClass().getName(), "Update on data plan? " + settings.updateOnDataPlan());
             return settings.updateOnDataPlan();
-
         }
 
         return true;
