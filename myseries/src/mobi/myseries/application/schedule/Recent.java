@@ -5,7 +5,7 @@ import mobi.myseries.application.UpdateService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.repository.SeriesRepository;
 import mobi.myseries.shared.AbstractSpecification;
-import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Specification;
 
 public class Recent extends TimelineMode {
@@ -19,7 +19,7 @@ public class Recent extends TimelineMode {
         return new AbstractSpecification<Episode>() {
             @Override
             public boolean isSatisfiedBy(Episode e) {
-                return !e.airDate().after(Dates.now());
+                return !e.airDate().after(DatesAndTimes.now());
             }
         };
     }

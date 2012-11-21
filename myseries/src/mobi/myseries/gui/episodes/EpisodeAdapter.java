@@ -8,7 +8,7 @@ import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.gui.shared.Images;
-import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -113,7 +113,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
         this.episode = this.getItem(position);
 
         this.episodeName.setText(Objects.nullSafe(this.episode.name(), this.getContext().getString(R.string.to_be_announced)));
-        this.episodeFirstAired.setText(Dates.toString(this.episode.airDate(), App.environment().localization().dateFormat(), ""));
+        this.episodeFirstAired.setText(DatesAndTimes.toString(this.episode.airDate(), App.environment().localization().dateFormat(), ""));
         this.episodeDirector.setText(this.episode.directors());
         this.episodeWriter.setText(this.episode.writers());
         this.episodeGuestStars.setText(this.episode.guestStars());

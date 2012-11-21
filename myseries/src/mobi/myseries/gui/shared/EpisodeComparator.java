@@ -24,7 +24,7 @@ package mobi.myseries.gui.shared;
 import java.util.Comparator;
 
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Validate;
 
 public class EpisodeComparator {
@@ -98,6 +98,6 @@ public class EpisodeComparator {
     }
 
     private static int compareByAirdate(Episode episode1, Episode episode2) {
-        return Dates.compareByNullLast(episode1.airDate(), episode2.airDate());
+        return DatesAndTimes.compareByNullLast(episode1.airDate(), episode2.airDate());
     }
 }
