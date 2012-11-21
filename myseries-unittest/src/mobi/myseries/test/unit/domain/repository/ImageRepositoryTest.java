@@ -1,10 +1,10 @@
 package mobi.myseries.test.unit.domain.repository;
 
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import mobi.myseries.domain.repository.ImageStorage;
 import mobi.myseries.test.R;
 import android.graphics.Bitmap;
@@ -79,7 +79,7 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
         int imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
 
-        assertThat(this.imageRepository.savedImages(), hasItem(imageId));
+        assertThat(this.imageRepository.savedImages(), containsInAnyOrder(imageId));
     }
 
     public void testADeletedImageIsNotInTheCollectionOfSavedImagesAnymore() {
@@ -87,7 +87,7 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
         this.imageRepository.save(imageId, this.testImage);
         this.imageRepository.delete(imageId);
 
-        assertThat(this.imageRepository.savedImages(), not(hasItem(imageId)));
+        assertThat(this.imageRepository.savedImages(), not(containsInAnyOrder(imageId)));
     }
 
     public void testTheCollectionOfSavedImagesIsNeverNull() {
@@ -95,7 +95,7 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
     }
 
     public void testNotSavedImagesAreNotInTheCollectionOfSavedImages() {
-        assertThat(this.imageRepository.savedImages(), not(hasItem(NOT_SAVED_IMAGE_ID)));
+        assertThat(this.imageRepository.savedImages(), not(containsInAnyOrder(NOT_SAVED_IMAGE_ID)));
     }
 
     public void testTheCollectionOfSavedImagesStartsEmpty() {
