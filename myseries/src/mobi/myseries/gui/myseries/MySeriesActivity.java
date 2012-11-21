@@ -69,7 +69,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private boolean updating = false;
     private StateHolder state;
 
-	private MessageLauncher messageLauncher;
+    private MessageLauncher messageLauncher;
 
     public MySeriesActivity() {
     }
@@ -84,7 +84,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_series);
 
-        App.updateSeriesService().registerSeriesUpdateListener(this);
+        App.updateSeriesService().register(this);
 
         Object retained = this.getLastCustomNonConfigurationInstance();
         if ((retained != null) && (retained instanceof StateHolder)) {
@@ -99,9 +99,9 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     @Override
     protected void onResume() {
-    	super.onResume();
+        super.onResume();
         this.loadState();
-    	this.updating = App.updateSeriesService().isUpdating();
+        this.updating = App.updateSeriesService().isUpdating();
         this.setSupportProgressBarIndeterminateVisibility(this.updating);
 
         if (!this.updating) {
@@ -110,7 +110,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     }
 
     private void loadState() {
-    	this.messageLauncher.loadState();
+        this.messageLauncher.loadState();
         if (this.state.isShowingDialog){
             this.state.dialog.show();
         }

@@ -57,7 +57,7 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
         this.listeners = new ListenerSet<ScheduleListener>();
 
         following.registerSeriesFollowingListener(this);
-        update.registerSeriesUpdateListener(this);
+        update.register(this);
 
         this.loadEpisodes();
         this.sortEpisodes();
