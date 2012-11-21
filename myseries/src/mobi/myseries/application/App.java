@@ -72,6 +72,7 @@ public class App extends Application {
         messageService = new MessageService();
     }
 
+
     //TODO (Cleber) Turn this method private or delete it
     public static Environment environment() {
         return environment;

@@ -22,9 +22,17 @@
 package mobi.myseries.domain.source;
 
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class TheTVDBConstants {
     public static final String API_KEY = "6F2B5A871C96FB05";
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     public static final Language DEFAULT_LANGUAGE = Language.ENGLISH;
+
+    public static final TimeZone TIME_ZONE = TimeZone.getTimeZone("GMT-08:00");
+
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    static {
+        DATE_FORMAT.setTimeZone(TIME_ZONE);
+    }
 }

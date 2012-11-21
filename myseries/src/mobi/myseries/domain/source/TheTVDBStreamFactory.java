@@ -29,7 +29,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.ZipInputStream;
 
-import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.DatesAndTimes;
 import android.util.Log;
 
 public class TheTVDBStreamFactory implements StreamFactory {
@@ -77,13 +77,13 @@ public class TheTVDBStreamFactory implements StreamFactory {
 
         URL url;
 
-        if (currentTime - dateInMiliseconds < Dates.DAY_IN_MILLIS) {
+        if (currentTime - dateInMiliseconds < DatesAndTimes.DAY_IN_MILLIS) {
             url = this.urlFactory.urlForLastDayUpdates();
             Log.d(this.getClass().getName(), "Downloading update metadata for LAST DAY");
-        } else if (currentTime - dateInMiliseconds < Dates.WEEK_IN_MILLIS) {
+        } else if (currentTime - dateInMiliseconds < DatesAndTimes.WEEK_IN_MILLIS) {
             url = this.urlFactory.urlForLastWeekUpdates();
             Log.d(this.getClass().getName(), "Downloading update metadata for LAST WEEK");
-        } else if (currentTime - dateInMiliseconds < Dates.MONTH_IN_MILLIS) {
+        } else if (currentTime - dateInMiliseconds < DatesAndTimes.MONTH_IN_MILLIS) {
             url = this.urlFactory.urlForLastMonthUpdates();
             Log.d(this.getClass().getName(), "Downloading update metadata for LAST MONTH");
         } else {

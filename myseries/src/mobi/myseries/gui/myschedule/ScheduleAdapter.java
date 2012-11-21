@@ -37,7 +37,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.SeenMark;
-import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Publisher;
@@ -121,10 +121,10 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         if (this.isCellSectioned(position)) {
             DateFormat dateformat = new SimpleDateFormat(CONTEXT.getString(R.string.date_format_with_weekday));
             String unavailable = CONTEXT.getString(R.string.unavailable_date);
-            String formattedDate = Dates.toString(episode.airDate(), dateformat, unavailable);
+            String formattedDate = DatesAndTimes.toString(episode.airDate(), dateformat, unavailable);
 
             viewHolder.dateTextView.setText(formattedDate);
-            viewHolder.relativeTimeTextView.setText(Dates.relativeTimeStringForNear(episode.airDate()));
+            viewHolder.relativeTimeTextView.setText(DatesAndTimes.relativeTimeStringForNear(episode.airDate()));
             viewHolder.section.setVisibility(View.VISIBLE);
         } else {
             viewHolder.section.setVisibility(View.GONE);

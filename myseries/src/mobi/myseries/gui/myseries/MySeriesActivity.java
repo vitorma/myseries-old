@@ -46,6 +46,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -65,11 +66,11 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String UPDATE = "UPDATE";
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
+    private Handler handler = new Handler();
 
-    private boolean updating = false;
     private StateHolder state;
 
-	private MessageLauncher messageLauncher;
+    private MessageLauncher messageLauncher;
 
     public MySeriesActivity() {
     }
@@ -84,7 +85,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.my_series);
 
-        App.updateSeriesService().registerSeriesUpdateListener(this);
+        App.updateSeriesService().register(this);
 
         Object retained = this.getLastCustomNonConfigurationInstance();
         if ((retained != null) && (retained instanceof StateHolder)) {
@@ -94,23 +95,28 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             this.state = new StateHolder();
             this.messageLauncher = new MessageLauncher(this);
             this.state.messageLauncher = this.messageLauncher;
+            this.launchAutomaticUpdate();
         }
+    }
+
+    private void launchAutomaticUpdate() {
+        new Thread() {
+            @Override
+            public void run() {
+                App.updateSeriesService().updateDataIfNeeded(handler);
+            };
+        }.start();
     }
 
     @Override
     protected void onResume() {
-    	super.onResume();
+        super.onResume();
         this.loadState();
-    	this.updating = App.updateSeriesService().isUpdating();
-        this.setSupportProgressBarIndeterminateVisibility(this.updating);
-
-        if (!this.updating) {
-            App.updateSeriesService().updateDataIfNeeded();
-        }
+        this.setSupportProgressBarIndeterminateVisibility(App.updateSeriesService().isUpdating());
     }
 
     private void loadState() {
-    	this.messageLauncher.loadState();
+        this.messageLauncher.loadState();
         if (this.state.isShowingDialog){
             this.state.dialog.show();
         }
@@ -170,7 +176,12 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
-            App.updateSeriesService().updateData();
+            new Thread() {
+                @Override
+                public void run() {
+                    App.updateSeriesService().updateData(handler);
+                };
+            }.start();
         }
 
         if (item.getTitle().equals(REMOVE)) {
@@ -249,28 +260,24 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     public void onUpdateStart() {
         Log.d(this.getClass().getName(), "update started");
         this.setSupportProgressBarIndeterminateVisibility(true);
-        this.updating = true;
     }
 
     @Override
     public void onUpdateFailure(Exception e) {
         Log.d(this.getClass().getName(), "update failure");
         this.setSupportProgressBarIndeterminateVisibility(false);
-        this.updating = false;
     }
 
     @Override
     public void onUpdateSuccess() {
         Log.d(this.getClass().getName(), "update complete");
         this.setSupportProgressBarIndeterminateVisibility(false);
-        this.updating = false;
     }
 
     @Override
     public void onUpdateNotNecessary() {
         Log.d(this.getClass().getName(), "update not necessary yet");
         this.setSupportProgressBarIndeterminateVisibility(false);
-        this.updating = false;
     }
 
     //Search----------------------------------------------------------------------------------------

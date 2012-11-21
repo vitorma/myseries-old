@@ -278,8 +278,8 @@ public class EpisodeTest {
         episode1.mergeWith(episode2);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void mergingAnEpisodeWithAnotherHavingADifferentNumberCausesIllegalArgumentException() {
+    @Test
+    public void mergingAnEpisodeWithAnotherHavingADifferentNumber() {
         Episode episode1 = Episode.builder()
             .withId(ID1)
             .withSeriesId(SERIES_ID1)
@@ -295,6 +295,8 @@ public class EpisodeTest {
             .build();
 
         episode1.mergeWith(episode2);
+
+
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -314,6 +316,15 @@ public class EpisodeTest {
             .build();
 
         episode1.mergeWith(episode2);
+
+        Assert.assertEquals(episode2.number(), episode1.number());
+        Assert.assertEquals(episode2.name(), episode1.name());
+        Assert.assertEquals(episode2.airDate(), episode1.airDate());
+        Assert.assertEquals(episode2.overview(), episode1.overview());
+        Assert.assertEquals(episode2.directors(), episode1.directors());
+        Assert.assertEquals(episode2.writers(), episode1.writers());
+        Assert.assertEquals(episode2.guestStars(), episode1.guestStars());
+        Assert.assertEquals(episode2.imageFileName(), episode1.imageFileName());
     }
 
     @Test

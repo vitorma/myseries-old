@@ -28,7 +28,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.shared.Android;
-import mobi.myseries.shared.Dates;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -90,7 +90,7 @@ public class Item {
 
     private void setupEpisodeAirdate(RemoteViews item, Episode episode) {
         String unknownDate = this.context.getString(R.string.unknown_date);
-        String episodeAirdate = Dates.relativeTimeStringFor(episode.airDate(), unknownDate);
+        String episodeAirdate = DatesAndTimes.relativeTimeStringFor(episode.airDate(), unknownDate);
 
         item.setTextViewText(R.id.episodeAirDate, episodeAirdate);
     }
