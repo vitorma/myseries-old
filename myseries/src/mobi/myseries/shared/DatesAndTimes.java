@@ -1,5 +1,5 @@
 /*
- *   Dates.java
+ *   DatesAndTimes.java
  *
  *   Copyright 2012 MySeries Team.
  *
