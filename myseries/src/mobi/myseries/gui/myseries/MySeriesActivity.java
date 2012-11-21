@@ -68,7 +68,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String HELP = "HELP";
     private Handler handler = new Handler();
 
-    private boolean updating = false;
     private StateHolder state;
 
     private MessageLauncher messageLauncher;
@@ -96,24 +95,24 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             this.state = new StateHolder();
             this.messageLauncher = new MessageLauncher(this);
             this.state.messageLauncher = this.messageLauncher;
+            this.launchAutomaticUpdate();
         }
+    }
+
+    private void launchAutomaticUpdate() {
+        new Thread() {
+            @Override
+            public void run() {
+                App.updateSeriesService().updateDataIfNeeded(handler);
+            };
+        }.start();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         this.loadState();
-        this.updating = App.updateSeriesService().isUpdating();
-        this.setSupportProgressBarIndeterminateVisibility(this.updating);
-
-        if (!this.updating) {
-            new Thread() {
-                @Override
-                public void run() {
-                    App.updateSeriesService().updateDataIfNeeded(handler);
-                };
-            }.start();
-        }
+        this.setSupportProgressBarIndeterminateVisibility(App.updateSeriesService().isUpdating());
     }
 
     private void loadState() {
@@ -261,28 +260,24 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     public void onUpdateStart() {
         Log.d(this.getClass().getName(), "update started");
         this.setSupportProgressBarIndeterminateVisibility(true);
-        this.updating = true;
     }
 
     @Override
     public void onUpdateFailure(Exception e) {
         Log.d(this.getClass().getName(), "update failure");
         this.setSupportProgressBarIndeterminateVisibility(false);
-        this.updating = false;
     }
 
     @Override
     public void onUpdateSuccess() {
         Log.d(this.getClass().getName(), "update complete");
         this.setSupportProgressBarIndeterminateVisibility(false);
-        this.updating = false;
     }
 
     @Override
     public void onUpdateNotNecessary() {
         Log.d(this.getClass().getName(), "update not necessary yet");
         this.setSupportProgressBarIndeterminateVisibility(false);
-        this.updating = false;
     }
 
     //Search----------------------------------------------------------------------------------------

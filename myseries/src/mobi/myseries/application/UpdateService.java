@@ -1,8 +1,6 @@
 package mobi.myseries.application;
 
 /*
- * TODO (Reul): notify listeners of update start, end and failure
- * TODO (Reul): launch update only at application start
  * TODO (Reul): verify connection availability before update
  * TODO (Reul): verify if series.lastUpdate > 12h before updating series (automatic update only)
  * TODO (Reul): force download poster if series has none
@@ -40,7 +38,7 @@ import android.os.Handler;
 import android.util.Log;
 
 public class UpdateService implements Publisher<UpdateListener> {
-    private static final long AUTOMATIC_UPDATE_INTERVAL = 12L * 60L * 60L * 1000L;
+    private static final long AUTOMATIC_UPDATE_INTERVAL = /*12L * 60L * 60L * */1000L;
     private static final long ONE_MONTH = 30L * 24L * 60L * 60L * 1000L;
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
@@ -49,6 +47,7 @@ public class UpdateService implements Publisher<UpdateListener> {
     private Update update;
     private final ListenerSet<UpdateListener> updateListeners;
     private boolean updateRunning = false;
+    private UpdateListener selfListener;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
             LocalizationProvider localizationProvider, ImageService imageProvider) {
@@ -65,29 +64,36 @@ public class UpdateService implements Publisher<UpdateListener> {
         update = new Update();
         updateListeners = new ListenerSet<UpdateListener>();
 
-        register(new UpdateListener() {
+        selfListener = new UpdateListener() {
 
             @Override
             public void onUpdateSuccess() {
+                Log.d(getClass().getName(), "Update finished successfully. :)");
                 updateRunning = false;
             }
 
             @Override
             public void onUpdateStart() {
+                Log.d(getClass().getName(), "Update started.");
                 updateRunning = true;
             }
 
             @Override
             public void onUpdateNotNecessary() {
+                Log.d(getClass().getName(), "Update is not necessary.");
                 updateRunning = false;
             }
 
             @Override
             public void onUpdateFailure(Exception e) {
+                Log.d(getClass().getName(), "Update finished with failure. :(");
                 updateRunning = false;
 
             }
-        });
+        };
+
+        Validate.isTrue(register(selfListener),
+                "UpdateService could not be registered as listener to update ");
     }
 
     public void updateData(Handler handler) {
