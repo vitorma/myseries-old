@@ -1,4 +1,4 @@
-package mobi.myseries.application;
+package mobi.myseries.update;
 
 public class NetworkUnavailableException extends Exception {
     private static final long serialVersionUID = 1L;
