@@ -46,6 +46,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -65,6 +66,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String UPDATE = "UPDATE";
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
+    private Handler handler = new Handler();
 
     private boolean updating = false;
     private StateHolder state;
@@ -105,7 +107,12 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         this.setSupportProgressBarIndeterminateVisibility(this.updating);
 
         if (!this.updating) {
-            App.updateSeriesService().updateDataIfNeeded();
+            new Thread() {
+                @Override
+                public void run() {
+                    App.updateSeriesService().updateDataIfNeeded(handler);
+                };
+            }.start();
         }
     }
 
@@ -170,7 +177,12 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
-            App.updateSeriesService().updateData();
+            new Thread() {
+                @Override
+                public void run() {
+                    App.updateSeriesService().updateData(handler);
+                };
+            }.start();
         }
 
         if (item.getTitle().equals(REMOVE)) {
