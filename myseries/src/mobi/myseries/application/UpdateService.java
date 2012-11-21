@@ -1,9 +1,7 @@
 package mobi.myseries.application;
 
 /*
- * TODO (Reul): verify connection availability before update
  * TODO (Reul): verify if series.lastUpdate > 12h before updating series (automatic update only)
- * TODO (Reul): force download poster if series has none
  * TODO (Reul): verify if connection is of the right type
  * TODO (Reul): add a 30s timeout to each series update
  * TODO (Reul): create one AsyncTask per update task
@@ -215,8 +213,8 @@ public class UpdateService implements Publisher<UpdateListener> {
                                 + " updated.");
                     }
 
-                    if (imagesToUpdate.contains(s)) {
-                        updatePosterOf(s);
+                    if ((imageProvider.getPosterOf(s) == null) || imagesToUpdate.contains(s)) {
+                        updatePosterOf(s, handler);
                         Log.d(getClass().getName(), "Poster of " + s.name()
                                 + " updated.");
                     }
@@ -230,18 +228,23 @@ public class UpdateService implements Publisher<UpdateListener> {
             } catch (ConnectionFailedException e) {
                 notifyListenersOfUpdateFailure(e, handler);
                 e.printStackTrace();
+
             } catch (ConnectionTimeoutException e) {
                 notifyListenersOfUpdateFailure(e, handler);
                 e.printStackTrace();
+
             } catch (ParsingFailedException e) {
                 notifyListenersOfUpdateFailure(e, handler);
                 e.printStackTrace();
+
             } catch (UpdateMetadataUnavailableException e) {
                 notifyListenersOfUpdateFailure(e, handler);
                 e.printStackTrace();
+
             } catch (SeriesNotFoundException e) {
                 notifyListenersOfUpdateFailure(e, handler);
                 e.printStackTrace();
+
             }
         }
     }
@@ -266,9 +269,14 @@ public class UpdateService implements Publisher<UpdateListener> {
         series.mergeWith(downloadedSeries);
     }
 
-    private void updatePosterOf(Series series) {
+    private void updatePosterOf(final Series series, Handler handler) {
         Log.d(getClass().getName(), "Downloading poster of " + series.name());
-        imageProvider.downloadPosterOf(series);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                imageProvider.downloadPosterOf(series);
+            }
+        });
     }
 
     private List<Series> seriesWithObsoleteDataIn(
