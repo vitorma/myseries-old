@@ -18,6 +18,8 @@ import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.Android;
 import mobi.myseries.shared.AsyncTaskResult;
+import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -25,13 +27,14 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class UpdateService {
+public class UpdateService implements Publisher<UpdateListener> {
+    private static final long AUTOMATIC_UPDATE_INTERVAL = 12L * 60L * 60L * 1000L;
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
     private LocalizationProvider localizationProvider;
     private ImageService imageProvider;
     private SeriesUpdater seriesUpdater;
-    private final List<UpdateListener> updateListeners;  //< XXX(gabriel) Shouldn't this be a ListenerSet<UpdateListener>?
+    private final ListenerSet<UpdateListener> updateListeners;
     private boolean updateRunning = false;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
@@ -47,9 +50,9 @@ public class UpdateService {
         this.localizationProvider = localizationProvider;
         this.imageProvider = imageProvider;
         seriesUpdater = new SeriesUpdater();
-        updateListeners = new LinkedList<UpdateListener>();
+        updateListeners = new ListenerSet<UpdateListener>();
 
-        registerSeriesUpdateListener(new UpdateListener() {
+        register(new UpdateListener() {
 
             @Override
             public void onUpdateSuccess() {
@@ -95,7 +98,7 @@ public class UpdateService {
 
         long earliestUpdateTime = earliestUpdatedDateOf(seriesRepository.getAll());
 
-        if ((System.currentTimeMillis() - earliestUpdateTime) < automaticUpdateInterval()) {
+        if ((System.currentTimeMillis() - earliestUpdateTime) < AUTOMATIC_UPDATE_INTERVAL) {
             Log.d(getClass().getName(), "Update ran recently. Not running now.");
 
             for (UpdateListener listener : updateListeners) {
@@ -107,27 +110,17 @@ public class UpdateService {
         }
     }
 
-    // XXX(gabriel) This should be something from the Publisher interface or am I missing something?
-    public void registerSeriesUpdateListener(UpdateListener listener) {
-        if (!updateListeners.contains(listener)) {
-            updateListeners.add(listener);
-        }
-    }
-
     public boolean isUpdating() {
         return updateRunning;
     }
 
-    // XXX(gabriel) shouldn't this class be private? It is only being used in this file.
-    public class ComparatorByLastUpdate implements Comparator<Series> {
+    private class ComparatorByLastUpdate implements Comparator<Series> {
         @Override
         public int compare(Series series1, Series series2) {
             return (int) (series1.lastUpdate() - series2.lastUpdate());
         }
     }
 
-    // XXX(gabriel) A quick look shows these results being used only in the async task of SeriesUpdater#update. Why to
-    // keep it here?
     private static enum UpdateResult {
         NO_UPDATES_AVAILABLE, SUCCESS
     };
@@ -339,17 +332,6 @@ public class UpdateService {
         }
     }
 
-    // XXX(gabriel) This should be something from the Publisher interface or am I missing something?
-    public void deregisterSeriesUpdateListener(UpdateListener listener) {
-        updateListeners.remove(listener);
-    }
-
-    // XXX It would be better if this function was replaced by a static long. Or is the interval going to be changed in
-    // the future by something dynamic?
-    private static Long automaticUpdateInterval() {
-        return 12L * 60L * 60L * 1000L;
-    }
-
     private static long earliestUpdatedDateOf(Collection<Series> series) {
         long d = Long.MAX_VALUE;
 
@@ -393,6 +375,16 @@ public class UpdateService {
         ConnectivityManager connectivityManager =
                 ((ConnectivityManager) App.context().getSystemService(Context.CONNECTIVITY_SERVICE));
         return connectivityManager.getActiveNetworkInfo();
+    }
+
+    @Override
+    public boolean register(UpdateListener listener) {
+        return updateListeners.register(listener);
+    }
+
+    @Override
+    public boolean deregister(UpdateListener listener) {
+        return updateListeners.deregister(listener);
     }
 
 }
