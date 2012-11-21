@@ -27,9 +27,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.zip.ZipInputStream;
 
+import junit.framework.TestCase;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -44,11 +44,9 @@ import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
 
-import junit.framework.TestCase;
-
 public class SeriesParserTest extends TestCase {
-    
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+    private static final DateFormat DATE_FORMAT = TheTVDBConstants.DATE_FORMAT;
 
     /* Field values */
 
@@ -201,11 +199,17 @@ public class SeriesParserTest extends TestCase {
         public InputStream streamForSeries(int seriesId, Language language) throws StreamCreationFailedException {
             this.checkLikeUrlFactoryWouldCheck(language);
 
-            if (seriesId == Integer.valueOf(BASE_SERIES_ID)) return this.streamFor(BASE_SERIES_XML);
+            if (seriesId == Integer.valueOf(BASE_SERIES_ID)) {
+                return this.streamFor(BASE_SERIES_XML);
+            }
 
-            if (seriesId == Integer.valueOf(FULL_SERIES_ID)) return this.streamFor(FULL_SERIES_XML);
+            if (seriesId == Integer.valueOf(FULL_SERIES_ID)) {
+                return this.streamFor(FULL_SERIES_XML);
+            }
 
-            if (seriesId == SERIES_ID_FOR_INVALID_XML) return this.streamFor(SERIES_XML_WITHOUT_ROOT_ELEMENT);
+            if (seriesId == SERIES_ID_FOR_INVALID_XML) {
+                return this.streamFor(SERIES_XML_WITHOUT_ROOT_ELEMENT);
+            }
 
             throw new StreamCreationFailedException();
         }
@@ -220,11 +224,7 @@ public class SeriesParserTest extends TestCase {
         public InputStream streamForEpisodeImage(String fileName) {return null;}
 
         @Override
-        public ZipInputStream streamForUpdatesSince(long dateInMiliseconds)
-                throws StreamCreationFailedException, ConnectionFailedException {
-            // TODO (Reul) Implement me 
-            return null;
-        }
+        public ZipInputStream streamForUpdatesSince(long dateInMiliseconds) {return null;}
     }
 
     /* Parser to test */
@@ -287,7 +287,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(fullSeries.status(), equalTo(FULL_SERIES_STATUS));
         assertThat(fullSeries.airDay(), equalTo(FULL_SERIES_AIR_DAY));
         assertThat(fullSeries.airTime(), equalTo(FULL_SERIES_AIR_TIME));
-        assertThat(fullSeries.airDate(), equalTo(DatesAndTimes.parseDate("2012-01-01", DATE_FORMAT, null)));
+        assertThat(fullSeries.airDate(), equalTo(DatesAndTimes.parseDate(FULL_SERIES_AIR_DATE, DATE_FORMAT, null)));
         assertThat(fullSeries.runtime(), equalTo(FULL_SERIES_RUNTIME));
         assertThat(fullSeries.network(), equalTo(FULL_SERIES_NETWORK));
         assertThat(fullSeries.overview(), equalTo(FULL_SERIES_OVERVIEW));
