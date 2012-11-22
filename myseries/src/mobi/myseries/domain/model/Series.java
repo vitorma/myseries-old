@@ -367,4 +367,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         this.lastUpdate = lastUpdate;
         return this;
     }
+
+    public boolean hasPoster() {
+        return this.posterFileName != null;
+    }
 }

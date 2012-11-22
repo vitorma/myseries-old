@@ -230,11 +230,12 @@ public class UpdateService implements Publisher<UpdateListener> {
                                 + " updated.");
                     }
 
-                    if ((imageProvider.getPosterOf(s) == null)
+                    if ((s.hasPoster() &&
+                            (imageProvider.getPosterOf(s) == null))
                             || seriesWithPosterToUpdate.contains(s)) {
                         updatePosterOf(s, handler);
                         Log.d(getClass().getName(), "Poster of " + s.name()
-                                + " updated.");
+                                + " updated. (" + s.posterFileName() + ") ");
                     }
 
                     s.setLastUpdate(System.currentTimeMillis());
