@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.test.unit.domain.repository;
+package mobi.myseries.test.unit.domain.repository.image;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -29,8 +29,8 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import mobi.myseries.domain.repository.ImageStorage;
-import mobi.myseries.domain.repository.LruRepositoryManager;
+import mobi.myseries.domain.repository.image.ImageRepository;
+import mobi.myseries.domain.repository.image.LruRepositoryManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,12 +52,12 @@ public class LruRepositoryManagerTest {
     private Bitmap DEFAULT_IMAGE = PowerMockito.mock(Bitmap.class);  // This is not static because of a PowerMockito
                                                                      // issue when the tests are run from ant.
 
-    private ImageStorage managedRepository;
+    private ImageRepository managedRepository;
     private LruRepositoryManager manager;
 
     @Before
     public void setUp() {
-        this.managedRepository = mock(ImageStorage.class);
+        this.managedRepository = mock(ImageRepository.class);
 
         when(this.managedRepository.fetch(intThat(is(not(equalTo(NOT_USED_IMAGE_ID)))))).thenReturn(DEFAULT_IMAGE);
         when(this.managedRepository.fetch(NOT_USED_IMAGE_ID)).thenReturn(null);
@@ -74,12 +74,12 @@ public class LruRepositoryManagerTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void constructingItWithZeroImagesCausesIllegalArgumentException() {
-        new LruRepositoryManager(mock(ImageStorage.class), 0);
+        new LruRepositoryManager(mock(ImageRepository.class), 0);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void constructingItWithANegativeNumberOfKeptImagesCausesIllegalArgumentException() {
-        new LruRepositoryManager(mock(ImageStorage.class), -1);
+        new LruRepositoryManager(mock(ImageRepository.class), -1);
     }
 
     /* Saving */
@@ -210,16 +210,16 @@ public class LruRepositoryManagerTest {
 
     @Test
     public void theCollectionOfSavedImagesIsFetchedNoMatterTheLRUPolicy() {
-    	Collection<Integer> returnedCollection = new ArrayList<Integer>();
-    	when(this.managedRepository.savedImages()).thenReturn(returnedCollection);
+        Collection<Integer> returnedCollection = new ArrayList<Integer>();
+        when(this.managedRepository.savedImages()).thenReturn(returnedCollection);
 
-    	assertThat(this.manager.savedImages(), sameInstance(returnedCollection));
-    	verify(this.managedRepository).savedImages();
+        assertThat(this.manager.savedImages(), sameInstance(returnedCollection));
+        verify(this.managedRepository).savedImages();
     }
 
     /* Test tools */
 
-    private int fillWithTheDefaultImage(ImageStorage repository, int numberOfImages, int firstImageId) {
+    private int fillWithTheDefaultImage(ImageRepository repository, int numberOfImages, int firstImageId) {
         assert numberOfImages > 0;
         Bitmap imageToBeSaved = DEFAULT_IMAGE;
 

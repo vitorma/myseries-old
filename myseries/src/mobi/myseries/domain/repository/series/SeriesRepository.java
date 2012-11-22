@@ -1,5 +1,5 @@
 /*
- *   ImageIoException.java
+ *   SeriesRepository.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,17 +19,23 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.repository;
+package mobi.myseries.domain.repository.series;
 
-public class ImageIoException extends RuntimeException {
-    private static final long serialVersionUID = -2674512815215899997L;
-    private static final String CAUSE = "can't %s image file %s";
+import java.util.Collection;
 
-    public ImageIoException() {
-        super();
-    }
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Series;
 
-    public ImageIoException(String action, String filename) {
-        super(String.format(CAUSE, action, filename));
-    }
+public interface SeriesRepository {
+    public void insert(Series series);
+    public void update(Series series);
+    public void updateAll(Collection<Series> series);
+    public void update(Episode episode);
+    public void updateAllEpisodes(Collection<Episode> episodes);
+    public void delete(Series series);
+    public void deleteAll(Collection<Series> seriesCollection);
+    public void clear();
+    public boolean contains(Series series);
+    public Series get(int seriesId);
+    public Collection<Series> getAll();
 }

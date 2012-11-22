@@ -1,4 +1,4 @@
-package mobi.myseries.domain.repository;
+package mobi.myseries.domain.repository.image;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,7 +17,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Environment;
 
-public class ExternalStorageImageDirectory implements ImageStorage {
+public class ExternalStorageImageDirectory implements ImageRepository {
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final CompressFormat IMAGE_FORMAT = CompressFormat.JPEG;
     private static final String IMAGE_EXTENSION = "." + IMAGE_FORMAT.toString().toLowerCase();

@@ -31,7 +31,7 @@ import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.SeriesRepository;
+import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.ListenerSet;

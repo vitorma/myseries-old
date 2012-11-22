@@ -26,7 +26,7 @@ import java.util.Collection;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.SeriesRepository;
+import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.shared.Validate;
 
 public class SeriesProvider {

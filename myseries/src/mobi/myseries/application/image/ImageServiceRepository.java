@@ -1,5 +1,5 @@
 /*
- *   SeriesRepository.java
+ *   ImageRepository.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,23 +19,16 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.repository;
-
-import java.util.Collection;
+package mobi.myseries.application.image;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import android.graphics.Bitmap;
 
-public interface SeriesRepository {
-    public void insert(Series series);
-    public void update(Series series);
-    public void updateAll(Collection<Series> series);
-    public void update(Episode episode);
-    public void updateAllEpisodes(Collection<Episode> episodes);
-    public void delete(Series series);
-    public void deleteAll(Collection<Series> seriesCollection);
-    public void clear();
-    public boolean contains(Series series);
-    public Series get(int seriesId);
-    public Collection<Series> getAll();
+public interface ImageServiceRepository {
+    public void saveSeriesPoster(Series series, Bitmap file);
+    public void saveEpisodeImage(Episode episode, Bitmap file);
+    public void deleteAllImagesOf(Series series);
+    public Bitmap getPosterOf(Series series);
+    public Bitmap getImageOf(Episode episode);
 }

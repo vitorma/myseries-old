@@ -1,5 +1,5 @@
 /*
- *   ImageRepository.java
+ *   ImageIoException.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,16 +19,17 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.repository;
+package mobi.myseries.domain.repository.image;
 
-import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.Series;
-import android.graphics.Bitmap;
+public class ImageIoException extends RuntimeException {
+    private static final long serialVersionUID = -2674512815215899997L;
+    private static final String CAUSE = "can't %s image file %s";
 
-public interface ImageRepository {
-    public void saveSeriesPoster(Series series, Bitmap file);
-    public void saveEpisodeImage(Episode episode, Bitmap file);
-    public void deleteAllImagesOf(Series series);
-    public Bitmap getPosterOf(Series series);
-    public Bitmap getImageOf(Episode episode);
+    public ImageIoException() {
+        super();
+    }
+
+    public ImageIoException(String action, String filename) {
+        super(String.format(CAUSE, action, filename));
+    }
 }

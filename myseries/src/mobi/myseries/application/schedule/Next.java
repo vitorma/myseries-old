@@ -4,7 +4,7 @@ import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
-import mobi.myseries.domain.repository.SeriesRepository;
+import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.update.UpdateService;

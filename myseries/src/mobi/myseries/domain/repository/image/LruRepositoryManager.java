@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.repository;
+package mobi.myseries.domain.repository.image;
 
 import java.util.Collection;
 
@@ -27,7 +27,7 @@ import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
-public class LruRepositoryManager implements ImageStorage {
+public class LruRepositoryManager implements ImageRepository {
 
     private class ImagesQueue extends LruCache<Integer, Integer> {
 
@@ -44,9 +44,9 @@ public class LruRepositoryManager implements ImageStorage {
     }
 
     ImagesQueue imagesQueue;
-    ImageStorage managedRepository;
+    ImageRepository managedRepository;
 
-    public LruRepositoryManager(ImageStorage managedRepository, int numberOfKeptImages) {
+    public LruRepositoryManager(ImageRepository managedRepository, int numberOfKeptImages) {
         Validate.isNonNull(managedRepository, "managedRepository");
         Validate.isTrue(numberOfKeptImages > 0,
                 new IllegalArgumentException("numberOfKeptImages should be greater than zero"));

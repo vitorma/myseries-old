@@ -25,7 +25,7 @@ import java.util.Collection;
 
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.SeriesRepository;
+import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;

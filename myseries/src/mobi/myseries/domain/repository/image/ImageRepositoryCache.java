@@ -1,4 +1,4 @@
-package mobi.myseries.domain.repository;
+package mobi.myseries.domain.repository.image;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -11,16 +11,16 @@ import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
 
-public class ImageRepositoryCache implements ImageStorage {
+public class ImageRepositoryCache implements ImageRepository {
 
     private SparseArray<Bitmap> cachedImages;
     private Set<Integer> cachedImagesIds;  // this is here because there so far (2012-11-21) there is no easy way to
                                            // get the list of keys in a SparseArray.
 
     private ExecutorService threadExecutor;
-    private ImageStorage cachedRepository;
+    private ImageRepository cachedRepository;
 
-    public ImageRepositoryCache(ImageStorage cachedRepository) {
+    public ImageRepositoryCache(ImageRepository cachedRepository) {
         Validate.isNonNull(cachedRepository, "cachedRepository");
 
         this.cachedRepository = cachedRepository;

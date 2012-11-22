@@ -23,7 +23,6 @@ package mobi.myseries.application.image;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.ImageRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ImageNotFoundException;
@@ -35,12 +34,12 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 public final class ImageService {
-    private ImageRepository imageRepository;
+    private ImageServiceRepository imageRepository;
     private ImageSource imageSource;
     private ListenerSet<SeriesPosterDownloadListener> posterDownloadListeners;
     private ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
 
-    public ImageService(ImageSource imageSource, ImageRepository imageRepository) {
+    public ImageService(ImageSource imageSource, ImageServiceRepository imageRepository) {
         Validate.isNonNull(imageSource, "imageSource");
         Validate.isNonNull(imageRepository, "imageRepository");
 

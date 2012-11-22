@@ -1,11 +1,11 @@
-package mobi.myseries.test.unit.domain.repository;
+package mobi.myseries.test.unit.domain.repository.image;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import mobi.myseries.domain.repository.ImageStorage;
+import mobi.myseries.domain.repository.image.ImageRepository;
 import mobi.myseries.test.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,13 +21,13 @@ import android.test.InstrumentationTestCase;
  */
 public abstract class ImageRepositoryTest extends InstrumentationTestCase {
 
-    private static final int NOT_SAVED_IMAGE_ID = -5;
+    private static final int NOT_SAVED_IMAGE_ID = -5;  // repositories must also work with negative ids
 
     private Bitmap testImage;
 
-    private ImageStorage imageRepository;
+    private ImageRepository imageRepository;
 
-    protected abstract ImageStorage newRepository();
+    protected abstract ImageRepository newRepository();
 
     public void setUp() {
         this.testImage = BitmapFactory.decodeResource(

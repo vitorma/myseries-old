@@ -21,11 +21,11 @@
 
 package mobi.myseries.application;
 
-import mobi.myseries.domain.repository.ImageDirectory;
-import mobi.myseries.domain.repository.ImageRepository;
-import mobi.myseries.domain.repository.SeriesCache;
-import mobi.myseries.domain.repository.SeriesDatabase;
-import mobi.myseries.domain.repository.SeriesRepository;
+import mobi.myseries.application.image.ImageDirectory;
+import mobi.myseries.application.image.ImageServiceRepository;
+import mobi.myseries.domain.repository.series.SeriesCache;
+import mobi.myseries.domain.repository.series.SeriesDatabase;
+import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.domain.source.ImageSource;
 import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.domain.source.TheTVDB;
@@ -38,7 +38,7 @@ public class Environment {
     private SeriesProvider seriesProvider;
     private LocalizationProvider localization;
     private SeriesRepository seriesRepository;
-    private ImageRepository imageRepository;
+    private ImageServiceRepository imageRepository;
 
     private static final String apiKey = "6F2B5A871C96FB05";
 
@@ -123,7 +123,7 @@ public class Environment {
         return this.seriesRepository;
     }
 
-    public ImageRepository imageRepository() {
+    public ImageServiceRepository imageRepository() {
         return this.imageRepository;
     }
 }

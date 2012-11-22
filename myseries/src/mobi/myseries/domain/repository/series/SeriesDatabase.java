@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.repository;
+package mobi.myseries.domain.repository.series;
 
 import java.util.Collection;
 import java.util.LinkedList;

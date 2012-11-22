@@ -19,16 +19,20 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.repository;
+package mobi.myseries.application.image;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.repository.image.ExternalStorageImageDirectory;
+import mobi.myseries.domain.repository.image.ImageRepositoryCache;
+import mobi.myseries.domain.repository.image.ImageRepository;
+import mobi.myseries.domain.repository.image.LruRepositoryManager;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-public class ImageDirectory implements ImageRepository {
+public class ImageDirectory implements ImageServiceRepository {
     private static final String SERIES_POSTERS = "series_posters";
     private static final String EPISODE_IMAGES = "episode_images";
 
@@ -39,8 +43,8 @@ public class ImageDirectory implements ImageRepository {
     private static final int NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES = EPISODE_IMAGE_CACHE_SIZE /
                                                                              EPISODE_IMAGE_AVERAGE_SIZE;
 
-    private final ImageStorage posterDirectory;
-    private final ImageStorage episodeDirectory;
+    private final ImageRepository posterDirectory;
+    private final ImageRepository episodeDirectory;
 
     public ImageDirectory(Context context) {
         Validate.isNonNull(context, "context");

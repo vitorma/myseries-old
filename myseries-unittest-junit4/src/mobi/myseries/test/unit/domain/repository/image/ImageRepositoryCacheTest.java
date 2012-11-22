@@ -1,4 +1,4 @@
-package mobi.myseries.test.unit.domain.repository;
+package mobi.myseries.test.unit.domain.repository.image;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -13,8 +13,8 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import mobi.myseries.domain.repository.ImageRepositoryCache;
-import mobi.myseries.domain.repository.ImageStorage;
+import mobi.myseries.domain.repository.image.ImageRepositoryCache;
+import mobi.myseries.domain.repository.image.ImageRepository;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,12 +37,12 @@ public class ImageRepositoryCacheTest {
                                                                      // issue when the tests are run from ant.
     private Bitmap DEFAULT_IMAGE2 = PowerMockito.mock(Bitmap.class);
 
-    private ImageStorage cachedRepository;
+    private ImageRepository cachedRepository;
     private ImageRepositoryCache cache;
 
     @Before
     public void setUp() {
-        this.cachedRepository = mock(ImageStorage.class);
+        this.cachedRepository = mock(ImageRepository.class);
 
         this.cache = new ImageRepositoryCache(this.cachedRepository);
     }
@@ -60,7 +60,7 @@ public class ImageRepositoryCacheTest {
     public void theAlreadySavedImagesMustBePrefetchedDuringConstruction() {
         List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
 
-        ImageStorage cachedRepository = mock(ImageStorage.class);
+        ImageRepository cachedRepository = mock(ImageRepository.class);
         when(cachedRepository.savedImages()).thenReturn(returnedImages);
 
         new ImageRepositoryCache(cachedRepository);
@@ -83,7 +83,7 @@ public class ImageRepositoryCacheTest {
         List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
         int fetchedImage = 1;
 
-        ImageStorage cachedRepository = mock(ImageStorage.class);
+        ImageRepository cachedRepository = mock(ImageRepository.class);
         when(cachedRepository.savedImages()).thenReturn(returnedImages);
 
         new ImageRepositoryCache(cachedRepository).fetch(fetchedImage);
@@ -96,7 +96,7 @@ public class ImageRepositoryCacheTest {
         List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
         int fetchedImageId = 1;
 
-        ImageStorage cachedRepository = mock(ImageStorage.class);
+        ImageRepository cachedRepository = mock(ImageRepository.class);
         when(cachedRepository.savedImages()).thenReturn(returnedImages);
         when(cachedRepository.fetch(fetchedImageId)).thenReturn(DEFAULT_IMAGE);
 
