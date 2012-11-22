@@ -51,20 +51,20 @@ public class App extends Application {
                 environment.imageSource(),
                 environment.imageRepository());
         errorService = new ErrorService();
-        searchService = new SearchSeriesService(environment.theTVDB());
+        searchService = new SearchSeriesService(environment.seriesSource());
         followSeriesService = new FollowSeriesService(
-                environment.theTVDB(),
-                environment.repository(),
-                environment.localization(),
+                environment.seriesSource(),
+                environment.seriesRepository(),
+                environment.localizationProvider(),
                 imageService,
                 errorService());
         updateService = new UpdateService(
-                environment.theTVDB(),
-                environment.repository(),
-                environment.localization(),
+                environment.seriesSource(),
+                environment.seriesRepository(),
+                environment.localizationProvider(),
                 imageService);
         schedule = new Schedule(
-                environment.repository(),
+                environment.seriesRepository(),
                 followSeriesService,
                 updateService);
         messageService = new MessageService();
@@ -92,25 +92,34 @@ public class App extends Application {
         return errorService;
     }
 
-    // Search Series
+    /* SERIES SEARCHING */
+
+    public static SearchSeriesService searchSeriesService() {
+        return searchService;
+    }
+
+    @Deprecated
     public static void searchSeries(String seriesName) {
         searchService.search(seriesName, localLanguage());
     }
 
+    @Deprecated
     public static void registerSearchSeriesListener(SearchSeriesListener listener){
         searchService.registerListener(listener);
     }
 
+    @Deprecated
     public static void deregisterSearchSeriesListener(SearchSeriesListener listener){
         searchService.deregisterListener(listener);
     }
 
+    @Deprecated
     public static List<Series> getLastValidSearchResult(){
         return SearchSeriesService.getLastSearchResult();
     }
 
     private static String localLanguage() {
-        return environment.localization().language();
+        return environment.localizationProvider().language();
     }
 
     /* SERIES FOLLOWING */
@@ -152,7 +161,7 @@ public class App extends Application {
 
     /* IMAGES */
 
-    public static ImageService imageProvider() {
+    public static ImageService imageService() {
         return imageService;
     }
 
@@ -165,7 +174,7 @@ public class App extends Application {
     /* LOCALIZATION */
 
     public static DateFormat dateFormat() {
-        return environment.localization().dateFormat();
+        return environment.localizationProvider().dateFormat();
     }
 
     public static MessageService messageService() {

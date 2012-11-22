@@ -32,11 +32,7 @@ import mobi.myseries.shared.Validate;
 public class SeriesProvider {
     private final SeriesRepository seriesRepository;
 
-    public static SeriesProvider newInstance(SeriesRepository seriesRepository) {
-        return new SeriesProvider(seriesRepository);
-    }
-
-    private SeriesProvider(SeriesRepository seriesRepository) {
+    public SeriesProvider(SeriesRepository seriesRepository) {
         Validate.isNonNull(seriesRepository, "seriesRepository");
 
         this.seriesRepository = seriesRepository;

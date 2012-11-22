@@ -40,7 +40,7 @@ public class FollowSeriesService {
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
     private LocalizationProvider localizationProvider;
-    private ImageService imageProvider;
+    private ImageService imageService;
     private ErrorService errorService;
     private SeriesFollower seriesFollower;
     private final ListenerSet<SeriesFollowingListener> seriesFollowingListeners;
@@ -48,27 +48,27 @@ public class FollowSeriesService {
     public FollowSeriesService(SeriesSource seriesSource,
                                SeriesRepository seriesRepository,
                                LocalizationProvider localizationProvider,
-                               ImageService imageProvider,
+                               ImageService imageService,
                                ErrorService errorService) {
-        this(seriesSource, seriesRepository, localizationProvider, imageProvider, errorService, true);
+        this(seriesSource, seriesRepository, localizationProvider, imageService, errorService, true);
     }
 
     public FollowSeriesService(SeriesSource seriesSource,
                                SeriesRepository seriesRepository,
                                LocalizationProvider localizationProvider,
-                               ImageService imageProvider,
+                               ImageService imageService,
                                ErrorService errorService,
                                boolean asyncFollowing) {
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
-        Validate.isNonNull(imageProvider, "imageProvider");
+        Validate.isNonNull(imageService, "imageService");
         Validate.isNonNull(errorService, "errorService");
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
         this.localizationProvider = localizationProvider;
-        this.imageProvider = imageProvider;
+        this.imageService = imageService;
         this.errorService = errorService;
         this.seriesFollower = (asyncFollowing ? new AsynchronousFollower() : new SynchronousFollower());
         this.seriesFollowingListeners = new ListenerSet<SeriesFollowingListener>();
@@ -83,7 +83,7 @@ public class FollowSeriesService {
     public void stopFollowing(Series series) {
         this.seriesRepository.delete(series);
 
-        this.imageProvider.removeAllImagesOf(series);
+        this.imageService.removeAllImagesOf(series);
 
         this.notifyListenersOfUnfollowedSeries(series);
     }
@@ -92,7 +92,7 @@ public class FollowSeriesService {
         this.seriesRepository.deleteAll(seriesCollection);
 
         for (Series series : seriesCollection) {
-            this.imageProvider.removeAllImagesOf(series);
+            this.imageService.removeAllImagesOf(series);
         }
 
         this.notifyListenersOfUnfollowedSeries(seriesCollection);
@@ -172,7 +172,7 @@ public class FollowSeriesService {
         protected void afterFollowingActions() {
             if (!this.failed) {
                 FollowSeriesService.this.notifyListenersOfFollowedSeries(this.followedSeries);
-                FollowSeriesService.this.imageProvider.downloadPosterOf(this.followedSeries); // TODO:
+                FollowSeriesService.this.imageService.downloadPosterOf(this.followedSeries); // TODO:
                                                                                               // move
                                                                                               // me
                                                                                               // elsewhere

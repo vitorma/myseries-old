@@ -37,6 +37,7 @@ import mobi.myseries.shared.Validate;
 import android.os.AsyncTask;
 import android.util.Log;
 
+// TODO(Gabriel) implement Publisher interface
 public class SearchSeriesService {
     private SeriesSource seriesSource;
     private ListenerSet<SearchSeriesListener> listenerSet;

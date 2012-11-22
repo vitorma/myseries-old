@@ -54,7 +54,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageService IMAGE_PROVIDER = App.imageProvider();
+    private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final Comparator<Series> COMPARATOR = new SeriesComparator();
 
     private SeriesCoverFlowAdapter seriesAdapter;
@@ -109,7 +109,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        IMAGE_PROVIDER.register(this.posterDownloadListener);
+        IMAGE_SERVICE.register(this.posterDownloadListener);
         App.registerSeriesFollowingListener(this.seriesFollowingListener);
     }
 

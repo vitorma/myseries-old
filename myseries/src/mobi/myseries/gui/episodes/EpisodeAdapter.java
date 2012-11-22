@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 public class EpisodeAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageService IMAGE_SERVICE = App.imageProvider();
+    private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
     private static final int ITEM_LAYOUT = R.layout.episodes_item;
 
@@ -113,7 +113,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
         this.episode = this.getItem(position);
 
         this.episodeName.setText(Objects.nullSafe(this.episode.name(), this.getContext().getString(R.string.to_be_announced)));
-        this.episodeFirstAired.setText(DatesAndTimes.toString(this.episode.airDate(), App.environment().localization().dateFormat(), ""));
+        this.episodeFirstAired.setText(DatesAndTimes.toString(this.episode.airDate(), App.environment().localizationProvider().dateFormat(), ""));
         this.episodeDirector.setText(this.episode.directors());
         this.episodeWriter.setText(this.episode.writers());
         this.episodeGuestStars.setText(this.episode.guestStars());

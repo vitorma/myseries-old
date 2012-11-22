@@ -36,24 +36,24 @@ public class UpdateService implements Publisher<UpdateListener> {
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
     private LocalizationProvider localizationProvider;
-    private ImageService imageProvider;
+    private ImageService imageService;
     private Update update;
     private final ListenerSet<UpdateListener> updateListeners;
     private boolean updateRunning = false;
     private UpdateListener selfListener;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
-            LocalizationProvider localizationProvider, ImageService imageProvider) {
+            LocalizationProvider localizationProvider, ImageService imageService) {
 
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
-        Validate.isNonNull(imageProvider, "imageProvider");
+        Validate.isNonNull(imageService, "imageService");
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
         this.localizationProvider = localizationProvider;
-        this.imageProvider = imageProvider;
+        this.imageService = imageService;
         update = new Update();
         updateListeners = new ListenerSet<UpdateListener>();
 
@@ -230,8 +230,7 @@ public class UpdateService implements Publisher<UpdateListener> {
                                 + " updated.");
                     }
 
-                    if ((s.hasPoster() &&
-                            (imageProvider.getPosterOf(s) == null))
+                    if ((s.hasPoster() && imageService.getPosterOf(s) == null)
                             || seriesWithPosterToUpdate.contains(s)) {
                         updatePosterOf(s, handler);
                         Log.d(getClass().getName(), "Poster of " + s.name()
@@ -298,7 +297,7 @@ public class UpdateService implements Publisher<UpdateListener> {
             @Override
             public void run() {
                 series.setPosterFilename(seriesSource.posterUpdateMetadata().get(series.id()));
-                imageProvider.downloadPosterOf(series);
+                imageService.downloadPosterOf(series);
             }
         });
     }

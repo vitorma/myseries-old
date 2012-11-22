@@ -72,7 +72,7 @@ public class Item {
     }
 
     private void setupSeriesPoster(RemoteViews item, Series series) {
-        Bitmap seriesPoster = App.imageProvider().getPosterOf(series);
+        Bitmap seriesPoster = App.imageService().getPosterOf(series);
 
         item.setImageViewBitmap(R.id.seriesPoster, Objects.nullSafe(seriesPoster, GENERIC_POSTER));
     }

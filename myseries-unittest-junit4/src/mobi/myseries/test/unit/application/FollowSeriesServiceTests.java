@@ -65,7 +65,7 @@ public class FollowSeriesServiceTests {
     private SeriesRepository seriesRepository;
     private FollowSeriesService followSeriesService;
     private LocalizationProvider localizationProvider;
-    private ImageService imageProvider;
+    private ImageService imageService;
 
     private SeriesFollowingListener seriesFollowingListener;
     private ErrorService errorService;
@@ -79,14 +79,14 @@ public class FollowSeriesServiceTests {
         this.localizationProvider = mock(LocalizationProvider.class);
         when(this.localizationProvider.language()).thenReturn("en");
 
-        this.imageProvider = PowerMockito.mock(ImageService.class);
+        this.imageService = PowerMockito.mock(ImageService.class);
 
         this.seriesFollowingListener = mock(SeriesFollowingListener.class);
 
         this.followSeriesService = new FollowSeriesService(this.seriesSource,
                                                            this.seriesRepository,
                                                            this.localizationProvider,
-                                                           this.imageProvider,
+                                                           this.imageService,
                                                            this.errorService,
                                                            false);
 
@@ -109,7 +109,7 @@ public class FollowSeriesServiceTests {
         new FollowSeriesService(null,
                                 this.seriesRepository,
                                 this.localizationProvider,
-                                this.imageProvider,
+                                this.imageService,
                                 this.errorService);
     }
 
@@ -118,7 +118,7 @@ public class FollowSeriesServiceTests {
         new FollowSeriesService(this.seriesSource,
                                 null,
                                 this.localizationProvider,
-                                this.imageProvider,
+                                this.imageService,
                                 this.errorService);
     }
 
@@ -127,12 +127,12 @@ public class FollowSeriesServiceTests {
         new FollowSeriesService(this.seriesSource,
                                 this.seriesRepository,
                                 null,
-                                this.imageProvider,
+                                this.imageService,
                                 this.errorService);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void itShouldNotAcceptNullImageProvider() {
+    public void itShouldNotAcceptNullImageService() {
         new FollowSeriesService(this.seriesSource,
                                 this.seriesRepository,
                                 this.localizationProvider,

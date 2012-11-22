@@ -29,6 +29,7 @@ import java.util.Map;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
@@ -55,6 +56,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private static final Context CONTEXT = App.context();
     private static final Schedule SCHEDULE = App.schedule();
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final ImageService IMAGE_SERVICE = App.imageService();
 
     private static final int STATE_UNKNOWN = 0;
     private static final int STATE_SECTIONED_CELL = 1;
@@ -132,7 +134,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     }
 
     public void setUpCellBody(ViewHolder viewHolder, Series series, Episode episode) {
-        Bitmap seriesPoster = App.imageProvider().getPosterOf(series);
+        Bitmap seriesPoster = IMAGE_SERVICE.getPosterOf(series);
         Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
         viewHolder.seriesPosterImageView.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
 

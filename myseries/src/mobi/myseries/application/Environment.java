@@ -33,14 +33,15 @@ import mobi.myseries.shared.Validate;
 import android.content.Context;
 
 public class Environment {
-    private Context context;
+    private static final String THE_TVDB_API_KEY = "6F2B5A871C96FB05";
+
     private TheTVDB theTVDB;
     private SeriesProvider seriesProvider;
-    private LocalizationProvider localization;
+    private LocalizationProvider localizationProvider;
     private SeriesRepository seriesRepository;
     private ImageServiceRepository imageRepository;
 
-    private static final String apiKey = "6F2B5A871C96FB05";
+    private Context context;
 
     public static Environment newEnvironment(Context context) {
         return new Environment(context);
@@ -50,6 +51,9 @@ public class Environment {
         Validate.isNonNull(context, "context");
 
         this.context = context;
+
+        this.theTVDB = new TheTVDB(THE_TVDB_API_KEY);
+        this.localizationProvider =  new AndroidLocalizationProvider();
         this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
         this.imageRepository = new AndroidImageStorage(this.context);
     }
@@ -60,66 +64,25 @@ public class Environment {
 
     public SeriesProvider seriesProvider() {
         if (this.seriesProvider == null) {
-            this.seriesProvider = this.defaultSeriesProvider();
+            this.seriesProvider = new SeriesProvider(this.seriesRepository());
         }
 
         return this.seriesProvider;
     }
 
-    private SeriesProvider defaultSeriesProvider() {
-        return SeriesProvider.newInstance(this.repository());
-    }
-
-    public void setSeriesProvider(SeriesProvider newSeriesProvider) {
-        this.seriesProvider = newSeriesProvider;
-    }
-
     public SeriesSource seriesSource() {
-        return this.theTVDB();
-    }
-
-    public ImageSource imageSource() {
-        return this.theTVDB();
-    }
-
-    // TODO Remove this method ASAP and use seriesSource() or imageSource()
-    public TheTVDB theTVDB() {
-        if (this.theTVDB == null) {
-            this.theTVDB = this.defaultTheTVDB();
-        }
-
         return this.theTVDB;
     }
 
-    private TheTVDB defaultTheTVDB() {
-        return new TheTVDB(apiKey);
+    public ImageSource imageSource() {
+        return this.theTVDB;
     }
 
-    public void setTheTVDBTo(TheTVDB newTheTVDB) {
-        this.theTVDB = newTheTVDB;
+    public LocalizationProvider localizationProvider() {
+        return this.localizationProvider;
     }
 
-    public LocalizationProvider localization() {
-        if (this.localization == null) {
-            this.localization = this.defaultLocalization();
-        }
-
-        return this.localization;
-    }
-
-    private LocalizationProvider defaultLocalization() {
-        return new AndroidLocalizationProvider();
-    }
-
-    public void setLocalizationTo(LocalizationProvider newLocalization) {
-        this.localization = newLocalization;
-    }
-
-    public SeriesRepository repository() {
-        if (this.seriesRepository == null) {
-            this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context()));
-        }
-
+    public SeriesRepository seriesRepository() {
         return this.seriesRepository;
     }
 

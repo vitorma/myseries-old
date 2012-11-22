@@ -38,7 +38,7 @@ import android.graphics.Bitmap;
 
 public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageService IMAGE_PROVIDER = App.imageProvider();
+    private static final ImageService IMAGE_SERVICE = App.imageService();
 
     private List<Series> seriesList;
 
@@ -53,7 +53,7 @@ public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
 
     @Override
     protected Bitmap createBitmap(int position) {
-        Bitmap poster = IMAGE_PROVIDER.getPosterOf(this.seriesList.get(position));
+        Bitmap poster = IMAGE_SERVICE.getPosterOf(this.seriesList.get(position));
         Bitmap generic = Images.genericSeriesPosterFrom(App.resources());
 
         return Objects.nullSafe(poster, generic);

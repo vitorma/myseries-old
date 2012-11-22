@@ -21,7 +21,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class DetailsFragment extends SherlockFragment {
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageService IMAGE_PROVIDER = App.imageProvider();
+    private static final ImageService IMAGE_SERVICE = App.imageService();
 
     private int seriesId;
 
@@ -74,7 +74,7 @@ public class DetailsFragment extends SherlockFragment {
         seriesActors.setText(series.actors());
         seriesOverview.setText(series.overview());
 
-        Bitmap poster = App.imageProvider().getPosterOf(series);
+        Bitmap poster = IMAGE_SERVICE.getPosterOf(series);
         Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
         Bitmap ensuredPoster = Objects.nullSafe(poster, genericPoster);
 

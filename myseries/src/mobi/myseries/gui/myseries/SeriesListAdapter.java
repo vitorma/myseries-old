@@ -54,7 +54,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 SeriesFollowingListener, SeriesPosterDownloadListener {
 
     private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
-    private static final ImageService IMAGE_PROVIDER = App.imageProvider();
+    private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
     private static final int ITEM_LAYOUT = R.layout.myseries_item;
 
@@ -93,7 +93,7 @@ SeriesFollowingListener, SeriesPosterDownloadListener {
         private void setPosterTo(Series series, View itemView) {
             final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
 
-            Bitmap seriesPoster = App.imageProvider().getPosterOf(series);
+            Bitmap seriesPoster = IMAGE_SERVICE.getPosterOf(series);
             Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
 
             image.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
@@ -162,7 +162,7 @@ SeriesFollowingListener, SeriesPosterDownloadListener {
 
         this.listItemFactory = new SeriesListItemFactory(context);
 
-        IMAGE_PROVIDER.register(this);
+        IMAGE_SERVICE.register(this);
 
         App.registerSeriesFollowingListener(this);
 
