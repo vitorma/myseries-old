@@ -210,11 +210,57 @@ public class LruRepositoryManagerTest {
 
     @Test
     public void theCollectionOfSavedImagesIsFetchedNoMatterTheLRUPolicy() {
+        reset(this.managedRepository);  // dismiss initial loading of entries into the LRU
+
         Collection<Integer> returnedCollection = new ArrayList<Integer>();
         when(this.managedRepository.savedImages()).thenReturn(returnedCollection);
 
         assertThat(this.manager.savedImages(), sameInstance(returnedCollection));
         verify(this.managedRepository).savedImages();
+    }
+
+    /* Previously saved images */
+
+    @Test
+    public void spareImagesMustBeEvictedAfterInstantiatingAnLRUWithLessKeptImagesThanTheExistingAmount() {
+        int numberOfPreviouslySavedImages = 8;
+        Collection<Integer> previouslySavedImages = this.collectionOfIds(numberOfPreviouslySavedImages);
+
+        ImageRepository managedRepository = mock(ImageRepository.class);
+        when(managedRepository.savedImages()).thenReturn(previouslySavedImages);
+
+        int numberOfImagesInLRU = numberOfPreviouslySavedImages - 3;  // less than numberOfPreviouslySavedImages
+        new LruRepositoryManager(managedRepository, numberOfImagesInLRU);
+
+        verify(managedRepository, times(numberOfPreviouslySavedImages - numberOfImagesInLRU)).delete(anyInt());
+    }
+
+    @Test
+    public void aPreviouslySavedImageMustBeEvictedAfterSavingANewImage() {
+        int numberOfPreviouslySavedImages = 8;
+        Collection<Integer> previouslySavedImages = this.collectionOfIds(numberOfPreviouslySavedImages);
+
+        ImageRepository managedRepository = mock(ImageRepository.class);
+        when(managedRepository.savedImages()).thenReturn(previouslySavedImages);
+
+        ImageRepository manager = new LruRepositoryManager(managedRepository, numberOfPreviouslySavedImages);
+        manager.save(NOT_USED_IMAGE_ID, DEFAULT_IMAGE);
+
+        verify(managedRepository).delete(anyInt());
+    }
+
+    @Test
+    public void savingOverAnAlreadySavedImageIdMustNotEvictAnyImages() {
+        int numberOfPreviouslySavedImages = 8;
+        Collection<Integer> previouslySavedImages = this.collectionOfIds(numberOfPreviouslySavedImages);
+
+        ImageRepository managedRepository = mock(ImageRepository.class);
+        when(managedRepository.savedImages()).thenReturn(previouslySavedImages);
+
+        ImageRepository manager = new LruRepositoryManager(managedRepository, numberOfPreviouslySavedImages);
+        manager.save(previouslySavedImages.iterator().next(), DEFAULT_IMAGE);
+
+        verify(managedRepository, never()).delete(anyInt());
     }
 
     /* Test tools */
@@ -234,5 +280,15 @@ public class LruRepositoryManagerTest {
         }
 
         return idOfTheLastSavedImage;
+    }
+
+    private Collection<Integer> collectionOfIds(int numberOfElements) {
+        Collection<Integer> collection = new ArrayList<Integer>();
+
+        for (int i = 0; i < numberOfElements; ++i) {
+            collection.add(ID_OF_THE_FIRST_SAVED_IMAGE + i);
+        }
+
+        return collection;
     }
 }

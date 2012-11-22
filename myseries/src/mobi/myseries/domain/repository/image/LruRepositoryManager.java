@@ -41,6 +41,10 @@ public class LruRepositoryManager implements ImageRepository {
                 LruRepositoryManager.this.delete(key);
             }
         }
+
+        public void put(int id) {
+            this.put(id, id);
+        }
     }
 
     ImagesQueue imagesQueue;
@@ -53,12 +57,20 @@ public class LruRepositoryManager implements ImageRepository {
 
         this.managedRepository = managedRepository;
         this.imagesQueue = new ImagesQueue(numberOfKeptImages);
+
+        this.loadPreviouslySavedImages();
+    }
+
+    private void loadPreviouslySavedImages() {
+        for (int id : this.managedRepository.savedImages()) {
+            this.imagesQueue.put(id);
+        }
     }
 
     @Override
     public void save(int id, Bitmap image) {
         this.managedRepository.save(id, image);
-        this.imagesQueue.put(id, id);
+        this.imagesQueue.put(id);
     }
 
     @Override
@@ -66,7 +78,7 @@ public class LruRepositoryManager implements ImageRepository {
         Bitmap fetchedImage = this.managedRepository.fetch(id);
 
         if (fetchedImage != null) {
-            this.imagesQueue.put(id, id);
+            this.imagesQueue.put(id);
         }
 
         return fetchedImage;
