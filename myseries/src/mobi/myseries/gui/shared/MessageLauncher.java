@@ -2,7 +2,7 @@ package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.MessageServiceListener;
+import mobi.myseries.application.message.MessageServiceListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;

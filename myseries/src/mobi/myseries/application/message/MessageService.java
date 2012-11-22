@@ -1,7 +1,9 @@
-package mobi.myseries.application;
+package mobi.myseries.application.message;
 
 import java.util.Collection;
 
+import mobi.myseries.application.App;
+import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.update.UpdateListener;

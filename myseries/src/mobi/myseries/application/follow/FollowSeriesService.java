@@ -19,10 +19,12 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.application;
+package mobi.myseries.application.follow;
 
 import java.util.Collection;
 
+import mobi.myseries.application.LocalizationProvider;
+import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;

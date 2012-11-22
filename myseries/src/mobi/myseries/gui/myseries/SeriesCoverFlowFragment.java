@@ -26,8 +26,8 @@ import java.util.Comparator;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesFollowingListener;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.image.SeriesPosterDownloadListener;
 import mobi.myseries.domain.model.Episode;

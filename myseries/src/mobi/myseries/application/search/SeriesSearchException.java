@@ -1,4 +1,4 @@
-package mobi.myseries.application;
+package mobi.myseries.application.search;
 
 public class SeriesSearchException extends Exception {
 

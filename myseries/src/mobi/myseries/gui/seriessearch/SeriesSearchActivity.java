@@ -25,8 +25,8 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SearchSeriesListener;
-import mobi.myseries.application.SeriesSearchException;
+import mobi.myseries.application.search.SearchSeriesListener;
+import mobi.myseries.application.search.SeriesSearchException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;

@@ -1,4 +1,4 @@
-package mobi.myseries.application;
+package mobi.myseries.application.error;
 
 import mobi.myseries.shared.ListenerSet;
 

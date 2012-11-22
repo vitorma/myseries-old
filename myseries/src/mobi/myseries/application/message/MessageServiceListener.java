@@ -1,4 +1,4 @@
-package mobi.myseries.application;
+package mobi.myseries.application.message;
 
 import mobi.myseries.domain.model.Series;
 

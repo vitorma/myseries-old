@@ -24,8 +24,14 @@ package mobi.myseries.application;
 import java.text.DateFormat;
 import java.util.List;
 
+import mobi.myseries.application.error.ErrorService;
+import mobi.myseries.application.follow.FollowSeriesService;
+import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.image.ImageService;
+import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.schedule.Schedule;
+import mobi.myseries.application.search.SearchSeriesListener;
+import mobi.myseries.application.search.SearchSeriesService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.update.UpdateService;
 import android.app.Application;

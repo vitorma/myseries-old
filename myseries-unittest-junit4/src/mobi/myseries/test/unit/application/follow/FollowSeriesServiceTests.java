@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.test.unit.application;
+package mobi.myseries.test.unit.application.follow;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -33,10 +33,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-import mobi.myseries.application.ErrorService;
-import mobi.myseries.application.FollowSeriesService;
 import mobi.myseries.application.LocalizationProvider;
-import mobi.myseries.application.SeriesFollowingListener;
+import mobi.myseries.application.error.ErrorService;
+import mobi.myseries.application.follow.FollowSeriesService;
+import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
