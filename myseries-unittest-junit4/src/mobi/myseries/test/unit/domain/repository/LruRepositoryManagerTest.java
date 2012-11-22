@@ -64,6 +64,7 @@ public class LruRepositoryManagerTest {
 
         this.manager = new LruRepositoryManager(this.managedRepository, DEFAULT_CACHE_SIZE);
     }
+
     /* Construction */
 
     @Test(expected=IllegalArgumentException.class)

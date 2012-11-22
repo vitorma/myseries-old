@@ -81,6 +81,5 @@ public class ImageRepositoryCache implements ImageStorage {
     @Override
     public Collection<Integer> savedImages() {
         return Collections.unmodifiableCollection(this.cachedImagesIds);
-        //return this.cachedRepository.savedImages();
     }
 }

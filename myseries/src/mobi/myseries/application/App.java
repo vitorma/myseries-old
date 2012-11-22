@@ -41,7 +41,7 @@ public class App extends Application {
     private static Schedule schedule;
     private static UpdateService updateService;
     private static ErrorService errorService;
-    private static ImageService imageProvider;
+    private static ImageService imageService;
     private static MessageService messageService;
 
     @Override
@@ -49,7 +49,7 @@ public class App extends Application {
         super.onCreate();
 
         environment = Environment.newEnvironment(this);
-        imageProvider = new ImageService(
+        imageService = new ImageService(
                 environment.imageSource(),
                 environment.imageRepository());
         errorService = new ErrorService();
@@ -59,13 +59,13 @@ public class App extends Application {
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
-                imageProvider,
+                imageService,
                 errorService());
         updateService = new UpdateService(
                 environment.theTVDB(),
                 environment.repository(),
                 environment.localization(),
-                imageProvider);
+                imageService);
         schedule = new Schedule(
                 environment.repository(),
                 followSeriesService,
@@ -156,7 +156,7 @@ public class App extends Application {
     /* IMAGES */
 
     public static ImageService imageProvider() {
-        return imageProvider;
+        return imageService;
     }
 
     /* SCHEDULE */
