@@ -21,7 +21,6 @@
 
 package mobi.myseries.application;
 
-import mobi.myseries.domain.repository.ImageCache;
 import mobi.myseries.domain.repository.ImageDirectory;
 import mobi.myseries.domain.repository.ImageRepository;
 import mobi.myseries.domain.repository.SeriesCache;
@@ -52,7 +51,7 @@ public class Environment {
 
         this.context = context;
         this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
-        this.imageRepository = new ImageCache(new ImageDirectory(this.context), this.seriesRepository);
+        this.imageRepository = new ImageDirectory(this.context);
     }
 
     public Context context() {

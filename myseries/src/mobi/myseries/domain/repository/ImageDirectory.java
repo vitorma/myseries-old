@@ -26,43 +26,29 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.util.LruCache;
+import android.os.AsyncTask;
 
 public class ImageDirectory implements ImageRepository {
     private static final String SERIES_POSTERS = "series_posters";
     private static final String EPISODE_IMAGES = "episode_images";
 
-    private class EpisodeImagesQueue extends LruCache<Integer, Integer> {
-        private static final int KiB = 1024;
-        private static final int MiB = 1024 * KiB;
-        private static final int EPISODE_IMAGE_AVERAGE_SIZE = 14 * KiB;
-        private static final int CACHE_SIZE = 1 * MiB;
-        private static final int NUMBER_OF_CACHE_ENTRIES = CACHE_SIZE / EPISODE_IMAGE_AVERAGE_SIZE;
+    private static final int KiB = 1024;
+    private static final int MiB = 1024 * KiB;
+    private static final int EPISODE_IMAGE_AVERAGE_SIZE = 14 * KiB;
+    private static final int EPISODE_IMAGE_CACHE_SIZE = 1 * MiB;
+    private static final int NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES = EPISODE_IMAGE_CACHE_SIZE /
+                                                                             EPISODE_IMAGE_AVERAGE_SIZE;
 
-        public EpisodeImagesQueue() {
-            super(NUMBER_OF_CACHE_ENTRIES);
-        }
-
-        @Override
-        protected void entryRemoved(boolean evicted, Integer key, Integer oldValue, Integer newValue) {
-            if (evicted) {
-                ImageDirectory.this.deleteEpisodeImage(key);
-            }
-        }
-    }
-
-    private final ExternalStorageImageDirectory posterDirectory;
-    private final ExternalStorageImageDirectory episodeDirectory;
-
-    private final EpisodeImagesQueue episodeImagesQueue;
+    private final ImageStorage posterDirectory;
+    private final ImageStorage episodeDirectory;
 
     public ImageDirectory(Context context) {
         Validate.isNonNull(context, "context");
 
-        this.posterDirectory = new ExternalStorageImageDirectory(context, SERIES_POSTERS);
-        this.episodeDirectory = new ExternalStorageImageDirectory(context, EPISODE_IMAGES);
+        this.posterDirectory = new ImageRepositoryCache(new ExternalStorageImageDirectory(context, SERIES_POSTERS));
 
-        this.episodeImagesQueue = new EpisodeImagesQueue();
+        this.episodeDirectory = new LruRepositoryManager(new ExternalStorageImageDirectory(context, EPISODE_IMAGES),
+                                                         NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES);
     }
 
     @Override
@@ -77,18 +63,27 @@ public class ImageDirectory implements ImageRepository {
         Validate.isNonNull(episode, "episode");
 
         this.episodeDirectory.save(episode.id(), file);
-        this.episodeImagesQueue.put(episode.id(), episode.id());
     }
 
     @Override
     public void deleteAllImagesOf(Series series) {
         Validate.isNonNull(series, "series");
 
-        this.deleteSeriesPoster(series.id());
+        new AsyncTask<Series, Void, Void>() {
+            @Override
+            protected Void doInBackground(Series... params) {
+                Validate.isTrue(params.length == 1, "It must receive a single param", (Object) null);
+                Series series = params[0];
 
-        for (Episode e : series.episodes()) {
-            this.deleteEpisodeImage(e.id());
-        }
+                ImageDirectory.this.deleteSeriesPoster(series.id());
+
+                for (Episode e : series.episodes()) {
+                    ImageDirectory.this.deleteEpisodeImage(e.id());
+                }
+
+                return null;
+            }
+        }.execute(series);
     }
 
     private void deleteSeriesPoster(int seriesId) {
@@ -97,7 +92,6 @@ public class ImageDirectory implements ImageRepository {
 
     private void deleteEpisodeImage(int episodeId) {
         this.episodeDirectory.delete(episodeId);
-        this.episodeImagesQueue.remove(episodeId);
     }
 
     @Override
@@ -111,13 +105,6 @@ public class ImageDirectory implements ImageRepository {
     public Bitmap getImageOf(Episode episode) {
         Validate.isNonNull(episode, "episode");
 
-        Bitmap episodeImage = this.episodeDirectory.fetch(episode.id());
-
-        if (episodeImage != null) {  // to avoid putting in the queue episodes without images and whose images cannot be
-                                     // opened.
-            this.episodeImagesQueue.put(episode.id(), episode.id());
-        }
-
-        return episodeImage;
+        return this.episodeDirectory.fetch(episode.id());
     }
 }
