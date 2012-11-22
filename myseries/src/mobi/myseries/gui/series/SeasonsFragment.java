@@ -16,7 +16,7 @@ import android.widget.ExpandableListView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeasonsFragment extends SherlockFragment {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     private int seriesId;
     private ExpandableListView list;

@@ -53,7 +53,7 @@ import android.widget.TextView;
 public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener,
 SeriesFollowingListener, SeriesPosterDownloadListener {
 
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
     private static final int ITEM_LAYOUT = R.layout.myseries_item;

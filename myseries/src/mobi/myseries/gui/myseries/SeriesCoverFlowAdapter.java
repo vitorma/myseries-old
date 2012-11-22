@@ -37,7 +37,7 @@ import mobi.myseries.shared.Objects;
 import android.graphics.Bitmap;
 
 public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
 
     private List<Series> seriesList;

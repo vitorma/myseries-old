@@ -56,7 +56,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     //TODO Menu from xml
     //TODO Internationalized string

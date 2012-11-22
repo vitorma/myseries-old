@@ -34,7 +34,7 @@ import mobi.myseries.gui.appwidget.ItemPageBrowser;
 import mobi.myseries.gui.shared.SortMode;
 
 public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     private static final String SORT_MODE_KEY = "SortMode";
     private static final String SHOW_SPECIAL_EPISODES_KEY = "ShowSpecialEpisodes";

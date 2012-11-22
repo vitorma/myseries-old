@@ -36,7 +36,6 @@ public class Environment {
     private static final String THE_TVDB_API_KEY = "6F2B5A871C96FB05";
 
     private TheTVDB theTVDB;
-    private SeriesProvider seriesProvider;
     private LocalizationProvider localizationProvider;
     private SeriesRepository seriesRepository;
     private ImageServiceRepository imageRepository;
@@ -60,14 +59,6 @@ public class Environment {
 
     public Context context() {
         return this.context;
-    }
-
-    public SeriesProvider seriesProvider() {
-        if (this.seriesProvider == null) {
-            this.seriesProvider = new SeriesProvider(this.seriesRepository());
-        }
-
-        return this.seriesProvider;
     }
 
     public SeriesSource seriesSource() {

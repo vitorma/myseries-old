@@ -41,6 +41,7 @@ public class App extends Application {
     private static ErrorService errorService;
     private static ImageService imageService;
     private static MessageService messageService;
+    private static SeriesProvider seriesProvider;
 
     @Override
     public void onCreate() {
@@ -68,6 +69,7 @@ public class App extends Application {
                 followSeriesService,
                 updateService);
         messageService = new MessageService();
+        seriesProvider = new SeriesProvider(environment.seriesRepository());
     }
 
 
@@ -155,8 +157,13 @@ public class App extends Application {
 
     /* SERIES */
 
+    public static SeriesProvider seriesProvider() {
+        return seriesProvider;
+    }
+
+    @Deprecated
     public static Series getSeries(int seriesId) {
-        return environment.seriesProvider().getSeries(seriesId);
+        return seriesProvider().getSeries(seriesId);
     }
 
     /* IMAGES */

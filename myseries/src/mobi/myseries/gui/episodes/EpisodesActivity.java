@@ -48,7 +48,7 @@ public class EpisodesActivity extends SherlockFragmentActivity {
         public String EPISODE_NUMBER = "episodeNumber";
     }
 
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     private int seriesId;
     private int seasonNumber;

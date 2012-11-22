@@ -19,7 +19,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implements SeasonListener, EpisodeListener {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     private Context context;
     private Series series;

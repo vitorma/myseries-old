@@ -55,7 +55,7 @@ import android.widget.TextView;
 public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Publisher<ScheduleAdapter.Listener> {
     private static final Context CONTEXT = App.context();
     private static final Schedule SCHEDULE = App.schedule();
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
 
     private static final int STATE_UNKNOWN = 0;

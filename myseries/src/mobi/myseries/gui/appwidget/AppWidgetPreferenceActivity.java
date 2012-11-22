@@ -30,7 +30,7 @@ import android.widget.RadioGroup;
 import com.actionbarsherlock.app.SherlockActivity;
 
 public class AppWidgetPreferenceActivity extends SherlockActivity {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     public static Intent newIntent(Context context, int appWidgetId) {
         Intent intent = new Intent(context, AppWidgetPreferenceActivity.class);

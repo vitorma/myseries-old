@@ -30,7 +30,7 @@ import android.widget.ListAdapter;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 public class SeriesListFragment extends SherlockListFragment {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

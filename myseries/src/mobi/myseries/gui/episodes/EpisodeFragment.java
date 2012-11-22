@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 public class EpisodeFragment extends SherlockListFragment {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final String EPISODE_NUMBER = "episodeNumber";
     private static final String SEASON_NUMBER = "seasonNumber";
     private static final String SERIES_ID = "seriesId";

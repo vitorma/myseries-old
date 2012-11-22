@@ -23,7 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class EpisodeAdapter extends ArrayAdapter<Episode> {
-    private static final SeriesProvider SERIES_PROVIDER = App.environment().seriesProvider();
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
     private static final int ITEM_LAYOUT = R.layout.episodes_item;
