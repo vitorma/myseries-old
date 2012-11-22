@@ -1,5 +1,5 @@
 /*
- *   ImageDirectory.java
+ *   AndroidImageStorage.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -32,7 +32,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-public class ImageDirectory implements ImageServiceRepository {
+public class AndroidImageStorage implements ImageServiceRepository {
     private static final String SERIES_POSTERS = "series_posters";
     private static final String EPISODE_IMAGES = "episode_images";
 
@@ -46,7 +46,7 @@ public class ImageDirectory implements ImageServiceRepository {
     private final ImageRepository posterDirectory;
     private final ImageRepository episodeDirectory;
 
-    public ImageDirectory(Context context) {
+    public AndroidImageStorage(Context context) {
         Validate.isNonNull(context, "context");
 
         this.posterDirectory = new ImageRepositoryCache(new ExternalStorageImageDirectory(context, SERIES_POSTERS));
@@ -79,10 +79,10 @@ public class ImageDirectory implements ImageServiceRepository {
                 Validate.isTrue(params.length == 1, "It must receive a single param", (Object) null);
                 Series series = params[0];
 
-                ImageDirectory.this.deleteSeriesPoster(series.id());
+                AndroidImageStorage.this.deleteSeriesPoster(series.id());
 
                 for (Episode e : series.episodes()) {
-                    ImageDirectory.this.deleteEpisodeImage(e.id());
+                    AndroidImageStorage.this.deleteEpisodeImage(e.id());
                 }
 
                 return null;
