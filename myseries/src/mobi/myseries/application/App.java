@@ -25,7 +25,6 @@ import java.text.DateFormat;
 import java.util.List;
 
 import mobi.myseries.application.image.ImageService;
-import mobi.myseries.application.image.ImageloaderService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.update.UpdateService;
@@ -37,7 +36,6 @@ public class App extends Application {
     private static Environment environment;
     private static SearchSeriesService searchService;
     private static FollowSeriesService followSeriesService;
-    private static ImageloaderService imageLoadService;
     private static Schedule schedule;
     private static UpdateService updateService;
     private static ErrorService errorService;
@@ -54,7 +52,6 @@ public class App extends Application {
                 environment.imageRepository());
         errorService = new ErrorService();
         searchService = new SearchSeriesService(environment.theTVDB());
-        imageLoadService = new ImageloaderService();
         followSeriesService = new FollowSeriesService(
                 environment.theTVDB(),
                 environment.repository(),
