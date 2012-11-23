@@ -22,17 +22,13 @@
 package mobi.myseries.application;
 
 import java.text.DateFormat;
-import java.util.List;
 
 import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.follow.FollowSeriesService;
-import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.schedule.Schedule;
-import mobi.myseries.application.search.SearchSeriesListener;
 import mobi.myseries.application.search.SearchSeriesService;
-import mobi.myseries.domain.model.Series;
 import mobi.myseries.update.UpdateService;
 import android.app.Application;
 import android.content.Context;
@@ -53,44 +49,44 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        environment = Environment.newEnvironment(this);
+        environment = new Environment(this);
+
         imageService = new ImageService(
                 environment.imageSource(),
                 environment.imageRepository());
+
         errorService = new ErrorService();
-        searchService = new SearchSeriesService(environment.seriesSource());
+
+        searchService = new SearchSeriesService(
+                environment.seriesSource(),
+                environment.localizationProvider());
+
         followSeriesService = new FollowSeriesService(
                 environment.seriesSource(),
                 environment.seriesRepository(),
                 environment.localizationProvider(),
                 imageService,
-                errorService());
+                errorService);
+
         updateService = new UpdateService(
                 environment.seriesSource(),
                 environment.seriesRepository(),
                 environment.localizationProvider(),
                 imageService);
+
         schedule = new Schedule(
                 environment.seriesRepository(),
                 followSeriesService,
                 updateService);
+
         messageService = new MessageService();
+
         seriesProvider = new SeriesProvider(environment.seriesRepository());
     }
-
-
-    //TODO (Cleber) Turn this method private or delete it
-    public static Environment environment() {
-        return environment;
-    }
-
-    /* Use context() instead of environment().context() */
 
     public static Context context() {
         return environment.context();
     }
-
-    /* Use resources() instead of environment().context().resources() */
 
     public static Resources resources() {
         return context().getResources();
@@ -106,57 +102,14 @@ public class App extends Application {
         return searchService;
     }
 
-    @Deprecated
-    public static void searchSeries(String seriesName) {
-        searchService.search(seriesName, localLanguage());
-    }
-
-    @Deprecated
-    public static void registerSearchSeriesListener(SearchSeriesListener listener){
-        searchService.registerListener(listener);
-    }
-
-    @Deprecated
-    public static void deregisterSearchSeriesListener(SearchSeriesListener listener){
-        searchService.deregisterListener(listener);
-    }
-
-    @Deprecated
-    public static List<Series> getLastValidSearchResult(){
-        return SearchSeriesService.getLastSearchResult();
-    }
-
-    private static String localLanguage() {
-        return environment.localizationProvider().language();
-    }
-
     /* SERIES FOLLOWING */
 
     public static FollowSeriesService followSeriesService() {
         return followSeriesService;
     }
 
-    @Deprecated
-    public static void registerSeriesFollowingListener(SeriesFollowingListener listener) {
-        followSeriesService().registerSeriesFollowingListener(listener);
-    }
+    /* UPDATE */
 
-    @Deprecated
-    public static void follow(Series series) {
-        followSeriesService().follow(series);
-    }
-
-    @Deprecated
-    public static void stopFollowing(Series series) {
-        followSeriesService().stopFollowing(series);
-    }
-
-    @Deprecated
-    public static boolean follows(Series series) {
-        return followSeriesService().follows(series);
-    }
-
-    // Update Series
     public static UpdateService updateSeriesService() {
         return updateService;
     }
@@ -165,11 +118,6 @@ public class App extends Application {
 
     public static SeriesProvider seriesProvider() {
         return seriesProvider;
-    }
-
-    @Deprecated
-    public static Series getSeries(int seriesId) {
-        return seriesProvider().getSeries(seriesId);
     }
 
     /* IMAGES */

@@ -23,6 +23,7 @@ package mobi.myseries.gui.myseries;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import android.app.Dialog;
@@ -30,6 +31,8 @@ import android.content.Context;
 import android.util.Log;
 
 public class StopFollowingDialogBuilder extends ConfirmationDialogBuilder {
+    private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
+
     private Series series;
 
     public StopFollowingDialogBuilder(Series series, Context context) {
@@ -47,7 +50,7 @@ public class StopFollowingDialogBuilder extends ConfirmationDialogBuilder {
         return new ButtonOnClickListener() {
             @Override
             public void onClick(Dialog dialog) {
-                App.stopFollowing(series);
+                FOLLOW_SERIES_SERVICE.stopFollowing(series);
                 dialog.dismiss();
             }
         };

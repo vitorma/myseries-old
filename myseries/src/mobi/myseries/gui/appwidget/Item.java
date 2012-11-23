@@ -58,7 +58,7 @@ public class Item {
     }
 
     public RemoteViews createFor(Episode episode) {
-        Series series = App.getSeries(episode.seriesId());
+        Series series = App.seriesProvider().getSeries(episode.seriesId());
 
         RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.appwidget_myschedule_item);
 

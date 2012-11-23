@@ -113,7 +113,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
         this.episode = this.getItem(position);
 
         this.episodeName.setText(Objects.nullSafe(this.episode.name(), this.getContext().getString(R.string.to_be_announced)));
-        this.episodeFirstAired.setText(DatesAndTimes.toString(this.episode.airDate(), App.environment().localizationProvider().dateFormat(), ""));
+        this.episodeFirstAired.setText(DatesAndTimes.toString(this.episode.airDate(), App.dateFormat(), ""));
         this.episodeDirector.setText(this.episode.directors());
         this.episodeWriter.setText(this.episode.writers());
         this.episodeGuestStars.setText(this.episode.guestStars());

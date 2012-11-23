@@ -27,6 +27,7 @@ import java.util.Comparator;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.image.SeriesPosterDownloadListener;
@@ -55,6 +56,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
+    private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
+
     private static final Comparator<Series> COMPARATOR = new SeriesComparator();
 
     private SeriesCoverFlowAdapter seriesAdapter;
@@ -110,7 +113,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         super.onCreate(savedInstanceState);
 
         IMAGE_SERVICE.register(this.posterDownloadListener);
-        App.registerSeriesFollowingListener(this.seriesFollowingListener);
+        FOLLOW_SERIES_SERVICE.registerSeriesFollowingListener(this.seriesFollowingListener);
     }
 
     @Override
@@ -195,7 +198,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
             return;
         }
 
-        String format = App.environment().context().getString(R.string.episode_number_format);
+        String format = App.context().getString(R.string.episode_number_format);
         this.seriesItemViewHolder.nextToSee.setText(String.format(format, next.seasonNumber(), next.number()));
 
         this.seriesItemViewHolder.seenMark.setVisibility(View.VISIBLE);

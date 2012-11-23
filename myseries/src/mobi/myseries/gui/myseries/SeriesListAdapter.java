@@ -27,6 +27,7 @@ import java.util.Collection;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.image.SeriesPosterDownloadListener;
@@ -51,10 +52,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener,
-SeriesFollowingListener, SeriesPosterDownloadListener {
+        SeriesFollowingListener, SeriesPosterDownloadListener {
 
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
+    private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
+
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
     private static final int ITEM_LAYOUT = R.layout.myseries_item;
 
@@ -164,7 +167,7 @@ SeriesFollowingListener, SeriesPosterDownloadListener {
 
         IMAGE_SERVICE.register(this);
 
-        App.registerSeriesFollowingListener(this);
+        FOLLOW_SERIES_SERVICE.registerSeriesFollowingListener(this);
 
         for (Series series : objects) {
             series.register(this);

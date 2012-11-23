@@ -42,11 +42,7 @@ public class Environment {
 
     private Context context;
 
-    public static Environment newEnvironment(Context context) {
-        return new Environment(context);
-    }
-
-    private Environment(Context context) {
+    public Environment(Context context) {
         Validate.isNonNull(context, "context");
 
         this.context = context;

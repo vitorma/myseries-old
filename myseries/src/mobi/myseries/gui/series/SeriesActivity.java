@@ -2,6 +2,7 @@ package mobi.myseries.gui.series;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.TabsAdapter;
 import android.content.Context;
@@ -15,6 +16,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 public class SeriesActivity extends SherlockFragmentActivity {
+    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
+
     private static final String SELECTED_TAB = "selectedTab";
     private static final int DETAILS = 0;
     private static final int SEASONS = 1;
@@ -50,7 +53,7 @@ public class SeriesActivity extends SherlockFragmentActivity {
     private void setUpActionBar() {
         ActionBar actionBar = this.getSupportActionBar();
 
-        actionBar.setTitle(App.getSeries(this.seriesId).name());
+        actionBar.setTitle(SERIES_PROVIDER.getSeries(this.seriesId).name());
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 

@@ -25,7 +25,9 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.search.SearchSeriesListener;
+import mobi.myseries.application.search.SearchSeriesService;
 import mobi.myseries.application.search.SeriesSearchException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -37,7 +39,6 @@ import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
-import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -56,6 +57,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 public class SeriesSearchActivity extends  SherlockListActivity {
+    private static final SearchSeriesService SEARCH_SERIES_SERVICE = App.searchSeriesService();
+    private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
+
     private StateHolder state;
     private SearchSeriesListener listener;
     private MessageLauncher messageLauncher;
@@ -93,26 +97,26 @@ public class SeriesSearchActivity extends  SherlockListActivity {
     }
 
     private void setupMessageLauncher() {
-		this.messageLauncher = new MessageLauncher(this);
-		state.messageLauncher = this.messageLauncher;
-	}
+        this.messageLauncher = new MessageLauncher(this);
+        state.messageLauncher = this.messageLauncher;
+    }
 
     private void loadState() {
-    	this.messageLauncher = state.messageLauncher;
+        this.messageLauncher = state.messageLauncher;
 
         if (state.isSearching) {
-            if (App.getLastValidSearchResult() != null) {
-                setupListOnAdapter(App.getLastValidSearchResult());
+            if (SEARCH_SERIES_SERVICE.getLastValidSearchResult() != null) {
+                setupListOnAdapter(SEARCH_SERIES_SERVICE.getLastValidSearchResult());
             }
             listener.onStart();
-            App.registerSearchSeriesListener(listener);
+            SEARCH_SERIES_SERVICE.registerListener(listener);
 
         } else {
             if (state.seriesFound != null)
                 setupListOnAdapter(state.seriesFound);
             
             if (this.state.isShowingDialog){
-                	this.state.dialog.show();
+                    this.state.dialog.show();
                 }
             this.messageLauncher.loadState();
         }
@@ -127,12 +131,12 @@ public class SeriesSearchActivity extends  SherlockListActivity {
     protected void onStop() {
         super.onStop();
         this.messageLauncher.onStop();
-        App.deregisterSearchSeriesListener(listener);
+        SEARCH_SERIES_SERVICE.deregisterListener(listener);
         if (state.dialog != null && state.dialog.isShowing()) {
-        	state.isShowingDialog = true;
-        	state.dialog.dismiss();
+            state.isShowingDialog = true;
+            state.dialog.dismiss();
         } else {
-        	state.isSearching = false;
+            state.isSearching = false;
         }
         
     }
@@ -196,7 +200,7 @@ public class SeriesSearchActivity extends  SherlockListActivity {
                         dialogBuilder.setTitle(R.string.parsing_failed_title);
                         dialogBuilder.setMessage(R.string.parsing_failed_message);
                     } else if (exception.getCause() instanceof ConnectionTimeoutException){
-                    	dialogBuilder.setTitle(R.string.connection_timeout_title);
+                        dialogBuilder.setTitle(R.string.connection_timeout_title);
                         dialogBuilder.setMessage(R.string.connection_timeout_message);
                     }
                     Dialog dialog = dialogBuilder.build();
@@ -230,8 +234,8 @@ public class SeriesSearchActivity extends  SherlockListActivity {
         SeriesSearchActivity.this.setListAdapter(null);
         state.seriesFound = null;
 
-        App.registerSearchSeriesListener(listener);
-        App.searchSeries(searchField.getText().toString());
+        SEARCH_SERIES_SERVICE.registerListener(listener);
+        SEARCH_SERIES_SERVICE.search(searchField.getText().toString());
     }
 
     private void setupListOnAdapter(List<Series> series) {
@@ -287,7 +291,7 @@ public class SeriesSearchActivity extends  SherlockListActivity {
                             final View view, final int position, final long id) {
                         this.selectedItem = (Series) parent
                                 .getItemAtPosition(position);
-                        this.userFollowsSeries = App.follows(this.selectedItem);
+                        this.userFollowsSeries = FOLLOW_SERIES_SERVICE.follows(this.selectedItem);
 
                         this.dialog = new ConfirmationDialogBuilder(
                                 SeriesSearchActivity.this)
@@ -295,7 +299,7 @@ public class SeriesSearchActivity extends  SherlockListActivity {
                                 .setMessage(this.selectedItem.overview())
                                 .setSurrogateMessage(R.string.overview_unavailable)
                                 .setPositiveButton(this.followButtonTextResourceId(),
-                                        		   this.followButtonClickListener())
+                                                   this.followButtonClickListener())
                                 .setNegativeButton(R.string.back, null).build();
 
                         this.dialog.show();
@@ -312,9 +316,9 @@ public class SeriesSearchActivity extends  SherlockListActivity {
                             @Override
                             public void onClick(Dialog dialog) {
                                 if (userFollowsSeries) {
-                                    App.stopFollowing(selectedItem);
+                                    FOLLOW_SERIES_SERVICE.stopFollowing(selectedItem);
                                 } else {
-                                    App.follow(selectedItem);
+                                    FOLLOW_SERIES_SERVICE.follow(selectedItem);
                                 }
                                 dialog.dismiss();
                             }

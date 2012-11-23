@@ -24,6 +24,7 @@ package mobi.myseries.application.search;
 import java.util.Collections;
 import java.util.List;
 
+import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
@@ -39,16 +40,20 @@ import android.util.Log;
 
 // TODO(Gabriel) implement Publisher interface
 public class SearchSeriesService {
-    private SeriesSource seriesSource;
-    private ListenerSet<SearchSeriesListener> listenerSet;
     private static List<Series> lastSearchResult;
 
-    public SearchSeriesService(SeriesSource seriesSource) {
+    private SeriesSource seriesSource;
+    private ListenerSet<SearchSeriesListener> listenerSet;
+    private LocalizationProvider localizationProvider;
+
+    public SearchSeriesService(SeriesSource seriesSource, LocalizationProvider localizationProvider) {
         Validate.isNonNull(seriesSource, "seriesSource");
+        Validate.isNonNull(localizationProvider, "localizationProvider");
+
         this.seriesSource = seriesSource;
         this.listenerSet = new ListenerSet<SearchSeriesListener>();
+        this.localizationProvider = localizationProvider;
     }
-    
 
     public void registerListener(SearchSeriesListener listener){
         this.listenerSet.register(listener);
@@ -58,14 +63,18 @@ public class SearchSeriesService {
         this.listenerSet.deregister(listener);
     }
 
-    public void search(String seriesName, String language) {
+    public void search(String seriesName) {
+        this.search(seriesName, this.localizationProvider.language());
+    }
 
+    public void search(String seriesName, String language) {
         new SearchSeriesTask(this.seriesSource, listenerSet).execute(seriesName, language);
-}
-    public static List<Series> getLastSearchResult(){
+    }
+
+    public List<Series> getLastValidSearchResult(){
         return lastSearchResult;
-        
-}
+    }
+
     private static class SearchSeriesTask extends AsyncTask<String, Void, AsyncTaskResult<List<Series>>> {
         private SeriesSource seriesSource;
         private ListenerSet<SearchSeriesListener> listenerSet;
