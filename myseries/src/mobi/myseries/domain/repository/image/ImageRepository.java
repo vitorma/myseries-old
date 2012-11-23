@@ -5,8 +5,12 @@ import java.util.Collection;
 import android.graphics.Bitmap;
 
 public interface ImageRepository {
-    public void save(int id, Bitmap image);
-    public Bitmap fetch(int id);
-    public void delete(int id);
-    public Collection<Integer> savedImages();
+
+    public void save(int id, Bitmap image) throws ImageRepositoryException;
+
+    public Bitmap fetch(int id) throws ImageRepositoryException;
+
+    public void delete(int id) throws ImageRepositoryException;
+
+    public Collection<Integer> savedImages() throws ImageRepositoryException;
 }

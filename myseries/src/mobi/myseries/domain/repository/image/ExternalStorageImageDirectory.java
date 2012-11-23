@@ -109,9 +109,9 @@ public class ExternalStorageImageDirectory implements ImageRepository {
                 nomedia.createNewFile();
             }
         } catch (SecurityException e) {
-            throw new RuntimeException("can't create the given directory: " + path);
+            throw new ImageDirectoryIoException("create", path, e);
         } catch (IOException e) {
-            throw new RuntimeException("can't write/read the on given directory: " + path);
+            throw new ImageDirectoryIoException("write/read on", path, e);
         }
 
         return directory;
@@ -123,11 +123,53 @@ public class ExternalStorageImageDirectory implements ImageRepository {
             image.compress(IMAGE_FORMAT, COMPRESS_QUALITY, os);
             os.close();
         } catch (IOException e) {
-            throw new ImageIoException("create", file.toString());
+            throw new ImageFileIoException("create", file.toString(), e);
         }
     }
 
     private boolean isExternalStorageAvaliable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    }
+
+    public static class ImageFileIoException extends ImageRepositoryException {
+        private static final long serialVersionUID = 1L;
+        private static final String CAUSE = "Can't %s image file %s";
+
+        public ImageFileIoException() {
+            super();
+        }
+
+        public ImageFileIoException(String action, String filename) {
+            super(String.format(CAUSE, action, filename));
+        }
+
+        public ImageFileIoException(String action, String filename, Throwable throwable) {
+            super(String.format(CAUSE, action, filename), throwable);
+        }
+
+        public ImageFileIoException(Throwable throwable) {
+            super(throwable);
+        }
+    }
+
+    public static class ImageDirectoryIoException extends ImageRepositoryException {
+        private static final long serialVersionUID = 1L;
+        private static final String CAUSE = "Can't %s directory %s";
+
+        public ImageDirectoryIoException() {
+            super();
+        }
+
+        public ImageDirectoryIoException(String action, String filename) {
+            super(String.format(CAUSE, action, filename));
+        }
+
+        public ImageDirectoryIoException(String action, String filename, Throwable throwable) {
+            super(String.format(CAUSE, action, filename), throwable);
+        }
+
+        public ImageDirectoryIoException(Throwable throwable) {
+            super(throwable);
+        }
     }
 }

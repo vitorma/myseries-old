@@ -32,6 +32,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+// TODO(Gabriel) Catch exceptions form the repositories.
 public class AndroidImageStorage implements ImageServiceRepository {
     private static final String SERIES_POSTERS = "series_posters";
     private static final String EPISODE_IMAGES = "episode_images";

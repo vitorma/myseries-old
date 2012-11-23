@@ -33,6 +33,7 @@ import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+// TODO(Gabriel) Log the operations of this service.
 public final class ImageService {
     private ImageServiceRepository imageRepository;
     private ImageSource imageSource;
@@ -61,6 +62,7 @@ public final class ImageService {
         this.imageRepository.deleteAllImagesOf(series);
     }
 
+    // TODO(Cleber, Gabriel) Download of series posters should be synchronous.
     public void downloadPosterOf(Series series) {
         Validate.isNonNull(series, "series");
 
@@ -77,6 +79,7 @@ public final class ImageService {
         new EpisodeImageDownload(episode).execute();
     };
 
+    // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
     public boolean register(SeriesPosterDownloadListener listener) {
         return this.posterDownloadListeners.register(listener);
     }
@@ -85,6 +88,7 @@ public final class ImageService {
         return this.episodeImageDownloadListeners.register(listener);
     }
 
+    // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
     public boolean deregister(SeriesPosterDownloadListener listener) {
         return this.posterDownloadListeners.deregister(listener);
     }
@@ -93,6 +97,7 @@ public final class ImageService {
         return this.episodeImageDownloadListeners.deregister(listener);
     }
 
+    // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
     private void notifyListenersOfFinishDownloadingPosterOf(Series series) {
         for (SeriesPosterDownloadListener listener : this.posterDownloadListeners) {
             listener.onFinishDownloadingPosterOf(series);
@@ -105,6 +110,7 @@ public final class ImageService {
         }
     }
 
+    // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
     private void notifyListenersOfStartDownloadingPosterOf(Series series) {
         for (SeriesPosterDownloadListener listener : this.posterDownloadListeners) {
             listener.onStartDownloadingPosterOf(series);
@@ -117,6 +123,7 @@ public final class ImageService {
         }
     }
 
+     // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
     private class SeriesPosterDownload extends AsyncTask<Void, Void, Void> {
         private Series series;
 

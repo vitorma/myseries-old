@@ -23,6 +23,7 @@ package mobi.myseries.application.image;
 
 import mobi.myseries.domain.model.Series;
 
+// TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
 public interface SeriesPosterDownloadListener {
     void onStartDownloadingPosterOf(Series series);
     void onFinishDownloadingPosterOf(Series series);
