@@ -58,16 +58,14 @@ public class SearchSeriesService {
     public void registerListener(SearchSeriesListener listener){
         this.listenerSet.register(listener);
     }
-    
+
     public void deregisterListener(SearchSeriesListener listener){
         this.listenerSet.deregister(listener);
     }
 
     public void search(String seriesName) {
-        this.search(seriesName, this.localizationProvider.language());
-    }
+        String language = this.localizationProvider.language();
 
-    public void search(String seriesName, String language) {
         new SearchSeriesTask(this.seriesSource, listenerSet).execute(seriesName, language);
     }
 
@@ -84,7 +82,7 @@ public class SearchSeriesService {
             this.seriesSource = seriesSource;
             this.listenerSet = listenerSet;
         }
-        
+
         @Override
         protected void onPreExecute() {
             lastSearchResult = null;
@@ -117,9 +115,9 @@ public class SearchSeriesService {
                 Log.d("Series Search", "the search has falied, the parsing has failed.");
                 return new AsyncTaskResult<List<Series>>(new SeriesSearchException(e));
             } catch (ConnectionTimeoutException e) {
-            	Log.d("Series Search", "the search has falied, the connection has timed out.");
-            	return new AsyncTaskResult<List<Series>>(new SeriesSearchException(e));
-			}
+                Log.d("Series Search", "the search has falied, the connection has timed out.");
+                return new AsyncTaskResult<List<Series>>(new SeriesSearchException(e));
+            }
         }
 
         @Override
