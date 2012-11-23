@@ -164,7 +164,7 @@ public class FollowSeriesService {
                             .language());
             FollowSeriesService.this.seriesRepository.insert(this.followedSeries);
 
-            FollowSeriesService.this.imageService.downloadPosterOf(this.followedSeries);
+            FollowSeriesService.this.imageService.downloadAndSavePosterOf(this.followedSeries);
 
             this.failed = false;
         }

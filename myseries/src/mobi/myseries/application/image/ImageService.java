@@ -60,7 +60,7 @@ public final class ImageService {
         this.imageRepository.deleteAllImagesOf(series);
     }
 
-    public void downloadPosterOf(Series series) {
+    public void downloadAndSavePosterOf(Series series) {
         Validate.isNonNull(series, "series");
 
         if (Strings.isNullOrBlank(series.posterFileName())) {

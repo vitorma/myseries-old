@@ -297,7 +297,7 @@ public class UpdateService implements Publisher<UpdateListener> {
             @Override
             public void run() {
                 series.setPosterFilename(seriesSource.posterUpdateMetadata().get(series.id()));
-                imageService.downloadPosterOf(series);
+                imageService.downloadAndSavePosterOf(series);
             }
         });
     }
