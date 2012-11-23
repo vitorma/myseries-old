@@ -30,7 +30,6 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.image.ImageService;
-import mobi.myseries.application.image.SeriesPosterDownloadListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
@@ -39,6 +38,8 @@ import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.shared.Objects;
+import mobi.myseries.update.UpdateListener;
+import mobi.myseries.update.UpdateService;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -51,12 +52,12 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener,
-        SeriesFollowingListener, SeriesPosterDownloadListener {
+public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, SeriesFollowingListener {
 
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
+    private static final UpdateService UPDATE_SERIES_SERVICE = App.updateSeriesService();
 
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
     private static final int ITEM_LAYOUT = R.layout.myseries_item;
@@ -160,14 +161,34 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
     private SeriesListItemFactory listItemFactory;
 
+    private UpdateListener updateListener = new UpdateListener() {
+
+        @Override
+        public void onUpdateSuccess() {
+            SeriesListAdapter.this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onUpdateFailure(Exception e) {
+            // TODO(Gabriel) Should we really do something here?
+            // May the series have been partially updated after a failure?
+            SeriesListAdapter.this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onUpdateStart() {}
+
+        @Override
+        public void onUpdateNotNecessary() {}
+    };
+
     public SeriesListAdapter(Context context, Collection<Series> objects) {
         super(context, ITEM_LAYOUT, new ArrayList<Series>(objects));
 
         this.listItemFactory = new SeriesListItemFactory(context);
 
-        IMAGE_SERVICE.register(this);
-
         FOLLOW_SERIES_SERVICE.registerSeriesFollowingListener(this);
+        UPDATE_SERIES_SERVICE.register(this.updateListener);
 
         for (Series series : objects) {
             series.register(this);
@@ -218,24 +239,9 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         //TODO This behavior will depend on the user's settings (SharedPreference)
     }
 
-    /* TODO (Reul): Listen to update instead
     @Override
-    public void onMerge(Series series) {
-        this.notifyDataSetChanged();
-    }
-     */
+    public void onFollowingStart(Series seriesToFollow) {}
 
     @Override
-    public void onStartDownloadingPosterOf(Series series) {}
-
-    @Override
-    public void onFinishDownloadingPosterOf(Series series) {
-        this.notifyDataSetChanged();
-    }
-
-	@Override
-	public void onFollowingStart(Series seriesToFollow) {}
-
-	@Override
-	public void onFollowingFailure(Series series, Exception e) {}
+    public void onFollowingFailure(Series series, Exception e) {}
 }

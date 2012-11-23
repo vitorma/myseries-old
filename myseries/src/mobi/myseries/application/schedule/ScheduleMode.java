@@ -144,6 +144,8 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
     @Override
     public final void onUpdateStart() { }
 
+    // TODO(Gabriel) Shouldn't we do something here?
+    // Can't the series have been partially updated after a failure?
     @Override
     public final void onUpdateFailure(Exception e) { }
 

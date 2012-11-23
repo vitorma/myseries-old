@@ -29,8 +29,6 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
-import mobi.myseries.application.image.ImageService;
-import mobi.myseries.application.image.SeriesPosterDownloadListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
@@ -39,6 +37,8 @@ import mobi.myseries.gui.shared.CoverFlow;
 import mobi.myseries.gui.shared.ReflectingImageAdapter;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
+import mobi.myseries.update.UpdateListener;
+import mobi.myseries.update.UpdateService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -55,8 +55,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
-    private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
+    private static final UpdateService UPDATE_SERIES_SERVICE = App.updateSeriesService();
 
     private static final Comparator<Series> COMPARATOR = new SeriesComparator();
 
@@ -88,20 +88,34 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
             }
         }
 
-		@Override
-		public void onFollowingStart(Series seriesToFollow) {}
+        @Override
+        public void onFollowingStart(Series seriesToFollow) {}
 
-		@Override
-		public void onFollowingFailure(Series series, Exception e) {}
+        @Override
+        public void onFollowingFailure(Series series, Exception e) {}
     };
 
-    private SeriesPosterDownloadListener posterDownloadListener = new SeriesPosterDownloadListener() {
+    private UpdateListener updateListener = new UpdateListener() {
 
         @Override
-        public void onStartDownloadingPosterOf(Series series) {}
+        public void onUpdateSuccess() {
+            this.reload();
+        }
 
         @Override
-        public void onFinishDownloadingPosterOf(Series series) {
+        public void onUpdateFailure(Exception e) {
+            // TODO(Gabriel) Should we really do something here?
+            // May the series have been partially updated after a failure?
+            this.reload();
+        }
+
+        @Override
+        public void onUpdateStart() {}
+
+        @Override
+        public void onUpdateNotNecessary() {}
+
+        private void reload() {
             if (SeriesCoverFlowFragment.this.getActivity() != null) {
                 SeriesCoverFlowFragment.this.reload();
             }
@@ -112,7 +126,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        IMAGE_SERVICE.register(this.posterDownloadListener);
+        UPDATE_SERIES_SERVICE.register(this.updateListener);
         FOLLOW_SERIES_SERVICE.registerSeriesFollowingListener(this.seriesFollowingListener);
     }
 
@@ -237,15 +251,6 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
             this.downloadDescription(series);
         }
     }
-
-    /* TODO (Reul) Listen to update instead
-    @Override
-    public void onMerge(Series series) {
-        if (this.isSelected(series)) {
-            this.downloadDescription(series);
-        }
-    }
-     */
 
     private static class SeriesItemViewHolder {
         private TextView name;

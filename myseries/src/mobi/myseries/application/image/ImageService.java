@@ -37,7 +37,6 @@ import android.os.AsyncTask;
 public final class ImageService {
     private ImageServiceRepository imageRepository;
     private ImageSource imageSource;
-    private ListenerSet<SeriesPosterDownloadListener> posterDownloadListeners;
     private ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
 
     public ImageService(ImageSource imageSource, ImageServiceRepository imageRepository) {
@@ -46,7 +45,6 @@ public final class ImageService {
 
         this.imageSource = imageSource;
         this.imageRepository = imageRepository;
-        this.posterDownloadListeners = new ListenerSet<SeriesPosterDownloadListener>();
         this.episodeImageDownloadListeners = new ListenerSet<EpisodeImageDownloadListener>();
     }
 
@@ -62,15 +60,23 @@ public final class ImageService {
         this.imageRepository.deleteAllImagesOf(series);
     }
 
-    // TODO(Cleber, Gabriel) Download of series posters should be synchronous.
     public void downloadPosterOf(Series series) {
         Validate.isNonNull(series, "series");
 
-        if (Strings.isNullOrBlank(series.posterFileName())) {return;}
+        if (Strings.isNullOrBlank(series.posterFileName())) {
+            return;
+        }
 
-        new SeriesPosterDownload(series).execute();
+        try {
+            Bitmap fetchedPoster = this.imageSource.fetchSeriesPoster(series.posterFileName());
+            this.imageRepository.saveSeriesPoster(series, fetchedPoster);
+        } catch (ConnectionFailedException e) {
+        } catch (ConnectionTimeoutException e) {
+        } catch (ImageNotFoundException e) {}
     }
 
+    // TODO(Gabriel) Should we pass the listener as a parameter, to avoid the
+    // users not registering their listeners?
     public void downloadImageOf(Episode episode) {
         Validate.isNonNull(episode, "episode");
 
@@ -79,29 +85,12 @@ public final class ImageService {
         new EpisodeImageDownload(episode).execute();
     };
 
-    // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
-    public boolean register(SeriesPosterDownloadListener listener) {
-        return this.posterDownloadListeners.register(listener);
-    }
-
     public boolean register(EpisodeImageDownloadListener listener) {
         return this.episodeImageDownloadListeners.register(listener);
     }
 
-    // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
-    public boolean deregister(SeriesPosterDownloadListener listener) {
-        return this.posterDownloadListeners.deregister(listener);
-    }
-
     public boolean deregister(EpisodeImageDownloadListener listener) {
         return this.episodeImageDownloadListeners.deregister(listener);
-    }
-
-    // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
-    private void notifyListenersOfFinishDownloadingPosterOf(Series series) {
-        for (SeriesPosterDownloadListener listener : this.posterDownloadListeners) {
-            listener.onFinishDownloadingPosterOf(series);
-        }
     }
 
     private void notifyListenersOfFinishDownloadingImageOf(Episode episode) {
@@ -110,54 +99,9 @@ public final class ImageService {
         }
     }
 
-    // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
-    private void notifyListenersOfStartDownloadingPosterOf(Series series) {
-        for (SeriesPosterDownloadListener listener : this.posterDownloadListeners) {
-            listener.onStartDownloadingPosterOf(series);
-        }
-    }
-
     private void notifyListenersOfStartDownloadingImageOf(Episode episode) {
         for (EpisodeImageDownloadListener l : this.episodeImageDownloadListeners) {
             l.onStartDownloadingImageOf(episode);
-        }
-    }
-
-     // TODO(Cleber, Gabriel) remove this. Download of series posters should be synchronous.
-    private class SeriesPosterDownload extends AsyncTask<Void, Void, Void> {
-        private Series series;
-
-        private SeriesPosterDownload(Series series) {
-            this.series = series;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            ImageService.this.notifyListenersOfStartDownloadingPosterOf(this.series);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Bitmap fetchedPoster = null;
-
-            try {
-                fetchedPoster = ImageService.this.imageSource.fetchSeriesPoster(this.series.posterFileName());
-            } catch (ConnectionFailedException e) {
-                return null;
-            } catch (ConnectionTimeoutException e) {
-                return null;
-            } catch (ImageNotFoundException e) {
-                return null;
-            }
-
-            ImageService.this.imageRepository.saveSeriesPoster(this.series, fetchedPoster);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            ImageService.this.notifyListenersOfFinishDownloadingPosterOf(this.series);
         }
     }
 
@@ -175,19 +119,13 @@ public final class ImageService {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Bitmap fetchedImage = null;
-
             try {
-                fetchedImage = ImageService.this.imageSource.fetchEpisodeImage(this.episode.imageFileName());
-            } catch (ConnectionFailedException e) {
-                return null;
-            } catch (ConnectionTimeoutException e) {
-                return null;
-            } catch (ImageNotFoundException e) {
-                return null;
-            }
+                Bitmap fetchedImage = ImageService.this.imageSource.fetchEpisodeImage(this.episode.imageFileName());
 
-            ImageService.this.imageRepository.saveEpisodeImage(this.episode, fetchedImage);
+                ImageService.this.imageRepository.saveEpisodeImage(this.episode, fetchedImage);
+            } catch (ConnectionFailedException e) {
+            } catch (ConnectionTimeoutException e) {
+            } catch (ImageNotFoundException e) {}
 
             return null;
         }

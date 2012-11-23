@@ -164,6 +164,8 @@ public class FollowSeriesService {
                             .language());
             FollowSeriesService.this.seriesRepository.insert(this.followedSeries);
 
+            FollowSeriesService.this.imageService.downloadPosterOf(this.followedSeries);
+
             this.failed = false;
         }
 
@@ -174,10 +176,6 @@ public class FollowSeriesService {
         protected void afterFollowingActions() {
             if (!this.failed) {
                 FollowSeriesService.this.notifyListenersOfFollowedSeries(this.followedSeries);
-                FollowSeriesService.this.imageService.downloadPosterOf(this.followedSeries); // TODO:
-                                                                                              // move
-                                                                                              // me
-                                                                                              // elsewhere
             }
         }
     }
