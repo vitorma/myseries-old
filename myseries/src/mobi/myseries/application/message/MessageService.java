@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import mobi.myseries.application.App;
 import mobi.myseries.application.follow.SeriesFollowingListener;
+import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.update.UpdateListener;
 
 public class MessageService implements SeriesFollowingListener, UpdateListener{
 

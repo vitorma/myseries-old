@@ -1,4 +1,4 @@
-package mobi.myseries.update;
+package mobi.myseries.application.update;
 
 /*
  * TODO (Reul): verify if connection is of the right type

@@ -3,6 +3,7 @@ package mobi.myseries.gui.shared;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.message.MessageServiceListener;
+import mobi.myseries.application.update.NetworkUnavailableException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
@@ -10,7 +11,6 @@ import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.Validate;
-import mobi.myseries.update.NetworkUnavailableException;
 import android.app.Activity;
 import android.app.Dialog;
 

@@ -1,4 +1,4 @@
-package mobi.myseries.update;
+package mobi.myseries.application.update;
 
 import java.util.Collection;
 

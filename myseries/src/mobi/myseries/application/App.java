@@ -29,7 +29,7 @@ import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.search.SearchSeriesService;
-import mobi.myseries.update.UpdateService;
+import mobi.myseries.application.update.UpdateService;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
