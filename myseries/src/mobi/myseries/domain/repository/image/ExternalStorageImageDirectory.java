@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import mobi.myseries.shared.Validate;
@@ -15,12 +16,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
-import android.os.Environment;
 
 public class ExternalStorageImageDirectory implements ImageRepository {
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final CompressFormat IMAGE_FORMAT = CompressFormat.JPEG;
-    private static final String IMAGE_EXTENSION = "." + IMAGE_FORMAT.toString().toLowerCase();
+    private static final String IMAGE_EXTENSION = "." + IMAGE_FORMAT.toString().toLowerCase(Locale.US);
     private static final int COMPRESS_QUALITY = 85;
     private static final Pattern IMAGE_FILE_REGEX_PATTERN = Pattern.compile("^-?\\d+\\" + IMAGE_EXTENSION + "$");
       // The "\\" just before IMAGE_EXTENSION is there because the first character of IMAGE_EXTENSION is a "."
@@ -38,19 +38,11 @@ public class ExternalStorageImageDirectory implements ImageRepository {
     public void save(int id, Bitmap image) {
         Validate.isNonNull(image, "image");
 
-        if (!this.isExternalStorageAvaliable()) {
-            return;
-        }
-
         this.saveImageFile(image, this.fileFor(id));
     }
 
     @Override
     public Bitmap fetch(int id) {
-        if (!this.isExternalStorageAvaliable()) {
-            return null;
-        }
-
         return BitmapFactory.decodeFile(this.filePathFor(id));
     }
 
@@ -96,7 +88,13 @@ public class ExternalStorageImageDirectory implements ImageRepository {
     }
 
     private File rootDirectory() {
-        return this.context.getExternalFilesDir(null);
+        File externalFilesDirectory = this.context.getExternalFilesDir(null);
+
+        if (externalFilesDirectory == null) {
+            throw new ExternalStorageUnavailableException();
+        }
+
+        return externalFilesDirectory;
     }
 
     private static File ensuredDirectory(String path) {
@@ -127,21 +125,9 @@ public class ExternalStorageImageDirectory implements ImageRepository {
         }
     }
 
-    private boolean isExternalStorageAvaliable() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
-    }
-
     public static class ImageFileIoException extends ImageRepositoryException {
         private static final long serialVersionUID = 1L;
         private static final String CAUSE = "Can't %s image file %s";
-
-        public ImageFileIoException() {
-            super();
-        }
-
-        public ImageFileIoException(String action, String filename) {
-            super(String.format(CAUSE, action, filename));
-        }
 
         public ImageFileIoException(String action, String filename, Throwable throwable) {
             super(String.format(CAUSE, action, filename), throwable);
@@ -156,20 +142,20 @@ public class ExternalStorageImageDirectory implements ImageRepository {
         private static final long serialVersionUID = 1L;
         private static final String CAUSE = "Can't %s directory %s";
 
-        public ImageDirectoryIoException() {
-            super();
-        }
-
-        public ImageDirectoryIoException(String action, String filename) {
-            super(String.format(CAUSE, action, filename));
-        }
-
         public ImageDirectoryIoException(String action, String filename, Throwable throwable) {
             super(String.format(CAUSE, action, filename), throwable);
         }
 
         public ImageDirectoryIoException(Throwable throwable) {
             super(throwable);
+        }
+    }
+
+    public static class ExternalStorageUnavailableException extends ImageRepositoryException {
+        private static final long serialVersionUID = 1L;
+
+        public ExternalStorageUnavailableException() {
+            super("Can't open external storage directory for MySeries");
         }
     }
 }
