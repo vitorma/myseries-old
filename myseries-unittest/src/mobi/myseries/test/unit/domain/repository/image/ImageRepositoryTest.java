@@ -42,6 +42,7 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
             this.imageRepository.delete(imageId);
         }
         this.imageRepository = null;
+        this.testImage = null;
     }
 
     public void testDeletingANotSavedImageDoesNotCauseAnyError() {

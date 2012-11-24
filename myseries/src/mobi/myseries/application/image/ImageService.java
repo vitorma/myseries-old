@@ -83,7 +83,7 @@ public final class ImageService {
         if (Strings.isNullOrBlank(episode.imageFileName())) {return;}
 
         new EpisodeImageDownload(episode).execute();
-    };
+    }
 
     public boolean register(EpisodeImageDownloadListener listener) {
         return this.episodeImageDownloadListeners.register(listener);

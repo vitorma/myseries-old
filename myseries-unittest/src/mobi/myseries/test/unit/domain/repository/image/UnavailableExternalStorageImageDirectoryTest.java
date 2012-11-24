@@ -27,7 +27,12 @@ public class UnavailableExternalStorageImageDirectoryTest extends Instrumentatio
         when(contextWithoutExternalStorage.getExternalFilesDir(null)).thenReturn(null);
 
         this.imageRepository = new ExternalStorageImageDirectory(contextWithoutExternalStorage,
-                                                                 "image_repository_exceptions_test_dir");
+                                                                 "unavailable_image_repository_test_dir");
+    }
+
+    public void tearDown() {
+        this.imageRepository = null;
+        this.testImage = null;
     }
 
     public void testItShouldThrowAnExceptionWhenGettingTheCollectionOfSavedImages() {

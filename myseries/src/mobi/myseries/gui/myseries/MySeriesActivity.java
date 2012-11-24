@@ -104,7 +104,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             @Override
             public void run() {
                 App.updateSeriesService().updateDataIfNeeded(handler);
-            };
+            }
         }.start();
     }
 
@@ -180,7 +180,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                 @Override
                 public void run() {
                     App.updateSeriesService().updateData(handler);
-                };
+                }
             }.start();
         }
 
