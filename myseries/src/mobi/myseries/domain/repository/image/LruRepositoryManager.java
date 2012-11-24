@@ -59,7 +59,10 @@ public class LruRepositoryManager implements ImageRepository {
         this.managedRepository = managedRepository;
         this.imagesQueue = new ImagesQueue(numberOfKeptImages);
 
-        this.loadPreviouslySavedImages();
+        try {
+            this.loadPreviouslySavedImages();
+        } catch (ImageRepositoryException e) {}  // The images cannot be loaded into the cache there is nothing we can
+                                                 // do about it. The cache has to be constructed anyway.
     }
 
     private void loadPreviouslySavedImages() {

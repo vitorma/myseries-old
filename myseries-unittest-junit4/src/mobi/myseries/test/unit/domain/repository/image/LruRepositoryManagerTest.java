@@ -23,13 +23,22 @@ package mobi.myseries.test.unit.domain.repository.image;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.intThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import mobi.myseries.domain.repository.image.ImageRepository;
+import mobi.myseries.domain.repository.image.ImageRepositoryException;
 import mobi.myseries.domain.repository.image.LruRepositoryManager;
 
 import org.junit.Before;
@@ -53,14 +62,20 @@ public class LruRepositoryManagerTest {
                                                                      // issue when the tests are run from ant.
 
     private ImageRepository managedRepository;
+    private ImageRepository malfunctioningRepository;
     private LruRepositoryManager manager;
 
     @Before
     public void setUp() {
         this.managedRepository = mock(ImageRepository.class);
-
         when(this.managedRepository.fetch(intThat(is(not(equalTo(NOT_USED_IMAGE_ID)))))).thenReturn(DEFAULT_IMAGE);
         when(this.managedRepository.fetch(NOT_USED_IMAGE_ID)).thenReturn(null);
+
+        this.malfunctioningRepository = mock(ImageRepository.class);
+        doThrow(new ImageRepositoryException()).when(this.malfunctioningRepository).delete(anyInt());
+        doThrow(new ImageRepositoryException()).when(this.malfunctioningRepository).save(anyInt(), argThat(any(Bitmap.class)));
+        when(this.malfunctioningRepository.fetch(anyInt())).thenThrow(new ImageRepositoryException());
+        when(this.malfunctioningRepository.savedImages()).thenThrow(new ImageRepositoryException());
 
         this.manager = new LruRepositoryManager(this.managedRepository, DEFAULT_CACHE_SIZE);
     }
@@ -80,6 +95,11 @@ public class LruRepositoryManagerTest {
     @Test(expected=IllegalArgumentException.class)
     public void constructingItWithANegativeNumberOfKeptImagesCausesIllegalArgumentException() {
         new LruRepositoryManager(mock(ImageRepository.class), -1);
+    }
+
+    @Test
+    public void itMustBeConstructedEvenIfTheManagedRepositoryIsNotWorking() {
+        new LruRepositoryManager(this.malfunctioningRepository, DEFAULT_CACHE_SIZE);
     }
 
     /* Saving */
