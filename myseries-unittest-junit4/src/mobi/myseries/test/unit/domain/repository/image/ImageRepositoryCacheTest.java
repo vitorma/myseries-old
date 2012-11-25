@@ -10,6 +10,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,7 +37,7 @@ import android.graphics.Bitmap;
 @PrepareForTest(Bitmap.class)
 public class ImageRepositoryCacheTest {
 
-    private static long TEST_SLEEPING_INTERVAL_FOR_ASYNC_OPERATIONS_TO_COMPLETE_IN_MILLIS = 10;
+    private static int MAXIMUM_TIME_FOR_ASYNC_OPERATIONS = 1000;  // milliseconds
 
     private static int NOT_USED_IMAGE_ID = 0;
     private static int ID_OF_THE_FIRST_SAVED_IMAGE = 1;
@@ -191,9 +192,7 @@ public class ImageRepositoryCacheTest {
 
         this.cache.save(imageId, savedImage);
 
-        verify(this.cachedRepository, never()).save(imageId, savedImage);
-        waitForAsynchronousOperations();
-        verify(this.cachedRepository).save(imageId, savedImage);
+        verify(this.cachedRepository, timeout(MAXIMUM_TIME_FOR_ASYNC_OPERATIONS)).save(imageId, savedImage);
     }
 
     @Test
@@ -205,11 +204,8 @@ public class ImageRepositoryCacheTest {
         this.cache.save(imageId, firstlySavedImage);
         this.cache.save(imageId, secondlySavedImage);
 
-        verify(this.cachedRepository, never()).save(imageId, firstlySavedImage);
-        verify(this.cachedRepository, never()).save(imageId, secondlySavedImage);
-        waitForAsynchronousOperations();
-        verify(this.cachedRepository).save(imageId, firstlySavedImage);
-        verify(this.cachedRepository).save(imageId, secondlySavedImage);
+        verify(this.cachedRepository, timeout(MAXIMUM_TIME_FOR_ASYNC_OPERATIONS)).save(imageId, firstlySavedImage);
+        verify(this.cachedRepository, timeout(MAXIMUM_TIME_FOR_ASYNC_OPERATIONS)).save(imageId, secondlySavedImage);
     }
 
     /* Deleting */
@@ -220,9 +216,7 @@ public class ImageRepositoryCacheTest {
 
         this.cache.delete(deletedImageId);
 
-        verify(this.cachedRepository, never()).delete(deletedImageId);
-        waitForAsynchronousOperations();
-        verify(this.cachedRepository).delete(deletedImageId);
+        verify(this.cachedRepository, timeout(MAXIMUM_TIME_FOR_ASYNC_OPERATIONS)).delete(deletedImageId);
     }
 
     /* Saved Images */
@@ -234,15 +228,5 @@ public class ImageRepositoryCacheTest {
         this.cache.savedImages();
 
         verify(this.cachedRepository, never()).savedImages();
-    }
-
-    /* Test tools */
-
-    private static void waitForAsynchronousOperations() {
-        try {
-            Thread.sleep(TEST_SLEEPING_INTERVAL_FOR_ASYNC_OPERATIONS_TO_COMPLETE_IN_MILLIS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
