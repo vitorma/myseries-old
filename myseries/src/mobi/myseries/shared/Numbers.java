@@ -40,4 +40,12 @@ public class Numbers {
 
         return date.getTime();
     }
+
+    public static Long parseLong(Airtime airtime, Long alternative) {
+        if (airtime == null) {
+            return alternative;
+        }
+
+        return airtime.toLong();
+    }
 }

@@ -75,8 +75,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             SERIES_NAME +     " TEXT NOT NULL, " +
             SERIES_STATUS +   " TEXT, " +
             SERIES_AIRDAY +   " TEXT, " +
-            SERIES_AIRTIME +  " TEXT, " +
-            SERIES_AIRDATE +  " INTEGER, " +
+            SERIES_AIRTIME +  " BIGINT, " +
+            SERIES_AIRDATE +  " BIGINT, " +
             SERIES_RUNTIME +  " TEXT, " +
             SERIES_NETWORK +  " TEXT, " +
             SERIES_OVERVIEW + " TEXT, " +
@@ -326,7 +326,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put(SERIES_NAME, s.name());
         cv.put(SERIES_STATUS, s.status());
         cv.put(SERIES_AIRDAY, s.airDay());
-        cv.put(SERIES_AIRTIME, s.airTime());
+        cv.put(SERIES_AIRTIME, Numbers.parseLong(s.airtime(), null));
         cv.put(SERIES_AIRDATE, Numbers.parseLong(s.airDate(), null));
         cv.put(SERIES_RUNTIME, s.runtime());
         cv.put(SERIES_NETWORK, s.network());
@@ -364,7 +364,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withName(c.getString(c.getColumnIndex(SERIES_NAME)))
             .withStatus(c.getString(c.getColumnIndex(SERIES_STATUS)))
             .withAirDay(c.getString(c.getColumnIndex(SERIES_AIRDAY)))
-            .withAirTime(c.getString(c.getColumnIndex(SERIES_AIRTIME)))
+            .withAirtime(DatesAndTimes.parseAirtime(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), null))
             .withAirDate(DatesAndTimes.parseDate(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), null))
             .withRuntime(c.getString(c.getColumnIndex(SERIES_RUNTIME)))
             .withNetwork(c.getString(c.getColumnIndex(SERIES_NETWORK)))

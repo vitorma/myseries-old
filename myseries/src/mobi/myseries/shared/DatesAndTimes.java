@@ -58,6 +58,14 @@ public class DatesAndTimes {
         return new Date(date);
     }
 
+    public static Airtime parseAirtime(Long airtime, Airtime alternative) {
+        if (airtime == null) {
+            return alternative;
+        }
+
+        return Airtime.valueOf(airtime);
+    }
+
     public static String toString(Date date, DateFormat format) {
         Validate.isNonNull(date, "date");
         Validate.isNonNull(format, "format");
@@ -73,6 +81,18 @@ public class DatesAndTimes {
         }
 
         return format.format(date);
+    }
+
+    public static String toString(Airtime airtime, DateFormat format, String alternative) {
+        if (airtime == null) {
+            return alternative;
+        }
+
+        if (format == null) {
+            return airtime.toString();
+        }
+
+        return airtime.toString(format);
     }
 
     public static int compareByNullLast(Date date1, Date date2) {

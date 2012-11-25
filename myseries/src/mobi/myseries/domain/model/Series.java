@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import mobi.myseries.domain.constant.Invalid;
+import mobi.myseries.shared.Airtime;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
@@ -39,7 +40,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     private String status;
     private Date airDate;
     private String airDay;
-    private String airTime;
+    private Airtime airtime;
     private String runtime;
     private String network;
     private String overview;
@@ -87,8 +88,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.airDay;
     }
 
-    public String airTime() {
-        return this.airTime;
+    public Airtime airtime() {
+        return this.airtime;
     }
 
     public String runtime() {
@@ -115,6 +116,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.posterFileName;
     }
 
+    public boolean hasPoster() {
+        return this.posterFileName != null;
+    }
+
     public Series setPosterFilename(String posterFileName) {
         this.posterFileName = posterFileName;
 
@@ -129,12 +134,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.seasons.season(number);
     }
 
-    //Wrong! get lastSeason with seasons().seasonAt(seasons().numberOfSeasons() - 1)
-    //    public Season lastSeason() {
-    //        int lastNumber = this.hasSpecialEpisodes() ? this.seasons.numberOfSeasons() - 1 : this.seasons.numberOfSeasons();
-    //        return this.season(lastNumber);
-    //    }
-
     public boolean hasSpecialEpisodes() {
         return this.seasons.hasSpecialEpisodes();
     }
@@ -146,12 +145,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     public List<Episode> episodesBy(Specification<Episode> specification) {
         return this.seasons.episodesBy(specification);
     }
-
-    //Wrong! get lastEpisode with seasons().seasonAt(seasons().numberOfSeasons() - 1).episodeAt(...)
-    //    public Episode lastEpisode() {
-    //        int lastNumber = this.lastSeason().numberOfEpisodes();
-    //        return this.lastSeason().episode(lastNumber);
-    //    }
 
     public int numberOfEpisodes() {
         return this.seasons.numberOfEpisodes();
@@ -170,15 +163,24 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this;
     }
 
+    public Long lastUpdate() {
+        return this.lastUpdate;
+    }
+
+    public Series setLastUpdate(Long lastUpdate) {
+        this.lastUpdate = lastUpdate;
+        return this;
+    }
+
     public void mergeWith(Series other) {
         Validate.isNonNull(other, "other");
         Validate.isTrue(other.id == this.id, "other should have the same id as this");
-        Validate.isTrue(other.name.equals(this.name), "other should have the same name as this");
+//        Validate.isTrue(other.name.equals(this.name), "other should have the same name as this");
 
         this.status = other.status;
         this.airDate = other.airDate;
         this.airDay = other.airDay;
-        this.airTime = other.airTime;
+        this.airtime = other.airtime;
         this.runtime = other.runtime;
         this.network = other.network;
         this.overview = other.overview;
@@ -247,7 +249,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         private String status;
         private Date airDate;
         private String airDay;
-        private String airTime;
+        private Airtime airtime;
         private String runtime;
         private String network;
         private String overview;
@@ -288,8 +290,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return this;
         }
 
-        public Builder withAirTime(String airTime) {
-            this.airTime = airTime;
+        public Builder withAirtime(Airtime airtime) {
+            this.airtime = airtime;
             return this;
         }
 
@@ -333,7 +335,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
             series.status = this.status;
             series.airDay = this.airDay;
-            series.airTime = this.airTime;
+            series.airtime = this.airtime;
             series.airDate = this.airDate;
             series.runtime = this.runtime;
             series.network = this.network;
@@ -344,10 +346,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
             if (this.lastUpdate == null) {
                 series.lastUpdate = System.currentTimeMillis();
-
             } else {
                 series.lastUpdate = this.lastUpdate;
-
             }
 
             return series.includingAll(this.episodes);
@@ -357,18 +357,5 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             this.lastUpdate = lastUpdate;
             return this;
         }
-    }
-
-    public Long lastUpdate() {
-        return this.lastUpdate;
-    }
-
-    public Series setLastUpdate(Long lastUpdate) {
-        this.lastUpdate = lastUpdate;
-        return this;
-    }
-
-    public boolean hasPoster() {
-        return this.posterFileName != null;
     }
 }

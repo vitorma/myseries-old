@@ -40,6 +40,7 @@ import mobi.myseries.domain.source.SeriesParser;
 import mobi.myseries.domain.source.StreamCreationFailedException;
 import mobi.myseries.domain.source.StreamFactory;
 import mobi.myseries.domain.source.TheTVDBConstants;
+import mobi.myseries.shared.Airtime;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
@@ -266,7 +267,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(baseSeries.name(), equalTo(BASE_SERIES_NAME));
         assertThat(baseSeries.status(), equalTo(BASE_SERIES_STATUS));
         assertThat(baseSeries.airDay(), equalTo(BASE_SERIES_AIR_DAY));
-        assertThat(baseSeries.airTime(), equalTo(BASE_SERIES_AIR_TIME));
+        assertThat(baseSeries.airtime(), equalTo(null));
         assertThat(baseSeries.airDate(), equalTo(null));
         assertThat(baseSeries.runtime(), equalTo(BASE_SERIES_RUNTIME));
         assertThat(baseSeries.network(), equalTo(BASE_SERIES_NETWORK));
@@ -286,7 +287,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(fullSeries.name(), equalTo(FULL_SERIES_NAME));
         assertThat(fullSeries.status(), equalTo(FULL_SERIES_STATUS));
         assertThat(fullSeries.airDay(), equalTo(FULL_SERIES_AIR_DAY));
-        assertThat(fullSeries.airTime(), equalTo(FULL_SERIES_AIR_TIME));
+        assertThat(fullSeries.airtime(), equalTo(Airtime.valueOf(FULL_SERIES_AIR_TIME)));
         assertThat(fullSeries.airDate(), equalTo(DatesAndTimes.parseDate(FULL_SERIES_AIR_DATE, DATE_FORMAT, null)));
         assertThat(fullSeries.runtime(), equalTo(FULL_SERIES_RUNTIME));
         assertThat(fullSeries.network(), equalTo(FULL_SERIES_NETWORK));

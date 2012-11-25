@@ -7,10 +7,13 @@ import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.Images;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 public class DetailsFragment extends SherlockFragment {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
+    private static final Context CONTEXT = App.context();
 
     private int seriesId;
 
@@ -67,7 +71,9 @@ public class DetailsFragment extends SherlockFragment {
         Series series = SERIES_PROVIDER.getSeries(this.seriesId);
 
         seriesStatus.setText(series.status().toString());
-        seriesAirDays.setText(series.airDay() + " " + series.airTime() + " (" + series.network() + ")");
+
+        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(CONTEXT), "");
+        seriesAirDays.setText(series.airDay() + " " + airtime + " (" + series.network() + ")");
         seriesRuntime.setText(String.format(this.getString(R.string.runtime_minutes_format), series.runtime()));
 
         seriesGenre.setText(series.genres());
