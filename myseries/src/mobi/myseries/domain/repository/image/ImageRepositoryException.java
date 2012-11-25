@@ -1,6 +1,6 @@
 package mobi.myseries.domain.repository.image;
 
-public class ImageRepositoryException extends RuntimeException {
+public class ImageRepositoryException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public ImageRepositoryException() {

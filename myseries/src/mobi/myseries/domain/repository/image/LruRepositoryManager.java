@@ -27,7 +27,6 @@ import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
-// TODO(Gabriel) Handle exceptions form the managed repository.
 public class LruRepositoryManager implements ImageRepository {
 
     private class ImagesQueue extends LruCache<Integer, Integer> {
@@ -39,7 +38,9 @@ public class LruRepositoryManager implements ImageRepository {
         @Override
         protected void entryRemoved(boolean evicted, Integer key, Integer oldValue, Integer newValue) {
             if (evicted) {
-                LruRepositoryManager.this.delete(key);
+                try {
+                    LruRepositoryManager.this.delete(key);
+                } catch (ImageRepositoryException e) {}
             }
         }
 
@@ -59,23 +60,26 @@ public class LruRepositoryManager implements ImageRepository {
         this.managedRepository = managedRepository;
         this.imagesQueue = new ImagesQueue(numberOfKeptImages);
 
-        this.loadPreviouslySavedImages();
+        try {
+            this.loadPreviouslySavedImages();
+        } catch (ImageRepositoryException e) {}  // The images cannot be loaded into the cache there is nothing we can
+                                                 // do about it. The cache has to be constructed anyway.
     }
 
-    private void loadPreviouslySavedImages() {
+    private void loadPreviouslySavedImages() throws ImageRepositoryException {
         for (int id : this.managedRepository.savedImages()) {
             this.imagesQueue.put(id);
         }
     }
 
     @Override
-    public void save(int id, Bitmap image) {
+    public void save(int id, Bitmap image) throws ImageRepositoryException {
         this.managedRepository.save(id, image);
         this.imagesQueue.put(id);
     }
 
     @Override
-    public Bitmap fetch(int id) {
+    public Bitmap fetch(int id) throws ImageRepositoryException {
         Bitmap fetchedImage = this.managedRepository.fetch(id);
 
         if (fetchedImage != null) {
@@ -86,13 +90,13 @@ public class LruRepositoryManager implements ImageRepository {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws ImageRepositoryException {
         this.managedRepository.delete(id);
         this.imagesQueue.remove(id);
     }
 
     @Override
-    public Collection<Integer> savedImages() {
+    public Collection<Integer> savedImages() throws ImageRepositoryException {
         return this.managedRepository.savedImages();
     }
 }

@@ -26,9 +26,14 @@ import mobi.myseries.domain.model.Series;
 import android.graphics.Bitmap;
 
 public interface ImageServiceRepository {
-    public void saveSeriesPoster(Series series, Bitmap file);
-    public void saveEpisodeImage(Episode episode, Bitmap file);
-    public void deleteAllImagesOf(Series series);
+
     public Bitmap getPosterOf(Series series);
+
     public Bitmap getImageOf(Episode episode);
+
+    public void saveSeriesPoster(Series series, Bitmap poster);
+
+    public void saveEpisodeImage(Episode episode, Bitmap image);
+
+    public void deleteAllImagesOf(Series series);
 }

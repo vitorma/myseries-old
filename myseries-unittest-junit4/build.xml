@@ -16,7 +16,8 @@
 
     <path id="classpath">
         <!-- test tools -->
-        <fileset dir="${lib.dir}" includes="junit4.jar"/>
+        <fileset dir="${lib.dir}" includes="junit*.jar"/>
+        <fileset dir="${lib.dir}" includes="hamcrest*.jar"/>
         <fileset dir="${lib.dir}" includes="mockito*.jar"/>
         <fileset dir="${lib.dir}" includes="powermock*/*.jar"/>
 
@@ -78,7 +79,7 @@
             <jvmarg value="-Demma.coverage.out.merge=true" />
 
             <batchtest todir="${reports.dir}">
-                <fileset dir="${src.dir}" includes="mobi/myseries/**/*.java"/>
+                <fileset dir="${src.dir}" includes="mobi/myseries/test/**/*.java"/>
             </batchtest>
         </junit>
 
