@@ -1,8 +1,10 @@
 package mobi.myseries.test.unit.domain.repository.image;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -13,8 +15,9 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import mobi.myseries.domain.repository.image.ImageRepositoryCache;
 import mobi.myseries.domain.repository.image.ImageRepository;
+import mobi.myseries.domain.repository.image.ImageRepositoryCache;
+import mobi.myseries.domain.repository.image.ImageRepositoryException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,11 +41,18 @@ public class ImageRepositoryCacheTest {
     private Bitmap DEFAULT_IMAGE2 = PowerMockito.mock(Bitmap.class);
 
     private ImageRepository cachedRepository;
+    private ImageRepository malfunctioningRepository;
     private ImageRepositoryCache cache;
 
     @Before
     public void setUp() {
         this.cachedRepository = mock(ImageRepository.class);
+
+        this.malfunctioningRepository = mock(ImageRepository.class);
+        doThrow(new ImageRepositoryException()).when(this.malfunctioningRepository).delete(anyInt());
+        doThrow(new ImageRepositoryException()).when(this.malfunctioningRepository).save(anyInt(), argThat(any(Bitmap.class)));
+        when(this.malfunctioningRepository.fetch(anyInt())).thenThrow(new ImageRepositoryException());
+        when(this.malfunctioningRepository.savedImages()).thenThrow(new ImageRepositoryException());
 
         this.cache = new ImageRepositoryCache(this.cachedRepository);
     }
@@ -52,6 +62,11 @@ public class ImageRepositoryCacheTest {
     @Test(expected=IllegalArgumentException.class)
     public void constructingItWithANullRepositoryCausesIllegalArgumentException() {
         new ImageRepositoryCache(null);
+    }
+
+    @Test
+    public void itMustBeConstructedEvenIfTheCachedRepositoryIsNotWorking() {
+        new ImageRepositoryCache(this.malfunctioningRepository);
     }
 
     /* Pre-fetching during construction */

@@ -15,8 +15,8 @@ import android.util.SparseArray;
 public class ImageRepositoryCache implements ImageRepository {
 
     private SparseArray<Bitmap> cachedImages;
-    private Set<Integer> cachedImagesIds;  // this is here because there so far (2012-11-21) there is no easy way to
-                                           // get the list of keys in a SparseArray.
+    private Set<Integer> cachedImagesIds;  // this is here because so far (2012-11-21) there is no easy way to
+                                           // get the collection of keys in a SparseArray.
 
     private ExecutorService threadExecutor;
     private ImageRepository cachedRepository;
@@ -29,7 +29,10 @@ public class ImageRepositoryCache implements ImageRepository {
         this.cachedImages = new SparseArray<Bitmap>();
         this.cachedImagesIds = new HashSet<Integer>();
 
-        this.loadImagesFromCachedRepository();
+        try {
+            this.loadImagesFromCachedRepository();
+        } catch (ImageRepositoryException e) {}  // The images cannot be loaded into the cache, but there is nothing we
+                                                 // can do about it. The cache has to be constructed anyway.
     }
 
     private void loadImagesFromCachedRepository() {
@@ -44,6 +47,7 @@ public class ImageRepositoryCache implements ImageRepository {
 
         this.cachedImages.put(id, image);
         this.cachedImagesIds.add(id);
+
         this.threadExecutor.execute(this.saveImageInTheCachedRepository(id, image));
     }
 
