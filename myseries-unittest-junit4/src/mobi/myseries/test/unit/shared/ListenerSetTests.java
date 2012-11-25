@@ -21,6 +21,15 @@
 
 package mobi.myseries.test.unit.shared;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.either;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
+
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -30,10 +39,6 @@ import mobi.myseries.shared.ListenerSet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.*;
-import static org.hamcrest.CoreMatchers.*;
 
 public class ListenerSetTests {
 
@@ -60,7 +65,7 @@ public class ListenerSetTests {
 
         listeners.register(listener);
 
-        assertThat(listeners, hasItem(listener));
+        assertThat(listeners, containsInAnyOrder(listener));
     }
 
     @Test
@@ -70,7 +75,7 @@ public class ListenerSetTests {
 
         listeners.deregister(listener);
 
-        assertThat(listeners, not(hasItem(listener)));
+        assertThat(listeners, not(containsInAnyOrder(listener)));
     }
 
     @Test
@@ -109,6 +114,7 @@ public class ListenerSetTests {
         assertThat(reference.get(), nullValue());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void equivalentButDifferentListenersArentTheSameInRegistering() {
         // Given
@@ -121,8 +127,8 @@ public class ListenerSetTests {
         assertThat(listeners.register(secondListener), is(true));
 
         // Then
-        assertThat(listeners, hasItem(sameInstance(firstListener)));
-        assertThat(listeners, hasItem(sameInstance(secondListener)));
+        assertThat(listeners, containsInAnyOrder(sameInstance(firstListener),
+                                                 sameInstance(secondListener)));
     }
 
     @Test
@@ -137,7 +143,7 @@ public class ListenerSetTests {
         assertThat(listeners.deregister(secondListener), is(false));
 
         // Then
-        assertThat(listeners, hasItem(sameInstance(firstListener)));
+        assertThat(listeners, contains(sameInstance(firstListener)));
     }
 
     @Test
