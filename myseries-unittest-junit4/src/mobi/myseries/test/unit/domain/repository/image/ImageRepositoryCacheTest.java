@@ -1,6 +1,8 @@
 package mobi.myseries.test.unit.domain.repository.image;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.any;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.argThat;
@@ -18,7 +20,9 @@ import java.util.List;
 import mobi.myseries.domain.repository.image.ImageRepository;
 import mobi.myseries.domain.repository.image.ImageRepositoryCache;
 import mobi.myseries.domain.repository.image.ImageRepositoryException;
+import mobi.myseries.testutil.CatchAllExceptionsRule;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,20 +45,30 @@ public class ImageRepositoryCacheTest {
     private Bitmap DEFAULT_IMAGE2 = PowerMockito.mock(Bitmap.class);
 
     private ImageRepository cachedRepository;
-    private ImageRepository malfunctioningRepository;
     private ImageRepositoryCache cache;
+
+    // This was supposed to be used with @Rule annotation, but PowerMock doesn't want to work this way.
+    // So, there is a call to its setUp() method in @Before and a call to its tearDown() method in @After.
+    public CatchAllExceptionsRule noUnhandledExceptions = new CatchAllExceptionsRule();
+
+    protected ImageRepository newRepositoryToBeCached() {
+        return mock(ImageRepository.class);
+    }
 
     @Before
     public void setUp() {
-        this.cachedRepository = mock(ImageRepository.class);
-
-        this.malfunctioningRepository = mock(ImageRepository.class);
-        doThrow(new ImageRepositoryException()).when(this.malfunctioningRepository).delete(anyInt());
-        doThrow(new ImageRepositoryException()).when(this.malfunctioningRepository).save(anyInt(), argThat(any(Bitmap.class)));
-        when(this.malfunctioningRepository.fetch(anyInt())).thenThrow(new ImageRepositoryException());
-        when(this.malfunctioningRepository.savedImages()).thenThrow(new ImageRepositoryException());
-
+        this.cachedRepository = this.newRepositoryToBeCached();
         this.cache = new ImageRepositoryCache(this.cachedRepository);
+
+        this.noUnhandledExceptions.setUp();
+    }
+
+    @After
+    public void tearDown() {
+        this.cachedRepository = null;
+        this.cache = null;
+
+        this.noUnhandledExceptions.after();
     }
 
     /* Construction */
@@ -66,7 +80,13 @@ public class ImageRepositoryCacheTest {
 
     @Test
     public void itMustBeConstructedEvenIfTheCachedRepositoryIsNotWorking() {
-        new ImageRepositoryCache(this.malfunctioningRepository);
+        ImageRepository malfunctioningRepository = mock(ImageRepository.class);
+        doThrow(new ImageRepositoryException()).when(malfunctioningRepository).delete(anyInt());
+        doThrow(new ImageRepositoryException()).when(malfunctioningRepository).save(anyInt(), argThat(any(Bitmap.class)));
+        when(malfunctioningRepository.fetch(anyInt())).thenThrow(new ImageRepositoryException());
+        when(malfunctioningRepository.savedImages()).thenThrow(new ImageRepositoryException());
+
+        new ImageRepositoryCache(malfunctioningRepository);
     }
 
     /* Pre-fetching during construction */

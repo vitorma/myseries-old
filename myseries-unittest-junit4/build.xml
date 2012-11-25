@@ -79,7 +79,7 @@
             <jvmarg value="-Demma.coverage.out.merge=true" />
 
             <batchtest todir="${reports.dir}">
-                <fileset dir="${src.dir}" includes="mobi/myseries/**/*.java"/>
+                <fileset dir="${src.dir}" includes="mobi/myseries/test/**/*.java"/>
             </batchtest>
         </junit>
 

@@ -11,7 +11,6 @@ import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
 
-// TODO(Gabriel) Handle exceptions form the cached repository.
 public class ImageRepositoryCache implements ImageRepository {
 
     private SparseArray<Bitmap> cachedImages;
@@ -56,7 +55,9 @@ public class ImageRepositoryCache implements ImageRepository {
 
             @Override
             public void run() {
-                ImageRepositoryCache.this.cachedRepository.save(id, image);
+                try {
+                    ImageRepositoryCache.this.cachedRepository.save(id, image);
+                } catch (ImageRepositoryException e) {}
             }
         };
     }
@@ -78,7 +79,9 @@ public class ImageRepositoryCache implements ImageRepository {
 
             @Override
             public void run() {
-                ImageRepositoryCache.this.cachedRepository.delete(id);
+                try {
+                    ImageRepositoryCache.this.cachedRepository.delete(id);
+                } catch (ImageRepositoryException e) {}
             }
         };
     }
