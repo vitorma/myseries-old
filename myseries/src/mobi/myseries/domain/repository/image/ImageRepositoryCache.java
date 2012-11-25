@@ -34,14 +34,14 @@ public class ImageRepositoryCache implements ImageRepository {
                                                  // can do about it. The cache has to be constructed anyway.
     }
 
-    private void loadImagesFromCachedRepository() {
+    private void loadImagesFromCachedRepository() throws ImageRepositoryException {
         for (int image : this.cachedRepository.savedImages()) {
             this.cachedImages.put(image, this.cachedRepository.fetch(image));
         }
     }
 
     @Override
-    public void save(int id, Bitmap image) {
+    public void save(int id, Bitmap image) throws ImageRepositoryException {
         Validate.isNonNull(image, "image");
 
         this.cachedImages.put(id, image);
@@ -63,12 +63,12 @@ public class ImageRepositoryCache implements ImageRepository {
     }
 
     @Override
-    public Bitmap fetch(int id) {
+    public Bitmap fetch(int id) throws ImageRepositoryException {
         return this.cachedImages.get(id);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws ImageRepositoryException {
         this.cachedImages.delete(id);
         this.cachedImagesIds.remove(id);
         this.threadExecutor.execute(this.deleteImageFromTheCachedRepository(id));
@@ -87,7 +87,7 @@ public class ImageRepositoryCache implements ImageRepository {
     }
 
     @Override
-    public Collection<Integer> savedImages() {
+    public Collection<Integer> savedImages() throws ImageRepositoryException {
         return Collections.unmodifiableCollection(this.cachedImagesIds);
     }
 }

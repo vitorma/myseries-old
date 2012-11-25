@@ -52,12 +52,12 @@ public class ImageRepositoryCacheTest {
     // So, there is a call to its setUp() method in @Before and a call to its tearDown() method in @After.
     public CatchAllExceptionsRule noUnhandledExceptions = new CatchAllExceptionsRule();
 
-    protected ImageRepository newRepositoryToBeCached() {
+    protected ImageRepository newRepositoryToBeCached() throws ImageRepositoryException {
         return mock(ImageRepository.class);
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws ImageRepositoryException {
         this.cachedRepository = this.newRepositoryToBeCached();
         this.cache = new ImageRepositoryCache(this.cachedRepository);
 
@@ -80,7 +80,7 @@ public class ImageRepositoryCacheTest {
     }
 
     @Test
-    public void itMustBeConstructedEvenIfTheCachedRepositoryIsNotWorking() {
+    public void itMustBeConstructedEvenIfTheCachedRepositoryIsNotWorking() throws ImageRepositoryException {
         ImageRepository malfunctioningRepository = mock(ImageRepository.class);
         doThrow(new ImageRepositoryException()).when(malfunctioningRepository).delete(anyInt());
         doThrow(new ImageRepositoryException()).when(malfunctioningRepository).save(anyInt(), argThat(any(Bitmap.class)));
@@ -93,7 +93,7 @@ public class ImageRepositoryCacheTest {
     /* Pre-fetching during construction */
 
     @Test
-    public void theAlreadySavedImagesMustBePrefetchedDuringConstruction() {
+    public void theAlreadySavedImagesMustBePrefetchedDuringConstruction() throws ImageRepositoryException {
         List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
 
         ImageRepository cachedRepository = mock(ImageRepository.class);
@@ -110,12 +110,13 @@ public class ImageRepositoryCacheTest {
     /* Fetching */
 
     @Test
-    public void fetchingANotSavedImageReturnsNull() {
+    public void fetchingANotSavedImageReturnsNull() throws ImageRepositoryException {
         assertThat(this.cache.fetch(NOT_USED_IMAGE_ID), nullValue());
     }
 
     @Test
-    public void fetchingAnAlreadySavedImageImmediatelyAfterConstructionDoesNotTouchTheCachedRepository() {
+    public void fetchingAnAlreadySavedImageImmediatelyAfterConstructionDoesNotTouchTheCachedRepository()
+            throws ImageRepositoryException {
         List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
         int fetchedImage = 1;
 
@@ -128,7 +129,8 @@ public class ImageRepositoryCacheTest {
     }
 
     @Test
-    public void fetchingAnAlreadySavedImageImmediatelyAfterConstructionReturnsTheSavedImage() {
+    public void fetchingAnAlreadySavedImageImmediatelyAfterConstructionReturnsTheSavedImage()
+            throws ImageRepositoryException {
         List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
         int fetchedImageId = 1;
 
@@ -142,7 +144,7 @@ public class ImageRepositoryCacheTest {
     }
 
     @Test
-    public void fetchingAJustSavedImageReturnsTheSavedImage() {
+    public void fetchingAJustSavedImageReturnsTheSavedImage() throws ImageRepositoryException {
         int imageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         Bitmap savedImage = DEFAULT_IMAGE;
 
@@ -154,7 +156,7 @@ public class ImageRepositoryCacheTest {
     }
 
     @Test
-    public void fetchingAJustReplacedImageReturnsTheLastSavedImage() {
+    public void fetchingAJustReplacedImageReturnsTheLastSavedImage() throws ImageRepositoryException {
         int imageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         Bitmap firstSavedImage = DEFAULT_IMAGE;
         Bitmap secondSavedImage = DEFAULT_IMAGE;
@@ -168,7 +170,7 @@ public class ImageRepositoryCacheTest {
     }
 
     @Test
-    public void fetchingAJustDeletedImageReturnsNull() {
+    public void fetchingAJustDeletedImageReturnsNull() throws ImageRepositoryException {
         int imageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         Bitmap savedImage = DEFAULT_IMAGE;
 
@@ -181,12 +183,12 @@ public class ImageRepositoryCacheTest {
     /* Saving */
 
     @Test(expected=IllegalArgumentException.class)
-    public void savingANullImageShouldThrowAnIllegalArgumentException() {
+    public void savingANullImageShouldThrowAnIllegalArgumentException() throws ImageRepositoryException {
         this.cache.save(ID_OF_THE_FIRST_SAVED_IMAGE, null);
     }
 
     @Test
-    public void savingAnImageForTheFirstTimeTouchesTheCachedRepository() {
+    public void savingAnImageForTheFirstTimeTouchesTheCachedRepository() throws ImageRepositoryException {
         int imageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         Bitmap savedImage = DEFAULT_IMAGE;
 
@@ -196,7 +198,7 @@ public class ImageRepositoryCacheTest {
     }
 
     @Test
-    public void savingAnImageForTheSecondTimeTouchesTheCachedRepositoryTwice() {
+    public void savingAnImageForTheSecondTimeTouchesTheCachedRepositoryTwice() throws ImageRepositoryException {
         int imageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         Bitmap firstlySavedImage = DEFAULT_IMAGE;
         Bitmap secondlySavedImage = DEFAULT_IMAGE2;
@@ -211,7 +213,7 @@ public class ImageRepositoryCacheTest {
     /* Deleting */
 
     @Test
-    public void deletingAnImageMustDeleteItFromTheCachedRepository() {
+    public void deletingAnImageMustDeleteItFromTheCachedRepository() throws ImageRepositoryException {
         int deletedImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
 
         this.cache.delete(deletedImageId);
@@ -222,7 +224,7 @@ public class ImageRepositoryCacheTest {
     /* Saved Images */
 
     @Test
-    public void queryingTheCollectionOfSavedImagesMustNotTouchTheCachedRepository() {
+    public void queryingTheCollectionOfSavedImagesMustNotTouchTheCachedRepository() throws ImageRepositoryException {
         reset(this.cachedRepository);  // to ignore prefetching
 
         this.cache.savedImages();

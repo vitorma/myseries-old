@@ -35,24 +35,24 @@ public class ExternalStorageImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void save(int id, Bitmap image) {
+    public void save(int id, Bitmap image) throws ImageRepositoryException {
         Validate.isNonNull(image, "image");
 
         this.saveImageFile(image, this.fileFor(id));
     }
 
     @Override
-    public Bitmap fetch(int id) {
+    public Bitmap fetch(int id) throws ImageRepositoryException {
         return BitmapFactory.decodeFile(this.filePathFor(id));
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws ImageRepositoryException {
         this.fileFor(id).delete();
     }
 
     @Override
-    public Collection<Integer> savedImages() {
+    public Collection<Integer> savedImages() throws ImageRepositoryException {
         String[] files = this.imageFolder().list(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
@@ -71,11 +71,11 @@ public class ExternalStorageImageDirectory implements ImageRepository {
         return fileNumbers;
     }
 
-    private File fileFor(int id) {
+    private File fileFor(int id) throws ImageRepositoryException {
         return new File(this.imageFolder(), this.fileNameFor(id));
     }
 
-    private String filePathFor(int id) {
+    private String filePathFor(int id) throws ImageRepositoryException {
         return this.imageFolder() + FILE_SEPARATOR + this.fileNameFor(id);
     }
 
@@ -83,11 +83,11 @@ public class ExternalStorageImageDirectory implements ImageRepository {
         return id + IMAGE_EXTENSION;
     }
 
-    private File imageFolder() {
+    private File imageFolder() throws ImageRepositoryException {
         return ensuredDirectory(this.rootDirectory().getPath() + FILE_SEPARATOR + this.directoryName);
     }
 
-    private File rootDirectory() {
+    private File rootDirectory() throws ImageRepositoryException {
         File externalFilesDirectory = this.context.getExternalFilesDir(null);
 
         if (externalFilesDirectory == null) {
@@ -97,7 +97,7 @@ public class ExternalStorageImageDirectory implements ImageRepository {
         return externalFilesDirectory;
     }
 
-    private static File ensuredDirectory(String path) {
+    private static File ensuredDirectory(String path) throws ImageRepositoryException {
         File directory = new File(path);
 
         try {
@@ -115,7 +115,7 @@ public class ExternalStorageImageDirectory implements ImageRepository {
         return directory;
     }
 
-    private void saveImageFile(Bitmap image, File file) {
+    private void saveImageFile(Bitmap image, File file) throws ImageRepositoryException {
         try {
             FileOutputStream os = new FileOutputStream(file);
             image.compress(IMAGE_FORMAT, COMPRESS_QUALITY, os);

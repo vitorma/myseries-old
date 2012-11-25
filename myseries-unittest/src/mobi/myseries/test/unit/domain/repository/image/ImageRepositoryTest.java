@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import mobi.myseries.domain.repository.image.ImageRepository;
+import mobi.myseries.domain.repository.image.ImageRepositoryException;
 import mobi.myseries.test.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,7 +38,7 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
         this.imageRepository = this.newRepository();
     }
 
-    public void tearDown() {
+    public void tearDown() throws ImageRepositoryException {
         for (int imageId : this.imageRepository.savedImages()) {
             this.imageRepository.delete(imageId);
         }
@@ -45,22 +46,22 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
         this.testImage = null;
     }
 
-    public void testDeletingANotSavedImageDoesNotCauseAnyError() {
+    public void testDeletingANotSavedImageDoesNotCauseAnyError() throws ImageRepositoryException {
         this.imageRepository.delete(NOT_SAVED_IMAGE_ID);
     }
 
-    public void testFetchingANotSavedImageReturnsNull() {
+    public void testFetchingANotSavedImageReturnsNull() throws ImageRepositoryException {
         assertThat(this.imageRepository.fetch(NOT_SAVED_IMAGE_ID), is(nullValue()));
     }
 
-    public void testSavingANullImageThrowsException() {
+    public void testSavingANullImageThrowsException() throws ImageRepositoryException {
         try {
             this.imageRepository.save(NOT_SAVED_IMAGE_ID, null);
             fail("Should have thrown an IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
     }
 
-    public void testFetchingASavedImageReturnsThatImage() {
+    public void testFetchingASavedImageReturnsThatImage() throws ImageRepositoryException {
         int imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
 
@@ -68,7 +69,7 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
         assertThat(this.imageRepository.fetch(imageId), not(nullValue()));
     }
 
-    public void testFetchingADeletedImageReturnsNull() {
+    public void testFetchingADeletedImageReturnsNull() throws ImageRepositoryException {
         int imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
         this.imageRepository.delete(imageId);
@@ -76,14 +77,14 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
         assertThat(this.imageRepository.fetch(imageId), is(nullValue()));
     }
 
-    public void testAJustSavedImageIsInTheCollectionOfSavedImages() {
+    public void testAJustSavedImageIsInTheCollectionOfSavedImages() throws ImageRepositoryException {
         int imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
 
         assertThat(this.imageRepository.savedImages(), containsInAnyOrder(imageId));
     }
 
-    public void testADeletedImageIsNotInTheCollectionOfSavedImagesAnymore() {
+    public void testADeletedImageIsNotInTheCollectionOfSavedImagesAnymore() throws ImageRepositoryException {
         int imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
         this.imageRepository.delete(imageId);
@@ -91,15 +92,15 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
         assertThat(this.imageRepository.savedImages(), not(containsInAnyOrder(imageId)));
     }
 
-    public void testTheCollectionOfSavedImagesIsNeverNull() {
+    public void testTheCollectionOfSavedImagesIsNeverNull() throws ImageRepositoryException {
         assertThat(this.imageRepository.savedImages(), not(nullValue()));
     }
 
-    public void testNotSavedImagesAreNotInTheCollectionOfSavedImages() {
+    public void testNotSavedImagesAreNotInTheCollectionOfSavedImages() throws ImageRepositoryException {
         assertThat(this.imageRepository.savedImages(), not(containsInAnyOrder(NOT_SAVED_IMAGE_ID)));
     }
 
-    public void testTheCollectionOfSavedImagesStartsEmpty() {
+    public void testTheCollectionOfSavedImagesStartsEmpty() throws ImageRepositoryException {
         assertTrue(this.imageRepository.savedImages().isEmpty());
     }
 }

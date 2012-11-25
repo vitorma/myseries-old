@@ -21,7 +21,7 @@ public class ImageRepositoryCacheWithMalfunctioningCachedRepositoryTest extends 
     // tests for an ImageRepositoryCache with a functioning cached repository. 
 
     @Override
-    protected ImageRepository newRepositoryToBeCached() {
+    protected ImageRepository newRepositoryToBeCached() throws ImageRepositoryException {
         ImageRepository malfunctioningRepository = mock(ImageRepository.class);
         doThrow(new ImageRepositoryException()).when(malfunctioningRepository).delete(anyInt());
         doThrow(new ImageRepositoryException()).when(malfunctioningRepository).save(anyInt(), argThat(any(Bitmap.class)));

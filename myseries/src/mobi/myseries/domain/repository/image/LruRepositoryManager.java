@@ -66,20 +66,20 @@ public class LruRepositoryManager implements ImageRepository {
                                                  // do about it. The cache has to be constructed anyway.
     }
 
-    private void loadPreviouslySavedImages() {
+    private void loadPreviouslySavedImages() throws ImageRepositoryException {
         for (int id : this.managedRepository.savedImages()) {
             this.imagesQueue.put(id);
         }
     }
 
     @Override
-    public void save(int id, Bitmap image) {
+    public void save(int id, Bitmap image) throws ImageRepositoryException {
         this.managedRepository.save(id, image);
         this.imagesQueue.put(id);
     }
 
     @Override
-    public Bitmap fetch(int id) {
+    public Bitmap fetch(int id) throws ImageRepositoryException {
         Bitmap fetchedImage = this.managedRepository.fetch(id);
 
         if (fetchedImage != null) {
@@ -90,13 +90,13 @@ public class LruRepositoryManager implements ImageRepository {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws ImageRepositoryException {
         this.managedRepository.delete(id);
         this.imagesQueue.remove(id);
     }
 
     @Override
-    public Collection<Integer> savedImages() {
+    public Collection<Integer> savedImages() throws ImageRepositoryException {
         return this.managedRepository.savedImages();
     }
 }

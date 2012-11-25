@@ -69,7 +69,7 @@ public class LruRepositoryManagerTest {
     private LruRepositoryManager malfunctioningManager;
 
     @Before
-    public void setUp() {
+    public void setUp() throws ImageRepositoryException {
         this.managedRepository = mock(ImageRepository.class);
         when(this.managedRepository.fetch(intThat(is(not(equalTo(NOT_USED_IMAGE_ID)))))).thenReturn(DEFAULT_IMAGE);
         when(this.managedRepository.fetch(NOT_USED_IMAGE_ID)).thenReturn(null);
@@ -108,7 +108,7 @@ public class LruRepositoryManagerTest {
     /* Saving */
 
     @Test
-    public void anImageSavedOnTheManagerShouldBeForwardedToTheManagedRepository() {
+    public void anImageSavedOnTheManagerShouldBeForwardedToTheManagedRepository() throws ImageRepositoryException {
         Bitmap image = DEFAULT_IMAGE;
         int imageId = NOT_USED_IMAGE_ID;
 
@@ -118,7 +118,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void anUpdateToASavedImageShouldBeForwardedToTheManagedRepository() {
+    public void anUpdateToASavedImageShouldBeForwardedToTheManagedRepository() throws ImageRepositoryException {
         Bitmap image = mock(Bitmap.class);
         int imageId = 0;
 
@@ -129,7 +129,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test(expected=ImageRepositoryException.class)
-    public void exceptionsMustNotBeCaughtByTheLruWhenSaving() {
+    public void exceptionsMustNotBeCaughtByTheLruWhenSaving() throws ImageRepositoryException {
         Bitmap image = DEFAULT_IMAGE;
         int imageId = NOT_USED_IMAGE_ID;
 
@@ -139,14 +139,14 @@ public class LruRepositoryManagerTest {
     /* Evicting */
 
     @Test
-    public void noImagesShouldBeEvictedBeforeSavingMoreThanTheNumberOfKeptImages() {
+    public void noImagesShouldBeEvictedBeforeSavingMoreThanTheNumberOfKeptImages() throws ImageRepositoryException {
         this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, ID_OF_THE_FIRST_SAVED_IMAGE);
 
         verify(this.managedRepository, never()).delete(anyInt());
     }
 
     @Test
-    public void noImagesShouldBeEvictedAfterUpdatingAnAlreadySavedImage() {
+    public void noImagesShouldBeEvictedAfterUpdatingAnAlreadySavedImage() throws ImageRepositoryException {
         int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, firstImageId);
 
@@ -157,7 +157,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void theOldestImageShouldBeEvictedAfterSavingANewImage() {
+    public void theOldestImageShouldBeEvictedAfterSavingANewImage() throws ImageRepositoryException {
         int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         int lastSavedId = this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, firstImageId);
 
@@ -167,7 +167,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void noImagesShouldBeEvictedAfterFailingSavingANewImage() {
+    public void noImagesShouldBeEvictedAfterFailingSavingANewImage() throws ImageRepositoryException {
         int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         int lastSavedId = this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, firstImageId);
 
@@ -183,7 +183,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void theLastFetchedImageIsTheLastOneToBeEvicted() {
+    public void theLastFetchedImageIsTheLastOneToBeEvicted() throws ImageRepositoryException {
         // Given
         int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         int numberOfSavedImages = DEFAULT_CACHE_SIZE;
@@ -204,7 +204,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void aFailedFetchMustNotChangeTheEvictingOrder() {
+    public void aFailedFetchMustNotChangeTheEvictingOrder() throws ImageRepositoryException {
         int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         int numberOfSavedImages = DEFAULT_CACHE_SIZE;
 
@@ -225,7 +225,8 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void itShouldIgnoreTheFailedDeletionOfEvictedImages() {  // this will avoid possible infinite loop problems.
+    public void itShouldIgnoreTheFailedDeletionOfEvictedImages() throws ImageRepositoryException {
+            // this will avoid possible infinite loop problems.
         int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         int numberOfSavedImages = DEFAULT_CACHE_SIZE;
 
@@ -240,7 +241,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void fetchingANonexistentImageShouldNotProduceAnyEviction() {
+    public void fetchingANonexistentImageShouldNotProduceAnyEviction() throws ImageRepositoryException {
         this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, ID_OF_THE_FIRST_SAVED_IMAGE);
 
         Bitmap fetchedImage = this.manager.fetch(NOT_USED_IMAGE_ID);
@@ -250,7 +251,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void theDeletedImagesAreNotEvictedLater() {
+    public void theDeletedImagesAreNotEvictedLater() throws ImageRepositoryException {
         // Given
         int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         int numberOfImagesToBeSaved = DEFAULT_CACHE_SIZE;
@@ -270,7 +271,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void theImagesWhoseDeleteFailedAreEvictedLater() {
+    public void theImagesWhoseDeleteFailedAreEvictedLater() throws ImageRepositoryException {
         // Given
         int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
         int numberOfImagesToBeSaved = DEFAULT_CACHE_SIZE;
@@ -299,20 +300,20 @@ public class LruRepositoryManagerTest {
     /* Fetch */
 
     @Test
-    public void theFetchedImagesAreFetchedFromTheManagedRepository() {
+    public void theFetchedImagesAreFetchedFromTheManagedRepository() throws ImageRepositoryException {
         this.manager.fetch(NOT_USED_IMAGE_ID);
         verify(this.managedRepository).fetch(NOT_USED_IMAGE_ID);
     }
 
     @Test(expected=ImageRepositoryException.class)
-    public void exceptionsMustNotBeCaughtByTheLruWhenFetching() {
+    public void exceptionsMustNotBeCaughtByTheLruWhenFetching() throws ImageRepositoryException {
         this.malfunctioningManager.fetch(NOT_USED_IMAGE_ID);
     }
 
     /* Delete */
 
     @Test
-    public void theDeletedImagesAreDeletedFromTheManagedRepository() {
+    public void theDeletedImagesAreDeletedFromTheManagedRepository() throws ImageRepositoryException {
         int imageId = NOT_USED_IMAGE_ID;
         this.manager.save(imageId, DEFAULT_IMAGE);
 
@@ -322,14 +323,14 @@ public class LruRepositoryManagerTest {
     }
 
     @Test(expected=ImageRepositoryException.class)
-    public void exceptionsMustNotBeCaughtByTheLruWhenDeleting() {
+    public void exceptionsMustNotBeCaughtByTheLruWhenDeleting() throws ImageRepositoryException {
         this.malfunctioningManager.delete(NOT_USED_IMAGE_ID);
     }
 
     /* Saved Images */
 
     @Test
-    public void theCollectionOfSavedImagesIsFetchedNoMatterTheLRUPolicy() {
+    public void theCollectionOfSavedImagesIsFetchedNoMatterTheLRUPolicy() throws ImageRepositoryException {
         reset(this.managedRepository);  // dismiss initial loading of entries into the LRU
 
         Collection<Integer> returnedCollection = new ArrayList<Integer>();
@@ -340,7 +341,8 @@ public class LruRepositoryManagerTest {
     }
 
     @Test(expected=ImageRepositoryException.class)
-    public void exceptionsMustNotBeCaughtByTheLruWhenGettingTheCollectionOfSavedImages() {
+    public void exceptionsMustNotBeCaughtByTheLruWhenGettingTheCollectionOfSavedImages()
+            throws ImageRepositoryException {
         // this is not in setUp method because it causes other tests to break when trying to change the behaviour of
         // this.malfunctioningRepository.savedImages().
         when(this.malfunctioningRepository.savedImages()).thenThrow(new ImageRepositoryException());
@@ -351,7 +353,8 @@ public class LruRepositoryManagerTest {
     /* Previously saved images */
 
     @Test
-    public void spareImagesMustBeEvictedAfterInstantiatingAnLRUWithLessKeptImagesThanTheExistingAmount() {
+    public void spareImagesMustBeEvictedAfterInstantiatingAnLRUWithLessKeptImagesThanTheExistingAmount()
+            throws ImageRepositoryException {
         int numberOfPreviouslySavedImages = 8;
         Collection<Integer> previouslySavedImages = this.collectionOfIds(numberOfPreviouslySavedImages);
 
@@ -365,7 +368,8 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void theConstructionOfAnLRUOnAMalfunctioningRepositoryWithSpareImagesMustNotBreak() {
+    public void theConstructionOfAnLRUOnAMalfunctioningRepositoryWithSpareImagesMustNotBreak()
+            throws ImageRepositoryException {
         int numberOfPreviouslySavedImages = 8;
         Collection<Integer> previouslySavedImages = this.collectionOfIds(numberOfPreviouslySavedImages);
 
@@ -379,7 +383,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void aPreviouslySavedImageMustBeEvictedAfterSavingANewImage() {
+    public void aPreviouslySavedImageMustBeEvictedAfterSavingANewImage() throws ImageRepositoryException {
         int numberOfPreviouslySavedImages = 8;
         Collection<Integer> previouslySavedImages = this.collectionOfIds(numberOfPreviouslySavedImages);
 
@@ -393,7 +397,7 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
-    public void savingOverAnAlreadySavedImageIdMustNotEvictAnyImages() {
+    public void savingOverAnAlreadySavedImageIdMustNotEvictAnyImages() throws ImageRepositoryException {
         int numberOfPreviouslySavedImages = 8;
         Collection<Integer> previouslySavedImages = this.collectionOfIds(numberOfPreviouslySavedImages);
 
@@ -408,7 +412,8 @@ public class LruRepositoryManagerTest {
 
     /* Test tools */
 
-    private int fillWithTheDefaultImage(ImageRepository repository, int numberOfImages, int firstImageId) {
+    private int fillWithTheDefaultImage(ImageRepository repository, int numberOfImages, int firstImageId)
+            throws ImageRepositoryException {
         assert numberOfImages > 0;
         Bitmap imageToBeSaved = DEFAULT_IMAGE;
 
