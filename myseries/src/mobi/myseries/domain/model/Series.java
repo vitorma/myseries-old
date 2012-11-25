@@ -175,8 +175,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     public void mergeWith(Series other) {
         Validate.isNonNull(other, "other");
         Validate.isTrue(other.id == this.id, "other should have the same id as this");
-//        Validate.isTrue(other.name.equals(this.name), "other should have the same name as this");
 
+        this.name = other.name;
         this.status = other.status;
         this.airDate = other.airDate;
         this.airDay = other.airDay;
@@ -187,6 +187,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         this.genres = other.genres;
         this.actors = other.actors;
         this.posterFileName = other.posterFileName;
+
         this.seasons.mergeWith(other.seasons);
     }
 
