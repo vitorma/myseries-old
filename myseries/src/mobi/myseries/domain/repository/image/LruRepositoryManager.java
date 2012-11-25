@@ -27,7 +27,6 @@ import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
-// TODO(Gabriel) Handle exceptions form the managed repository.
 public class LruRepositoryManager implements ImageRepository {
 
     private class ImagesQueue extends LruCache<Integer, Integer> {
@@ -39,7 +38,9 @@ public class LruRepositoryManager implements ImageRepository {
         @Override
         protected void entryRemoved(boolean evicted, Integer key, Integer oldValue, Integer newValue) {
             if (evicted) {
-                LruRepositoryManager.this.delete(key);
+                try {
+                    LruRepositoryManager.this.delete(key);
+                } catch (ImageRepositoryException e) {}
             }
         }
 

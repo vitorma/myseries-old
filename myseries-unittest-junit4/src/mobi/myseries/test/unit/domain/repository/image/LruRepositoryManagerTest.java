@@ -26,6 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.intThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -62,8 +63,10 @@ public class LruRepositoryManagerTest {
                                                                      // issue when the tests are run from ant.
 
     private ImageRepository managedRepository;
-    private ImageRepository malfunctioningRepository;
     private LruRepositoryManager manager;
+
+    private ImageRepository malfunctioningRepository;
+    private LruRepositoryManager malfunctioningManager;
 
     @Before
     public void setUp() {
@@ -75,12 +78,10 @@ public class LruRepositoryManagerTest {
         doThrow(new ImageRepositoryException()).when(this.malfunctioningRepository).delete(anyInt());
         doThrow(new ImageRepositoryException()).when(this.malfunctioningRepository).save(anyInt(), argThat(any(Bitmap.class)));
         when(this.malfunctioningRepository.fetch(anyInt())).thenThrow(new ImageRepositoryException());
-        when(this.malfunctioningRepository.savedImages()).thenThrow(new ImageRepositoryException());
 
         this.manager = new LruRepositoryManager(this.managedRepository, DEFAULT_CACHE_SIZE);
+        this.malfunctioningManager = new LruRepositoryManager(this.malfunctioningRepository, DEFAULT_CACHE_SIZE);
     }
-
-    // TODO(Gabriel) Test exception handling.
 
     /* Construction */
 
@@ -127,6 +128,14 @@ public class LruRepositoryManagerTest {
         verify(this.managedRepository, times(2)).save(imageId, image);
     }
 
+    @Test(expected=ImageRepositoryException.class)
+    public void exceptionsMustNotBeCaughtByTheLruWhenSaving() {
+        Bitmap image = DEFAULT_IMAGE;
+        int imageId = NOT_USED_IMAGE_ID;
+
+        this.malfunctioningManager.save(imageId, image);
+    }
+
     /* Evicting */
 
     @Test
@@ -158,6 +167,22 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
+    public void noImagesShouldBeEvictedAfterFailingSavingANewImage() {
+        int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
+        int lastSavedId = this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, firstImageId);
+
+        int idOfImageToBeSaved = lastSavedId + 1;
+        Bitmap imageToBeSaved = DEFAULT_IMAGE;
+
+        doThrow(new ImageRepositoryException()).when(this.managedRepository).save(idOfImageToBeSaved, imageToBeSaved);
+        try {
+            this.manager.save(idOfImageToBeSaved, imageToBeSaved);
+        } catch (ImageRepositoryException e) {}
+
+        verify(this.managedRepository, never()).delete(firstImageId);
+    }
+
+    @Test
     public void theLastFetchedImageIsTheLastOneToBeEvicted() {
         // Given
         int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
@@ -179,6 +204,42 @@ public class LruRepositoryManagerTest {
     }
 
     @Test
+    public void aFailedFetchMustNotChangeTheEvictingOrder() {
+        int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
+        int numberOfSavedImages = DEFAULT_CACHE_SIZE;
+
+        int lastSavedId = this.fillWithTheDefaultImage(this.manager, numberOfSavedImages, firstImageId);
+
+        int fetchedImageId = firstImageId;
+        when(this.managedRepository.fetch(fetchedImageId)).thenThrow(new ImageRepositoryException());
+
+        try {
+            this.manager.fetch(fetchedImageId);
+        } catch (ImageRepositoryException e) {}
+
+        // now the image whose fetch failed should be the next one to be evicted
+        verify(this.managedRepository, never()).delete(fetchedImageId);
+
+        this.manager.save(lastSavedId + 1, DEFAULT_IMAGE);
+        verify(this.managedRepository).delete(fetchedImageId);
+    }
+
+    @Test
+    public void itShouldIgnoreTheFailedDeletionOfEvictedImages() {  // this will avoid possible infinite loop problems.
+        int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
+        int numberOfSavedImages = DEFAULT_CACHE_SIZE;
+
+        int lastSavedId = this.fillWithTheDefaultImage(this.manager, numberOfSavedImages, firstImageId);
+
+        int nextImageToBeEvicted = firstImageId;
+        doThrow(new ImageRepositoryException()).when(this.managedRepository).delete(nextImageToBeEvicted);
+
+        this.manager.save(lastSavedId + 1, DEFAULT_IMAGE);
+
+        // no exceptions should be thrown here
+    }
+
+    @Test
     public void fetchingANonexistentImageShouldNotProduceAnyEviction() {
         this.fillWithTheDefaultImage(this.manager, DEFAULT_CACHE_SIZE, ID_OF_THE_FIRST_SAVED_IMAGE);
 
@@ -187,7 +248,7 @@ public class LruRepositoryManagerTest {
         assertThat(fetchedImage, is(nullValue()));  // there is no image for that id
         verify(this.managedRepository, never()).delete(anyInt());
     }
-   
+
     @Test
     public void theDeletedImagesAreNotEvictedLater() {
         // Given
@@ -198,7 +259,7 @@ public class LruRepositoryManagerTest {
 
         this.manager.delete(firstImageId);
         reset(this.managedRepository);  // to forget that the file has been deleted once
-        
+
         // When
         // this will make the manager evict all the already added images
         this.fillWithTheDefaultImage(this.manager, numberOfImagesToBeSaved, lastSavedId + 1);
@@ -208,6 +269,33 @@ public class LruRepositoryManagerTest {
         verify(this.managedRepository, never()).delete(firstImageId);
     }
 
+    @Test
+    public void theImagesWhoseDeleteFailedAreEvictedLater() {
+        // Given
+        int firstImageId = ID_OF_THE_FIRST_SAVED_IMAGE;
+        int numberOfImagesToBeSaved = DEFAULT_CACHE_SIZE;
+
+        int lastSavedId = this.fillWithTheDefaultImage(this.manager, numberOfImagesToBeSaved, firstImageId);
+
+        int idToBeDeleted = firstImageId;
+        doThrow(new ImageRepositoryException()).when(this.managedRepository).delete(idToBeDeleted);
+
+        try {
+            this.manager.delete(idToBeDeleted);
+        } catch (ImageRepositoryException e) {}
+
+        reset(this.managedRepository);  // to forget that the file has been deleted once
+        doNothing().when(this.managedRepository).delete(idToBeDeleted);  // it won't throw the exception anymore
+
+        // When
+        // this will make the manager evict all the saved images
+        this.fillWithTheDefaultImage(this.manager, numberOfImagesToBeSaved, lastSavedId + 1);
+
+        // Then
+        // the one whose delete failed must be deleted again.
+        verify(this.managedRepository).delete(firstImageId);
+    }
+
     /* Fetch */
 
     @Test
@@ -215,7 +303,12 @@ public class LruRepositoryManagerTest {
         this.manager.fetch(NOT_USED_IMAGE_ID);
         verify(this.managedRepository).fetch(NOT_USED_IMAGE_ID);
     }
-    
+
+    @Test(expected=ImageRepositoryException.class)
+    public void exceptionsMustNotBeCaughtByTheLruWhenFetching() {
+        this.malfunctioningManager.fetch(NOT_USED_IMAGE_ID);
+    }
+
     /* Delete */
 
     @Test
@@ -226,6 +319,11 @@ public class LruRepositoryManagerTest {
         this.manager.delete(imageId);
         
         verify(this.managedRepository).delete(imageId);
+    }
+
+    @Test(expected=ImageRepositoryException.class)
+    public void exceptionsMustNotBeCaughtByTheLruWhenDeleting() {
+        this.malfunctioningManager.delete(NOT_USED_IMAGE_ID);
     }
 
     /* Saved Images */
@@ -239,6 +337,15 @@ public class LruRepositoryManagerTest {
 
         assertThat(this.manager.savedImages(), sameInstance(returnedCollection));
         verify(this.managedRepository).savedImages();
+    }
+
+    @Test(expected=ImageRepositoryException.class)
+    public void exceptionsMustNotBeCaughtByTheLruWhenGettingTheCollectionOfSavedImages() {
+        // this is not in setUp method because it causes other tests to break when trying to change the behaviour of
+        // this.malfunctioningRepository.savedImages().
+        when(this.malfunctioningRepository.savedImages()).thenThrow(new ImageRepositoryException());
+
+        this.malfunctioningManager.savedImages();
     }
 
     /* Previously saved images */
@@ -255,6 +362,20 @@ public class LruRepositoryManagerTest {
         new LruRepositoryManager(managedRepository, numberOfImagesInLRU);
 
         verify(managedRepository, times(numberOfPreviouslySavedImages - numberOfImagesInLRU)).delete(anyInt());
+    }
+
+    @Test
+    public void theConstructionOfAnLRUOnAMalfunctioningRepositoryWithSpareImagesMustNotBreak() {
+        int numberOfPreviouslySavedImages = 8;
+        Collection<Integer> previouslySavedImages = this.collectionOfIds(numberOfPreviouslySavedImages);
+
+        ImageRepository managedRepository = this.malfunctioningRepository;
+        when(managedRepository.savedImages()).thenReturn(previouslySavedImages);
+
+        doThrow(new ImageRepositoryException()).when(managedRepository).delete(anyInt());
+
+        int numberOfImagesInLRU = numberOfPreviouslySavedImages - 3;  // less than numberOfPreviouslySavedImages
+        new LruRepositoryManager(managedRepository, numberOfImagesInLRU);
     }
 
     @Test
