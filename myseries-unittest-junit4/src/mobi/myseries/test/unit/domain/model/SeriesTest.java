@@ -38,6 +38,7 @@ public class SeriesTest {
 
         series.mergeWith(seriesUpdate);
 
+        assertEquals(NAME, series.name());
         assertEquals(ACTORS, series.actors());
         assertEquals(AIR_DATE, series.airDate());
         assertEquals(AIR_DAY, series.airDay());
@@ -96,7 +97,7 @@ public class SeriesTest {
 
     private static Series incompleteSeries() {
         return Series.builder()
-        .withName(NAME)
+        .withName("Seri")
         .withId(ID)
         .build();
     }
