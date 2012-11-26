@@ -159,7 +159,12 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     }
 
     public Series includingAll(Collection<Episode> episodes) {
-        this.seasons.includingAll(episodes);
+        Validate.isNonNull(episodes, "episodes");
+
+        for (Episode e : episodes) {
+            this.seasons.including(e.withAirtime(this.airtime));
+        }
+
         return this;
     }
 

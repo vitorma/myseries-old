@@ -7,8 +7,10 @@
 
     <TextView
         android:id="@+id/date"
-        style="@style/TextView.Section"
-        android:padding="@dimen/gap_small"
+        style="@style/TextView.Section.Left"
+        android:paddingTop = "@dimen/gap_small"
+        android:paddingBottom = "@dimen/gap_small"
+        android:paddingLeft="@dimen/gap_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -16,8 +18,10 @@
 
     <TextView
         android:id="@+id/relativeDate"
-        style="@style/TextView.Section.Small"
-        android:padding="@dimen/gap_small"
+        style="@style/TextView.Section.Right"
+        android:paddingTop = "@dimen/gap_small"
+        android:paddingBottom = "@dimen/gap_small"
+        android:paddingRight="@dimen/gap_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -26,7 +30,7 @@
     <View
         android:background="@color/blue"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1.5dp"
         android:layout_below="@id/date"/>
 
 </RelativeLayout>

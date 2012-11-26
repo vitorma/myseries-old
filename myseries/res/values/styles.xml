@@ -34,6 +34,10 @@
         <item name="android:scrollHorizontally">true</item>
     </style>
 
+    <style name="TextView.Data.Large.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="TextView.Label">
         <item name="android:textColor">@color/gray</item>
     </style>
@@ -55,14 +59,16 @@
     </style>
 
     <style name="TextView.Section">
-        <item name="android:textColor">@color/blue</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
     </style>
 
-    <style name="TextView.Section.Small">
+    <style name="TextView.Section.Left">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.Section.Right">
         <item name="android:textColor">@color/gray</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
     </style>
 
     <style name="TextView.Translucent">

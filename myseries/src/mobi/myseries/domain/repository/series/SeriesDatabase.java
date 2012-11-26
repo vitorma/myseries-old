@@ -62,6 +62,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     private static final String EPISODE_SEASON = "season";
     private static final String EPISODE_NAME = "name";
     private static final String EPISODE_AIRDATE = "airdate";
+    private static final String EPISODE_AIRTIME = "airtime";
     private static final String EPISODE_OVERVIEW = "overview";
     private static final String EPISODE_DIRECTORS = "directors";
     private static final String EPISODE_WRITERS = "writers";
@@ -92,7 +93,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             EPISODE_NUMBER +     " INTEGER NOT NULL, " +
             EPISODE_SEASON +     " INTEGER NOT NULL, " +
             EPISODE_NAME +       " TEXT, " +
-            EPISODE_AIRDATE +    " INTEGER, " +
+            EPISODE_AIRDATE +    " BIGINT, " +
+            EPISODE_AIRTIME +    " BIGINT, " +
             EPISODE_OVERVIEW +   " TEXT, " +
             EPISODE_DIRECTORS +  " TEXT, " +
             EPISODE_WRITERS +    " TEXT, " +
@@ -348,6 +350,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put(EPISODE_SEASON, e.seasonNumber());
         cv.put(EPISODE_NAME, e.name());
         cv.put(EPISODE_AIRDATE, Numbers.parseLong(e.airDate(), null));
+        cv.put(EPISODE_AIRTIME, Numbers.parseLong(e.airtime(), null));
         cv.put(EPISODE_OVERVIEW, e.overview());
         cv.put(EPISODE_DIRECTORS, e.directors());
         cv.put(EPISODE_WRITERS, e.writers());
@@ -379,6 +382,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     private Episode episodeByCurrentPositionOf(Cursor c) {
         int airDateColumnIndex = c.getColumnIndex(EPISODE_AIRDATE);
         Long airDate = c.isNull(airDateColumnIndex) ? null : c.getLong(airDateColumnIndex);
+        int airtimeCollumnIndex = c.getColumnIndex(EPISODE_AIRTIME);
+        Long airtime = c.isNull(airtimeCollumnIndex) ? null : c.getLong(airtimeCollumnIndex);
 
         return Episode.builder()
             .withId(c.getInt(c.getColumnIndex(EPISODE_ID)))
@@ -387,6 +392,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withSeasonNumber(c.getInt(c.getColumnIndex(EPISODE_SEASON)))
             .withName(c.getString(c.getColumnIndex(EPISODE_NAME)))
             .withAirDate(DatesAndTimes.parseDate(airDate, null))
+            .withAirtime(DatesAndTimes.parseAirtime(airtime, null))
             .withOverview(c.getString(c.getColumnIndex(EPISODE_OVERVIEW)))
             .withDirectors(c.getString(c.getColumnIndex(EPISODE_DIRECTORS)))
             .withWriters(c.getString(c.getColumnIndex(EPISODE_WRITERS)))

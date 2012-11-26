@@ -100,6 +100,11 @@ public class DatesAndTimes {
                Objects.nullSafe(date2, MAX_DATE));
     }
 
+    public static int compareByNullLast(Airtime airtime1, Airtime airtime2) {
+        return Objects.nullSafe(airtime1, Airtime.MAX_VALUE).compareTo(
+               Objects.nullSafe(airtime2, Airtime.MAX_VALUE));
+    }
+
     public static Date today() {
         Calendar c = Calendar.getInstance();
 

@@ -93,7 +93,7 @@ public class ScheduleFragment extends SherlockListFragment implements ScheduleAd
     }
 
     private void setUpPadding() {
-        int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.gap_large);
+        int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.gap_medium);
         this.getListView().setPadding(padding, 0, padding, 0);
     }
 

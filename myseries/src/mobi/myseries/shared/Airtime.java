@@ -21,6 +21,9 @@ public class Airtime implements Comparable<Airtime> {
         }
     }
 
+    public static final Airtime MAX_VALUE = Airtime.valueOf("23:59");
+    public static final Airtime MIN_VALUE = Airtime.valueOf("00:00");
+
     private Date time;
 
     private Airtime(Date time) {

@@ -22,7 +22,6 @@
 package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -42,6 +41,7 @@ import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Publisher;
+import mobi.myseries.shared.Strings;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -121,7 +121,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         this.updateCellStates(position);
 
         if (this.isCellSectioned(position)) {
-            DateFormat dateformat = new SimpleDateFormat(CONTEXT.getString(R.string.date_format_with_weekday));
+            DateFormat dateformat = DateFormat.getDateInstance(DateFormat.MEDIUM);
             String unavailable = CONTEXT.getString(R.string.unavailable_date);
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateformat, unavailable);
 
@@ -141,7 +141,13 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         viewHolder.seriesNameTextView.setText(series.name());
 
         String numberFormat = CONTEXT.getString(R.string.episode_number_format);
-        viewHolder.episodeNumberTextView.setText(String.format(numberFormat, episode.seasonNumber(), episode.number()));
+        String episodeNumber = String.format(numberFormat, episode.seasonNumber(), episode.number());
+        viewHolder.episodeNumberTextView.setText(episodeNumber);
+
+        DateFormat airtimeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        String airtime = DatesAndTimes.toString(episode.airtime(), airtimeFormat, "");
+        String network = Strings.isBlank(series.network()) ? "" : " (" + series.network() + ")";
+        viewHolder.episodeAirtimeAndNetwork.setText(airtime + network);
 
         viewHolder.seenMarkCheckBox.setChecked(episode.wasSeen());
         viewHolder.seenMarkCheckBox.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
@@ -259,6 +265,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         private TextView relativeTimeTextView;
         private TextView seriesNameTextView;
         private TextView episodeNumberTextView;
+        private TextView episodeAirtimeAndNetwork;
         private SeenMark seenMarkCheckBox;
 
         private ViewHolder(View view) {
@@ -267,6 +274,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             this.relativeTimeTextView = (TextView) view.findViewById(R.id.relativeDate);
             this.seriesNameTextView = (TextView) view.findViewById(R.id.episodeSeriesTextView);
             this.episodeNumberTextView = (TextView) view.findViewById(R.id.episodeSeasonEpisodeTextView);
+            this.episodeAirtimeAndNetwork = (TextView) view.findViewById(R.id.episodeAirtimeAndNetwork);
             this.seenMarkCheckBox = (SeenMark) view.findViewById(R.id.episodeIsViewedCheckBox);
             this.seriesPosterImageView = (ImageView) view.findViewById(R.id.seriesPoster);
 

@@ -52,6 +52,12 @@ public class EpisodeComparator {
                     return byAirdate;
                 }
 
+                int byAirtime = compareByAirtime(episode1, episode2);
+
+                if (byAirtime != 0) {
+                    return byAirtime;
+                }
+
                 int bySeriesId = compareBySeriesId(episode1, episode2);
 
                 if (bySeriesId != 0) {
@@ -99,5 +105,9 @@ public class EpisodeComparator {
 
     private static int compareByAirdate(Episode episode1, Episode episode2) {
         return DatesAndTimes.compareByNullLast(episode1.airDate(), episode2.airDate());
+    }
+
+    private static int compareByAirtime(Episode episode1, Episode episode2) {
+        return DatesAndTimes.compareByNullLast(episode1.airtime(), episode2.airtime());
     }
 }

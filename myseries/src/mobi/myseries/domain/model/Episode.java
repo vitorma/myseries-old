@@ -24,6 +24,7 @@ package mobi.myseries.domain.model;
 import java.util.Date;
 
 import mobi.myseries.domain.constant.Invalid;
+import mobi.myseries.shared.Airtime;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
@@ -35,12 +36,12 @@ public class Episode implements Publisher<EpisodeListener> {
     private int seasonNumber;
     private String name;
     private Date airDate;
+    private Airtime airtime;
     private String overview;
     private String directors;
     private String writers;
     private String guestStars;
     private String imageFileName;
-
     private boolean seenMark;
     private ListenerSet<EpisodeListener> listeners;
     private boolean beingMarkedBySeason;
@@ -93,6 +94,15 @@ public class Episode implements Publisher<EpisodeListener> {
 
     public Date airDate() {
         return this.airDate;
+    }
+
+    public Airtime airtime() {
+        return this.airtime;
+    }
+
+    Episode withAirtime(Airtime airtime) {
+        this.airtime = airtime;
+        return this;
     }
 
     public String overview() {
@@ -150,6 +160,7 @@ public class Episode implements Publisher<EpisodeListener> {
         this.number = other.number;
         this.name = other.name;
         this.airDate = other.airDate;
+        this.airtime = other.airtime;
         this.overview = other.overview;
         this.directors = other.directors;
         this.writers = other.writers;
@@ -210,6 +221,7 @@ public class Episode implements Publisher<EpisodeListener> {
         private int seasonNumber;
         private String name;
         private Date airDate;
+        private Airtime airtime;
         private String overview;
         private String directors;
         private String writers;
@@ -254,6 +266,11 @@ public class Episode implements Publisher<EpisodeListener> {
             return this;
         }
 
+        public Builder withAirtime(Airtime airtime) {
+            this.airtime = airtime;
+            return this;
+        }
+
         public Builder withOverview(String overview) {
             this.overview = overview;
             return this;
@@ -289,6 +306,7 @@ public class Episode implements Publisher<EpisodeListener> {
 
             episode.name = this.name;
             episode.airDate = this.airDate;
+            episode.airtime = this.airtime;
             episode.overview = this.overview;
             episode.directors = this.directors;
             episode.writers = this.writers;

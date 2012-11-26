@@ -15,7 +15,7 @@
         android:id="@+id/episode"
         android:background="@drawable/list_selector_holo_light"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/section">
 
         <ImageView
@@ -23,23 +23,23 @@
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
             android:padding="@dimen/gap_medium"
-            android:layout_width="38dp"
-            android:layout_height="50dp"
+            android:layout_width="56dp"
+            android:layout_height="74dp"
             android:layout_alignParentLeft="true"/>
 
         <mobi.myseries.gui.shared.SeenMark
             android:id="@+id/episodeIsViewedCheckBox"
             android:gravity="center"
             android:layout_width="48dp"
-            android:layout_height="50dp"
+            android:layout_height="74dp"
             android:layout_alignParentRight="true"/>
 
         <TextView
             android:id="@+id/episodeSeriesTextView"
-            style="@style/TextView.Data.Medium"
+            style="@style/TextView.Data.Large"
             android:paddingTop="@dimen/gap_medium"
             android:layout_width="match_parent"
-            android:layout_height="26dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="@id/seriesPoster"
             android:layout_toRightOf="@id/seriesPoster"
             android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
@@ -47,10 +47,19 @@
         <TextView
             android:id="@+id/episodeSeasonEpisodeTextView"
             style="@style/TextView.Label.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/episodeSeriesTextView"
+            android:layout_toRightOf="@id/seriesPoster"
+            android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
+
+        <TextView
+            android:id="@+id/episodeAirtimeAndNetwork"
+            style="@style/TextView.Label.Small"
             android:paddingBottom="@dimen/gap_medium"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_below="@id/episodeSeriesTextView"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/episodeSeasonEpisodeTextView"
             android:layout_toRightOf="@id/seriesPoster"
             android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
 
