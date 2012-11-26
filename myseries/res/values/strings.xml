@@ -124,6 +124,8 @@
     <string name="update_on_wifi">Only if a wifi connection is available</string>
     <string name="update_on_wifi_or_data_plan">When any connection is available</string>
     <string name="do_not_update">Do not update (not recommended)</string>
+    <string name="backup_restore">Backup/Restore</string>
+    
 
 
     <!-- Do not translate -->
