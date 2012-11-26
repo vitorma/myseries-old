@@ -100,7 +100,7 @@ public class Episode implements Publisher<EpisodeListener> {
         return this.airtime;
     }
 
-    Episode withAirtime(Airtime airtime) {
+    public Episode withAirtime(Airtime airtime) {
         this.airtime = airtime;
         return this;
     }

@@ -2,7 +2,6 @@ package mobi.myseries.test.unit.domain.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Airtime;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class SeriesTest {
     private static final int ID = 1;
@@ -38,95 +38,107 @@ public class SeriesTest {
 
         series.mergeWith(seriesUpdate);
 
-        assertEquals(NAME, series.name());
-        assertEquals(ACTORS, series.actors());
-        assertEquals(AIR_DATE, series.airDate());
-        assertEquals(AIR_DAY, series.airDay());
-        assertEquals(AIR_TIME, series.airtime());
-        assertEquals(GENRES, series.genres());
-        assertEquals(ID, series.id());
-        assertEquals(NETWORK, series.network());
-        assertEquals(NAME, series.name());
-        assertEquals(OVERVIEW, series.overview());
-        assertEquals(POSTER_FILENAME, series.posterFileName());
-        assertEquals(RUNTIME, series.runtime());
-        assertEquals(STATUS, series.status());
+        assertEquals(seriesUpdate.name(), series.name());
+        assertEquals(seriesUpdate.actors(), series.actors());
+        assertEquals(seriesUpdate.airDate(), series.airDate());
+        assertEquals(seriesUpdate.airDay(), series.airDay());
+        assertEquals(seriesUpdate.airtime(), series.airtime());
+        assertEquals(seriesUpdate.genres(), series.genres());
+        assertEquals(seriesUpdate.id(), series.id());
+        assertEquals(seriesUpdate.network(), series.network());
+        assertEquals(seriesUpdate.name(), series.name());
+        assertEquals(seriesUpdate.overview(), series.overview());
+        assertEquals(seriesUpdate.posterFileName(), series.posterFileName());
+        assertEquals(seriesUpdate.runtime(), series.runtime());
+        assertEquals(seriesUpdate.status(), series.status());
     }
 
     @Test
     public void mergeShouldAddEpisodes() {
-        Series series = incompleteSeries();
-        Series seriesUpdate = completeSeries();
+        Series outdatedSeries = incompleteSeries();
+        Series updatedSeries = completeSeries();
 
-        List<Episode> episodes = episodesList(2, 10);
-        series = series.includingAll(episodes);
+        List<Episode> outdatedEpisodes = episodesList(2, 10, outdatedSeries);
+        List<Episode> updatedEpisodes = episodesList(3, 10, updatedSeries);
 
-        for (int i = 11; i <= 20; ++i) {
-            episodes.add(episodeMock(i, 2, ID));
-        }
+        outdatedSeries = outdatedSeries.includingAll(outdatedEpisodes);
+        updatedSeries = updatedSeries.includingAll(updatedEpisodes);
 
-        seriesUpdate = seriesUpdate.includingAll(episodes);
+        assertEquals(20, outdatedSeries.episodes().size());
+        assertEquals(20, outdatedSeries.numberOfEpisodes());
+        assertEquals(30, updatedSeries.episodes().size());
+        assertEquals(30, updatedSeries.numberOfEpisodes());
 
-        assertEquals(20, series.episodes().size());
-        assertEquals(20, series.numberOfEpisodes());
-        assertEquals(30, seriesUpdate.episodes().size());
-        assertEquals(30, seriesUpdate.numberOfEpisodes());
+        outdatedSeries.mergeWith(updatedSeries);
 
-        series.mergeWith(seriesUpdate);
+        assertEquals(30, outdatedSeries.episodes().size());
+        assertEquals(30, outdatedSeries.numberOfEpisodes());
+        assertEquals(30, updatedSeries.episodes().size());
+        assertEquals(30, updatedSeries.numberOfEpisodes());
 
-        assertEquals(30, series.episodes().size());
-        assertEquals(30, series.numberOfEpisodes());
-
-        for (Episode e : episodes) {
-            assertTrue(series.episodes().contains(e));
-            assertTrue(seriesUpdate.episodes().contains(e));
+        for (Episode e : updatedEpisodes) {
+            assertTrue(includes(outdatedSeries, e));
+            assertTrue(includes(updatedSeries, e));
         }
     }
 
     /* Auxiliary */
 
-    private static Episode episodeMock(int number, int seasonNumber, int seriesId) {
-        Episode episode = mock(Episode.class);
-        doReturn(100 * seasonNumber + number).when(episode).id();
-        doReturn(number).when(episode).number();
-        doReturn(seriesId).when(episode).seriesId();
-        doReturn(seasonNumber).when(episode).seasonNumber();
-
-        return episode;
-    }
-
     private static Series incompleteSeries() {
         return Series.builder()
-        .withName("Seri")
-        .withId(ID)
-        .build();
+                     .withName("Seri")
+                     .withId(ID)
+                     .build();
     }
 
     private static Series completeSeries() {
         return Series.builder()
-        .withName(NAME)
-        .withId(ID)
-        .withActors(ACTORS)
-        .withAirDate(AIR_DATE)
-        .withAirDay(AIR_DAY)
-        .withAirtime(AIR_TIME)
-        .withGenres(GENRES)
-        .withNetwork(NETWORK)
-        .withOverview(OVERVIEW)
-        .withPosterFileName(POSTER_FILENAME)
-        .withRuntime(RUNTIME)
-        .withStatus(STATUS)
-        .build();
+                     .withName(NAME)
+                     .withId(ID)
+                     .withActors(ACTORS)
+                     .withAirDate(AIR_DATE)
+                     .withAirDay(AIR_DAY)
+                     .withAirtime(AIR_TIME)
+                     .withGenres(GENRES)
+                     .withNetwork(NETWORK)
+                     .withOverview(OVERVIEW)
+                     .withPosterFileName(POSTER_FILENAME)
+                     .withRuntime(RUNTIME)
+                     .withStatus(STATUS)
+                     .build();
     }
 
-    private static List<Episode> episodesList(int numberOfSeasons, int episodesPerSeason) {
+    private static boolean includes(Series series, Episode episode) {
+        for (Episode e : series.episodes()) {
+            if (e.id() == episode.id()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static List<Episode> episodesList(int numberOfSeasons, int episodesPerSeason, Series series) {
         List<Episode> episodes = new ArrayList<Episode>();
+
         for (int season = 1; season <= numberOfSeasons; ++season) {
             for (int episode = 1; episode <= episodesPerSeason; ++episode) {
-                episodes.add(episodeMock(episode, season, ID));
+                episodes.add(episodeMock(episode, season, series));
             }
         }
 
         return episodes;
+    }
+
+    private static Episode episodeMock(int number, int seasonNumber, Series series) {
+        Episode episode = mock(Episode.class);
+
+        Mockito.when(episode.id()).thenReturn(100 * seasonNumber + number);
+        Mockito.when(episode.seriesId()).thenReturn(series.id());
+        Mockito.when(episode.number()).thenReturn(number);
+        Mockito.when(episode.seasonNumber()).thenReturn(seasonNumber);
+        Mockito.when(episode.withAirtime(series.airtime())).thenReturn(episode);
+
+        return episode;
     }
 }
