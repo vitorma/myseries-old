@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/relativeDate"
-        style="@style/TextView.Section.Right"
+        style="@style/TextView.Small.LightGray"
         android:paddingTop = "@dimen/gap_small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,6 +26,7 @@
     <View
         android:background="@color/blue"
         android:layout_width="match_parent"
+        android:layout_marginTop="1dp"
         android:layout_height="1.5dp"
         android:layout_below="@id/date"/>
 

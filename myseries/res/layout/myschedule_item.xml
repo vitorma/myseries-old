@@ -48,7 +48,7 @@
 
         <TextView
             android:id="@+id/episodeSeasonEpisodeTextView"
-            style="@style/TextView.Label.Small.Bold.Ellipsized"
+            style="@style/TextView.Small.MediumGray.Ellipsized"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeSeriesTextView"
@@ -57,7 +57,7 @@
 
         <TextView
             android:id="@+id/episodeAirtimeAndNetwork"
-            style="@style/TextView.Label.Small"
+            style="@style/TextView.Small.LightGray"
             android:paddingBottom="@dimen/gap_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
