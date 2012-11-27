@@ -6,8 +6,8 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
-import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
+import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import android.util.Log;
 
 /*
@@ -26,39 +26,48 @@ class Updater {
         this.imageService = imageService;
     }
 
-    void updateDataOf(Series series) throws ParsingFailedException,
-            ConnectionFailedException, SeriesNotFoundException,
-            ConnectionTimeoutException {
-
+    UpdateResult updateDataOf(final Series series) {
         Log.d(getClass().getName(),
                 "Updating series: " + series.name());
 
-        Log.d(getClass().getName(),
-                "Last updated: " + series.lastUpdate());
+        Log.d(getClass().getName(), "Last updated: " + series.lastUpdate());
 
         Series downloadedSeries;
 
         Log.d(getClass().getName(), "Updating " + series.name());
 
-        downloadedSeries = seriesSource.fetchSeries(series.id(),
-                localizationProvider.language());
+        Exception error = null;
 
-        series.seasons().turnNotificationsOff();
+        try {
+            downloadedSeries = seriesSource.fetchSeries(series.id(),
+                    localizationProvider.language());
+            series.seasons().turnNotificationsOff();
+            series.mergeWith(downloadedSeries);
+            series.seasons().turnNotificationsOn();
 
-        series.mergeWith(downloadedSeries);
+            Log.d(getClass().getName(), "Data of " + series.name() + " updated.");
 
-        series.seasons().turnNotificationsOn();
+        } catch (Exception e) {
+            e.printStackTrace();
+            error = e;
+        }
 
-        Log.d(getClass().getName(), "Data of " + series.name()
-                + " updated.");
+        return new UpdateResult().withError(error);
+
     }
 
     void updatePosterOf(final Series series) {
         Log.d(getClass().getName(), "Downloading poster of " + series.name());
         imageService.downloadAndSavePosterOf(series);
 
-        Log.d(getClass().getName(), "Poster of " + series.name()
-                + " updated. (" + series.posterFileName() + ") ");
-
+        Log.d(getClass().getName(),
+                "Poster of " + series.name() + " updated. (" + series.posterFileName() + ") ");
     }
+
+    boolean fetchUpdateMetadataSince(long dateInMiliseconds)
+            throws ConnectionFailedException, ConnectionTimeoutException,
+            ParsingFailedException, UpdateMetadataUnavailableException {
+        return seriesSource.fetchUpdateMetadataSince(dateInMiliseconds);
+    }
+
 }
