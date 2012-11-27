@@ -29,8 +29,7 @@
     <style name="TextView.Data.Large">
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:lines">1</item>
-        <item name="android:scrollHorizontally">true</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="TextView.Data.Large.Bold">
@@ -51,8 +50,7 @@
 
     <style name="TextView.Label.Small.Bold.Ellipsized">
         <item name="android:ellipsize">end</item>
-        <item name="android:lines">1</item>
-        <item name="android:scrollHorizontally">true</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="TextView.Label.Micro">
