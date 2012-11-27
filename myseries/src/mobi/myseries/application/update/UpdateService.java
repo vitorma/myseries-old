@@ -9,7 +9,6 @@ import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
-import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.CollectionFilter;
@@ -141,82 +140,85 @@ public class UpdateService implements Publisher<UpdateListener> {
             return;
         }
 
-        try {
+        boolean updateAvailable = false;
 
-            boolean updateAvailable = false;
+        Collection<Series> seriesWithDataToUpdate = followedSeries();
+        Collection<Series> seriesWithPosterToUpdate = followedSeries();
 
-            Collection<Series> seriesWithDataToUpdate = followedSeries();
-            Collection<Series> seriesWithPosterToUpdate = followedSeries();
+        long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
 
-            long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
-            if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.downloadEverythingInterval()) {
+        if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.downloadEverythingInterval()) {
 
-                updateAvailable = fetchUpdateMetadataSince(lastSuccessfulUpdate);
+            try {
+                updateAvailable = updater.fetchUpdateMetadataSince(lastSuccessfulUpdate);
+                Log.d(getClass().getName(), "Update Metadata Available? " + updateAvailable);
 
-                CollectionFilter<Series> withOutdatedData =
-                        new CollectionFilter<Series>(
-                                new SeriesIdInCollectionSpecification(
-                                        seriesSource.seriesUpdateMetadata()));
+            } catch (ConnectionFailedException e) {
+                notifyListenersOfUpdateFailure(e);
+                e.printStackTrace();
+                return;
 
-                CollectionFilter<Series> withOutdatedPoster =
-                        new CollectionFilter<Series>(
-                                new SeriesIdInCollectionSpecification(seriesSource
-                                        .posterUpdateMetadata().keySet()));
+            } catch (ConnectionTimeoutException e) {
+                notifyListenersOfUpdateFailure(e);
+                e.printStackTrace();
+                return;
 
-                seriesWithDataToUpdate = withOutdatedData.in(followedSeries());
-                seriesWithPosterToUpdate = withOutdatedPoster.in(followedSeries());
+            } catch (ParsingFailedException e) {
+                notifyListenersOfUpdateFailure(e);
+                e.printStackTrace();
+                return;
 
-                if (!forceUpdateRecent) {
-                    CollectionFilter<Series> notRecentlyUpdated =
-                            new CollectionFilter<Series>(new RecentlyUpdatedSpecification());
+            } catch (UpdateMetadataUnavailableException e) {
+                notifyListenersOfUpdateFailure(e);
+                e.printStackTrace();
+                return;
+            }
 
-                    seriesWithDataToUpdate = notRecentlyUpdated.in(seriesWithDataToUpdate);
-                    seriesWithPosterToUpdate = notRecentlyUpdated.in(seriesWithPosterToUpdate);
-                }
+            CollectionFilter<Series> withOutdatedData =
+                    new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
+                            seriesSource.seriesUpdateMetadata()));
+
+            CollectionFilter<Series> withOutdatedPoster =
+                    new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
+                            seriesSource.posterUpdateMetadata().keySet()));
+
+            seriesWithDataToUpdate = withOutdatedData.in(followedSeries());
+            seriesWithPosterToUpdate = withOutdatedPoster.in(followedSeries());
+
+            if (!forceUpdateRecent) {
+                CollectionFilter<Series> notRecentlyUpdated =
+                        new CollectionFilter<Series>(new RecentlyUpdatedSpecification());
+
+                seriesWithDataToUpdate = notRecentlyUpdated.in(seriesWithDataToUpdate);
+                seriesWithPosterToUpdate = notRecentlyUpdated.in(seriesWithPosterToUpdate);
             }
 
             if (!updateAvailable
                     || ((seriesWithDataToUpdate.isEmpty()) && (seriesWithPosterToUpdate.isEmpty()))) {
                 notifyListenersOfUpdateNotNecessary();
             }
+        }
 
-            for (final Series s : followedSeries()) {
+        for (final Series s : followedSeries()) {
 
-                if (seriesWithDataToUpdate.contains(s)) {
-                    UpdateService.this.updater.updateDataOf(s);
+            if (seriesWithDataToUpdate.contains(s)) {
+                UpdateResult result = UpdateService.this.updater.updateDataOf(s);
+
+                if (!result.success()) {
+                    notifyListenersOfUpdateFailure(result.error());
+                    return;
                 }
-
-                if (posterAvailableButNotDownloaded(s) || seriesWithPosterToUpdate.contains(s)) {
-                    UpdateService.this.updater.updatePosterOf(s);
-                }
-
-                s.setLastUpdate(System.currentTimeMillis());
-                seriesRepository.update(s);
             }
 
-            notifyListenersOfUpdateSuccess();
+            if (posterAvailableButNotDownloaded(s) || seriesWithPosterToUpdate.contains(s)) {
+                UpdateService.this.updater.updatePosterOf(s);
+            }
 
-        } catch (ConnectionFailedException e) {
-            notifyListenersOfUpdateFailure(e);
-            e.printStackTrace();
-
-        } catch (ConnectionTimeoutException e) {
-            notifyListenersOfUpdateFailure(e);
-            e.printStackTrace();
-
-        } catch (ParsingFailedException e) {
-            notifyListenersOfUpdateFailure(e);
-            e.printStackTrace();
-
-        } catch (UpdateMetadataUnavailableException e) {
-            notifyListenersOfUpdateFailure(e);
-            e.printStackTrace();
-
-        } catch (SeriesNotFoundException e) {
-            notifyListenersOfUpdateFailure(e);
-            e.printStackTrace();
-
+            s.setLastUpdate(System.currentTimeMillis());
+            seriesRepository.update(s);
         }
+
+        notifyListenersOfUpdateSuccess();
     }
 
     private boolean posterAvailableButNotDownloaded(Series series) {
@@ -225,12 +227,6 @@ public class UpdateService implements Publisher<UpdateListener> {
 
     private static long timeSince(long timestamp) {
         return System.currentTimeMillis() - timestamp;
-    }
-
-    private boolean fetchUpdateMetadataSince(long dateInMiliseconds)
-            throws ConnectionFailedException, ConnectionTimeoutException,
-            ParsingFailedException, UpdateMetadataUnavailableException {
-        return seriesSource.fetchUpdateMetadataSince(dateInMiliseconds);
     }
 
     private Collection<Series> followedSeries() {
