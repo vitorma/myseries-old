@@ -121,7 +121,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         this.updateCellStates(position);
 
         if (this.isCellSectioned(position)) {
-            DateFormat dateformat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            DateFormat dateformat = android.text.format.DateFormat.getDateFormat(CONTEXT);
             String unavailable = CONTEXT.getString(R.string.unavailable_date);
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateformat, unavailable);
 
@@ -144,7 +144,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         String episodeNumber = String.format(numberFormat, episode.seasonNumber(), episode.number());
         viewHolder.episodeNumberTextView.setText(episodeNumber + " " + episode.name());
 
-        DateFormat airtimeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(CONTEXT);
         String airtime = DatesAndTimes.toString(episode.airtime(), airtimeFormat, "");
         String network = Strings.isBlank(series.network()) ? "" : " (" + series.network() + ")";
         viewHolder.episodeAirtimeAndNetwork.setText(airtime + network);
