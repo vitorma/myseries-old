@@ -55,6 +55,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
+
+    /* TODO(Reul): Use MessageService instead of UpdateService*/
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
     private static final UpdateService UPDATE_SERIES_SERVICE = App.updateSeriesService();
 

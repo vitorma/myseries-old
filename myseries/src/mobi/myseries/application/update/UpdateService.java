@@ -1,16 +1,8 @@
 package mobi.myseries.application.update;
 
-/*
- * TODO (Reul): verify if connection is of the right type
- * TODO (Reul): add a 30s timeout to each series update
- * TODO (Reul): create one AsyncTask per update task
- */
-
 import java.util.Collection;
 
-import mobi.myseries.application.App;
 import mobi.myseries.application.LocalizationProvider;
-import mobi.myseries.application.SettingsProvider;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
@@ -24,23 +16,18 @@ import mobi.myseries.shared.CollectionFilter;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Handler;
 import android.util.Log;
 
 public class UpdateService implements Publisher<UpdateListener> {
-    private static final long AUTOMATIC_UPDATE_INTERVAL = 12L * 60L * 60L * 1000L;
-    private static final long ONE_MONTH = 30L * 24L * 60L * 60L * 1000L;
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
-    private LocalizationProvider localizationProvider;
     private ImageService imageService;
-    private Update update;
     private final ListenerSet<UpdateListener> updateListeners;
     private boolean updateRunning = false;
     private UpdateListener selfListener;
+    private Updater updater;
+    private Handler handler;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
             LocalizationProvider localizationProvider, ImageService imageService) {
@@ -52,12 +39,11 @@ public class UpdateService implements Publisher<UpdateListener> {
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
-        this.localizationProvider = localizationProvider;
         this.imageService = imageService;
-        update = new Update();
-        updateListeners = new ListenerSet<UpdateListener>();
+        this.updateListeners = new ListenerSet<UpdateListener>();
+        this.updater = new Updater(seriesSource, localizationProvider, imageService);
 
-        selfListener = new UpdateListener() {
+        this.selfListener = new UpdateListener() {
 
             @Override
             public void onUpdateSuccess() {
@@ -89,221 +75,156 @@ public class UpdateService implements Publisher<UpdateListener> {
                 "UpdateService could not be registered as listener to update ");
     }
 
-    public void updateData(Handler handler) {
-        if (updateRunning) {
-            Log.d(getClass().getName(), "Update already running");
-            return;
-        }
+    public UpdateService withHandler(Handler handler) {
+        this.handler = handler;
 
-        update.run(handler);
-    }
-
-    public void updateDataIfNeeded(Handler handler) {
-        if (updateRunning) {
-            Log.d(getClass().getName(), "Update already running");
-            return;
-        }
-        if (!shouldUpdate()) {
-            Log.d(getClass().getName(), "Update will not run.");
-            return;
-        }
-
-        long lastSuccessfulUpdate = earliestUpdatedDateOf(seriesRepository.getAll());
-
-        if (timeSince(lastSuccessfulUpdate) < AUTOMATIC_UPDATE_INTERVAL) {
-            Log.d(getClass().getName(), "Update ran recently. Not running now.");
-
-        } else {
-            update.run(handler);
-            Log.d(getClass().getName(), "Launching update.");
-        }
-    }
-
-    private void notifyListenersOfUpdateStart(Handler handler) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onUpdateStart();
-                }
-            }
-        });
-    }
-
-    private void notifyListenersOfUpdateNotNecessary(Handler handler) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onUpdateNotNecessary();
-                }
-            }
-        });
-    }
-
-    private void notifyListenersOfUpdateSuccess(Handler handler) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onUpdateSuccess();
-                }
-            }
-        });
-    }
-
-    private void notifyListenersOfUpdateFailure(final Exception cause, Handler handler) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onUpdateFailure(cause);
-                }
-            }
-        });
+        return this;
     }
 
     public boolean isUpdating() {
         return updateRunning;
     }
 
-    private class Update {
-        public void run(Handler handler) {
-            run(handler, true);
+    public void updateData() {
+        if (updateRunning) {
+            Log.d(getClass().getName(), "Update already running");
+            return;
         }
 
-        public void run(Handler handler, boolean forceUpdateRecent) {
-            notifyListenersOfUpdateStart(handler);
+        update(true);
+    }
 
-            if (!networkAvailable()) {
-                notifyListenersOfUpdateFailure(new NetworkUnavailableException(), handler);
-                return;
-            }
-
-            try {
-
-                boolean updateAvailable = false;
-
-                Collection<Series> seriesWithDataToUpdate = followedSeries();
-                Collection<Series> seriesWithPosterToUpdate = followedSeries();
-
-                long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
-                if (timeSince(lastSuccessfulUpdate) < ONE_MONTH) {
-
-                    updateAvailable =
-                            fetchUpdateMetadataSince(lastSuccessfulUpdate);
-
-                    CollectionFilter<Series> withOutdatedData =
-                            new CollectionFilter<Series>(
-                                    new SeriesIdInCollectionSpecification(
-                                            seriesSource.seriesUpdateMetadata()));
-
-                    CollectionFilter<Series> withOutdatedPoster =
-                            new CollectionFilter<Series>(
-                                    new SeriesIdInCollectionSpecification(seriesSource
-                                            .posterUpdateMetadata().keySet()));
-
-                    seriesWithDataToUpdate = withOutdatedData.in(followedSeries());
-                    seriesWithPosterToUpdate =
-                            withOutdatedPoster.in(followedSeries());
-
-                    if (!forceUpdateRecent) {
-                        CollectionFilter<Series> notRecentlyUpdated =
-                                new CollectionFilter<Series>(new RecentlyUpdatedSpecification());
-
-                        seriesWithDataToUpdate = notRecentlyUpdated.in(seriesWithDataToUpdate);
-                        seriesWithPosterToUpdate = notRecentlyUpdated.in(seriesWithPosterToUpdate);
-                    }
-                }
-
-                if (!updateAvailable ||
-                        ((seriesWithDataToUpdate.size() == 0)
-                        && (seriesWithPosterToUpdate.size() == 0))) {
-                    notifyListenersOfUpdateNotNecessary(handler);
-                }
-
-                for (final Series s : followedSeries()) {
-
-                    if (seriesWithDataToUpdate.contains(s)) {
-                        updateDataOf(s);
-                        Log.d(getClass().getName(), "Data of " + s.name()
-                                + " updated.");
-                    }
-
-                    if ((s.hasPoster() && (imageService.getPosterOf(s) == null))
-                            || seriesWithPosterToUpdate.contains(s)) {
-                        updatePosterOf(s, handler);
-                        Log.d(getClass().getName(), "Poster of " + s.name()
-                                + " updated. (" + s.posterFileName() + ") ");
-                    }
-
-                    s.setLastUpdate(System.currentTimeMillis());
-                    seriesRepository.update(s);
-                }
-
-                notifyListenersOfUpdateSuccess(handler);
-
-            } catch (ConnectionFailedException e) {
-                notifyListenersOfUpdateFailure(e, handler);
-                e.printStackTrace();
-
-            } catch (ConnectionTimeoutException e) {
-                notifyListenersOfUpdateFailure(e, handler);
-                e.printStackTrace();
-
-            } catch (ParsingFailedException e) {
-                notifyListenersOfUpdateFailure(e, handler);
-                e.printStackTrace();
-
-            } catch (UpdateMetadataUnavailableException e) {
-                notifyListenersOfUpdateFailure(e, handler);
-                e.printStackTrace();
-
-            } catch (SeriesNotFoundException e) {
-                notifyListenersOfUpdateFailure(e, handler);
-                e.printStackTrace();
-
-            }
+    public void updateDataIfNeeded() {
+        if (updateRunning) {
+            Log.d(getClass().getName(), "Update already running");
+            return;
         }
+        if (!UpdatePolicy.shouldUpdateNow()) {
+            Log.d(getClass().getName(), "Update will not run.");
+            return;
+        }
+
+        long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
+
+        if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.automaticUpdateInterval()) {
+            Log.d(getClass().getName(), "Update ran recently. Not running now.");
+
+        } else {
+            update();
+            Log.d(getClass().getName(), "Launching update.");
+        }
+    }
+
+    // interface Publisher<UpdateListener>
+
+    @Override
+    public boolean register(UpdateListener listener) {
+        return updateListeners.register(listener);
+    }
+
+    @Override
+    public boolean deregister(UpdateListener listener) {
+        return updateListeners.deregister(listener);
+    }
+
+    // Auxiliary
+
+    private void update() {
+        this.update(false);
+    }
+
+    private void update(boolean forceUpdateRecent) {
+        notifyListenersOfUpdateStart();
+
+        if (!UpdatePolicy.networkAvailable()) {
+            notifyListenersOfUpdateFailure(new NetworkUnavailableException());
+            return;
+        }
+
+        try {
+
+            boolean updateAvailable = false;
+
+            Collection<Series> seriesWithDataToUpdate = followedSeries();
+            Collection<Series> seriesWithPosterToUpdate = followedSeries();
+
+            long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
+            if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.downloadEverythingInterval()) {
+
+                updateAvailable = fetchUpdateMetadataSince(lastSuccessfulUpdate);
+
+                CollectionFilter<Series> withOutdatedData =
+                        new CollectionFilter<Series>(
+                                new SeriesIdInCollectionSpecification(
+                                        seriesSource.seriesUpdateMetadata()));
+
+                CollectionFilter<Series> withOutdatedPoster =
+                        new CollectionFilter<Series>(
+                                new SeriesIdInCollectionSpecification(seriesSource
+                                        .posterUpdateMetadata().keySet()));
+
+                seriesWithDataToUpdate = withOutdatedData.in(followedSeries());
+                seriesWithPosterToUpdate = withOutdatedPoster.in(followedSeries());
+
+                if (!forceUpdateRecent) {
+                    CollectionFilter<Series> notRecentlyUpdated =
+                            new CollectionFilter<Series>(new RecentlyUpdatedSpecification());
+
+                    seriesWithDataToUpdate = notRecentlyUpdated.in(seriesWithDataToUpdate);
+                    seriesWithPosterToUpdate = notRecentlyUpdated.in(seriesWithPosterToUpdate);
+                }
+            }
+
+            if (!updateAvailable
+                    || ((seriesWithDataToUpdate.isEmpty()) && (seriesWithPosterToUpdate.isEmpty()))) {
+                notifyListenersOfUpdateNotNecessary();
+            }
+
+            for (final Series s : followedSeries()) {
+
+                if (seriesWithDataToUpdate.contains(s)) {
+                    UpdateService.this.updater.updateDataOf(s);
+                }
+
+                if (posterAvailableButNotDownloaded(s) || seriesWithPosterToUpdate.contains(s)) {
+                    UpdateService.this.updater.updatePosterOf(s);
+                }
+
+                s.setLastUpdate(System.currentTimeMillis());
+                seriesRepository.update(s);
+            }
+
+            notifyListenersOfUpdateSuccess();
+
+        } catch (ConnectionFailedException e) {
+            notifyListenersOfUpdateFailure(e);
+            e.printStackTrace();
+
+        } catch (ConnectionTimeoutException e) {
+            notifyListenersOfUpdateFailure(e);
+            e.printStackTrace();
+
+        } catch (ParsingFailedException e) {
+            notifyListenersOfUpdateFailure(e);
+            e.printStackTrace();
+
+        } catch (UpdateMetadataUnavailableException e) {
+            notifyListenersOfUpdateFailure(e);
+            e.printStackTrace();
+
+        } catch (SeriesNotFoundException e) {
+            notifyListenersOfUpdateFailure(e);
+            e.printStackTrace();
+
+        }
+    }
+
+    private boolean posterAvailableButNotDownloaded(Series series) {
+        return series.hasPoster() && (imageService.getPosterOf(series) == null);
     }
 
     private static long timeSince(long timestamp) {
         return System.currentTimeMillis() - timestamp;
-    }
-
-    private void updateDataOf(Series series) throws ParsingFailedException,
-            ConnectionFailedException, SeriesNotFoundException,
-            ConnectionTimeoutException {
-
-        Log.d(getClass().getName(),
-                "Updating series: " + series.name());
-
-        Log.d(getClass().getName(),
-                "Last updated: " + series.lastUpdate());
-
-        Series downloadedSeries;
-
-        Log.d(getClass().getName(), "Updating " + series.name());
-
-        downloadedSeries = seriesSource.fetchSeries(series.id(),
-                localizationProvider.language());
-
-        series.seasons().turnNotificationsOff();
-
-        series.mergeWith(downloadedSeries);
-
-        series.seasons().turnNotificationsOn();
-    }
-
-    private void updatePosterOf(final Series series, Handler handler) {
-        Log.d(getClass().getName(), "Downloading poster of " + series.name());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                series.setPosterFilename(seriesSource.posterUpdateMetadata().get(series.id()));
-                imageService.downloadAndSavePosterOf(series);
-            }
-        });
     }
 
     private boolean fetchUpdateMetadataSince(long dateInMiliseconds)
@@ -328,50 +249,47 @@ public class UpdateService implements Publisher<UpdateListener> {
         return d;
     }
 
-    private boolean shouldUpdate() {
-        SettingsProvider settings = new SettingsProvider(App.context());
-
-        if (!settings.updateAutomatically()) {
-            Log.d(this.getClass().getName(), "Do not update automatically.");
-            return false;
-        }
-
-        NetworkInfo networkInfo = this.activeNetworkInfo();
-
-        if ((networkInfo == null) || !networkInfo.isConnected()) {
-            Log.d(this.getClass().getName(), "No connection.");
-            return false;
-
-        } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-            Log.d(this.getClass().getName(), "Update on data plan? " + settings.updateOnDataPlan());
-            return settings.updateOnDataPlan();
-        }
-
-        return true;
+    private void notifyListenersOfUpdateStart() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (final UpdateListener listener : updateListeners) {
+                    listener.onUpdateStart();
+                }
+            }
+        });
     }
 
-    private boolean networkAvailable() {
-        return (activeNetworkInfo() != null) && activeNetworkInfo().isConnected();
+    private void notifyListenersOfUpdateNotNecessary() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (final UpdateListener listener : updateListeners) {
+                    listener.onUpdateNotNecessary();
+                }
+            }
+        });
     }
 
-    private NetworkInfo activeNetworkInfo() {
-        ConnectivityManager connectivityManager =
-                ((ConnectivityManager) App.context().getSystemService(Context.CONNECTIVITY_SERVICE));
-        return connectivityManager.getActiveNetworkInfo();
+    private void notifyListenersOfUpdateSuccess() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (final UpdateListener listener : updateListeners) {
+                    listener.onUpdateSuccess();
+                }
+            }
+        });
     }
 
-    @Override
-    public boolean register(UpdateListener listener) {
-        return updateListeners.register(listener);
+    private void notifyListenersOfUpdateFailure(final Exception cause) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (final UpdateListener listener : updateListeners) {
+                    listener.onUpdateFailure(cause);
+                }
+            }
+        });
     }
-
-    @Override
-    public boolean deregister(UpdateListener listener) {
-        return updateListeners.deregister(listener);
-    }
-
-    public static long automaticUpdateInterval() {
-        return AUTOMATIC_UPDATE_INTERVAL;
-    }
-
 }

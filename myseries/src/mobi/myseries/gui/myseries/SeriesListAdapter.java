@@ -57,6 +57,8 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
+
+    /* TODO(Reul): Use MessageService instead of UpdateService*/
     private static final UpdateService UPDATE_SERIES_SERVICE = App.updateSeriesService();
 
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
