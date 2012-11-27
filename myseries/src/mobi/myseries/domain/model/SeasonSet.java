@@ -38,6 +38,7 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
 
     private TreeMap<Integer, Season> seasons;
     private ListenerSet<SeasonSetListener> listeners;
+    private boolean enableNotifications;
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
@@ -76,7 +77,8 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         }
 
         throw new IndexOutOfBoundsException(
-                "invalid position, " + position + ", should be in the range [0, " + this.numberOfSeasons() + ")");
+                "invalid position, " + position + ", should be in the range [0, "
+                        + this.numberOfSeasons() + ")");
     }
 
     private Season ensuredSeason(int number) {
@@ -165,17 +167,21 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     }
 
     public Episode nextEpisodeToSee(boolean includingSpecialEpisodes) {
-        if (!includingSpecialEpisodes) return this.nextNonSpecialEpisodeToSee();
+        if (!includingSpecialEpisodes)
+            return this.nextNonSpecialEpisodeToSee();
 
         Episode nextNonSpecialEpisodeToSee = this.nextNonSpecialEpisodeToSee();
         Episode nextSpecialEpisodeToSee = this.nextSpecialEpisodeToSee();
 
-        if (nextNonSpecialEpisodeToSee == null) return nextSpecialEpisodeToSee;
-        if (nextSpecialEpisodeToSee == null) return nextNonSpecialEpisodeToSee;
+        if (nextNonSpecialEpisodeToSee == null)
+            return nextSpecialEpisodeToSee;
+        if (nextSpecialEpisodeToSee == null)
+            return nextNonSpecialEpisodeToSee;
 
-        return DatesAndTimes.compareByNullLast(nextNonSpecialEpisodeToSee.airDate(), nextSpecialEpisodeToSee.airDate()) < 1
+        return DatesAndTimes.compareByNullLast(nextNonSpecialEpisodeToSee.airDate(),
+                nextSpecialEpisodeToSee.airDate()) < 1
                 ? nextNonSpecialEpisodeToSee
-                        : nextSpecialEpisodeToSee;
+                : nextSpecialEpisodeToSee;
     }
 
     private Episode nextSpecialEpisodeToSee() {
@@ -185,9 +191,11 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
 
     private Episode nextNonSpecialEpisodeToSee() {
         for (Season s : this.seasons.values()) {
-            if (s.number() == SPECIAL_EPISODES_SEASON_NUMBER) continue;
+            if (s.number() == SPECIAL_EPISODES_SEASON_NUMBER)
+                continue;
 
-            if (!s.wasSeen()) return s.nextEpisodeToSee();
+            if (!s.wasSeen())
+                return s.nextEpisodeToSee();
         }
 
         return null;
@@ -195,14 +203,17 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
 
     public SeasonSet mergeWith(SeasonSet other) {
         Validate.isNonNull(other, "other");
-        Validate.isTrue(this.seriesId == other.seriesId, "other's seriesId should be %d", this.seriesId);
+        Validate.isTrue(this.seriesId == other.seriesId, "other's seriesId should be %d",
+                this.seriesId);
 
         for (Season s : this.seasons.values()) {
-            if (other.includes(s)) s.mergeWith(other.season(s.number()));
+            if (other.includes(s))
+                s.mergeWith(other.season(s.number()));
         }
 
         for (Season s : other.seasons.values()) {
-            if (!this.includes(s)) this.including(s);
+            if (!this.includes(s))
+                this.including(s);
         }
 
         return this;
@@ -219,25 +230,29 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     }
 
     private void notifyThatNumberOfSeenEpisodesChanged() {
-        for (SeasonSetListener l : this.listeners) {
-            l.onChangeNumberOfSeenEpisodes(this);
+        if (this.enableNotifications) {
+            for (SeasonSetListener l : this.listeners) {
+                l.onChangeNumberOfSeenEpisodes(this);
+            }
         }
     }
 
     private void notifyThatNextEpisodeToSeeChanged() {
-        for (SeasonSetListener l : this.listeners) {
-            l.onChangeNextEpisodeToSee(this);
+        if (this.enableNotifications) {
+            for (SeasonSetListener l : this.listeners) {
+                l.onChangeNextEpisodeToSee(this);
+            }
         }
     }
 
     @Override
     public void onMarkAsSeen(Season season) {
-        //SeasonSet is not interested in this event
+        // SeasonSet is not interested in this event
     }
 
     @Override
     public void onMarkAsNotSeen(Season season) {
-        //SeasonSet is not interested in this event
+        // SeasonSet is not interested in this event
     }
 
     @Override
@@ -247,7 +262,15 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
 
     @Override
     public void onChangeNextEpisodeToSee(Season season) {
-        //FIXME Notify only if the general next to see change
+        // FIXME Notify only if the general next to see change
         this.notifyThatNextEpisodeToSeeChanged();
+    }
+
+    public void turnNotificationsOff() {
+        this.enableNotifications = false;
+    }
+
+    public void turnNotificationsOn() {
+        this.enableNotifications = true;
     }
 }

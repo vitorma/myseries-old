@@ -31,7 +31,7 @@ import android.os.Handler;
 import android.util.Log;
 
 public class UpdateService implements Publisher<UpdateListener> {
-    private static final long AUTOMATIC_UPDATE_INTERVAL =  12L * 60L * 60L * 1000L;
+    private static final long AUTOMATIC_UPDATE_INTERVAL = 12L * 60L * 60L * 1000L;
     private static final long ONE_MONTH = 30L * 24L * 60L * 60L * 1000L;
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
@@ -230,7 +230,7 @@ public class UpdateService implements Publisher<UpdateListener> {
                                 + " updated.");
                     }
 
-                    if ((s.hasPoster() && imageService.getPosterOf(s) == null)
+                    if ((s.hasPoster() && (imageService.getPosterOf(s) == null))
                             || seriesWithPosterToUpdate.contains(s)) {
                         updatePosterOf(s, handler);
                         Log.d(getClass().getName(), "Poster of " + s.name()
@@ -288,7 +288,11 @@ public class UpdateService implements Publisher<UpdateListener> {
         downloadedSeries = seriesSource.fetchSeries(series.id(),
                 localizationProvider.language());
 
+        series.seasons().turnNotificationsOff();
+
         series.mergeWith(downloadedSeries);
+
+        series.seasons().turnNotificationsOn();
     }
 
     private void updatePosterOf(final Series series, Handler handler) {
