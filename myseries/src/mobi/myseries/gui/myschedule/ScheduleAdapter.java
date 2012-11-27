@@ -142,7 +142,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
         String numberFormat = CONTEXT.getString(R.string.episode_number_format);
         String episodeNumber = String.format(numberFormat, episode.seasonNumber(), episode.number());
-        viewHolder.episodeNumberTextView.setText(episodeNumber);
+        viewHolder.episodeNumberTextView.setText(episodeNumber + " " + episode.name());
 
         DateFormat airtimeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
         String airtime = DatesAndTimes.toString(episode.airtime(), airtimeFormat, "");

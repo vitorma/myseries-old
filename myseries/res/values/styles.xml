@@ -28,9 +28,8 @@
 
     <style name="TextView.Data.Large">
         <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:ellipsize">marquee</item>
+        <item name="android:ellipsize">end</item>
         <item name="android:lines">1</item>
-        <item name="android:marqueeRepeatLimit">marquee_forever</item>
         <item name="android:scrollHorizontally">true</item>
     </style>
 
@@ -48,6 +47,20 @@
 
     <style name="TextView.Label.Small.Bold">
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.Label.Small.Bold.Ellipsized">
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
+    <style name="TextView.Label.Micro">
+        <item name="android:textSize">@dimen/text_size_micro</item>
+    </style>
+
+    <style name="TextView.Label.Micro.Italic">
+        <item name="android:textStyle">italic</item>
     </style>
 
     <style name="TextView.Label.Medium">
@@ -236,5 +249,9 @@
 
     <!-- Animation -->
     <style name="DialogAnimation" parent="android:Animation.Dialog"/>
+
+    <style name="ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="backgroundStacked">@drawable/abs__ab_bottom_solid_light_holo</item>
+    </style>
 
 </resources>

@@ -22,31 +22,33 @@
             android:id="@+id/seriesPoster"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:padding="@dimen/gap_medium"
-            android:layout_width="56dp"
-            android:layout_height="74dp"
+            android:paddingTop="@dimen/gap_medium"
+            android:paddingBottom="@dimen/gap_medium"
+            android:paddingRight="@dimen/gap_medium"
+            android:layout_width="43dp"
+            android:layout_height="67dp"
             android:layout_alignParentLeft="true"/>
 
         <mobi.myseries.gui.shared.SeenMark
             android:id="@+id/episodeIsViewedCheckBox"
             android:gravity="center"
             android:layout_width="48dp"
-            android:layout_height="74dp"
+            android:layout_height="67dp"
             android:layout_alignParentRight="true"/>
 
         <TextView
             android:id="@+id/episodeSeriesTextView"
             style="@style/TextView.Data.Large"
-            android:paddingTop="@dimen/gap_medium"
+            android:paddingTop="@dimen/gap_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="@id/seriesPoster"
+            android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/seriesPoster"
             android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
 
         <TextView
             android:id="@+id/episodeSeasonEpisodeTextView"
-            style="@style/TextView.Label.Small"
+            style="@style/TextView.Label.Small.Bold.Ellipsized"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeSeriesTextView"
@@ -56,7 +58,7 @@
         <TextView
             android:id="@+id/episodeAirtimeAndNetwork"
             style="@style/TextView.Label.Small"
-            android:paddingBottom="@dimen/gap_medium"
+            android:paddingBottom="@dimen/gap_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeSeasonEpisodeTextView"

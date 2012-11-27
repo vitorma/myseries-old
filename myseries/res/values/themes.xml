@@ -15,6 +15,16 @@
         <item name="android:progressBarStyle">@style/ProgressBar</item>
         <item name="android:progressBarStyleLarge">@style/ProgressBar.Large</item>
 
+        <!-- Tabs -->
+        <item name="actionBarStyle">@style/ActionBar</item>
+        <item name="actionBarTabStyle">@style/Widget.Sherlock.Light.ActionBar.TabView</item>
+        <item name="actionBarTabBarStyle">@style/Widget.Sherlock.Light.ActionBar.TabBar</item>
+        <item name="actionBarTabTextStyle">@style/Widget.Sherlock.Light.ActionBar.TabText</item>
+        <item name="android:dividerVertical">@drawable/abs__list_divider_holo_light</item>
+        <item name="textColorPrimary">@color/abs__primary_text_holo_light</item>
+        <item name="textColorPrimaryDisableOnly">@color/abs__primary_text_disable_only_holo_light</item>
+        <item name="textColorPrimaryInverse">@color/abs__primary_text_holo_dark</item>
+
         <!-- Scroll -->
 
         <item name="android:scrollbarFadeDuration">250</item>
