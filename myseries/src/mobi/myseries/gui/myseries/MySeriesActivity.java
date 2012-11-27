@@ -31,6 +31,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.update.UpdateListener;
+import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.preferences.Preferences;
@@ -66,7 +67,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String UPDATE = "UPDATE";
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
-    private Handler handler = new Handler();
+    private static final Handler HANDLER = new Handler();
+    private static final UpdateService UPDATE_SERVICE = App.updateSeriesService(HANDLER);
 
     private StateHolder state;
 
@@ -103,7 +105,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         new Thread() {
             @Override
             public void run() {
-                App.updateSeriesService().updateDataIfNeeded(handler);
+                UPDATE_SERVICE.updateDataIfNeeded();
             }
         }.start();
     }
@@ -112,7 +114,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     protected void onResume() {
         super.onResume();
         this.loadState();
-        this.setSupportProgressBarIndeterminateVisibility(App.updateSeriesService().isUpdating());
+        this.setSupportProgressBarIndeterminateVisibility(UPDATE_SERVICE.isUpdating());
     }
 
     private void loadState() {
@@ -179,7 +181,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             new Thread() {
                 @Override
                 public void run() {
-                    App.updateSeriesService().updateData(handler);
+                    UPDATE_SERVICE.updateData();
                 }
             }.start();
         }
