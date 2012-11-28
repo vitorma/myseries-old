@@ -126,14 +126,42 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateformat, unavailable);
 
             viewHolder.dateTextView.setText(formattedDate);
-            viewHolder.relativeTimeTextView.setText(DatesAndTimes.relativeTimeStringForNear(episode.airDate()));
+            viewHolder.relativeTimeTextView.setText(this.relativeTimeStringFor(episode.airDate()));
             viewHolder.section.setVisibility(View.VISIBLE);
         } else {
             viewHolder.section.setVisibility(View.GONE);
         }
     }
 
-    public void setUpCellBody(ViewHolder viewHolder, Series series, Episode episode) {
+    //TODO (Cleber) Move this method to a better place
+    private String relativeTimeStringFor(Date airDate) {
+        if (airDate == null) {
+            return "";
+        }
+
+        int days = DatesAndTimes.daysBetween(DatesAndTimes.today(), airDate);
+
+        switch (days) {
+            case 0:
+                return CONTEXT.getString(R.string.relative_time_today);
+            case 1:
+                return CONTEXT.getString(R.string.relative_time_tomorrow);
+            case -1:
+                return CONTEXT.getString(R.string.relative_time_yesterday);
+            default:
+                if (Math.abs(days) >= DatesAndTimes.DAYS_IN_A_WEEK) {
+                    return "";
+                }
+
+                if (days > 0) {
+                    return String.format(CONTEXT.getString(R.string.relative_time_future), days);
+                }
+
+                return String.format(CONTEXT.getString(R.string.relative_time_past), Math.abs(days));
+        }
+    }
+
+    private void setUpCellBody(ViewHolder viewHolder, Series series, Episode episode) {
         Bitmap seriesPoster = IMAGE_SERVICE.getPosterOf(series);
         Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
         viewHolder.seriesPosterImageView.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
