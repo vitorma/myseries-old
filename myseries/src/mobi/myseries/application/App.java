@@ -33,7 +33,6 @@ import mobi.myseries.application.update.UpdateService;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Handler;
 
 public class App extends Application {
     private static Environment environment;
@@ -111,12 +110,6 @@ public class App extends Application {
 
     /* UPDATE */
 
-
-    public static UpdateService updateSeriesService(Handler handler) {
-        return updateService.withHandler(handler);
-    }
-
-    @Deprecated     /* TODO(Reul): Remove this method as soon as possible */
     public static UpdateService updateSeriesService() {
         return updateService;
     }
