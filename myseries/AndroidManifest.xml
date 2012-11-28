@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    
+
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="15"/>
@@ -20,7 +20,6 @@
         android:theme="@style/MySeriesTheme">
 
         <activity
-            android:label="@string/my_series"
             android:name=".gui.myseries.MySeriesActivity"
             android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
@@ -67,7 +66,7 @@
 
         <receiver
             android:name=".gui.appwidget.ScheduleWidgetV8"
-            android:label="@string/appwidget_myschedule"
+            android:label="@string/appwidget"
             android:enabled="@bool/oldWidgetsEnabled"
             android:exported="false">
             <intent-filter>
@@ -79,7 +78,7 @@
         </receiver>
         <receiver
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetV11"
-            android:label="@string/appwidget_myschedule"
+            android:label="@string/appwidget"
             android:enabled="@bool/newWidgetsEnabled"
             android:exported="false">
             <intent-filter>

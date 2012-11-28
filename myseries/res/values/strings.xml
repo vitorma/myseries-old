@@ -131,7 +131,7 @@
 
     <!-- Do not translate -->
 
-    <string name="app">My Series</string>
-    <string name="appwidget_myschedule">My Schedule</string>
+    <string name="app">MySeries</string>
+    <string name="appwidget">@string/app</string>
 
 </resources>
