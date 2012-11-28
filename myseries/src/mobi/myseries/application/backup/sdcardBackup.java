@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import android.os.Environment;
 
 import mobi.myseries.application.App;
 
@@ -29,12 +30,12 @@ public class sdcardBackup {
         }
     }
 
-    private String backupFilePath() {
+    private static String backupFilePath() {
         return backupFolder().getPath() + FILE_SEPARATOR + BACKUP_FILE_NAME;
     }
     
-    private File backupFolder() {
-        return ensuredDirectory(this.sdcardrootDirectory().getPath() + FILE_SEPARATOR + BACKUP_FOLDER);
+    private static File backupFolder() {
+        return ensuredDirectory(sdcardrootDirectory().getPath() + FILE_SEPARATOR + BACKUP_FOLDER);
     }
     
     private static File ensuredDirectory(String path) {
@@ -51,8 +52,8 @@ public class sdcardBackup {
         return directory;
     }
 
-    private File sdcardrootDirectory() {
-        File externalFilesDirectory = App.context().getExternalFilesDir(null);
+    private static File sdcardrootDirectory() {
+        File externalFilesDirectory = Environment.getExternalStorageDirectory();
 
         if (externalFilesDirectory == null) {
             //TODO something
@@ -82,6 +83,10 @@ public class sdcardBackup {
                 }
             }
         }
+    }
+
+    public static String path() {
+        return backupFilePath();
     }
 }
 

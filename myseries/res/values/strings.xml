@@ -129,9 +129,18 @@
     <string name="do_not_update">Do not update (not recommended)</string>
     <string name="backup_restore">Backup/Restore</string>
 
+    <!-- Backup -->
+    <string name="backup_description">write a description here, you are a lazy bitch!</string>
+    <string name="backup_folder_file_path">Backup path: %s</string>
+    <string name="backup_button">Backup</string>
+    <string name="restore_button">Restore</string>
+
     <!-- Do not translate -->
 
     <string name="app">MySeries</string>
     <string name="appwidget">@string/app</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_backup">BackupActivity</string>
 
 </resources>
