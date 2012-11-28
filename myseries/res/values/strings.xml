@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
 
     <!-- Recently added -->
@@ -40,7 +39,6 @@
     <string name="no_series_selected_to_remove">No series selected to remove.</string>
     <string name="no_series_to_remove">No series to remove.</string>
     <string name="add_success">%s successfully added.</string>
-
 
     <!-- Labels -->
 
@@ -114,7 +112,6 @@
     <string name="update_series_not_found">The database has returned "series not found" while updating. Check your connection and configurations then try again.</string>
     <string name="update_success_message">Update complete.</string>
     <string name="update_network_unavailable">Internet access is not available. Please turn either wifi or mobile connection on and try again.</string>
-
     <string name="stop_follow_message_format" formatted="false">Do you want to stop following %s?</string>
     <string name="follow_toast_message_format" formatted="false">The series %s will be added to your list soon.</string>
 
@@ -125,12 +122,19 @@
     <string name="update_on_wifi_or_data_plan">When any connection is available</string>
     <string name="do_not_update">Do not update (not recommended)</string>
     <string name="backup_restore">Backup/Restore</string>
-    
 
+    <!-- Backup -->
+    <string name="backup_description">write a description here, you are a lazy bitch!</string>
+    <string name="backup_folder_file_path">Backup path: %s</string>
+    <string name="backup_button">Backup</string>
+    <string name="restore_button">Restore</string>
 
     <!-- Do not translate -->
 
     <string name="app">My Series</string>
     <string name="appwidget_myschedule">My Schedule</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_backup">BackupActivity</string>
 
 </resources>
