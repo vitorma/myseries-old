@@ -40,7 +40,11 @@
     <string name="no_series_selected_to_remove">No series selected to remove.</string>
     <string name="no_series_to_remove">No series to remove.</string>
     <string name="add_success">%s successfully added.</string>
-
+    <string name="relative_time_today">Today</string>
+    <string name="relative_time_tomorrow">Tomorrow</string>
+    <string name="relative_time_yesterday">Yesterday</string>
+    <string name="relative_time_past">%d days ago</string>
+    <string name="relative_time_future">In %d days</string>
 
     <!-- Labels -->
 
