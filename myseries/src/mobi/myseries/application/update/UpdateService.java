@@ -6,11 +6,7 @@ import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
-import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.ConnectionTimeoutException;
-import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesSource;
-import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.CollectionFilter;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
@@ -153,24 +149,9 @@ public class UpdateService implements Publisher<UpdateListener> {
                 updateAvailable = updater.fetchUpdateMetadataSince(lastSuccessfulUpdate);
                 Log.d(getClass().getName(), "Update Metadata Available? " + updateAvailable);
 
-            } catch (ConnectionFailedException e) {
-                notifyListenersOfUpdateFailure(e);
+            } catch (Exception e) {
                 e.printStackTrace();
-                return;
-
-            } catch (ConnectionTimeoutException e) {
                 notifyListenersOfUpdateFailure(e);
-                e.printStackTrace();
-                return;
-
-            } catch (ParsingFailedException e) {
-                notifyListenersOfUpdateFailure(e);
-                e.printStackTrace();
-                return;
-
-            } catch (UpdateMetadataUnavailableException e) {
-                notifyListenersOfUpdateFailure(e);
-                e.printStackTrace();
                 return;
             }
 

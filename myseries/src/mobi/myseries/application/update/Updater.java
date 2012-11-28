@@ -1,5 +1,9 @@
 package mobi.myseries.application.update;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
@@ -32,22 +36,38 @@ class Updater {
 
         Log.d(getClass().getName(), "Last updated: " + series.lastUpdate());
 
-        Series downloadedSeries;
-
         Log.d(getClass().getName(), "Updating " + series.name());
 
         Exception error = null;
 
         try {
-            downloadedSeries = seriesSource.fetchSeries(series.id(),
-                    localizationProvider.language());
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+
+            DownloadSeriesTask downloadTask =
+                    new DownloadSeriesTask(seriesSource, localizationProvider, series);
+
+            executor.submit(downloadTask);
+            executor.shutdown();
+
+            if (!executor.awaitTermination(UpdatePolicy.updateTimeout(), TimeUnit.MILLISECONDS)) {
+                executor.shutdownNow();
+                return new UpdateResult().withError(new UpdateTimeoutException());
+
+            } else if (!downloadTask.successful()) {
+                return new UpdateResult().withError(downloadTask.error());
+
+            }
+
             series.seasons().turnNotificationsOff();
-            series.mergeWith(downloadedSeries);
+            series.mergeWith(downloadTask.downloadedSeries());
             series.seasons().turnNotificationsOn();
 
             Log.d(getClass().getName(), "Data of " + series.name() + " updated.");
 
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            //TODO (Reul): Something to do here?
+
             e.printStackTrace();
             error = e;
         }
@@ -68,6 +88,44 @@ class Updater {
             throws ConnectionFailedException, ConnectionTimeoutException,
             ParsingFailedException, UpdateMetadataUnavailableException {
         return seriesSource.fetchUpdateMetadataSince(dateInMiliseconds);
+    }
+
+    private static class DownloadSeriesTask implements Runnable {
+        private Series series;
+        private Series downloadedSeries;
+        private Exception error;
+        private SeriesSource seriesSource;
+        private LocalizationProvider localizationProvider;
+
+        public DownloadSeriesTask(SeriesSource seriesSource,
+                LocalizationProvider localizationProvider, Series series) {
+            this.series = series;
+            this.seriesSource = seriesSource;
+            this.localizationProvider = localizationProvider;
+        }
+
+        @Override
+        public void run() {
+            try {
+                downloadedSeries = seriesSource.fetchSeries(series.id(),
+                        localizationProvider.language());
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.error = e;
+            }
+        }
+
+        public Series downloadedSeries() {
+            return this.downloadedSeries;
+        }
+
+        public Exception error() {
+            return this.error;
+        }
+
+        public boolean successful() {
+            return this.error == null;
+        }
     }
 
 }

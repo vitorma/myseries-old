@@ -10,7 +10,7 @@ import android.util.Log;
 class UpdatePolicy {
     private static final long ONE_MONTH = 30L * 24L * 60L * 60L * 1000L;
     private static final long AUTOMATIC_UPDATE_INTERVAL = 12L * 60L * 60L * 1000L;
-    private static final long THIRTY_SECONDS = 30 * 1000L;
+    private static final long ONE_MINUTE = 60 * 1000L;
 
     static boolean networkAvailable() {
         return (activeNetworkInfo() != null) && activeNetworkInfo().isConnected();
@@ -54,6 +54,6 @@ class UpdatePolicy {
     }
 
     public static long updateTimeout() {
-        return THIRTY_SECONDS;
+        return ONE_MINUTE;
     }
 }
