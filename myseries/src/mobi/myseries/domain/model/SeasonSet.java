@@ -38,7 +38,7 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
 
     private TreeMap<Integer, Season> seasons;
     private ListenerSet<SeasonSetListener> listeners;
-    private boolean enableNotifications;
+    private boolean enableNotifications = true;
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
