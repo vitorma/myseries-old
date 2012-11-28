@@ -4,6 +4,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.message.MessageServiceListener;
 import mobi.myseries.application.update.NetworkUnavailableException;
+import mobi.myseries.application.update.UpdateTimeoutException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
@@ -112,7 +113,8 @@ public class MessageLauncher implements MessageServiceListener {
 
         } else if (e instanceof NetworkUnavailableException) {
             dialogBuilder.setMessage(R.string.update_network_unavailable);
-
+        } else if (e instanceof UpdateTimeoutException) {
+            dialogBuilder.setMessage(R.string.update_timeout);
         } else {
             dialogBuilder.setMessage(e.getMessage());
 

@@ -33,6 +33,7 @@ public class DatesAndTimes {
     public static final long DAY_IN_MILLIS = 24L * 60L * 60L * 1000L;
     public static final long WEEK_IN_MILLIS = 7L * DAY_IN_MILLIS;
     public static final long MONTH_IN_MILLIS = 30L * DAY_IN_MILLIS;
+    public static final int DAYS_IN_A_WEEK = 7;
 
     private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
 
@@ -136,6 +137,13 @@ public class DatesAndTimes {
                 return d2.compareTo(d1);
             }
         };
+    }
+
+    public static int daysBetween(Date d1, Date d2) {
+        Validate.isNonNull(d1, "date1");
+        Validate.isNonNull(d2, "date2");
+
+        return (int) ((d2.getTime() - d1.getTime())/DAY_IN_MILLIS);
     }
 
     public static String relativeTimeStringForNear(Date date) {

@@ -1,7 +1,8 @@
 package mobi.myseries.application.update;
 
 public class UpdateTimeoutException extends Exception {
-    public UpdateTimeoutException(Exception e) {
-        super(e);
+    private static final long serialVersionUID = 1L;
+
+    public UpdateTimeoutException() {
     }
 }

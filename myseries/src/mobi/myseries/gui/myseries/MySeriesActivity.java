@@ -68,7 +68,8 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
     private static final Handler HANDLER = new Handler();
-    private static final UpdateService UPDATE_SERVICE = App.updateSeriesService(HANDLER);
+    private static final UpdateService UPDATE_SERVICE = App.updateSeriesService().withHandler(
+            HANDLER);
 
     private StateHolder state;
 

@@ -39,6 +39,11 @@
     <string name="no_series_selected_to_remove">No series selected to remove.</string>
     <string name="no_series_to_remove">No series to remove.</string>
     <string name="add_success">%s successfully added.</string>
+    <string name="relative_time_today">Today</string>
+    <string name="relative_time_tomorrow">Tomorrow</string>
+    <string name="relative_time_yesterday">Yesterday</string>
+    <string name="relative_time_past">%d days ago</string>
+    <string name="relative_time_future">In %d days</string>
 
     <!-- Labels -->
 
@@ -106,6 +111,7 @@
     <string name="up_to_date_message">Data is up-to-date.</string>
     <string name="update_connection_failed">The connection has failed while updating. Check your connection and try again.</string>
     <string name="update_connection_timeout">The connection has timed out while updating. Check your connection and try again.</string>
+    <string name="update_timeout">Download time limit exceeded. Check your connection and try again.</string>
     <string name="update_failed_title">Update failed</string>
     <string name="update_started_message">Checking for updates…</string>
     <string name="update_metadata_unavailable">The update metadata is unavailable. The server may be down. Please try again later.</string>
