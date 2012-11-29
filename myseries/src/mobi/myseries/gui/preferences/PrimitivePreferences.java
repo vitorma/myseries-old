@@ -32,7 +32,7 @@ public class PrimitivePreferences {
     private static final Context CONTEXT = App.context();
 
     private static final String DEFAULT_KEY_SUFFIX = "";
-    private static final String SUFFIX_SEPARATOR = ".";
+    public static final String SUFFIX_SEPARATOR = ".";
 
     private String name;
     private String keySuffix;

@@ -179,5 +179,15 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
         public void setCurrentPage(int currentPage) {
             this.primitive.putInt(CURRENT_PAGE_KEY, currentPage);
         }
+
+        public void clearThatOfAppWidget(int appWidgetId) {
+            String suffix = PrimitivePreferences.SUFFIX_SEPARATOR + appWidgetId;
+
+            for (String key : this.primitive.getKeys()) {
+                if (key.endsWith(suffix)) {
+                    this.primitive.remove(key);
+                }
+            }
+        }
     }
 }

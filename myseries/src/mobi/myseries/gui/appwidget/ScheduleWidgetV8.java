@@ -21,9 +21,11 @@
 
 package mobi.myseries.gui.appwidget;
 
+import mobi.myseries.gui.preferences.Preferences;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.util.Log;
 
 public class ScheduleWidgetV8 extends AppWidgetProvider {
 
@@ -46,5 +48,27 @@ public class ScheduleWidgetV8 extends AppWidgetProvider {
         }
 
         super.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+        Log.d("Widget", "onDeleted called");
+
+        for (int appWidgetId : appWidgetIds) {
+            Preferences.clearThatOfAppWidget(appWidgetId);
+        }
+    }
+
+    @Override
+    public void onEnabled(Context context) {
+        super.onEnabled(context);
+        Log.d("Widget", "onEnabled called");
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        super.onDisabled(context);
+        Log.d("Widget", "onDisabled called");
     }
 }

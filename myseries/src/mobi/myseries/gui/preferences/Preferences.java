@@ -47,8 +47,8 @@ public class Preferences {
         SchedulePreferences.forAppWidget().removeEntriesRelatedToAll(series);
     }
 
-    public static void clearThatForAppWidget(int appWidgetId) {
-        //TODO Implement
+    public static void clearThatOfAppWidget(int appWidgetId) {
+        SchedulePreferences.forAppWidget().clearThatOfAppWidget(appWidgetId);
     }
 
     public static void clearAll() {

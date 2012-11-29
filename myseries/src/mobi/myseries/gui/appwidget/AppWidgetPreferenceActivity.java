@@ -5,7 +5,6 @@ import java.util.Map;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.preferences.Preferences;
@@ -30,7 +29,6 @@ import android.widget.RadioGroup;
 import com.actionbarsherlock.app.SherlockActivity;
 
 public class AppWidgetPreferenceActivity extends SherlockActivity {
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     public static Intent newIntent(Context context, int appWidgetId) {
         Intent intent = new Intent(context, AppWidgetPreferenceActivity.class);
@@ -144,11 +142,11 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     }
 
     private void setUpSeriesToShowOptions() {
-        LayoutInflater inflater = LayoutInflater.from(this);
+        LayoutInflater inflater = LayoutInflater.from(this.getApplicationContext());
         LinearLayout seriesToShowPanel = (LinearLayout) this.findViewById(R.id.seriesToShowPanel);
         this.seriesToShow = new HashMap<Series, CheckedTextView>();
 
-        for (Series s : SERIES_PROVIDER.followedSeries()) {
+        for (Series s : App.seriesProvider().followedSeries()) {
             View v = inflater.inflate(R.layout.appwidget_myschedule_preference_filter_option, null);
             final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.seriesCheck);
 
@@ -239,9 +237,14 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
 
     private void updateAppWidget() {
         if (Android.isHoneycombOrHigher()) {
-            ScheduleWidgetV11.setUp(this, AppWidgetManager.getInstance(this), this.appWidgetId);
+            ScheduleWidgetV11.setUp(
+                    this.getApplicationContext(),
+                    AppWidgetManager.getInstance(this.getApplicationContext()),
+                    this.appWidgetId);
         } else {
-            ScheduleWidgetV8.setUp(this, this.appWidgetId);
+            ScheduleWidgetV8.setUp(
+                    this.getApplicationContext(),
+                    this.appWidgetId);
         }
     }
 

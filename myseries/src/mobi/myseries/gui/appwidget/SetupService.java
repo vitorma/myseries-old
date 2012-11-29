@@ -64,14 +64,14 @@ public class SetupService extends IntentService {
 
     @Override
     public void onHandleIntent(Intent intent) {
-        AppWidgetManager mgr = AppWidgetManager.getInstance(this);
+        AppWidgetManager mgr = AppWidgetManager.getInstance(this.getApplicationContext());
 
         this.appWidgetId = intent.getExtras().getInt(Extra.APPWIDGET_ID);
         this.action = intent.getAction();
         this.preferences = Preferences.forAppWidget(this.appWidgetId);
         this.loadEpisodes();
         this.setupItemPageBrowser();
-        this.setupAppWidgetView();
+        this.setUpAppWidgetView();
 
         mgr.updateAppWidget(this.appWidgetId, this.appWidgetView);
     }
@@ -101,7 +101,7 @@ public class SetupService extends IntentService {
         this.saveCurrentPage();
     }
 
-    private void setupAppWidgetView() {
+    private void setUpAppWidgetView() {
         this.appWidgetView = new RemoteViews(this.getPackageName(), R.layout.appwidget_myschedule);
 
         this.setupActionBar();
@@ -110,11 +110,11 @@ public class SetupService extends IntentService {
     }
 
     private void setupActionBar() {
-        ActionBar.from(this, this.appWidgetView).setUpFor(this.appWidgetId);
+        ActionBar.from(this.getApplicationContext(), this.appWidgetView).setUpFor(this.appWidgetId);
     }
 
     private void setupItemPageBar() {
-        ItemPageBar.from(this, this.appWidgetView)
+        ItemPageBar.from(this.getApplicationContext(), this.appWidgetView)
             .setupFor(this.appWidgetId)
             .showNavigationAccordingTo(this.itemPageBrowser);
     }
@@ -123,13 +123,13 @@ public class SetupService extends IntentService {
         this.appWidgetView.removeAllViews(R.id.episodes);
 
         if (this.episodes.isEmpty()) {
-            RemoteViews item = Item.from(this).empty();
+            RemoteViews item = Item.from(this.getApplicationContext()).empty();
             this.appWidgetView.addView(R.id.episodes, item);
             return;
         }
 
         for (int i = this.firstItemPosition(); i <= this.lastItemPosition(); i++) {
-            RemoteViews item = Item.from(this).createFor(this.episodes.get(i));
+            RemoteViews item = Item.from(this.getApplicationContext()).createFor(this.episodes.get(i));
             this.appWidgetView.addView(R.id.episodes, item);
         }
     }

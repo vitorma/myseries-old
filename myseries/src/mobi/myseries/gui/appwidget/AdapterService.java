@@ -40,6 +40,6 @@ public class AdapterService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new ScheduleRemoteViewsFactory(this, intent);
+        return new ScheduleRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 }
