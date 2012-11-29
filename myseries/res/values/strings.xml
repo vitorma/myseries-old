@@ -137,8 +137,8 @@
 
     <!-- Do not translate -->
 
-    <string name="app">My Series</string>
-    <string name="appwidget_myschedule">My Schedule</string>
+    <string name="app">MySeries</string>
+    <string name="appwidget">@string/app</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_backup">BackupActivity</string>

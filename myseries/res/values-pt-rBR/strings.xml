@@ -62,11 +62,4 @@
     <string name="stop_follow_message_format" formatted="false">Deseja parar de seguir %s?</string>
     <string name="follow_successfull_message_format" formatted="false">A série %s aparecerá na sua lista em breve.</string>
 
-    <!-- Do not translate -->
-
-    <string name="app_name">My Series</string>
-    <string name="large_widget_name">My Series (4x4)</string>
-    <string name="medium_widget_name">My Series (4x2)</string>
-    <string name="small_widget_name">My Series (4x1)</string>
-
 </resources>
