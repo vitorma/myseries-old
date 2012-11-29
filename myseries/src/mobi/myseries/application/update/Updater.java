@@ -59,9 +59,7 @@ class Updater {
 
             }
 
-            series.seasons().turnNotificationsOff();
             series.mergeWith(downloadTask.downloadedSeries());
-            series.seasons().turnNotificationsOn();
 
             Log.d(getClass().getName(), "Data of " + series.name() + " updated.");
 

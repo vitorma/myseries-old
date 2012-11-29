@@ -4,7 +4,7 @@ import mobi.myseries.R;
 import mobi.myseries.R.id;
 import mobi.myseries.R.layout;
 import mobi.myseries.R.string;
-import mobi.myseries.application.backup.sdcardBackup;
+import mobi.myseries.application.backup.SdcardBackup;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -34,7 +34,7 @@ public class BackupActivity extends SherlockActivity {
     }
 
     private void setupBackupPathTV() {
-        this.backupPath.setText(String.format(this.getString(R.string.backup_folder_file_path), sdcardBackup.path()));
+        this.backupPath.setText(String.format(this.getString(R.string.backup_folder_file_path), SdcardBackup.path()));
         
     }
 
