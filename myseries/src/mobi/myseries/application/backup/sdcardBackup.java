@@ -65,6 +65,7 @@ public class sdcardBackup {
     private File dbPath(){
         return App.context().getDatabasePath(DATABASE_NAME);
     }
+
     private void copyFile(FileInputStream fromFile, FileOutputStream toFile) throws IOException {
         FileChannel fromChannel = null;
         FileChannel toChannel = null;
