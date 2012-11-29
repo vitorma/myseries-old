@@ -38,7 +38,6 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
 
     private TreeMap<Integer, Season> seasons;
     private ListenerSet<SeasonSetListener> listeners;
-    private boolean enableNotifications = true;
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
@@ -207,8 +206,9 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
                 this.seriesId);
 
         for (Season s : this.seasons.values()) {
-            if (other.includes(s))
+            if (other.includes(s)) {
                 s.mergeWith(other.season(s.number()));
+            }
         }
 
         for (Season s : other.seasons.values()) {
@@ -230,18 +230,14 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     }
 
     private void notifyThatNumberOfSeenEpisodesChanged() {
-        if (this.enableNotifications) {
-            for (SeasonSetListener l : this.listeners) {
-                l.onChangeNumberOfSeenEpisodes(this);
-            }
+        for (SeasonSetListener l : this.listeners) {
+            l.onChangeNumberOfSeenEpisodes(this);
         }
     }
 
     private void notifyThatNextEpisodeToSeeChanged() {
-        if (this.enableNotifications) {
-            for (SeasonSetListener l : this.listeners) {
-                l.onChangeNextEpisodeToSee(this);
-            }
+        for (SeasonSetListener l : this.listeners) {
+            l.onChangeNextEpisodeToSee(this);
         }
     }
 
@@ -264,13 +260,5 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     public void onChangeNextEpisodeToSee(Season season) {
         // FIXME Notify only if the general next to see change
         this.notifyThatNextEpisodeToSeeChanged();
-    }
-
-    public void turnNotificationsOff() {
-        this.enableNotifications = false;
-    }
-
-    public void turnNotificationsOn() {
-        this.enableNotifications = true;
     }
 }
