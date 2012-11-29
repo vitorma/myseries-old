@@ -11,7 +11,7 @@ import android.os.Environment;
 import mobi.myseries.application.App;
 
 //TODO extract an interface to the others backup services
-public class sdcardBackup {
+public class SdcardBackup {
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     //TODO this should not be hardcoded, discover a better way to do it
     private static final String DATABASE_NAME = "myseries_db";
@@ -65,6 +65,7 @@ public class sdcardBackup {
     private File dbPath(){
         return App.context().getDatabasePath(DATABASE_NAME);
     }
+
     private void copyFile(FileInputStream fromFile, FileOutputStream toFile) throws IOException {
         FileChannel fromChannel = null;
         FileChannel toChannel = null;
