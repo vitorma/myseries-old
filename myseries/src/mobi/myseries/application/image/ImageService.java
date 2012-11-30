@@ -86,7 +86,7 @@ public final class ImageService {
             this.imageRepository.saveSeriesPoster(series, fetchedPoster);
 
             Bitmap smallPoster = Bitmap.createScaledBitmap(fetchedPoster, this.smallPosterWidth,
-                                                                          this.smallPosterHeight, false);
+                                                                          this.smallPosterHeight, true);
             this.imageRepository.saveSmallSeriesPoster(series, smallPoster);
         } catch (ConnectionFailedException e) {
         } catch (ConnectionTimeoutException e) {
