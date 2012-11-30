@@ -70,7 +70,7 @@ public class SetupService extends IntentService {
         this.action = intent.getAction();
         this.preferences = Preferences.forAppWidget(this.appWidgetId);
         this.loadEpisodes();
-        this.setupItemPageBrowser();
+        this.setUpItemPageBrowser();
         this.setUpAppWidgetView();
 
         mgr.updateAppWidget(this.appWidgetId, this.appWidgetView);
@@ -93,7 +93,7 @@ public class SetupService extends IntentService {
         }
     }
 
-    private void setupItemPageBrowser() {
+    private void setUpItemPageBrowser() {
         this.itemPageBrowser = ItemPageBrowser.from(this.episodes.size(), ITEMS_PER_PAGE)
             .goToPage(this.currentPage())
             .navigateAccordingToAction(this.action);
@@ -104,22 +104,22 @@ public class SetupService extends IntentService {
     private void setUpAppWidgetView() {
         this.appWidgetView = new RemoteViews(this.getPackageName(), R.layout.appwidget_myschedule);
 
-        this.setupActionBar();
-        this.setupItemPageBar();
-        this.setupItems();
+        this.setUpActionBar();
+        this.setUpItemPageBar();
+        this.setUpItems();
     }
 
-    private void setupActionBar() {
+    private void setUpActionBar() {
         ActionBar.from(this.getApplicationContext(), this.appWidgetView).setUpFor(this.appWidgetId);
     }
 
-    private void setupItemPageBar() {
+    private void setUpItemPageBar() {
         ItemPageBar.from(this.getApplicationContext(), this.appWidgetView)
             .setupFor(this.appWidgetId)
             .showNavigationAccordingTo(this.itemPageBrowser);
     }
 
-    private void setupItems() {
+    private void setUpItems() {
         this.appWidgetView.removeAllViews(R.id.episodes);
 
         if (this.episodes.isEmpty()) {
