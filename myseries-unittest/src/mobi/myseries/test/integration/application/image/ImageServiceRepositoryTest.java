@@ -22,11 +22,11 @@ public abstract class ImageServiceRepositoryTest extends InstrumentationTestCase
     private static final String TEST_SERIES_NAME = "Test Series";
     private static final int TEST_EPISODE_ID = -1;
     private static final String TEST_EPISODE_NAME = "Test Episode";
-    
+
     private Bitmap testImage;
     private Series testSeries;
     private Episode testEpisode;
-    
+
     private ImageServiceRepository imageRepository;
 
     protected abstract ImageServiceRepository newImageServiceRepository();
@@ -40,7 +40,7 @@ public abstract class ImageServiceRepositoryTest extends InstrumentationTestCase
         when(this.testSeries.id()).thenReturn(TEST_SERIES_ID);
         when(this.testSeries.name()).thenReturn(TEST_SERIES_NAME);
         when(this.testSeries.episodes()).thenReturn(Arrays.asList(this.testEpisode));
-        
+
         this.testImage = BitmapFactory.decodeResource(
                 this.getInstrumentation().getContext().getResources(),
                 R.drawable.icon);
