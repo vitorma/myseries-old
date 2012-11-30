@@ -16,7 +16,7 @@ import android.test.InstrumentationTestCase;
 
 public abstract class ImageServiceRepositoryTest extends InstrumentationTestCase {
 
-    private static final long MAXIMUM_TIME_FOR_ASYNC_OPERATIONS = 2000;  // milliseconds
+    private static final long MAXIMUM_TIME_FOR_ASYNC_OPERATIONS = 5000;  // milliseconds
 
     private static final int TEST_SERIES_ID = -1;
     private static final String TEST_SERIES_NAME = "Test Series";
@@ -88,6 +88,37 @@ public abstract class ImageServiceRepositoryTest extends InstrumentationTestCase
         assertThat(this.imageRepository.getPosterOf(this.testSeries), not(nullValue()));
     }
 
+    /* Small series poster */
+
+    public void testSavingASmallPosterOfANullSeriesThrowsException() {
+        try {
+            this.imageRepository.saveSmallSeriesPoster(null, this.testImage);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testItIsPossibleToSaveANullSmallPoster() {
+        this.imageRepository.saveSmallSeriesPoster(this.testSeries, null);
+    }
+
+    public void testGettingASmallPosterOfANullSeriesThrowsException() {
+        try {
+            this.imageRepository.getSmallPosterOf(null);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testGettingANotSavedSmallPosterReturnsNull() {
+        assertThat(this.imageRepository.getSmallPosterOf(this.testSeries), nullValue());
+    }
+
+    public void testGettingASavedSmallPosterMustReturnAValidSmallPoster() {
+        this.imageRepository.saveSmallSeriesPoster(this.testSeries, this.testImage);
+
+        // TODO(Gabriel) Find a better way to compare the bitmaps
+        assertThat(this.imageRepository.getSmallPosterOf(this.testSeries), not(nullValue()));
+    }
+
     /* Episode image */
 
     public void testSavingAnImageOfANullEpisodeThrowsException() {
@@ -138,6 +169,14 @@ public abstract class ImageServiceRepositoryTest extends InstrumentationTestCase
         this.imageRepository.deleteAllImagesOf(this.testSeries);
         waitForAsyncOperations();
         assertThat(this.imageRepository.getPosterOf(this.testSeries), nullValue());
+    }
+
+    public void testTheSavedSmallPosterOfASeriesShouldBeDeletedAfterDeletingAllImagesOfTheSeries() {
+        this.imageRepository.saveSmallSeriesPoster(this.testSeries, this.testImage);
+
+        this.imageRepository.deleteAllImagesOf(this.testSeries);
+        waitForAsyncOperations();
+        assertThat(this.imageRepository.getSmallPosterOf(this.testSeries), nullValue());
     }
 
     public void testTheSavedEpisodeImageOfASeriesShouldBeDeletedAfterDeletingAllImagesOfTheSeries() {

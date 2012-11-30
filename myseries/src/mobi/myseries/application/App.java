@@ -23,6 +23,7 @@ package mobi.myseries.application;
 
 import java.text.DateFormat;
 
+import mobi.myseries.R;
 import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.image.ImageService;
@@ -53,7 +54,9 @@ public class App extends Application {
 
         imageService = new ImageService(
                 environment.imageSource(),
-                environment.imageRepository());
+                environment.imageRepository(),
+                this.getResources().getDimensionPixelSize(R.dimen.appwidget_item_poster_width),
+                this.getResources().getDimensionPixelSize(R.dimen.appwidget_item_poster_height));
 
         errorService = new ErrorService();
 

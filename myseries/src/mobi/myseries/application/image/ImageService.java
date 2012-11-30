@@ -35,21 +35,35 @@ import android.os.AsyncTask;
 
 // TODO(Gabriel) Log the operations of this service.
 public final class ImageService {
-    private ImageServiceRepository imageRepository;
-    private ImageSource imageSource;
-    private ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
 
-    public ImageService(ImageSource imageSource, ImageServiceRepository imageRepository) {
+    private final int smallPosterWidth;
+    private final int smallPosterHeight;
+
+    private final ImageServiceRepository imageRepository;
+    private final ImageSource imageSource;
+
+    private final ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
+
+    public ImageService(ImageSource imageSource, ImageServiceRepository imageRepository,
+                        int smallPostersWidth, int smallPostersHeight) {
         Validate.isNonNull(imageSource, "imageSource");
         Validate.isNonNull(imageRepository, "imageRepository");
 
         this.imageSource = imageSource;
         this.imageRepository = imageRepository;
+
+        this.smallPosterWidth = smallPostersWidth;
+        this.smallPosterHeight = smallPostersHeight;
+
         this.episodeImageDownloadListeners = new ListenerSet<EpisodeImageDownloadListener>();
     }
 
     public Bitmap getPosterOf(Series series) {
         return this.imageRepository.getPosterOf(series);
+    }
+
+    public Bitmap getSmallPosterOf(Series series) {
+        return this.imageRepository.getSmallPosterOf(series);
     }
 
     public Bitmap getImageOf(Episode episode) {
@@ -70,6 +84,10 @@ public final class ImageService {
         try {
             Bitmap fetchedPoster = this.imageSource.fetchSeriesPoster(series.posterFileName());
             this.imageRepository.saveSeriesPoster(series, fetchedPoster);
+
+            Bitmap smallPoster = Bitmap.createScaledBitmap(fetchedPoster, this.smallPosterWidth,
+                                                                          this.smallPosterHeight, false);
+            this.imageRepository.saveSmallSeriesPoster(series, smallPoster);
         } catch (ConnectionFailedException e) {
         } catch (ConnectionTimeoutException e) {
         } catch (ImageNotFoundException e) {}

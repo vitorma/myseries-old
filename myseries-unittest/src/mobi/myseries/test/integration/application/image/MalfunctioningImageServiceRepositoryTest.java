@@ -61,6 +61,8 @@ public abstract class MalfunctioningImageServiceRepositoryTest extends Instrumen
         this.imageRepository.getImageOf(this.testEpisode);
     }
 
+    /* Series posters */
+
     public void testItMustNotThrowAnyExceptionOnSavingSeriesPosters() {
         this.imageRepository.saveSeriesPoster(this.testSeries, this.testImage);
     }
@@ -69,6 +71,18 @@ public abstract class MalfunctioningImageServiceRepositoryTest extends Instrumen
         this.imageRepository.saveSeriesPoster(this.testSeries, null);
     }
 
+    /* Small series posters */
+
+    public void testItMustNotThrowAnyExceptionOnSavingSmallSeriesPosters() {
+        this.imageRepository.saveSmallSeriesPoster(this.testSeries, this.testImage);
+    }
+
+    public void testItMustNotThrowAnyExceptionOnSavingSmallNullSeriesPosters() {
+        this.imageRepository.saveSmallSeriesPoster(this.testSeries, null);
+    }
+
+    /* Episode images */
+
     public void testItMustNotThrowAnyExceptionOnSavingEpisodeImages() {
         this.imageRepository.saveEpisodeImage(this.testEpisode, this.testImage);
     }
@@ -76,6 +90,8 @@ public abstract class MalfunctioningImageServiceRepositoryTest extends Instrumen
     public void testItMustNotThrowAnyExceptionOnSavingNullEpisodeImages() {
         this.imageRepository.saveEpisodeImage(this.testEpisode, null);
     }
+
+    /* Delete images */
 
     public void testItMustNotThrowAnyExceptionOnDeletingImages() {
         this.imageRepository.deleteAllImagesOf(this.testSeries);
