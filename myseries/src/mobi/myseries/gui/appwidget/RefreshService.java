@@ -48,9 +48,9 @@ public class RefreshService extends IntentService {
         int appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
 
         if (Android.isHoneycombOrHigher()) {
-            ScheduleWidgetV11.refresh(this.getApplicationContext(), appWidgetId);
+            AppWidgetV11.refresh(this.getApplicationContext(), appWidgetId);
         } else {
-            ScheduleWidgetV8.refresh(this.getApplicationContext(), appWidgetId);
+            AppWidgetV8.refresh(this.getApplicationContext(), appWidgetId);
         }
     }
 }

@@ -52,7 +52,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.appwidget_myschedule_preferences);
+        this.setContentView(R.layout.appwidget_preferences);
         this.getExtraAppWidgetIdOrFinish();
         this.setUpViews();
         this.getSupportActionBar().setTitle(R.string.widget_preferences);
@@ -149,7 +149,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         this.seriesToShow = new HashMap<Series, CheckedTextView>();
 
         for (Series s : App.seriesProvider().followedSeries()) {
-            View v = inflater.inflate(R.layout.appwidget_myschedule_preference_filter_option, null);
+            View v = inflater.inflate(R.layout.appwidget_preferences_filter_option, null);
             final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.seriesCheck);
 
             seriesCheck.setText(s.name());
@@ -239,12 +239,12 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
 
     private void updateAppWidget() {
         if (Android.isHoneycombOrHigher()) {
-            ScheduleWidgetV11.setUp(
+            AppWidgetV11.setUp(
                     this.getApplicationContext(),
                     AppWidgetManager.getInstance(this.getApplicationContext()),
                     this.appWidgetId);
         } else {
-            ScheduleWidgetV8.setUp(
+            AppWidgetV8.setUp(
                     this.getApplicationContext(),
                     this.appWidgetId);
         }

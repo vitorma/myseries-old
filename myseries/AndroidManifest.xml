@@ -71,26 +71,26 @@
         </activity>
 
         <receiver
-            android:name=".gui.appwidget.ScheduleWidgetV8"
+            android:name=".gui.appwidget.AppWidgetV8"
             android:label="@string/appwidget"
-            android:enabled="@bool/oldWidgetsEnabled">
+            android:enabled="@bool/appwidget_v8_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_myschedule_old_info"/>
+                android:resource="@xml/appwidget_info"/>
         </receiver>
         <receiver
-            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetV11"
+            android:name=".gui.appwidget.AppWidgetV11"
             android:label="@string/appwidget"
-            android:enabled="@bool/newWidgetsEnabled">
+            android:enabled="@bool/appwidget_v11_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_myschedule_info"/>
+                android:resource="@xml/appwidget_info"/>
         </receiver>
 
         <service

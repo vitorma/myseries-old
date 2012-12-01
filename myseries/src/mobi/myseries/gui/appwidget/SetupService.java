@@ -101,7 +101,7 @@ public class SetupService extends IntentService {
     }
 
     private void setUpAppWidgetView() {
-        this.appWidgetView = new RemoteViews(this.getPackageName(), R.layout.appwidget_myschedule);
+        this.appWidgetView = new RemoteViews(this.getPackageName(), R.layout.appwidget);
 
         this.setUpActionBar();
         this.setUpItemPageBar();

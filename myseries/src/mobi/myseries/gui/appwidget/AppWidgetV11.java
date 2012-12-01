@@ -1,5 +1,5 @@
 /*
- *   ScheduleWidgetV11.java
+ *   AppWidgetV11.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -30,14 +30,13 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 
-public class ScheduleWidgetV11 extends AppWidgetProvider {
+public class AppWidgetV11 extends AppWidgetProvider {
 
     @SuppressWarnings("deprecation")
     public static void setUp(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.appwidget_myschedule);
+        RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.appwidget);
 
         ActionBar.from(context, appWidgetView).setUpFor(appWidgetId);
 
@@ -80,21 +79,9 @@ public class ScheduleWidgetV11 extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        Log.d("Widget", "onDeleted called");
+
         for (int appWidgetId : appWidgetIds) {
             Preferences.removeEntriesRelatedToAppWidget(appWidgetId);
         }
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-        super.onEnabled(context);
-        Log.d("Widget", "onEnabled called");
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        super.onDisabled(context);
-        Log.d("Widget", "onDisabled called");
     }
 }

@@ -60,7 +60,7 @@ public class Item {
     public RemoteViews createFor(Episode episode) {
         Series series = App.seriesProvider().getSeries(episode.seriesId());
 
-        RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.appwidget_myschedule_item);
+        RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.appwidget_item);
 
         this.setUpSeriesPoster(item, series);
         this.setUpSeriesName(item, series);

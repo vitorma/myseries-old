@@ -2,7 +2,7 @@
 
 <resources>
 
-    <bool name="oldWidgetsEnabled">false</bool>
-    <bool name="newWidgetsEnabled">true</bool>
+    <bool name="appwidget_v8_enabled">false</bool>
+    <bool name="appwidget_v11_enabled">true</bool>
 
 </resources>
