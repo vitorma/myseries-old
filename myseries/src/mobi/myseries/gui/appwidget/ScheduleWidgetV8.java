@@ -53,10 +53,10 @@ public class ScheduleWidgetV8 extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        Log.d("Widget", "onDeleted called");
 
         for (int appWidgetId : appWidgetIds) {
             Preferences.clearThatOfAppWidget(appWidgetId);
+            Log.d("Widget", "Deleted " + appWidgetId);
         }
     }
 

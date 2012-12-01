@@ -30,7 +30,6 @@ import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
-import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -55,7 +54,7 @@ public class SetupService extends IntentService {
     public static Intent newIntent(Context context, int appWidgetId, String action) {
         Intent intent = new Intent(context, SetupService.class);
 
-        intent.putExtra(Extra.APPWIDGET_ID, appWidgetId);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setAction(action);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
@@ -66,7 +65,7 @@ public class SetupService extends IntentService {
     public void onHandleIntent(Intent intent) {
         AppWidgetManager mgr = AppWidgetManager.getInstance(this.getApplicationContext());
 
-        this.appWidgetId = intent.getExtras().getInt(Extra.APPWIDGET_ID);
+        this.appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
         this.action = intent.getAction();
         this.preferences = Preferences.forAppWidget(this.appWidgetId);
         this.loadEpisodes();

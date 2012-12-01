@@ -9,7 +9,6 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
-import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.Android;
 import android.app.Activity;
@@ -33,7 +32,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     public static Intent newIntent(Context context, int appWidgetId) {
         Intent intent = new Intent(context, AppWidgetPreferenceActivity.class);
 
-        intent.putExtra(Extra.APPWIDGET_ID, appWidgetId);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
@@ -54,7 +53,6 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.appwidget_myschedule_preferences);
-        this.setResult(Activity.RESULT_CANCELED);
         this.getExtraAppWidgetIdOrFinish();
         this.setUpViews();
         this.getSupportActionBar().setTitle(R.string.widget_preferences);
@@ -62,6 +60,10 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
 
     private void getExtraAppWidgetIdOrFinish() {
         this.appWidgetId = this.tryGettingAppWidgetIdFromExtras();
+
+        this.setResult(
+                Activity.RESULT_CANCELED,
+                new Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, this.appWidgetId));
 
         if (this.appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             this.finish();
@@ -74,7 +76,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         Bundle extras = this.getIntent().getExtras();
 
         return extras != null ?
-               extras.getInt(Extra.APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID) :
+               extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID) :
                AppWidgetManager.INVALID_APPWIDGET_ID;
     }
 
@@ -249,7 +251,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     }
 
     private void finishOk() {
-        Intent resultValue = new Intent().putExtra(Extra.APPWIDGET_ID, this.appWidgetId);
+        Intent resultValue = new Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, this.appWidgetId);
         this.setResult(Activity.RESULT_OK, resultValue);
         this.finish();
     }

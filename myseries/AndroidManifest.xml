@@ -73,8 +73,7 @@
         <receiver
             android:name=".gui.appwidget.ScheduleWidgetV8"
             android:label="@string/appwidget"
-            android:enabled="@bool/oldWidgetsEnabled"
-            android:exported="false">
+            android:enabled="@bool/oldWidgetsEnabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -85,8 +84,7 @@
         <receiver
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetV11"
             android:label="@string/appwidget"
-            android:enabled="@bool/newWidgetsEnabled"
-            android:exported="false">
+            android:enabled="@bool/newWidgetsEnabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>

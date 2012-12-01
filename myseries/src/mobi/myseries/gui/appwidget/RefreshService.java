@@ -21,9 +21,9 @@
 
 package mobi.myseries.gui.appwidget;
 
-import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.shared.Android;
 import android.app.IntentService;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -37,7 +37,7 @@ public class RefreshService extends IntentService {
     public static Intent newIntent(Context context, int appWidgetId) {
         Intent intent = new Intent(context, RefreshService.class);
 
-        intent.putExtra(Extra.APPWIDGET_ID, appWidgetId);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
         return intent;
@@ -45,7 +45,7 @@ public class RefreshService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        int appWidgetId = intent.getExtras().getInt(Extra.APPWIDGET_ID);
+        int appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
 
         if (Android.isHoneycombOrHigher()) {
             ScheduleWidgetV11.refresh(this.getApplicationContext(), appWidgetId);
