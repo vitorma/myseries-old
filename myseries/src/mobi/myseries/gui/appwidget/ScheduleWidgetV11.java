@@ -82,7 +82,7 @@ public class ScheduleWidgetV11 extends AppWidgetProvider {
         super.onDeleted(context, appWidgetIds);
         Log.d("Widget", "onDeleted called");
         for (int appWidgetId : appWidgetIds) {
-            Preferences.clearThatOfAppWidget(appWidgetId);
+            Preferences.removeEntriesRelatedToAppWidget(appWidgetId);
         }
     }
 

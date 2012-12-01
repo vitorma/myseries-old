@@ -219,7 +219,7 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
 
     private void showFilterDialog() {
         final MySchedulePreferences preferences = this.preferencesForCurrentMode();
-        final Map<Series, Boolean> filterOptions = preferences.seriesFilterOptions();
+        final Map<Series, Boolean> filterOptions = preferences.seriesToShow();
         final ScheduleAdapter adapter = this.adapterForCurrentMode();
 
         this.state.dialog = new SeriesFilterDialogBuilder(this)

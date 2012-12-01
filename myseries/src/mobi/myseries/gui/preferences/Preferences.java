@@ -30,29 +30,24 @@ import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
 public class Preferences {
 
     public static MySchedulePreferences forMySchedule(int scheduleMode) {
-        return SchedulePreferences.forMySchedule().appendingSuffixToKeys(scheduleMode);
+        return SchedulePreferences.forMySchedule().suffixingKeysWith(scheduleMode);
     }
 
     public static AppWidgetPreferences forAppWidget(int appWidgetId) {
-        return SchedulePreferences.forAppWidget().appendingSuffixToKeys(appWidgetId);
+        return SchedulePreferences.forAppWidget().suffixingKeysWith(appWidgetId);
     }
 
-    public static void removeEntriesRelatedTo(Series series) {
-        SchedulePreferences.forMySchedule().removeEntriesRelatedTo(series);
-        SchedulePreferences.forAppWidget().removeEntriesRelatedTo(series);
+    public static void removeEntriesRelatedToSeries(Series series) {
+        SchedulePreferences.forMySchedule().removeEntriesRelatedToSeries(series);
+        SchedulePreferences.forAppWidget().removeEntriesRelatedToSeries(series);
     }
 
-    public static void removeEntriesRelatedToAll(Collection<Series> series) {
-        SchedulePreferences.forMySchedule().removeEntriesRelatedToAll(series);
-        SchedulePreferences.forAppWidget().removeEntriesRelatedToAll(series);
+    public static void removeEntriesRelatedToAllSeries(Collection<Series> series) {
+        SchedulePreferences.forMySchedule().removeEntriesRelatedToAllSeries(series);
+        SchedulePreferences.forAppWidget().removeEntriesRelatedToAllSeries(series);
     }
 
-    public static void clearThatOfAppWidget(int appWidgetId) {
-        SchedulePreferences.forAppWidget().clearThatOfAppWidget(appWidgetId);
-    }
-
-    public static void clearAll() {
-        SchedulePreferences.forMySchedule().clear();
-        SchedulePreferences.forAppWidget().clear();
+    public static void removeEntriesRelatedToAppWidget(int appWidgetId) {
+        SchedulePreferences.forAppWidget().removeEntriesRelatedToAppWidget(appWidgetId);
     }
 }
