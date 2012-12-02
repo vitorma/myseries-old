@@ -82,7 +82,8 @@ public class App extends Application {
                 environment.seriesSource(),
                 environment.seriesRepository(),
                 environment.localizationProvider(),
-                imageService);
+                imageService,
+                broadcastService);
 
         schedule = new Schedule(
                 environment.seriesRepository(),
