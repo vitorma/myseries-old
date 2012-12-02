@@ -21,15 +21,10 @@
 
 package mobi.myseries.gui.appwidget;
 
-import mobi.myseries.application.broadcast.BroadcastAction;
-import mobi.myseries.gui.preferences.Preferences;
 import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 
-public class AppWidgetV8 extends AppWidgetProvider {
+public class AppWidgetV8 extends AppWidget {
 
     public static void setUp(Context context, int appWidgetId) {
         startService(context, appWidgetId, Action.SETUP);
@@ -44,43 +39,7 @@ public class AppWidgetV8 extends AppWidgetProvider {
     }
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for (int i = 0; i < appWidgetIds.length; i++) {
-            refresh(context, appWidgetIds[i]);
-        }
-
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
-    }
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        super.onDeleted(context, appWidgetIds);
-
-        for (int appWidgetId : appWidgetIds) {
-            Preferences.removeEntriesRelatedToAppWidget(appWidgetId);
-        }
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (this.shouldCallUpdate(intent.getAction())) {
-            this.callUpdate(context);
-        } else {
-            super.onReceive(context, intent);
-        }
-    }
-
-    public boolean shouldCallUpdate(String action) {
-        return BroadcastAction.SEEN_MARKUP.equals(action) ||
-               BroadcastAction.UPDATE.equals(action) ||
-               BroadcastAction.ADDICTION.equals(action) ||
-               BroadcastAction.REMOVAL.equals(action);
-    }
-
-    public void callUpdate(Context context) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, AppWidgetV8.class));
-
-        this.onUpdate(context, appWidgetManager, appWidgetIds);
+    protected void onUpdate(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        refresh(context, appWidgetId);
     }
 }

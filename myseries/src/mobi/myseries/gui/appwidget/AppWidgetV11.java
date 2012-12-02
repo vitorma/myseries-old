@@ -22,19 +22,15 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
-import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.gui.episodes.EpisodesActivity;
-import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.shared.Android;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-public class AppWidgetV11 extends AppWidgetProvider {
+public class AppWidgetV11 extends AppWidget {
 
     @SuppressWarnings("deprecation")
     public static void setUp(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
@@ -70,43 +66,7 @@ public class AppWidgetV11 extends AppWidgetProvider {
     }
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for (int i = 0; i < appWidgetIds.length; i++) {
-            setUp(context, appWidgetManager, appWidgetIds[i]);
-        }
-
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
-    }
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        super.onDeleted(context, appWidgetIds);
-
-        for (int appWidgetId : appWidgetIds) {
-            Preferences.removeEntriesRelatedToAppWidget(appWidgetId);
-        }
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (this.shouldCallUpdate(intent.getAction())) {
-            this.callUpdate(context);
-        } else {
-            super.onReceive(context, intent);
-        }
-    }
-
-    public boolean shouldCallUpdate(String action) {
-        return BroadcastAction.SEEN_MARKUP.equals(action) ||
-               BroadcastAction.UPDATE.equals(action) ||
-               BroadcastAction.ADDICTION.equals(action) ||
-               BroadcastAction.REMOVAL.equals(action);
-    }
-
-    public void callUpdate(Context context) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, AppWidgetV11.class));
-
-        this.onUpdate(context, appWidgetManager, appWidgetIds);
+    protected void onUpdate(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        setUp(context, appWidgetManager, appWidgetId);
     }
 }
