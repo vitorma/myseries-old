@@ -8,6 +8,8 @@
     android:minResizeWidth="250dp"
     android:minResizeHeight="88dp"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="21600000"
+    android:updatePeriodMillis="0"
     android:configure="mobi.myseries.gui.appwidget.AppWidgetPreferenceActivity"
-    android:previewImage="@drawable/appwidget_preview"/>
+    android:previewImage="@drawable/appwidget_preview"
+    android:widgetCategory="home_screen|keyguard"
+    android:initialKeyguardLayout="@layout/appwidget"/>
