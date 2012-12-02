@@ -85,6 +85,11 @@ public class EpisodesActivity extends SherlockFragmentActivity {
 
         Series series = SERIES_PROVIDER.getSeries(this.seriesId);
 
+        if (series == null) {
+            this.finish();
+            return;
+        }
+
         List<Episode> episodes = series.episodes();
 
         this.adapter = new EpisodePagerAdapter(this, this.getSupportFragmentManager(), episodes);
@@ -100,28 +105,28 @@ public class EpisodesActivity extends SherlockFragmentActivity {
         ab.setTitle(series.name());
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
-        
-        Object retained = getLastCustomNonConfigurationInstance();
+
+        Object retained = this.getLastCustomNonConfigurationInstance();
         if ((retained != null) && (retained instanceof StateHolder)) {
             this.state = (StateHolder) retained;
-            this.messageLauncher = state.messageLauncher;
+            this.messageLauncher = this.state.messageLauncher;
         } else {
             this.state = new StateHolder();
             this.messageLauncher = new MessageLauncher(this);
             this.state.messageLauncher = this.messageLauncher;
         }
-        
+
     }
     @Override
     protected void onResume() {
     	super.onResume();
-        loadState();
+        this.loadState();
     }
 
     private void loadState() {
     	this.messageLauncher.loadState();
     }
-    
+
     @Override
     protected void onStop() {
     	super.onStop();
@@ -130,7 +135,7 @@ public class EpisodesActivity extends SherlockFragmentActivity {
 
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
-        return state;
+        return this.state;
     }
 
 	@Override
@@ -145,6 +150,7 @@ public class EpisodesActivity extends SherlockFragmentActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     private static class StateHolder {
         MessageLauncher messageLauncher;
     }
