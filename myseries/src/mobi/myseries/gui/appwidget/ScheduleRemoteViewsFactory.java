@@ -29,7 +29,7 @@ import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
-import mobi.myseries.gui.shared.Extra;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -43,7 +43,7 @@ public class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteView
 
     public ScheduleRemoteViewsFactory(Context context, Intent intent) {
         this.context = context;
-        this.appWidgetId = intent.getExtras().getInt(Extra.APPWIDGET_ID);
+        this.appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
         this.loadingView = Item.from(context).loading();
     }
 

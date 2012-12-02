@@ -105,11 +105,31 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         return result;
     }
 
-    public Season including(Episode episode) {
+    private void validate(Episode episode) {
         Validate.isNonNull(episode, "episode");
         Validate.isTrue(episode.seriesId() == this.seriesId, "episode's seriesId should be %d", this.seriesId);
         Validate.isTrue(episode.seasonNumber() == this.number, "episode's seasonNumber should be %d", this.number);
         Validate.isTrue(!this.includes(episode), "episode is already included");
+    }
+
+    private void insert(Episode episode) {
+        validate(episode);
+
+        if (episode.wasSeen()) {
+            this.numberOfSeenEpisodes++;
+        }
+
+        if (this.nextEpisodeToSeeShouldBe(episode)) {
+            this.nextEpisodeToSee = episode;
+            this.notifyThatNextToSeeChanged();
+        }
+
+        this.episodes.put(episode.number(), episode);
+        episode.register(this);
+    }
+
+    public Season including(Episode episode) {
+        validate(episode);
 
         if (episode.wasSeen()) {
             this.numberOfSeenEpisodes++;
@@ -199,7 +219,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         }
 
         for (Episode e : other.episodes.values()) {
-            if (!this.includes(e)) this.including(e);
+            if (!this.includes(e)) this.insert(e);
         }
 
         return this;

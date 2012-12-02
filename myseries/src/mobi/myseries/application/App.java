@@ -23,7 +23,7 @@ package mobi.myseries.application;
 
 import java.text.DateFormat;
 
-import mobi.myseries.application.backup.BackupService;
+import mobi.myseries.R;
 import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.image.ImageService;
@@ -31,6 +31,7 @@ import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.search.SearchSeriesService;
 import mobi.myseries.application.update.UpdateService;
+import mobi.myseries.application.backup.BackupService;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
@@ -55,7 +56,9 @@ public class App extends Application {
 
         imageService = new ImageService(
                 environment.imageSource(),
-                environment.imageRepository());
+                environment.imageRepository(),
+                this.getResources().getDimensionPixelSize(R.dimen.appwidget_item_poster_width),
+                this.getResources().getDimensionPixelSize(R.dimen.appwidget_item_poster_height));
 
         errorService = new ErrorService();
 

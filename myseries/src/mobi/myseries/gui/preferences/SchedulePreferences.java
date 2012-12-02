@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Series;
@@ -34,8 +33,6 @@ import mobi.myseries.gui.appwidget.ItemPageBrowser;
 import mobi.myseries.gui.shared.SortMode;
 
 public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
-
     private static final String SORT_MODE_KEY = "SortMode";
     private static final String SHOW_SPECIAL_EPISODES_KEY = "ShowSpecialEpisodes";
     private static final String SHOW_SEEN_EPISODES_KEY = "ShowSeenEpisodes";
@@ -61,7 +58,7 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public <S> T appendingSuffixToKeys(S suffix) {
+    public <S> T suffixingKeysWith(S suffix) {
         this.primitive.appendingSuffixToKeys(suffix.toString());
 
         return (T) this;
@@ -83,14 +80,14 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
         return this.primitive.getBoolean(SHOW_SERIES_KEY + seriesId, SHOW_SERIES_DEFAULT_VALUE);
     }
 
-    public Map<Series, Boolean> seriesFilterOptions() {
-        Map<Series, Boolean> seriesFilterOptions = new HashMap<Series, Boolean>();
+    public Map<Series, Boolean> seriesToShow() {
+        Map<Series, Boolean> seriesToShow = new HashMap<Series, Boolean>();
 
-        for (Series s : SERIES_PROVIDER.followedSeries()) {
-            seriesFilterOptions.put(s, this.showSeries(s.id()));
+        for (Series s : App.seriesProvider().followedSeries()) {
+            seriesToShow.put(s, this.showSeries(s.id()));
         }
 
-        return seriesFilterOptions;
+        return seriesToShow;
     }
 
     public ScheduleSpecification fullSpecification() {
@@ -98,7 +95,7 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
             .specifySortMode(this.sortMode())
             .specifyInclusionOfSpecialEpisodes(this.showSpecialEpisodes())
             .specifyInclusionOfSeenEpisodes(this.showSeenEpisodes())
-            .specifyInclusionOfAllSeries(this.seriesFilterOptions());
+            .specifyInclusionOfAllSeries(this.seriesToShow());
     }
 
     public void setSortMode(int sortMode) {
@@ -117,13 +114,13 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
         this.primitive.putBoolean(SHOW_SERIES_KEY + seriesId, show);
     }
 
-    public void setIfShowSeries(Map<Series, Boolean> filterOptions) {
-        for (Series s : filterOptions.keySet()) {
-            this.setIfShowSeries(s.id(), filterOptions.get(s));
+    public void setIfShowSeries(Map<Series, Boolean> seriesToShow) {
+        for (Series s : seriesToShow.keySet()) {
+            this.setIfShowSeries(s.id(), seriesToShow.get(s));
         }
     }
 
-    public void removeEntriesRelatedTo(Series series) {
+    public void removeEntriesRelatedToSeries(Series series) {
         String prefix = SHOW_SERIES_KEY + series.id();
 
         for (String key : this.primitive.getKeys()) {
@@ -133,14 +130,10 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
         }
     }
 
-    public void removeEntriesRelatedToAll(Collection<Series> series) {
+    public void removeEntriesRelatedToAllSeries(Collection<Series> series) {
         for (Series s : series) {
-            this.removeEntriesRelatedTo(s);
+            this.removeEntriesRelatedToSeries(s);
         }
-    }
-
-    public void clear() {
-        this.primitive.clear();
     }
 
     /* Concrete children */
@@ -178,6 +171,16 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
 
         public void setCurrentPage(int currentPage) {
             this.primitive.putInt(CURRENT_PAGE_KEY, currentPage);
+        }
+
+        public void removeEntriesRelatedToAppWidget(int appWidgetId) {
+            String suffix = PrimitivePreferences.SUFFIX_SEPARATOR + appWidgetId;
+
+            for (String key : this.primitive.getKeys()) {
+                if (key.endsWith(suffix)) {
+                    this.primitive.remove(key);
+                }
+            }
         }
     }
 }

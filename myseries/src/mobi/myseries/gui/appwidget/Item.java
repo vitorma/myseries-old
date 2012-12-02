@@ -60,42 +60,42 @@ public class Item {
     public RemoteViews createFor(Episode episode) {
         Series series = App.seriesProvider().getSeries(episode.seriesId());
 
-        RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.appwidget_myschedule_item);
+        RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.appwidget_item);
 
-        this.setupSeriesPoster(item, series);
-        this.setupSeriesName(item, series);
-        this.setupEpisodeNumber(item, episode);
-        this.setupEpisodeAirdate(item, episode);
-        this.setupOnClickIntent(item, episode);
+        this.setUpSeriesPoster(item, series);
+        this.setUpSeriesName(item, series);
+        this.setUpEpisodeNumber(item, episode);
+        this.setUpEpisodeAirdate(item, episode);
+        this.setUpOnClickIntent(item, episode);
 
         return item;
     }
 
-    private void setupSeriesPoster(RemoteViews item, Series series) {
-        Bitmap seriesPoster = App.imageService().getPosterOf(series);
+    private void setUpSeriesPoster(RemoteViews item, Series series) {
+        Bitmap seriesPoster = App.imageService().getSmallPosterOf(series);
 
         item.setImageViewBitmap(R.id.seriesPoster, Objects.nullSafe(seriesPoster, GENERIC_POSTER));
     }
 
-    private void setupSeriesName(RemoteViews item, Series series) {
+    private void setUpSeriesName(RemoteViews item, Series series) {
         item.setTextViewText(R.id.seriesName, series.name());
     }
 
-    private void setupEpisodeNumber(RemoteViews item, Episode episode) {
+    private void setUpEpisodeNumber(RemoteViews item, Episode episode) {
         String format = this.context.getString(R.string.episode_number_format);
         String episodeNumber = String.format(format, episode.seasonNumber(), episode.number());
 
         item.setTextViewText(R.id.episodeNumber, episodeNumber);
     }
 
-    private void setupEpisodeAirdate(RemoteViews item, Episode episode) {
+    private void setUpEpisodeAirdate(RemoteViews item, Episode episode) {
         String unknownDate = this.context.getString(R.string.unknown_date);
         String episodeAirdate = DatesAndTimes.relativeTimeStringFor(episode.airDate(), unknownDate);
 
         item.setTextViewText(R.id.episodeAirDate, episodeAirdate);
     }
 
-    private void setupOnClickIntent(RemoteViews item, Episode episode) {
+    private void setUpOnClickIntent(RemoteViews item, Episode episode) {
         if (Android.isHoneycombOrHigher()) {
             this.setupOnClickFillInIntent(item, episode);
         } else {

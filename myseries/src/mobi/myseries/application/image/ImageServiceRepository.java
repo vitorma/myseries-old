@@ -28,11 +28,11 @@ import android.graphics.Bitmap;
 public interface ImageServiceRepository {
 
     public Bitmap getPosterOf(Series series);
-
+    public Bitmap getSmallPosterOf(Series series);
     public Bitmap getImageOf(Episode episode);
 
     public void saveSeriesPoster(Series series, Bitmap poster);
-
+    public void saveSmallSeriesPoster(Series series, Bitmap smallPoster);
     public void saveEpisodeImage(Episode episode, Bitmap image);
 
     public void deleteAllImagesOf(Series series);

@@ -1,5 +1,5 @@
 /*
- *   ScheduleWidgetV8.java
+ *   AppWidgetV8.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -21,11 +21,12 @@
 
 package mobi.myseries.gui.appwidget;
 
+import mobi.myseries.gui.preferences.Preferences;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 
-public class ScheduleWidgetV8 extends AppWidgetProvider {
+public class AppWidgetV8 extends AppWidgetProvider {
 
     public static void setUp(Context context, int appWidgetId) {
         startService(context, appWidgetId, Action.SETUP);
@@ -46,5 +47,14 @@ public class ScheduleWidgetV8 extends AppWidgetProvider {
         }
 
         super.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+
+        for (int appWidgetId : appWidgetIds) {
+            Preferences.removeEntriesRelatedToAppWidget(appWidgetId);
+        }
     }
 }

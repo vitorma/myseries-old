@@ -21,7 +21,7 @@
 
 package mobi.myseries.gui.appwidget;
 
-import mobi.myseries.gui.shared.Extra;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,7 +32,7 @@ public class AdapterService extends RemoteViewsService {
     public static Intent newIntent(Context context, int appWidgetId) {
         Intent intent = new Intent(context, AdapterService.class);
 
-        intent.putExtra(Extra.APPWIDGET_ID, appWidgetId);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
         return intent;
@@ -40,6 +40,6 @@ public class AdapterService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new ScheduleRemoteViewsFactory(this, intent);
+        return new ScheduleRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 }

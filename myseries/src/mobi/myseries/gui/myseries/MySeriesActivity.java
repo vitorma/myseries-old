@@ -240,7 +240,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                     @Override
                     public void onClick(Dialog dialog) {
                         App.followSeriesService().stopFollowingAll(allSeriesToRemove);
-                        Preferences.removeEntriesRelatedToAll(allSeriesToRemove);
+                        Preferences.removeEntriesRelatedToAllSeries(allSeriesToRemove);
 
                         dialog.dismiss();
                     }

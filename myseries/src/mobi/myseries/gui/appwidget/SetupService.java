@@ -30,7 +30,6 @@ import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
-import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -55,7 +54,7 @@ public class SetupService extends IntentService {
     public static Intent newIntent(Context context, int appWidgetId, String action) {
         Intent intent = new Intent(context, SetupService.class);
 
-        intent.putExtra(Extra.APPWIDGET_ID, appWidgetId);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setAction(action);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
@@ -64,14 +63,14 @@ public class SetupService extends IntentService {
 
     @Override
     public void onHandleIntent(Intent intent) {
-        AppWidgetManager mgr = AppWidgetManager.getInstance(this);
+        AppWidgetManager mgr = AppWidgetManager.getInstance(this.getApplicationContext());
 
-        this.appWidgetId = intent.getExtras().getInt(Extra.APPWIDGET_ID);
+        this.appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
         this.action = intent.getAction();
         this.preferences = Preferences.forAppWidget(this.appWidgetId);
         this.loadEpisodes();
-        this.setupItemPageBrowser();
-        this.setupAppWidgetView();
+        this.setUpItemPageBrowser();
+        this.setUpAppWidgetView();
 
         mgr.updateAppWidget(this.appWidgetId, this.appWidgetView);
     }
@@ -93,7 +92,7 @@ public class SetupService extends IntentService {
         }
     }
 
-    private void setupItemPageBrowser() {
+    private void setUpItemPageBrowser() {
         this.itemPageBrowser = ItemPageBrowser.from(this.episodes.size(), ITEMS_PER_PAGE)
             .goToPage(this.currentPage())
             .navigateAccordingToAction(this.action);
@@ -101,35 +100,35 @@ public class SetupService extends IntentService {
         this.saveCurrentPage();
     }
 
-    private void setupAppWidgetView() {
-        this.appWidgetView = new RemoteViews(this.getPackageName(), R.layout.appwidget_myschedule);
+    private void setUpAppWidgetView() {
+        this.appWidgetView = new RemoteViews(this.getPackageName(), R.layout.appwidget);
 
-        this.setupActionBar();
-        this.setupItemPageBar();
-        this.setupItems();
+        this.setUpActionBar();
+        this.setUpItemPageBar();
+        this.setUpItems();
     }
 
-    private void setupActionBar() {
-        ActionBar.from(this, this.appWidgetView).setUpFor(this.appWidgetId);
+    private void setUpActionBar() {
+        ActionBar.from(this.getApplicationContext(), this.appWidgetView).setUpFor(this.appWidgetId);
     }
 
-    private void setupItemPageBar() {
-        ItemPageBar.from(this, this.appWidgetView)
+    private void setUpItemPageBar() {
+        ItemPageBar.from(this.getApplicationContext(), this.appWidgetView)
             .setupFor(this.appWidgetId)
             .showNavigationAccordingTo(this.itemPageBrowser);
     }
 
-    private void setupItems() {
+    private void setUpItems() {
         this.appWidgetView.removeAllViews(R.id.episodes);
 
         if (this.episodes.isEmpty()) {
-            RemoteViews item = Item.from(this).empty();
+            RemoteViews item = Item.from(this.getApplicationContext()).empty();
             this.appWidgetView.addView(R.id.episodes, item);
             return;
         }
 
         for (int i = this.firstItemPosition(); i <= this.lastItemPosition(); i++) {
-            RemoteViews item = Item.from(this).createFor(this.episodes.get(i));
+            RemoteViews item = Item.from(this.getApplicationContext()).createFor(this.episodes.get(i));
             this.appWidgetView.addView(R.id.episodes, item);
         }
     }

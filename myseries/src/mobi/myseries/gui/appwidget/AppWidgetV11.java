@@ -1,5 +1,5 @@
 /*
- *   ScheduleWidgetV11.java
+ *   AppWidgetV11.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -23,6 +23,7 @@ package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
 import mobi.myseries.gui.episodes.EpisodesActivity;
+import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.shared.Android;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -31,11 +32,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-public class ScheduleWidgetV11 extends AppWidgetProvider {
+public class AppWidgetV11 extends AppWidgetProvider {
 
     @SuppressWarnings("deprecation")
     public static void setUp(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.appwidget_myschedule);
+        RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.appwidget);
 
         ActionBar.from(context, appWidgetView).setUpFor(appWidgetId);
 
@@ -73,5 +74,14 @@ public class ScheduleWidgetV11 extends AppWidgetProvider {
         }
 
         super.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+
+        for (int appWidgetId : appWidgetIds) {
+            Preferences.removeEntriesRelatedToAppWidget(appWidgetId);
+        }
     }
 }

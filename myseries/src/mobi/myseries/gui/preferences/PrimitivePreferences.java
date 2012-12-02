@@ -29,10 +29,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class PrimitivePreferences {
-    private static final Context CONTEXT = App.context();
-
+    public static final String SUFFIX_SEPARATOR = ".";
     private static final String DEFAULT_KEY_SUFFIX = "";
-    private static final String SUFFIX_SEPARATOR = ".";
 
     private String name;
     private String keySuffix;
@@ -91,7 +89,7 @@ public class PrimitivePreferences {
     }
 
     private SharedPreferences getSharedPreferences() {
-        return CONTEXT.getSharedPreferences(this.name, Context.MODE_PRIVATE);
+        return App.context().getSharedPreferences(this.name, Context.MODE_PRIVATE);
     }
 
     private SharedPreferences.Editor getEditor() {
