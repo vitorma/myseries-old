@@ -31,7 +31,6 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.update.UpdateListener;
-import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.preferences.Preferences;
@@ -67,16 +66,10 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String UPDATE = "UPDATE";
     private static final String SETTINGS = "SETTINGS";
     private static final String HELP = "HELP";
-    private static final Handler HANDLER = new Handler();
-    private static final UpdateService UPDATE_SERVICE = App.updateSeriesService().withHandler(
-            HANDLER);
 
     private StateHolder state;
 
     private MessageLauncher messageLauncher;
-
-    public MySeriesActivity() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +82,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         ab.setTitle(R.string.my_series);
 
         App.updateSeriesService().register(this);
+        App.updateSeriesService().withHandler(new Handler());
 
         Object retained = this.getLastCustomNonConfigurationInstance();
         if ((retained != null) && (retained instanceof StateHolder)) {
@@ -106,7 +100,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         new Thread() {
             @Override
             public void run() {
-                UPDATE_SERVICE.updateDataIfNeeded();
+                App.updateSeriesService().updateDataIfNeeded();
             }
         }.start();
     }
@@ -115,7 +109,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     protected void onResume() {
         super.onResume();
         this.loadState();
-        this.setSupportProgressBarIndeterminateVisibility(UPDATE_SERVICE.isUpdating());
+        this.setSupportProgressBarIndeterminateVisibility(App.updateSeriesService().isUpdating());
     }
 
     private void loadState() {
@@ -182,7 +176,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             new Thread() {
                 @Override
                 public void run() {
-                    UPDATE_SERVICE.updateData();
+                    App.updateSeriesService().updateData();
                 }
             }.start();
         }

@@ -1,12 +1,21 @@
 package mobi.myseries.application.update;
 
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 
 import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
+import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.domain.source.ConnectionTimeoutException;
+import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesSource;
+import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.CollectionFilter;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
@@ -21,8 +30,9 @@ public class UpdateService implements Publisher<UpdateListener> {
     private final ListenerSet<UpdateListener> updateListeners;
     private boolean updateRunning = false;
     private UpdateListener selfListener;
-    private Updater updater;
     private Handler handler;
+    private LocalizationProvider localizationProvider;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
             LocalizationProvider localizationProvider, ImageService imageService) {
@@ -36,7 +46,7 @@ public class UpdateService implements Publisher<UpdateListener> {
         this.seriesRepository = seriesRepository;
         this.imageService = imageService;
         this.updateListeners = new ListenerSet<UpdateListener>();
-        this.updater = new Updater(seriesSource, localizationProvider, imageService);
+        this.localizationProvider = localizationProvider;
 
         this.selfListener = new UpdateListener() {
 
@@ -122,8 +132,6 @@ public class UpdateService implements Publisher<UpdateListener> {
         return updateListeners.deregister(listener);
     }
 
-    // Auxiliary
-
     private void update() {
         this.update(false);
     }
@@ -146,7 +154,7 @@ public class UpdateService implements Publisher<UpdateListener> {
         if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.downloadEverythingInterval()) {
 
             try {
-                updateAvailable = updater.fetchUpdateMetadataSince(lastSuccessfulUpdate);
+                updateAvailable = fetchUpdateMetadataSince(lastSuccessfulUpdate);
                 Log.d(getClass().getName(), "Update Metadata Available? " + updateAvailable);
 
             } catch (Exception e) {
@@ -180,23 +188,68 @@ public class UpdateService implements Publisher<UpdateListener> {
             }
         }
 
-        for (final Series s : followedSeries()) {
+        try {
+            for (final Series s : followedSeries()) {
 
-            if (seriesWithDataToUpdate.contains(s)) {
-                UpdateResult result = UpdateService.this.updater.updateDataOf(s);
+                if (seriesWithDataToUpdate.contains(s)) {
+                    /* UPDATE SERIES DATA */
 
-                if (!result.success()) {
-                    notifyListenersOfUpdateFailure(result.error());
-                    return;
+                    UpdateTask updateSeriesTask;
+                    UpdateResult result = null;
+
+                    updateSeriesTask =
+                            new UpdateSeriesTask(seriesRepository, seriesSource,
+                                    localizationProvider, s);
+                    Future<?> future = executor.submit(updateSeriesTask);
+                    future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
+                    result = updateSeriesTask.result();
+
+                    if (!result.success()) {
+                        notifyListenersOfUpdateFailure(result.error());
+                        return;
+                    }
+                } else {
+                    Log.d(getClass().getName(), "Not updating data of " + s.name());
                 }
+
+                if (posterAvailableButNotDownloaded(s) || seriesWithPosterToUpdate.contains(s)) {
+                    /* UPDATE POSTER */
+
+                    UpdateTask updateSeriesTask;
+                    UpdateResult result = null;
+
+                    updateSeriesTask = new UpdatePosterTask(imageService, s);
+                    Future<?> future = executor.submit(updateSeriesTask);
+                    future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
+                    result = updateSeriesTask.result();
+
+                    if (!result.success()) {
+                        notifyListenersOfUpdateFailure(result.error());
+                        return;
+                    }
+                } else {
+                    Log.d(getClass().getName(), "Not updating poster of " + s.name());
+                }
+
+                s.setLastUpdate(System.currentTimeMillis());
+                seriesRepository.update(s);
             }
 
-            if (posterAvailableButNotDownloaded(s) || seriesWithPosterToUpdate.contains(s)) {
-                UpdateService.this.updater.updatePosterOf(s);
-            }
+        } catch (InterruptedException e) {
+            // Should never happen
+            e.printStackTrace();
+            return;
 
-            s.setLastUpdate(System.currentTimeMillis());
-            seriesRepository.update(s);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            notifyListenersOfUpdateFailure((Exception) e.getCause());
+            return;
+
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            notifyListenersOfUpdateFailure(new UpdateTimeoutException(e));
+            return;
+
         }
 
         notifyListenersOfUpdateSuccess();
@@ -213,6 +266,8 @@ public class UpdateService implements Publisher<UpdateListener> {
     private Collection<Series> followedSeries() {
         return seriesRepository.getAll();
     }
+
+    // Auxiliary
 
     private static long earliestUpdatedDateOf(Collection<Series> series) {
         long d = Long.MAX_VALUE;
@@ -268,5 +323,11 @@ public class UpdateService implements Publisher<UpdateListener> {
                 }
             }
         });
+    }
+
+    boolean fetchUpdateMetadataSince(long dateInMiliseconds)
+            throws ConnectionFailedException, ConnectionTimeoutException,
+            ParsingFailedException, UpdateMetadataUnavailableException {
+        return seriesSource.fetchUpdateMetadataSince(dateInMiliseconds);
     }
 }

@@ -1,5 +1,7 @@
 package mobi.myseries.application.update;
 
+import java.util.concurrent.TimeUnit;
+
 import mobi.myseries.application.App;
 import mobi.myseries.application.SettingsProvider;
 import android.content.Context;
@@ -55,5 +57,9 @@ class UpdatePolicy {
 
     public static long updateTimeout() {
         return ONE_MINUTE;
+    }
+
+    public static TimeUnit updateTimeoutUnit() {
+        return TimeUnit.MILLISECONDS;
     }
 }
