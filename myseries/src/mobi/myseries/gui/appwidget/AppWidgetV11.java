@@ -22,12 +22,15 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
+import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.shared.Android;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -82,6 +85,18 @@ public class AppWidgetV11 extends AppWidgetProvider {
 
         for (int appWidgetId : appWidgetIds) {
             Preferences.removeEntriesRelatedToAppWidget(appWidgetId);
+        }
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        //TODO (Cleber) Receive broadcasts about ADD, REMOVE and UPDATE
+        if (BroadcastAction.SEEN_MARKUP.equals(intent.getAction())) {
+            AppWidgetManager awm = AppWidgetManager.getInstance(App.context());
+            int[] ids = awm.getAppWidgetIds(new ComponentName(App.context(), AppWidgetV11.class));
+            this.onUpdate(App.context(), awm, ids);
+        } else {
+            super.onReceive(context, intent);
         }
     }
 }

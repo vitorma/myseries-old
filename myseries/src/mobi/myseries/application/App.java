@@ -24,6 +24,8 @@ package mobi.myseries.application;
 import java.text.DateFormat;
 
 import mobi.myseries.R;
+import mobi.myseries.application.backup.BackupService;
+import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.image.ImageService;
@@ -31,7 +33,6 @@ import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.search.SearchSeriesService;
 import mobi.myseries.application.update.UpdateService;
-import mobi.myseries.application.backup.BackupService;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
@@ -47,6 +48,7 @@ public class App extends Application {
     private static MessageService messageService;
     private static SeriesProvider seriesProvider;
     private static BackupService backupService;
+    private static BroadcastService broadcastService;
 
     @Override
     public void onCreate() {
@@ -88,8 +90,9 @@ public class App extends Application {
 
         messageService = new MessageService();
 
-        seriesProvider = new SeriesProvider(environment.seriesRepository());
+        broadcastService = new BroadcastService(this);
 
+        seriesProvider = new SeriesProvider(environment.seriesRepository(), broadcastService);
     }
 
     public static Context context() {

@@ -77,6 +77,9 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP" />
+            </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_info"/>
@@ -87,6 +90,9 @@
             android:enabled="@bool/appwidget_v11_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

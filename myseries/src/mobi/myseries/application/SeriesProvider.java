@@ -23,6 +23,7 @@ package mobi.myseries.application;
 
 import java.util.Collection;
 
+import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
@@ -30,12 +31,22 @@ import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.shared.Validate;
 
 public class SeriesProvider {
-    private final SeriesRepository seriesRepository;
+    private SeriesRepository seriesRepository;
+    private BroadcastService broadcastService;
 
+    //TODO (Cleber) Remove this constructor or create a SeenMarkService receiving a BroadcastService
     public SeriesProvider(SeriesRepository seriesRepository) {
         Validate.isNonNull(seriesRepository, "seriesRepository");
 
         this.seriesRepository = seriesRepository;
+    }
+
+    public SeriesProvider(SeriesRepository seriesRepository, BroadcastService broadcastService) {
+        Validate.isNonNull(seriesRepository, "seriesRepository");
+        Validate.isNonNull(broadcastService, "broadcastService");
+
+        this.seriesRepository = seriesRepository;
+        this.broadcastService = broadcastService;
     }
 
     public Collection<Series> followedSeries() {
@@ -51,20 +62,24 @@ public class SeriesProvider {
     public void markSeasonAsSeen(Season season) {
         season.markAsSeen();
         this.seriesRepository.updateAllEpisodes(season.episodes());
+        this.broadcastService.broadcastSeenMarkup();
     }
 
     public void markSeasonAsNotSeen(Season season) {
         season.markAsNotSeen();
         this.seriesRepository.updateAllEpisodes(season.episodes());
+        this.broadcastService.broadcastSeenMarkup();
     }
 
     public void markEpisodeAsSeen(Episode episode) {
         episode.markAsSeen();
         this.seriesRepository.update(episode);
+        this.broadcastService.broadcastSeenMarkup();
     }
 
     public void markEpisodeAsNotSeen(Episode episode) {
         episode.markAsNotSeen();
         this.seriesRepository.update(episode);
+        this.broadcastService.broadcastSeenMarkup();
     }
 }
