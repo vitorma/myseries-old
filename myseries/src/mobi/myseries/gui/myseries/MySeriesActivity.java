@@ -34,8 +34,8 @@ import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.preferences.Preferences;
+import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
-import mobi.myseries.gui.settings.SettingsActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
 import mobi.myseries.gui.shared.MessageLauncher;
@@ -293,7 +293,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     //Settings--------------------------------------------------------------------------------------
     private void showSettingsActivity() {
-        this.startActivity(SettingsActivity.newIntent(this));
+        this.startActivity(PreferencesActivity.newIntent(this));
     }
 
 }

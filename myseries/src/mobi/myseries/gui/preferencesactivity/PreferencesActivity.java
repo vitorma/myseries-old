@@ -19,10 +19,10 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.settings;
+package mobi.myseries.gui.preferencesactivity;
 
 import mobi.myseries.R;
-import mobi.myseries.application.SettingsProvider;
+import mobi.myseries.gui.preferences.PreferencesProvider;
 import mobi.myseries.gui.settings.backup.BackupActivity;
 import android.app.Activity;
 import android.content.Context;
@@ -39,7 +39,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-public class SettingsActivity extends SherlockActivity {
+public class PreferencesActivity extends SherlockActivity {
     private RadioGroup automaticUpdatesRadioGroup;
     private Button cancelButton;
     private Button saveButton;
@@ -91,7 +91,7 @@ public class SettingsActivity extends SherlockActivity {
     }
 
     private void loadSettings() {
-        SettingsProvider settings = settingsProviderFor(this);
+        PreferencesProvider settings = settingsProviderFor(this);
 
         if (!settings.updateAutomatically()) {
             this.automaticUpdatesRadioGroup.check(R.id.doNotUpdateRadioButton);
@@ -110,7 +110,7 @@ public class SettingsActivity extends SherlockActivity {
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SettingsActivity.this.finish();
+                PreferencesActivity.this.finish();
 
             }
         });
@@ -122,7 +122,7 @@ public class SettingsActivity extends SherlockActivity {
         this.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SettingsActivity.this.save();
+                PreferencesActivity.this.save();
 
             }
         });
@@ -169,12 +169,12 @@ public class SettingsActivity extends SherlockActivity {
     }
 
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, SettingsActivity.class);
+        Intent intent = new Intent(context, PreferencesActivity.class);
 
         return intent;
     }
 
-    private SettingsProvider settingsProviderFor(Context context) {
-        return new SettingsProvider(context);
+    private PreferencesProvider settingsProviderFor(Context context) {
+        return new PreferencesProvider(context);
     }
 }
