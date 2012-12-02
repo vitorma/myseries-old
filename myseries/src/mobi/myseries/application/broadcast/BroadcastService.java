@@ -37,4 +37,16 @@ public class BroadcastService {
     public void broadcastSeenMarkup() {
         this.context.sendBroadcast(new Intent(BroadcastAction.SEEN_MARKUP));
     }
+
+    public void broadcastUpdate() {
+        this.context.sendBroadcast(new Intent(BroadcastAction.UPDATE));
+    }
+
+    public void broadcastAddiction() {
+        this.context.sendBroadcast(new Intent(BroadcastAction.ADDICTION));
+    }
+
+    public void broadcastRemoval() {
+        this.context.sendBroadcast(new Intent(BroadcastAction.REMOVAL));
+    }
 }

@@ -21,7 +21,6 @@
 
 package mobi.myseries.gui.appwidget;
 
-import mobi.myseries.application.App;
 import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.gui.preferences.Preferences;
 import android.appwidget.AppWidgetManager;
@@ -64,13 +63,24 @@ public class AppWidgetV8 extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //TODO (Cleber) Receive broadcasts about ADD, REMOVE and UPDATE
-        if (BroadcastAction.SEEN_MARKUP.equals(intent.getAction())) {
-            AppWidgetManager awm = AppWidgetManager.getInstance(App.context());
-            int[] ids = awm.getAppWidgetIds(new ComponentName(App.context(), AppWidgetV8.class));
-            this.onUpdate(App.context(), awm, ids);
+        if (this.shouldCallUpdate(intent.getAction())) {
+            this.callUpdate(context);
         } else {
             super.onReceive(context, intent);
         }
+    }
+
+    public boolean shouldCallUpdate(String action) {
+        return BroadcastAction.SEEN_MARKUP.equals(action) ||
+               BroadcastAction.UPDATE.equals(action) ||
+               BroadcastAction.ADDICTION.equals(action) ||
+               BroadcastAction.REMOVAL.equals(action);
+    }
+
+    public void callUpdate(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, AppWidgetV8.class));
+
+        this.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 }

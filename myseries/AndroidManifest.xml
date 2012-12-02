@@ -75,10 +75,19 @@
             android:label="@string/appwidget"
             android:enabled="@bool/appwidget_v8_enabled">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP" />
+                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.UPDATE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.ADDICTION"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
@@ -92,7 +101,16 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP" />
+                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.UPDATE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.ADDICTION"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
