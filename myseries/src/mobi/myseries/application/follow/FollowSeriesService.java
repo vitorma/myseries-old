@@ -55,6 +55,16 @@ public class FollowSeriesService {
             ImageService imageService,
             ErrorService errorService,
             BroadcastService broadcastService) {
+        this(seriesSource, seriesRepository, localizationProvider, imageService, errorService, broadcastService, true);
+    }
+
+    public FollowSeriesService(SeriesSource seriesSource,
+            SeriesRepository seriesRepository,
+            LocalizationProvider localizationProvider,
+            ImageService imageService,
+            ErrorService errorService,
+            BroadcastService broadcastService,
+            boolean asyncFollowing) {
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
@@ -68,35 +78,6 @@ public class FollowSeriesService {
         this.imageService = imageService;
         this.errorService = errorService;
         this.broadcastService = broadcastService;
-        this.seriesFollower = new AsynchronousFollower();
-        this.seriesFollowingListeners = new ListenerSet<SeriesFollowingListener>();
-    }
-
-    public FollowSeriesService(SeriesSource seriesSource,
-                               SeriesRepository seriesRepository,
-                               LocalizationProvider localizationProvider,
-                               ImageService imageService,
-                               ErrorService errorService) {
-        this(seriesSource, seriesRepository, localizationProvider, imageService, errorService, true);
-    }
-
-    public FollowSeriesService(SeriesSource seriesSource,
-                               SeriesRepository seriesRepository,
-                               LocalizationProvider localizationProvider,
-                               ImageService imageService,
-                               ErrorService errorService,
-                               boolean asyncFollowing) {
-        Validate.isNonNull(seriesSource, "seriesSource");
-        Validate.isNonNull(seriesRepository, "seriesRepository");
-        Validate.isNonNull(localizationProvider, "localizationProvider");
-        Validate.isNonNull(imageService, "imageService");
-        Validate.isNonNull(errorService, "errorService");
-
-        this.seriesSource = seriesSource;
-        this.seriesRepository = seriesRepository;
-        this.localizationProvider = localizationProvider;
-        this.imageService = imageService;
-        this.errorService = errorService;
         this.seriesFollower = (asyncFollowing ? new AsynchronousFollower() : new SynchronousFollower());
         this.seriesFollowingListeners = new ListenerSet<SeriesFollowingListener>();
     }
@@ -215,12 +196,12 @@ public class FollowSeriesService {
         @Override
         public void follow(final Series series) {
             new FollowSeriesTask(series, FollowSeriesService.this.errorService).execute();
-        };
+        }
     }
 
     private class FollowSeriesTask extends AsyncTask<Series, Void, AsyncTaskResult<Series>> {
         private Series series;
-        private ErrorService errorService;
+        private ErrorService errorService; //XXX (Cleber) unused
 
         public FollowSeriesTask(Series series, ErrorService errorService) {
             this.series = series;
@@ -261,6 +242,6 @@ public class FollowSeriesService {
                 FollowSeriesService.this.notifyListenersOfFollowingError(series, e);
             }
             this.afterFollowingActions();
-        };
+        }
     }
 }
