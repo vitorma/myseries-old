@@ -58,6 +58,8 @@ import com.actionbarsherlock.view.Window;
 public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
+    //TODO (Reul) Refresh after a successful update
+    //TODO (Reul) Refresh after removing all series
     //TODO Menu from xml
     //TODO Internationalized string
     private static final String SCHEDULE = "SCHEDULE";
