@@ -161,4 +161,38 @@ public class MessageLauncher implements MessageServiceListener {
                 .build().show();
     }
 
+    @Override
+    public void onBackupSucess() {
+        //TODO(vitor) turn this a Internacionalizable string
+        this.showToastWith("Backup completed!");
+        
+    }
+
+    @Override
+    public void onBackupFailure(Exception e) {
+        // TODO(vitor) handle this exception properly
+        this.dialogBuilder.setTitle("The backup operation has failed");
+        this.dialogBuilder.setMessage("Something goes wrong!");
+        Dialog dialog = this.dialogBuilder.build();
+        dialog.show();
+        this.currentDialog = dialog;
+    }
+
+    @Override
+    public void onRestoreSucess() {
+        this.showToastWith("Restore completed!");
+        
+    }
+
+    @Override
+    public void onRestoreFailure(Exception e) {
+     // TODO(vitor) handle this exception properly
+        this.dialogBuilder.setTitle("The backup operation has failed");
+        this.dialogBuilder.setMessage("Something goes wrong!");
+        Dialog dialog = this.dialogBuilder.build();
+        dialog.show();
+        this.currentDialog = dialog;
+        
+    }
+
 }

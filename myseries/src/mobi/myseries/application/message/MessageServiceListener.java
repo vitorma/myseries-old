@@ -10,5 +10,9 @@ public interface MessageServiceListener {
 	public void onUpdateStart();
 	public void onUpdateSuccess();
 	public void onUpdateError(Exception e);
+    public void onBackupSucess();
+    public void onBackupFailure(Exception e);
+    public void onRestoreSucess();
+    public void onRestoreFailure(Exception e);
 
 }

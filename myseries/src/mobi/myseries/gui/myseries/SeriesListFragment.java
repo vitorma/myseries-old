@@ -24,13 +24,16 @@ package mobi.myseries.gui.myseries;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.backup.BackupListener;
+import mobi.myseries.application.backup.BackupService;
 import android.os.Bundle;
 import android.widget.ListAdapter;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public class SeriesListFragment extends SherlockListFragment {
+public class SeriesListFragment extends SherlockListFragment implements BackupListener {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
+    private static final BackupService BACKUP_SERVICE = App.backupService();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class SeriesListFragment extends SherlockListFragment {
         this.setUpSelector();
         this.setUpEmptyTextView();
         this.setUpListAdapter();
+        BACKUP_SERVICE.register(this);
     }
 
     private void setUpEmptyTextView() {
@@ -58,4 +62,18 @@ public class SeriesListFragment extends SherlockListFragment {
         ListAdapter adapter = new SeriesListAdapter(this.getActivity(), SERIES_PROVIDER.followedSeries());
         this.setListAdapter(adapter);
     }
+
+    @Override
+    public void onBackupSucess() {}
+
+    @Override
+    public void onBackupFailure(Exception e) {}
+
+    @Override
+    public void onRestoreSucess() {
+        this.setUpListAdapter();
+    }
+
+    @Override
+    public void onRestoreFailure(Exception e) {}
 }

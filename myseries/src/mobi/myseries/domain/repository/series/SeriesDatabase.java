@@ -21,13 +21,18 @@
 
 package mobi.myseries.domain.repository.series;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import mobi.myseries.application.App;
+import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;
+import mobi.myseries.shared.FilesUtil;
 import mobi.myseries.shared.Numbers;
 import mobi.myseries.shared.Validate;
 import android.content.ContentValues;
@@ -35,6 +40,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.MediaStore.Files;
 
 public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository {
     private static final String DATABASE_NAME = "myseries_db";
@@ -306,6 +312,19 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
         return result;
     }
+    
+    public void doBackupTo(String destinationFilePath) throws IOException{
+        FilesUtil.copy(dbFile(), new File(destinationFilePath));
+    }
+    
+    public void restoreDBFrom(String sourceFilePath) throws IOException {
+        FilesUtil.copy(new File(sourceFilePath), dbFile());
+        getReadableDatabase().close();
+    }
+
+    private File dbFile(){
+        return App.context().getDatabasePath(DATABASE_NAME);
+    }
 
     private List<Episode> episodesWithSeriesId(int seriesId, SQLiteDatabase db) {
         Cursor c = db.rawQuery(SELECT_ALL_EPISODES_OF_A_SERIES, new String[] {String.valueOf(seriesId)});
@@ -401,4 +420,17 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withSeenMark(Boolean.valueOf(c.getString(c.getColumnIndex(EPISODE_SEENMARK))))
             .build();
     }
+
+    @Override
+    public void exportTo(String backupFilePath) throws IOException {
+        this.doBackupTo(backupFilePath);
+        
+    }
+
+    @Override
+    public void restoreFrom(String backupFilePath) throws IOException {
+        this.restoreDBFrom(backupFilePath);
+        
+    }
+
 }

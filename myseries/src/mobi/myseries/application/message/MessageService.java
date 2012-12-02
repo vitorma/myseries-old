@@ -3,12 +3,13 @@ package mobi.myseries.application.message;
 import java.util.Collection;
 
 import mobi.myseries.application.App;
+import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 
-public class MessageService implements SeriesFollowingListener, UpdateListener{
+public class MessageService implements SeriesFollowingListener, UpdateListener, BackupListener{
 
     private ListenerSet<MessageServiceListener> listeners;
 
@@ -16,6 +17,7 @@ public class MessageService implements SeriesFollowingListener, UpdateListener{
         this.listeners = new ListenerSet<MessageServiceListener>();
         App.followSeriesService().registerSeriesFollowingListener(this);
         App.updateSeriesService().register(this);
+        App.backupService().register(this);
     }
 
     public boolean registerListener(MessageServiceListener l) {
@@ -57,9 +59,21 @@ public class MessageService implements SeriesFollowingListener, UpdateListener{
         }
     }
 
-    public void notifyUpdateError(Exception e) {
+    private void notifyUpdateError(Exception e) {
         for (MessageServiceListener l : listeners) {
             l.onUpdateError(e);
+        }
+    }
+
+    private void notifyBackupSucess() {
+        for (MessageServiceListener l : listeners) {
+            l.onBackupSucess();
+        }
+    }
+
+    private void notifyBackupFailure(Exception e) {
+        for (MessageServiceListener l : listeners) {
+            l.onBackupFailure(e);
         }
     }
 
@@ -73,7 +87,6 @@ public class MessageService implements SeriesFollowingListener, UpdateListener{
         notifyFollowingSuccess(followedSeries);
 
     }
-
 
     @Override
     public void onStopFollowing(Series unfollowedSeries) {}
@@ -103,6 +116,42 @@ public class MessageService implements SeriesFollowingListener, UpdateListener{
     @Override
     public void onFollowingFailure(Series series, Exception e) {
         notifyFollowingError(series, e);
+    }
+
+    @Override
+    public void onBackupSucess() {
+        notifyBackupSucess();
+        
+    }
+
+    @Override
+    public void onBackupFailure(Exception e) {
+        notifyBackupFailure(e);
+        
+    }
+
+    @Override
+    public void onRestoreSucess() {
+        notifyRestoreSucess();
+        
+    }
+
+    private void notifyRestoreSucess() {
+        for (MessageServiceListener l : listeners) {
+            l.onRestoreSucess();
+        }
+    }
+
+    @Override
+    public void onRestoreFailure(Exception e) {
+        notifyRestoreFailure(e);
+        
+    }
+
+    private void notifyRestoreFailure(Exception e) {
+        for (MessageServiceListener l : listeners) {
+            l.onRestoreFailure(e);
+        }
     }
 
 }

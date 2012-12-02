@@ -21,6 +21,7 @@
 
 package mobi.myseries.domain.repository.series;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
@@ -284,5 +285,18 @@ public class SeriesCache implements SeriesRepository {
             this.series.clear();
             return this;
         }
+    }
+
+    @Override
+    public void exportTo(String backupFilePath) throws IOException {
+        this.sourceRepository.exportTo(backupFilePath);
+        
+    }
+
+    @Override
+    public void restoreFrom(String backupFilePath) throws IOException {
+        this.sourceRepository.restoreFrom(backupFilePath);
+        this.seriesSet = new SeriesSet().includingAll(this.sourceRepository.getAll());
+        
     }
 }

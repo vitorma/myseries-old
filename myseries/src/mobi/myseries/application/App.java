@@ -23,6 +23,7 @@ package mobi.myseries.application;
 
 import java.text.DateFormat;
 
+import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.image.ImageService;
@@ -44,6 +45,7 @@ public class App extends Application {
     private static ImageService imageService;
     private static MessageService messageService;
     private static SeriesProvider seriesProvider;
+    private static BackupService backupService;
 
     @Override
     public void onCreate() {
@@ -79,9 +81,12 @@ public class App extends Application {
                 followSeriesService,
                 updateService);
 
+        backupService = new BackupService(environment.seriesRepository());
+
         messageService = new MessageService();
 
         seriesProvider = new SeriesProvider(environment.seriesRepository());
+
     }
 
     public static Context context() {
@@ -140,5 +145,9 @@ public class App extends Application {
 
     public static MessageService messageService() {
         return messageService;
+    }
+
+    public static BackupService backupService() {
+        return backupService;
     }
 }
