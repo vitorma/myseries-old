@@ -3,7 +3,7 @@ package mobi.myseries.application.update;
 import java.util.concurrent.TimeUnit;
 
 import mobi.myseries.application.App;
-import mobi.myseries.application.SettingsProvider;
+import mobi.myseries.gui.preferences.PreferencesProvider;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,7 +25,7 @@ class UpdatePolicy {
     }
 
     static boolean shouldUpdateNow() {
-        SettingsProvider settings = new SettingsProvider(App.context());
+        PreferencesProvider settings = new PreferencesProvider(App.context());
 
         if (!settings.updateAutomatically()) {
             Log.d(UpdatePolicy.class.getName(), "Do not update automatically.");
