@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
 import mobi.myseries.application.LocalizationProvider;
+import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
@@ -33,46 +34,51 @@ public class UpdateService implements Publisher<UpdateListener> {
     private Handler handler;
     private LocalizationProvider localizationProvider;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final BroadcastService broadcastService;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
-            LocalizationProvider localizationProvider, ImageService imageService) {
+            LocalizationProvider localizationProvider, ImageService imageService,
+            BroadcastService broadcastService) {
 
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
         Validate.isNonNull(imageService, "imageService");
+        Validate.isNonNull(broadcastService, "broadcastService");
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
         this.imageService = imageService;
         this.updateListeners = new ListenerSet<UpdateListener>();
         this.localizationProvider = localizationProvider;
+        this.broadcastService = broadcastService;
 
         this.selfListener = new UpdateListener() {
 
             @Override
             public void onUpdateSuccess() {
                 Log.d(getClass().getName(), "Update finished successfully. :)");
-                updateRunning = false;
+                UpdateService.this.broadcastService.broadcastUpdate();
+                UpdateService.this.updateRunning = false;
             }
 
             @Override
             public void onUpdateStart() {
                 Log.d(getClass().getName(), "Update started.");
-                updateRunning = true;
+                UpdateService.this.updateRunning = true;
             }
 
             @Override
             public void onUpdateNotNecessary() {
                 Log.d(getClass().getName(), "Update is not necessary.");
-                updateRunning = false;
+                UpdateService.this.updateRunning = false;
             }
 
             @Override
             public void onUpdateFailure(Exception e) {
                 Log.d(getClass().getName(), "Update finished with failure. :(");
-                updateRunning = false;
-
+                UpdateService.this.broadcastService.broadcastUpdate();
+                UpdateService.this.updateRunning = false;
             }
         };
 
