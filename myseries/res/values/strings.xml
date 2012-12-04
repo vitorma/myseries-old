@@ -120,6 +120,7 @@
     <string name="update_network_unavailable">Internet access is not available. Please turn either wifi or mobile connection on and try again.</string>
     <string name="stop_follow_message_format" formatted="false">Do you want to stop following %s?</string>
     <string name="follow_toast_message_format" formatted="false">The series %s will be added to your list soon.</string>
+    <string name="no_series_to_update">No series to update.</string>
 
     <!-- Preferences Activity -->
 

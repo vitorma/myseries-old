@@ -175,6 +175,16 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(UPDATE)) {
+
+            final Context context = this;
+            final Collection<Series> followedSeries = SERIES_PROVIDER.followedSeries();
+
+            if (followedSeries.isEmpty()) {
+                new ToastBuilder(context).setMessage(R.string.no_series_to_update).build().show();
+                return super.onMenuItemSelected(featureId, item);
+            }
+
+
             new Thread() {
                 @Override
                 public void run() {
