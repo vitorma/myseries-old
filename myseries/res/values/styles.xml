@@ -212,6 +212,8 @@
         <item name="android:footerDividersEnabled">true</item>
         <item name="android:showDividers">beginning|middle|end</item>
         <item name="android:fastScrollEnabled">true</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:cacheColorHint">@color/white</item>
     </style>
 
     <!-- ExpandableListView -->
