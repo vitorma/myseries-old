@@ -3,6 +3,7 @@ package mobi.myseries.application.update;
 import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
+import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
 import android.util.Log;
 
@@ -34,9 +35,15 @@ class UpdateSeriesTask implements UpdateTask {
             Log.d(getClass().getName(), "Saving " + series.name());
             repository.update(series);
 
+        } catch (SeriesNotFoundException e) {
+            e.printStackTrace();
+            this.result = new UpdateResult().withError(e.withSeriesName(series.name()));
+            return;
+
         } catch (Exception e) {
             e.printStackTrace();
             this.result = new UpdateResult().withError(e);
+            return;
 
         }
 

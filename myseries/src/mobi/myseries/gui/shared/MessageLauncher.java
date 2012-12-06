@@ -96,6 +96,7 @@ public class MessageLauncher implements MessageServiceListener {
     @Override
     public void onUpdateError(Exception e) {
         this.dialogBuilder.setTitle(R.string.update_failed_title);
+
         if (e instanceof ConnectionFailedException) {
             dialogBuilder.setMessage(R.string.update_connection_failed);
 
@@ -103,18 +104,22 @@ public class MessageLauncher implements MessageServiceListener {
             dialogBuilder.setMessage(R.string.update_connection_timeout);
 
         } else if (e instanceof ParsingFailedException) {
-            dialogBuilder.setMessage(R.string.parsing_failed_message);
+            dialogBuilder.setMessage(R.string.update_parsing_failed);
 
         } else if (e instanceof SeriesNotFoundException) {
-            dialogBuilder.setMessage(R.string.update_series_not_found);
+            dialogBuilder.setMessage(String.format(
+                    App.context().getString(R.string.update_series_not_found),
+                    ((SeriesNotFoundException) e).seriesName()));
 
         } else if (e instanceof UpdateMetadataUnavailableException) {
             dialogBuilder.setMessage(R.string.update_metadata_unavailable);
 
         } else if (e instanceof NetworkUnavailableException) {
             dialogBuilder.setMessage(R.string.update_network_unavailable);
+
         } else if (e instanceof UpdateTimeoutException) {
             dialogBuilder.setMessage(R.string.update_timeout);
+
         } else {
             dialogBuilder.setMessage(e.getMessage());
 
@@ -163,9 +168,9 @@ public class MessageLauncher implements MessageServiceListener {
 
     @Override
     public void onBackupSucess() {
-        //TODO(vitor) turn this a Internacionalizable string
+        // TODO(vitor) turn this a Internacionalizable string
         this.showToastWith("Backup completed!");
-        
+
     }
 
     @Override
@@ -181,18 +186,18 @@ public class MessageLauncher implements MessageServiceListener {
     @Override
     public void onRestoreSucess() {
         this.showToastWith("Restore completed!");
-        
+
     }
 
     @Override
     public void onRestoreFailure(Exception e) {
-     // TODO(vitor) handle this exception properly
+        // TODO(vitor) handle this exception properly
         this.dialogBuilder.setTitle("The backup operation has failed");
         this.dialogBuilder.setMessage("Something goes wrong!");
         Dialog dialog = this.dialogBuilder.build();
         dialog.show();
         this.currentDialog = dialog;
-        
+
     }
 
 }

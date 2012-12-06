@@ -23,6 +23,7 @@ package mobi.myseries.domain.source;
 
 public class SeriesNotFoundException extends Exception {
     private static final long serialVersionUID = 1L;
+    private String seriesName;
 
     public SeriesNotFoundException() {
         super();
@@ -30,5 +31,14 @@ public class SeriesNotFoundException extends Exception {
 
     public SeriesNotFoundException(Throwable cause) {
         super(cause);
+    }
+
+    public SeriesNotFoundException withSeriesName(String seriesName) {
+        this.seriesName = seriesName;
+        return this;
+    }
+
+    public String seriesName() {
+        return this.seriesName;
     }
 }
