@@ -181,17 +181,6 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
             @Override
             public void onNothingSelected(final AdapterView< ? > parent) {}
         });
-
-        this.coverFlow.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Series series = SeriesCoverFlowFragment.this.seriesAdapter.itemOf(position);
-
-                if (!SeriesCoverFlowFragment.this.isSelected(series)) {return true;}
-
-                new StopFollowingDialogBuilder(series, view.getContext()).build().show();
-                return true;
-            }});
     }
 
     private void downloadDescription(Series item) {

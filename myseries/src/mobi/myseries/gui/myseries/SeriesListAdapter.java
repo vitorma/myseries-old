@@ -77,7 +77,6 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
             this.setNameTo(item.name(), itemView);
             this.setSeenEpisodesBarFor(item, itemView);
             this.setUpShowingSeriesDetailsViewOnClickFor(item, itemView);
-            this.setUpStopFollowingOnLongClickFor(item, itemView);
 
             return itemView;
         }
@@ -118,17 +117,6 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
                 public void onClick(View v) {
                     Intent intent = SeriesActivity.newIntent(SeriesListItemFactory.this.context, series.id());
                     SeriesListItemFactory.this.context.startActivity(intent);
-                }
-            });
-        }
-
-        private void setUpStopFollowingOnLongClickFor(final Series series, View itemView) {
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-
-                @Override
-                public boolean onLongClick(View v) {
-                    new StopFollowingDialogBuilder(series, SeriesListItemFactory.this.context).build().show();
-                    return true;
                 }
             });
         }
