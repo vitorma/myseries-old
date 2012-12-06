@@ -17,33 +17,4 @@
         android:layout_height="@dimen/chunkbar_height"
         android:layout_centerVertical="true"/>
 
-    <CheckBox
-        android:id="@+id/nextToSeeCheckBox"
-        android:layout_width="@dimen/checkbox_width"
-        android:layout_height="@dimen/checkbox_height"
-        android:layout_marginLeft="@dimen/gap_medium"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
-
-    <TextView
-        android:id="@+id/nextToSeeTextView"
-        style="@style/TextView.Data.Medium"
-        android:gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="18dp"
-        android:layout_toLeftOf="@id/nextToSeeCheckBox"
-        android:layout_alignBottom="@id/nextToSeeCheckBox"
-        android:layout_alignWithParentIfMissing="true"/>
-
-    <TextView
-        android:id="@+id/nextToSeeLabelTextView"
-        android:text="@string/next_to_see"
-        style="@style/TextView.Label.Small"
-        android:gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="14dp"
-        android:layout_toLeftOf="@id/nextToSeeCheckBox"
-        android:layout_above="@id/nextToSeeTextView"
-        android:layout_alignWithParentIfMissing="true"/>
-
 </RelativeLayout>

@@ -27,14 +27,11 @@ import java.util.Collection;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.backup.BackupListener;
-import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.application.update.UpdateService;
-import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.series.SeriesActivity;
@@ -47,10 +44,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -81,7 +76,6 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
             this.setPosterTo(item, itemView);
             this.setNameTo(item.name(), itemView);
             this.setSeenEpisodesBarFor(item, itemView);
-            this.setNextEpisodeToSeeTo(item.nextEpisodeToSee(true), itemView); //TODO SharedPreference
             this.setUpShowingSeriesDetailsViewOnClickFor(item, itemView);
             this.setUpStopFollowingOnLongClickFor(item, itemView);
 
@@ -115,29 +109,6 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         private void setSeenEpisodesBarFor(Series series, View itemView) {
             SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.seenEpisodesBar);
             seenEpisodesBar.updateWithEpisodesOf(series);
-        }
-
-        private void setNextEpisodeToSeeTo(final Episode nextEpisode, View itemView) {
-            TextView nextToSee = (TextView) itemView.findViewById(R.id.nextToSeeTextView);
-            CheckBox seenMark = (CheckBox) itemView.findViewById(R.id.nextToSeeCheckBox);
-
-            if (nextEpisode == null) {
-                nextToSee.setText(this.context.getString(R.string.up_to_date));
-                seenMark.setVisibility(View.GONE);
-                return;
-            }
-
-            String format = this.context.getString(R.string.episode_number_format);
-            nextToSee.setText(String.format(format, nextEpisode.seasonNumber(), nextEpisode.number()));
-
-            seenMark.setVisibility(View.VISIBLE);
-            seenMark.setChecked(nextEpisode.wasSeen());
-            seenMark.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SERIES_PROVIDER.markEpisodeAsSeen(nextEpisode);
-                }
-            });
         }
 
         private void setUpShowingSeriesDetailsViewOnClickFor(final Series series, View itemView) {
