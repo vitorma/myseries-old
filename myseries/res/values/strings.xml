@@ -121,7 +121,7 @@
     <string name="up_to_date_message">Data is up-to-date.</string>
     <string name="update_timeout">Download time limit exceeded. Check your connection and try again.</string>
     <string name="update_started_message">Checking for updates…</string>
-    <string name="update_metadata_unavailable">The update metadata is not unavailable. TheTVDB may be down. Please try again later.</string>
+    <string name="update_metadata_unavailable">Data us up-to-date.</string>
     <string name="update_success_message">Update complete.</string>
 
 
