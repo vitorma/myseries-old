@@ -26,7 +26,6 @@ import java.util.Collection;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.image.ImageService;
@@ -50,8 +49,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, SeriesFollowingListener {
-
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
 
