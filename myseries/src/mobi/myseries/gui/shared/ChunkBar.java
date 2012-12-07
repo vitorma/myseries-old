@@ -67,6 +67,7 @@ public class ChunkBar extends View {
         this.textBackground.setColor(DEFAULT_TEXT_BACKGROUND_COLOR);
     }
 
+    @Override
     public void setBackgroundColor(int color) {
         this.background.setColor(color);
     }
@@ -115,19 +116,31 @@ public class ChunkBar extends View {
 
         float width =
                 this.getMeasuredWidth() - this.getPaddingLeft() - this.getPaddingRight()
-                        - textWidth - 2 * internalPadding;
+                        - textWidth - (2 * internalPadding);
 
-        float partWidth = (float) (width) / this.parts.length;
-        float partHeight = (float) height;
+        float partWidth = (width) / this.parts.length;
+        float partHeight = height;
 
         RectF rect = new RectF(this.getPaddingLeft(), this.getPaddingTop(), width, height);
         canvas.drawRect(rect, background);
 
-        for (int i = 0; i < this.parts.length; ++i) {
-            if (this.parts[i]) {
-                canvas.drawRect(i * partWidth + this.getPaddingLeft(), this.getPaddingTop(),
-                        (i + 1) * partWidth, partHeight - this.getPaddingBottom(), this.foreground);
+        int i = 0;
+        int j;
+        while (i < this.parts.length) {
+            if (!this.parts[i]) {
+                ++i;
+                continue;
             }
+
+            j = i + 1;
+            while ((j < this.parts.length) && (this.parts[i] == this.parts[j])) {
+                ++j;
+            }
+
+            canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
+                    (j) * partWidth, partHeight - this.getPaddingBottom(), this.foreground);
+
+            i = j;
         }
 
         int textBackgroundRight = this.getMeasuredWidth() + (int) textWidth;
@@ -136,7 +149,7 @@ public class ChunkBar extends View {
         canvas.drawRect(rect2, textBackground);
 
         float diff = this.getMeasuredHeight() - textBounds.height();
-        float textY = textBounds.height() + diff / 2.0f;
+        float textY = textBounds.height() + (diff / 2.0f);
 
         canvas.drawText(text, this.getMeasuredWidth() - this.getPaddingRight() - internalPadding,
                 textY, this.textPaint);
