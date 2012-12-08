@@ -26,12 +26,10 @@ import java.util.Comparator;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.application.update.UpdateService;
-import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.series.SeriesActivity;
@@ -43,19 +41,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
-
     /* TODO(Reul): Use MessageService instead of UpdateService*/
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
     private static final UpdateService UPDATE_SERIES_SERVICE = App.updateSeriesService();
@@ -158,8 +152,6 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         this.seriesItemViewHolder = new SeriesItemViewHolder();
         this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.nameTextView);
         this.seriesItemViewHolder.bar = (SeenEpisodesBar) this.getActivity().findViewById(R.id.seenEpisodesBar);
-        this.seriesItemViewHolder.nextToSee = (TextView) this.getActivity().findViewById(R.id.nextToSeeTextView);
-        this.seriesItemViewHolder.seenMark = (CheckBox) this.getActivity().findViewById(R.id.nextToSeeCheckBox);
 
         this.seriesAdapter.registerSeriesListener(this);
         this.setUpListeners();
@@ -189,42 +181,11 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
             @Override
             public void onNothingSelected(final AdapterView< ? > parent) {}
         });
-
-        this.coverFlow.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Series series = SeriesCoverFlowFragment.this.seriesAdapter.itemOf(position);
-
-                if (!SeriesCoverFlowFragment.this.isSelected(series)) {return true;}
-
-                new StopFollowingDialogBuilder(series, view.getContext()).build().show();
-                return true;
-            }});
     }
 
     private void downloadDescription(Series item) {
         this.seriesItemViewHolder.name.setText(item.name());
         this.seriesItemViewHolder.bar.updateWithEpisodesOf(item);
-
-        final Episode next = item.nextEpisodeToSee(true); //TODO SharedPreference or remove the boolean
-
-        if (next == null) {
-            this.seriesItemViewHolder.nextToSee.setText(R.string.up_to_date);
-            this.seriesItemViewHolder.seenMark.setVisibility(View.GONE);
-            return;
-        }
-
-        String format = App.context().getString(R.string.episode_number_format);
-        this.seriesItemViewHolder.nextToSee.setText(String.format(format, next.seasonNumber(), next.number()));
-
-        this.seriesItemViewHolder.seenMark.setVisibility(View.VISIBLE);
-        this.seriesItemViewHolder.seenMark.setChecked(next.wasSeen());
-        this.seriesItemViewHolder.seenMark.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                SERIES_PROVIDER.markEpisodeAsSeen(next);
-            }
-        });
     }
 
     private boolean isSelected(Series series) {
@@ -257,7 +218,5 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     private static class SeriesItemViewHolder {
         private TextView name;
         private SeenEpisodesBar bar;
-        private TextView nextToSee;
-        private CheckBox seenMark;
     }
 }
