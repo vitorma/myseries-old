@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mobi.myseries.application.App;
-import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;
@@ -39,8 +38,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.MediaStore.Files;
 
 public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository {
     private static final String DATABASE_NAME = "myseries_db";
@@ -317,9 +316,28 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         FilesUtil.copy(dbFile(), new File(destinationFilePath));
     }
     
-    public void restoreDBFrom(String sourceFilePath) throws IOException {
+    public void restoreDBFrom(String sourceFilePath) throws IOException, InvalidDBSourceFileException {
+        testDatabase(sourceFilePath); 
         FilesUtil.copy(new File(sourceFilePath), dbFile());
-        getReadableDatabase().close();
+
+
+    }
+
+    private void testDatabase(String sourceFilePath) throws InvalidDBSourceFileException {
+        SQLiteDatabase db = null;
+        try{
+            db = SQLiteDatabase.openDatabase(sourceFilePath, null, SQLiteDatabase.OPEN_READONLY);
+            Cursor c = db.rawQuery(SELECT_ALL_SERIES, null);
+            if((c.getCount() == 0) || (db.getVersion() > DATABASE_VERSION)){
+                throw new InvalidDBSourceFileException();
+            }
+        } catch (SQLiteException e) {
+            throw new InvalidDBSourceFileException();
+        } finally {
+            if(db != null){
+                db.close();
+            }
+        }
     }
 
     private File dbFile(){
@@ -428,7 +446,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     @Override
-    public void restoreFrom(String backupFilePath) throws IOException {
+    public void restoreFrom(String backupFilePath) throws IOException, InvalidDBSourceFileException {
         this.restoreDBFrom(backupFilePath);
         
     }
