@@ -3,10 +3,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayout"
+    android:background="@color/white"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/dialog_full_holo_light">
+    android:layout_margin="@dimen/appwidget_margin">
 
     <include
         layout="@layout/appwidget_actionbar"/>
@@ -14,7 +15,7 @@
     <LinearLayout android:id="@+id/episodes"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="160dp"/>
+        android:layout_height="@dimen/appwidget_content_height"/>
 
     <include
         layout="@layout/appwidget_pagebar"/>

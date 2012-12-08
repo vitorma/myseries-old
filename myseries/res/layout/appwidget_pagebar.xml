@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/pageTextView"
-        style="@style/TextView.Label.Small"
+        style="@style/TextView.Small.LightGray.Ellipsized"
         android:gravity="center"
         android:background="@color/transparent"
         android:layout_width="0dp"

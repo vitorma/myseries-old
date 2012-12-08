@@ -5,4 +5,6 @@
     <integer name="tab_today">1</integer>
     <integer name="tab_upcoming">2</integer>
 
+    <integer name="appwidget_number_of_items">4</integer>
+
 </resources>

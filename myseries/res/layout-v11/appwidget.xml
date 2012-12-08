@@ -3,25 +3,25 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayout"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:background="@drawable/dialog_full_holo_light"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/appwidget_margin">
 
     <include
         layout="@layout/appwidget_actionbar"/>
 
     <ListView
         android:id="@+id/episodeList"
-        android:paddingTop="@dimen/gap_small"
-        android:paddingBottom="@dimen/gap_small"
+        style="@style/ListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <TextView
         android:id="@+id/emptyView"
         android:text="@string/no_episodes_to_see"
-        style="@style/TextView.AppWidget.Data"
+        style="@style/TextView.Small.DarkGray"
         android:gravity="center"
         android:minHeight="@dimen/appwidget_item_height"
         android:layout_width="match_parent"

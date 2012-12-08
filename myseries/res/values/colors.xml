@@ -11,12 +11,12 @@
     <color name="gray">#ff656565</color>
     <color name="dark_gray">#ff272727</color>
     <color name="black">#ff000000</color>
-
-    <color name="text_light">#ff808080</color>
-    <color name="text_medium">#ff535353</color>
-    <color name="text_dark">#ff272727</color>
-
     <color name="blue">#ff33b5e5</color>
     <color name="dark_blue">#ff0099cc</color>
+
+    <color name="text_light_gray">#ff808080</color>
+    <color name="text_medium_gray">#ff535353</color>
+    <color name="text_dark_gray">#ff272727</color>
+    <color name="text_dark_blue">#ff0099cc</color>
 
 </resources>
