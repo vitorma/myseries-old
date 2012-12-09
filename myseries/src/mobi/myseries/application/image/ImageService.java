@@ -30,6 +30,7 @@ import mobi.myseries.domain.source.ImageSource;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
+import mobi.myseries.shared.imageprocessing.BitmapResizer;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
@@ -85,8 +86,8 @@ public final class ImageService {
             Bitmap fetchedPoster = this.imageSource.fetchSeriesPoster(series.posterFileName());
             this.imageRepository.saveSeriesPoster(series, fetchedPoster);
 
-            Bitmap smallPoster = Bitmap.createScaledBitmap(fetchedPoster, this.smallPosterWidth,
-                                                                          this.smallPosterHeight, true);
+            Bitmap smallPoster = new BitmapResizer(fetchedPoster).toSize(this.smallPosterWidth, this.smallPosterHeight);
+
             this.imageRepository.saveSmallSeriesPoster(series, smallPoster);
         } catch (ConnectionFailedException e) {
         } catch (ConnectionTimeoutException e) {

@@ -91,7 +91,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         private void setPosterTo(Series series, View itemView) {
             final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
 
-            Bitmap seriesPoster = IMAGE_SERVICE.getPosterOf(series);
+            Bitmap seriesPoster = IMAGE_SERVICE.getSmallPosterOf(series);
             Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
 
             image.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));

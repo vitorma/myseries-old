@@ -21,6 +21,9 @@
 
 package mobi.myseries.gui.appwidget;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
@@ -30,6 +33,7 @@ import mobi.myseries.gui.shared.Images;
 import mobi.myseries.shared.Android;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
+import mobi.myseries.shared.Strings;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -63,9 +67,10 @@ public class Item {
         RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.appwidget_item);
 
         this.setUpSeriesPoster(item, series);
-        this.setUpSeriesName(item, series);
-        this.setUpEpisodeNumber(item, episode);
         this.setUpEpisodeAirdate(item, episode);
+        this.setUpAirtimeAndNetwork(item, series);
+        this.setUpSeriesName(item, series);
+        this.setUpEpisodeName(item, episode);
         this.setUpOnClickIntent(item, episode);
 
         return item;
@@ -77,33 +82,40 @@ public class Item {
         item.setImageViewBitmap(R.id.seriesPoster, Objects.nullSafe(seriesPoster, GENERIC_POSTER));
     }
 
+    private void setUpEpisodeAirdate(RemoteViews item, Episode episode) {
+        String episodeAirdate = this.relativeTimeStringFor(episode.airDate());
+
+        item.setTextViewText(R.id.episodeAirDate, episodeAirdate);
+    }
+
+    private void setUpAirtimeAndNetwork(RemoteViews item, Series series) {
+        DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(this.context);
+        String airtime = DatesAndTimes.toString(series.airtime(), airtimeFormat, "");
+        String network = Strings.isBlank(series.network()) ? "" : " " + series.network();
+
+        item.setTextViewText(R.id.airtimeAndNetwork, airtime + network);
+    }
+
     private void setUpSeriesName(RemoteViews item, Series series) {
         item.setTextViewText(R.id.seriesName, series.name());
     }
 
-    private void setUpEpisodeNumber(RemoteViews item, Episode episode) {
+    private void setUpEpisodeName(RemoteViews item, Episode episode) {
         String format = this.context.getString(R.string.episode_number_format);
         String episodeNumber = String.format(format, episode.seasonNumber(), episode.number());
 
-        item.setTextViewText(R.id.episodeNumber, episodeNumber);
-    }
-
-    private void setUpEpisodeAirdate(RemoteViews item, Episode episode) {
-        String unknownDate = this.context.getString(R.string.unknown_date);
-        String episodeAirdate = DatesAndTimes.relativeTimeStringFor(episode.airDate(), unknownDate);
-
-        item.setTextViewText(R.id.episodeAirDate, episodeAirdate);
+        item.setTextViewText(R.id.episodeNumber, episodeNumber + " " + episode.name());
     }
 
     private void setUpOnClickIntent(RemoteViews item, Episode episode) {
         if (Android.isHoneycombOrHigher()) {
             this.setupOnClickFillInIntent(item, episode);
         } else {
-            this.setupOnClickPendingIntent(item, episode);
+            this.setUpOnClickPendingIntent(item, episode);
         }
     }
 
-    private void setupOnClickPendingIntent(RemoteViews item, Episode episode) {
+    private void setUpOnClickPendingIntent(RemoteViews item, Episode episode) {
         Intent intent = EpisodesActivity.newIntent(
                 this.context, episode.seriesId(), episode.seasonNumber(), episode.number());
 
@@ -127,5 +139,35 @@ public class Item {
 
     private int requestCode() {
         return (int) System.currentTimeMillis();
+    }
+
+    //TODO (Cleber) Move this method to a better place
+    private String relativeTimeStringFor(Date airDate) {
+        if (airDate == null) {
+            return "";
+        }
+
+        int days = DatesAndTimes.daysBetween(DatesAndTimes.today(), airDate);
+
+        switch (days) {
+            case 0:
+                return this.context.getString(R.string.relative_time_today);
+            case 1:
+                return this.context.getString(R.string.relative_time_tomorrow);
+            case -1:
+                return this.context.getString(R.string.relative_time_yesterday);
+            default:
+                if (Math.abs(days) >= DatesAndTimes.DAYS_IN_A_WEEK) {
+                    DateFormat dateformat = android.text.format.DateFormat.getDateFormat(this.context);
+                    String formattedDate = DatesAndTimes.toString(airDate, dateformat, "");
+                    return formattedDate;
+                }
+
+                if (days > 0) {
+                    return String.format(App.context().getString(R.string.relative_time_future), days);
+                }
+
+                return String.format(this.context.getString(R.string.relative_time_past), Math.abs(days));
+        }
     }
 }

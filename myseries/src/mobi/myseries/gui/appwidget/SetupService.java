@@ -38,8 +38,6 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 public class SetupService extends IntentService {
-    private static final int ITEMS_PER_PAGE = 4;
-
     private int appWidgetId;
     private String action;
     private AppWidgetPreferences preferences;
@@ -93,7 +91,9 @@ public class SetupService extends IntentService {
     }
 
     private void setUpItemPageBrowser() {
-        this.itemPageBrowser = ItemPageBrowser.from(this.episodes.size(), ITEMS_PER_PAGE)
+        int itemsPerPage = App.resources().getInteger(R.integer.appwidget_number_of_items);
+
+        this.itemPageBrowser = ItemPageBrowser.from(this.episodes.size(), itemsPerPage)
             .goToPage(this.currentPage())
             .navigateAccordingToAction(this.action);
 

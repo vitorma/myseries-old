@@ -2,12 +2,12 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- TextView -->
+    <!-- TextView -Old - DELETEME ASAP -->
 
     <style name="TextView" parent="android:Widget.TextView"/>
 
     <style name="TextView.Data">
-        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textColor">@color/text_dark_gray</item>
     </style>
 
     <style name="TextView.Data.Small">
@@ -48,23 +48,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextView.Small">
-        <item name="android:textSize">@dimen/text_size_small</item>
-    </style>
-
-    <style name="TextView.Small.LightGray">
-        <item name="android:textColor">@color/text_light</item>
-    </style>
-
-    <style name="TextView.Small.MediumGray">
-        <item name="android:textColor">@color/text_medium</item>
-    </style>
-
-    <style name="TextView.Small.MediumGray.Ellipsized">
-        <item name="android:ellipsize">end</item>
-        <item name="android:singleLine">true</item>
-    </style>
-
+    
     <style name="TextView.Label.Micro">
         <item name="android:textSize">@dimen/text_size_micro</item>
     </style>
@@ -135,6 +119,78 @@
     <style name="TextView.AppWidget.Data">
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- TextView -->
+
+    <style name="TextView.Micro">
+        <item name="android:textSize">@dimen/text_size_micro</item>
+    </style>
+
+    <style name="TextView.Micro.LightGray">
+        <item name="android:textColor">@color/text_light_gray</item>
+    </style>
+
+    <style name="TextView.Micro.LightGray.Ellipsized">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextView.Micro.MediumGray">
+        <item name="android:textColor">@color/text_medium_gray</item>
+    </style>
+
+    <style name="TextView.Micro.MediumGray.Ellipsized">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextView.Micro.DarkBlue">
+        <item name="android:textColor">@color/text_dark_blue</item>
+    </style>
+
+    <style name="TextView.Small">
+        <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
+    <style name="TextView.Small.LightGray">
+        <item name="android:textColor">@color/text_light_gray</item>
+    </style>
+
+    <style name="TextView.Small.LightGray.Ellipsized">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextView.Small.MediumGray">
+        <item name="android:textColor">@color/text_medium_gray</item>
+    </style>
+
+    <style name="TextView.Small.MediumGray.Ellipsized">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextView.Small.DarkGray">
+        <item name="android:textColor">@color/text_dark_gray</item>
+    </style>
+
+    <style name="TextView.Small.DarkGray.Ellipsized">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextView.Large">
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
+    <style name="TextView.Large.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextView.Large.White.Ellipsized">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <!-- EditText -->
@@ -213,6 +269,7 @@
         <item name="android:showDividers">beginning|middle|end</item>
         <item name="android:fastScrollEnabled">true</item>
         <item name="android:overScrollFooter">@null</item>
+        <item name="android:overScrollHeader">@null</item>
     </style>
 
     <!-- ExpandableListView -->
