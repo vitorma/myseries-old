@@ -4,6 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/appwidget"
     android:updatePeriodMillis="0"
-    android:minWidth="@dimen/appwidget_width"
-    android:minHeight="@dimen/appwidget_height"
+    android:minWidth="250dp"
+    android:minHeight="250dp"
     android:configure="mobi.myseries.gui.appwidget.AppWidgetPreferenceActivity"/>
