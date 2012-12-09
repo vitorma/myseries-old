@@ -36,7 +36,7 @@ import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
-import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
+import mobi.myseries.gui.shared.ButtonOnClickListener;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.app.Dialog;

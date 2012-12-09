@@ -1,14 +1,8 @@
 package mobi.myseries.application.backup;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import android.os.Environment;
 
-import mobi.myseries.application.App;
 import mobi.myseries.shared.FilesUtil;
 
 //TODO extract an interface to the others backup services

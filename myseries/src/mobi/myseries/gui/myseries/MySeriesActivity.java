@@ -36,8 +36,9 @@ import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
+import mobi.myseries.gui.shared.BackupDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
-import mobi.myseries.gui.shared.ConfirmationDialogBuilder.ButtonOnClickListener;
+import mobi.myseries.gui.shared.ButtonOnClickListener;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
@@ -67,6 +68,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     private static final String REMOVE = "REMOVE SERIES";
     private static final String UPDATE = "UPDATE";
     private static final String SETTINGS = "SETTINGS";
+    private static final String BACKUP_RESTORE = "BACKUP/RESTORE";
     private static final String HELP = "HELP";
 
     private StateHolder state;
@@ -163,6 +165,10 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         menu.add(SETTINGS)
         .setIcon(R.drawable.actionbar_settings)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        
+        menu.add(BACKUP_RESTORE)
+        .setIcon(R.drawable.actionbar_settings)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         //TODO add intent
         menu.add(HELP)
@@ -200,9 +206,14 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         if (item.getTitle().equals(SETTINGS)) {
             this.showSettingsActivity();
         }
+        
+        if(item.getTitle().equals(BACKUP_RESTORE)) {
+            this.showBackupDialog();
+        }
 
         return super.onMenuItemSelected(featureId, item);
     }
+
 
     private void showRemoveDialog() {
         final Context context = this;
@@ -259,6 +270,50 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         .show();
     }
 
+    private void showBackupDialog() {
+        final BackupDialogBuilder dialogBuilder = new BackupDialogBuilder(this);
+        dialogBuilder.setBackupFolder(App.backupService().sdCardPath());
+        dialogBuilder.setBackupButtonListener(new ButtonOnClickListener() {
+            @Override
+            public void onClick(Dialog dialog) {
+                new ConfirmationDialogBuilder(dialogBuilder.context())
+                .setTitle(R.string.are_you_sure)
+                .setMessage(R.string.overwrite_backup)
+                .setNegativeButton(R.string.no, null)
+                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        App.backupService().doBackup();
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
+                
+            }
+        });
+        dialogBuilder.setRestoreButtonListener(new ButtonOnClickListener() {
+            @Override
+            public void onClick(Dialog dialog) {
+                new ConfirmationDialogBuilder(dialogBuilder.context())
+                .setTitle(R.string.are_you_sure)
+                .setMessage(R.string.actual_following_series_will_be_replaced)
+                .setNegativeButton(R.string.no, null)
+                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        App.backupService().restoreBackup();
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
+                
+            }
+        });
+        dialogBuilder.build().show();
+        
+    }
     @Override
     public boolean onSearchRequested() {
         this.showSearchActivity();

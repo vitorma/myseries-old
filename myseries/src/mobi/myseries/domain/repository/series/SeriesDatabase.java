@@ -40,6 +40,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository {
     private static final String DATABASE_NAME = "myseries_db";
@@ -319,6 +320,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public void restoreDBFrom(String sourceFilePath) throws IOException, InvalidDBSourceFileException {
         testDatabase(sourceFilePath); 
         FilesUtil.copy(new File(sourceFilePath), dbFile());
+        Log.d(getClass().getName(), "database sucessfully restored");
 
 
     }
@@ -328,10 +330,17 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         try{
             db = SQLiteDatabase.openDatabase(sourceFilePath, null, SQLiteDatabase.OPEN_READONLY);
             Cursor c = db.rawQuery(SELECT_ALL_SERIES, null);
-            if((c.getCount() == 0) || (db.getVersion() > DATABASE_VERSION)){
+            Log.d(getClass().getName(), "backup file sucessfully tested");
+            if(c.getCount() == 0) {
+                Log.d(getClass().getName(), "there are no series to restore on backup file");
+                throw new InvalidDBSourceFileException();
+            }
+            if(db.getVersion() > DATABASE_VERSION) {
+                Log.d(getClass().getName(), "backup file seems to be invalid, the database version is higher than actual version");
                 throw new InvalidDBSourceFileException();
             }
         } catch (SQLiteException e) {
+            Log.d(getClass().getName(), "backup file does not contains a valid database");
             throw new InvalidDBSourceFileException();
         } finally {
             if(db != null){
