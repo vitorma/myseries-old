@@ -86,7 +86,7 @@ public final class ImageService {
             Bitmap fetchedPoster = this.imageSource.fetchSeriesPoster(series.posterFileName());
             this.imageRepository.saveSeriesPoster(series, fetchedPoster);
 
-            Bitmap smallPoster = new BitmapResizer(fetchedPoster).toSize(2*this.smallPosterWidth, 2*this.smallPosterHeight);
+            Bitmap smallPoster = new BitmapResizer(fetchedPoster).toSize(this.smallPosterWidth, this.smallPosterHeight);
 
             this.imageRepository.saveSmallSeriesPoster(series, smallPoster);
         } catch (ConnectionFailedException e) {

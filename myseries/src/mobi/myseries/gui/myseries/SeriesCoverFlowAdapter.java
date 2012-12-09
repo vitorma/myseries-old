@@ -53,7 +53,7 @@ public class SeriesCoverFlowAdapter extends CoverFlowAdapter {
 
     @Override
     protected Bitmap createBitmap(int position) {
-        Bitmap poster = IMAGE_SERVICE.getPosterOf(this.seriesList.get(position));
+        Bitmap poster = IMAGE_SERVICE.getSmallPosterOf(this.seriesList.get(position));
         Bitmap generic = Images.genericSeriesPosterFrom(App.resources());
 
         return Objects.nullSafe(poster, generic);
