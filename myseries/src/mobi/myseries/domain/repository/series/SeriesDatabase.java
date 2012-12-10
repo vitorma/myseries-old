@@ -329,15 +329,14 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         SQLiteDatabase db = null;
         try{
             db = SQLiteDatabase.openDatabase(sourceFilePath, null, SQLiteDatabase.OPEN_READONLY);
-            Cursor c = db.rawQuery(SELECT_ALL_SERIES, null);
             Log.d(getClass().getName(), "backup file sucessfully tested");
-            if(c.getCount() == 0) {
+            if(getAll().size() == 0) {
                 Log.d(getClass().getName(), "there are no series to restore on backup file");
-                throw new InvalidDBSourceFileException();
+                throw new NoSeriesToRestoreException();
             }
             if(db.getVersion() > DATABASE_VERSION) {
                 Log.d(getClass().getName(), "backup file seems to be invalid, the database version is higher than actual version");
-                throw new InvalidDBSourceFileException();
+                throw new InvalidBackupVersionException();
             }
         } catch (SQLiteException e) {
             Log.d(getClass().getName(), "backup file does not contains a valid database");

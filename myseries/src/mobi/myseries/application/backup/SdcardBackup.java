@@ -13,22 +13,26 @@ public class SdcardBackup {
     private static final String BACKUP_FILE_NAME = "myseries.db";
     
 
-    public String backupFilePath() {
+    public String backupFilePath() throws ExternalStorageNotAvailableException {
         return backupFolder().getPath() + FILE_SEPARATOR + BACKUP_FILE_NAME;
     }
     
-    private File backupFolder() {
+    public File backupFolder() throws ExternalStorageNotAvailableException {
         return FilesUtil.ensuredDirectory(sdcardrootDirectory().getPath() + FILE_SEPARATOR + BACKUP_FOLDER);
     }
 
-    private File sdcardrootDirectory() {
+    private File sdcardrootDirectory() throws ExternalStorageNotAvailableException {
         File externalFilesDirectory = Environment.getExternalStorageDirectory();
 
-        if (externalFilesDirectory == null) {
-            //TODO something
+        if (externalFilesDirectory == null || !isSDcardMounted()) {
+            throw new ExternalStorageNotAvailableException();
         }
 
         return externalFilesDirectory;
+    }
+    
+    private boolean isSDcardMounted() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }
 

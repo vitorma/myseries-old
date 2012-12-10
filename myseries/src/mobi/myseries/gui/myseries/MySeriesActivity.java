@@ -29,6 +29,7 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.application.backup.ExternalStorageNotAvailableException;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Series;
@@ -39,6 +40,7 @@ import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.shared.BackupDialogBuilder;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ButtonOnClickListener;
+import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
@@ -167,7 +169,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         
         menu.add(BACKUP_RESTORE)
-        .setIcon(R.drawable.actionbar_settings)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         //TODO add intent
@@ -271,47 +272,53 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
     }
 
     private void showBackupDialog() {
-        final BackupDialogBuilder dialogBuilder = new BackupDialogBuilder(this);
-        dialogBuilder.setBackupFolder(App.backupService().sdCardPath());
-        dialogBuilder.setBackupButtonListener(new ButtonOnClickListener() {
-            @Override
-            public void onClick(Dialog dialog) {
-                new ConfirmationDialogBuilder(dialogBuilder.context())
-                .setTitle(R.string.are_you_sure)
-                .setMessage(R.string.overwrite_backup)
-                .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        App.backupService().doBackup();
-                        dialog.dismiss();
-                    }
-                })
-                .build()
-                .show();
-                
-            }
-        });
-        dialogBuilder.setRestoreButtonListener(new ButtonOnClickListener() {
-            @Override
-            public void onClick(Dialog dialog) {
-                new ConfirmationDialogBuilder(dialogBuilder.context())
-                .setTitle(R.string.are_you_sure)
-                .setMessage(R.string.actual_following_series_will_be_replaced)
-                .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        App.backupService().restoreBackup();
-                        dialog.dismiss();
-                    }
-                })
-                .build()
-                .show();
-                
-            }
-        });
-        dialogBuilder.build().show();
+        try {
+            final BackupDialogBuilder dialogBuilder = new BackupDialogBuilder(this);
+            String folderPath = App.backupService().backupFolderPath();
+            dialogBuilder.setBackupFolder(folderPath);
+            dialogBuilder.setBackupButtonListener(new ButtonOnClickListener() {
+                @Override
+                public void onClick(Dialog dialog) {
+                    new ConfirmationDialogBuilder(dialogBuilder.context())
+                    .setTitle(R.string.are_you_sure)
+                    .setMessage(R.string.overwrite_backup)
+                    .setNegativeButton(R.string.no, null)
+                    .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            App.backupService().doBackup();
+                            dialog.dismiss();
+                        }
+                    })
+                    .build()
+                    .show();
+                }
+            });
+            dialogBuilder.setRestoreButtonListener(new ButtonOnClickListener() {
+                @Override
+                public void onClick(Dialog dialog) {
+                    new ConfirmationDialogBuilder(dialogBuilder.context())
+                    .setTitle(R.string.are_you_sure)
+                    .setMessage(R.string.actual_following_series_will_be_replaced)
+                    .setNegativeButton(R.string.no, null)
+                    .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            App.backupService().restoreBackup();
+                            dialog.dismiss();
+                        }
+                    })
+                    .build()
+                    .show();
+                }
+            });
+            dialogBuilder.build().show();
+        } catch (ExternalStorageNotAvailableException e) {
+            new FailureDialogBuilder(this)
+            .setTitle(R.string.external_storage_not_available)
+            .setMessage(R.string.backup_storage_failure)
+            .build().show();
+        }
         
     }
     @Override

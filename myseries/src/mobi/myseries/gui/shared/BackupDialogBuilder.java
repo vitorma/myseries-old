@@ -12,7 +12,7 @@ public class BackupDialogBuilder {
     private Context context;
     private ButtonOnClickListener backupButtonListener;
     private ButtonOnClickListener restoreButtonListener;
-    private String backupFolder;
+    private String backupFolderPath;
 
     
     public BackupDialogBuilder(Context context) {
@@ -34,7 +34,7 @@ public class BackupDialogBuilder {
     }
 
     public void setBackupFolder(String backupFolder) {
-        this.backupFolder = backupFolder;
+        this.backupFolderPath = backupFolder;
         
     }
 
@@ -44,12 +44,14 @@ public class BackupDialogBuilder {
         dialog.setContentView(R.layout.dialog_backup);
 
         this.setupTitleFor(dialog);
-        this.setupMessageFor(dialog);
-        this.setupBackupButtonFor(dialog);
+        this.setupMessage(dialog);
+         this.setupBackupButtonFor(dialog);
         this.setupRestoreButtonFor(dialog);
 
         return dialog;
     }
+
+
 
     private void setupRestoreButtonFor(Dialog dialog) {
         Button restoreButton = (Button) dialog.findViewById(R.id.restoreButton);
@@ -87,14 +89,14 @@ private OnClickListener restoreButtonListenerFor(final Dialog dialog) {
     };
 }
 
-    private void setupMessageFor(Dialog dialog) {
-        TextView messageView = (TextView) dialog.findViewById(R.id.message);
-        StringBuilder sb = new StringBuilder();
-        sb.append(context.getText(R.string.backup_description));
-        sb.append("\n");
-        sb.append("\n");
-        sb.append(String.format(context.getString(R.string.backup_folder_file_path), this.backupFolder));
-        messageView.setText(sb.toString());
+    private void setupMessage(Dialog dialog) {
+        TextView descriptionView = (TextView) dialog.findViewById(R.id.message);
+        StringBuilder builder = new StringBuilder();
+        builder.append(context.getString(R.string.backup_description));
+        builder.append("\n");
+        builder.append("\n");
+        builder.append(String.format(context.getString(R.string.backup_folder_file_path), this.backupFolderPath));
+        descriptionView.setText(builder.toString());
     }
 
     private void setupTitleFor(Dialog dialog) {
@@ -106,4 +108,5 @@ private OnClickListener restoreButtonListenerFor(final Dialog dialog) {
         titleDivider.setVisibility(View.VISIBLE);
         
     }
+
 }
