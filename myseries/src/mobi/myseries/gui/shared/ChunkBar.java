@@ -33,9 +33,6 @@ import android.view.View;
 public class ChunkBar extends View {
     private static final int DEFAULT_DRAWING_COLOR = Color.rgb(50, 182, 231);
     private static final int DEFAULT_BACKGROUND_COLOR = Color.rgb(27, 27, 27);
-    private static final int DEFAULT_TEXT_COLOR = Color.WHITE;
-    private static final int DEFAULT_TEXT_BACKGROUND_COLOR = Color.rgb(27, 27, 27);
-    private static final String TEXT_WIDTH_PARAMETER = "0000/0000";
 
     private boolean[] parts;
     private Paint foreground;
