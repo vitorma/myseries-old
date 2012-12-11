@@ -26,8 +26,8 @@ public class BackupService {
         new restoreBackupAsyncTask().execute();
     }
 
-    public String sdCardPath() {
-        return sdcardBackup.backupFilePath();
+    public String backupFolderPath() throws ExternalStorageNotAvailableException {
+        return sdcardBackup.backupFolder().getPath();
     }
 
     private class doBackupAsyncTask extends AsyncTask<Void, Void, AsyncTaskResult<Void>> {

@@ -1,14 +1,8 @@
 package mobi.myseries.application.backup;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import android.os.Environment;
 
-import mobi.myseries.application.App;
 import mobi.myseries.shared.FilesUtil;
 
 //TODO extract an interface to the others backup services
@@ -19,22 +13,26 @@ public class SdcardBackup {
     private static final String BACKUP_FILE_NAME = "myseries.db";
     
 
-    public String backupFilePath() {
+    public String backupFilePath() throws ExternalStorageNotAvailableException {
         return backupFolder().getPath() + FILE_SEPARATOR + BACKUP_FILE_NAME;
     }
     
-    private File backupFolder() {
+    public File backupFolder() throws ExternalStorageNotAvailableException {
         return FilesUtil.ensuredDirectory(sdcardrootDirectory().getPath() + FILE_SEPARATOR + BACKUP_FOLDER);
     }
 
-    private File sdcardrootDirectory() {
+    private File sdcardrootDirectory() throws ExternalStorageNotAvailableException {
         File externalFilesDirectory = Environment.getExternalStorageDirectory();
 
-        if (externalFilesDirectory == null) {
-            //TODO something
+        if (externalFilesDirectory == null || !isSDcardMounted()) {
+            throw new ExternalStorageNotAvailableException();
         }
 
         return externalFilesDirectory;
+    }
+    
+    private boolean isSDcardMounted() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }
 

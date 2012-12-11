@@ -23,7 +23,6 @@ package mobi.myseries.gui.preferencesactivity;
 
 import mobi.myseries.R;
 import mobi.myseries.gui.preferences.PreferencesProvider;
-import mobi.myseries.gui.settings.backup.BackupActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +42,6 @@ public class PreferencesActivity extends SherlockActivity {
     private RadioGroup automaticUpdatesRadioGroup;
     private Button cancelButton;
     private Button saveButton;
-    private TextView backupTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +54,6 @@ public class PreferencesActivity extends SherlockActivity {
         this.loadSettings();
         this.setUpCancelButton();
         this.setUpSaveButton();
-        this.setupBackupTVListener();
     }
 
     private void setupActionBar() {
@@ -70,25 +67,8 @@ public class PreferencesActivity extends SherlockActivity {
     private void setupViews() {
         this.automaticUpdatesRadioGroup =
                 (RadioGroup) this.findViewById(R.id.automaticUpdatesRadioGroup);
-        this.backupTextView = (TextView) this.findViewById(R.id.backupRestoreText);
     }
 
-    private void setupBackupTVListener() {
-        OnClickListener cl = new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                showBackupActivity();
-            }
-        };
-        this.backupTextView.setOnClickListener(cl);
-        
-    }
-
-    private void showBackupActivity() {
-        this.startActivity(BackupActivity.newIntent(this));
-        
-    }
 
     private void loadSettings() {
         PreferencesProvider settings = settingsProviderFor(this);

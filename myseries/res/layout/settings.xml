@@ -72,25 +72,6 @@
                     android:textSize="@dimen/text_size_medium" />
 
             </RadioGroup>
-
-            <View
-                android:background="@drawable/list_divider_holo_light"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"/>
-
-            <TextView
-                android:id="@+id/backupRestoreText"
-                style="@style/TextView.Data.Medium"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toucharea_minimum_side"
-                android:text="@string/backup_restore"/>
-            
-            <View
-                android:background="@drawable/list_divider_holo_light"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"/>
-
         </LinearLayout>
 
     </ScrollView>

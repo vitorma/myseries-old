@@ -294,7 +294,7 @@ public class SeriesCache implements SeriesRepository {
     }
 
     @Override
-    public void restoreFrom(String backupFilePath) throws IOException {
+    public void restoreFrom(String backupFilePath) throws IOException, InvalidDBSourceFileException {
         this.sourceRepository.restoreFrom(backupFilePath);
         this.seriesSet = new SeriesSet().includingAll(this.sourceRepository.getAll());
         

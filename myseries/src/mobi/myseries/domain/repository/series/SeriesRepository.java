@@ -40,6 +40,6 @@ public interface SeriesRepository {
     public Series get(int seriesId);
     public Collection<Series> getAll();
     public void exportTo(String backupFilePath) throws IOException;
-    public void restoreFrom(String backupFilePath) throws IOException;
+    public void restoreFrom(String backupFilePath) throws IOException, InvalidDBSourceFileException;
     
 }

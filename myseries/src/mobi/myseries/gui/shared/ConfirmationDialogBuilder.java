@@ -165,7 +165,4 @@ public class ConfirmationDialogBuilder {
         };
     }
 
-    public static interface ButtonOnClickListener {
-        public void onClick(Dialog dialog);
-    }
 }
