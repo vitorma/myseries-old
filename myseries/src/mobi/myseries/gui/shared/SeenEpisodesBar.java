@@ -62,8 +62,6 @@ public class SeenEpisodesBar extends LinearLayout {
         chunkBar.setParts(parts);
         chunkBar.setBackgroundColor(this.getResources().getColor(R.color.black));
         chunkBar.setForegroundColor(this.getResources().getColor(R.color.blue));
-        chunkBar.setTextColor(this.getResources().getColor(R.color.white));
-        chunkBar.setTextBackgroundColor(this.getResources().getColor(R.color.dark_blue));
 
         this.removeAllViews();
         this.addView(chunkBar);

@@ -26,9 +26,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -42,8 +40,7 @@ public class ChunkBar extends View {
     private boolean[] parts;
     private Paint foreground;
     private Paint background;
-    private TextPaint textPaint;
-    private Paint textBackground;
+    private RectF rect;
 
     public ChunkBar(Context context) {
         this(context, null);
@@ -61,10 +58,7 @@ public class ChunkBar extends View {
         this.foreground.setColor(DEFAULT_DRAWING_COLOR);
         this.background = new Paint();
         this.background.setColor(DEFAULT_BACKGROUND_COLOR);
-        this.textPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG | TextPaint.SUBPIXEL_TEXT_FLAG);
-        this.textPaint.setColor(DEFAULT_TEXT_COLOR);
-        this.textBackground = new Paint();
-        this.textBackground.setColor(DEFAULT_TEXT_BACKGROUND_COLOR);
+        this.rect = new RectF();
     }
 
     @Override
@@ -74,14 +68,6 @@ public class ChunkBar extends View {
 
     public void setForegroundColor(int color) {
         this.foreground.setColor(color);
-    }
-
-    public void setTextColor(int color) {
-        this.textPaint.setColor(color);
-    }
-
-    public void setTextBackgroundColor(int color) {
-        this.textBackground.setColor(color);
     }
 
     public void setParts(boolean[] parts) {
@@ -106,22 +92,18 @@ public class ChunkBar extends View {
         int internalPadding = 2;
         float height = this.getMeasuredHeight() - this.getPaddingTop() - this.getPaddingBottom();
 
-        textPaint.setTextSize(height);
-        textPaint.setTextAlign(Paint.Align.RIGHT);
-
-        Rect textBounds = new Rect();
-        textPaint.getTextBounds(TEXT_WIDTH_PARAMETER, 0, TEXT_WIDTH_PARAMETER.length(), textBounds);
-
-        float textWidth = this.textPaint.measureText(TEXT_WIDTH_PARAMETER);
-
         float width =
                 this.getMeasuredWidth() - this.getPaddingLeft() - this.getPaddingRight()
-                        - textWidth - (2 * internalPadding);
+                        - (2 * internalPadding);
 
         float partWidth = (width) / this.parts.length;
         float partHeight = height;
 
-        RectF rect = new RectF(this.getPaddingLeft(), this.getPaddingTop(), width, height);
+        rect.left = this.getPaddingLeft();
+        rect.top = this.getPaddingTop();
+        rect.right =  width;
+        rect.bottom = height;
+
         canvas.drawRect(rect, background);
 
         int i = 0;
@@ -142,16 +124,5 @@ public class ChunkBar extends View {
 
             i = j;
         }
-
-        int textBackgroundRight = this.getMeasuredWidth() + (int) textWidth;
-
-        RectF rect2 = new RectF(width, this.getPaddingTop(), textBackgroundRight, height);
-        canvas.drawRect(rect2, textBackground);
-
-        float diff = this.getMeasuredHeight() - textBounds.height();
-        float textY = textBounds.height() + (diff / 2.0f);
-
-        canvas.drawText(text, this.getMeasuredWidth() - this.getPaddingRight() - internalPadding,
-                textY, this.textPaint);
     }
 }
