@@ -33,9 +33,6 @@ import android.view.View;
 public class ChunkBar extends View {
     private static final int DEFAULT_DRAWING_COLOR = Color.rgb(50, 182, 231);
     private static final int DEFAULT_BACKGROUND_COLOR = Color.rgb(27, 27, 27);
-    private static final int DEFAULT_TEXT_COLOR = Color.WHITE;
-    private static final int DEFAULT_TEXT_BACKGROUND_COLOR = Color.rgb(27, 27, 27);
-    private static final String TEXT_WIDTH_PARAMETER = "0000/0000";
 
     private boolean[] parts;
     private Paint foreground;
@@ -80,28 +77,17 @@ public class ChunkBar extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int availableParts = 0;
-        for (boolean part : this.parts) {
-            if (part) {
-                ++availableParts;
-            }
-        }
-
-        String text = String.format("%d/%d", availableParts, this.parts.length);
-
-        int internalPadding = 2;
         float height = this.getMeasuredHeight() - this.getPaddingTop() - this.getPaddingBottom();
 
         float width =
-                this.getMeasuredWidth() - this.getPaddingLeft() - this.getPaddingRight()
-                        - (2 * internalPadding);
+                this.getMeasuredWidth() - this.getPaddingLeft() - this.getPaddingRight();
 
         float partWidth = (width) / this.parts.length;
         float partHeight = height;
 
         rect.left = this.getPaddingLeft();
         rect.top = this.getPaddingTop();
-        rect.right =  width;
+        rect.right = width;
         rect.bottom = height;
 
         canvas.drawRect(rect, background);
