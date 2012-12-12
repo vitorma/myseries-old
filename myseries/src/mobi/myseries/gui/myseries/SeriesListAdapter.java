@@ -21,6 +21,7 @@
 
 package mobi.myseries.gui.myseries;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -37,7 +38,9 @@ import mobi.myseries.gui.series.SeriesActivity;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
+import mobi.myseries.shared.Strings;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -72,6 +75,9 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
             this.setPosterTo(item, itemView);
             this.setNameTo(item.name(), itemView);
+            this.setStatusTo(item.status(), itemView);
+            this.setAirInfoTo(item, itemView);
+            this.setSeenEpisodesFor(item, itemView);
             this.setSeenEpisodesBarFor(item, itemView);
             this.setUpShowingSeriesDetailsViewOnClickFor(item, itemView);
 
@@ -100,6 +106,29 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         private void setNameTo(String name, View itemView) {
             TextView nameView = (TextView) itemView.findViewById(R.id.nameTextView);
             nameView.setText(name);
+        }
+
+        private void setStatusTo(String status, View itemView) {
+            TextView statusTextView = (TextView) itemView.findViewById(R.id.statusTextView);
+            statusTextView.setText(status);
+        }
+
+        private void setAirInfoTo(Series series, View itemView) {
+            TextView airInfoTextView = (TextView) itemView.findViewById(R.id.airInfoTextView);
+            String airDay = series.airDay();
+            DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(this.context);
+            String airtime = DatesAndTimes.toString(series.airtime(), airtimeFormat, "");
+            String network = series.network();
+            String airInfo = airDay +
+                    (Strings.isBlank(airtime) ? airtime : " " + airtime) +
+                    (Strings.isBlank(network) ? network : " " + network);
+            airInfoTextView.setText(airInfo);
+        }
+
+        private void setSeenEpisodesFor(Series series, View itemView) {
+            TextView amountTextView = (TextView) itemView.findViewById(R.id.amountTextView);
+            String am = series.numberOfSeenEpisodes() + "/" + series.numberOfEpisodes();
+            amountTextView.setText(am);
         }
 
         private void setSeenEpisodesBarFor(Series series, View itemView) {

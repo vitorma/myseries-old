@@ -27,7 +27,6 @@
     <TextView
         android:id="@+id/statusTextView"
         style="@style/TextView.Small.MediumGray"
-        android:text="Continuing"
         android:layout_marginLeft="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,12 +36,20 @@
     <TextView
         android:id="@+id/airInfoTextView"
         style="@style/TextView.Small.LightGray"
-        android:text="Qua 08h00 FOX"
         android:layout_marginLeft="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/statusTextView"
         android:layout_toRightOf="@id/seriesImageView"/>
+
+    <TextView
+        android:id="@+id/amountTextView"
+        style="@style/TextView.Small.MediumGray"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/airInfoTextView"
+        android:layout_alignParentRight="true"/>
 
     <mobi.myseries.gui.shared.SeenEpisodesBar
         android:id="@+id/seenEpisodesBar"
@@ -51,15 +58,5 @@
         android:layout_marginTop="8dp"
         android:layout_below="@id/seriesImageView"
         />
-
-    <TextView
-        android:id="@+id/amountTextView"
-        android:text="853/1156"
-        style="@style/TextView.Small.MediumGray"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/airInfoTextView"
-        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>
