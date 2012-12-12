@@ -77,28 +77,17 @@ public class ChunkBar extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int availableParts = 0;
-        for (boolean part : this.parts) {
-            if (part) {
-                ++availableParts;
-            }
-        }
-
-        String text = String.format("%d/%d", availableParts, this.parts.length);
-
-        int internalPadding = 2;
         float height = this.getMeasuredHeight() - this.getPaddingTop() - this.getPaddingBottom();
 
         float width =
-                this.getMeasuredWidth() - this.getPaddingLeft() - this.getPaddingRight()
-                        - (2 * internalPadding);
+                this.getMeasuredWidth() - this.getPaddingLeft() - this.getPaddingRight();
 
         float partWidth = (width) / this.parts.length;
         float partHeight = height;
 
         rect.left = this.getPaddingLeft();
         rect.top = this.getPaddingTop();
-        rect.right =  width;
+        rect.right = width;
         rect.bottom = height;
 
         canvas.drawRect(rect, background);
