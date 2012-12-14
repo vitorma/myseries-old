@@ -51,6 +51,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+// TODO (Cleber) Refactoring:
+//               Use ViewHolder pattern
+//               Use notifyDatasetChanged instead of remove/add items
+//               Clean code
 public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, SeriesFollowingListener {
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();

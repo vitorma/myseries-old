@@ -59,12 +59,12 @@ public class DatesAndTimes {
         return new Date(date);
     }
 
-    public static Airtime parseAirtime(Long airtime, Airtime alternative) {
+    public static Time parseAirtime(Long airtime, Time alternative) {
         if (airtime == null) {
             return alternative;
         }
 
-        return Airtime.valueOf(airtime);
+        return Time.valueOf(airtime);
     }
 
     public static String toString(Date date, DateFormat format) {
@@ -84,7 +84,7 @@ public class DatesAndTimes {
         return format.format(date);
     }
 
-    public static String toString(Airtime airtime, DateFormat format, String alternative) {
+    public static String toString(Time airtime, DateFormat format, String alternative) {
         if (airtime == null) {
             return alternative;
         }
@@ -101,9 +101,9 @@ public class DatesAndTimes {
                Objects.nullSafe(date2, MAX_DATE));
     }
 
-    public static int compareByNullLast(Airtime airtime1, Airtime airtime2) {
-        return Objects.nullSafe(airtime1, Airtime.MAX_VALUE).compareTo(
-               Objects.nullSafe(airtime2, Airtime.MAX_VALUE));
+    public static int compareByNullLast(Time airtime1, Time airtime2) {
+        return Objects.nullSafe(airtime1, Time.MAX_VALUE).compareTo(
+               Objects.nullSafe(airtime2, Time.MAX_VALUE));
     }
 
     public static Date today() {

@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Airtime implements Comparable<Airtime> {
+public class Time implements Comparable<Time> {
     private static final DateFormat[] ACCEPTED_TIME_FORMATS = {
         new SimpleDateFormat("hh:mm aa", Locale.US),
         new SimpleDateFormat("hh:mmaa", Locale.US),
@@ -21,25 +21,25 @@ public class Airtime implements Comparable<Airtime> {
         }
     }
 
-    public static final Airtime MAX_VALUE = Airtime.valueOf("23:59");
-    public static final Airtime MIN_VALUE = Airtime.valueOf("00:00");
+    public static final Time MAX_VALUE = Time.valueOf("23:59");
+    public static final Time MIN_VALUE = Time.valueOf("00:00");
 
     private Date time;
 
-    private Airtime(Date time) {
+    private Time(Date time) {
         this.time = time;
     }
 
-    public static Airtime valueOf(long time) {
-        return new Airtime(new Date(time));
+    public static Time valueOf(long time) {
+        return new Time(new Date(time));
     }
 
-    public static Airtime valueOf(String time) {
+    public static Time valueOf(String time) {
         Validate.isNonNull(time, "time");
 
         for (DateFormat df : ACCEPTED_TIME_FORMATS) {
             try {
-                return new Airtime(df.parse(time));
+                return new Time(df.parse(time));
             } catch (ParseException e) {
                 continue;
             }
@@ -49,7 +49,7 @@ public class Airtime implements Comparable<Airtime> {
     }
 
     @Override
-    public int compareTo(Airtime other) {
+    public int compareTo(Time other) {
         return this.time.compareTo(other.time);
     }
 
@@ -79,6 +79,6 @@ public class Airtime implements Comparable<Airtime> {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Airtime && this.time.equals(((Airtime) obj).time);
+        return obj instanceof Time && this.time.equals(((Time) obj).time);
     }
 }

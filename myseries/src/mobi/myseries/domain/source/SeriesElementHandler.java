@@ -27,7 +27,7 @@ import java.util.List;
 
 import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.Airtime;
+import mobi.myseries.shared.Time;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Numbers;
 import mobi.myseries.shared.Strings;
@@ -141,7 +141,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(AIR_TIME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                Airtime airtime = Airtime.valueOf(body.trim());
+                Time airtime = Time.valueOf(body.trim());
                 SeriesElementHandler.this.seriesBuilder.withAirtime(airtime);
             }
         });

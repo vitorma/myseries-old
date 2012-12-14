@@ -24,7 +24,7 @@ package mobi.myseries.domain.model;
 import java.util.Date;
 
 import mobi.myseries.domain.constant.Invalid;
-import mobi.myseries.shared.Airtime;
+import mobi.myseries.shared.Time;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
@@ -36,7 +36,7 @@ public class Episode implements Publisher<EpisodeListener> {
     private int seasonNumber;
     private String name;
     private Date airDate;
-    private Airtime airtime;
+    private Time airtime;
     private String overview;
     private String directors;
     private String writers;
@@ -96,11 +96,11 @@ public class Episode implements Publisher<EpisodeListener> {
         return this.airDate;
     }
 
-    public Airtime airtime() {
+    public Time airtime() {
         return this.airtime;
     }
 
-    public Episode withAirtime(Airtime airtime) {
+    public Episode withAirtime(Time airtime) {
         this.airtime = airtime;
         return this;
     }
@@ -221,7 +221,7 @@ public class Episode implements Publisher<EpisodeListener> {
         private int seasonNumber;
         private String name;
         private Date airDate;
-        private Airtime airtime;
+        private Time airtime;
         private String overview;
         private String directors;
         private String writers;
@@ -266,7 +266,7 @@ public class Episode implements Publisher<EpisodeListener> {
             return this;
         }
 
-        public Builder withAirtime(Airtime airtime) {
+        public Builder withAirtime(Time airtime) {
             this.airtime = airtime;
             return this;
         }

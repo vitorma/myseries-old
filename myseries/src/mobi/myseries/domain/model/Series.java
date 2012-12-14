@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import mobi.myseries.domain.constant.Invalid;
-import mobi.myseries.shared.Airtime;
+import mobi.myseries.shared.Time;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
@@ -40,7 +40,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     private String status;
     private Date airDate;
     private String airDay;
-    private Airtime airtime;
+    private Time airtime;
     private String runtime;
     private String network;
     private String overview;
@@ -88,7 +88,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.airDay;
     }
 
-    public Airtime airtime() {
+    public Time airtime() {
         return this.airtime;
     }
 
@@ -255,7 +255,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         private String status;
         private Date airDate;
         private String airDay;
-        private Airtime airtime;
+        private Time airtime;
         private String runtime;
         private String network;
         private String overview;
@@ -296,7 +296,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return this;
         }
 
-        public Builder withAirtime(Airtime airtime) {
+        public Builder withAirtime(Time airtime) {
             this.airtime = airtime;
             return this;
         }
