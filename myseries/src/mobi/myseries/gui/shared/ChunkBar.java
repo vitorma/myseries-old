@@ -52,9 +52,9 @@ public class ChunkBar extends View {
 
         this.parts = new boolean[] { false };
         this.foreground = new Paint();
-        this.foreground.setColor(DEFAULT_DRAWING_COLOR);
+        this.foreground.setColor(ChunkBar.DEFAULT_DRAWING_COLOR);
         this.background = new Paint();
-        this.background.setColor(DEFAULT_BACKGROUND_COLOR);
+        this.background.setColor(ChunkBar.DEFAULT_BACKGROUND_COLOR);
         this.rect = new RectF();
     }
 
@@ -85,12 +85,12 @@ public class ChunkBar extends View {
         float partWidth = (width) / this.parts.length;
         float partHeight = height;
 
-        rect.left = this.getPaddingLeft();
-        rect.top = this.getPaddingTop();
-        rect.right = width;
-        rect.bottom = height;
+        this.rect.left = this.getPaddingLeft();
+        this.rect.top = this.getPaddingTop();
+        this.rect.right = width;
+        this.rect.bottom = height;
 
-        canvas.drawRect(rect, background);
+        canvas.drawRect(this.rect, this.background);
 
         int i = 0;
         int j;
@@ -105,8 +105,15 @@ public class ChunkBar extends View {
                 ++j;
             }
 
-            canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
-                    (j) * partWidth, partHeight - this.getPaddingBottom(), this.foreground);
+            if (((j-i)*partWidth) >= 1.0) {
+                this.foreground.setAlpha(255);
+                canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
+                        (j) * partWidth, partHeight - this.getPaddingBottom(), this.foreground);
+            } else {
+                this.foreground.setAlpha((int)(100 + (155 * (j-i) * partWidth)));
+                canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
+                        ((i)*partWidth) + 1, partHeight - this.getPaddingBottom(), this.foreground);
+            }
 
             i = j;
         }
