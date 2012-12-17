@@ -153,7 +153,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                Date airDate = DatesAndTimes.parseDate(body, TheTVDBConstants.DATE_FORMAT, null);
+                Date airDate = DatesAndTimes.parse(body, TheTVDBConstants.DATE_FORMAT, null);
                 EpisodeElementHandler.this.episodeBuilder.withAirDate(airDate);
             }
         });

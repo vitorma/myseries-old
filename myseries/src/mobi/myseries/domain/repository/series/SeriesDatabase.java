@@ -24,6 +24,7 @@ package mobi.myseries.domain.repository.series;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.FilesUtil;
 import mobi.myseries.shared.Numbers;
+import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
 import android.content.ContentValues;
 import android.content.Context;
@@ -123,6 +125,9 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private static final String SELECT_ALL_SERIES =
         "SELECT * FROM " + SERIES;
+
+    private static final Date DEFAULT_AIRDATE = null;
+    private static final Time DEFAULT_AIRTIME = null;
 
     public SeriesDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -312,15 +317,15 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
         return result;
     }
-    
+
     public void doBackupTo(String destinationFilePath) throws IOException{
-        FilesUtil.copy(dbFile(), new File(destinationFilePath));
+        FilesUtil.copy(this.dbFile(), new File(destinationFilePath));
     }
-    
+
     public void restoreDBFrom(String sourceFilePath) throws IOException, InvalidDBSourceFileException {
-        testDatabase(sourceFilePath); 
-        FilesUtil.copy(new File(sourceFilePath), dbFile());
-        Log.d(getClass().getName(), "database sucessfully restored");
+        this.testDatabase(sourceFilePath);
+        FilesUtil.copy(new File(sourceFilePath), this.dbFile());
+        Log.d(this.getClass().getName(), "database sucessfully restored");
 
 
     }
@@ -332,16 +337,16 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             db = SQLiteDatabase.openDatabase(sourceFilePath, null, SQLiteDatabase.OPEN_READONLY);
             c = db.rawQuery(SELECT_ALL_SERIES, null);
             if(c.getCount() == 0) {
-                Log.d(getClass().getName(), "there are no series to restore on backup file");
+                Log.d(this.getClass().getName(), "there are no series to restore on backup file");
                 throw new NoSeriesToRestoreException();
             }
             if(db.getVersion() > DATABASE_VERSION) {
-                Log.d(getClass().getName(), "backup file seems to be invalid, the database version is higher than actual version");
+                Log.d(this.getClass().getName(), "backup file seems to be invalid, the database version is higher than actual version");
                 throw new InvalidBackupVersionException();
             }
-            Log.d(getClass().getName(), "backup file sucessfully tested");
+            Log.d(this.getClass().getName(), "backup file sucessfully tested");
         } catch (SQLiteException e) {
-            Log.d(getClass().getName(), "backup file does not contains a valid database");
+            Log.d(this.getClass().getName(), "backup file does not contains a valid database");
             throw new InvalidDBSourceFileException();
         } finally {
             if(db != null){
@@ -417,8 +422,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withName(c.getString(c.getColumnIndex(SERIES_NAME)))
             .withStatus(c.getString(c.getColumnIndex(SERIES_STATUS)))
             .withAirDay(c.getString(c.getColumnIndex(SERIES_AIRDAY)))
-            .withAirtime(DatesAndTimes.parseAirtime(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), null))
-            .withAirDate(DatesAndTimes.parseDate(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), null))
+            .withAirtime(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), DEFAULT_AIRTIME))
+            .withAirDate(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), DEFAULT_AIRDATE))
             .withRuntime(c.getString(c.getColumnIndex(SERIES_RUNTIME)))
             .withNetwork(c.getString(c.getColumnIndex(SERIES_NETWORK)))
             .withOverview(c.getString(c.getColumnIndex(SERIES_OVERVIEW)))
@@ -441,8 +446,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withNumber(c.getInt(c.getColumnIndex(EPISODE_NUMBER)))
             .withSeasonNumber(c.getInt(c.getColumnIndex(EPISODE_SEASON)))
             .withName(c.getString(c.getColumnIndex(EPISODE_NAME)))
-            .withAirDate(DatesAndTimes.parseDate(airDate, null))
-            .withAirtime(DatesAndTimes.parseAirtime(airtime, null))
+            .withAirDate(DatesAndTimes.parse(airDate, DEFAULT_AIRDATE))
+            .withAirtime(DatesAndTimes.parse(airtime, DEFAULT_AIRTIME))
             .withOverview(c.getString(c.getColumnIndex(EPISODE_OVERVIEW)))
             .withDirectors(c.getString(c.getColumnIndex(EPISODE_DIRECTORS)))
             .withWriters(c.getString(c.getColumnIndex(EPISODE_WRITERS)))
@@ -455,13 +460,10 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     @Override
     public void exportTo(String backupFilePath) throws IOException {
         this.doBackupTo(backupFilePath);
-        
     }
 
     @Override
     public void restoreFrom(String backupFilePath) throws IOException, InvalidDBSourceFileException {
         this.restoreDBFrom(backupFilePath);
-        
     }
-
 }

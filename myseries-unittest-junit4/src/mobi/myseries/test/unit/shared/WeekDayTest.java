@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class WeekDayTest {
+
     @Test(expected=IllegalArgumentException.class)
     public void valueOfNullStringCausesIllegalArgumentException() {
         WeekDay.valueOf(null);

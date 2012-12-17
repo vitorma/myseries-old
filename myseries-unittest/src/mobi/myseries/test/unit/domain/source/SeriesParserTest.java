@@ -288,7 +288,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(fullSeries.status(), equalTo(FULL_SERIES_STATUS));
         assertThat(fullSeries.airDay(), equalTo(FULL_SERIES_AIR_DAY));
         assertThat(fullSeries.airtime(), equalTo(Time.valueOf(FULL_SERIES_AIR_TIME)));
-        assertThat(fullSeries.airDate(), equalTo(DatesAndTimes.parseDate(FULL_SERIES_AIR_DATE, DATE_FORMAT, null)));
+        assertThat(fullSeries.airDate(), equalTo(DatesAndTimes.parse(FULL_SERIES_AIR_DATE, DATE_FORMAT, null)));
         assertThat(fullSeries.runtime(), equalTo(FULL_SERIES_RUNTIME));
         assertThat(fullSeries.network(), equalTo(FULL_SERIES_NETWORK));
         assertThat(fullSeries.overview(), equalTo(FULL_SERIES_OVERVIEW));
@@ -305,7 +305,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(episode1.number(), equalTo(Integer.valueOf(EPISODE1_NUMBER)));
         assertThat(episode1.seasonNumber(), equalTo(Integer.valueOf(SEASON_NUMBER)));
         assertThat(episode1.name(), equalTo(EPISODE1_NAME));
-        assertThat(episode1.airDate(), equalTo(DatesAndTimes.parseDate(EPISODE1_AIR_DATE, TheTVDBConstants.DATE_FORMAT, null)));
+        assertThat(episode1.airDate(), equalTo(DatesAndTimes.parse(EPISODE1_AIR_DATE, TheTVDBConstants.DATE_FORMAT, null)));
         assertThat(episode1.overview(), equalTo(EPISODE1_OVERVIEW));
         assertThat(episode1.directors(), equalTo(Strings.normalizePipeSeparated(EPISODE1_DIRECTORS)));
         assertThat(episode1.writers(), equalTo(Strings.normalizePipeSeparated(EPISODE1_WRITERS)));
@@ -319,7 +319,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(episode2.number(), equalTo(Integer.valueOf(EPISODE2_NUMBER)));
         assertThat(episode2.seasonNumber(), equalTo(Integer.valueOf(SEASON_NUMBER)));
         assertThat(episode2.name(), equalTo(EPISODE2_NAME));
-        assertThat(episode2.airDate(), equalTo(DatesAndTimes.parseDate(EPISODE2_AIR_DATE, TheTVDBConstants.DATE_FORMAT, null)));
+        assertThat(episode2.airDate(), equalTo(DatesAndTimes.parse(EPISODE2_AIR_DATE, TheTVDBConstants.DATE_FORMAT, null)));
         assertThat(episode2.overview(), equalTo(EPISODE2_OVERVIEW));
         assertThat(episode2.directors(), equalTo(Strings.normalizePipeSeparated(EPISODE2_DIRECTORS)));
         assertThat(episode2.writers(), equalTo(Strings.normalizePipeSeparated(EPISODE2_WRITERS)));

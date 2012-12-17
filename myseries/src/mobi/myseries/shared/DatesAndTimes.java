@@ -24,10 +24,8 @@ package mobi.myseries.shared;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
-
-import android.text.format.DateUtils;
+import java.util.Locale;
 
 public class DatesAndTimes {
     public static final long DAY_IN_MILLIS = 24L * 60L * 60L * 1000L;
@@ -37,74 +35,101 @@ public class DatesAndTimes {
 
     private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
 
-    public static Date parseDate(String date, DateFormat format, Date alternative) {
+    /* Parsing */
+
+    public static Date parse(String date, DateFormat format, Date defaultDate) {
         Validate.isNonNull(format, "format");
 
         if (date == null || Strings.isBlank(date)) {
-            return alternative;
+            return defaultDate;
         }
 
         try {
             return format.parse(date);
         } catch (ParseException e) {
-            return alternative;
+            return defaultDate;
         }
     }
 
-    public static Date parseDate(Long date, Date alternative) {
+    public static Date parse(Long date, Date defaultDate) {
         if (date == null) {
-            return alternative;
+            return defaultDate;
         }
 
         return new Date(date);
     }
 
-    public static Time parseAirtime(Long airtime, Time alternative) {
-        if (airtime == null) {
-            return alternative;
+    public static Time parse(Long time, Time defaultTime) {
+        if (time == null) {
+            return defaultTime;
         }
 
-        return Time.valueOf(airtime);
+        return Time.valueOf(time);
     }
 
-    public static String toString(Date date, DateFormat format) {
-        Validate.isNonNull(date, "date");
-        Validate.isNonNull(format, "format");
+    public static WeekDay parse(Long weekDay, WeekDay defaultWeekDay) {
+        if (weekDay == null) {
+            return defaultWeekDay;
+        }
 
-        return format.format(date);
+        return WeekDay.valueOf(weekDay);
     }
 
-    public static String toString(Date date, DateFormat format, String alternative) {
+    /* Formatting */
+
+    public static String toString(Date date, DateFormat format, String defaultDate) {
         Validate.isNonNull(format, "format");
 
         if (date == null) {
-            return alternative;
+            return defaultDate;
         }
 
         return format.format(date);
     }
 
-    public static String toString(Time airtime, DateFormat format, String alternative) {
-        if (airtime == null) {
-            return alternative;
+    public static String toString(Time time, DateFormat format, String defaultTime) {
+        Validate.isNonNull(format, "format");
+
+        if (time == null) {
+            return defaultTime;
         }
 
-        if (format == null) {
-            return airtime.toString();
-        }
-
-        return airtime.toString(format);
+        return time.toString(format);
     }
+
+    public static String toString(WeekDay weekDay, Locale locale, String defaultWeekDay) {
+        Validate.isNonNull(locale, "locale");
+
+        if (weekDay == null) {
+            return defaultWeekDay;
+        }
+
+        return weekDay.toString(locale);
+    }
+
+    public static String toShortString(WeekDay weekDay, Locale locale, String defaultWeekDay) {
+        Validate.isNonNull(locale, "locale");
+
+        if (weekDay == null) {
+            return defaultWeekDay;
+        }
+
+        return weekDay.toShortString(locale);
+    }
+
+    /* Comparison */
 
     public static int compareByNullLast(Date date1, Date date2) {
         return Objects.nullSafe(date1, MAX_DATE).compareTo(
                Objects.nullSafe(date2, MAX_DATE));
     }
 
-    public static int compareByNullLast(Time airtime1, Time airtime2) {
-        return Objects.nullSafe(airtime1, Time.MAX_VALUE).compareTo(
-               Objects.nullSafe(airtime2, Time.MAX_VALUE));
+    public static int compareByNullLast(Time time1, Time time2) {
+        return Objects.nullSafe(time1, Time.MAX_VALUE).compareTo(
+               Objects.nullSafe(time2, Time.MAX_VALUE));
     }
+
+    /* Calculus */
 
     public static Date today() {
         Calendar c = Calendar.getInstance();
@@ -121,62 +146,10 @@ public class DatesAndTimes {
         return new Date();
     }
 
-    public static Comparator<Date> naturalComparator() {
-        return new Comparator<Date>() {
-            @Override
-            public int compare(Date d1, Date d2) {
-                return d1.compareTo(d2);
-            }
-        };
-    }
+    public static int daysBetween(Date date1, Date date2) {
+        Validate.isNonNull(date1, "date1");
+        Validate.isNonNull(date2, "date2");
 
-    public static Comparator<Date> reversedComparator() {
-        return new Comparator<Date>() {
-            @Override
-            public int compare(Date d1, Date d2) {
-                return d2.compareTo(d1);
-            }
-        };
-    }
-
-    public static int daysBetween(Date d1, Date d2) {
-        Validate.isNonNull(d1, "date1");
-        Validate.isNonNull(d2, "date2");
-
-        return (int) ((d2.getTime() - d1.getTime())/DAY_IN_MILLIS);
-    }
-
-    public static String relativeTimeStringForNear(Date date) {
-        if (date == null) {
-            return "";
-        }
-
-        long time = date.getTime();
-        long now = System.currentTimeMillis();
-        long duration = Math.abs(now - time);
-
-        if (duration >= WEEK_IN_MILLIS) {
-            return "";
-        }
-
-        long minResolution = DAY_IN_MILLIS;
-        int flag = DateUtils.FORMAT_ABBREV_RELATIVE;
-
-        return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
-    }
-
-    public static String relativeTimeStringFor(Date date, String defaultReturn) {
-        Validate.isNonNull(defaultReturn, "defaultReturn");
-
-        if (date == null) {
-            return defaultReturn;
-        }
-
-        long time = date.getTime();
-        long now = System.currentTimeMillis();
-        long minResolution = DAY_IN_MILLIS;
-        int flag = DateUtils.FORMAT_ABBREV_ALL;
-
-        return DateUtils.getRelativeTimeSpanString(time, now, minResolution, flag).toString();
+        return (int) ((date2.getTime() - date1.getTime())/DAY_IN_MILLIS);
     }
 }
