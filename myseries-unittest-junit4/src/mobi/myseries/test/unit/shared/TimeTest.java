@@ -103,10 +103,10 @@ public class TimeTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void toStringWithNullFormatCausesIllegalArgumentException() {
-        Time a = Time.valueOf("08:30 PM");
+        Time t = Time.valueOf("08:30 PM");
 
-        Assert.assertNotNull(a);
+        Assert.assertNotNull(t);
 
-        a.toString(null);
+        t.toString(null);
     }
 }
