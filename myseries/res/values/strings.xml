@@ -44,6 +44,8 @@
     <string name="relative_time_yesterday">Yesterday</string>
     <string name="relative_time_past">%d days ago</string>
     <string name="relative_time_future">In %d days</string>
+    <string name="status_continuing">Continuing</string>
+    <string name="status_ended">Ended</string>
 
     <!-- Labels -->
 
