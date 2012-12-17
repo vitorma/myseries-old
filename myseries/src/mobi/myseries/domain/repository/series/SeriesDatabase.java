@@ -34,6 +34,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.FilesUtil;
 import mobi.myseries.shared.Numbers;
+import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
 import mobi.myseries.shared.WeekDay;
@@ -381,7 +382,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
         cv.put(SERIES_ID, s.id());
         cv.put(SERIES_NAME, s.name());
-        cv.put(SERIES_STATUS, s.status());
+        cv.put(SERIES_STATUS, s.status().name());
         cv.put(SERIES_AIRDAY, Numbers.parseLong(s.airDay(), null));
         cv.put(SERIES_AIRTIME, Numbers.parseLong(s.airtime(), null));
         cv.put(SERIES_AIRDATE, Numbers.parseLong(s.airDate(), null));
@@ -420,7 +421,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         return Series.builder()
             .withId(c.getInt(c.getColumnIndex(SERIES_ID)))
             .withName(c.getString(c.getColumnIndex(SERIES_NAME)))
-            .withStatus(c.getString(c.getColumnIndex(SERIES_STATUS)))
+            .withStatus(Status.from(c.getString(c.getColumnIndex(SERIES_STATUS))))
             .withAirDay(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDAY)), DEFAULT_AIRDAY))
             .withAirtime(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), DEFAULT_AIRTIME))
             .withAirDate(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), DEFAULT_AIRDATE))

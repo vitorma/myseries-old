@@ -31,6 +31,7 @@ import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
+import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
 import mobi.myseries.shared.WeekDay;
@@ -38,7 +39,7 @@ import mobi.myseries.shared.WeekDay;
 public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     private int id;
     private String name;
-    private String status;
+    private Status status;
     private Date airDate;
     private WeekDay airDay;
     private Time airtime;
@@ -77,7 +78,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.name;
     }
 
-    public String status() {
+    public Status status() {
         return this.status;
     }
 
@@ -253,7 +254,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     public static class Builder {
         private int id;
         private String name;
-        private String status;
+        private Status status;
         private Date airDate;
         private WeekDay airDay;
         private Time airtime;
@@ -282,7 +283,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return this;
         }
 
-        public Builder withStatus(String status) {
+        public Builder withStatus(Status status) {
             this.status = status;
             return this;
         }

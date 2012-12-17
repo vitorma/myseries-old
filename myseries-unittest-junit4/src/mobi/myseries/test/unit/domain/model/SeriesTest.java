@@ -10,6 +10,7 @@ import java.util.List;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.WeekDay;
 
@@ -28,7 +29,7 @@ public class SeriesTest {
     private static final String OVERVIEW = "overview";
     private static final String POSTER_FILENAME = "poster filename";
     private static final String RUNTIME = "runtime";
-    private static final String STATUS = "status";
+    private static final Status STATUS = Status.from("status");
 
     /* Merge */
 

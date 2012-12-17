@@ -37,10 +37,12 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.series.SeriesActivity;
 import mobi.myseries.gui.shared.Images;
+import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
+import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Strings;
 import android.content.Context;
 import android.content.Intent;
@@ -113,9 +115,9 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
             nameView.setText(name);
         }
 
-        private void setStatusTo(String status, View itemView) {
+        private void setStatusTo(Status status, View itemView) {
             TextView statusTextView = (TextView) itemView.findViewById(R.id.statusTextView);
-            statusTextView.setText(status);
+            statusTextView.setText(LocalText.of(status, ""));
         }
 
         private void setAirInfoTo(Series series, View itemView) {

@@ -29,6 +29,7 @@ import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Numbers;
+import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
@@ -120,7 +121,8 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(STATUS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withStatus(body);
+                Status status = Status.from(body.trim());
+                SeriesElementHandler.this.seriesBuilder.withStatus(status);
             }
         });
 
