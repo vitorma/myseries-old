@@ -27,11 +27,12 @@ import java.util.List;
 
 import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.Time;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Numbers;
 import mobi.myseries.shared.Strings;
+import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
+import mobi.myseries.shared.WeekDay;
 
 import org.xml.sax.Attributes;
 
@@ -130,7 +131,8 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(AIR_DAY).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withAirDay(body);
+                WeekDay airDay = WeekDay.valueOf(body.trim());
+                SeriesElementHandler.this.seriesBuilder.withAirDay(airDay);
             }
         });
 

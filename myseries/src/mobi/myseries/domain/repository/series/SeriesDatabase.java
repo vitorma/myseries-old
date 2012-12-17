@@ -36,6 +36,7 @@ import mobi.myseries.shared.FilesUtil;
 import mobi.myseries.shared.Numbers;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
+import mobi.myseries.shared.WeekDay;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -83,7 +84,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             SERIES_ID +       " INTEGER PRIMARY KEY, " +
             SERIES_NAME +     " TEXT NOT NULL, " +
             SERIES_STATUS +   " TEXT, " +
-            SERIES_AIRDAY +   " TEXT, " +
+            SERIES_AIRDAY +   " BIGINT, " +
             SERIES_AIRTIME +  " BIGINT, " +
             SERIES_AIRDATE +  " BIGINT, " +
             SERIES_RUNTIME +  " TEXT, " +
@@ -128,6 +129,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private static final Date DEFAULT_AIRDATE = null;
     private static final Time DEFAULT_AIRTIME = null;
+    private static final WeekDay DEFAULT_AIRDAY = null;
 
     public SeriesDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -326,8 +328,6 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         this.testDatabase(sourceFilePath);
         FilesUtil.copy(new File(sourceFilePath), this.dbFile());
         Log.d(this.getClass().getName(), "database sucessfully restored");
-
-
     }
 
     private void testDatabase(String sourceFilePath) throws InvalidDBSourceFileException {
@@ -382,7 +382,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put(SERIES_ID, s.id());
         cv.put(SERIES_NAME, s.name());
         cv.put(SERIES_STATUS, s.status());
-        cv.put(SERIES_AIRDAY, s.airDay());
+        cv.put(SERIES_AIRDAY, Numbers.parseLong(s.airDay(), null));
         cv.put(SERIES_AIRTIME, Numbers.parseLong(s.airtime(), null));
         cv.put(SERIES_AIRDATE, Numbers.parseLong(s.airDate(), null));
         cv.put(SERIES_RUNTIME, s.runtime());
@@ -421,7 +421,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withId(c.getInt(c.getColumnIndex(SERIES_ID)))
             .withName(c.getString(c.getColumnIndex(SERIES_NAME)))
             .withStatus(c.getString(c.getColumnIndex(SERIES_STATUS)))
-            .withAirDay(c.getString(c.getColumnIndex(SERIES_AIRDAY)))
+            .withAirDay(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDAY)), DEFAULT_AIRDAY))
             .withAirtime(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), DEFAULT_AIRTIME))
             .withAirDate(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), DEFAULT_AIRDATE))
             .withRuntime(c.getString(c.getColumnIndex(SERIES_RUNTIME)))

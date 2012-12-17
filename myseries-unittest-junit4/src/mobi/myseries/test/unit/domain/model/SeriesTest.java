@@ -11,6 +11,7 @@ import java.util.List;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Time;
+import mobi.myseries.shared.WeekDay;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -19,7 +20,7 @@ public class SeriesTest {
     private static final int ID = 1;
     private static final String ACTORS = "actors";
     private static final Date AIR_DATE = new Date(1);
-    private static final String AIR_DAY = "air day";
+    private static final WeekDay AIR_DAY = WeekDay.valueOf(1);
     private static final Time AIR_TIME = Time.valueOf(1);
     private static final String GENRES = "genres";
     private static final String NETWORK = "network";

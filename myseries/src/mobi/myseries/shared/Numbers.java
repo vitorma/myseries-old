@@ -25,27 +25,35 @@ import java.util.Date;
 
 public class Numbers {
 
-    public static int parseInt(String string, int alternative) {
+    public static int parseInt(String string, int defaultInt) {
         try {
             return Integer.valueOf(string);
         } catch (NumberFormatException e) {
-            return alternative;
+            return defaultInt;
         }
     }
 
-    public static Long parseLong(Date date, Long alternative) {
+    public static Long parseLong(Date date, Long defaultLong) {
         if (date == null) {
-            return alternative;
+            return defaultLong;
         }
 
         return date.getTime();
     }
 
-    public static Long parseLong(Time airtime, Long alternative) {
-        if (airtime == null) {
-            return alternative;
+    public static Long parseLong(Time time, Long defaultLong) {
+        if (time == null) {
+            return defaultLong;
         }
 
-        return airtime.toLong();
+        return time.toLong();
+    }
+
+    public static Long parseLong(WeekDay weekDay, Long defaultLong) {
+        if (weekDay == null) {
+            return defaultLong;
+        }
+
+        return weekDay.toLong();
     }
 }

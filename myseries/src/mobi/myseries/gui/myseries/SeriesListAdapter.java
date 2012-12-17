@@ -24,6 +24,7 @@ package mobi.myseries.gui.myseries;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -119,7 +120,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
 
         private void setAirInfoTo(Series series, View itemView) {
             TextView airInfoTextView = (TextView) itemView.findViewById(R.id.airInfoTextView);
-            String airDay = series.airDay();
+            String airDay = series.airDay().toString(Locale.getDefault());
             DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(this.context);
             String airtime = DatesAndTimes.toString(series.airtime(), airtimeFormat, "");
             String network = series.network();

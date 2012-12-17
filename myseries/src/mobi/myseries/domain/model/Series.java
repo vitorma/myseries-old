@@ -28,18 +28,19 @@ import java.util.List;
 import java.util.Set;
 
 import mobi.myseries.domain.constant.Invalid;
-import mobi.myseries.shared.Time;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
+import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
+import mobi.myseries.shared.WeekDay;
 
 public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     private int id;
     private String name;
     private String status;
     private Date airDate;
-    private String airDay;
+    private WeekDay airDay;
     private Time airtime;
     private String runtime;
     private String network;
@@ -84,7 +85,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.airDate;
     }
 
-    public String airDay() {
+    public WeekDay airDay() {
         return this.airDay;
     }
 
@@ -254,7 +255,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         private String name;
         private String status;
         private Date airDate;
-        private String airDay;
+        private WeekDay airDay;
         private Time airtime;
         private String runtime;
         private String network;
@@ -291,7 +292,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return this;
         }
 
-        public Builder withAirDay(String airDay) {
+        public Builder withAirDay(WeekDay airDay) {
             this.airDay = airDay;
             return this;
         }
