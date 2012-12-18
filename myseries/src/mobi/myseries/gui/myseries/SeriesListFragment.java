@@ -40,22 +40,28 @@ public class SeriesListFragment extends SherlockListFragment implements BackupLi
         super.onCreate(savedInstanceState);
     }
 
-    @Override  
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        this.setUpPadding();
         this.setUpSelector();
-        this.setUpEmptyTextView();
+        this.setUpEmptyText();
         this.setUpListAdapter();
         BACKUP_SERVICE.register(this);
     }
 
-    private void setUpEmptyTextView() {
-        this.setEmptyText(this.getString(R.string.no_followed_series));
+    private void setUpPadding() {
+        int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.gap_large);
+        this.getListView().setPadding(padding, 0, padding, 0);
     }
 
     private void setUpSelector() {
         this.getListView().setSelector(R.color.transparent);
+    }
+
+    private void setUpEmptyText() {
+        this.setEmptyText(this.getString(R.string.no_followed_series));
     }
 
     private void setUpListAdapter() {

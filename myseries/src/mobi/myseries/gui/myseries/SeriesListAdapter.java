@@ -66,7 +66,7 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
     private static final UpdateService UPDATE_SERIES_SERVICE = App.updateSeriesService();
 
     private static final SeriesComparator COMPARATOR = new SeriesComparator();
-    private static final int ITEM_LAYOUT = R.layout.myseries_item_new;
+    private static final int ITEM_LAYOUT = R.layout.myseries_item;
 
     private static class SeriesListItemFactory {
         private Context context;
