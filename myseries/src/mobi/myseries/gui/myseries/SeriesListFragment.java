@@ -26,7 +26,6 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
 import android.os.Bundle;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -36,26 +35,10 @@ public class SeriesListFragment extends SherlockListFragment implements BackupLi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.setUpPadding();
-        this.setUpScrollBarStyle();
-        this.setUpSelector();
         this.setUpEmptyText();
         this.setUpListAdapter();
 
         App.backupService().register(this);
-    }
-
-    private void setUpPadding() {
-        int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.gap_large);
-        this.getListView().setPadding(padding, 0, padding, 0);
-    }
-
-    private void setUpScrollBarStyle() {
-        this.getListView().setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
-    }
-
-    private void setUpSelector() {
-        this.getListView().setSelector(R.color.transparent);
     }
 
     private void setUpEmptyText() {

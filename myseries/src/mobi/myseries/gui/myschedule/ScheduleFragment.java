@@ -29,7 +29,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -58,9 +57,6 @@ public class ScheduleFragment extends SherlockListFragment implements ScheduleAd
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.setUpPadding();
-        this.setUpScrollBarStyle();
-        this.setUpSelector();
         this.setUpEmptyText();
         this.setUpItemClickListener();
         this.setUpAdapter();
@@ -92,19 +88,6 @@ public class ScheduleFragment extends SherlockListFragment implements ScheduleAd
     @Override
     public void onFinishLoading() {
         this.setListShown(true);
-    }
-
-    private void setUpPadding() {
-        int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.gap_large);
-        this.getListView().setPadding(padding, 0, padding, 0);
-    }
-
-    private void setUpScrollBarStyle() {
-        this.getListView().setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
-    }
-
-    private void setUpSelector() {
-        this.getListView().setSelector(R.color.transparent);
     }
 
     private void setUpEmptyText() {

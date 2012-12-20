@@ -3,6 +3,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/itemPanel"
+    android:background="@drawable/list_selector_holo_light"
     android:paddingTop="@dimen/appwidget_gap"
     android:paddingBottom="@dimen/appwidget_gap"
     android:paddingLeft="@dimen/appwidget_gap"

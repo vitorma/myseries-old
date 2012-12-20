@@ -269,16 +269,28 @@
     <!-- ListView -->
 
     <style name="ListView" parent="android:Widget.ListView">
-        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
-        <item name="android:drawSelectorOnTop">true</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">@dimen/gap_large</item>
+        <item name="android:paddingRight">@dimen/gap_large</item>
+
+        <item name="android:listSelector">@color/transparent</item>
+
         <item name="android:divider">@drawable/list_divider_holo_light</item>
         <item name="android:dividerHeight">0.5dp</item>
         <item name="android:headerDividersEnabled">true</item>
         <item name="android:footerDividersEnabled">true</item>
         <item name="android:showDividers">beginning|middle|end</item>
+
+        <item name="android:scrollbarStyle">outsideOverlay</item>
         <item name="android:fastScrollEnabled">true</item>
         <item name="android:overScrollFooter">@null</item>
         <item name="android:overScrollHeader">@null</item>
+    </style>
+
+    <style name="ListView.AppWidget">
+        <item name="android:padding">0dp</item>
+        <item name="android:divider">@null</item>
     </style>
 
     <!-- ExpandableListView -->
