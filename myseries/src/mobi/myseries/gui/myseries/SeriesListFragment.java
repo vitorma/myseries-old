@@ -23,37 +23,35 @@ package mobi.myseries.gui.myseries;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.backup.BackupListener;
-import mobi.myseries.application.backup.BackupService;
 import android.os.Bundle;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
 public class SeriesListFragment extends SherlockListFragment implements BackupListener {
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
-    private static final BackupService BACKUP_SERVICE = App.backupService();
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         this.setUpPadding();
+        this.setUpScrollBarStyle();
         this.setUpSelector();
         this.setUpEmptyText();
         this.setUpListAdapter();
-        BACKUP_SERVICE.register(this);
+
+        App.backupService().register(this);
     }
 
     private void setUpPadding() {
         int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.gap_large);
         this.getListView().setPadding(padding, 0, padding, 0);
+    }
+
+    private void setUpScrollBarStyle() {
+        this.getListView().setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
     }
 
     private void setUpSelector() {
@@ -65,7 +63,7 @@ public class SeriesListFragment extends SherlockListFragment implements BackupLi
     }
 
     private void setUpListAdapter() {
-        ListAdapter adapter = new SeriesListAdapter(this.getActivity(), SERIES_PROVIDER.followedSeries());
+        ListAdapter adapter = new SeriesListAdapter(this.getActivity(), App.seriesProvider().followedSeries());
         this.setListAdapter(adapter);
     }
 
