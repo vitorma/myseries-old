@@ -23,27 +23,58 @@ package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.shared.RelativeDay;
 import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Validate;
 
 public class LocalText {
 
-    public static String of(Status status, String defaultTextForUnknownStatus) {
+    public static String of(Status status, String defaultText) {
         Validate.isNonNull(status, "status");
-        Validate.isNonNull(defaultTextForUnknownStatus, "defaultTextForUnknownStatus");
+        Validate.isNonNull(defaultText, "defaultText");
 
         switch (status) {
             case CONTINUING:
-                return stringFromId(R.string.status_continuing);
+                return get(R.string.status_continuing);
             case ENDED:
-                return stringFromId(R.string.status_ended);
+                return get(R.string.status_ended);
             case UNKNOWN:
             default:
-                return defaultTextForUnknownStatus;
+                return defaultText;
         }
     }
 
-    private static String stringFromId(int stringResourceId) {
+    public static String of(RelativeDay day, String defaultText) {
+        Validate.isNonNull(defaultText, "defaultText");
+
+        if (day == null) {
+            return defaultText;
+        }
+
+        if (day.isToday()) {
+            return get(R.string.relative_time_today);
+        }
+
+        if (day.isYesterday()) {
+            return get(R.string.relative_time_yesterday);
+        }
+
+        if (day.isTomorrow()) {
+            return get(R.string.relative_time_tomorrow);
+        }
+
+        if (day.wasLessThanAWeekAgo()) {
+            return String.format(get(R.string.relative_time_past), day.daysUntilToday());
+        }
+
+        if (day.isInLessThanAWeek()) {
+            return String.format(get(R.string.relative_time_future), day.daysSinceToday());
+        }
+
+        return defaultText;
+    }
+
+    public static String get(int stringResourceId) {
         return App.resources().getString(stringResourceId);
     }
 }

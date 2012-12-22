@@ -27,22 +27,20 @@ import java.util.Map;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.image.ImageService;
-import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
 import mobi.myseries.gui.shared.Images;
+import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Publisher;
+import mobi.myseries.shared.RelativeDay;
 import mobi.myseries.shared.Strings;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
@@ -53,19 +51,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Publisher<ScheduleAdapter.Listener> {
-    private static final Context CONTEXT = App.context();
-    private static final Schedule SCHEDULE = App.schedule();
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
-    private static final ImageService IMAGE_SERVICE = App.imageService();
-
     private static final int STATE_UNKNOWN = 0;
-    private static final int STATE_SECTIONED_CELL = 1;
-    private static final int STATE_REGULAR_CELL = 2;
+    private static final int STATE_SECTIONED = 1;
+    private static final int STATE_REGULAR = 2;
 
     private int scheduleMode;
     private MySchedulePreferences preferences;
     private ScheduleMode items;
-    private int[] cellStates;
+    private int[] viewStates;
 
     public ScheduleAdapter(int scheduleMode, MySchedulePreferences preferences) {
         this.scheduleMode = scheduleMode;
@@ -84,11 +77,6 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     }
 
     @Override
-    public int getViewTypeCount() {
-        return 1;
-    }
-
-    @Override
     public Object getItem(int position) {
         return this.items.episodeAt(position);
     }
@@ -99,80 +87,49 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     }
 
     @Override
-    public boolean areAllItemsEnabled() {
-        return true;
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = Objects.nullSafe(convertView, View.inflate(CONTEXT, R.layout.myschedule_item, null));
+        View view = Objects.nullSafe(convertView, View.inflate(App.context(), R.layout.myschedule_item, null));
         ViewHolder viewHolder = (view == convertView) ? (ViewHolder) view.getTag() : new ViewHolder(view);
 
         Episode episode = this.items.episodeAt(position);
-        Series series = SERIES_PROVIDER.getSeries(episode.seriesId());
+        Series series = App.seriesProvider().getSeries(episode.seriesId());
 
-        this.setUpCellSection(position, viewHolder, episode);
-        this.setUpCellBody(viewHolder, series, episode);
+        this.setUpViewSection(position, viewHolder, episode);
+        this.setUpViewBody(viewHolder, series, episode);
 
         return view;
     }
 
-    private void setUpCellSection(int position, ViewHolder viewHolder, Episode episode) {
-        this.updateCellStates(position);
+    private void setUpViewSection(int position, ViewHolder viewHolder, Episode episode) {
+        this.updateViewStates(position);
 
-        if (this.isCellSectioned(position)) {
-            DateFormat dateformat = android.text.format.DateFormat.getDateFormat(CONTEXT);
-            String unavailable = CONTEXT.getString(R.string.unavailable_date);
+        if (this.isViewSectioned(position)) {
+            DateFormat dateformat = android.text.format.DateFormat.getDateFormat(App.context());
+            String unavailable = LocalText.get(R.string.unavailable_date);
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateformat, unavailable);
-
             viewHolder.date.setText(formattedDate);
-            viewHolder.relativeTime.setText(this.relativeTimeStringFor(episode.airDate()));
+
+            RelativeDay relativeDay = DatesAndTimes.parse(episode.airDate(), null);
+            viewHolder.relativeDay.setText(LocalText.of(relativeDay, ""));
+
             viewHolder.section.setVisibility(View.VISIBLE);
         } else {
             viewHolder.section.setVisibility(View.GONE);
         }
     }
 
-    //TODO (Cleber) Move this method to a better place
-    private String relativeTimeStringFor(Date airDate) {
-        if (airDate == null) {
-            return "";
-        }
-
-        int days = DatesAndTimes.daysBetween(DatesAndTimes.today(), airDate);
-
-        switch (days) {
-            case 0:
-                return CONTEXT.getString(R.string.relative_time_today);
-            case 1:
-                return CONTEXT.getString(R.string.relative_time_tomorrow);
-            case -1:
-                return CONTEXT.getString(R.string.relative_time_yesterday);
-            default:
-                if (Math.abs(days) >= DatesAndTimes.DAYS_IN_A_WEEK) {
-                    return "";
-                }
-
-                if (days > 0) {
-                    return String.format(CONTEXT.getString(R.string.relative_time_future), days);
-                }
-
-                return String.format(CONTEXT.getString(R.string.relative_time_past), Math.abs(days));
-        }
-    }
-
-    private void setUpCellBody(ViewHolder viewHolder, Series series, Episode episode) {
-        Bitmap seriesPoster = IMAGE_SERVICE.getPosterOf(series);
+    private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
+        Bitmap seriesPoster = App.imageService().getPosterOf(series);
         Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
         viewHolder.poster.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
 
         viewHolder.seriesName.setText(series.name());
 
-        String numberFormat = CONTEXT.getString(R.string.episode_number_format);
+        String numberFormat = App.context().getString(R.string.episode_number_format);
         String episodeNumber = String.format(numberFormat, episode.seasonNumber(), episode.number());
         viewHolder.episodeName.setText(episodeNumber + " " + episode.name());
 
-        DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(CONTEXT);
+        DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(App.context());
         String airtime = DatesAndTimes.toString(episode.airtime(), airtimeFormat, "");
         String network = Strings.isBlank(series.network()) ? "" : " (" + series.network() + ")";
         viewHolder.airInfo.setText(airtime + network);
@@ -181,17 +138,17 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         viewHolder.seenMark.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
     }
 
-    private void updateCellStates(int position) {
-        if (this.cellStates[position] == STATE_UNKNOWN) {
-            this.cellStates[position] = this.calculateCellState(position);
+    private void updateViewStates(int position) {
+        if (this.viewStates[position] == STATE_UNKNOWN) {
+            this.viewStates[position] = this.calculateViewState(position);
         }
     }
 
-    private int calculateCellState(int position) {
-        return this.shouldBeSectioned(position) ? STATE_SECTIONED_CELL : STATE_REGULAR_CELL;
+    private int calculateViewState(int position) {
+        return this.shouldViewBeSectioned(position) ? STATE_SECTIONED : STATE_REGULAR;
     }
 
-    private boolean shouldBeSectioned(int position) {
+    private boolean shouldViewBeSectioned(int position) {
         if (position == 0) {
             return true;
         }
@@ -202,8 +159,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         return Objects.areDifferent(current, previous);
     }
 
-    private boolean isCellSectioned(int position) {
-        return this.cellStates[position] == STATE_SECTIONED_CELL;
+    private boolean isViewSectioned(int position) {
+        return this.viewStates[position] == STATE_SECTIONED;
     }
 
     /* Preferences change */
@@ -270,17 +227,17 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private void setUpData() {
         switch(this.scheduleMode) {
             case ScheduleMode.RECENT:
-                this.items = SCHEDULE.modeRecent(this.preferences.fullSpecification());
+                this.items = App.schedule().modeRecent(this.preferences.fullSpecification());
                 break;
             case ScheduleMode.NEXT:
-                this.items = SCHEDULE.modeNext(this.preferences.fullSpecification());
+                this.items = App.schedule().modeNext(this.preferences.fullSpecification());
                 break;
             case ScheduleMode.UPCOMING:
-                this.items = SCHEDULE.modeUpcoming(this.preferences.fullSpecification());
+                this.items = App.schedule().modeUpcoming(this.preferences.fullSpecification());
                 break;
         }
 
-        this.cellStates = new int[this.items.numberOfEpisodes()];
+        this.viewStates = new int[this.items.numberOfEpisodes()];
         this.items.register(this);
     }
 
@@ -289,7 +246,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private static class ViewHolder {
         private View section;
         private TextView date;
-        private TextView relativeTime;
+        private TextView relativeDay;
         private ImageView poster;
         private SeenMark seenMark;
         private TextView seriesName;
@@ -299,7 +256,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         private ViewHolder(View view) {
             this.section = view.findViewById(R.id.section);
             this.date = (TextView) view.findViewById(R.id.date);
-            this.relativeTime = (TextView) view.findViewById(R.id.relativeTime);
+            this.relativeDay = (TextView) view.findViewById(R.id.relativeDay);
             this.poster = (ImageView) view.findViewById(R.id.poster);
             this.seenMark = (SeenMark) view.findViewById(R.id.seenMark);
             this.seriesName = (TextView) view.findViewById(R.id.seriesName);
@@ -333,7 +290,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     @Override
     public void onScheduleStateChanged() {
-        this.cellStates = new int[this.items.numberOfEpisodes()];
+        this.viewStates = new int[this.items.numberOfEpisodes()];
         this.notifyDataSetChanged();
     }
 

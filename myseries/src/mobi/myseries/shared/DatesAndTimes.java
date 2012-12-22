@@ -75,6 +75,14 @@ public class DatesAndTimes {
         return WeekDay.valueOf(weekDay);
     }
 
+    public static RelativeDay parse(Date day, RelativeDay defaultRelativeDay) {
+        if (day == null) {
+            return defaultRelativeDay;
+        }
+
+        return RelativeDay.valueOf(day);
+    }
+
     /* Formatting */
 
     public static String toString(Date date, DateFormat format, String defaultDate) {

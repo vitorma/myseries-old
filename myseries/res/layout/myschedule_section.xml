@@ -15,7 +15,7 @@
         android:layout_alignParentLeft="true"/>
 
     <TextView
-        android:id="@+id/relativeTime"
+        android:id="@+id/relativeDay"
         style="@style/TextView.Small.LightGray"
         android:gravity="right"
         android:layout_width="match_parent"

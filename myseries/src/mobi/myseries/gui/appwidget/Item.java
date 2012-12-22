@@ -21,24 +21,24 @@
 
 package mobi.myseries.gui.appwidget;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Images;
+import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.shared.Android;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
+import mobi.myseries.shared.RelativeDay;
 import mobi.myseries.shared.Strings;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.widget.RemoteViews;
 
 public class Item {
@@ -83,14 +83,14 @@ public class Item {
     }
 
     private void setUpEpisodeAirdate(RemoteViews item, Episode episode) {
-        String episodeAirdate = this.relativeTimeStringFor(episode.airDate());
+        RelativeDay relativeAirDay = DatesAndTimes.parse(episode.airDate(), null);
+        String airDate = DatesAndTimes.toString(episode.airDate(), DateFormat.getDateFormat(this.context), "");
 
-        item.setTextViewText(R.id.episodeAirDate, episodeAirdate);
+        item.setTextViewText(R.id.episodeAirDate, LocalText.of(relativeAirDay, airDate));
     }
 
     private void setUpAirtimeAndNetwork(RemoteViews item, Series series) {
-        DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(this.context);
-        String airtime = DatesAndTimes.toString(series.airtime(), airtimeFormat, "");
+        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(this.context), "");
         String network = Strings.isBlank(series.network()) ? "" : " " + series.network();
 
         item.setTextViewText(R.id.airtimeAndNetwork, airtime + network);
@@ -139,35 +139,5 @@ public class Item {
 
     private int requestCode() {
         return (int) System.currentTimeMillis();
-    }
-
-    //TODO (Cleber) Move this method to a better place
-    private String relativeTimeStringFor(Date airDate) {
-        if (airDate == null) {
-            return "";
-        }
-
-        int days = DatesAndTimes.daysBetween(DatesAndTimes.today(), airDate);
-
-        switch (days) {
-            case 0:
-                return this.context.getString(R.string.relative_time_today);
-            case 1:
-                return this.context.getString(R.string.relative_time_tomorrow);
-            case -1:
-                return this.context.getString(R.string.relative_time_yesterday);
-            default:
-                if (Math.abs(days) >= DatesAndTimes.DAYS_IN_A_WEEK) {
-                    DateFormat dateformat = android.text.format.DateFormat.getDateFormat(this.context);
-                    String formattedDate = DatesAndTimes.toString(airDate, dateformat, "");
-                    return formattedDate;
-                }
-
-                if (days > 0) {
-                    return String.format(App.context().getString(R.string.relative_time_future), days);
-                }
-
-                return String.format(this.context.getString(R.string.relative_time_past), Math.abs(days));
-        }
     }
 }
