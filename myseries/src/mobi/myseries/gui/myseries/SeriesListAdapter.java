@@ -1,174 +1,224 @@
-/*
- *   SeriesListAdapter.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.gui.myseries;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.follow.FollowSeriesService;
+import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.follow.SeriesFollowingListener;
-import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.update.UpdateListener;
-import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
-import mobi.myseries.gui.series.SeriesActivity;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.shared.DatesAndTimes;
+import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Objects;
-import mobi.myseries.shared.Status;
+import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Strings;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.view.LayoutInflater;
+import android.os.AsyncTask;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-// TODO (Cleber) Refactoring:
-//               Use ViewHolder pattern
-//               Use notifyDatasetChanged instead of remove/add items
-//               Clean code
-public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesListener, SeriesFollowingListener {
-    private static final ImageService IMAGE_SERVICE = App.imageService();
-    private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
+public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesListAdapter.Listener> {
+    private List<Series> items;
 
-    /* TODO(Reul): Use MessageService instead of UpdateService*/
-    private static final UpdateService UPDATE_SERIES_SERVICE = App.updateSeriesService();
+    public SeriesListAdapter() {
+        App.followSeriesService().registerSeriesFollowingListener(this.seriesFollowingListener);
+        App.updateSeriesService().register(this.updateListener);
+        App.backupService().register(this.backupListener);
 
-    private static final SeriesComparator COMPARATOR = new SeriesComparator();
-    private static final int ITEM_LAYOUT = R.layout.myseries_item;
+        this.items = new ArrayList<Series>();
 
-    private static class SeriesListItemFactory {
-        private Context context;
-        private LayoutInflater layoutInflater;
+        this.reload();
+    }
 
-        private SeriesListItemFactory(Context context) {
-            this.context = context;
-            this.layoutInflater = LayoutInflater.from(this.context);
-        }
+    /* BaseAdapter */
 
-        public View draw(Series item, View oldView) {
-            View itemView = this.prepareViewFrom(oldView);
+    @Override
+    public int getCount() {
+        return this.items.size();
+    }
 
-            this.setPosterTo(item, itemView);
-            this.setNameTo(item.name(), itemView);
-            this.setStatusTo(item.status(), itemView);
-            this.setAirInfoTo(item, itemView);
-            this.setSeenEpisodesFor(item, itemView);
-            this.setSeenEpisodesBarFor(item, itemView);
-            this.setUpShowingSeriesDetailsViewOnClickFor(item, itemView);
+    @Override
+    public Object getItem(int position) {
+        return this.items.get(position);
+    }
 
-            return itemView;
-        }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-        private View prepareViewFrom(View oldView) {
-            View itemView = oldView;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = Objects.nullSafe(
+                convertView,
+                View.inflate(App.context(), R.layout.myseries_item, null));
 
-            if (oldView == null) {
-                itemView = this.layoutInflater.inflate(ITEM_LAYOUT, null);
+        ViewHolder viewHolder = (view == convertView)
+                ? (ViewHolder) view.getTag()
+                : new ViewHolder(view);
+
+        Series series = this.items.get(position);
+
+        this.setUpView(viewHolder, series);
+
+        return view;
+    }
+
+    private void setUpView(ViewHolder viewHolder, Series series) {
+        Bitmap poster = App.imageService().getSmallPosterOf(series);
+        Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
+        viewHolder.poster.setImageBitmap(Objects.nullSafe(poster, genericPoster));
+
+        String name = series.name();
+        viewHolder.name.setText(name);
+
+        String status = LocalText.of(series.status(), "");
+        viewHolder.status.setText(status);
+
+        String airDay = DatesAndTimes.toString(series.airDay(), Locale.getDefault(), "");
+        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(App.context()), "");
+        String network = series.network();
+        String airInfo = airDay +
+                (Strings.isBlank(airtime) ? airtime : ", " + airtime) +
+                (Strings.isBlank(network) ? network : " (" + network + ")");
+        viewHolder.airInfo.setText(airInfo);
+
+        String seenEpisodes = series.numberOfSeenEpisodes() + "/" + series.numberOfEpisodes();
+        viewHolder.seenEpisodes.setText(seenEpisodes);
+
+        viewHolder.seenEpisodesBar.updateWithEpisodesOf(series);
+    }
+
+    private void reload() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                SeriesListAdapter.this.isLoading = true;
+                SeriesListAdapter.this.notifyStartLoading();
             }
 
-            return itemView;
+            @Override
+            protected Void doInBackground(Void... params) {
+                SeriesListAdapter.this.setUpData();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                SeriesListAdapter.this.isLoading = false;
+                SeriesListAdapter.this.notifyFinishLoading();
+                SeriesListAdapter.this.notifyDataSetChanged();
+            }
+        }.execute();
+    }
+
+    private void setUpData() {
+        this.items = new ArrayList<Series>(App.seriesProvider().followedSeries());
+
+        for (Series s : this.items) {
+            s.register(this.seriesListener);
         }
 
-        private void setPosterTo(Series series, View itemView) {
-            final ImageView image = (ImageView) itemView.findViewById(R.id.seriesImageView);
+        Collections.sort(this.items, new SeriesComparator());
+    }
 
-            Bitmap seriesPoster = IMAGE_SERVICE.getSmallPosterOf(series);
-            Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
+    /* ViewHolder */
 
-            image.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
-        }
+    private static class ViewHolder {
+        private ImageView poster;
+        private TextView name;
+        private TextView status;
+        private TextView airInfo;
+        private TextView seenEpisodes;
+        private SeenEpisodesBar seenEpisodesBar;
 
-        private void setNameTo(String name, View itemView) {
-            TextView nameView = (TextView) itemView.findViewById(R.id.nameTextView);
-            nameView.setText(name);
-        }
+        private ViewHolder(View view) {
+            this.poster = (ImageView) view.findViewById(R.id.poster);
+            this.name = (TextView) view.findViewById(R.id.name);
+            this.status = (TextView) view.findViewById(R.id.status);
+            this.airInfo = (TextView) view.findViewById(R.id.airInfo);
+            this.seenEpisodes = (TextView) view.findViewById(R.id.seenEpisodes);
+            this.seenEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
 
-        private void setStatusTo(Status status, View itemView) {
-            TextView statusTextView = (TextView) itemView.findViewById(R.id.statusTextView);
-            statusTextView.setText(LocalText.of(status, ""));
-        }
-
-        private void setAirInfoTo(Series series, View itemView) {
-            TextView airInfoTextView = (TextView) itemView.findViewById(R.id.airInfoTextView);
-            String airDay = series.airDay().toString(Locale.getDefault());
-            DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(this.context);
-            String airtime = DatesAndTimes.toString(series.airtime(), airtimeFormat, "");
-            String network = series.network();
-            String airInfo = airDay +
-                    (Strings.isBlank(airtime) ? airtime : " " + airtime) +
-                    (Strings.isBlank(network) ? network : " " + network);
-            airInfoTextView.setText(airInfo);
-        }
-
-        private void setSeenEpisodesFor(Series series, View itemView) {
-            TextView amountTextView = (TextView) itemView.findViewById(R.id.amountTextView);
-            String am = series.numberOfSeenEpisodes() + "/" + series.numberOfEpisodes();
-            amountTextView.setText(am);
-        }
-
-        private void setSeenEpisodesBarFor(Series series, View itemView) {
-            SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.seenEpisodesBar);
-            seenEpisodesBar.updateWithEpisodesOf(series);
-        }
-
-        private void setUpShowingSeriesDetailsViewOnClickFor(final Series series, View itemView) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    Intent intent = SeriesActivity.newIntent(SeriesListItemFactory.this.context, series.id());
-                    SeriesListItemFactory.this.context.startActivity(intent);
-                }
-            });
+            view.setTag(this);
         }
     }
 
-    private SeriesListItemFactory listItemFactory;
+    /* SeriesListener */
 
-    private UpdateListener updateListener = new UpdateListener() {
+    private SeriesListener seriesListener = new SeriesListener() {
+        @Override
+        public void onChangeNumberOfSeenEpisodes(Series series) {
+            SeriesListAdapter.this.notifyDataSetChanged();
+        }
 
         @Override
-        public void onUpdateSuccess() {
+        public void onChangeNextEpisodeToSee(Series series) {}
+
+        @Override
+        public void onChangeNextNonSpecialEpisodeToSee(Series series) {
             SeriesListAdapter.this.notifyDataSetChanged();
+        }
+    };
+
+    /* SeriesFollowingListener */
+
+    private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
+        @Override
+        public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
+            for (Series s : allUnfollowedSeries) {
+                s.deregister(SeriesListAdapter.this.seriesListener);
+            }
+
+            SeriesListAdapter.this.reload();
+        }
+
+        @Override
+        public void onStopFollowing(Series unfollowedSeries) {
+            unfollowedSeries.deregister(SeriesListAdapter.this.seriesListener);
+
+            SeriesListAdapter.this.reload();
+        }
+
+        @Override
+        public void onFollowingStart(Series seriesToFollow) {}
+
+        @Override
+        public void onFollowingFailure(Series series, Exception e) {}
+
+        @Override
+        public void onFollowing(Series followedSeries) {
+            followedSeries.register(SeriesListAdapter.this.seriesListener);
+
+            SeriesListAdapter.this.reload();
+        }
+    };
+
+    /* UpdateListener */
+
+    private UpdateListener updateListener = new UpdateListener() {
+        @Override
+        public void onUpdateSuccess() {
+            SeriesListAdapter.this.reload();
         }
 
         @Override
         public void onUpdateFailure(Exception e) {
-            // TODO(Gabriel) Should we really do something here?
-            // May the series have been partially updated after a failure?
-            SeriesListAdapter.this.notifyDataSetChanged();
+            SeriesListAdapter.this.reload();
         }
 
         @Override
@@ -178,66 +228,57 @@ public class SeriesListAdapter extends ArrayAdapter<Series> implements SeriesLis
         public void onUpdateNotNecessary() {}
     };
 
-    public SeriesListAdapter(Context context, Collection<Series> objects) {
-        super(context, ITEM_LAYOUT, new ArrayList<Series>(objects));
+    /* BackupListener */
 
-        this.listItemFactory = new SeriesListItemFactory(context);
+    private BackupListener backupListener = new BackupListener() {
+        @Override
+        public void onBackupSucess() {}
 
-        FOLLOW_SERIES_SERVICE.registerSeriesFollowingListener(this);
-        UPDATE_SERIES_SERVICE.register(this.updateListener);
+        @Override
+        public void onBackupFailure(Exception e) {}
 
-        for (Series series : objects) {
-            series.register(this);
+        @Override
+        public void onRestoreSucess() {
+            SeriesListAdapter.this.reload();
         }
 
-        this.sort(COMPARATOR);
+        @Override
+        public void onRestoreFailure(Exception e) {}
+    };
+
+    /* SeriesListAdapter.Listener */
+
+    public static interface Listener {
+        public void onStartLoading();
+        public void onFinishLoading();
+    }
+
+    private boolean isLoading;
+    private ListenerSet<SeriesListAdapter.Listener> listeners = new ListenerSet<SeriesListAdapter.Listener>();
+
+    public boolean isLoading() {
+        return this.isLoading;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Series item = this.getItem(position);
-        return this.listItemFactory.draw(item, convertView);
+    public boolean register(SeriesListAdapter.Listener listener) {
+        return this.listeners.register(listener);
     }
 
     @Override
-    public void onFollowing(Series followedSeries) {
-        followedSeries.register(this);
-        this.add(followedSeries);
-        this.sort(COMPARATOR);
+    public boolean deregister(SeriesListAdapter.Listener listener) {
+        return this.listeners.deregister(listener);
     }
 
-    @Override
-    public void onStopFollowing(Series unfollowedSeries) {
-        unfollowedSeries.deregister(this);
-        this.remove(unfollowedSeries);
-    }
-
-    @Override
-    public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
-        for (Series s : allUnfollowedSeries) {
-            this.onStopFollowing(s);
+    private void notifyStartLoading() {
+        for (SeriesListAdapter.Listener listener : this.listeners) {
+            listener.onStartLoading();
         }
     }
 
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Series series) {
-        this.notifyDataSetChanged();
+    private void notifyFinishLoading() {
+        for (SeriesListAdapter.Listener listener : this.listeners) {
+            listener.onFinishLoading();
+        }
     }
-
-    @Override
-    public void onChangeNextEpisodeToSee(Series series) {
-        //TODO This behavior will depend on the user's settings (SharedPreference)
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onChangeNextNonSpecialEpisodeToSee(Series series) {
-        //TODO This behavior will depend on the user's settings (SharedPreference)
-    }
-
-    @Override
-    public void onFollowingStart(Series seriesToFollow) {}
-
-    @Override
-    public void onFollowingFailure(Series series, Exception e) {}
 }

@@ -61,8 +61,8 @@ public class App extends Application {
         imageService = new ImageService(
                 environment.imageSource(),
                 environment.imageRepository(),
-                this.getResources().getDimensionPixelSize(R.dimen.myseries_image_width),
-                this.getResources().getDimensionPixelSize(R.dimen.myseries_item_height));
+                this.getResources().getDimensionPixelSize(R.dimen.poster_width_thumbnail),
+                this.getResources().getDimensionPixelSize(R.dimen.poster_height_thumbnail));
 
         errorService = new ErrorService();
 

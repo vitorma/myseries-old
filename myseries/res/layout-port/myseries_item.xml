@@ -3,60 +3,60 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/list_selector_holo_light"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/myseries_item_height"
     android:paddingTop="@dimen/gap_medium"
-    android:paddingBottom="@dimen/gap_medium">
+    android:paddingBottom="@dimen/gap_medium"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/seriesImageView"
-        android:layout_width="49dp"
-        android:layout_height="72dp"
-        android:layout_alignParentLeft="true"
-        android:scaleType="centerInside"/>
+        android:id="@+id/poster"
+        android:contentDescription="@string/description_poster"
+        android:scaleType="centerInside"
+        android:layout_width="@dimen/poster_width_myseries_list"
+        android:layout_height="@dimen/poster_height_myseries_list"
+        android:layout_alignParentLeft="true"/>
 
     <TextView
-        android:id="@+id/nameTextView"
+        android:id="@+id/name"
         style="@style/TextView.Large.DarkGray.Ellipsized"
-        android:textSize="18sp"
-        android:layout_marginLeft="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/seriesImageView"
-        android:layout_toRightOf="@id/seriesImageView"/>
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/poster"/>
 
     <TextView
-        android:id="@+id/statusTextView"
+        android:id="@+id/status"
         style="@style/TextView.Small.MediumGray"
-        android:layout_marginLeft="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/nameTextView"
-        android:layout_toRightOf="@id/seriesImageView"/>
+        android:layout_below="@id/name"
+        android:layout_toRightOf="@id/poster"/>
 
     <TextView
-        android:id="@+id/airInfoTextView"
+        android:id="@+id/airInfo"
         style="@style/TextView.Small.LightGray"
-        android:layout_marginLeft="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/statusTextView"
-        android:layout_toRightOf="@id/seriesImageView"/>
+        android:layout_below="@id/status"
+        android:layout_toRightOf="@id/poster"/>
 
     <TextView
-        android:id="@+id/amountTextView"
-        style="@style/TextView.Small.MediumGray"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
+        android:id="@+id/seenEpisodes"
+        style="@style/TextView.Small.MediumGray.Bold"
+        android:gravity="right"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/airInfoTextView"
-        android:layout_alignParentRight="true"/>
+        android:layout_toRightOf="@id/poster"
+        android:layout_below="@id/airInfo"/>
 
     <mobi.myseries.gui.shared.SeenEpisodesBar
         android:id="@+id/seenEpisodesBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/chunkbar_height"
-        android:layout_marginTop="8dp"
-        android:layout_below="@id/seriesImageView"/>
+        android:layout_marginTop="@dimen/gap_medium"
+        android:layout_below="@id/seenEpisodes"/>
 
 </RelativeLayout>

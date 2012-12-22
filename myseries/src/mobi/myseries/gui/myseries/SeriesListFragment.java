@@ -23,44 +23,79 @@ package mobi.myseries.gui.myseries;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.backup.BackupListener;
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.series.SeriesActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ListAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public class SeriesListFragment extends SherlockListFragment implements BackupListener {
+public class SeriesListFragment extends SherlockListFragment {
+    private SeriesListAdapter adapter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         this.setUpEmptyText();
+        this.setUpItemClickListener();
         this.setUpListAdapter();
+    }
 
-        App.backupService().register(this);
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        this.adapter.register(this.adapterListener);
+
+        if (this.adapter.isLoading()) {
+            this.adapterListener.onStartLoading();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        this.adapter.deregister(this.adapterListener);
     }
 
     private void setUpEmptyText() {
         this.setEmptyText(this.getString(R.string.no_followed_series));
     }
 
+    private void setUpItemClickListener() {
+        this.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Series series = (Series) parent.getItemAtPosition(position);
+
+                Intent intent = SeriesActivity.newIntent(App.context(), series.id());
+
+                SeriesListFragment.this.startActivity(intent);
+            }
+        });
+    }
+
     private void setUpListAdapter() {
-        ListAdapter adapter = new SeriesListAdapter(this.getActivity(), App.seriesProvider().followedSeries());
-        this.setListAdapter(adapter);
+        this.adapter = new SeriesListAdapter();
+
+        this.setListAdapter(this.adapter);
     }
 
-    @Override
-    public void onBackupSucess() {}
+    /* SeriesListAdapter.Listener */
 
-    @Override
-    public void onBackupFailure(Exception e) {}
+    SeriesListAdapter.Listener adapterListener = new SeriesListAdapter.Listener() {
+        @Override
+        public void onStartLoading() {
+            SeriesListFragment.this.setListShown(false);
+        }
 
-    @Override
-    public void onRestoreSucess() {
-        this.setUpListAdapter();
-    }
-
-    @Override
-    public void onRestoreFailure(Exception e) {}
+        @Override
+        public void onFinishLoading() {
+            SeriesListFragment.this.setListShown(true);
+        }
+    };
 }

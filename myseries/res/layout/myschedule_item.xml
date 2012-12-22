@@ -12,58 +12,58 @@
         android:layout_alignParentTop="true"/>
 
     <RelativeLayout
-        android:id="@+id/episode"
+        android:id="@+id/body"
         android:background="@drawable/list_selector_holo_light"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingBottom="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/section">
 
         <ImageView
-            android:id="@+id/seriesPoster"
-            android:adjustViewBounds="true"
+            android:id="@+id/poster"
+            android:contentDescription="@string/description_poster"
             android:scaleType="centerInside"
-            android:paddingTop="@dimen/gap_medium"
-            android:paddingBottom="@dimen/gap_medium"
-            android:paddingRight="@dimen/gap_medium"
-            android:layout_width="43dp"
-            android:layout_height="67dp"
+            android:layout_width="@dimen/poster_width_myschedule"
+            android:layout_height="@dimen/poster_height_myschedule"
             android:layout_alignParentLeft="true"/>
 
         <mobi.myseries.gui.shared.SeenMark
-            android:id="@+id/episodeIsViewedCheckBox"
+            android:id="@+id/seenMark"
             android:gravity="center"
-            android:layout_width="48dp"
-            android:layout_height="67dp"
+            android:layout_width="@dimen/toucharea_minimum_side"
+            android:layout_height="@dimen/poster_height_myschedule"
             android:layout_alignParentRight="true"/>
 
         <TextView
-            android:id="@+id/episodeSeriesTextView"
-            style="@style/TextView.Data.Large"
-            android:paddingTop="@dimen/gap_small"
+            android:id="@+id/seriesName"
+            style="@style/TextView.Large.DarkGray.Ellipsized"
+            android:paddingLeft="@dimen/gap_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/seriesPoster"
-            android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
+            android:layout_toRightOf="@id/poster"
+            android:layout_toLeftOf="@id/seenMark"/>
 
         <TextView
-            android:id="@+id/episodeSeasonEpisodeTextView"
+            android:id="@+id/episodeName"
             style="@style/TextView.Small.MediumGray.Ellipsized"
+            android:paddingLeft="@dimen/gap_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/episodeSeriesTextView"
-            android:layout_toRightOf="@id/seriesPoster"
-            android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
+            android:layout_below="@id/seriesName"
+            android:layout_toRightOf="@id/poster"
+            android:layout_toLeftOf="@id/seenMark"/>
 
         <TextView
-            android:id="@+id/episodeAirtimeAndNetwork"
-            style="@style/TextView.Small.LightGray"
-            android:paddingBottom="@dimen/gap_small"
+            android:id="@+id/airInfo"
+            style="@style/TextView.Small.LightGray.Ellipsized"
+            android:paddingLeft="@dimen/gap_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/episodeSeasonEpisodeTextView"
-            android:layout_toRightOf="@id/seriesPoster"
-            android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
+            android:layout_below="@id/episodeName"
+            android:layout_toRightOf="@id/poster"
+            android:layout_toLeftOf="@id/seenMark"/>
 
     </RelativeLayout>
 

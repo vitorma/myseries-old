@@ -125,8 +125,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             String unavailable = CONTEXT.getString(R.string.unavailable_date);
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateformat, unavailable);
 
-            viewHolder.dateTextView.setText(formattedDate);
-            viewHolder.relativeTimeTextView.setText(this.relativeTimeStringFor(episode.airDate()));
+            viewHolder.date.setText(formattedDate);
+            viewHolder.relativeTime.setText(this.relativeTimeStringFor(episode.airDate()));
             viewHolder.section.setVisibility(View.VISIBLE);
         } else {
             viewHolder.section.setVisibility(View.GONE);
@@ -164,21 +164,21 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private void setUpCellBody(ViewHolder viewHolder, Series series, Episode episode) {
         Bitmap seriesPoster = IMAGE_SERVICE.getPosterOf(series);
         Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
-        viewHolder.seriesPosterImageView.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
+        viewHolder.poster.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
 
-        viewHolder.seriesNameTextView.setText(series.name());
+        viewHolder.seriesName.setText(series.name());
 
         String numberFormat = CONTEXT.getString(R.string.episode_number_format);
         String episodeNumber = String.format(numberFormat, episode.seasonNumber(), episode.number());
-        viewHolder.episodeNumberTextView.setText(episodeNumber + " " + episode.name());
+        viewHolder.episodeName.setText(episodeNumber + " " + episode.name());
 
         DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(CONTEXT);
         String airtime = DatesAndTimes.toString(episode.airtime(), airtimeFormat, "");
         String network = Strings.isBlank(series.network()) ? "" : " (" + series.network() + ")";
-        viewHolder.episodeAirtimeAndNetwork.setText(airtime + network);
+        viewHolder.airInfo.setText(airtime + network);
 
-        viewHolder.seenMarkCheckBox.setChecked(episode.wasSeen());
-        viewHolder.seenMarkCheckBox.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
+        viewHolder.seenMark.setChecked(episode.wasSeen());
+        viewHolder.seenMark.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
     }
 
     private void updateCellStates(int position) {
@@ -288,23 +288,23 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     private static class ViewHolder {
         private View section;
-        private ImageView seriesPosterImageView;
-        private TextView dateTextView;
-        private TextView relativeTimeTextView;
-        private TextView seriesNameTextView;
-        private TextView episodeNumberTextView;
-        private TextView episodeAirtimeAndNetwork;
-        private SeenMark seenMarkCheckBox;
+        private TextView date;
+        private TextView relativeTime;
+        private ImageView poster;
+        private SeenMark seenMark;
+        private TextView seriesName;
+        private TextView episodeName;
+        private TextView airInfo;
 
         private ViewHolder(View view) {
             this.section = view.findViewById(R.id.section);
-            this.dateTextView = (TextView) view.findViewById(R.id.date);
-            this.relativeTimeTextView = (TextView) view.findViewById(R.id.relativeDate);
-            this.seriesNameTextView = (TextView) view.findViewById(R.id.episodeSeriesTextView);
-            this.episodeNumberTextView = (TextView) view.findViewById(R.id.episodeSeasonEpisodeTextView);
-            this.episodeAirtimeAndNetwork = (TextView) view.findViewById(R.id.episodeAirtimeAndNetwork);
-            this.seenMarkCheckBox = (SeenMark) view.findViewById(R.id.episodeIsViewedCheckBox);
-            this.seriesPosterImageView = (ImageView) view.findViewById(R.id.seriesPoster);
+            this.date = (TextView) view.findViewById(R.id.date);
+            this.relativeTime = (TextView) view.findViewById(R.id.relativeTime);
+            this.poster = (ImageView) view.findViewById(R.id.poster);
+            this.seenMark = (SeenMark) view.findViewById(R.id.seenMark);
+            this.seriesName = (TextView) view.findViewById(R.id.seriesName);
+            this.episodeName = (TextView) view.findViewById(R.id.episodeName);
+            this.airInfo = (TextView) view.findViewById(R.id.airInfo);
 
             view.setTag(this);
         }
@@ -313,10 +313,10 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             return new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (ViewHolder.this.seenMarkCheckBox.isChecked()) {
-                        SERIES_PROVIDER.markEpisodeAsSeen(episode);
+                    if (ViewHolder.this.seenMark.isChecked()) {
+                        App.seriesProvider().markEpisodeAsSeen(episode);
                     } else {
-                        SERIES_PROVIDER.markEpisodeAsNotSeen(episode);
+                        App.seriesProvider().markEpisodeAsNotSeen(episode);
                     }
                 }
             };

@@ -47,6 +47,10 @@
     <string name="status_continuing">Continuing</string>
     <string name="status_ended">Ended</string>
 
+    <!-- Accessibility -->
+
+    <string name="description_poster">Series poster</string>
+
     <!-- Labels -->
 
     <string name="actors">Actors</string>
