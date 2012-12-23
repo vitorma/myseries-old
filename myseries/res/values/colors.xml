@@ -14,6 +14,10 @@
     <color name="blue">#ff33b5e5</color>
     <color name="dark_blue">#ff0099cc</color>
 
+    <color name="chunk_bar_background_gradient">@color/white</color>
+    <color name="chunk_bar_background_plain">@color/black</color>
+    <color name="chunk_bar_foreground">@color/blue</color>
+
     <color name="text_light_gray">#ff808080</color>
     <color name="text_medium_gray">#ff535353</color>
     <color name="text_dark_gray">@color/dark_gray</color>

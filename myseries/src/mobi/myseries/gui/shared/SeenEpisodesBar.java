@@ -65,8 +65,8 @@ public class SeenEpisodesBar extends LinearLayout {
         ChunkBar chunkBar = new ChunkBar(this.getContext());
         chunkBar.setParts(parts);
         chunkBar.setStops(stops);
-        chunkBar.setBackgroundColor(this.getResources().getColor(R.color.white));
-        chunkBar.setForegroundColor(this.getResources().getColor(R.color.blue));
+        chunkBar.setBackgroundColor(this.getResources().getColor(R.color.chunk_bar_background_gradient));
+        chunkBar.setForegroundColor(this.getResources().getColor(R.color.chunk_bar_foreground));
 
         this.removeAllViews();
         this.addView(chunkBar);
@@ -82,8 +82,8 @@ public class SeenEpisodesBar extends LinearLayout {
 
         ChunkBar chunkBar = new ChunkBar(this.getContext());
         chunkBar.setParts(parts);
-        chunkBar.setBackgroundColor(this.getResources().getColor(R.color.black));
-        chunkBar.setForegroundColor(this.getResources().getColor(R.color.blue));
+        chunkBar.setBackgroundColor(this.getResources().getColor(R.color.chunk_bar_background_plain));
+        chunkBar.setForegroundColor(this.getResources().getColor(R.color.chunk_bar_foreground));
 
         this.removeAllViews();
         this.addView(chunkBar);

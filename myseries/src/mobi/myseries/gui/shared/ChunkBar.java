@@ -95,8 +95,6 @@ public class ChunkBar extends View {
             canvas.drawRect(this.rect, this.background);
         }
 
-        this.rect.top += 1;
-
         int i = 0;
         int j;
 
