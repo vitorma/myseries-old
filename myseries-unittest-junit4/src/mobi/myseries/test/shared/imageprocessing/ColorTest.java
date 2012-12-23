@@ -1,4 +1,6 @@
-package mobi.myseries.shared.imageprocessing;
+package mobi.myseries.test.shared.imageprocessing;
+
+import mobi.myseries.shared.imageprocessing.Color;
 
 import org.junit.Assert;
 import org.junit.Test;
