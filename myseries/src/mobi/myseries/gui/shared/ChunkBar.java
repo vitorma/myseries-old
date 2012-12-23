@@ -33,6 +33,16 @@ import android.view.View;
 public class ChunkBar extends View {
     private static final int DEFAULT_BACKGROUND_COLOR = Color.rgb(27, 27, 27);
     private static final int DEFAULT_DRAWING_COLOR = Color.rgb(50, 182, 231);
+    private static final int OPAQUE_ALPHA = 255;
+    private static final int MIN_ALLOWED_ALPHA = 100;
+    private static final double ONE_PIXEL = 1.0;
+    private static final int BLUE_MASK = 0xFF;
+    private static final int GREEN_MASK = 0xFF00;
+    private static final int RED_MASK = 0xFF0000;
+    private static final int ALPHA_MASK = 0xFF000000;
+    private static final int RED_DELTA = 16;
+    private static final int GREEN_DELTA = 8;
+    private static final int BLUE_DELTA = 0;
 
     private Paint background;
     private Paint foreground;
@@ -109,12 +119,19 @@ public class ChunkBar extends View {
                 ++j;
             }
 
-            if (((j - i) * partWidth) >= 1.0) {
-                this.foreground.setAlpha(255);
+            if (((j - i) * partWidth) >= ChunkBar.ONE_PIXEL) {
+                this.foreground.setAlpha(ChunkBar.OPAQUE_ALPHA);
+
                 canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
                         (j) * partWidth, partHeight - this.getPaddingBottom(), this.foreground);
             } else {
-                this.foreground.setAlpha((int) (100 + (155 * (j - i) * partWidth)));
+                this.foreground.setAlpha(
+                        (int) (ChunkBar.MIN_ALLOWED_ALPHA
+                        + ((ChunkBar.OPAQUE_ALPHA - ChunkBar.MIN_ALLOWED_ALPHA)
+                                * (j - i) * partWidth)
+                        )
+                        );
+
                 canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
                         ((i) * partWidth) + 1, partHeight - this.getPaddingBottom(),
                         this.foreground);
@@ -132,11 +149,23 @@ public class ChunkBar extends View {
 
         int oldColor = this.background.getColor() & 0xFFFFFF;
 
-        int blueStep = (distance * (((oldColor & 0x0000FF) >> 0) / (this.stops.length))) & 0xFF;
-        int greenStep = (distance * (((oldColor & 0x00FF00) >> 8) / (this.stops.length))) & 0xFF;
-        int redStep = (distance * (((oldColor & 0xFF0000) >> 16) / (this.stops.length))) & 0xFF;
+        int blueStep =
+                (distance * (((oldColor & ChunkBar.BLUE_MASK) >> ChunkBar.BLUE_DELTA)
+                / (this.stops.length))) & 0xFF;
 
-        int color = 0xFF000000 | ((oldColor) - ((redStep << 16) | (greenStep << 8) | blueStep));
+        int greenStep =
+                (distance * (((oldColor & ChunkBar.GREEN_MASK) >> ChunkBar.GREEN_DELTA)
+                / (this.stops.length))) & 0xFF;
+
+        int redStep =
+                (distance * (((oldColor & ChunkBar.RED_MASK) >> ChunkBar.RED_DELTA)
+                / (this.stops.length))) & 0xFF;
+
+        int color =
+                ChunkBar.ALPHA_MASK
+                        | ((oldColor) - ((redStep << ChunkBar.RED_DELTA)
+                                | (greenStep << ChunkBar.GREEN_DELTA)
+                                | (blueStep << ChunkBar.BLUE_DELTA)));
 
         paint.setColor(color);
         return paint;
