@@ -43,13 +43,35 @@ public class SeenEpisodesBar extends LinearLayout {
         this.setOrientation(LinearLayout.HORIZONTAL);
     }
 
-    public void updateWithEpisodesOf(Series series) {
-        this.updateWith(series.episodes());
-    }
-
     public void updateWithEpisodesOf(Season season) {
         this.updateWith(season.episodes());
     }
+
+    public void updateWithEpisodesOf(Series series) {
+        List<Episode> episodes = series.episodes();
+
+        boolean[] parts = new boolean[episodes.size()];
+
+        for (int i = 0; i < episodes.size(); ++i) {
+            parts[i] = episodes.get(i).wasSeen();
+        }
+
+        int[] stops = new int[series.seasons().numberOfSeasons()];
+
+        for (int i =0 ; i < series.seasons().numberOfSeasons(); ++i) {
+            stops[i] = series.season(i).numberOfEpisodes();
+        }
+
+        ChunkBar chunkBar = new ChunkBar(this.getContext());
+        chunkBar.setParts(parts);
+        chunkBar.setStops(stops);
+        chunkBar.setBackgroundColor(this.getResources().getColor(R.color.white));
+        chunkBar.setForegroundColor(this.getResources().getColor(R.color.blue));
+
+        this.removeAllViews();
+        this.addView(chunkBar);
+    }
+
 
     private void updateWith(List<Episode> episodes) {
         boolean[] parts = new boolean[episodes.size()];
