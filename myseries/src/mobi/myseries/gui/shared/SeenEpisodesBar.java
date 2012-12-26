@@ -27,6 +27,7 @@ import mobi.myseries.R;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.imageprocessing.LinearGradient;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
@@ -69,7 +70,11 @@ public class SeenEpisodesBar extends LinearLayout {
         ChunkBar chunkBar = new ChunkBar(this.getContext());
         chunkBar.setParts(parts);
         chunkBar.setStops(stops);
-        chunkBar.setBackgroundColor(this.getResources().getColor(R.color.chunk_bar_background_gradient));
+        chunkBar.setBackgroundGradient(new LinearGradient()
+                .from(this.getResources().getColor(R.color.chunk_bar_background_gradient_from))
+                .to(this.getResources().getColor(R.color.chunk_bar_background_gradient_to))
+                );
+
         chunkBar.setForegroundColor(this.getResources().getColor(R.color.chunk_bar_foreground));
 
         this.removeAllViews();

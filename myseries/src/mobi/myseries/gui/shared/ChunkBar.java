@@ -22,6 +22,7 @@
 package mobi.myseries.gui.shared;
 
 import mobi.myseries.shared.Validate;
+import mobi.myseries.shared.imageprocessing.LinearGradient;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -36,19 +37,16 @@ public class ChunkBar extends View {
     private static final int OPAQUE_ALPHA = 255;
     private static final int MIN_ALLOWED_ALPHA = 100;
     private static final double ONE_PIXEL = 1.0;
-    private static final int BLUE_MASK = 0xFF;
-    private static final int GREEN_MASK = 0xFF00;
-    private static final int RED_MASK = 0xFF0000;
-    private static final int ALPHA_MASK = 0xFF000000;
-    private static final int RED_DELTA = 16;
-    private static final int GREEN_DELTA = 8;
-    private static final int BLUE_DELTA = 0;
-
-    private Paint background;
-    private Paint foreground;
+    private Paint p = new Paint();
     private boolean[] parts;
     private RectF rect;
     private int[] stops = {};
+    private LinearGradient backgroundGradient = new LinearGradient()
+            .from(ChunkBar.DEFAULT_BACKGROUND_COLOR)
+            .to(ChunkBar.DEFAULT_BACKGROUND_COLOR);
+    private LinearGradient foregroundGradient = new LinearGradient()
+            .from(ChunkBar.DEFAULT_DRAWING_COLOR)
+            .to(ChunkBar.DEFAULT_BACKGROUND_COLOR);
 
     public ChunkBar(Context context) {
         this(context, null);
@@ -62,52 +60,49 @@ public class ChunkBar extends View {
         super(context, attrs, defStyle);
 
         this.parts = new boolean[] { false };
-        this.foreground = new Paint();
-        this.foreground.setColor(ChunkBar.DEFAULT_DRAWING_COLOR);
-        this.background = new Paint();
-        this.background.setColor(ChunkBar.DEFAULT_BACKGROUND_COLOR);
         this.rect = new RectF();
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    private void drawBackgroundNoParts(Canvas canvas) {
+        this.updateRect();
+        this.p.setColor(this.backgroundGradient.startColor());
+        canvas.drawRect(this.rect, this.p);
+    }
 
-        float height = this.getMeasuredHeight() - this.getPaddingTop() - this.getPaddingBottom();
+    private void drawBackgroundWithParts(Canvas canvas) {
+        this.updateRect();
 
-        float width =
-                this.getMeasuredWidth() - this.getPaddingLeft() - this.getPaddingRight();
+        float partWidth = (this.usableWidth()) / this.parts.length;
 
-        float partWidth = (width) / this.parts.length;
-        float partHeight = height;
+        this.backgroundGradient.withSteps(this.stops.length);
 
-        this.rect.left = this.getPaddingLeft();
-        this.rect.top = this.getPaddingTop();
-        this.rect.right = width;
-        this.rect.bottom = height;
-
-        if (this.stops.length > 0) {
-            int slice = 0;
-            for (int stop : this.stops) {
-                if (stop > this.parts.length) {
-                    break;
-                }
-
-                canvas.drawRect(
-                        this.rect.left,
-                        this.rect.top,
-                        this.rect.left += (stop * partWidth),
-                        this.rect.bottom,
-                        this.backgroundOfSlice(slice));
-                ++slice;
+        int slice = 0;
+        for (int stop : this.stops) {
+            if (stop > this.parts.length) {
+                break;
             }
-        } else {
-            canvas.drawRect(this.rect, this.background);
+
+            this.p.setColor(this.backgroundGradient.colorOfPiece(slice));
+
+            canvas.drawRect(
+                    this.rect.left,
+                    this.rect.top,
+                    this.rect.left += (stop * partWidth),
+                    this.rect.bottom,
+                    this.p);
+            ++slice;
         }
+
+    }
+
+    private void drawForegroundNoParts(Canvas canvas) {
+        float partWidth = (this.usableWidth()) / this.parts.length;
+        float partHeight = this.usableHeight();
 
         int i = 0;
         int j;
 
+        this.p.setColor(this.foregroundGradient.startColor());
         while (i < this.parts.length) {
             if (!this.parts[i]) {
                 ++i;
@@ -120,12 +115,12 @@ public class ChunkBar extends View {
             }
 
             if (((j - i) * partWidth) >= ChunkBar.ONE_PIXEL) {
-                this.foreground.setAlpha(ChunkBar.OPAQUE_ALPHA);
+                this.p.setAlpha(ChunkBar.OPAQUE_ALPHA);
 
                 canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
-                        (j) * partWidth, partHeight - this.getPaddingBottom(), this.foreground);
+                        (j) * partWidth, partHeight - this.getPaddingBottom(), this.p);
             } else {
-                this.foreground.setAlpha(
+                this.p.setAlpha(
                         (int) (ChunkBar.MIN_ALLOWED_ALPHA
                         + ((ChunkBar.OPAQUE_ALPHA - ChunkBar.MIN_ALLOWED_ALPHA)
                                 * (j - i) * partWidth)
@@ -134,50 +129,46 @@ public class ChunkBar extends View {
 
                 canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
                         ((i) * partWidth) + 1, partHeight - this.getPaddingBottom(),
-                        this.foreground);
+                        this.p);
             }
 
             i = j;
         }
     }
 
-    private Paint backgroundOfSlice(int slice) {
-        Paint paint = new Paint(this.background);
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
 
-        int middle = this.stops.length;
-        int distance = middle - slice;
+        if (this.stops.length > 0) {
+            this.drawBackgroundWithParts(canvas);
+            this.drawForegroundNoParts(canvas);
+        } else {
+            this.drawBackgroundNoParts(canvas);
+            this.drawForegroundNoParts(canvas);
+        }
 
-        int oldColor = this.background.getColor() & 0xFFFFFF;
-
-        int blueStep =
-                (distance * (((oldColor & ChunkBar.BLUE_MASK) >> ChunkBar.BLUE_DELTA)
-                / (this.stops.length))) & 0xFF;
-
-        int greenStep =
-                (distance * (((oldColor & ChunkBar.GREEN_MASK) >> ChunkBar.GREEN_DELTA)
-                / (this.stops.length))) & 0xFF;
-
-        int redStep =
-                (distance * (((oldColor & ChunkBar.RED_MASK) >> ChunkBar.RED_DELTA)
-                / (this.stops.length))) & 0xFF;
-
-        int color =
-                ChunkBar.ALPHA_MASK
-                        | ((oldColor) - ((redStep << ChunkBar.RED_DELTA)
-                                | (greenStep << ChunkBar.GREEN_DELTA)
-                                | (blueStep << ChunkBar.BLUE_DELTA)));
-
-        paint.setColor(color);
-        return paint;
     }
 
     @Override
     public void setBackgroundColor(int color) {
-        this.background.setColor(color);
+        this.backgroundGradient.from(color).to(color);
+    }
+
+    public void setBackgroundGradient(LinearGradient linearGradient) {
+        Validate.isNonNull(linearGradient, "linearGradient");
+
+        this.backgroundGradient = new LinearGradient(linearGradient);
     }
 
     public void setForegroundColor(int color) {
-        this.foreground.setColor(color);
+        this.foregroundGradient.from(color).to(color);
+    }
+
+    public void setForegroundGradient(LinearGradient linearGradient) {
+        Validate.isNonNull(linearGradient, "linearGradient");
+
+        this.foregroundGradient = new LinearGradient(linearGradient);
     }
 
     public void setParts(boolean[] parts) {
@@ -195,4 +186,21 @@ public class ChunkBar extends View {
     public int[] stops() {
         return this.stops;
     }
+
+    private void updateRect() {
+        this.rect.left = this.getPaddingLeft();
+        this.rect.top = this.getPaddingTop();
+        this.rect.right = this.usableWidth();
+        this.rect.bottom = this.usableHeight();
+
+    }
+
+    private float usableHeight() {
+        return this.getMeasuredHeight() - this.getPaddingTop() - this.getPaddingBottom();
+    }
+
+    private float usableWidth() {
+        return this.getMeasuredWidth() - this.getPaddingLeft() - this.getPaddingRight();
+    }
+
 }
