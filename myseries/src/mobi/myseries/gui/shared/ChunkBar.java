@@ -196,7 +196,7 @@ public class ChunkBar extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (this.stops.length > 0) {
+        if (this.stops.length > 1) {
             this.drawBackgroundWithParts(canvas);
             this.drawForegroundWithParts(canvas);
         } else {
