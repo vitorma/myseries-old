@@ -17,8 +17,11 @@
     <color name="chunk_bar_background_gradient_from">#ff222222</color>
     <color name="chunk_bar_background_gradient_to">#fff1f1f1</color>
 
+    <color name="chunk_bar_foreground_gradient_from">#ffd1eef9</color>
+    <color name="chunk_bar_foreground_gradient_to">#ff178ab4</color>
+
     <color name="chunk_bar_background_plain">@color/black</color>
-    <color name="chunk_bar_foreground">@color/blue</color>
+    <color name="chunk_bar_foreground_plain">@color/blue</color>
 
     <color name="text_light_gray">#ff808080</color>
     <color name="text_medium_gray">#ff535353</color>

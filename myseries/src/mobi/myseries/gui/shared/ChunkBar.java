@@ -65,6 +65,7 @@ public class ChunkBar extends View {
 
     private void drawBackgroundNoParts(Canvas canvas) {
         this.updateRect();
+        this.p.setAlpha(ChunkBar.OPAQUE_ALPHA);
         this.p.setColor(this.backgroundGradient.startColor());
         canvas.drawRect(this.rect, this.p);
     }
@@ -72,16 +73,16 @@ public class ChunkBar extends View {
     private void drawBackgroundWithParts(Canvas canvas) {
         this.updateRect();
 
+        this.p.setColor(this.backgroundGradient.endColor());
+        this.p.setAlpha(ChunkBar.OPAQUE_ALPHA);
+        canvas.drawRect(this.rect, this.p);
+
         float partWidth = (this.usableWidth()) / this.parts.length;
 
         this.backgroundGradient.withSteps(this.stops.length);
 
         int slice = 0;
         for (int stop : this.stops) {
-            if (stop > this.parts.length) {
-                break;
-            }
-
             this.p.setColor(this.backgroundGradient.colorOfPiece(slice));
 
             canvas.drawRect(
@@ -90,6 +91,7 @@ public class ChunkBar extends View {
                     this.rect.left += (stop * partWidth),
                     this.rect.bottom,
                     this.p);
+
             ++slice;
         }
 
@@ -102,7 +104,9 @@ public class ChunkBar extends View {
         int i = 0;
         int j;
 
+        this.p.setAlpha(ChunkBar.OPAQUE_ALPHA);
         this.p.setColor(this.foregroundGradient.startColor());
+
         while (i < this.parts.length) {
             if (!this.parts[i]) {
                 ++i;
@@ -136,13 +140,57 @@ public class ChunkBar extends View {
         }
     }
 
+    private void drawForegroundWithParts(Canvas canvas) {
+        float partWidth = (this.usableWidth()) / this.parts.length;
+        float partHeight = this.usableHeight();
+
+        int i = 0;
+        int slice = 0;
+        int slicePart = 1;
+
+        this.foregroundGradient.withSteps(this.stops.length);
+        this.p.setAlpha(ChunkBar.OPAQUE_ALPHA);
+        this.p.setColor(this.foregroundGradient.colorOfPiece(slice));
+
+        while (i < this.parts.length) {
+            if ((slice < this.stops.length) && (slicePart > this.stops[slice])) {
+                slicePart = 1;
+                ++slice;
+                this.p.setColor(this.foregroundGradient.colorOfPiece(slice));
+            }
+
+
+            if (!this.parts[i]) {
+
+            } else if (partWidth >= ChunkBar.ONE_PIXEL) {
+                this.p.setAlpha(ChunkBar.OPAQUE_ALPHA);
+
+                canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
+                        (i + 1) * partWidth, partHeight - this.getPaddingBottom(), this.p);
+            } else {
+                this.p.setAlpha(
+                        (int) (ChunkBar.MIN_ALLOWED_ALPHA
+                        + ((ChunkBar.OPAQUE_ALPHA - ChunkBar.MIN_ALLOWED_ALPHA) * partWidth)
+                        )
+                        );
+
+                canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
+                        (i * partWidth) + 1, partHeight - this.getPaddingBottom(),
+                        this.p);
+            }
+
+            ++i;
+            ++slicePart;
+        }
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         if (this.stops.length > 0) {
             this.drawBackgroundWithParts(canvas);
-            this.drawForegroundNoParts(canvas);
+            this.drawForegroundWithParts(canvas);
         } else {
             this.drawBackgroundNoParts(canvas);
             this.drawForegroundNoParts(canvas);
