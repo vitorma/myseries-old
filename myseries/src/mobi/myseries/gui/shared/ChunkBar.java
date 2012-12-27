@@ -145,7 +145,9 @@ public class ChunkBar extends View {
         float partHeight = this.usableHeight();
 
         int i = 0;
+        int j;
         int slice = 0;
+        int lastStop = 0;
         int slicePart = 1;
 
         this.foregroundGradient.withSteps(this.stops.length);
@@ -153,29 +155,35 @@ public class ChunkBar extends View {
         this.p.setColor(this.foregroundGradient.colorOfPiece(slice));
 
         while (i < this.parts.length) {
-            if ((slice < this.stops.length) && (slicePart > this.stops[slice])) {
+            if (((slice + 1) < this.stops.length) && (slicePart > this.stops[slice])) {
                 slicePart = 1;
+                lastStop += this.stops[slice];
                 ++slice;
                 this.p.setColor(this.foregroundGradient.colorOfPiece(slice));
             }
 
+            j = i + 1;
+            while ((j < this.parts.length) && (this.parts[i] == this.parts[j]) && ((i - lastStop) < this.stops[slice])) {
+                ++j;
+            }
 
             if (!this.parts[i]) {
 
-            } else if (partWidth >= ChunkBar.ONE_PIXEL) {
+            } else             if (((j - i) * partWidth) >= ChunkBar.ONE_PIXEL) {
                 this.p.setAlpha(ChunkBar.OPAQUE_ALPHA);
 
                 canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
-                        (i + 1) * partWidth, partHeight - this.getPaddingBottom(), this.p);
+                        (j) * partWidth, partHeight - this.getPaddingBottom(), this.p);
             } else {
                 this.p.setAlpha(
                         (int) (ChunkBar.MIN_ALLOWED_ALPHA
-                        + ((ChunkBar.OPAQUE_ALPHA - ChunkBar.MIN_ALLOWED_ALPHA) * partWidth)
+                        + ((ChunkBar.OPAQUE_ALPHA - ChunkBar.MIN_ALLOWED_ALPHA)
+                                * (j - i) * partWidth)
                         )
                         );
 
                 canvas.drawRect(((i * partWidth) + this.getPaddingLeft()), this.getPaddingTop(),
-                        (i * partWidth) + 1, partHeight - this.getPaddingBottom(),
+                        ((i) * partWidth) + 1, partHeight - this.getPaddingBottom(),
                         this.p);
             }
 
