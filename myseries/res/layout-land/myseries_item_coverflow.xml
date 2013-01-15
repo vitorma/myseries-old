@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mobi.myseries.gui.shared.CoverFlow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
+    android:id="@+id/coverflow"
+    coverflow:imageWidth="@dimen/poster_width_myseries_coverflow"
+    coverflow:imageHeight="@dimen/poster_height_myseries_coverflow"
+    coverflow:withReflection="@bool/coverflow_reflection_enabled"
+    coverflow:imageReflectionRatio="0.1"
+    coverflow:reflectionGap="@dimen/gap_coverflow_reflection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>

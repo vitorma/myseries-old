@@ -23,6 +23,7 @@ package mobi.myseries.gui.myseries;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Locale;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -34,11 +35,14 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.series.SeriesActivity;
 import mobi.myseries.gui.shared.CoverFlow;
-import mobi.myseries.gui.shared.ReflectingImageAdapter;
+import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
+import mobi.myseries.shared.DatesAndTimes;
+import mobi.myseries.shared.Strings;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +61,6 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
     private static final Comparator<Series> COMPARATOR = new SeriesComparator();
 
     private SeriesCoverFlowAdapter seriesAdapter;
-    private ReflectingImageAdapter adapter;
     private CoverFlow coverFlow;
     private SeriesItemViewHolder seriesItemViewHolder;
 
@@ -139,19 +142,22 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
     public void reload() {
         this.seriesAdapter = new SeriesCoverFlowAdapter().sort(COMPARATOR);
-        this.adapter = new ReflectingImageAdapter(this.seriesAdapter);
+
         this.coverFlow = (CoverFlow) this.getActivity().findViewById(R.id.coverflow);
-        this.coverFlow.setAdapter(this.adapter);
+        this.coverFlow.setAdapter(this.seriesAdapter);
 
         if (this.seriesAdapter.isEmpty()) {
-            ((TextView) this.getActivity().findViewById(R.id.coverflow_empty)).setVisibility(View.VISIBLE);
-            this.getActivity().findViewById(R.id.seriesData).setVisibility(View.INVISIBLE);
+            ((TextView) this.getActivity().findViewById(R.id.empty)).setVisibility(View.VISIBLE);
+            this.getActivity().findViewById(R.id.data).setVisibility(View.INVISIBLE);
             return;
         }
 
         this.seriesItemViewHolder = new SeriesItemViewHolder();
-        this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.nameTextView);
-        this.seriesItemViewHolder.bar = (SeenEpisodesBar) this.getActivity().findViewById(R.id.seenEpisodesBar);
+        this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.name);
+        this.seriesItemViewHolder.status = (TextView) this.getActivity().findViewById(R.id.status);
+        this.seriesItemViewHolder.airInfo = (TextView) this.getActivity().findViewById(R.id.airInfo);
+        this.seriesItemViewHolder.seenEpisodes = (TextView) this.getActivity().findViewById(R.id.seenEpisodes);
+        this.seriesItemViewHolder.seenEpisodesBar = (SeenEpisodesBar) this.getActivity().findViewById(R.id.seenEpisodesBar);
 
         this.seriesAdapter.registerSeriesListener(this);
         this.setUpListeners();
@@ -185,7 +191,20 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
     private void downloadDescription(Series item) {
         this.seriesItemViewHolder.name.setText(item.name());
-        this.seriesItemViewHolder.bar.updateWithEpisodesOf(item);
+        this.seriesItemViewHolder.status.setText(LocalText.of(item.status(), ""));
+
+        String airDay = DatesAndTimes.toString(item.airDay(), Locale.getDefault(), "");
+        String airtime = DatesAndTimes.toString(item.airtime(), DateFormat.getTimeFormat(App.context()), "");
+        String network = item.network();
+        String airInfo = airDay +
+                (Strings.isBlank(airtime) ? airtime : ", " + airtime) +
+                (Strings.isBlank(network) ? network : " (" + network + ")");
+        this.seriesItemViewHolder.airInfo.setText(airInfo);
+
+        String seenEpisodes = item.numberOfSeenEpisodes() + "/" + item.numberOfEpisodes();
+        this.seriesItemViewHolder.seenEpisodes.setText(seenEpisodes);
+
+        this.seriesItemViewHolder.seenEpisodesBar.updateWithEpisodesOf(item);
     }
 
     private boolean isSelected(Series series) {
@@ -217,6 +236,9 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
 
     private static class SeriesItemViewHolder {
         private TextView name;
-        private SeenEpisodesBar bar;
+        private TextView status;
+        private TextView airInfo;
+        private TextView seenEpisodes;
+        private SeenEpisodesBar seenEpisodesBar;
     }
 }

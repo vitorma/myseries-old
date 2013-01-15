@@ -192,6 +192,14 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TextView.Medium">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="TextView.Medium.DarkGray">
+        <item name="android:textColor">@color/text_dark_gray</item>
+    </style>
+
     <style name="TextView.Large">
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>

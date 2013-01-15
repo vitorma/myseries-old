@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <bool name="coverflow_reflection_enabled">false</bool>
+
+</resources>

@@ -2,6 +2,10 @@
 
 <resources>
 
+    <dimen name="gap_coverflow_padding_horizontal">16dp</dimen>
+    <dimen name="gap_coverflow_padding_vertical">8dp</dimen>
+    <dimen name="gap_coverflow_reflection">0dp</dimen>
+
     <dimen name="appwidget_content_height">168dp</dimen>
     <dimen name="appwidget_height">264dp</dimen>
     <dimen name="appwidget_width">240dp</dimen>

@@ -2,16 +2,17 @@
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingBottom="@dimen/gap_medium"
-    android:paddingLeft="@dimen/gap_large"
-    android:paddingRight="@dimen/gap_large"
+    android:paddingTop="@dimen/gap_coverflow_padding_vertical"
+    android:paddingBottom="@dimen/gap_coverflow_padding_vertical"
+    android:paddingLeft="@dimen/gap_coverflow_padding_horizontal"
+    android:paddingRight="@dimen/gap_coverflow_padding_horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/coverflow_empty"
+        android:id="@+id/empty"
         android:text="@string/no_followed_series"
-        style="@style/TextView.Data.Medium"
+        style="@style/TextView.Medium.DarkGray"
         android:visibility="invisible"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -22,62 +23,55 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/seriesData"
+            android:id="@+id/data"
             android:orientation="vertical"
-            android:descendantFocusability="blocksDescendants"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
 
             <TextView
-                android:id="@+id/nameTextView"
+                android:id="@+id/name"
                 style="@style/TextView.Large.DarkGray.Ellipsized"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/airinfoTextView"
-                style="@style/TextView.Small.LightGray.Ellipsized"
-                android:text="Continuing - quarta-feira, 21:00 on Showtime"
+                android:id="@+id/status"
+                style="@style/TextView.Small.MediumGray.Ellipsized"
                 android:gravity="center_horizontal"
-                android:paddingBottom="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/airInfo"
+                style="@style/TextView.Small.LightGray.Ellipsized"
+                android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <mobi.myseries.gui.shared.SeenEpisodesBar
                 android:id="@+id/seenEpisodesBar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/chunkbar_height"/>
+                android:layout_height="@dimen/chunkbar_height"
+                android:layout_marginTop="@dimen/gap_micro"
+                android:layout_marginBottom="@dimen/gap_micro"/>
 
             <TextView
-                android:id="@+id/amountTextView"
+                android:id="@+id/seenEpisodes"
                 style="@style/TextView.Small.DarkGray"
-                android:text="1152/1153"
                 android:textStyle="bold"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            </LinearLayout>
+        </LinearLayout>
 
-        <LinearLayout
+        <include
+            layout="@layout/myseries_item_coverflow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/seriesData">
-
-            <mobi.myseries.gui.shared.CoverFlow
-                xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
-                android:id="@+id/coverflow"
-                coverflow:imageWidth="@dimen/poster_width_myseries_coverflow"
-                coverflow:imageHeight="@dimen/poster_height_myseries_coverflow"
-                coverflow:withReflection="true"
-                coverflow:imageReflectionRatio="0.2"
-                coverflow:reflectionGap="0dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </LinearLayout>
+            android:layout_above="@id/data"/>
 
     </RelativeLayout>
 

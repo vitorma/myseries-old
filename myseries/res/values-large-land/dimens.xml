@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <dimen name="gap_coverflow_padding_horizontal">64dp</dimen>
+    <dimen name="gap_coverflow_padding_vertical">64dp</dimen>
+    <dimen name="gap_coverflow_reflection">8dp</dimen>
+
+    <dimen name="poster_width_myseries_coverflow">170dp</dimen>
+    <dimen name="poster_height_myseries_coverflow">250dp</dimen>
+
+</resources>

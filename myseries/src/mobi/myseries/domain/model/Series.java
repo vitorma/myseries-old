@@ -136,6 +136,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.seasons.season(number);
     }
 
+    public Season seasonAt(int position) {
+        return this.seasons.seasonAt(position);
+    }
+
     public boolean hasSpecialEpisodes() {
         return this.seasons.hasSpecialEpisodes();
     }

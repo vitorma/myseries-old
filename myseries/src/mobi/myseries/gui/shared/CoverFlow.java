@@ -35,7 +35,7 @@ import android.widget.SpinnerAdapter;
 
 /**
  * Cover Flow implementation.
- * 
+ *
  */
 public class CoverFlow extends Gallery {
 
@@ -47,7 +47,7 @@ public class CoverFlow extends Gallery {
     /**
      * The maximum angle the Child ImageView will be rotated by.
      */
-    private int mMaxRotationAngle = 45; //This value was originally 60
+    private int mMaxRotationAngle = 60; //This value was originally 60
 
     /**
      * The maximum zoom on the centre Child.
@@ -76,16 +76,16 @@ public class CoverFlow extends Gallery {
 
     /**
      * Gets the image height.
-     * 
+     *
      * @return the image height
      */
     public float getImageHeight() {
-        return imageHeight;
+        return this.imageHeight;
     }
 
     /**
      * Sets the image height.
-     * 
+     *
      * @param imageHeight
      *            the new image height
      */
@@ -95,16 +95,16 @@ public class CoverFlow extends Gallery {
 
     /**
      * Gets the image width.
-     * 
+     *
      * @return the image width
      */
     public float getImageWidth() {
-        return imageWidth;
+        return this.imageWidth;
     }
 
     /**
      * Sets the image width.
-     * 
+     *
      * @param imageWidth
      *            the new image width
      */
@@ -114,16 +114,16 @@ public class CoverFlow extends Gallery {
 
     /**
      * Gets the reflection gap.
-     * 
+     *
      * @return the reflection gap
      */
     public float getReflectionGap() {
-        return reflectionGap;
+        return this.reflectionGap;
     }
 
     /**
      * Sets the reflection gap.
-     * 
+     *
      * @param reflectionGap
      *            the new reflection gap
      */
@@ -133,16 +133,16 @@ public class CoverFlow extends Gallery {
 
     /**
      * Checks if is with reflection.
-     * 
+     *
      * @return true, if is with reflection
      */
     public boolean isWithReflection() {
-        return withReflection;
+        return this.withReflection;
     }
 
     /**
      * Sets the with reflection.
-     * 
+     *
      * @param withReflection
      *            the new with reflection
      */
@@ -152,7 +152,7 @@ public class CoverFlow extends Gallery {
 
     /**
      * Sets the image reflection ratio.
-     * 
+     *
      * @param imageReflectionRatio
      *            the new image reflection ratio
      */
@@ -162,11 +162,11 @@ public class CoverFlow extends Gallery {
 
     /**
      * Gets the image reflection ratio.
-     * 
+     *
      * @return the image reflection ratio
      */
     public float getImageReflectionRatio() {
-        return imageReflectionRatio;
+        return this.imageReflectionRatio;
     }
 
     public CoverFlow(final Context context) {
@@ -180,22 +180,22 @@ public class CoverFlow extends Gallery {
 
     public CoverFlow(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        parseAttributes(context, attrs);
+        this.parseAttributes(context, attrs);
         this.setStaticTransformationsEnabled(true);
     }
 
     /**
      * Get the max rotational angle of the image.
-     * 
+     *
      * @return the mMaxRotationAngle
      */
     public int getMaxRotationAngle() {
-        return mMaxRotationAngle;
+        return this.mMaxRotationAngle;
     }
 
     /**
      * Sets the.
-     * 
+     *
      * @param adapter
      *            the new adapter
      */
@@ -206,14 +206,14 @@ public class CoverFlow extends Gallery {
                     + CoverFlowAdapter.class.getName());
         }
         final CoverFlowAdapter coverAdapter = (CoverFlowAdapter) adapter;
-        coverAdapter.setWidth(imageWidth);
-        coverAdapter.setHeight(imageHeight);
-        if (withReflection) {
+        coverAdapter.setWidth(this.imageWidth);
+        coverAdapter.setHeight(this.imageHeight);
+        if (this.withReflection) {
             final ReflectingImageAdapter reflectAdapter = new ReflectingImageAdapter(coverAdapter);
-            reflectAdapter.setReflectionGap(reflectionGap);
-            reflectAdapter.setWidthRatio(imageReflectionRatio);
-            reflectAdapter.setWidth(imageWidth);
-            reflectAdapter.setHeight(imageHeight * (1 + imageReflectionRatio));
+            reflectAdapter.setReflectionGap(this.reflectionGap);
+            reflectAdapter.setWidthRatio(this.imageReflectionRatio);
+            reflectAdapter.setWidth(this.imageWidth);
+            reflectAdapter.setHeight(this.imageHeight * (1 + this.imageReflectionRatio));
             super.setAdapter(reflectAdapter);
         } else {
             super.setAdapter(adapter);
@@ -222,45 +222,45 @@ public class CoverFlow extends Gallery {
 
     /**
      * Set the max rotational angle of each image.
-     * 
+     *
      * @param maxRotationAngle
      *            the mMaxRotationAngle to set
      */
     public void setMaxRotationAngle(final int maxRotationAngle) {
-        mMaxRotationAngle = maxRotationAngle;
+        this.mMaxRotationAngle = maxRotationAngle;
     }
 
     /**
      * Get the Max zoom of the centre image.
-     * 
+     *
      * @return the mMaxZoom
      */
     public int getMaxZoom() {
-        return mMaxZoom;
+        return this.mMaxZoom;
     }
 
     /**
      * Set the max zoom of the centre image.
-     * 
+     *
      * @param maxZoom
      *            the mMaxZoom to set
      */
     public void setMaxZoom(final int maxZoom) {
-        mMaxZoom = maxZoom;
+        this.mMaxZoom = maxZoom;
     }
 
     /**
      * Get the Centre of the Coverflow.
-     * 
+     *
      * @return The centre of this Coverflow.
      */
     private int getCenterOfCoverflow() {
-        return (getWidth() - getPaddingLeft() - getPaddingRight()) / 2 + getPaddingLeft();
+        return (this.getWidth() - this.getPaddingLeft() - this.getPaddingRight()) / 2 + this.getPaddingLeft();
     }
 
     /**
      * Get the Centre of the View.
-     * 
+     *
      * @return The centre of the given view.
      */
     private static int getCenterOfView(final View view) {
@@ -269,7 +269,7 @@ public class CoverFlow extends Gallery {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see #setStaticTransformationsEnabled(boolean)
      */
     @Override
@@ -282,14 +282,14 @@ public class CoverFlow extends Gallery {
         t.clear();
         t.setTransformationType(Transformation.TYPE_MATRIX);
 
-        if (childCenter == mCoveflowCenter) {
-            transformImageBitmap((ImageView) child, t, 0);
+        if (childCenter == this.mCoveflowCenter) {
+            this.transformImageBitmap((ImageView) child, t, 0);
         } else {
-            rotationAngle = (int) ((float) (mCoveflowCenter - childCenter) / childWidth * mMaxRotationAngle);
-            if (Math.abs(rotationAngle) > mMaxRotationAngle) {
-                rotationAngle = rotationAngle < 0 ? -mMaxRotationAngle : mMaxRotationAngle;
+            rotationAngle = (int) ((float) (this.mCoveflowCenter - childCenter) / childWidth * this.mMaxRotationAngle);
+            if (Math.abs(rotationAngle) > this.mMaxRotationAngle) {
+                rotationAngle = rotationAngle < 0 ? -this.mMaxRotationAngle : this.mMaxRotationAngle;
             }
-            transformImageBitmap((ImageView) child, t, rotationAngle);
+            this.transformImageBitmap((ImageView) child, t, rotationAngle);
         }
 
         return true;
@@ -299,7 +299,7 @@ public class CoverFlow extends Gallery {
      * This is called during layout when the size of this view has changed. If
      * you were just added to the view hierarchy, you're called with the old
      * values of 0.
-     * 
+     *
      * @param w
      *            Current width of this view.
      * @param h
@@ -311,13 +311,13 @@ public class CoverFlow extends Gallery {
      */
     @Override
     protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
-        mCoveflowCenter = getCenterOfCoverflow();
+        this.mCoveflowCenter = this.getCenterOfCoverflow();
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
     /**
      * Transform the Image Bitmap by the Angle passed.
-     * 
+     *
      * @param imageView
      *            ImageView the ImageView whose bitmap we want to rotate
      * @param t
@@ -326,7 +326,7 @@ public class CoverFlow extends Gallery {
      *            the Angle by which to rotate the Bitmap
      */
     private void transformImageBitmap(final ImageView child, final Transformation t, final int rotationAngle) {
-        mCamera.save();
+        this.mCamera.save();
         final Matrix imageMatrix = t.getMatrix();
 
         final int height = child.getLayoutParams().height;
@@ -334,24 +334,24 @@ public class CoverFlow extends Gallery {
         final int width = child.getLayoutParams().width;
         final int rotation = Math.abs(rotationAngle);
 
-        mCamera.translate(0.0f, 0.0f, 100.0f);
+        this.mCamera.translate(0.0f, 0.0f, 100.0f);
 
         // As the angle of the view gets less, zoom in
-        if (rotation < mMaxRotationAngle) {
-            final float zoomAmount = (float) (mMaxZoom + rotation * 1.5);
-            mCamera.translate(0.0f, 0.0f, zoomAmount);
+        if (rotation < this.mMaxRotationAngle) {
+            final float zoomAmount = (float) (this.mMaxZoom + rotation * 1.5);
+            this.mCamera.translate(0.0f, 0.0f, zoomAmount);
         }
 
-        mCamera.rotateY(rotationAngle);
-        mCamera.getMatrix(imageMatrix);
+        this.mCamera.rotateY(rotationAngle);
+        this.mCamera.getMatrix(imageMatrix);
         imageMatrix.preTranslate(-(width / 2.0f), -(height / 2.0f));
         imageMatrix.postTranslate((width / 2.0f), (height / 2.0f));
-        mCamera.restore();
+        this.mCamera.restore();
     }
 
     /**
      * Parses the attributes.
-     * 
+     *
      * @param context
      *            the context
      * @param attrs
@@ -360,12 +360,12 @@ public class CoverFlow extends Gallery {
     private void parseAttributes(final Context context, final AttributeSet attrs) {
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CoverFlow);
         try {
-            imageWidth = a.getDimension(R.styleable.CoverFlow_imageWidth, 480);
-            imageHeight = a.getDimension(R.styleable.CoverFlow_imageHeight, 320);
-            withReflection = a.getBoolean(R.styleable.CoverFlow_withReflection, false);
-            imageReflectionRatio = a.getFloat(R.styleable.CoverFlow_imageReflectionRatio, 0.2f);
-            reflectionGap = a.getDimension(R.styleable.CoverFlow_reflectionGap, 4);
-            setSpacing(-9);
+            this.imageWidth = a.getDimension(R.styleable.CoverFlow_imageWidth, 480);
+            this.imageHeight = a.getDimension(R.styleable.CoverFlow_imageHeight, 320);
+            this.withReflection = a.getBoolean(R.styleable.CoverFlow_withReflection, false);
+            this.imageReflectionRatio = a.getFloat(R.styleable.CoverFlow_imageReflectionRatio, 0.2f);
+            this.reflectionGap = a.getDimension(R.styleable.CoverFlow_reflectionGap, 4);
+            this.setSpacing(-9);
         } finally {
             a.recycle();
         }
