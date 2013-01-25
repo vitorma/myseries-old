@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- CoverFlow -->
+
+    <dimen name="coverflow_padding_vertical">8dp</dimen>
+    <dimen name="coverflow_padding_horizontal">16dp</dimen>
+    <dimen name="coverflow_poster_width">71dp</dimen>
+    <dimen name="coverflow_poster_height">105dp</dimen>
+    <dimen name="coverflow_reflection_gap">0dp</dimen>
+    <integer name="coverflow_reflection_percentage">30</integer>
+    <bool name="coverflow_reflection_enabled">true</bool>
+
+</resources>

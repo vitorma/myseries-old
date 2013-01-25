@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<resources>
-
-    <dimen name="poster_width_myseries_coverflow">68dp</dimen>
-    <dimen name="poster_height_myseries_coverflow">100dp</dimen>
-
-</resources>

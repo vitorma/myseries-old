@@ -2,10 +2,10 @@
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingTop="@dimen/gap_coverflow_padding_vertical"
-    android:paddingBottom="@dimen/gap_coverflow_padding_vertical"
-    android:paddingLeft="@dimen/gap_coverflow_padding_horizontal"
-    android:paddingRight="@dimen/gap_coverflow_padding_horizontal"
+    android:paddingTop="@dimen/coverflow_padding_vertical"
+    android:paddingBottom="@dimen/coverflow_padding_vertical"
+    android:paddingLeft="@dimen/coverflow_padding_horizontal"
+    android:paddingRight="@dimen/coverflow_padding_horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -67,11 +67,13 @@
 
         </LinearLayout>
 
-        <include
-            layout="@layout/myseries_item_coverflow"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/data"/>
+        <mobi.myseries.gui.shared.CoverFlow
+                xmlns:coverflow="http://schemas.android.com/apk/res/mobi.myseries"
+                android:id="@+id/coverflow"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/data"/>
 
     </RelativeLayout>
 

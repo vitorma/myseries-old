@@ -10,10 +10,13 @@
         <item name="android:imageButtonStyle">@style/ImageButton</item>
         <item name="android:listViewStyle">@style/ListView</item>
         <item name="android:expandableListViewStyle">@style/ExpandableListView</item>
-        <item name="android:scrollViewStyle">@style/ScrollView</item>
-        <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
         <item name="android:progressBarStyle">@style/ProgressBar</item>
         <item name="android:progressBarStyleLarge">@style/ProgressBar.Large</item>
+        <item name="android:scrollViewStyle">@style/ScrollView</item>
+
+        <!-- Custom -->
+        <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
+        <item name="coverFlowStyle">@style/CoverFlow</item>
 
         <!-- Tabs -->
 

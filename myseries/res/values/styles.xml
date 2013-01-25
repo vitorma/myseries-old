@@ -367,4 +367,14 @@
         <item name="android:backgroundStacked">@drawable/abs__ab_bottom_solid_inverse_holo</item>
     </style>
 
+    <!-- CoverFlow -->
+
+    <style name="CoverFlow">
+        <item name="imageWidth">@dimen/coverflow_poster_width</item>
+        <item name="imageHeight">@dimen/coverflow_poster_height</item>
+        <item name="withReflection">@bool/coverflow_reflection_enabled</item>
+        <item name="imageReflectionRatio">@integer/coverflow_reflection_percentage</item>
+        <item name="reflectionGap">@dimen/coverflow_reflection_gap</item>
+    </style>
+
 </resources>

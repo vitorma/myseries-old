@@ -175,12 +175,12 @@ public class CoverFlow extends Gallery {
     }
 
     public CoverFlow(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.galleryStyle);
+        this(context, attrs, R.styleable.CoverFlow_coverFlowStyle);
     }
 
     public CoverFlow(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        this.parseAttributes(context, attrs);
+        this.parseAttributes(context, attrs, defStyle);
         this.setStaticTransformationsEnabled(true);
     }
 
@@ -356,14 +356,16 @@ public class CoverFlow extends Gallery {
      *            the context
      * @param attrs
      *            the attrs
+     * @param defStyle
      */
-    private void parseAttributes(final Context context, final AttributeSet attrs) {
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CoverFlow);
+    private void parseAttributes(final Context context, final AttributeSet attrs, int defStyle) {
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CoverFlow, defStyle, R.style.CoverFlow);
+
         try {
             this.imageWidth = a.getDimension(R.styleable.CoverFlow_imageWidth, 480);
             this.imageHeight = a.getDimension(R.styleable.CoverFlow_imageHeight, 320);
             this.withReflection = a.getBoolean(R.styleable.CoverFlow_withReflection, false);
-            this.imageReflectionRatio = a.getFloat(R.styleable.CoverFlow_imageReflectionRatio, 0.2f);
+            this.imageReflectionRatio = a.getInteger(R.styleable.CoverFlow_imageReflectionRatio, 20) / 100f;
             this.reflectionGap = a.getDimension(R.styleable.CoverFlow_reflectionGap, 4);
             this.setSpacing(-9);
         } finally {

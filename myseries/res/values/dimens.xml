@@ -7,12 +7,10 @@
     <dimen name="text_size_medium">14sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
 
-    <dimen name="poster_width_thumbnail">@dimen/poster_width_myseries_coverflow</dimen>
-    <dimen name="poster_height_thumbnail">@dimen/poster_height_myseries_coverflow</dimen>
+    <dimen name="poster_width_thumbnail">@dimen/coverflow_poster_width</dimen>
+    <dimen name="poster_height_thumbnail">@dimen/coverflow_poster_height</dimen>
     <dimen name="poster_width_myseries_list">51dp</dimen>
     <dimen name="poster_height_myseries_list">75dp</dimen>
-    <dimen name="poster_width_myseries_coverflow">85dp</dimen>
-    <dimen name="poster_height_myseries_coverflow">125dp</dimen>
     <dimen name="poster_width_myschedule">40dp</dimen>
     <dimen name="poster_height_myschedule">59dp</dimen>
 

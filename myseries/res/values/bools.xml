@@ -5,6 +5,4 @@
     <bool name="appwidget_v8_enabled">true</bool>
     <bool name="appwidget_v11_enabled">false</bool>
 
-    <bool name="coverflow_reflection_enabled">true</bool>
-
 </resources>
