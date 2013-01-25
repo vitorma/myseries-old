@@ -149,19 +149,22 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         if (this.seriesAdapter.isEmpty()) {
             ((TextView) this.getActivity().findViewById(R.id.empty)).setVisibility(View.VISIBLE);
             this.getActivity().findViewById(R.id.data).setVisibility(View.INVISIBLE);
-            return;
+        } else {
+            ((TextView) this.getActivity().findViewById(R.id.empty)).setVisibility(View.INVISIBLE);
+            this.getActivity().findViewById(R.id.data).setVisibility(View.VISIBLE);
+
+            //TODO Extract this block
+            this.seriesItemViewHolder = new SeriesItemViewHolder();
+            this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.name);
+            this.seriesItemViewHolder.status = (TextView) this.getActivity().findViewById(R.id.status);
+            this.seriesItemViewHolder.airInfo = (TextView) this.getActivity().findViewById(R.id.airInfo);
+            this.seriesItemViewHolder.seenEpisodes = (TextView) this.getActivity().findViewById(R.id.seenEpisodes);
+            this.seriesItemViewHolder.seenEpisodesBar = (SeenEpisodesBar) this.getActivity().findViewById(R.id.seenEpisodesBar);
+
+            this.seriesAdapter.registerSeriesListener(this);
+            this.setUpListeners();
+            this.coverFlow.selectMiddleItem();
         }
-
-        this.seriesItemViewHolder = new SeriesItemViewHolder();
-        this.seriesItemViewHolder.name = (TextView) this.getActivity().findViewById(R.id.name);
-        this.seriesItemViewHolder.status = (TextView) this.getActivity().findViewById(R.id.status);
-        this.seriesItemViewHolder.airInfo = (TextView) this.getActivity().findViewById(R.id.airInfo);
-        this.seriesItemViewHolder.seenEpisodes = (TextView) this.getActivity().findViewById(R.id.seenEpisodes);
-        this.seriesItemViewHolder.seenEpisodesBar = (SeenEpisodesBar) this.getActivity().findViewById(R.id.seenEpisodesBar);
-
-        this.seriesAdapter.registerSeriesListener(this);
-        this.setUpListeners();
-        this.coverFlow.selectMiddleItem();
     }
 
     private void setUpListeners() {
