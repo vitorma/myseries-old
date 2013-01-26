@@ -35,12 +35,14 @@ import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
-import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ButtonOnClickListener;
+import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -56,7 +58,7 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-public class SeriesSearchActivity extends  SherlockListActivity {
+public class SeriesSearchActivity extends SherlockListActivity {
     private static final SearchSeriesService SEARCH_SERIES_SERVICE = App.searchSeriesService();
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
 
@@ -67,78 +69,87 @@ public class SeriesSearchActivity extends  SherlockListActivity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         this.setContentView(R.layout.add_series);
 
         ActionBar ab = this.getSupportActionBar();
         ab.setTitle(R.string.add_series);
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
-        setSupportProgressBarIndeterminateVisibility(false);
+        this.setSupportProgressBarIndeterminateVisibility(false);
 
         this.setupSearchListener();
-        this.setupSearchButtonClickListener();
+        this.setUpClearButtonClickListener();
+        this.setUpSearchButtonClickListener();
         this.setupItemClickListener();
         this.setupSearchFieldActionListeners();
 
-        Object retained = getLastNonConfigurationInstance();
+        Object retained = this.getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
-            state = (StateHolder) retained;
+            this.state = (StateHolder) retained;
         } else {
-            state = new StateHolder();
+            this.state = new StateHolder();
             this.setupMessageLauncher();
         }
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
-        loadState();
+        this.loadState();
     }
 
     private void setupMessageLauncher() {
         this.messageLauncher = new MessageLauncher(this);
-        state.messageLauncher = this.messageLauncher;
+        this.state.messageLauncher = this.messageLauncher;
     }
 
     private void loadState() {
-        this.messageLauncher = state.messageLauncher;
+        this.messageLauncher = this.state.messageLauncher;
 
-        if (state.isSearching) {
+        if (this.state.isSearching) {
             if (SEARCH_SERIES_SERVICE.getLastValidSearchResult() != null) {
-                setupListOnAdapter(SEARCH_SERIES_SERVICE.getLastValidSearchResult());
+                this.setupListOnAdapter(SEARCH_SERIES_SERVICE.getLastValidSearchResult());
             }
-            listener.onStart();
-            SEARCH_SERIES_SERVICE.registerListener(listener);
+            this.listener.onStart();
+            SEARCH_SERIES_SERVICE.registerListener(this.listener);
 
         } else {
-            if (state.seriesFound != null)
-                setupListOnAdapter(state.seriesFound);
-            
+            if (this.state.seriesFound != null) {
+                this.setupListOnAdapter(this.state.seriesFound);
+
+                EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
+                TextView numberOfResults = (TextView) SeriesSearchActivity.this.findViewById(R.id.numberOfResults);
+                String format = this.getString(R.string.number_of_search_results);
+                numberOfResults.setVisibility(View.VISIBLE);
+                numberOfResults.setText(String.format(format, this.state.seriesFound.size(), searchField.getText()));
+            }
+
             if (this.state.isShowingDialog){
                     this.state.dialog.show();
-                }
+            }
+
             this.messageLauncher.loadState();
         }
     }
 
     @Override
     public Object onRetainNonConfigurationInstance() {
-        return state;
+        return this.state;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         this.messageLauncher.onStop();
-        SEARCH_SERIES_SERVICE.deregisterListener(listener);
-        if (state.dialog != null && state.dialog.isShowing()) {
-            state.isShowingDialog = true;
-            state.dialog.dismiss();
+        SEARCH_SERIES_SERVICE.deregisterListener(this.listener);
+        if (this.state.dialog != null && this.state.dialog.isShowing()) {
+            this.state.isShowingDialog = true;
+            this.state.dialog.dismiss();
         } else {
-            state.isSearching = false;
+            this.state.isSearching = false;
         }
-        
+
     }
 
     @Override
@@ -152,30 +163,48 @@ public class SeriesSearchActivity extends  SherlockListActivity {
         }
     }
 
-    private void setupSearchButtonClickListener() {
-        final ImageButton searchButton = (ImageButton) this
-                .findViewById(R.id.searchButton);
+    private void setUpClearButtonClickListener() {
+        final ImageButton clearButton = (ImageButton) this.findViewById(R.id.clearButton);
+        final EditText searchField = (EditText) this.findViewById(R.id.searchField);
+        final TextView numberOfResults = (TextView) this.findViewById(R.id.numberOfResults);
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                searchField.setText("");
+                numberOfResults.setVisibility(View.INVISIBLE);
+                SeriesSearchActivity.this.setListAdapter(null);
+                SeriesSearchActivity.this.state.seriesFound = null;
+            }
+        });
+    }
+
+    private void setUpSearchButtonClickListener() {
+        final ImageButton searchButton = (ImageButton) this.findViewById(R.id.searchButton);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                performSearch();
+                SeriesSearchActivity.this.performSearch();
             }
         });
     }
 
     private void setupSearchListener() {
-        final EditText searchField = (EditText) SeriesSearchActivity.this
-                .findViewById(R.id.searchField);
-        final ImageButton searchButton = (ImageButton) this
-                .findViewById(R.id.searchButton);
+        final EditText searchField = (EditText) this.findViewById(R.id.searchField);
+        final View buttonPanel = this.findViewById(R.id.buttonPanel);
+        final TextView numberOfResults = (TextView) this.findViewById(R.id.numberOfResults);
+        final String format = this.getString(R.string.number_of_search_results);
 
         this.listener = new SearchSeriesListener() {
 
             @Override
             public void onSucess(List<Series> series) {
-                state.seriesFound = series;
-                setupListOnAdapter(series);
+                SeriesSearchActivity.this.state.seriesFound = series;
+                SeriesSearchActivity.this.setupListOnAdapter(series);
+
+                numberOfResults.setVisibility(View.VISIBLE);
+                numberOfResults.setText(String.format(format, series.size(), searchField.getText()));
             }
 
             @Override
@@ -205,57 +234,78 @@ public class SeriesSearchActivity extends  SherlockListActivity {
                     }
                     Dialog dialog = dialogBuilder.build();
                     dialog.show();
-                    state.dialog = dialog;
+                    SeriesSearchActivity.this.state.dialog = dialog;
                 }
             }
 
             @Override
             public void onStart() {
-                state.isSearching = true;
-                setSupportProgressBarIndeterminateVisibility(true);
+                SeriesSearchActivity.this.state.isSearching = true;
+                SeriesSearchActivity.this.setSupportProgressBarIndeterminateVisibility(true);
                 searchField.setEnabled(false);
-                searchButton.setEnabled(false);
+                buttonPanel.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFinish() {
-                state.isSearching = false;
-                setSupportProgressBarIndeterminateVisibility(false);
+                SeriesSearchActivity.this.state.isSearching = false;
+                SeriesSearchActivity.this.setSupportProgressBarIndeterminateVisibility(false);
                 searchField.setEnabled(true);
-                searchButton.setEnabled(true);
+                buttonPanel.setVisibility(View.VISIBLE);
             }
         };
     }
 
     private void performSearch() {
-        final EditText searchField = (EditText) SeriesSearchActivity.this
-                .findViewById(R.id.searchField);
+        final EditText searchField = (EditText) this.findViewById(R.id.searchField);
+        final TextView numberOfResults = (TextView) this.findViewById(R.id.numberOfResults);
 
-        SeriesSearchActivity.this.setListAdapter(null);
-        state.seriesFound = null;
+        numberOfResults.setVisibility(View.INVISIBLE);
+        this.setListAdapter(null);
+        this.state.seriesFound = null;
 
-        SEARCH_SERIES_SERVICE.registerListener(listener);
+        SEARCH_SERIES_SERVICE.registerListener(this.listener);
         SEARCH_SERIES_SERVICE.search(searchField.getText().toString());
     }
 
     private void setupListOnAdapter(List<Series> series) {
         ArrayAdapter<Series> adapter = new SeriesSearchItemAdapter(
-                // TODO Use a simple ArrayAdapter<String> and use
-                // StateHolder#seriesFound to recover series
                 SeriesSearchActivity.this, SeriesSearchActivity.this,
                 R.layout.seriessearch_item, series);
         SeriesSearchActivity.this.setListAdapter(adapter);
     }
 
     private void setupSearchFieldActionListeners() {
-        final EditText searchField = (EditText) findViewById(R.id.searchField);
+        final EditText searchField = (EditText) this.findViewById(R.id.searchField);
+        final View buttons = this.findViewById(R.id.buttonPanel);
+        final TextView numberOfResults = (TextView) this.findViewById(R.id.numberOfResults);
+
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    buttons.setVisibility(View.VISIBLE);
+                } else {
+                    buttons.setVisibility(View.INVISIBLE);
+                    numberOfResults.setVisibility(View.INVISIBLE);
+                    SeriesSearchActivity.this.setListAdapter(null);
+                    SeriesSearchActivity.this.state.seriesFound = null;
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         searchField.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId,
                     KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    performSearch();
+                    SeriesSearchActivity.this.performSearch();
                     return true;
                 }
 
@@ -268,7 +318,7 @@ public class SeriesSearchActivity extends  SherlockListActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    performSearch();
+                    SeriesSearchActivity.this.performSearch();
                 }
                 return false;
             }
@@ -303,7 +353,7 @@ public class SeriesSearchActivity extends  SherlockListActivity {
                                 .setNegativeButton(R.string.back, null).build();
 
                         this.dialog.show();
-                        state.dialog = this.dialog;
+                        SeriesSearchActivity.this.state.dialog = this.dialog;
                     }
 
                     private int followButtonTextResourceId() {
@@ -348,5 +398,4 @@ public class SeriesSearchActivity extends  SherlockListActivity {
         List<Series> seriesFound;
         MessageLauncher messageLauncher;
     }
-
 }

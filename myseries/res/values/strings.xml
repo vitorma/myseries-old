@@ -46,10 +46,13 @@
     <string name="relative_time_future">In %d days</string>
     <string name="status_continuing">Continuing</string>
     <string name="status_ended">Ended</string>
+    <string name="number_of_search_results" formatted="false">%d results for \'%s\'</string>
 
     <!-- Accessibility -->
 
     <string name="description_poster">Series poster</string>
+    <string name="description_clear_button">Clear button</string>
+    <string name="description_search_button">Search button</string>
 
     <!-- Labels -->
 
@@ -73,7 +76,7 @@
     <string name="powered_by_thetvdb">Powered by TheTVDB.com</string>
     <string name="recent">Recent</string>
     <string name="add_series">Add Series</string>
-    <string name="search_series">Search series</string>
+    <string name="search">Search</string>
     <string name="seasons">Seasons</string>
     <string name="series_name">Series name</string>
     <string name="settings">Settings</string>

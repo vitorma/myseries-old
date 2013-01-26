@@ -4,14 +4,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/list_selector_holo_light"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/toucharea_minimum_side"
-    android:paddingLeft="@dimen/gap_medium">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/gap_medium">
 
     <TextView
         android:id="@+id/itemName"
-        style="@style/TextView.Data.Medium"
-        android:gravity="center_vertical"
+        style="@style/TextView.Large.DarkGray"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toucharea_minimum_side"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

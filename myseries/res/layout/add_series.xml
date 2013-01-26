@@ -5,40 +5,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/searchButton"
-        android:src="@drawable/ic_search_api_holo_light"
-        android:layout_width="@dimen/imagebutton_width"
-        android:layout_height="@dimen/imagebutton_height"
-        android:layout_margin="@dimen/gap_medium"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"/>
-
-    <EditText
-        android:id="@+id/searchField"
-        style="@style/EditText.PlainText.ActionDone"
-        android:hint="@string/search_series"
+    <FrameLayout
+        android:id="@+id/searchPanel"
+        android:paddingLeft="@dimen/gap_large"
+        android:paddingRight="@dimen/gap_large"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/imagebutton_height"
-        android:layout_marginTop="@dimen/gap_medium"
-        android:layout_marginBottom="@dimen/gap_medium"
-        android:layout_marginLeft="@dimen/gap_medium"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@id/searchButton"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <EditText
+            android:id="@+id/searchField"
+            android:hint="@string/search"
+            style="@style/EditText.PlainText.ActionDone"
+            android:paddingLeft="8dp"
+            android:paddingRight="109dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+
+        <LinearLayout
+            android:id="@+id/buttonPanel"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            android:layout_width="96dp"
+            android:layout_height="@dimen/imagebutton_height"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="5dp">
+
+            <ImageButton
+                android:id="@+id/clearButton"
+                android:src="@drawable/ic_clear_search_api_holo_light"
+                android:contentDescription="@string/description_clear_button"
+                android:background="@drawable/item_background_holo_light"
+                android:layout_width="@dimen/imagebutton_width"
+                android:layout_height="@dimen/imagebutton_height"/>
+
+            <ImageButton
+                android:id="@+id/searchButton"
+                android:src="@drawable/ic_search_api_holo_light"
+                android:contentDescription="@string/description_search_button"
+                android:background="@drawable/item_background_holo_light"
+                android:layout_width="@dimen/imagebutton_width"
+                android:layout_height="@dimen/imagebutton_height"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/poweredby"
+        android:text="@string/powered_by_thetvdb"
+        style="@style/TextView.Small.LightGray"
+        android:paddingTop="4dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchPanel"/>
+
+    <TextView
+        android:id="@+id/numberOfResults"
+        style="@style/TextView.Small.Blue"
+        android:visibility="invisible"
+        android:paddingBottom="4dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/poweredby"/>
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/searchField"/>
-
-    <TextView
-        android:id="@+id/poweredby"
-        android:text="@string/powered_by_thetvdb"
-        style="@style/TextView.Translucent.Label.Small"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_below="@id/numberOfResults"/>
 
 </RelativeLayout>
