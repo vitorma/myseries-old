@@ -131,8 +131,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
         DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(App.context());
         String airtime = DatesAndTimes.toString(episode.airtime(), airtimeFormat, "");
-        String network = Strings.isBlank(series.network()) ? "" : " (" + series.network() + ")";
-        viewHolder.airInfo.setText(airtime + network);
+        String network = series.network();
+        viewHolder.airInfo.setText(Strings.concat(airtime, network, " - "));
 
         viewHolder.seenMark.setChecked(episode.wasSeen());
         viewHolder.seenMark.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));

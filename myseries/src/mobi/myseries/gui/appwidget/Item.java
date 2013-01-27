@@ -91,9 +91,9 @@ public class Item {
 
     private void setUpAirtimeAndNetwork(RemoteViews item, Series series) {
         String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(this.context), "");
-        String network = Strings.isBlank(series.network()) ? "" : " " + series.network();
+        String network = series.network();
 
-        item.setTextViewText(R.id.airtimeAndNetwork, airtime + network);
+        item.setTextViewText(R.id.airtimeAndNetwork, Strings.concat(airtime, network, " - "));
     }
 
     private void setUpSeriesName(RemoteViews item, Series series) {

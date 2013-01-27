@@ -57,4 +57,20 @@ public abstract class Strings {
 
         return builder.toString();
     }
+
+    public static String concat(String s1, String s2, String separator) {
+        Validate.isNonNull(s1, "s1");
+        Validate.isNonNull(s2, "s2");
+        Validate.isNonNull(separator, "separator");
+
+        if (isBlank(s2)) {
+            return s1;
+        }
+
+        if (isBlank(s1)) {
+            return s2;
+        }
+
+        return s1 + separator + s2;
+    }
 }

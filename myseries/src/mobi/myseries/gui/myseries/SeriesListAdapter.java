@@ -92,9 +92,8 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
         String airDay = DatesAndTimes.toString(series.airDay(), Locale.getDefault(), "");
         String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(App.context()), "");
         String network = series.network();
-        String airInfo = airDay +
-                (Strings.isBlank(airtime) ? airtime : ", " + airtime) +
-                (Strings.isBlank(network) ? network : " (" + network + ")");
+        String airInfo = Strings.concat(airDay, airtime, ", ");
+        airInfo = Strings.concat(airInfo, network, " - ");
         viewHolder.airInfo.setText(airInfo);
 
         String seenEpisodes = series.numberOfSeenEpisodes() + "/" + series.numberOfEpisodes();

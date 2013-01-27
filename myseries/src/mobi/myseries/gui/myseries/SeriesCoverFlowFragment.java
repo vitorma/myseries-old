@@ -199,9 +199,8 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         String airDay = DatesAndTimes.toString(item.airDay(), Locale.getDefault(), "");
         String airtime = DatesAndTimes.toString(item.airtime(), DateFormat.getTimeFormat(App.context()), "");
         String network = item.network();
-        String airInfo = airDay +
-                (Strings.isBlank(airtime) ? airtime : ", " + airtime) +
-                (Strings.isBlank(network) ? network : " (" + network + ")");
+        String airInfo = Strings.concat(airDay, airtime, ", ");
+        airInfo = Strings.concat(airInfo, network, " - ");
         this.seriesItemViewHolder.airInfo.setText(airInfo);
 
         String seenEpisodes = item.numberOfSeenEpisodes() + "/" + item.numberOfEpisodes();
