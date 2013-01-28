@@ -89,6 +89,9 @@
             <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.CONFIGURATION_CHANGE"/>
+            </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_info"/>
@@ -112,6 +115,9 @@
             <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.CONFIGURATION_CHANGE"/>
+            </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_info"/>
@@ -124,6 +130,8 @@
         <service
             android:name="mobi.myseries.gui.appwidget.AdapterService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service
+            android:name="mobi.myseries.application.broadcast.ConfigurationChangeService"/>
 
     </application>
 

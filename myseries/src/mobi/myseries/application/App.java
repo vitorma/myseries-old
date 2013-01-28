@@ -26,6 +26,7 @@ import java.text.DateFormat;
 import mobi.myseries.R;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
+import mobi.myseries.application.broadcast.ConfigurationChangeService;
 import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.image.ImageService;
@@ -95,6 +96,8 @@ public class App extends Application {
         messageService = new MessageService();
 
         seriesProvider = new SeriesProvider(environment.seriesRepository(), broadcastService);
+
+        this.startService(ConfigurationChangeService.newIntent(this));
     }
 
     public static Context context() {

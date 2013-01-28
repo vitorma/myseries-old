@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/appwidget_margin">
+    android:layout_margin="@dimen/appwidget_margin_resizable">
 
     <include
         layout="@layout/appwidget_actionbar"/>

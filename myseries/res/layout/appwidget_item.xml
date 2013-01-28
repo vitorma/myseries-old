@@ -4,53 +4,54 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/itemPanel"
     android:background="@drawable/list_selector_holo_light"
-    android:paddingTop="@dimen/appwidget_gap"
-    android:paddingBottom="@dimen/appwidget_gap"
-    android:paddingLeft="@dimen/appwidget_gap"
-    android:paddingRight="@dimen/appwidget_gap"
+    android:paddingTop="@dimen/appwidget_item_gap"
+    android:paddingBottom="@dimen/appwidget_item_gap"
+    android:paddingLeft="@dimen/appwidget_item_gap"
+    android:paddingRight="@dimen/appwidget_item_gap"
     android:layout_width="match_parent"
     android:layout_height="@dimen/appwidget_item_height">
 
     <ImageView
         android:id="@+id/seriesPoster"
+        android:contentDescription="@string/description_poster"
         android:layout_width="@dimen/appwidget_item_poster_width"
         android:layout_height="@dimen/appwidget_item_poster_height"
         android:layout_alignParentLeft="true"/>
 
     <TextView
-        android:id="@+id/episodeAirDate"
-        style="@style/TextView.Micro.Blue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"/>
-
-    <TextView
-        android:id="@+id/airtimeAndNetwork"
-        style="@style/TextView.Micro.LightGray"
-        android:paddingLeft="@dimen/appwidget_gap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/seriesPoster"
-        android:layout_toLeftOf="@id/episodeAirDate"/>
-
-    <TextView
         android:id="@+id/seriesName"
-        style="@style/TextView.Small.DarkGray.Ellipsized"
-        android:paddingLeft="@dimen/appwidget_gap"
+        style="@style/TextView.Small.DarkGray.Bold.Ellipsized"
+        android:paddingLeft="@dimen/appwidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/seriesPoster"/>
 
     <TextView
         android:id="@+id/episodeNumber"
-        style="@style/TextView.Micro.MediumGray.Ellipsized"
-        android:paddingLeft="@dimen/appwidget_gap"
-        android:layout_width="wrap_content"
+        style="@style/TextView.Small.MediumGray.Ellipsized"
+        android:paddingLeft="@dimen/appwidget_item_gap"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/seriesName"
         android:layout_toRightOf="@id/seriesPoster"/>
+
+    <TextView
+        android:id="@+id/episodeAirDate"
+        style="@style/TextView.Small.Blue.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/episodeNumber"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:id="@+id/airtimeAndNetwork"
+        style="@style/TextView.Small.LightGray.Ellipsized"
+        android:paddingLeft="@dimen/appwidget_item_gap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/episodeNumber"
+        android:layout_toRightOf="@id/seriesPoster"
+        android:layout_toLeftOf="@id/episodeAirDate"/>
 
 </RelativeLayout>

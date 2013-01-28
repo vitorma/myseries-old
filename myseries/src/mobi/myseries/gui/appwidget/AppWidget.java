@@ -65,7 +65,8 @@ public abstract class AppWidget extends AppWidgetProvider {
         return BroadcastAction.SEEN_MARKUP.equals(action) ||
                BroadcastAction.UPDATE.equals(action) ||
                BroadcastAction.ADDICTION.equals(action) ||
-               BroadcastAction.REMOVAL.equals(action);
+               BroadcastAction.REMOVAL.equals(action) ||
+               BroadcastAction.CONFIGURATION_CHANGE.equals(action);
     }
 
     private void callOnUpdate(Context context) {

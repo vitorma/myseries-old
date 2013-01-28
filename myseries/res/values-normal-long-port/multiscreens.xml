@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- AppWidget -->
+
+    <integer name="appwidget_number_of_items">5</integer>
+    <dimen name="appwidget_content_height">315dp</dimen>
+
+</resources>

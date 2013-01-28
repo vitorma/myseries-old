@@ -2,7 +2,6 @@
 
 <resources>
 
-    <dimen name="text_size_micro">10sp</dimen>
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_medium">14sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
@@ -32,18 +31,5 @@
     <dimen name="myseries_item_height">106dp</dimen>
     <dimen name="myseries_image_height">106dp</dimen>
     <dimen name="myseries_image_width">69dp</dimen>
-
-    <dimen name="appwidget_margin">8dp</dimen>
-    <dimen name="appwidget_gap">6dp</dimen>
-    <dimen name="appwidget_actionbar_height">40dp</dimen>
-    <dimen name="appwidget_actionbar_button_height">40dp</dimen>
-    <dimen name="appwidget_actionbar_button_width">40dp</dimen>
-    <dimen name="appwidget_actionbar_text_size">16sp</dimen>
-    <dimen name="appwidget_item_poster_height">44dp</dimen>
-    <dimen name="appwidget_item_poster_width">30dp</dimen>
-    <dimen name="appwidget_item_height">56dp</dimen>
-    <dimen name="appwidget_content_height">224dp</dimen>
-    <dimen name="appwidget_height">320dp</dimen>
-    <dimen name="appwidget_width">240dp</dimen>
 
 </resources>

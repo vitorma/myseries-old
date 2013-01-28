@@ -12,4 +12,9 @@
     <integer name="coverflow_reflection_percentage">30</integer>
     <bool name="coverflow_reflection_enabled">false</bool>
 
+    <!-- AppWidget -->
+
+    <integer name="appwidget_number_of_items">3</integer>
+    <dimen name="appwidget_content_height">189dp</dimen>
+
 </resources>
