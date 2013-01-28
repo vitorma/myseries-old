@@ -47,6 +47,15 @@
     <string name="status_continuing">Continuing</string>
     <string name="status_ended">Ended</string>
     <string name="number_of_search_results" formatted="false">%d results for \'%s\'</string>
+    <string name="fraction" formatted="false">%d of %d</string>
+    <plurals name="plural_episode">
+        <item quantity="one">episode</item>
+        <item quantity="other">episodes</item>
+    </plurals>
+    <plurals name="plural_was_seen">
+        <item quantity="one">was seen</item>
+        <item quantity="other">were seen</item>
+    </plurals>
 
     <!-- Accessibility -->
 

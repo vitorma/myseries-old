@@ -2,34 +2,51 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:paddingTop="@dimen/gap_medium"
     android:paddingBottom="@dimen/gap_medium"
-    android:paddingLeft="@dimen/toucharea_minimum_side"
-    android:paddingRight="@dimen/gap_medium">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <CheckBox
-        android:id="@+id/isSeasonViewedCheckBox"
-        android:layout_width="@dimen/checkbox_width"
-        android:layout_height="@dimen/checkbox_height"
-        android:layout_marginLeft="@dimen/gap_medium"
+    <ImageView
+        android:id="@+id/groupIndicator"
+        android:src="@drawable/expander_open_holo_light"
+        android:scaleType="centerInside"
+        android:layout_width="@dimen/toucharea_minimum_side"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"/>
+
+    <mobi.myseries.gui.shared.SeenMark
+        android:id="@+id/seenMark"
+        android:gravity="center"
+        android:layout_width="@dimen/toucharea_minimum_side"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"/>
 
     <TextView
-        android:id="@+id/itemName"
-        style="@style/TextView.Data.Medium"
-        android:gravity="top"
+        android:id="@+id/seasonNumber"
+        style="@style/TextView.Large.DarkGray.Ellipsized"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@id/isSeasonViewedCheckBox"/>
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/groupIndicator"
+        android:layout_toLeftOf="@id/seenMark"/>
+
+    <TextView
+        android:id="@+id/seenEpisodes"
+        style="@style/TextView.Small.MediumGray.Ellipsized"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seasonNumber"
+        android:layout_toRightOf="@id/groupIndicator"
+        android:layout_toLeftOf="@id/seenMark"/>
 
     <mobi.myseries.gui.shared.SeenEpisodesBar
-        android:id="@+id/seen_episodes"
-        android:layout_width="wrap_content"
+        android:id="@+id/seenEpisodesBar"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/chunkbar_height"
-        android:layout_toLeftOf="@id/isSeasonViewedCheckBox"
-        android:layout_alignBottom="@id/isSeasonViewedCheckBox"/>
+        android:layout_below="@id/seenMark"/>
 
 </RelativeLayout>

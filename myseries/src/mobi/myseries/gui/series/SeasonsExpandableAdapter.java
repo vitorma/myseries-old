@@ -9,13 +9,14 @@ import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.SeasonListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
+import mobi.myseries.gui.shared.SeenMark;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implements SeasonListener, EpisodeListener {
@@ -69,9 +70,9 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
             itemView = LayoutInflater.from(this.context).inflate(R.layout.series_seasons_item_episode, null);
         }
 
-        TextView numberTextView = (TextView) itemView.findViewById(R.id.episodeNumberTextView);
-        TextView nameTextView = (TextView) itemView.findViewById(R.id.episodeNameTextView);
-        final CheckBox isViewedCheckBox = (CheckBox) itemView.findViewById(R.id.episodeIsViewedCheckBox);
+        TextView numberTextView = (TextView) itemView.findViewById(R.id.episodeNumber);
+        TextView nameTextView = (TextView) itemView.findViewById(R.id.episodeName);
+        final SeenMark isViewedCheckBox = (SeenMark) itemView.findViewById(R.id.seenMark);
 
         final Episode episode = this.episode(groupPosition, childPosition);
 
@@ -122,9 +123,9 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
 
         final Season season = this.season(groupPosition);
 
-        TextView name = (TextView) itemView.findViewById(R.id.itemName);
-        SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.seen_episodes);
-        final CheckBox isSeasonViewed = (CheckBox) itemView.findViewById(R.id.isSeasonViewedCheckBox);
+        TextView name = (TextView) itemView.findViewById(R.id.seasonNumber);
+        SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.seenEpisodesBar);
+        final SeenMark isSeasonViewed = (SeenMark) itemView.findViewById(R.id.seenMark);
 
         if (season.number() == 0) {
             name.setText(this.context.getString(R.string.special_episodes));
@@ -145,6 +146,25 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
                 }
             }
         });
+
+        ImageView groupIndicator = (ImageView) itemView.findViewById(R.id.groupIndicator);
+        groupIndicator.setImageResource(
+                isExpanded ?
+                R.drawable.expander_close_holo_light :
+                R.drawable.expander_open_holo_light);
+
+        TextView seenEpisodes = (TextView) itemView.findViewById(R.id.seenEpisodes);
+        String fraction = String.format(
+                this.context.getString(R.string.fraction),
+                season.numberOfSeenEpisodes(),
+                season.numberOfEpisodes());
+        String pluralOfEpisode = this.context.getResources().getQuantityString(
+                R.plurals.plural_episode,
+                season.numberOfEpisodes());
+        String pluralOfWasSeen = this.context.getResources().getQuantityString(
+                R.plurals.plural_was_seen,
+                season.numberOfSeenEpisodes());
+        seenEpisodes.setText(fraction + " " + pluralOfEpisode + " " + pluralOfWasSeen);
 
         return itemView;
     }

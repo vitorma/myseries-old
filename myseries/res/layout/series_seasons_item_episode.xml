@@ -2,34 +2,36 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingTop="@dimen/gap_medium"
+    android:paddingBottom="@dimen/gap_medium"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/gap_medium"
-    android:background="@color/light_gray">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/episodeNumberTextView"
-        style="@style/TextView.Label.Medium"
+        android:id="@+id/episodeNumber"
+        style="@style/TextView.Medium.MediumGray"
         android:gravity="center"
-        android:layout_width="@dimen/checkbox_width"
-        android:layout_height="@dimen/checkbox_width"
-        android:layout_marginRight="@dimen/gap_medium"
+        android:layout_width="@dimen/toucharea_minimum_side"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"/>
 
-    <CheckBox
-        android:id="@+id/episodeIsViewedCheckBox"
-        android:layout_width="@dimen/checkbox_width"
-        android:layout_height="@dimen/checkbox_height"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="@dimen/gap_medium"/>
+    <mobi.myseries.gui.shared.SeenMark
+        android:id="@+id/seenMark"
+        android:minHeight="@dimen/toucharea_minimum_side"
+        android:layout_width="@dimen/toucharea_minimum_side"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
 
     <TextView
-        android:id="@+id/episodeNameTextView"
-        style="@style/TextView.Data.Medium"
+        android:id="@+id/episodeName"
+        style="@style/TextView.Large.DarkGray"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/episodeNumberTextView"
-        android:layout_toLeftOf="@id/episodeIsViewedCheckBox"/>
+        android:layout_toRightOf="@id/episodeNumber"
+        android:layout_toLeftOf="@id/seenMark"/>
 
 </RelativeLayout>
