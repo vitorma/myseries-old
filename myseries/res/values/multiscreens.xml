@@ -2,6 +2,17 @@
 
 <resources>
 
+    <!-- Poster -->
+
+    <dimen name="poster_width_thumbnail">@dimen/coverflow_poster_width</dimen>
+    <dimen name="poster_height_thumbnail">@dimen/coverflow_poster_height</dimen>
+    <dimen name="poster_width_myseries_list">51dp</dimen>
+    <dimen name="poster_height_myseries_list">75dp</dimen>
+    <dimen name="poster_width_myschedule">40dp</dimen>
+    <dimen name="poster_height_myschedule">59dp</dimen>
+    <dimen name="poster_width_series_details">300dp</dimen>
+    <dimen name="poster_height_series_details">441dp</dimen>
+
     <!-- CoverFlow -->
 
     <dimen name="coverflow_padding_vertical">8dp</dimen>

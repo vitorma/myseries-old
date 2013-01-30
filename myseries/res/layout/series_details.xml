@@ -1,129 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingLeft="@dimen/gap_large"
+    android:paddingRight="@dimen/gap_large"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/background"
-        android:scaleType="centerCrop"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingBottom="@dimen/gap_medium">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
+        <TextView
+            android:id="@+id/seriesName"
+            style="@style/TextView.XLarge.DarkGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/gap_large">
+            android:layout_alignParentTop="true"/>
 
-            <ImageView
-                android:id="@+id/seriesPosterImageView"
-                android:scaleType="centerInside"
-                android:layout_width="37dp"
-                android:layout_height="57dp"
-                android:layout_marginTop="@dimen/gap_medium"
-                android:layout_marginLeft="@dimen/gap_medium"
-                android:layout_marginRight="6dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"/>
+        <TextView
+            android:id="@+id/genreTextView"
+            style="@style/TextView.Medium.Blue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seriesName"/>
 
-            <TextView
-                android:id="@+id/statusTextView"
-                android:drawableLeft="@drawable/ic_hourglass"
-                style="@style/TextView.Data.Small.Bold"
-                android:gravity="center_vertical|left"
-                android:layout_width="wrap_content"
-                android:layout_height="19dp"
-                android:layout_alignTop="@id/seriesPosterImageView"
-                android:layout_toRightOf="@id/seriesPosterImageView"/>
+        <TextView
+            android:id="@+id/statusTextView"
+            style="@style/TextView.Medium.MediumGray"
+            android:drawableLeft="@drawable/ic_hourglass"
+            android:drawablePadding="@dimen/gap_micro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/genreTextView"
+            android:layout_marginTop="@dimen/gap_medium"/>
 
-            <TextView
-                android:id="@+id/airDaysTextView"
-                android:drawableLeft="@drawable/ic_calendar"
-                style="@style/TextView.Data.Small"
-                android:gravity="center_vertical|left"
-                android:layout_width="wrap_content"
-                android:layout_height="19dp"
-                android:layout_below="@id/statusTextView"
-                android:layout_toRightOf="@id/seriesPosterImageView"/>
+        <TextView
+            android:id="@+id/airDaysTextView"
+            style="@style/TextView.Medium.MediumGray"
+            android:drawableLeft="@drawable/ic_calendar"
+            android:drawablePadding="@dimen/gap_micro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/statusTextView"/>
 
-            <TextView
-                android:id="@+id/runtimeTextView"
-                style="@style/TextView.Data.Small"
-                android:drawableLeft="@drawable/ic_runtime"
-                android:gravity="center_vertical|left"
-                android:layout_width="wrap_content"
-                android:layout_height="19dp"
-                android:layout_below="@id/airDaysTextView"
-                android:layout_toRightOf="@id/seriesPosterImageView"/>
+        <TextView
+            android:id="@+id/runtimeTextView"
+            style="@style/TextView.Medium.MediumGray"
+            android:drawableLeft="@drawable/ic_runtime"
+            android:drawablePadding="@dimen/gap_micro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/airDaysTextView"/>
 
-            <TextView
-                android:id="@+id/genreLabel"
-                android:text="@string/genres"
-                style="@style/TextView.Label.Small.Bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gap_large"
-                android:layout_marginLeft="@dimen/gap_medium"
-                android:layout_marginRight="@dimen/gap_medium"
-                android:layout_below="@id/seriesPosterImageView"/>
+        <ImageView
+            android:id="@+id/seriesPosterImageView"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/poster_width_series_details"
+            android:layout_height="@dimen/poster_height_series_details"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/runtimeTextView"
+            android:layout_marginTop="@dimen/gap_large"/>
 
-            <TextView
-                android:id="@+id/genreTextView"
-                style="@style/TextView.Data.Small"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/gap_medium"
-                android:layout_marginRight="@dimen/gap_medium"
-                android:layout_below="@id/genreLabel"/>
+        <TextView
+            android:id="@+id/overviewLabel"
+            android:text="@string/overview"
+            style="@style/TextView.Medium.MediumGray.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seriesPosterImageView"
+            android:layout_marginTop="@dimen/gap_large"/>
 
-            <TextView
-                android:id="@+id/actorsLabel"
-                android:text="@string/actors"
-                style="@style/TextView.Label.Small.Bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gap_large"
-                android:layout_marginLeft="@dimen/gap_medium"
-                android:layout_marginRight="@dimen/gap_medium"
-                android:layout_below="@id/genreTextView"/>
+        <TextView
+            android:id="@+id/seriesOverviewTextView"
+            style="@style/TextView.Medium.MediumGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/overviewLabel"/>
 
-            <TextView
-                android:id="@+id/actorsTextView"
-                style="@style/TextView.Data.Small"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/gap_medium"
-                android:layout_marginRight="@dimen/gap_medium"
-                android:layout_below="@id/actorsLabel"/>
+        <TextView
+            android:id="@+id/actorsLabel"
+            android:text="@string/actors"
+            style="@style/TextView.Medium.MediumGray.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap_medium"
+            android:layout_below="@id/seriesOverviewTextView"/>
 
-            <TextView
-                android:id="@+id/overviewLabel"
-                android:text="@string/overview"
-                style="@style/TextView.Label.Small.Bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gap_large"
-                android:layout_marginLeft="@dimen/gap_medium"
-                android:layout_marginRight="@dimen/gap_medium"
-                android:layout_below="@id/actorsTextView"/>
+        <TextView
+            android:id="@+id/actorsTextView"
+            style="@style/TextView.Medium.MediumGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/actorsLabel"/>
 
-            <TextView
-                android:id="@+id/seriesOverviewTextView"
-                style="@style/TextView.Data.Small"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/gap_medium"
-                android:layout_marginRight="@dimen/gap_medium"
-                android:layout_marginBottom="@dimen/gap_medium"
-                android:layout_below="@id/overviewLabel"/>
+    </RelativeLayout>
 
-        </RelativeLayout>
-
-    </ScrollView>
-
-</FrameLayout>
+</ScrollView>

@@ -155,6 +155,10 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="TextView.Medium.LightGray.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="TextView.Medium.MediumGray">
         <item name="android:textColor">@color/text_medium_gray</item>
     </style>
@@ -162,6 +166,10 @@
     <style name="TextView.Medium.MediumGray.Ellipsized">
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextView.Medium.MediumGray.Bold">
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextView.Medium.DarkGray">
@@ -197,6 +205,14 @@
     <style name="TextView.Large.White.Ellipsized">
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextView.XLarge">
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+    </style>
+
+    <style name="TextView.XLarge.DarkGray">
+        <item name="android:textColor">@color/text_dark_gray</item>
     </style>
 
     <!-- EditText -->
@@ -316,6 +332,7 @@
     <!-- ScrollView -->
 
     <style name="ScrollView" parent="android:Widget.ScrollView">
+        <item name="android:scrollbarStyle">outsideOverlay</item>
         <item name="android:fastScrollEnabled">true</item>
     </style>
 

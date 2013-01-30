@@ -1,5 +1,7 @@
 package mobi.myseries.gui.series;
 
+import java.util.Locale;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
@@ -7,11 +9,12 @@ import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.Images;
+import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
+import mobi.myseries.shared.Strings;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -59,6 +62,7 @@ public class DetailsFragment extends SherlockFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        TextView seriesName = (TextView) this.getActivity().findViewById(R.id.seriesName);
         TextView seriesStatus = (TextView) this.getActivity().findViewById(R.id.statusTextView);
         TextView seriesAirDays = (TextView) this.getActivity().findViewById(R.id.airDaysTextView);
         TextView seriesRuntime = (TextView) this.getActivity().findViewById(R.id.runtimeTextView);
@@ -70,10 +74,15 @@ public class DetailsFragment extends SherlockFragment {
 
         Series series = SERIES_PROVIDER.getSeries(this.seriesId);
 
-        seriesStatus.setText(series.status().toString());
+        seriesName.setText(series.name());
+        seriesStatus.setText(LocalText.of(series.status(), ""));
 
-        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(CONTEXT), "");
-        seriesAirDays.setText(series.airDay() + " " + airtime + " (" + series.network() + ")");
+        String airDay = DatesAndTimes.toString(series.airDay(), Locale.getDefault(), "");
+        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(App.context()), "");
+        String network = series.network();
+        String airInfo = Strings.concat(airDay, airtime, ", ");
+        airInfo = Strings.concat(airInfo, network, " - ");
+        seriesAirDays.setText(airInfo);
         seriesRuntime.setText(String.format(this.getString(R.string.runtime_minutes_format), series.runtime()));
 
         seriesGenre.setText(series.genres());
@@ -87,9 +96,9 @@ public class DetailsFragment extends SherlockFragment {
         ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
         seriesPoster.setImageBitmap(ensuredPoster);
 
-        ImageView background = (ImageView) this.getActivity().findViewById(R.id.background);
-        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), ensuredPoster);
-        drawable.setAlpha(30);
-        background.setImageDrawable(drawable);
+//        ImageView background = (ImageView) this.getActivity().findViewById(R.id.background);
+//        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), ensuredPoster);
+//        drawable.setAlpha(30);
+//        background.setImageDrawable(drawable);
     }
 }
