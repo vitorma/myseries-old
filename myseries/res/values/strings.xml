@@ -65,7 +65,7 @@
 
     <!-- Labels -->
 
-    <string name="actors">Actors</string>
+    <string name="actors">ACTORS</string>
     <string name="back">Back</string>
     <string name="details">Details</string>
     <string name="directors">Directors</string>
@@ -80,7 +80,7 @@
     <string name="no_episodes_to_see">No episodes to see.</string>
     <string name="no_followed_series">No followed series.</string>
     <string name="ok">OK</string>
-    <string name="overview">Overview</string>
+    <string name="overview">OVERVIEW</string>
     <string name="overview_unavailable">Overview is unavailable.</string>
     <string name="powered_by_thetvdb">Powered by TheTVDB.com</string>
     <string name="recent">Recent</string>
