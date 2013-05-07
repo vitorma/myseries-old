@@ -12,6 +12,8 @@
     <dimen name="poster_height_myschedule">59dp</dimen>
     <dimen name="poster_width_series_details">300dp</dimen>
     <dimen name="poster_height_series_details">441dp</dimen>
+    <dimen name="poster_width_series_details_land">80dp</dimen>
+    <dimen name="poster_height_series_details_land">118dp</dimen>
 
     <!-- CoverFlow -->
 

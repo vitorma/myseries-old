@@ -57,6 +57,7 @@
 
         <ImageView
             android:id="@+id/seriesPosterImageView"
+            android:contentDescription="@string/description_poster"
             android:scaleType="fitXY"
             android:layout_width="@dimen/poster_width_series_details"
             android:layout_height="@dimen/poster_height_series_details"
