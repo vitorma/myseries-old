@@ -68,10 +68,10 @@
     <string name="actors">ACTORS</string>
     <string name="back">Back</string>
     <string name="details">Details</string>
-    <string name="directors">Directors</string>
+    <string name="directors">DIRECTORS</string>
     <string name="follow">Follow</string>
     <string name="genres">Genres</string>
-    <string name="guest_stars">Guest stars</string>
+    <string name="guest_stars">GUEST STARS</string>
     <string name="help">Help</string>
     <string name="my_schedule">My Schedule</string>
     <string name="my_series">My Series</string>
@@ -95,7 +95,7 @@
     <string name="up_to_date">UP-TO-DATE</string>
     <string name="upcoming">Upcoming</string>
     <string name="update_series_data">Update series data</string>
-    <string name="writers">Writers</string>
+    <string name="writers">WRITERS</string>
     <string name="yes">Yes</string>
 
     <!-- Label formats -->
