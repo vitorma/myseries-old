@@ -93,6 +93,9 @@
             <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.CONFIGURATION_CHANGE"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.SCHEDULE_MODE_CHANGE"/>
+            </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_info"/>
@@ -126,6 +129,8 @@
 
         <service
             android:name="mobi.myseries.gui.appwidget.RefreshService"/>
+        <service
+            android:name="mobi.myseries.gui.appwidget.TabService"/>
         <service
             android:name="mobi.myseries.gui.appwidget.SetupService"/>
         <service

@@ -4,7 +4,7 @@
 
     <!-- AppWidget -->
 
-    <integer name="appwidget_number_of_items">3</integer>
-    <dimen name="appwidget_content_height">189dp</dimen>
+    <integer name="appwidget_number_of_items">2</integer>
+    <dimen name="appwidget_content_height">126dp</dimen>
 
 </resources>

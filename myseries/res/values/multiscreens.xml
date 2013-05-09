@@ -35,8 +35,8 @@
     <dimen name="appwidget_item_poster_width">35dp</dimen>
     <dimen name="appwidget_item_gap">6dp</dimen>
 
-    <integer name="appwidget_number_of_items">4</integer>
-    <dimen name="appwidget_content_height">252dp</dimen>
+    <integer name="appwidget_number_of_items">3</integer>
+    <dimen name="appwidget_content_height">189dp</dimen>
     <dimen name="appwidget_min_height">250dp</dimen>
     <dimen name="appwidget_min_width">250dp</dimen>
     <dimen name="appwidget_margin">8dp</dimen>

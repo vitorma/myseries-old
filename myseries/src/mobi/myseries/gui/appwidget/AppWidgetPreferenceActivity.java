@@ -5,7 +5,6 @@ import java.util.Map;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
@@ -41,7 +40,6 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
 
     private int appWidgetId;
     private AppWidgetPreferences preferences;
-    private RadioGroup scheduleModeRadioGroup;
     private RadioGroup sortModeRadioGroup;
     private CheckedTextView showSpecialEpisodes;
     private CheckedTextView showSeenEpisodes;
@@ -81,29 +79,12 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     }
 
     private void setUpViews() {
-        this.setUpScheduleModeOptions();
         this.setUpSortModeOptions();
         this.setUpSpecialEpisodesOptions();
         this.setUpSeenEpisodesOptions();
         this.setUpSeriesToShowOptions();
         this.setUpCancelButton();
         this.setUpSaveButton();
-    }
-
-    private void setUpScheduleModeOptions() {
-        this.scheduleModeRadioGroup = (RadioGroup) this.findViewById(R.id.scheduleModeRadioGroup);
-
-        switch (this.preferences.scheduleMode()) {
-            case ScheduleMode.RECENT:
-                this.scheduleModeRadioGroup.check(R.id.recent);
-                break;
-            case ScheduleMode.NEXT:
-                this.scheduleModeRadioGroup.check(R.id.next);
-                break;
-            case ScheduleMode.UPCOMING:
-                this.scheduleModeRadioGroup.check(R.id.upcoming);
-                break;
-        }
     }
 
     private void setUpSortModeOptions() {
@@ -189,27 +170,12 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     }
 
     private void onSave() {
-        this.saveScheduleModePreference();
         this.saveSortModePreference();
         this.saveSpecialEpisodesPreference();
         this.saveSeenEpisodesPreference();
         this.saveSeriesToShowPreference();
         this.updateAppWidget();
         this.finishOk();
-    }
-
-    private void saveScheduleModePreference() {
-        switch (this.scheduleModeRadioGroup.getCheckedRadioButtonId()) {
-            case R.id.recent:
-                this.preferences.setScheduleMode(ScheduleMode.RECENT);
-                break;
-            case R.id.next:
-                this.preferences.setScheduleMode(ScheduleMode.NEXT);
-                break;
-            case R.id.upcoming:
-                this.preferences.setScheduleMode(ScheduleMode.UPCOMING);
-                break;
-        }
     }
 
     private void saveSortModePreference() {

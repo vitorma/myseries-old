@@ -104,12 +104,17 @@ public class SetupService extends IntentService {
         this.appWidgetView = new RemoteViews(this.getPackageName(), R.layout.appwidget);
 
         this.setUpActionBar();
+        this.setUpTabBar();
         this.setUpItemPageBar();
         this.setUpItems();
     }
 
     private void setUpActionBar() {
         ActionBar.from(this.getApplicationContext(), this.appWidgetView).setUpFor(this.appWidgetId);
+    }
+
+    private void setUpTabBar() {
+        TabBar.from(this.getApplicationContext(), this.appWidgetView).setUpFor(this.appWidgetId);
     }
 
     private void setUpItemPageBar() {

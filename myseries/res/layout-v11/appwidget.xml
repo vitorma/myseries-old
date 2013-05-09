@@ -12,6 +12,9 @@
     <include
         layout="@layout/appwidget_actionbar"/>
 
+    <include
+        layout="@layout/appwidget_tabbar"/>
+
     <ListView
         android:id="@+id/episodeList"
         style="@style/ListView.AppWidget"

@@ -37,6 +37,7 @@ public class AppWidgetV11 extends AppWidget {
         RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.appwidget);
 
         ActionBar.from(context, appWidgetView).setUpFor(appWidgetId);
+        TabBar.from(context, appWidgetView).setUpFor(appWidgetId);
 
         if (Android.isIceCreamSandwichOrHigher()) {
             appWidgetView.setRemoteAdapter(R.id.episodeList, adapterIntentFrom(context, appWidgetId));
@@ -48,6 +49,7 @@ public class AppWidgetV11 extends AppWidget {
         appWidgetView.setEmptyView(R.id.episodeList, R.id.emptyView);
 
         appWidgetManager.updateAppWidget(appWidgetId, appWidgetView);
+
         refresh(context, appWidgetId);
     }
 

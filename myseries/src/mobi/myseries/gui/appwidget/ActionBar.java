@@ -22,7 +22,6 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
-import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.myseries.MySeriesActivity;
 import mobi.myseries.gui.preferences.Preferences;
@@ -46,28 +45,11 @@ public class ActionBar {
     }
 
     public ActionBar setUpFor(int appWidgetId) {
-        this.appWidgetView.setTextViewText(R.id.titleView, this.titleFrom(appWidgetId));
         this.appWidgetView.setOnClickPendingIntent(R.id.homeButton, this.homeIntentFrom(appWidgetId));
         this.appWidgetView.setOnClickPendingIntent(R.id.scheduleButton, this.scheduleIntentFrom(appWidgetId));
         this.appWidgetView.setOnClickPendingIntent(R.id.configureButton, this.preferencesIntentFrom(appWidgetId));
-        this.appWidgetView.setOnClickPendingIntent(R.id.refreshButton, this.refreshIntentFrom(appWidgetId));
 
         return this;
-    }
-
-    private CharSequence titleFrom(int appWidgetId) {
-        int scheduleMode = Preferences.forAppWidget(appWidgetId).scheduleMode();
-
-        switch (scheduleMode) {
-            case ScheduleMode.RECENT:
-                return this.context.getText(R.string.recent);
-            case ScheduleMode.NEXT:
-                return this.context.getText(R.string.next);
-            case ScheduleMode.UPCOMING:
-                return this.context.getText(R.string.upcoming);
-            default:
-                return null;
-        }
     }
 
     private PendingIntent homeIntentFrom(int appWidgetId) {
@@ -91,11 +73,5 @@ public class ActionBar {
         Intent intent = AppWidgetPreferenceActivity.newIntent(this.context, appWidgetId);
 
         return PendingIntent.getActivity(this.context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private PendingIntent refreshIntentFrom(int appWidgetId) {
-        Intent intent = RefreshService.newIntent(this.context, appWidgetId);
-
-        return PendingIntent.getService(this.context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

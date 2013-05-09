@@ -12,7 +12,7 @@
     <string name="series_to_show_upper">SERIES TO SHOW</string>
     <string name="recent_episodes">Recent episodes</string>
     <string name="next_episodes">Next episodes to see</string>
-    <string name="next">Next</string>
+    <string name="next">NEXT</string>
     <string name="upcoming_episodes">Upcoming episodes</string>
     <string name="sorting">SORTING</string>
     <string name="sort_by_format" formatted="false">Sort %s by…</string>
@@ -83,7 +83,7 @@
     <string name="overview">OVERVIEW</string>
     <string name="overview_unavailable">Overview is unavailable.</string>
     <string name="powered_by_thetvdb">Powered by TheTVDB.com</string>
-    <string name="recent">Recent</string>
+    <string name="recent">RECENT</string>
     <string name="add_series">Add Series</string>
     <string name="search">Search</string>
     <string name="seasons">Seasons</string>
@@ -93,7 +93,7 @@
     <string name="stop_following">Stop following</string>
     <string name="to_be_announced">To be announced</string>
     <string name="up_to_date">UP-TO-DATE</string>
-    <string name="upcoming">Upcoming</string>
+    <string name="upcoming">UPCOMING</string>
     <string name="update_series_data">Update series data</string>
     <string name="writers">WRITERS</string>
     <string name="yes">Yes</string>
