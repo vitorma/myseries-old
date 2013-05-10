@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/seriesName"
-        style="@style/TextView.Small.DarkGray.Bold.Ellipsized"
+        style="@style/TextView.Small.DarkGray.Ellipsized"
         android:paddingLeft="@dimen/appwidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/episodeNumber"
-        style="@style/TextView.Small.MediumGray.Ellipsized"
+        style="@style/TextView.Small.LightGray.Ellipsized"
         android:paddingLeft="@dimen/appwidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/episodeAirDate"
-        style="@style/TextView.Small.Blue.Bold"
+        style="@style/TextView.Small.MediumGray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/episodeNumber"
