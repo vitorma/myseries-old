@@ -36,8 +36,8 @@
 
     <ImageView
         android:id="@+id/divider1"
-        android:background="@color/text_light_gray"
-        android:layout_width="0.5dp"
+        android:background="@drawable/abs__list_divider_holo_dark"
+        android:layout_width="0.1dp"
         android:layout_height="19dp"
         android:layout_gravity="center_vertical"/>
 
@@ -69,8 +69,8 @@
 
     <ImageView
         android:id="@+id/divider2"
-        android:background="@color/text_light_gray"
-        android:layout_width="0.5dp"
+        android:background="@drawable/abs__list_divider_holo_dark"
+        android:layout_width="0.1dp"
         android:layout_height="19dp"
         android:layout_gravity="center_vertical"/>
 
