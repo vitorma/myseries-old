@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.util.Log;
 
 public final class BitmapResizer {
-    final Bitmap bitmap;
+    Bitmap bitmap;
 
     public BitmapResizer(Bitmap bitmap) {
         Validate.isNonNull(bitmap, "bitmap");
@@ -23,24 +23,21 @@ public final class BitmapResizer {
         
         long start = System.currentTimeMillis();
 
-        final Bitmap destiny = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
+        Bitmap destiny = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
 
-        final float scaleFactor = Math.min((float) this.bitmap.getWidth() / targetWidth,
-                        (float) this.bitmap.getHeight() / targetHeight);
+        int scaleFactor = Math.min(this.bitmap.getWidth() * 1024 / targetWidth,
+                        this.bitmap.getHeight()* 1024 / targetHeight);
         
-        float dx, dy, red, green, blue;
+        int red, green, blue;
         int x, y, m, n;
         int sourceX, sourceY, currentX, currentY;
-        
+        int rfactor;
 
         for (y = 0; y < targetHeight; ++y) {
             for (x = 0; x < targetWidth; ++x) {
 
-                sourceX = clamp(0, (int) (scaleFactor * x), this.bitmap.getWidth() - 1);
-                sourceY = clamp(0, (int) (scaleFactor * y), this.bitmap.getHeight() - 1);
-
-                dx = x - (sourceX * (1 / scaleFactor));
-                dy = y - (sourceY * (1 / scaleFactor));
+                sourceX = ((scaleFactor * x) / 1024);
+                sourceY = ((scaleFactor * y) / 1024);
 
                 red = 0;
                 green = 0;
@@ -50,13 +47,15 @@ public final class BitmapResizer {
                         currentX = clamp(0, sourceX + n, bitmap.getWidth());
                         currentY = clamp(0, sourceY + m, bitmap.getHeight());
 
-                        red += ((Color.red(bitmap.getPixel(currentX, currentY))) * r(m - dx) * r(dy - n));
-                        green += ((Color.green(bitmap.getPixel(currentX, currentY))) * r(m - dx) * r(dy - n));
-                        blue += ((Color.blue(bitmap.getPixel(currentX, currentY))) * r(m - dx) * r(dy - n));
+                        rfactor = (r(m) * r(-n));
+
+                        red += ((Color.red(bitmap.getPixel(currentX, currentY))) * rfactor);
+                        green += ((Color.green(bitmap.getPixel(currentX, currentY))) * rfactor);
+                        blue += ((Color.blue(bitmap.getPixel(currentX, currentY))) * rfactor);
                     }
                 }
 
-                destiny.setPixel(x, y, Color.argb(0xff, (int) red, (int) green, (int) blue));
+                destiny.setPixel(x, y, Color.argb(0xff, red /36, green/36, blue/36));
             }
         }
         
@@ -72,12 +71,11 @@ public final class BitmapResizer {
         return (value < lo) ? (lo) : ((value > hi) ? (hi) : (value));
     }
 
-    private float r(float x) {
-        return ((1.0f / 6.0f) * 
-                (((1 * ppow3((x + 2)) - (4 * ppow3((x + 1)))) + (6 * ppow3((x)))) - (4 * ppow3((x - 1)))));
+    private int r(int x) {
+        return ((((1 * ppow3((x + 2)) - (4 * ppow3((x + 1)))) + (6 * ppow3((x)))) - (4 * ppow3((x - 1)))));
     }
     
-    private float ppow3(float x) {
-        return x < 0.01 ? 0: x * x * x;
+    private int ppow3(int x) {
+        return x <= 0 ? 0: x * x * x;
     }
 }
