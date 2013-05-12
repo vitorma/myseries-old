@@ -64,13 +64,6 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
     //TODO (Reul) Refresh after a successful update
     //TODO (Reul) Refresh after removing all series
     //TODO Menu from xml
-    //TODO Internationalized string
-    private static final String ADD = "ADD SERIES";
-    private static final String REMOVE = "REMOVE SERIES";
-    private static final String UPDATE = "UPDATE";
-    private static final String SETTINGS = "SETTINGS";
-    private static final String BACKUP_RESTORE = "BACKUP/RESTORE";
-    private static final String HELP = "HELP";
 
     private StateHolder state;
 
