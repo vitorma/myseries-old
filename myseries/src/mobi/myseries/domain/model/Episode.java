@@ -156,6 +156,7 @@ public class Episode implements Publisher<EpisodeListener> {
         Validate.isTrue(other.seriesId == this.seriesId, "other should have the same seriesId as this");
         Validate.isTrue(other.seasonNumber == this.seasonNumber, "other should have the same seasonNumber as this");
 
+        this.id = other.id;
         this.number = other.number;
         this.name = other.name;
         this.airDate = other.airDate;
