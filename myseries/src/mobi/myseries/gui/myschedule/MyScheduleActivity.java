@@ -36,18 +36,18 @@ import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.gui.shared.SortingDialogBuilder;
 import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
 import mobi.myseries.gui.shared.TabPagerAdapter;
+import mobi.myseries.gui.shared.TopActivity;
+import net.simonvt.menudrawer.MenuDrawer;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class MyScheduleActivity extends SherlockFragmentActivity implements ScheduleAdapter.Holder {
+public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.Holder {
     private State state;
 
     public static Intent newIntent(Context context, int scheduleMode) {
@@ -62,6 +62,11 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
         this.setContentView(R.layout.myschedule);
         this.setUpState();
         this.setUpActionBar();
+
+        this.getMenu().setTouchMode(
+                this.state.mode == ScheduleMode.RECENT ?
+                MenuDrawer.TOUCH_MODE_FULLSCREEN :
+                MenuDrawer.TOUCH_MODE_BEZEL);
     }
 
     @Override
@@ -111,9 +116,6 @@ public class MyScheduleActivity extends SherlockFragmentActivity implements Sche
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
             case R.id.sorting:
                 this.showSortingDialog();
                 return true;

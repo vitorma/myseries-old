@@ -30,42 +30,41 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.backup.ExternalStorageNotAvailableException;
-import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
 import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.shared.BackupDialogBuilder;
-import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.ButtonOnClickListener;
+import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
 import mobi.myseries.gui.shared.ToastBuilder;
+import mobi.myseries.gui.shared.TopActivity;
+import net.simonvt.menudrawer.MenuDrawer;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
+public class MySeriesActivity extends TopActivity implements UpdateListener {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     //TODO (Reul) Refresh after a successful update
     //TODO (Reul) Refresh after removing all series
     //TODO Menu from xml
     //TODO Internationalized string
-    private static final String SCHEDULE = "SCHEDULE";
     private static final String ADD = "ADD SERIES";
     private static final String REMOVE = "REMOVE SERIES";
     private static final String UPDATE = "UPDATE";
@@ -79,12 +78,15 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
+        super.onCreate(savedInstanceState);
         this.setContentView(R.layout.myseries);
         this.setSupportProgressBarIndeterminateVisibility(false);
 
         ActionBar ab = this.getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setDisplayShowTitleEnabled(true);
         ab.setTitle(R.string.my_series);
 
         App.updateSeriesService().register(this);
@@ -100,6 +102,11 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             this.state.messageLauncher = this.messageLauncher;
             this.launchAutomaticUpdate();
         }
+
+        this.getMenu().setTouchMode(
+                this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ?
+                MenuDrawer.TOUCH_MODE_BEZEL :
+                MenuDrawer.TOUCH_MODE_FULLSCREEN);
     }
 
     private void launchAutomaticUpdate() {
@@ -146,11 +153,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(SCHEDULE)
-        .setIntent(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT))
-        .setIcon(R.drawable.actionbar_calendar)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
         menu.add(ADD)
         .setIcon(R.drawable.actionbar_add)
         .setIntent(new Intent(this, SeriesSearchActivity.class))
@@ -167,7 +169,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         menu.add(SETTINGS)
         .setIcon(R.drawable.actionbar_settings)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        
+
         menu.add(BACKUP_RESTORE)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
@@ -207,7 +209,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         if (item.getTitle().equals(SETTINGS)) {
             this.showSettingsActivity();
         }
-        
+
         if(item.getTitle().equals(BACKUP_RESTORE)) {
             this.showBackupDialog();
         }
@@ -319,7 +321,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             .setMessage(R.string.backup_storage_failure)
             .build().show();
         }
-        
+
     }
     @Override
     public boolean onSearchRequested() {

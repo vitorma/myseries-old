@@ -3,19 +3,18 @@ package mobi.myseries.gui.series;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
+import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.TabsAdapter;
+import net.simonvt.menudrawer.MenuDrawer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
-public class SeriesActivity extends SherlockFragmentActivity {
+public class SeriesActivity extends BaseActivity {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     private static final String SELECTED_TAB = "selectedTab";
@@ -38,6 +37,11 @@ public class SeriesActivity extends SherlockFragmentActivity {
         this.setContentView(R.layout.series);
         this.setUpAttributesFrom(savedInstanceState);
         this.setUpActionBar();
+
+        this.getMenu().setTouchMode(
+                this.selectedTab == DETAILS ?
+                MenuDrawer.TOUCH_MODE_FULLSCREEN :
+                MenuDrawer.TOUCH_MODE_BEZEL);
     }
 
     private void setUpAttributesFrom(Bundle savedInstanceState) {
@@ -83,16 +87,5 @@ public class SeriesActivity extends SherlockFragmentActivity {
         outState.putInt(Extra.SERIES_ID, this.seriesId);
         outState.putInt(SELECTED_TAB, this.selectedTab);
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

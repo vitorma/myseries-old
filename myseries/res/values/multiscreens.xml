@@ -45,4 +45,8 @@
     <dimen name="appwidget_min_width_resizable">250dp</dimen>
     <dimen name="appwidget_margin_resizable">0dp</dimen>
 
+    <!-- SlidingMenu -->
+
+    <dimen name="sliding_menu_width">240dp</dimen>
+
 </resources>
