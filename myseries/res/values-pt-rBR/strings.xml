@@ -151,8 +151,8 @@
     <string name="backup_restore">Fazer backup / Restaurar dados</string>
 
     <!-- Backup -->
-    <string name="backup_description"><b>Fazer backup</b> faz uma cópia dos dados das séries que você acompanha para a pasta de backup. \nTo <b>Restaurar</b> your series data, make sure that theres a valid backup file in backup folder.</string>
-    <string name="backup_folder_file_path">Pasta de backup: <b>%s</b></string>
+    <string name="backup_description"><b>Fazer backup</b> faz uma cópia dos dados das séries que você acompanha para o diretório de backup. \nPara <b>Restaurar</b> os dados das suas séries, certifique-se de que há um arquivo de backup válido no diretório de backup.</string>
+    <string name="backup_folder_file_path">Diretório de backup: <b>%s</b></string>
     <string name="backup_button">Fazer backup</string>
     <string name="restore_button">Restaurar backup</string>
     <string name="overwrite_backup">Essa operação sobrescreverá um backup existente.</string>
