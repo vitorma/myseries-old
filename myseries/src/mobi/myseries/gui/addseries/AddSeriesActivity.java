@@ -1,5 +1,5 @@
 /*
- *   SeriesSearchActivity.java
+ *   AddSeriesActivity.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.seriessearch;
+package mobi.myseries.gui.addseries;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-public class SeriesSearchActivity extends SherlockListActivity {
+public class AddSeriesActivity extends SherlockListActivity {
     private static final SearchSeriesService SEARCH_SERIES_SERVICE = App.searchSeriesService();
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
 
@@ -118,8 +118,8 @@ public class SeriesSearchActivity extends SherlockListActivity {
             if (this.state.seriesFound != null) {
                 this.setupListOnAdapter(this.state.seriesFound);
 
-                EditText searchField = (EditText) SeriesSearchActivity.this.findViewById(R.id.searchField);
-                TextView numberOfResults = (TextView) SeriesSearchActivity.this.findViewById(R.id.numberOfResults);
+                EditText searchField = (EditText) AddSeriesActivity.this.findViewById(R.id.searchField);
+                TextView numberOfResults = (TextView) AddSeriesActivity.this.findViewById(R.id.numberOfResults);
                 String format = this.getString(R.string.number_of_search_results);
                 numberOfResults.setVisibility(View.VISIBLE);
                 numberOfResults.setText(String.format(format, this.state.seriesFound.size(), searchField.getText()));
@@ -173,8 +173,8 @@ public class SeriesSearchActivity extends SherlockListActivity {
             public void onClick(final View v) {
                 searchField.setText("");
                 numberOfResults.setVisibility(View.INVISIBLE);
-                SeriesSearchActivity.this.setListAdapter(null);
-                SeriesSearchActivity.this.state.seriesFound = null;
+                AddSeriesActivity.this.setListAdapter(null);
+                AddSeriesActivity.this.state.seriesFound = null;
             }
         });
     }
@@ -185,7 +185,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                SeriesSearchActivity.this.performSearch();
+                AddSeriesActivity.this.performSearch();
             }
         });
     }
@@ -200,8 +200,8 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
             @Override
             public void onSucess(List<Series> series) {
-                SeriesSearchActivity.this.state.seriesFound = series;
-                SeriesSearchActivity.this.setupListOnAdapter(series);
+                AddSeriesActivity.this.state.seriesFound = series;
+                AddSeriesActivity.this.setupListOnAdapter(series);
 
                 numberOfResults.setVisibility(View.VISIBLE);
                 numberOfResults.setText(String.format(format, series.size(), searchField.getText()));
@@ -211,7 +211,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
             public void onFaluire(Throwable exception) {
                 if (exception instanceof SeriesSearchException) {
                     FailureDialogBuilder dialogBuilder = new FailureDialogBuilder(
-                            SeriesSearchActivity.this);
+                            AddSeriesActivity.this);
 
                     if (exception.getCause() instanceof ConnectionFailedException) {
                         dialogBuilder.setTitle(R.string.connection_failed_title);
@@ -234,22 +234,22 @@ public class SeriesSearchActivity extends SherlockListActivity {
                     }
                     Dialog dialog = dialogBuilder.build();
                     dialog.show();
-                    SeriesSearchActivity.this.state.dialog = dialog;
+                    AddSeriesActivity.this.state.dialog = dialog;
                 }
             }
 
             @Override
             public void onStart() {
-                SeriesSearchActivity.this.state.isSearching = true;
-                SeriesSearchActivity.this.setSupportProgressBarIndeterminateVisibility(true);
+                AddSeriesActivity.this.state.isSearching = true;
+                AddSeriesActivity.this.setSupportProgressBarIndeterminateVisibility(true);
                 searchField.setEnabled(false);
                 buttonPanel.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFinish() {
-                SeriesSearchActivity.this.state.isSearching = false;
-                SeriesSearchActivity.this.setSupportProgressBarIndeterminateVisibility(false);
+                AddSeriesActivity.this.state.isSearching = false;
+                AddSeriesActivity.this.setSupportProgressBarIndeterminateVisibility(false);
                 searchField.setEnabled(true);
                 buttonPanel.setVisibility(View.VISIBLE);
             }
@@ -270,9 +270,9 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
     private void setupListOnAdapter(List<Series> series) {
         ArrayAdapter<Series> adapter = new SeriesSearchItemAdapter(
-                SeriesSearchActivity.this, SeriesSearchActivity.this,
+                AddSeriesActivity.this, AddSeriesActivity.this,
                 R.layout.seriessearch_item, series);
-        SeriesSearchActivity.this.setListAdapter(adapter);
+        AddSeriesActivity.this.setListAdapter(adapter);
     }
 
     private void setupSearchFieldActionListeners() {
@@ -288,8 +288,8 @@ public class SeriesSearchActivity extends SherlockListActivity {
                 } else {
                     buttons.setVisibility(View.INVISIBLE);
                     numberOfResults.setVisibility(View.INVISIBLE);
-                    SeriesSearchActivity.this.setListAdapter(null);
-                    SeriesSearchActivity.this.state.seriesFound = null;
+                    AddSeriesActivity.this.setListAdapter(null);
+                    AddSeriesActivity.this.state.seriesFound = null;
                 }
             }
 
@@ -305,7 +305,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
             public boolean onEditorAction(TextView v, int actionId,
                     KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    SeriesSearchActivity.this.performSearch();
+                    AddSeriesActivity.this.performSearch();
                     return true;
                 }
 
@@ -318,7 +318,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    SeriesSearchActivity.this.performSearch();
+                    AddSeriesActivity.this.performSearch();
                 }
                 return false;
             }
@@ -344,7 +344,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
                         this.userFollowsSeries = FOLLOW_SERIES_SERVICE.follows(this.selectedItem);
 
                         this.dialog = new ConfirmationDialogBuilder(
-                                SeriesSearchActivity.this)
+                                AddSeriesActivity.this)
                                 .setTitle(this.selectedItem.name())
                                 .setMessage(this.selectedItem.overview())
                                 .setSurrogateMessage(R.string.overview_unavailable)
@@ -353,7 +353,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
                                 .setNegativeButton(R.string.back, null).build();
 
                         this.dialog.show();
-                        SeriesSearchActivity.this.state.dialog = this.dialog;
+                        AddSeriesActivity.this.state.dialog = this.dialog;
                     }
 
                     private int followButtonTextResourceId() {
@@ -379,7 +379,7 @@ public class SeriesSearchActivity extends SherlockListActivity {
 
     @Override
     public final boolean onSearchRequested() {
-        final EditText searchField = (EditText) SeriesSearchActivity.this
+        final EditText searchField = (EditText) AddSeriesActivity.this
                 .findViewById(R.id.searchField);
         searchField.requestFocus();
         return true;

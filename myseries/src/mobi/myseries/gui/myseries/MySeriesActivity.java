@@ -32,9 +32,9 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.backup.ExternalStorageNotAvailableException;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
-import mobi.myseries.gui.seriessearch.SeriesSearchActivity;
 import mobi.myseries.gui.shared.BackupDialogBuilder;
 import mobi.myseries.gui.shared.ButtonOnClickListener;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
@@ -148,7 +148,7 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(this.getString(R.string.menu_add))
                 .setIcon(R.drawable.actionbar_add)
-                .setIntent(new Intent(this, SeriesSearchActivity.class))
+                .setIntent(new Intent(this, AddSeriesActivity.class))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(this.getString(R.string.menu_remove))
@@ -350,7 +350,7 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
     // Search----------------------------------------------------------------------------------------
 
     private void showSearchActivity() {
-        final Intent intent = new Intent(this, SeriesSearchActivity.class);
+        final Intent intent = new Intent(this, AddSeriesActivity.class);
         this.startActivity(intent);
     }
 

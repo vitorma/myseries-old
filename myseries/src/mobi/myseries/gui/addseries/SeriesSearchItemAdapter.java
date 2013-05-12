@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.seriessearch;
+package mobi.myseries.gui.addseries;
 
 import java.util.List;
 
@@ -33,9 +33,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public final class SeriesSearchItemAdapter extends ArrayAdapter<Series> {
-    private final SeriesSearchActivity seriesSearchView;
+    private final AddSeriesActivity seriesSearchView;
 
-    public SeriesSearchItemAdapter(SeriesSearchActivity seriesSearchView, Context context,
+    public SeriesSearchItemAdapter(AddSeriesActivity seriesSearchView, Context context,
             int seriesItemResourceId, List<Series> objects) {
         super(context, seriesItemResourceId, objects);
         this.seriesSearchView = seriesSearchView;
