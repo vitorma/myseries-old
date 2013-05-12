@@ -48,6 +48,7 @@
     <string name="status_ended">Ended</string>
     <string name="number_of_search_results" formatted="false">%d results for \'%s\'</string>
     <string name="fraction" formatted="false">%d of %d</string>
+
     <plurals name="plural_episode">
         <item quantity="one">episode</item>
         <item quantity="other">episodes</item>
@@ -121,7 +122,6 @@
     <string name="stop_follow_message_format" formatted="false">Do you want to stop following %s?</string>
     <string name="follow_toast_message_format" formatted="false">The series %s will be added to your list soon.</string>
 
-
     <!-- Adding Error Messages -->
     <string name="add_failed_title">Adding failed</string>
     <string name="add_connection_failed_message">The connection has failed while adding %s. Check your connection and try again.</string>
@@ -142,7 +142,6 @@
     <string name="update_metadata_unavailable">Data us up-to-date.</string>
     <string name="update_success_message">Update complete.</string>
 
-
     <!-- Preferences Activity -->
 
     <string name="update_data_automatically">UPDATE DATA AUTOMATICALLY</string>
@@ -159,16 +158,27 @@
     <string name="overwrite_backup">This operation will overwrite your actual backup.</string>
     <string name="actual_following_series_will_be_replaced">This operation will replace your actual following series by the backup ones.</string>
     <string name="external_storage_not_available">External Storage not available</string>
-    <string name="backup_storage_failure">Please make sure that your SD card is monuted before try to use backup or restore feature.</string>
+    <string name="backup_storage_failure">Please make sure that your SD card is mounted before try to use backup or restore feature.</string>
     <string name="backup_completed">Backup completed!</string>
     <string name="restore_completed">Restore completed!</string>
     <string name="backup_failed_title">Backup failed</string>
     <string name="backup_failed_message">Please verify if your SD card is mounted and has enough space to store the backup.</string>
     <string name="restore_failed_title">Restore failed</string>
-    <string name="restore_failed_message">Please make sure that you SD card is mounted and theres a valid backup fail in the backup folde.r</string>
+    <string name="restore_failed_message">Please make sure that you SD card is mounted and there\'s a valid backup file in the backup folder.</string>
     <string name="no_series_to_restore">The actual backup file has no series to restore.</string>
     <string name="restore_invalid_db_version">The backup file that you are trying to restore from has not a valid database version.</string>
     <string name="restore_invalid_db_file">The backup file that you are trying to restore from is invalid.</string>
+
+    <!-- Menu -->
+
+    <string name="menu_add">ADD SERIES</string>
+    <string name="menu_remove">REMOVE SERIES</string>
+    <string name="menu_update">UPDATE</string>
+    <string name="menu_settings">SETTINGS</string>
+    <string name="menu_backup_restore">BACKUP / RESTORE</string>
+    <string name="menu_schedule">SCHEDULE</string>
+    <string name="menu_help">HELP</string>
+
     <!-- Do not translate -->
 
     <string name="app">MySeries</string>

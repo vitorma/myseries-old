@@ -61,17 +61,9 @@ import com.actionbarsherlock.view.Window;
 public class MySeriesActivity extends SherlockFragmentActivity implements UpdateListener {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
-    //TODO (Reul) Refresh after a successful update
-    //TODO (Reul) Refresh after removing all series
-    //TODO Menu from xml
-    //TODO Internationalized string
-    private static final String SCHEDULE = "SCHEDULE";
-    private static final String ADD = "ADD SERIES";
-    private static final String REMOVE = "REMOVE SERIES";
-    private static final String UPDATE = "UPDATE";
-    private static final String SETTINGS = "SETTINGS";
-    private static final String BACKUP_RESTORE = "BACKUP/RESTORE";
-    private static final String HELP = "HELP";
+    // TODO (Reul) Refresh after a successful update
+    // TODO (Reul) Refresh after removing all series
+    // TODO Menu from xml
 
     private StateHolder state;
 
@@ -120,7 +112,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
 
     private void loadState() {
         this.messageLauncher.loadState();
-        if (this.state.isShowingDialog){
+        if (this.state.isShowingDialog) {
             this.state.dialog.show();
         }
     }
@@ -142,46 +134,46 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         }
     }
 
-    //Menu------------------------------------------------------------------------------------------
+    // Menu------------------------------------------------------------------------------------------
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(SCHEDULE)
-        .setIntent(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT))
-        .setIcon(R.drawable.actionbar_calendar)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(getString(R.string.menu_schedule))
+                .setIntent(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT))
+                .setIcon(R.drawable.actionbar_calendar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(ADD)
-        .setIcon(R.drawable.actionbar_add)
-        .setIntent(new Intent(this, SeriesSearchActivity.class))
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(getString(R.string.menu_add))
+                .setIcon(R.drawable.actionbar_add)
+                .setIntent(new Intent(this, SeriesSearchActivity.class))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(REMOVE)
-        .setIcon(R.drawable.actionbar_remove)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(getString(R.string.menu_remove))
+                .setIcon(R.drawable.actionbar_remove)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(UPDATE)
-        .setIcon(R.drawable.actionbar_update)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(getString(R.string.menu_update))
+                .setIcon(R.drawable.actionbar_update)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-        menu.add(SETTINGS)
-        .setIcon(R.drawable.actionbar_settings)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        
-        menu.add(BACKUP_RESTORE)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(getString(R.string.menu_settings))
+                .setIcon(R.drawable.actionbar_settings)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-        //TODO add intent
-        menu.add(HELP)
-        .setIcon(R.drawable.actionbar_help)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(getString(R.string.menu_backup_restore))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
+        // TODO add intent
+        //menu.add(getString(R.string.menu_help))
+        //        .setIcon(R.drawable.actionbar_help)
+        //        .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         return true;
     }
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        if (item.getTitle().equals(UPDATE)) {
+        if (item.getTitle().equals(getString(R.string.menu_update))) {
 
             final Context context = this;
             final Collection<Series> followedSeries = SERIES_PROVIDER.followedSeries();
@@ -191,7 +183,6 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                 return super.onMenuItemSelected(featureId, item);
             }
 
-
             new Thread() {
                 @Override
                 public void run() {
@@ -200,21 +191,20 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
             }.start();
         }
 
-        if (item.getTitle().equals(REMOVE)) {
+        if (item.getTitle().equals(getString(R.string.menu_remove))) {
             this.showRemoveDialog();
         }
 
-        if (item.getTitle().equals(SETTINGS)) {
+        if (item.getTitle().equals(getString(R.string.menu_settings))) {
             this.showSettingsActivity();
         }
-        
-        if(item.getTitle().equals(BACKUP_RESTORE)) {
+
+        if (item.getTitle().equals(getString(R.string.menu_backup_restore))) {
             this.showBackupDialog();
         }
 
         return super.onMenuItemSelected(featureId, item);
     }
-
 
     private void showRemoveDialog() {
         final Context context = this;
@@ -231,44 +221,46 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         }
 
         new RemovingSeriesDialogBuilder(this)
-        .setDefaultRemovalOptions(removalOptions)
-        .setOnRequestRemovalListener(new OnRequestRemovalListener() {
-            @Override
-            public void onRequestRemoval() {
-                final List<Series> allSeriesToRemove = new ArrayList<Series>();
-
-                for (Series s : removalOptions.keySet()) {
-                    if (removalOptions.get(s)) {
-                        allSeriesToRemove.add(s);
-                    }
-                }
-
-                if (allSeriesToRemove.isEmpty()) {
-                    new ToastBuilder(context)
-                            .setMessage(R.string.no_series_selected_to_remove).build()
-                            .show();
-                    return;
-                }
-
-                new ConfirmationDialogBuilder(context)
-                .setTitle(R.string.are_you_sure)
-                .setMessage(R.string.cannot_be_undone)
-                .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                .setDefaultRemovalOptions(removalOptions)
+                .setOnRequestRemovalListener(new OnRequestRemovalListener() {
                     @Override
-                    public void onClick(Dialog dialog) {
-                        App.followSeriesService().stopFollowingAll(allSeriesToRemove);
-                        Preferences.removeEntriesRelatedToAllSeries(allSeriesToRemove);
+                    public void onRequestRemoval() {
+                        final List<Series> allSeriesToRemove = new ArrayList<Series>();
 
-                        dialog.dismiss();
+                        for (Series s : removalOptions.keySet()) {
+                            if (removalOptions.get(s)) {
+                                allSeriesToRemove.add(s);
+                            }
+                        }
+
+                        if (allSeriesToRemove.isEmpty()) {
+                            new ToastBuilder(context)
+                                    .setMessage(R.string.no_series_selected_to_remove).build()
+                                    .show();
+                            return;
+                        }
+
+                        new ConfirmationDialogBuilder(context)
+                                .setTitle(R.string.are_you_sure)
+                                .setMessage(R.string.cannot_be_undone)
+                                .setNegativeButton(R.string.no, null)
+                                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                                    @Override
+                                    public void onClick(Dialog dialog) {
+                                        App.followSeriesService().stopFollowingAll(
+                                                allSeriesToRemove);
+                                        Preferences
+                                                .removeEntriesRelatedToAllSeries(allSeriesToRemove);
+
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .build()
+                                .show();
                     }
                 })
                 .build()
                 .show();
-            }
-        })
-        .build()
-        .show();
     }
 
     private void showBackupDialog() {
@@ -280,47 +272,48 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
                 @Override
                 public void onClick(Dialog dialog) {
                     new ConfirmationDialogBuilder(dialogBuilder.context())
-                    .setTitle(R.string.are_you_sure)
-                    .setMessage(R.string.overwrite_backup)
-                    .setNegativeButton(R.string.no, null)
-                    .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            App.backupService().doBackup();
-                            dialog.dismiss();
-                        }
-                    })
-                    .build()
-                    .show();
+                            .setTitle(R.string.are_you_sure)
+                            .setMessage(R.string.overwrite_backup)
+                            .setNegativeButton(R.string.no, null)
+                            .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                                @Override
+                                public void onClick(Dialog dialog) {
+                                    App.backupService().doBackup();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .build()
+                            .show();
                 }
             });
             dialogBuilder.setRestoreButtonListener(new ButtonOnClickListener() {
                 @Override
                 public void onClick(Dialog dialog) {
                     new ConfirmationDialogBuilder(dialogBuilder.context())
-                    .setTitle(R.string.are_you_sure)
-                    .setMessage(R.string.actual_following_series_will_be_replaced)
-                    .setNegativeButton(R.string.no, null)
-                    .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            App.backupService().restoreBackup();
-                            dialog.dismiss();
-                        }
-                    })
-                    .build()
-                    .show();
+                            .setTitle(R.string.are_you_sure)
+                            .setMessage(R.string.actual_following_series_will_be_replaced)
+                            .setNegativeButton(R.string.no, null)
+                            .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                                @Override
+                                public void onClick(Dialog dialog) {
+                                    App.backupService().restoreBackup();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .build()
+                            .show();
                 }
             });
             dialogBuilder.build().show();
         } catch (ExternalStorageNotAvailableException e) {
             new FailureDialogBuilder(this)
-            .setTitle(R.string.external_storage_not_available)
-            .setMessage(R.string.backup_storage_failure)
-            .build().show();
+                    .setTitle(R.string.external_storage_not_available)
+                    .setMessage(R.string.backup_storage_failure)
+                    .build().show();
         }
-        
+
     }
+
     @Override
     public boolean onSearchRequested() {
         this.showSearchActivity();
@@ -351,7 +344,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         this.setSupportProgressBarIndeterminateVisibility(false);
     }
 
-    //Search----------------------------------------------------------------------------------------
+    // Search----------------------------------------------------------------------------------------
 
     private void showSearchActivity() {
         final Intent intent = new Intent(this, SeriesSearchActivity.class);
@@ -364,8 +357,7 @@ public class MySeriesActivity extends SherlockFragmentActivity implements Update
         MessageLauncher messageLauncher;
     }
 
-
-    //Settings--------------------------------------------------------------------------------------
+    // Settings--------------------------------------------------------------------------------------
     private void showSettingsActivity() {
         this.startActivity(PreferencesActivity.newIntent(this));
     }
