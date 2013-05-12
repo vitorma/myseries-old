@@ -241,7 +241,25 @@ public class EpisodeTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void mergingAnEpisodeWithAnotherHavingADifferentIdCausesIllegalArgumentException() {
+    public void mergingAnEpisodeWithAnotherHavingADifferentNumberCausesIllegalArgumentException() {
+        Episode episode1 = Episode.builder()
+            .withId(ID1)
+            .withSeriesId(SERIES_ID1)
+            .withNumber(NUMBER1)
+            .withSeasonNumber(SEASON_NUMBER1)
+            .build();
+
+        Episode episode2 = Episode.builder()
+            .withId(ID1)
+            .withSeriesId(SERIES_ID1)
+            .withNumber(NUMBER2)
+            .withSeasonNumber(SEASON_NUMBER1)
+            .build();
+
+        episode1.mergeWith(episode2);
+    }
+
+    public void mergingAnEpisodeWithAnotherHavingADifferentId() {
         Episode episode1 = Episode.builder()
             .withId(ID1)
             .withSeriesId(SERIES_ID1)
@@ -259,6 +277,7 @@ public class EpisodeTest {
         episode1.mergeWith(episode2);
     }
 
+    
     @Test(expected = IllegalArgumentException.class)
     public void mergingAnEpisodeWithAnotherHavingADifferentSeriesIdCausesIllegalArgumentException() {
         Episode episode1 = Episode.builder()
@@ -276,27 +295,6 @@ public class EpisodeTest {
             .build();
 
         episode1.mergeWith(episode2);
-    }
-
-    @Test
-    public void mergingAnEpisodeWithAnotherHavingADifferentNumber() {
-        Episode episode1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
-
-        Episode episode2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
-
-        episode1.mergeWith(episode2);
-
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -532,25 +530,40 @@ public class EpisodeTest {
             .build();
 
         Episode e2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID2)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER2)
+            .withId(ID2)
+            .withSeriesId(SERIES_ID1)
+            .withNumber(NUMBER1)
+            .withSeasonNumber(SEASON_NUMBER1)
             .build();
 
         Episode e3 = Episode.builder()
             .withId(ID1)
-            .withSeriesId(SERIES_ID2)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER2)
+            .withSeriesId(SERIES_ID1)
+            .withNumber(NUMBER1)
+            .withSeasonNumber(SEASON_NUMBER1)
             .build();
 
         Episode e4 = Episode.builder()
             .withId(ID2)
-            .withSeriesId(SERIES_ID2)
+            .withSeriesId(SERIES_ID1)
             .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER2)
+            .withSeasonNumber(SEASON_NUMBER1)
             .build();
+        
+        Episode e5 = Episode.builder()
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER2)
+                .build();
+
+        Episode e6 = Episode.builder()
+                .withId(ID1)
+                .withSeriesId(SERIES_ID2)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER2)
+                .build();
+        
 
         //equals is consistent
         for (int i = 1; i <= 1000; i++) {
@@ -570,8 +583,13 @@ public class EpisodeTest {
             Assert.assertTrue(e2.equals(e3));
             Assert.assertTrue(e1.equals(e3));
 
-            //episodes are equal if and only if they have the same id
-            Assert.assertFalse(e2.equals(e4));
+            //episodes are equal if and only if they have the same series id and season number and number
+            Assert.assertFalse(e3.equals(e4));
+            Assert.assertFalse(e3.equals(e5));
+            Assert.assertFalse(e3.equals(e6));
+            Assert.assertFalse(e4.equals(e5));
+            Assert.assertFalse(e4.equals(e6));
+            Assert.assertFalse(e5.equals(e6));
         }
     }
 
