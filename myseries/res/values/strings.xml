@@ -48,6 +48,8 @@
     <string name="status_ended">Ended</string>
     <string name="number_of_search_results" formatted="false">%d results for \'%s\'</string>
     <string name="fraction" formatted="false">%d of %d</string>
+    <string name="trending">TRENDING</string>
+    <string name="powered_by_trakt">Powered by Trakt.tv</string>
 
     <plurals name="plural_episode">
         <item quantity="one">episode</item>
@@ -86,7 +88,7 @@
     <string name="powered_by_thetvdb">Powered by TheTVDB.com</string>
     <string name="recent">RECENT</string>
     <string name="add_series">Add Series</string>
-    <string name="search">Search</string>
+    <string name="search">SEARCH</string>
     <string name="seasons">Seasons</string>
     <string name="series_name">Series name</string>
     <string name="settings">Settings</string>
@@ -98,6 +100,8 @@
     <string name="update_series_data">Update series data</string>
     <string name="writers">WRITERS</string>
     <string name="yes">Yes</string>
+    <string name="add">Add</string>
+    <string name="dont_add">Don\'t add</string>
 
     <!-- Label formats -->
 
@@ -123,12 +127,15 @@
     <string name="follow_toast_message_format" formatted="false">The series %s will be added to your list soon.</string>
 
     <!-- Adding Error Messages -->
+
+    <string name="add_already_followed_series_message">You already follow \'%s\'.</string>
     <string name="add_failed_title">Adding failed</string>
     <string name="add_connection_failed_message">The connection has failed while adding %s. Check your connection and try again.</string>
     <string name="add_series_not_found">The database has returned "series not found" while adding %s. Check your connection and configurations then try again.</string>
     <string name="add_parsing_failed">Error reading file from the web while adding %s. Your connection may be too slow.</string>
 
     <!-- Update  Messages -->
+
     <string name="update_failed_title">Update failed</string>
     <string name="no_series_to_update">No series to update.</string>
     <string name="update_network_unavailable">You must be connected to the Internet.</string>
@@ -151,6 +158,7 @@
     <string name="backup_restore">Backup/Restore</string>
 
     <!-- Backup -->
+
     <string name="backup_description"><b>Backup</b> makes a copy of your actual following series to backup folder. \nTo <b>Restore</b> your series data, make sure that theres a valid backup file in backup folder.</string>
     <string name="backup_folder_file_path">Backup Folder: <b>%s</b></string>
     <string name="backup_button">Backup</string>

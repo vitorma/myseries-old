@@ -63,10 +63,7 @@ public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.H
         this.setUpState();
         this.setUpActionBar();
 
-        this.getMenu().setTouchMode(
-                this.state.mode == ScheduleMode.RECENT ?
-                MenuDrawer.TOUCH_MODE_FULLSCREEN :
-                MenuDrawer.TOUCH_MODE_BEZEL);
+        this.getMenu().setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
     }
 
     @Override

@@ -36,7 +36,7 @@ import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
 import mobi.myseries.gui.shared.BackupDialogBuilder;
-import mobi.myseries.gui.shared.ButtonOnClickListener;
+import mobi.myseries.gui.shared.DialogButtonOnClickListener;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
@@ -247,7 +247,7 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
                                 .setTitle(R.string.are_you_sure)
                                 .setMessage(R.string.cannot_be_undone)
                                 .setNegativeButton(R.string.no, null)
-                                .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                                .setPositiveButton(R.string.yes, new DialogButtonOnClickListener() {
                                     @Override
                                     public void onClick(Dialog dialog) {
                                         App.followSeriesService().stopFollowingAll(
@@ -271,14 +271,14 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
             final BackupDialogBuilder dialogBuilder = new BackupDialogBuilder(this);
             String folderPath = App.backupService().backupFolderPath();
             dialogBuilder.setBackupFolder(folderPath);
-            dialogBuilder.setBackupButtonListener(new ButtonOnClickListener() {
+            dialogBuilder.setBackupButtonListener(new DialogButtonOnClickListener() {
                 @Override
                 public void onClick(Dialog dialog) {
                     new ConfirmationDialogBuilder(dialogBuilder.context())
                             .setTitle(R.string.are_you_sure)
                             .setMessage(R.string.overwrite_backup)
                             .setNegativeButton(R.string.no, null)
-                            .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                            .setPositiveButton(R.string.yes, new DialogButtonOnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {
                                     App.backupService().doBackup();
@@ -289,14 +289,14 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
                             .show();
                 }
             });
-            dialogBuilder.setRestoreButtonListener(new ButtonOnClickListener() {
+            dialogBuilder.setRestoreButtonListener(new DialogButtonOnClickListener() {
                 @Override
                 public void onClick(Dialog dialog) {
                     new ConfirmationDialogBuilder(dialogBuilder.context())
                             .setTitle(R.string.are_you_sure)
                             .setMessage(R.string.actual_following_series_will_be_replaced)
                             .setNegativeButton(R.string.no, null)
-                            .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
+                            .setPositiveButton(R.string.yes, new DialogButtonOnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {
                                     App.backupService().restoreBackup();
