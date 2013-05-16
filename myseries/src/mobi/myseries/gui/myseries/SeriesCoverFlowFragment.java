@@ -113,7 +113,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         super.onCreate(savedInstanceState);
 
         UPDATE_SERIES_SERVICE.register(this.updateListener);
-        FOLLOW_SERIES_SERVICE.registerSeriesFollowingListener(this.seriesFollowingListener);
+        FOLLOW_SERIES_SERVICE.register(this.seriesFollowingListener);
     }
 
     @Override

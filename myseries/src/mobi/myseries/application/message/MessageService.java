@@ -2,29 +2,39 @@ package mobi.myseries.application.message;
 
 import java.util.Collection;
 
-import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
+import mobi.myseries.application.backup.BackupService;
+import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.update.UpdateListener;
+import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.shared.Publisher;
 
-public class MessageService implements SeriesFollowingListener, UpdateListener, BackupListener{
+public class MessageService implements
+        Publisher<MessageServiceListener>,
+        SeriesFollowingListener, UpdateListener, BackupListener {
 
     private ListenerSet<MessageServiceListener> listeners;
 
-    public MessageService() {
+    public MessageService(
+            FollowSeriesService followSeriesService,
+            UpdateService updateService,
+            BackupService backupService) {
+
         this.listeners = new ListenerSet<MessageServiceListener>();
-        App.followSeriesService().registerSeriesFollowingListener(this);
-        App.updateSeriesService().register(this);
-        App.backupService().register(this);
+
+        followSeriesService.register(this);
+        updateService.register(this);
+        backupService.register(this);
     }
 
-    public boolean registerListener(MessageServiceListener l) {
+    public boolean register(MessageServiceListener l) {
         return this.listeners.register(l);
     }
 
-    public boolean deregisterListener(MessageServiceListener l) {
+    public boolean deregister(MessageServiceListener l) {
         return this.listeners.deregister(l);
     }
 
@@ -65,7 +75,7 @@ public class MessageService implements SeriesFollowingListener, UpdateListener, 
         }
     }
 
-    private void notifyBackupSucess() {
+    private void notifyBackupSuccess() {
         for (MessageServiceListener l : listeners) {
             l.onBackupSucess();
         }
@@ -77,6 +87,20 @@ public class MessageService implements SeriesFollowingListener, UpdateListener, 
         }
     }
 
+    private void notifyRestoreSuccess() {
+        for (MessageServiceListener l : listeners) {
+            l.onRestoreSucess();
+        }
+    }
+
+    private void notifyRestoreFailure(Exception e) {
+        for (MessageServiceListener l : listeners) {
+            l.onRestoreFailure(e);
+        }
+    }
+
+    // Following and stop following
+
     @Override
     public void onFollowingStart(Series seriesToFollow) {
         notifyFollowingStart(seriesToFollow);
@@ -85,7 +109,6 @@ public class MessageService implements SeriesFollowingListener, UpdateListener, 
     @Override
     public void onFollowing(Series followedSeries) {
         notifyFollowingSuccess(followedSeries);
-
     }
 
     @Override
@@ -95,9 +118,15 @@ public class MessageService implements SeriesFollowingListener, UpdateListener, 
     public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {}
 
     @Override
+    public void onFollowingFailure(Series series, Exception e) {
+        notifyFollowingError(series, e);
+    }
+
+    // Update
+
+    @Override
     public void onUpdateStart() {
         notifyUpdateStart();
-
     }
 
     @Override
@@ -113,45 +142,25 @@ public class MessageService implements SeriesFollowingListener, UpdateListener, 
         notifyUpdateSuccess();
     }
 
-    @Override
-    public void onFollowingFailure(Series series, Exception e) {
-        notifyFollowingError(series, e);
-    }
+    // Backup and restore
 
     @Override
     public void onBackupSucess() {
-        notifyBackupSucess();
-        
+        notifyBackupSuccess();
     }
 
     @Override
     public void onBackupFailure(Exception e) {
         notifyBackupFailure(e);
-        
     }
 
     @Override
     public void onRestoreSucess() {
-        notifyRestoreSucess();
-        
-    }
-
-    private void notifyRestoreSucess() {
-        for (MessageServiceListener l : listeners) {
-            l.onRestoreSucess();
-        }
+        notifyRestoreSuccess();
     }
 
     @Override
     public void onRestoreFailure(Exception e) {
         notifyRestoreFailure(e);
-        
     }
-
-    private void notifyRestoreFailure(Exception e) {
-        for (MessageServiceListener l : listeners) {
-            l.onRestoreFailure(e);
-        }
-    }
-
 }

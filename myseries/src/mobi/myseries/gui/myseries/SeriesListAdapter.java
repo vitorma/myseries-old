@@ -35,7 +35,7 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
     private List<Series> items;
 
     public SeriesListAdapter() {
-        App.followSeriesService().registerSeriesFollowingListener(this.seriesFollowingListener);
+        App.followSeriesService().register(this.seriesFollowingListener);
         App.updateSeriesService().register(this.updateListener);
         App.backupService().register(this.backupListener);
 
