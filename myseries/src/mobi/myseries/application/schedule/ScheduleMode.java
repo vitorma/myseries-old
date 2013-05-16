@@ -29,7 +29,7 @@ import java.util.List;
 
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
-import mobi.myseries.application.update.UpdateListener;
+import mobi.myseries.application.update.UpdateFinishListener;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
@@ -39,7 +39,7 @@ import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 
-public abstract class ScheduleMode implements Publisher<ScheduleListener>, SeriesFollowingListener, UpdateListener {
+public abstract class ScheduleMode implements Publisher<ScheduleListener>, SeriesFollowingListener, UpdateFinishListener {
     public static final int RECENT = 0;
     public static final int NEXT = 1;
     public static final int UPCOMING = 2;
@@ -139,21 +139,10 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
         this.notifyOnScheduleStructureChanged();
     }
 
-    /* UpdateListener */
+    /* UpdateFinishListener */
 
     @Override
-    public final void onUpdateStart() { }
-
-    // TODO(Gabriel) Shouldn't we do something here?
-    // Can't the series have been partially updated after a failure?
-    @Override
-    public final void onUpdateFailure(Exception e) { }
-
-    @Override
-    public final void onUpdateSuccess() {
+    public void onUpdateFinish() {
         this.notifyOnScheduleStructureChanged();
     }
-
-    @Override
-    public final void onUpdateNotNecessary() { }
 }
