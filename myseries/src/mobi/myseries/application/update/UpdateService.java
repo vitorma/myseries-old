@@ -24,17 +24,23 @@ import mobi.myseries.shared.Validate;
 import android.os.Handler;
 import android.util.Log;
 
-public class UpdateService implements Publisher<UpdateListener> {
-    private SeriesSource seriesSource;
-    private SeriesRepository seriesRepository;
-    private ImageService imageService;
+// Java's type system does not allow us to declare Publisher more than once, even with different type arguments.
+// Anyway, it de facto implements this interface.
+public class UpdateService implements Publisher<UpdateListener>/*, Publisher<UpdateFinishListener>*/ {
+    private final SeriesSource seriesSource;
+    private final SeriesRepository seriesRepository;
+    private final ImageService imageService;
+    private final LocalizationProvider localizationProvider;
+    private final BroadcastService broadcastService;
+
     private final ListenerSet<UpdateListener> updateListeners;
+    private final ListenerSet<UpdateFinishListener> updateFinishListeners;
+
     private boolean updateRunning = false;
+
     private UpdateListener selfListener;
     private Handler handler;
-    private LocalizationProvider localizationProvider;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final BroadcastService broadcastService;
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
             LocalizationProvider localizationProvider, ImageService imageService,
@@ -49,9 +55,11 @@ public class UpdateService implements Publisher<UpdateListener> {
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
         this.imageService = imageService;
-        this.updateListeners = new ListenerSet<UpdateListener>();
         this.localizationProvider = localizationProvider;
         this.broadcastService = broadcastService;
+
+        this.updateListeners = new ListenerSet<UpdateListener>();
+        this.updateFinishListeners = new ListenerSet<UpdateFinishListener>();
 
         this.selfListener = new UpdateListener() {
 
@@ -119,9 +127,8 @@ public class UpdateService implements Publisher<UpdateListener> {
 
         if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.automaticUpdateInterval()) {
             Log.d(getClass().getName(), "Update ran recently. Not running now.");
-
         } else {
-            update();
+            update(false);
             Log.d(getClass().getName(), "Launching update.");
         }
     }
@@ -138,8 +145,14 @@ public class UpdateService implements Publisher<UpdateListener> {
         return updateListeners.deregister(listener);
     }
 
-    private void update() {
-        this.update(false);
+    // interface Publisher<UpdateFinishListener>
+
+    public boolean register(UpdateFinishListener listener) {
+        return updateFinishListeners.register(listener);
+    }
+
+    public boolean deregister(UpdateFinishListener listener) {
+        return updateFinishListeners.deregister(listener);
     }
 
     private void update(boolean forceUpdateRecent) {
@@ -316,6 +329,9 @@ public class UpdateService implements Publisher<UpdateListener> {
                 for (final UpdateListener listener : updateListeners) {
                     listener.onUpdateSuccess();
                 }
+                for (final UpdateFinishListener listener : updateFinishListeners) {
+                    listener.onUpdateFinish();
+                }
             }
         });
     }
@@ -326,6 +342,9 @@ public class UpdateService implements Publisher<UpdateListener> {
             public void run() {
                 for (final UpdateListener listener : updateListeners) {
                     listener.onUpdateFailure(cause);
+                }
+                for (final UpdateFinishListener listener : updateFinishListeners) {
+                    listener.onUpdateFinish();
                 }
             }
         });

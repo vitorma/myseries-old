@@ -93,7 +93,7 @@ public class FollowSeriesServiceTests {
                                                            this.broadcastService,
                                                            false);
 
-        this.followSeriesService.registerSeriesFollowingListener(this.seriesFollowingListener);
+        this.followSeriesService.register(this.seriesFollowingListener);
     }
 
     @After
@@ -324,6 +324,6 @@ public class FollowSeriesServiceTests {
 
     @Test(expected=IllegalArgumentException.class)
     public void cannotRegisterNullFollowingListeners() {
-        this.followSeriesService.registerSeriesFollowingListener(null);
+        this.followSeriesService.register(null);
     }
 }

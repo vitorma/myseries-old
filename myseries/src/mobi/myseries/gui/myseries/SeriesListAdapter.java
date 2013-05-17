@@ -10,7 +10,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.follow.SeriesFollowingListener;
-import mobi.myseries.application.update.UpdateListener;
+import mobi.myseries.application.update.UpdateFinishListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.shared.Images;
@@ -35,7 +35,7 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
     private List<Series> items;
 
     public SeriesListAdapter() {
-        App.followSeriesService().registerSeriesFollowingListener(this.seriesFollowingListener);
+        App.followSeriesService().register(this.seriesFollowingListener);
         App.updateSeriesService().register(this.updateListener);
         App.backupService().register(this.backupListener);
 
@@ -207,24 +207,13 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
         }
     };
 
-    /* UpdateListener */
+    /* UpdateFinishListener */
 
-    private UpdateListener updateListener = new UpdateListener() {
+    private UpdateFinishListener updateListener = new UpdateFinishListener() {
         @Override
-        public void onUpdateSuccess() {
+        public void onUpdateFinish() {
             SeriesListAdapter.this.reload();
         }
-
-        @Override
-        public void onUpdateFailure(Exception e) {
-            SeriesListAdapter.this.reload();
-        }
-
-        @Override
-        public void onUpdateStart() {}
-
-        @Override
-        public void onUpdateNotNecessary() {}
     };
 
     /* BackupListener */

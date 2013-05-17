@@ -94,7 +94,7 @@ public class App extends Application {
 
         backupService = new BackupService(environment.seriesRepository());
 
-        messageService = new MessageService();
+        messageService = new MessageService(followSeriesService, updateService, backupService);
 
         seriesProvider = new SeriesProvider(environment.seriesRepository(), broadcastService);
 
