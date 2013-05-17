@@ -58,8 +58,6 @@ public class App extends Application {
 
         environment = new Environment(this);
 
-        broadcastService = new BroadcastService(this);
-
         imageService = new ImageService(
                 environment.imageSource(),
                 environment.imageRepository(),
@@ -77,8 +75,9 @@ public class App extends Application {
                 environment.seriesRepository(),
                 environment.localizationProvider(),
                 imageService,
-                errorService,
-                broadcastService);
+                errorService);
+
+        broadcastService = new BroadcastService(this, followSeriesService);
 
         updateService = new UpdateService(
                 environment.seriesSource(),
