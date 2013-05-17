@@ -21,32 +21,17 @@
 
 package mobi.myseries.application.broadcast;
 
-import java.util.Collection;
-
-import mobi.myseries.application.follow.FollowSeriesService;
-import mobi.myseries.application.follow.SeriesFollowingListener;
-import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.content.Intent;
 
-public class BroadcastService implements SeriesFollowingListener {
+public class BroadcastService {
     private Context context;
 
-    // FIXME(Gabriel): Check whether this constructor is really necessary. It should be deprecated.
     public BroadcastService(Context context) {
         Validate.isNonNull(context, "context");
 
         this.context = context;
-    }
-
-    public BroadcastService(Context context, FollowSeriesService followSeriesService) {
-        Validate.isNonNull(context, "context");
-        Validate.isNonNull(followSeriesService, "followSeriesService");
-
-        this.context = context;
-
-        followSeriesService.register(this);
     }
 
     public void broadcastSeenMarkup() {
@@ -57,38 +42,15 @@ public class BroadcastService implements SeriesFollowingListener {
         this.context.sendBroadcast(new Intent(BroadcastAction.UPDATE));
     }
 
-    private void broadcastAddiction() {
+    public void broadcastAddiction() {
         this.context.sendBroadcast(new Intent(BroadcastAction.ADDICTION));
     }
 
-    private void broadcastRemoval() {
+    public void broadcastRemoval() {
         this.context.sendBroadcast(new Intent(BroadcastAction.REMOVAL));
     }
 
     public void broadcastConfigurationChange() {
         this.context.sendBroadcast(new Intent(BroadcastAction.CONFIGURATION_CHANGE));
     }
-
-    // SeriesFollowingListener
-
-    @Override
-    public void onFollowing(Series followedSeries) {
-        this.broadcastAddiction();
-    }
-
-    @Override
-    public void onStopFollowing(Series unfollowedSeries) {
-        this.broadcastRemoval();
-    }
-
-    @Override
-    public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
-        this.broadcastRemoval();
-    }
-
-    @Override
-    public void onFollowingStart(Series seriesToFollow) {}
-
-    @Override
-    public void onFollowingFailure(Series series, Exception e) {}
 }

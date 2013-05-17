@@ -34,6 +34,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import mobi.myseries.application.LocalizationProvider;
+import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
@@ -66,6 +67,7 @@ public class FollowSeriesServiceTests {
     private LocalizationProvider localizationProvider;
     private ImageService imageService;
     private ErrorService errorService;
+    private BroadcastService broadcastService;
 
     private SeriesFollowingListener seriesFollowingListener;
 
@@ -74,6 +76,7 @@ public class FollowSeriesServiceTests {
         this.seriesSource = mock(SeriesSource.class);
         this.seriesRepository = mock(SeriesRepository.class);
         this.errorService = mock(ErrorService.class);
+        this.broadcastService = mock(BroadcastService.class);
 
         this.localizationProvider = mock(LocalizationProvider.class);
         when(this.localizationProvider.language()).thenReturn("en");
@@ -87,6 +90,7 @@ public class FollowSeriesServiceTests {
                                                            this.localizationProvider,
                                                            this.imageService,
                                                            this.errorService,
+                                                           this.broadcastService,
                                                            false);
 
         this.followSeriesService.register(this.seriesFollowingListener);
@@ -109,7 +113,8 @@ public class FollowSeriesServiceTests {
                                 this.seriesRepository,
                                 this.localizationProvider,
                                 this.imageService,
-                                this.errorService);
+                                this.errorService,
+                                this.broadcastService);
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -118,7 +123,8 @@ public class FollowSeriesServiceTests {
                                 null,
                                 this.localizationProvider,
                                 this.imageService,
-                                this.errorService);
+                                this.errorService,
+                                this.broadcastService);
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -127,7 +133,8 @@ public class FollowSeriesServiceTests {
                                 this.seriesRepository,
                                 null,
                                 this.imageService,
-                                this.errorService);
+                                this.errorService,
+                                this.broadcastService);
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -136,7 +143,8 @@ public class FollowSeriesServiceTests {
                                 this.seriesRepository,
                                 this.localizationProvider,
                                 null,
-                                this.errorService);
+                                this.errorService,
+                                this.broadcastService);
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -145,6 +153,17 @@ public class FollowSeriesServiceTests {
                                 this.seriesRepository,
                                 this.localizationProvider,
                                 this.imageService,
+                                null,
+                                this.broadcastService);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void itShouldNotAcceptNullBroadcastService() {
+        new FollowSeriesService(this.seriesSource,
+                                this.seriesRepository,
+                                this.localizationProvider,
+                                this.imageService,
+                                this.errorService,
                                 null);
     }
 

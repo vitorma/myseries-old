@@ -24,6 +24,7 @@ package mobi.myseries.application.follow;
 import java.util.Collection;
 
 import mobi.myseries.application.LocalizationProvider;
+import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
@@ -45,6 +46,7 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
     private LocalizationProvider localizationProvider;
     private ImageService imageService;
     private ErrorService errorService;
+    private BroadcastService broadcastService;
     private SeriesFollower seriesFollower;
     private final ListenerSet<SeriesFollowingListener> seriesFollowingListeners;
 
@@ -52,8 +54,9 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
             SeriesRepository seriesRepository,
             LocalizationProvider localizationProvider,
             ImageService imageService,
-            ErrorService errorService) {
-        this(seriesSource, seriesRepository, localizationProvider, imageService, errorService, true);
+            ErrorService errorService,
+            BroadcastService broadcastService) {
+        this(seriesSource, seriesRepository, localizationProvider, imageService, errorService, broadcastService, true);
     }
 
     public FollowSeriesService(SeriesSource seriesSource,
@@ -61,18 +64,21 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
             LocalizationProvider localizationProvider,
             ImageService imageService,
             ErrorService errorService,
+            BroadcastService broadcastService,
             boolean asyncFollowing) {
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
         Validate.isNonNull(imageService, "imageService");
         Validate.isNonNull(errorService, "errorService");
+        Validate.isNonNull(broadcastService, "broadcastService");
 
         this.seriesSource = seriesSource;
         this.seriesRepository = seriesRepository;
         this.localizationProvider = localizationProvider;
         this.imageService = imageService;
         this.errorService = errorService;
+        this.broadcastService = broadcastService;
         this.seriesFollower = (asyncFollowing ? new AsynchronousFollower() : new SynchronousFollower());
         this.seriesFollowingListeners = new ListenerSet<SeriesFollowingListener>();
     }
@@ -135,6 +141,8 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
         for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
             listener.onFollowing(followedSeries);
         }
+
+        this.broadcastService.broadcastAddiction();
     }
 
     private void notifyListenersOfFollowingError(Series series, Exception e) {
@@ -147,12 +155,16 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
         for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
             listener.onStopFollowing(unfollowedSeries);
         }
+
+        this.broadcastService.broadcastRemoval();
     }
 
     private void notifyListenersOfUnfollowedSeries(Collection<Series> allUnfollowedSeries) {
         for (final SeriesFollowingListener listener : this.seriesFollowingListeners) {
             listener.onStopFollowingAll(allUnfollowedSeries);
         }
+
+        this.broadcastService.broadcastRemoval();
     }
 
     private abstract class SeriesFollower {
