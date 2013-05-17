@@ -1,5 +1,5 @@
 /*
- *   SearchSeriesFragment.java
+ *   SearchFragment.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -33,54 +33,36 @@ import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-
-public class SearchSeriesFragment extends SherlockListFragment {
+public class SearchFragment extends AddSeriesFragment {
 
     private SearchSeriesListener searchListener;
     private boolean isSearching;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.setRetainInstance(true);
+    protected int layoutResource() {
+        return R.layout.addseries_search;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    protected void setUp() {
         this.setUpSearchListener();
         this.setUpSearchFieldActionListeners();
         this.setUpClearButtonClickListener();
         this.setUpSearchButtonClickListener();
-        this.setUpItemClickListener();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.addseries_search, container, false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
+    protected void onStartFired() {
         App.searchSeriesService().registerListener(this.searchListener);
 
         if (this.isSearching) {
@@ -89,9 +71,7 @@ public class SearchSeriesFragment extends SherlockListFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-
+    protected void onStopFired() {
         App.searchSeriesService().deregisterListener(this.searchListener);
     }
 
@@ -108,7 +88,7 @@ public class SearchSeriesFragment extends SherlockListFragment {
                 } else {
                     buttons.setVisibility(View.INVISIBLE);
                     numberOfResults.setVisibility(View.INVISIBLE);
-                    SearchSeriesFragment.this.setListAdapter(null);
+                    SearchFragment.this.setListAdapter(null);
                 }
             }
 
@@ -123,7 +103,7 @@ public class SearchSeriesFragment extends SherlockListFragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    SearchSeriesFragment.this.performSearch();
+                    SearchFragment.this.performSearch();
                     return true;
                 }
 
@@ -135,7 +115,7 @@ public class SearchSeriesFragment extends SherlockListFragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    SearchSeriesFragment.this.performSearch();
+                    SearchFragment.this.performSearch();
                     return true;
                 }
 
@@ -154,7 +134,7 @@ public class SearchSeriesFragment extends SherlockListFragment {
             public void onClick(final View v) {
                 searchField.setText("");
                 numberOfResults.setVisibility(View.INVISIBLE);
-                SearchSeriesFragment.this.setListAdapter(null);
+                SearchFragment.this.setListAdapter(null);
             }
         });
     }
@@ -165,7 +145,7 @@ public class SearchSeriesFragment extends SherlockListFragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                SearchSeriesFragment.this.performSearch();
+                SearchFragment.this.performSearch();
             }
         });
     }
@@ -193,7 +173,7 @@ public class SearchSeriesFragment extends SherlockListFragment {
         return new SearchSeriesListener() {
             @Override
             public void onSucess(List<Series> series) {
-                SearchSeriesFragment.this.setUpListOnAdapter(series);
+                SearchFragment.this.setUpListOnAdapter(series);
                 numberOfResults.setVisibility(View.VISIBLE);
                 numberOfResults.setText(String.format(format, series.size(), searchField.getText()));
             }
@@ -202,23 +182,23 @@ public class SearchSeriesFragment extends SherlockListFragment {
             public void onFaluire(Throwable exception) {
                 if (exception instanceof SeriesSearchException) {
                     if (exception.getCause() instanceof ConnectionFailedException) {
-                        SearchSeriesFragment.this.activity().onSearchFailure(
+                        SearchFragment.this.activity().onSearchFailure(
                                 R.string.connection_failed_title,
                                 R.string.connection_failed_message);
                     } else if (exception.getCause() instanceof InvalidSearchCriteriaException) {
-                        SearchSeriesFragment.this.activity().onSearchFailure(
+                        SearchFragment.this.activity().onSearchFailure(
                                 R.string.invalid_criteria_title,
                                 R.string.invalid_criteria_message);
                     } else if (exception.getCause() instanceof SeriesNotFoundException) {
-                        SearchSeriesFragment.this.activity().onSearchFailure(
+                        SearchFragment.this.activity().onSearchFailure(
                                 R.string.no_results_title,
                                 R.string.no_results_message);
                     } else if (exception.getCause() instanceof ParsingFailedException) {
-                        SearchSeriesFragment.this.activity().onSearchFailure(
+                        SearchFragment.this.activity().onSearchFailure(
                                 R.string.parsing_failed_title,
                                 R.string.parsing_failed_message);
                     } else if (exception.getCause() instanceof ConnectionTimeoutException){
-                        SearchSeriesFragment.this.activity().onSearchFailure(
+                        SearchFragment.this.activity().onSearchFailure(
                                 R.string.connection_timeout_title,
                                 R.string.connection_timeout_message);
                     }
@@ -230,8 +210,8 @@ public class SearchSeriesFragment extends SherlockListFragment {
                 searchField.setEnabled(false);
                 buttonPanel.setVisibility(View.INVISIBLE);
 
-                SearchSeriesFragment.this.isSearching = true;
-                SearchSeriesFragment.this.activity().onSearchStart();
+                SearchFragment.this.isSearching = true;
+                SearchFragment.this.activity().onSearchStart();
             }
 
             @Override
@@ -239,35 +219,15 @@ public class SearchSeriesFragment extends SherlockListFragment {
                 searchField.setEnabled(true);
                 buttonPanel.setVisibility(View.VISIBLE);
 
-                SearchSeriesFragment.this.isSearching = false;
-                SearchSeriesFragment.this.activity().onSearchFinish();
+                SearchFragment.this.isSearching = false;
+                SearchFragment.this.activity().onSearchFinish();
             }
         };
     }
 
     private void setUpListOnAdapter(List<Series> series) {
         this.setListAdapter(
-            new SeriesSearchItemAdapter(
-                this.activity(),
-                this.activity(),
-                R.layout.addseries_search_item, series
-            )
+            new AddSeriesAdapter(this.activity(), R.layout.addseries_search_item, series)
         );
-    }
-
-    private void setUpItemClickListener() {
-        this.getListView().setOnItemClickListener(
-            new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Series selectedItem = (Series) parent.getItemAtPosition(position);
-                    SearchSeriesFragment.this.activity().onRequestAdd(selectedItem);
-                }
-            }
-        );
-    }
-
-    private AddSeriesActivity activity() {
-        return (AddSeriesActivity) this.getSherlockActivity();
     }
 }

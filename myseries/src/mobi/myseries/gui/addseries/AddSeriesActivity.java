@@ -97,7 +97,7 @@ public class AddSeriesActivity extends BaseActivity {
 
         new TabPagerAdapter(this)
             .addTab(R.string.trending, new TrendingFragment())
-            .addTab(R.string.search, new SearchSeriesFragment())
+            .addTab(R.string.search, new SearchFragment())
             .register(this.state);
 
         ab.setSelectedNavigationItem(this.state.selectedTab);

@@ -1,5 +1,5 @@
 /*
- *   SeriesSearchItemAdapter.java
+ *   AddSeriesAdapter.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -32,31 +32,27 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public final class SeriesSearchItemAdapter extends ArrayAdapter<Series> {
-    private final AddSeriesActivity seriesSearchView;
+public class AddSeriesAdapter extends ArrayAdapter<Series> {
+    private int itemResourceId;
 
-    public SeriesSearchItemAdapter(AddSeriesActivity seriesSearchView, Context context,
-            int seriesItemResourceId, List<Series> objects) {
-        super(context, seriesItemResourceId, objects);
-        this.seriesSearchView = seriesSearchView;
+    public AddSeriesAdapter(Context context, int itemResourceId, List<Series> objects) {
+        super(context, itemResourceId, objects);
+
+        this.itemResourceId = itemResourceId;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View itemView = convertView;
 
-        // if no view was passed, create one for the item
         if (itemView == null) {
-            final LayoutInflater vi = (LayoutInflater) this.seriesSearchView
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            itemView = vi.inflate(R.layout.addseries_search_item, null);
+            final LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            itemView = vi.inflate(this.itemResourceId, null);
         }
 
-        // get views for the series fields
-        final TextView name = (TextView) itemView.findViewById(R.id.itemName);
+        TextView name = (TextView) itemView.findViewById(R.id.itemName);
 
-        // load series data
-        final Series item = this.getItem(position);
+        Series item = this.getItem(position);
 
         name.setText(item.name());
 

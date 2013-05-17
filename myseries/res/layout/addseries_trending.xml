@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/poweredby"
+        android:text="@string/powered_by_trakt"
+        style="@style/TextView.Small.LightGray"
+        android:paddingTop="4dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/numberOfResults"
+        style="@style/TextView.Small.Blue"
+        android:paddingBottom="4dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/poweredby"/>
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/numberOfResults">
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@android:id/empty"
+            android:text="Crie uma string pra mim"
+            style="@style/TextView.Medium.MediumGray"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@style/ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
