@@ -85,7 +85,7 @@
                 <action android:name="mobi.myseries.application.broadcast.action.UPDATE"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.ADDICTION"/>
+                <action android:name="mobi.myseries.application.broadcast.action.ADDITION"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>
@@ -114,7 +114,7 @@
                 <action android:name="mobi.myseries.application.broadcast.action.UPDATE"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.ADDICTION"/>
+                <action android:name="mobi.myseries.application.broadcast.action.ADDITION"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>

@@ -142,7 +142,7 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
             listener.onFollowing(followedSeries);
         }
 
-        this.broadcastService.broadcastAddiction();
+        this.broadcastService.broadcastAddition();
     }
 
     private void notifyListenersOfFollowingError(Series series, Exception e) {
