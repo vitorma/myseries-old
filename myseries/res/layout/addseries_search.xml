@@ -65,7 +65,6 @@
     <TextView
         android:id="@+id/numberOfResults"
         style="@style/TextView.Small.Blue"
-        android:visibility="invisible"
         android:paddingBottom="4dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"

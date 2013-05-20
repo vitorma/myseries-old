@@ -6,7 +6,6 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.TrendingSeriesListener;
 import mobi.myseries.domain.model.Series;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -54,14 +53,12 @@ public class TrendingFragment extends AddSeriesFragment {
         return new TrendingSeriesListener() {
             @Override
             public void onStartLoading() {
-                Log.d("TRENDING", "onStartLoading");
                 TrendingFragment.this.showProgress();
                 TrendingFragment.this.isDownloadInProgress = true;
             }
 
             @Override
             public void onFinishLoading(List<Series> result) {
-                Log.d("TRENDING", "onFinishLoading");
                 TrendingFragment.this.setUpContent(result);
                 TrendingFragment.this.showContent();
                 TrendingFragment.this.isDownloadInProgress = false;
@@ -84,26 +81,24 @@ public class TrendingFragment extends AddSeriesFragment {
     }
 
     private void showProgress() {
-        this.numberOfResults().setVisibility(View.INVISIBLE);
         this.content().setVisibility(View.INVISIBLE);
         this.progress().setVisibility(View.VISIBLE);
     }
 
     private void showContent() {
-        this.numberOfResults().setVisibility(View.VISIBLE);
         this.content().setVisibility(View.VISIBLE);
         this.progress().setVisibility(View.INVISIBLE);
     }
 
     private ProgressBar progress() {
-        return (ProgressBar) this.activity().findViewById(R.id.progress);
+        return (ProgressBar) this.getView().findViewById(R.id.progress);
     }
 
     private View content() {
-        return this.activity().findViewById(R.id.content);
+        return this.getView().findViewById(R.id.content);
     }
 
     private TextView numberOfResults() {
-        return (TextView) this.activity().findViewById(R.id.numberOfResults);
+        return (TextView) this.getView().findViewById(R.id.numberOfResults);
     }
 }

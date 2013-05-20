@@ -47,6 +47,7 @@ public class SearchFragment extends AddSeriesFragment {
 
     private SearchSeriesListener searchListener;
     private boolean isSearching;
+    private AddSeriesAdapter adapter;
 
     @Override
     protected int layoutResource() {
@@ -65,7 +66,9 @@ public class SearchFragment extends AddSeriesFragment {
     protected void onStartFired() {
         App.searchSeriesService().registerListener(this.searchListener);
 
-        if (this.isSearching) {
+        if (this.adapter != null) {
+            this.setUpNumberOfResults(this.adapter.getCount());
+        } else if (this.isSearching) {
             this.searchListener.onStart();
         }
     }
@@ -76,19 +79,13 @@ public class SearchFragment extends AddSeriesFragment {
     }
 
     private void setUpSearchFieldActionListeners() {
-        final EditText searchField = (EditText) this.activity().findViewById(R.id.searchField);
-        final View buttons = this.activity().findViewById(R.id.buttonPanel);
-        final TextView numberOfResults = (TextView) this.activity().findViewById(R.id.numberOfResults);
-
-        searchField.addTextChangedListener(new TextWatcher() {
+        this.searchField().addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    buttons.setVisibility(View.VISIBLE);
+                    SearchFragment.this.showButtons();
                 } else {
-                    buttons.setVisibility(View.INVISIBLE);
-                    numberOfResults.setVisibility(View.INVISIBLE);
-                    SearchFragment.this.setListAdapter(null);
+                    SearchFragment.this.onClear();
                 }
             }
 
@@ -99,7 +96,7 @@ public class SearchFragment extends AddSeriesFragment {
             public void afterTextChanged(Editable s) {}
         });
 
-        searchField.setOnEditorActionListener(new OnEditorActionListener() {
+        this.searchField().setOnEditorActionListener(new OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -111,7 +108,7 @@ public class SearchFragment extends AddSeriesFragment {
             }
         });
 
-        searchField.setOnKeyListener(new View.OnKeyListener() {
+        this.searchField().setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -125,24 +122,16 @@ public class SearchFragment extends AddSeriesFragment {
     }
 
     private void setUpClearButtonClickListener() {
-        final ImageButton clearButton = (ImageButton) this.activity().findViewById(R.id.clearButton);
-        final EditText searchField = (EditText) this.activity().findViewById(R.id.searchField);
-        final TextView numberOfResults = (TextView) this.activity().findViewById(R.id.numberOfResults);
-
-        clearButton.setOnClickListener(new View.OnClickListener() {
+        this.clearButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                searchField.setText("");
-                numberOfResults.setVisibility(View.INVISIBLE);
-                SearchFragment.this.setListAdapter(null);
+                SearchFragment.this.searchField().setText("");
             }
         });
     }
 
     private void setUpSearchButtonClickListener() {
-        final ImageButton searchButton = (ImageButton) this.activity().findViewById(R.id.searchButton);
-
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        this.searchButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 SearchFragment.this.performSearch();
@@ -150,32 +139,31 @@ public class SearchFragment extends AddSeriesFragment {
         });
     }
 
-    void performSearch() {
-        final EditText searchField = (EditText) this.activity().findViewById(R.id.searchField);
-        final TextView numberOfResults = (TextView) this.activity().findViewById(R.id.numberOfResults);
-
-        numberOfResults.setVisibility(View.INVISIBLE);
-        this.setListAdapter(null);
-
-        App.searchSeriesService().search(searchField.getText().toString());
+    private void performSearch() {
+        App.searchSeriesService().search(this.searchField().getText().toString());
     }
 
     private void setUpSearchListener() {
-        this.searchListener = this.newSearchListener();
-    }
+        this.searchListener = new SearchSeriesListener() {
+            @Override
+            public void onStart() {
+                SearchFragment.this.disableSearch();
 
-    private SearchSeriesListener newSearchListener() {
-        final EditText searchField = (EditText) this.activity().findViewById(R.id.searchField);
-        final View buttonPanel = this.activity().findViewById(R.id.buttonPanel);
-        final TextView numberOfResults = (TextView) this.activity().findViewById(R.id.numberOfResults);
-        final String format = this.getString(R.string.number_of_search_results);
+                SearchFragment.this.isSearching = true;
+                SearchFragment.this.activity().onSearchStart();
+            }
 
-        return new SearchSeriesListener() {
+            @Override
+            public void onFinish() {
+                SearchFragment.this.enableSearch();
+
+                SearchFragment.this.isSearching = false;
+                SearchFragment.this.activity().onSearchFinish();
+            }
+
             @Override
             public void onSucess(List<Series> series) {
-                SearchFragment.this.setUpListOnAdapter(series);
-                numberOfResults.setVisibility(View.VISIBLE);
-                numberOfResults.setText(String.format(format, series.size(), searchField.getText()));
+                SearchFragment.this.showResults(series);
             }
 
             @Override
@@ -204,30 +192,68 @@ public class SearchFragment extends AddSeriesFragment {
                     }
                 }
             }
-
-            @Override
-            public void onStart() {
-                searchField.setEnabled(false);
-                buttonPanel.setVisibility(View.INVISIBLE);
-
-                SearchFragment.this.isSearching = true;
-                SearchFragment.this.activity().onSearchStart();
-            }
-
-            @Override
-            public void onFinish() {
-                searchField.setEnabled(true);
-                buttonPanel.setVisibility(View.VISIBLE);
-
-                SearchFragment.this.isSearching = false;
-                SearchFragment.this.activity().onSearchFinish();
-            }
         };
     }
 
-    private void setUpListOnAdapter(List<Series> series) {
-        this.setListAdapter(
-            new AddSeriesAdapter(this.activity(), R.layout.addseries_search_item, series)
-        );
+    private void showResults(List<Series> results) {
+        this.setUpAdapter(results);
+        this.setUpNumberOfResults(results.size());
+    }
+
+    private void setUpAdapter(List<Series> results) {
+        this.adapter = new AddSeriesAdapter(this.activity(), R.layout.addseries_search_item, results);
+        this.setListAdapter(this.adapter);
+    }
+
+    private void setUpNumberOfResults(int numberOfResults) {
+        String format = this.getString(R.string.number_of_search_results);
+        String seriesName = this.searchField().getText().toString();
+
+        this.numberOfResults().setText(String.format(format, numberOfResults, seriesName));
+    }
+
+    private void disableSearch() {
+        this.searchField().setEnabled(false);
+        this.onClear();
+    }
+
+    private void enableSearch() {
+        this.searchField().setEnabled(true);
+        this.showButtons();
+    }
+
+    private void onClear() {
+        this.hideButtons();
+        this.numberOfResults().setText("");
+        this.adapter = null;
+        this.setListAdapter(null);
+    }
+
+    private void hideButtons() {
+        this.buttonPanel().setVisibility(View.INVISIBLE);
+    }
+
+    private void showButtons() {
+        this.buttonPanel().setVisibility(View.VISIBLE);
+    }
+
+    private EditText searchField() {
+        return (EditText) this.getView().findViewById(R.id.searchField);
+    }
+
+    private View buttonPanel() {
+        return this.getView().findViewById(R.id.buttonPanel);
+    }
+
+    private ImageButton searchButton() {
+        return (ImageButton) this.getView().findViewById(R.id.searchButton);
+    }
+
+    private ImageButton clearButton() {
+        return (ImageButton) this.getView().findViewById(R.id.clearButton);
+    }
+
+    private TextView numberOfResults() {
+        return (TextView) this.getView().findViewById(R.id.numberOfResults);
     }
 }
