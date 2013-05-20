@@ -63,7 +63,11 @@ public class TrendingSeriesService implements Publisher<TrendingSeriesListener> 
         List<Series> result = new ArrayList<Series>(array.size());
 
         for (Object o : array) {
-            result.add(this.seriesFrom((JSONObject) o));
+            try {
+                result.add(this.seriesFrom((JSONObject) o));
+            } catch (Exception e) {
+                Log.e(TrendingSeriesService.class.toString(), e.getMessage());
+            }
         }
 
         return result;
