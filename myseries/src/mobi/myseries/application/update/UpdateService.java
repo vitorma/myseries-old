@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.broadcast.BroadcastService;
@@ -37,16 +37,14 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
     private final ListenerSet<UpdateListener> updateListeners;
     private final ListenerSet<UpdateFinishListener> updateFinishListeners;
 
-    private ReentrantLock updateLock;
+    private final AtomicBoolean isUpdating;
 
-    private UpdateListener selfListener;
+    private final ExecutorService executor;
     private Handler handler;
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
             LocalizationProvider localizationProvider, ImageService imageService,
             BroadcastService broadcastService) {
-
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
@@ -62,35 +60,8 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         this.updateListeners = new ListenerSet<UpdateListener>();
         this.updateFinishListeners = new ListenerSet<UpdateFinishListener>();
 
-        this.updateLock = new ReentrantLock();
-
-        this.selfListener = new UpdateListener() {
-
-            @Override
-            public void onUpdateSuccess() {
-                Log.d(getClass().getName(), "Update finished successfully. :)");
-                UpdateService.this.broadcastService.broadcastUpdate();
-            }
-
-            @Override
-            public void onUpdateStart() {
-                Log.d(getClass().getName(), "Update started.");
-            }
-
-            @Override
-            public void onUpdateNotNecessary() {
-                Log.d(getClass().getName(), "Update is not necessary.");
-            }
-
-            @Override
-            public void onUpdateFailure(Exception e) {
-                Log.d(getClass().getName(), "Update finished with failure. :(");
-                UpdateService.this.broadcastService.broadcastUpdate();
-            }
-        };
-
-        Validate.isTrue(register(selfListener),
-                "UpdateService could not be registered as listener to update ");
+        this.isUpdating = new AtomicBoolean(false);
+        this.executor = Executors.newSingleThreadExecutor();
     }
 
     public UpdateService withHandler(Handler handler) {
@@ -121,43 +92,41 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         return updateFinishListeners.deregister(listener);
     }
 
+    // Update methods
+
     public boolean isUpdating() {
-        return this.updateLock.isLocked();
+        return this.isUpdating.get();
     }
 
     public void updateData() {
-        if (!this.updateLock.tryLock()) {
+        if (!this.isUpdating.compareAndSet(false, true)) {
             Log.d(getClass().getName(), "Update already running");
             return;
         }
-        try {
-            update(true);
-        } finally {
-            this.updateLock.unlock();
-        }
+
+        update(true);
     }
 
     public void updateDataIfNeeded() {
-        if (!this.updateLock.tryLock()) {
+        if (!this.isUpdating.compareAndSet(false, true)) {
             Log.d(getClass().getName(), "Update already running");
             return;
         }
-        try {
-            if (!UpdatePolicy.shouldUpdateNow()) {
-                Log.d(getClass().getName(), "Update will not run.");
-                return;
-            }
 
-            long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
+        if (!UpdatePolicy.shouldUpdateNow()) {
+            Log.d(getClass().getName(), "Update will not run.");
+            this.isUpdating.set(false);
+            return;
+        }
 
-            if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.automaticUpdateInterval()) {
-                Log.d(getClass().getName(), "Update ran recently. Not running now.");
-            } else {
-                update(false);
-                Log.d(getClass().getName(), "Launching update.");
-            }
-        } finally {
-            this.updateLock.unlock();
+        long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
+
+        if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.automaticUpdateInterval()) {
+            this.isUpdating.set(false);
+            Log.d(getClass().getName(), "Update ran recently. Not running now.");
+        } else {
+            Log.d(getClass().getName(), "Launching update.");
+            update(false);
         }
     }
 
@@ -210,6 +179,7 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
             if (!updateAvailable
                     || ((seriesWithDataToUpdate.isEmpty()) && (seriesWithPosterToUpdate.isEmpty()))) {
                 notifyListenersOfUpdateNotNecessary();
+                return;
             }
         }
 
@@ -263,6 +233,7 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         } catch (InterruptedException e) {
             // Should never happen
             e.printStackTrace();
+            this.isUpdating.set(false);
             return;
 
         } catch (ExecutionException e) {
@@ -307,6 +278,8 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
     }
 
     private void notifyListenersOfUpdateStart() {
+        Log.d(getClass().getName(), "Update started.");
+
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -318,6 +291,9 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
     }
 
     private void notifyListenersOfUpdateNotNecessary() {
+        Log.d(getClass().getName(), "Update is not necessary.");
+        this.isUpdating.set(false);
+
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -329,6 +305,9 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
     }
 
     private void notifyListenersOfUpdateSuccess() {
+        Log.d(getClass().getName(), "Update finished successfully. :)");
+        this.isUpdating.set(false);
+
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -337,10 +316,14 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
                 }
             }
         });
+
         notifyListenersOfUpdateFinish();
     }
 
     private void notifyListenersOfUpdateFailure(final Exception cause) {
+        Log.d(getClass().getName(), "Update finished with failure. :(");
+        this.isUpdating.set(false);
+
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -349,6 +332,7 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
                 }
             }
         });
+
         notifyListenersOfUpdateFinish();
     }
 
@@ -361,6 +345,8 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
                 }
             }
         });
+
+        this.broadcastService.broadcastUpdate();
     }
 
     boolean fetchUpdateMetadataSince(long dateInMiliseconds)
