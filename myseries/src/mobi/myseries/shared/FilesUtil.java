@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.channels.FileChannel;
 
 public class FilesUtil {
@@ -33,6 +34,26 @@ public class FilesUtil {
             }
             if (destinationChannel != null) {
                 destinationChannel.close();
+            }
+        }
+    }
+
+    public static void writeFile(InputStream inputStream, File file) throws IOException {
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file);
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
             }
         }
     }

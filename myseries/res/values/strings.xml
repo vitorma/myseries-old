@@ -169,6 +169,12 @@
     <string name="no_series_to_restore">The actual backup file has no series to restore.</string>
     <string name="restore_invalid_db_version">The backup file that you are trying to restore from has not a valid database version.</string>
     <string name="restore_invalid_db_file">The backup file that you are trying to restore from is invalid.</string>
+    
+    <string name="google_drive">Google Drive</string>
+    <string name="select_account">Select account</string>
+    <string name="remote_location">Remote Location</string>
+    <string name="sd_card">SD Card</string>
+    <string name="sd_card_location">Backup folder location</string>
     <!-- Do not translate -->
 
     <string name="app">MySeries</string>

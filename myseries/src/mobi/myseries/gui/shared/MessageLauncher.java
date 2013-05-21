@@ -1,5 +1,8 @@
 package mobi.myseries.gui.shared;
 
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.message.MessageServiceListener;
@@ -178,36 +181,36 @@ public class MessageLauncher implements MessageServiceListener {
 
     @Override
     public void onBackupFailure(Exception e) {
-        // TODO(vitor) handle this exception properly
-        this.dialogBuilder.setTitle(R.string.backup_failed_title);
-        this.dialogBuilder.setMessage(R.string.backup_failed_message);
-        Dialog dialog = this.dialogBuilder.build();
-        dialog.show();
-        this.currentDialog = dialog;
+        if(!(e instanceof UserRecoverableAuthIOException)) {
+            // TODO(vitor) handle this exception properly
+            this.dialogBuilder.setTitle(R.string.backup_failed_title);
+            this.dialogBuilder.setMessage(R.string.backup_failed_message);
+            Dialog dialog = this.dialogBuilder.build();
+            dialog.show();
+            this.currentDialog = dialog;
+        }
     }
 
     @Override
     public void onRestoreSucess() {
         this.showToastWith(R.string.restore_completed);
-
     }
 
     @Override
     public void onRestoreFailure(Exception e) {
-
-        this.dialogBuilder.setTitle(R.string.restore_failed_title);
-        this.dialogBuilder.setMessage(R.string.restore_failed_message);
-        if(e instanceof NoSeriesToRestoreException) {
-            this.dialogBuilder.setMessage(R.string.no_series_to_restore);
-        } else if( e instanceof InvalidBackupVersionException) {
-            this.dialogBuilder.setMessage(R.string.restore_invalid_db_version);
-        } else if (e instanceof InvalidDBSourceFileException) {
-            this.dialogBuilder.setMessage(R.string.restore_invalid_db_file);
+        if(!(e instanceof UserRecoverableAuthIOException)) {
+            this.dialogBuilder.setTitle(R.string.restore_failed_title);
+            this.dialogBuilder.setMessage(R.string.restore_failed_message);
+            if(e instanceof NoSeriesToRestoreException) {
+                this.dialogBuilder.setMessage(R.string.no_series_to_restore);
+            } else if( e instanceof InvalidBackupVersionException) {
+                this.dialogBuilder.setMessage(R.string.restore_invalid_db_version);
+            } else if (e instanceof InvalidDBSourceFileException) {
+                this.dialogBuilder.setMessage(R.string.restore_invalid_db_file);
+            }
+            Dialog dialog = this.dialogBuilder.build();
+            dialog.show();
+            this.currentDialog = dialog;
         }
-        Dialog dialog = this.dialogBuilder.build();
-        dialog.show();
-        this.currentDialog = dialog;
-
     }
-
 }

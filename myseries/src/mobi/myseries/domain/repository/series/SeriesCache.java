@@ -21,6 +21,7 @@
 
 package mobi.myseries.domain.repository.series;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -288,8 +289,8 @@ public class SeriesCache implements SeriesRepository {
     }
 
     @Override
-    public void exportTo(String backupFilePath) throws IOException {
-        this.sourceRepository.exportTo(backupFilePath);
+    public File db() throws IOException {
+        return this.sourceRepository.db();
         
     }
 

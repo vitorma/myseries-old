@@ -21,6 +21,7 @@
 
 package mobi.myseries.domain.repository.series;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -39,7 +40,7 @@ public interface SeriesRepository {
     public boolean contains(Series series);
     public Series get(int seriesId);
     public Collection<Series> getAll();
-    public void exportTo(String backupFilePath) throws IOException;
+    public File db() throws IOException;
     public void restoreFrom(String backupFilePath) throws IOException, InvalidDBSourceFileException;
     
 }
