@@ -29,6 +29,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
+import mobi.myseries.application.update.UpdateFinishListener;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Series;
@@ -94,25 +95,11 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         public void onFollowingFailure(Series series, Exception e) {}
     };
 
-    private UpdateListener updateListener = new UpdateListener() {
-
+    private UpdateFinishListener updateListener = new UpdateFinishListener() {
         @Override
-        public void onUpdateSuccess() {
+        public void onUpdateFinish() {
             this.reload();
         }
-
-        @Override
-        public void onUpdateFailure(Exception e) {
-            // TODO(Gabriel) Should we really do something here?
-            // May the series have been partially updated after a failure?
-            this.reload();
-        }
-
-        @Override
-        public void onUpdateStart() {}
-
-        @Override
-        public void onUpdateNotNecessary() {}
 
         private void reload() {
             if (SeriesCoverFlowFragment.this.getActivity() != null) {
@@ -126,7 +113,7 @@ public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesL
         super.onCreate(savedInstanceState);
 
         UPDATE_SERIES_SERVICE.register(this.updateListener);
-        FOLLOW_SERIES_SERVICE.registerSeriesFollowingListener(this.seriesFollowingListener);
+        FOLLOW_SERIES_SERVICE.register(this.seriesFollowingListener);
     }
 
     @Override

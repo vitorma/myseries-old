@@ -37,7 +37,7 @@ public class MessageLauncher implements MessageServiceListener {
         this.dialogBuilder = new FailureDialogBuilder(activity);
         this.toastBuilder = new ToastBuilder(activity);
 
-        App.messageService().registerListener(this);
+        App.messageService().register(this);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class MessageLauncher implements MessageServiceListener {
     }
 
     public void onStop() {
-        App.messageService().deregisterListener(this);
+        App.messageService().deregister(this);
         if (this.currentDialog != null) {
             this.isShowingDialog = this.currentDialog.isShowing();
             this.currentDialog.dismiss();
@@ -156,7 +156,7 @@ public class MessageLauncher implements MessageServiceListener {
     }
 
     public void loadState() {
-        App.messageService().registerListener(this);
+        App.messageService().register(this);
         if ((currentDialog != null) && isShowingDialog()) {
             currentDialog.show();
         }

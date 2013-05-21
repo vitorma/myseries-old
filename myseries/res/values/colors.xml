@@ -28,7 +28,7 @@
 
     <color name="text_light_gray">#ff808080</color>
     <color name="text_medium_gray">@color/gray</color>
-    <color name="text_dark_gray">#ff424242</color>
+    <color name="text_dark_gray">#ff272727</color>
     <color name="text_blue">@color/dark_blue</color>
 
 </resources>

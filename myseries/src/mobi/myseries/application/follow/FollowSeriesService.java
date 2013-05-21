@@ -36,10 +36,11 @@ import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.ListenerSet;
+import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
 import android.os.AsyncTask;
 
-public class FollowSeriesService {
+public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
     private SeriesSource seriesSource;
     private SeriesRepository seriesRepository;
     private LocalizationProvider localizationProvider;
@@ -120,8 +121,14 @@ public class FollowSeriesService {
         this.seriesRepository.clear();
     }
 
-    public void registerSeriesFollowingListener(SeriesFollowingListener listener) {
-        this.seriesFollowingListeners.register(listener);
+    @Override
+    public boolean register(SeriesFollowingListener listener) {
+        return this.seriesFollowingListeners.register(listener);
+    }
+
+    @Override
+    public boolean deregister(SeriesFollowingListener listener) {
+        return this.seriesFollowingListeners.deregister(listener);
     }
 
     private void notifyListenersOfStartingToFollowSeries(Series seriesToFollow) {
@@ -135,7 +142,7 @@ public class FollowSeriesService {
             listener.onFollowing(followedSeries);
         }
 
-        this.broadcastService.broadcastAddiction();
+        this.broadcastService.broadcastAddition();
     }
 
     private void notifyListenersOfFollowingError(Series series, Exception e) {

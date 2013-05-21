@@ -28,19 +28,18 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.series.SeriesActivity;
+import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
+import net.simonvt.menudrawer.MenuDrawer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TitlePageIndicator;
 
-public class EpisodesActivity extends SherlockFragmentActivity {
+public class EpisodesActivity extends BaseActivity {
 
     public static interface Extra {
         public String SERIES_ID = "seriesId";
@@ -116,39 +115,28 @@ public class EpisodesActivity extends SherlockFragmentActivity {
             this.state.messageLauncher = this.messageLauncher;
         }
 
+        this.getMenu().setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
     }
+
     @Override
     protected void onResume() {
-    	super.onResume();
+        super.onResume();
         this.loadState();
     }
 
     private void loadState() {
-    	this.messageLauncher.loadState();
+        this.messageLauncher.loadState();
     }
 
     @Override
     protected void onStop() {
-    	super.onStop();
-    	this.messageLauncher.onStop();
+        super.onStop();
+        this.messageLauncher.onStop();
     }
 
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
         return this.state;
-    }
-
-	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case android.R.id.home:
-                Intent intent = SeriesActivity.newIntent(this, this.seriesId);
-                this.startActivity(intent);
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private static class StateHolder {

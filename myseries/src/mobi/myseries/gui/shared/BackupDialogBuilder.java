@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 public class BackupDialogBuilder {
     private Context context;
-    private ButtonOnClickListener backupButtonListener;
-    private ButtonOnClickListener restoreButtonListener;
+    private DialogButtonOnClickListener backupButtonListener;
+    private DialogButtonOnClickListener restoreButtonListener;
     private String backupFolderPath;
 
     
@@ -23,12 +23,12 @@ public class BackupDialogBuilder {
         return this.context;
     }
 
-    public BackupDialogBuilder setBackupButtonListener(ButtonOnClickListener buttonOnClickListener) {
+    public BackupDialogBuilder setBackupButtonListener(DialogButtonOnClickListener buttonOnClickListener) {
         this.backupButtonListener = buttonOnClickListener;
         return this;
     }
     
-    public BackupDialogBuilder setRestoreButtonListener(ButtonOnClickListener listener) {
+    public BackupDialogBuilder setRestoreButtonListener(DialogButtonOnClickListener listener) {
         this.restoreButtonListener = listener;
         return this;
     }

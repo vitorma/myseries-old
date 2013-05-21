@@ -42,8 +42,8 @@ public class BroadcastService {
         this.context.sendBroadcast(new Intent(BroadcastAction.UPDATE));
     }
 
-    public void broadcastAddiction() {
-        this.context.sendBroadcast(new Intent(BroadcastAction.ADDICTION));
+    public void broadcastAddition() {
+        this.context.sendBroadcast(new Intent(BroadcastAction.ADDITION));
     }
 
     public void broadcastRemoval() {

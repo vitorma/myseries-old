@@ -16,8 +16,8 @@ public class ConfirmationDialogBuilder {
     private String surrogateMessage;
     private String positiveButtonText;
     private String negativeButtonText;
-    private ButtonOnClickListener positiveButtonListener;
-    private ButtonOnClickListener negativeButtonListener;
+    private DialogButtonOnClickListener positiveButtonListener;
+    private DialogButtonOnClickListener negativeButtonListener;
 
     public ConfirmationDialogBuilder(Context context) {
         this.context = context;
@@ -57,25 +57,25 @@ public class ConfirmationDialogBuilder {
         return this;
     }
 
-    public ConfirmationDialogBuilder setPositiveButton(String text, ButtonOnClickListener listener) {
+    public ConfirmationDialogBuilder setPositiveButton(String text, DialogButtonOnClickListener listener) {
         this.positiveButtonText = text;
         this.positiveButtonListener = listener;
         return this;
     }
 
-    public ConfirmationDialogBuilder setPositiveButton(int textResourceId, ButtonOnClickListener listener) {
+    public ConfirmationDialogBuilder setPositiveButton(int textResourceId, DialogButtonOnClickListener listener) {
         this.positiveButtonText = this.context.getString(textResourceId);
         this.positiveButtonListener = listener;
         return this;
     }
 
-    public ConfirmationDialogBuilder setNegativeButton(String text, ButtonOnClickListener listener) {
+    public ConfirmationDialogBuilder setNegativeButton(String text, DialogButtonOnClickListener listener) {
         this.negativeButtonText = text;
         this.negativeButtonListener = listener;
         return this;
     }
 
-    public ConfirmationDialogBuilder setNegativeButton(int textResourceId, ButtonOnClickListener listener) {
+    public ConfirmationDialogBuilder setNegativeButton(int textResourceId, DialogButtonOnClickListener listener) {
         this.negativeButtonText = this.context.getString(textResourceId);
         this.negativeButtonListener = listener;
         return this;

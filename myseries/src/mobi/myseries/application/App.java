@@ -50,6 +50,7 @@ public class App extends Application {
     private static SeriesProvider seriesProvider;
     private static BackupService backupService;
     private static BroadcastService broadcastService;
+    private static TrendingSeriesService trendingSeriesService;
 
     @Override
     public void onCreate() {
@@ -93,9 +94,11 @@ public class App extends Application {
 
         backupService = new BackupService(environment.seriesRepository());
 
-        messageService = new MessageService();
+        messageService = new MessageService(followSeriesService, updateService, backupService);
 
         seriesProvider = new SeriesProvider(environment.seriesRepository(), broadcastService);
+
+        trendingSeriesService = new TrendingSeriesService();
 
         this.startService(ConfigurationChangeService.newIntent(this));
     }
@@ -110,6 +113,10 @@ public class App extends Application {
 
     public static ErrorService errorService(){
         return errorService;
+    }
+
+    public static TrendingSeriesService trendingSeriesService() {
+        return trendingSeriesService;
     }
 
     /* SERIES SEARCHING */
