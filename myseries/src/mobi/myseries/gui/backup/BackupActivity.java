@@ -259,8 +259,10 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
 
     @Override
     public void onRestoreFailure(Exception e) {
-        startActivityForResult(((UserRecoverableAuthIOException)e).getIntent(), REQUEST_AUTHORIZATION);
-
+        if (e instanceof UserRecoverableAuthIOException) {
+            startActivityForResult(((UserRecoverableAuthIOException) e).getIntent(), REQUEST_AUTHORIZATION);
+        }
+        e.printStackTrace();
     }
 
     @Override
