@@ -1,5 +1,5 @@
 /*
- *   AddSeriesAdapter.java
+ *   SearchAdapter.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -25,20 +25,21 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.Strings;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AddSeriesAdapter extends ArrayAdapter<Series> {
-    private int itemResourceId;
+import com.squareup.picasso.Picasso;
 
-    public AddSeriesAdapter(Context context, int itemResourceId, List<Series> objects) {
-        super(context, itemResourceId, objects);
-
-        this.itemResourceId = itemResourceId;
+public class AddAdapter extends ArrayAdapter<Series> {
+    public AddAdapter(Context context, List<Series> objects) {
+        super(context, R.layout.addseries_item, objects);
     }
 
     @Override
@@ -47,14 +48,25 @@ public class AddSeriesAdapter extends ArrayAdapter<Series> {
 
         if (itemView == null) {
             final LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            itemView = vi.inflate(this.itemResourceId, null);
+            itemView = vi.inflate(R.layout.addseries_item, null);
         }
-
-        TextView name = (TextView) itemView.findViewById(R.id.itemName);
 
         Series item = this.getItem(position);
 
-        name.setText(item.name());
+        TextView name = (TextView) itemView.findViewById(R.id.itemName);
+        name.setText(item.name().toUpperCase());
+
+        ImageView poster = (ImageView) itemView.findViewById(R.id.seriesPoster);
+        if (!Strings.isNullOrBlank(item.posterFileName())) {
+            Log.d("AddAdapter", item.name() + "=>" + item.posterFileName());
+
+            Picasso.with(this.getContext())
+                .load(item.posterFileName())
+                .placeholder(R.drawable.generic_poster)
+                .error(R.drawable.generic_poster)
+                .resizeDimen(R.dimen.banner_width, R.dimen.banner_height)
+                .into(poster);
+        }
 
         return itemView;
     }

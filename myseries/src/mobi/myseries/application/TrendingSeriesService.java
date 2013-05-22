@@ -78,6 +78,7 @@ public class TrendingSeriesService implements Publisher<TrendingSeriesListener> 
             .withId(Integer.valueOf(object.get("tvdb_id").toString()))
             .withName(object.get("title").toString())
             .withOverview(object.get("overview").toString())
+            .withPosterFileName(((JSONObject) object.get("images")).get("banner").toString())
             .build();
     }
 

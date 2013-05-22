@@ -69,10 +69,11 @@ public class SeriesSearchParser {
         private Content() {
             this.rootElement = new RootElement(DATA);
 
-            this.seriesElementHandler = SeriesElementHandler.from(this.rootElement)
+            this.seriesElementHandler = SeriesSearchElementHandler.from(this.rootElement)
                 .handlingId()
                 .handlingName()
-                .handlingOverview();
+                .handlingOverview()
+                .handlingPosterFileName();
         }
 
         private ContentHandler handler() {

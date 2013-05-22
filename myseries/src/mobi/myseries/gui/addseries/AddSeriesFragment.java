@@ -1,15 +1,21 @@
 package mobi.myseries.gui.addseries;
 
+import java.util.List;
+
 import mobi.myseries.domain.model.Series;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public abstract class AddSeriesFragment extends SherlockListFragment {
+public abstract class AddSeriesFragment extends SherlockFragment {
+
+    protected GridView grid;
+    protected AddAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +33,7 @@ public abstract class AddSeriesFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.setUpItemClickListener();
+        this.setUpGrid();
         this.setUp();
     }
 
@@ -54,15 +60,26 @@ public abstract class AddSeriesFragment extends SherlockListFragment {
     protected abstract void onStartFired();
     protected abstract void onStopFired();
 
-    private void setUpItemClickListener() {
-        this.getListView().setOnItemClickListener(
-            new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Series selectedItem = (Series) parent.getItemAtPosition(position);
-                    AddSeriesFragment.this.activity().onRequestAdd(selectedItem);
-                }
+    private void setUpGrid() {
+        this.grid = (GridView) this.getView().findViewById(android.R.id.list);
+
+        this.grid.setEmptyView(this.getView().findViewById(android.R.id.empty));
+
+        if (this.adapter != null) {
+            this.grid.setAdapter(this.adapter);
+        }
+
+        this.grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Series selectedItem = (Series) parent.getItemAtPosition(position);
+                AddSeriesFragment.this.activity().onRequestAdd(selectedItem);
             }
-        );
+        });
+    }
+
+    protected void setUpAdapter(List<Series> results) {
+        this.adapter = new AddAdapter(this.activity(), results);
+        this.grid.setAdapter(this.adapter);
     }
 }

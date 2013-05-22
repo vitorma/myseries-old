@@ -47,7 +47,7 @@ public class SearchFragment extends AddSeriesFragment {
 
     private SearchSeriesListener searchListener;
     private boolean isSearching;
-    private AddSeriesAdapter adapter;
+    private String seriesName;
 
     @Override
     protected int layoutResource() {
@@ -196,20 +196,16 @@ public class SearchFragment extends AddSeriesFragment {
     }
 
     private void showResults(List<Series> results) {
+        this.seriesName = this.searchField().getText().toString();
+
         this.setUpAdapter(results);
         this.setUpNumberOfResults(results.size());
     }
 
-    private void setUpAdapter(List<Series> results) {
-        this.adapter = new AddSeriesAdapter(this.activity(), R.layout.addseries_search_item, results);
-        this.setListAdapter(this.adapter);
-    }
-
     private void setUpNumberOfResults(int numberOfResults) {
         String format = this.getString(R.string.number_of_search_results);
-        String seriesName = this.searchField().getText().toString();
 
-        this.numberOfResults().setText(String.format(format, numberOfResults, seriesName));
+        this.numberOfResults().setText(String.format(format, numberOfResults, this.seriesName));
     }
 
     private void disableSearch() {
@@ -224,9 +220,6 @@ public class SearchFragment extends AddSeriesFragment {
 
     private void onClear() {
         this.hideButtons();
-        this.numberOfResults().setText("");
-        this.adapter = null;
-        this.setListAdapter(null);
     }
 
     private void hideButtons() {

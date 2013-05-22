@@ -58,11 +58,11 @@ public class SeriesElementHandler {
     private static final String ACTORS = "Actors";
     private static final String POSTER_FILE_NAME = "poster";
 
-    private Element seriesElement;
-    private Series.Builder seriesBuilder;
+    protected Element seriesElement;
+    protected Series.Builder seriesBuilder;
     private List<Series> results;
 
-    private SeriesElementHandler(RootElement rootElement) {
+    protected SeriesElementHandler(RootElement rootElement) {
         Validate.isNonNull(rootElement, "rootElement");
 
         this.seriesElement = rootElement.getChild(SERIES);

@@ -50,6 +50,7 @@
     <string name="fraction" formatted="false">%d of %d</string>
     <string name="trending">TRENDING</string>
     <string name="powered_by_trakt">Powered by Trakt.tv</string>
+    <string name="number_of_trending_results">%d series being watched right now</string>
 
     <plurals name="plural_episode">
         <item quantity="one">episode</item>

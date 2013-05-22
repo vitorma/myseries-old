@@ -14,7 +14,6 @@ public class TrendingFragment extends AddSeriesFragment {
 
     private TrendingSeriesListener listener;
     private boolean isDownloadInProgress;
-    private AddSeriesAdapter adapter;
 
     @Override
     protected int layoutResource() {
@@ -72,12 +71,9 @@ public class TrendingFragment extends AddSeriesFragment {
     }
 
     private void setUpNumberOfResults(int n) {
-        this.numberOfResults().setText(String.valueOf(n));
-    }
+        String format = this.getString(R.string.number_of_trending_results);
 
-    private void setUpAdapter(List<Series> result) {
-        this.adapter = new AddSeriesAdapter(this.getSherlockActivity(), R.layout.addseries_search_item, result);
-        this.setListAdapter(this.adapter);
+        this.numberOfResults().setText(String.format(format, n));
     }
 
     private void showProgress() {

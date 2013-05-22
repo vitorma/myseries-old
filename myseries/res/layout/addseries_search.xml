@@ -3,7 +3,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#eeeeee">
 
     <FrameLayout
         android:id="@+id/searchPanel"
@@ -72,10 +73,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/poweredby"/>
 
-    <ListView
+    <GridView
         android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/numberOfResults"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:columnWidth="320dp"
+        android:gravity="center"
+        android:horizontalSpacing="0dp"
+        android:listSelector="#eeeeee"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="0dp"
+        android:layout_below="@id/numberOfResults"
+        android:fastScrollEnabled="true"/>
+
+    <TextView
+        android:id="@android:id/empty"
+        style="@style/TextView.Medium.MediumGray"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>
