@@ -1,37 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/gap_medium"
+    android:paddingLeft="@dimen/gap_large"
+    android:paddingRight="@dimen/gap_large"
+    android:paddingTop="@dimen/gap_medium" >
 
     <TextView
-        android:id="@+id/backupDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/backup_description"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-            android:id="@+id/backup_file_path"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    
-    <LinearLayout
+        style="@style/TextView.Label.Medium.Bold"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
-            <Button
-                android:id="@+id/backupButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/backup_button" />
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:text="@string/sd_card" />
 
-            <Button
-                android:id="@+id/restoreButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/restore_button" />
-        </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/list_divider_holo_light" />
+
+    <TextView
+        android:id="@+id/sd_card_location_text_view"
+        style="@style/TextView.Small.DarkGray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:text="@string/sd_card_location"
+        android:textSize="@dimen/text_size_medium"
+        android:onClick="onClick"
+        android:clickable="true" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_gravity="bottom" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/list_divider_holo_light" />
+
+        <View
+            android:id="@+id/dividerVertical"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/list_divider_holo_light" />
+
+        <Button
+            android:id="@+id/sd_card_backup_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toLeftOf="@id/dividerVertical"
+            android:background="@drawable/item_background_holo_light"
+            android:text="@string/backup_button" />
+
+        <Button
+            android:id="@+id/sd_card_restore_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toRightOf="@id/dividerVertical"
+            android:background="@drawable/item_background_holo_light"
+            android:text="@string/restore_button" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/TextView.Label.Medium.Bold"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:text="@string/google_drive" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/list_divider_holo_light" />
+
+    <Spinner
+        android:id="@+id/account_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/list_divider_holo_light" />
+
+    <TextView
+        android:id="@+id/google_drive_location_text_view"
+        style="@style/TextView.Small.DarkGray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:text="@string/remote_location"
+        android:textSize="@dimen/text_size_medium"
+        android:onClick="onClick"
+        android:clickable="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_gravity="bottom" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/list_divider_holo_light" />
+
+        <View
+            android:id="@+id/dividerVertical"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/list_divider_holo_light" />
+
+        <Button
+            android:id="@+id/google_drive_backup_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toLeftOf="@id/dividerVertical"
+            android:background="@drawable/item_background_holo_light"
+            android:text="@string/backup_button" />
+
+        <Button
+            android:id="@+id/google_drive_restore_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toRightOf="@id/dividerVertical"
+            android:background="@drawable/item_background_holo_light"
+            android:text="@string/restore_button" />
+    </RelativeLayout>
+
 </LinearLayout>

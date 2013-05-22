@@ -17,17 +17,11 @@ public final class BitmapResizer {
         Validate.isNonNegative(targetWidth, "targetWidth");
         Validate.isNonNegative(targetHeight, "targetHeight");
 
-        //TODO (Cleber) This method is currently very expensive.
-        //              Due to it, add a series can take more than one minute.
-        //              Improve it and uncomment next lines.
-        
-        long start = System.currentTimeMillis();
-
-        Bitmap destiny = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
+        Bitmap target = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
 
         int scaleFactor = Math.min(this.bitmap.getWidth() * 1024 / targetWidth,
-                        this.bitmap.getHeight()* 1024 / targetHeight);
-        
+            this.bitmap.getHeight() * 1024 / targetHeight);
+
         int red, green, blue;
         int x, y, m, n;
         int sourceX, sourceY, currentX, currentY;
@@ -55,16 +49,11 @@ public final class BitmapResizer {
                     }
                 }
 
-                destiny.setPixel(x, y, Color.argb(0xff, red /36, green/36, blue/36));
+                target.setPixel(x, y, Color.argb(0xff, red / 36, green / 36, blue / 36));
             }
         }
-        
-        long end = System.currentTimeMillis();
-        
-        Log.i(getClass().getName(), "Resize time: " + (end - start) / 1000.0);
 
-        //Bitmap destiny = Bitmap.createScaledBitmap(this.bitmap, targetWidth, targetHeight, false);
-        return destiny;
+        return target;
     }
 
     private int clamp(int lo, int value, int hi) {
@@ -74,8 +63,8 @@ public final class BitmapResizer {
     private int r(int x) {
         return ((((1 * ppow3((x + 2)) - (4 * ppow3((x + 1)))) + (6 * ppow3((x)))) - (4 * ppow3((x - 1)))));
     }
-    
+
     private int ppow3(int x) {
-        return x <= 0 ? 0: x * x * x;
+        return x <= 0 ? 0 : x * x * x;
     }
 }

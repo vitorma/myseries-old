@@ -459,8 +459,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     @Override
-    public void exportTo(String backupFilePath) throws IOException {
-        this.doBackupTo(backupFilePath);
+    public File db() throws IOException {
+        return this.dbFile();
     }
 
     @Override

@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"></uses-permission>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"></uses-permission>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"></uses-permission>
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -47,10 +51,10 @@
                 android:value=".gui.myseries.MySeriesActivity"/>
         </activity>
         <activity
-            android:name=".gui.settings.backup.BackupActivity">
+            android:name=".gui.backup.BackupActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.settings.SettingsActivity"/>
+                android:value=".gui.myseries.MySeriesActivity"/>
         </activity>
         <activity
             android:name=".gui.series.SeriesActivity">
@@ -85,7 +89,7 @@
                 <action android:name="mobi.myseries.application.broadcast.action.UPDATE"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.ADDICTION"/>
+                <action android:name="mobi.myseries.application.broadcast.action.ADDITION"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>
@@ -114,7 +118,7 @@
                 <action android:name="mobi.myseries.application.broadcast.action.UPDATE"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.ADDICTION"/>
+                <action android:name="mobi.myseries.application.broadcast.action.ADDITION"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>

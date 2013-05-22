@@ -59,6 +59,12 @@ public class PrimitivePreferences {
         return this.getSharedPreferences()
                    .getBoolean(this.compose(key), defaultValue);
     }
+    
+
+    public String getString(String key, String defaultValue) {
+        return this.getSharedPreferences()
+                   .getString(this.compose(key), defaultValue);
+    }
 
     public Collection<String> getKeys() {
         return this.getSharedPreferences().getAll().keySet();
@@ -73,6 +79,12 @@ public class PrimitivePreferences {
     public void putBoolean(String key, boolean value) {
         this.getEditor()
             .putBoolean(this.compose(key), value)
+            .commit();
+    }
+    
+    public void putString(String key, String value) {
+        this.getEditor()
+            .putString(this.compose(key), value)
             .commit();
     }
 

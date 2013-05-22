@@ -7,36 +7,38 @@ import android.os.AsyncTask;
 
 public class BackupService {
 
-    private SdcardBackup sdcardBackup;
-
     private ListenerSet<BackupListener> listeners;
 
     private SeriesRepository repository;
 
+    //private SharedPreferences preferences;
+
     public BackupService(SeriesRepository repository) {
-        this.sdcardBackup = new SdcardBackup();
         this.listeners = new ListenerSet<BackupListener>();
         this.repository = repository;
+        //this.preferences = App.context().getSharedPreferences("mobi.myseries.gui.settings.MySeriesPreferences", 0);
 }
-    public void doBackup() {
-        new doBackupAsyncTask().execute();
+    public void doBackup(BackupMode backupMode) {
+        new doBackupAsyncTask(backupMode).execute();
     }
 
-    public void restoreBackup() {
-        new restoreBackupAsyncTask().execute();
-    }
-
-    public String backupFolderPath() throws ExternalStorageNotAvailableException {
-        return sdcardBackup.backupFolder().getPath();
+    public void restoreBackup(BackupMode backupMode) {
+        new restoreBackupAsyncTask(backupMode).execute();
     }
 
     private class doBackupAsyncTask extends AsyncTask<Void, Void, AsyncTaskResult<Void>> {
 
+        private BackupMode backupMode;
+
+        public doBackupAsyncTask(BackupMode backupMode) {
+            this.backupMode = backupMode;
+        }
+
         @Override
         protected AsyncTaskResult<Void> doInBackground(Void... params) {
-            
             try {
-                repository.exportTo(sdcardBackup.backupFilePath());
+                backupMode.backupDB(repository.db());
+                //backupMode.backupPreferences(preferences);
             } catch (Exception e) {
                 return new AsyncTaskResult<Void>(e);
             }
@@ -55,11 +57,17 @@ public class BackupService {
     
     private class restoreBackupAsyncTask extends AsyncTask<Void, Void, AsyncTaskResult<Void>> {
 
+        private BackupMode backupMode;
+
+        public restoreBackupAsyncTask(BackupMode backupMode) {
+            this.backupMode = backupMode;
+        }
+
         @Override
         protected AsyncTaskResult<Void> doInBackground(Void... params) {
             
             try {
-                repository.restoreFrom(sdcardBackup.backupFilePath());
+                repository.restoreFrom(this.backupMode.getBackup().getAbsolutePath());
             } catch (Exception e) {
                 return new AsyncTaskResult<Void>(e);
             }
