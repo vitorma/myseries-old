@@ -1,24 +1,3 @@
-/*
- *   SearchAdapter.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.gui.addseries;
 
 import java.util.List;
@@ -27,7 +6,6 @@ import mobi.myseries.R;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Strings;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,39 +13,48 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 public class AddAdapter extends ArrayAdapter<Series> {
+    private LayoutInflater layoutInflater;
+    private ImageDownloader imageDownloader;
+
     public AddAdapter(Context context, List<Series> objects) {
         super(context, R.layout.addseries_item, objects);
+
+        this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.imageDownloader = ImageDownloader.getInstance(context);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View itemView = convertView;
-
-        if (itemView == null) {
-            final LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            itemView = vi.inflate(R.layout.addseries_item, null);
-        }
-
         Series item = this.getItem(position);
 
-        TextView name = (TextView) itemView.findViewById(R.id.itemName);
-        name.setText(item.name().toUpperCase());
+        ViewHolder viewHolder;
 
-        ImageView poster = (ImageView) itemView.findViewById(R.id.seriesPoster);
-        if (!Strings.isNullOrBlank(item.posterFileName())) {
-            Log.d("AddAdapter", item.name() + "=>" + item.posterFileName());
-
-            Picasso.with(this.getContext())
-                .load(item.posterFileName())
-                .placeholder(R.drawable.generic_poster)
-                .error(R.drawable.generic_poster)
-                .resizeDimen(R.dimen.banner_width, R.dimen.banner_height)
-                .into(poster);
+        if (convertView == null) {
+            convertView = this.layoutInflater.inflate(R.layout.addseries_item, null);
+            viewHolder = new ViewHolder(convertView);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        return itemView;
+        viewHolder.name.setText(item.name().toUpperCase());
+
+        if (!Strings.isNullOrBlank(item.posterFileName())) {
+            this.imageDownloader.download(item.posterFileName(), viewHolder.image, false);
+        }
+
+        return convertView;
+    }
+
+    private static class ViewHolder {
+        private TextView name;
+        private ImageView image;
+
+        private ViewHolder(View convertView) {
+            this.name = (TextView) convertView.findViewById(R.id.itemName);
+            this.image = (ImageView) convertView.findViewById(R.id.seriesPoster);
+
+            convertView.setTag(this);
+        }
     }
 }
