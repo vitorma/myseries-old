@@ -62,7 +62,7 @@ public class SearchFragment extends AddSeriesFragment {
 
     @Override
     protected void onStartFired() {
-        App.searchSeriesService().register(this.searchListener);
+        App.seriesSearch().register(this.searchListener);
 
         if (this.results != null) {
             this.setUpNumberOfResults(this.results.size());
@@ -73,7 +73,7 @@ public class SearchFragment extends AddSeriesFragment {
 
     @Override
     protected void onStopFired() {
-        App.searchSeriesService().deregister(this.searchListener);
+        App.seriesSearch().deregister(this.searchListener);
     }
 
     private void setUpSearchFieldActionListeners() {
@@ -138,7 +138,7 @@ public class SearchFragment extends AddSeriesFragment {
     }
 
     private void performSearch() {
-        App.searchSeriesService().bySeriesName(this.searchField().getText().toString());
+        App.seriesSearch().bySeriesName(this.searchField().getText().toString());
     }
 
     private void setUpSearchListener() {

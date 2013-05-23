@@ -41,7 +41,7 @@ import android.content.res.Resources;
 
 public class App extends Application {
     private static Environment environment;
-    private static SeriesSearch searchService;
+    private static SeriesSearch seriesSearch;
     private static FollowSeriesService followSeriesService;
     private static Schedule schedule;
     private static UpdateService updateService;
@@ -69,7 +69,7 @@ public class App extends Application {
 
         errorService = new ErrorService();
 
-        searchService = new SeriesSearch(
+        seriesSearch = new SeriesSearch(
                 environment.seriesSource(),
                 environment.localizationProvider());
 
@@ -122,8 +122,8 @@ public class App extends Application {
 
     /* SERIES SEARCHING */
 
-    public static SeriesSearch searchSeriesService() {
-        return searchService;
+    public static SeriesSearch seriesSearch() {
+        return seriesSearch;
     }
 
     /* SERIES FOLLOWING */
