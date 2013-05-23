@@ -4,7 +4,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.search.TrendingSeriesListener;
+import mobi.myseries.application.search.SeriesSearchListener;
 import mobi.myseries.domain.model.Series;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class TrendingFragment extends AddSeriesFragment {
 
-    private TrendingSeriesListener listener;
+    private SeriesSearchListener listener;
 
     @Override
     protected int layoutResource() {
@@ -26,12 +26,12 @@ public class TrendingFragment extends AddSeriesFragment {
 
     @Override
     protected void onStartFired() {
-        App.trendingSeriesService().register(this.listener);
+        App.seriesSearch().registerForSearchByTrending(this.listener);
 
         if (this.results == null) {
-            App.trendingSeriesService().downloadTrendingList();
+            App.seriesSearch().byTrending();
         } else if (this.isLoading) {
-            this.listener.onStartLoading();
+            this.listener.onStart();
         } else {
             this.setUpNumberOfResults(this.results.size());
             this.showContent();
@@ -40,27 +40,34 @@ public class TrendingFragment extends AddSeriesFragment {
 
     @Override
     protected void onStopFired() {
-        App.trendingSeriesService().deregister(this.listener);
+        App.seriesSearch().deregisterForSearchByTrending(this.listener);
     }
 
     private void setUpTrendingSeriesListener() {
         this.listener = this.newTrendingSeriesListener();
     }
 
-    private TrendingSeriesListener newTrendingSeriesListener() {
-        return new TrendingSeriesListener() {
+    private SeriesSearchListener newTrendingSeriesListener() {
+        return new SeriesSearchListener() {
             @Override
-            public void onStartLoading() {
+            public void onStart() {
                 TrendingFragment.this.showProgress();
                 TrendingFragment.this.isLoading = true;
             }
 
             @Override
-            public void onFinishLoading(List<Series> result) {
-                TrendingFragment.this.setUpContent(result);
+            public void onFinish() {
                 TrendingFragment.this.showContent();
                 TrendingFragment.this.isLoading = false;
             }
+
+            @Override
+            public void onSucess(List<Series> results) {
+                TrendingFragment.this.setUpContent(results);
+            }
+
+            @Override
+            public void onFailure(Exception exception) { }
         };
     }
 

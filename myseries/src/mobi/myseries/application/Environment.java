@@ -29,13 +29,17 @@ import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.domain.source.ImageSource;
 import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.domain.source.TheTVDB;
+import mobi.myseries.domain.source.TraktTv;
+import mobi.myseries.domain.source.TrendingSource;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 
 public class Environment {
     private static final String THE_TVDB_API_KEY = "6F2B5A871C96FB05";
+    private static final String TRAKTTV_API_KEY = "2665c5546c888a02c4ceff0afccfa927";
 
     private TheTVDB theTVDB;
+    private TraktTv traktTv;
     private LocalizationProvider localizationProvider;
     private SeriesRepository seriesRepository;
     private ImageServiceRepository imageRepository;
@@ -48,6 +52,7 @@ public class Environment {
         this.context = context;
 
         this.theTVDB = new TheTVDB(THE_TVDB_API_KEY);
+        this.traktTv = new TraktTv(TRAKTTV_API_KEY);
         this.localizationProvider =  new AndroidLocalizationProvider();
         this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
         this.imageRepository = new AndroidImageServiceRepository(this.context);
@@ -59,6 +64,10 @@ public class Environment {
 
     public SeriesSource seriesSource() {
         return this.theTVDB;
+    }
+
+    public TrendingSource trendingSource() {
+        return this.traktTv;
     }
 
     public ImageSource imageSource() {

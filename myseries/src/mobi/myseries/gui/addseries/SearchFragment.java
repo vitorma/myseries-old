@@ -44,7 +44,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class SearchFragment extends AddSeriesFragment {
 
-    private SeriesSearchListener searchListener;
+    private SeriesSearchListener listener;
     private String seriesName;
 
     @Override
@@ -62,18 +62,18 @@ public class SearchFragment extends AddSeriesFragment {
 
     @Override
     protected void onStartFired() {
-        App.seriesSearch().register(this.searchListener);
+        App.seriesSearch().registerForSearchByName(this.listener);
 
         if (this.results != null) {
             this.setUpNumberOfResults(this.results.size());
         } else if (this.isLoading) {
-            this.searchListener.onStart();
+            this.listener.onStart();
         }
     }
 
     @Override
     protected void onStopFired() {
-        App.seriesSearch().deregister(this.searchListener);
+        App.seriesSearch().deregisterForSearchByName(this.listener);
     }
 
     private void setUpSearchFieldActionListeners() {
@@ -138,11 +138,11 @@ public class SearchFragment extends AddSeriesFragment {
     }
 
     private void performSearch() {
-        App.seriesSearch().bySeriesName(this.searchField().getText().toString());
+        App.seriesSearch().byName(this.searchField().getText().toString());
     }
 
     private void setUpSearchListener() {
-        this.searchListener = new SeriesSearchListener() {
+        this.listener = new SeriesSearchListener() {
             @Override
             public void onStart() {
                 SearchFragment.this.disableSearch();

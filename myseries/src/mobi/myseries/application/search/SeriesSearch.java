@@ -1,107 +1,141 @@
 package mobi.myseries.application.search;
 
 import java.util.List;
+import java.util.Locale;
 
-import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.SeriesSource;
+import mobi.myseries.domain.source.TrendingSource;
 import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
 import android.os.AsyncTask;
-import android.util.Log;
 
-public class SeriesSearch implements Publisher<SeriesSearchListener> {
-    private static final String TAG = SeriesSearch.class.getSimpleName();
+public class SeriesSearch {
 
     private SeriesSource seriesSource;
-    private LocalizationProvider localizationProvider;
-    private ListenerSet<SeriesSearchListener> listenerSet;
+    private TrendingSource trendingSource;
+    private ListenerSet<SeriesSearchListener> searchByNameListeners;
+    private ListenerSet<SeriesSearchListener> searchByTrendingListeners;
 
-    public SeriesSearch(SeriesSource seriesSource, LocalizationProvider localizationProvider) {
+    public SeriesSearch(SeriesSource seriesSource, TrendingSource trendingSource) {
         Validate.isNonNull(seriesSource, "seriesSource");
-        Validate.isNonNull(localizationProvider, "localizationProvider");
+        Validate.isNonNull(trendingSource, "trendingSource");
 
         this.seriesSource = seriesSource;
-        this.localizationProvider = localizationProvider;
-        this.listenerSet = new ListenerSet<SeriesSearchListener>();
+        this.trendingSource = trendingSource;
+        this.searchByNameListeners = new ListenerSet<SeriesSearchListener>();
+        this.searchByTrendingListeners = new ListenerSet<SeriesSearchListener>();
     }
 
-    public void bySeriesName(String seriesName) {
-        String language = this.localizationProvider.language();
+    public void byName(String seriesName) {
+        String language = Locale.getDefault().getLanguage();
 
-        new SearchTask().execute(seriesName, language);
+        new SearchByNameTask().execute(seriesName, language);
     }
 
-    @Override
-    public boolean register(SeriesSearchListener listener){
-        return this.listenerSet.register(listener);
+    public void byTrending() {
+        new SearchByTrendingTask().execute();
     }
 
-    @Override
-    public boolean deregister(SeriesSearchListener listener){
-        return this.listenerSet.deregister(listener);
+    public boolean registerForSearchByName(SeriesSearchListener listener){
+        return this.searchByNameListeners.register(listener);
     }
 
-    private void notifyOnStart() {
-        for (SeriesSearchListener l : this.listenerSet) {
+    public boolean deregisterForSearchByName(SeriesSearchListener listener){
+        return this.searchByNameListeners.deregister(listener);
+    }
+
+    public boolean registerForSearchByTrending(SeriesSearchListener listener){
+        return this.searchByTrendingListeners.register(listener);
+    }
+
+    public boolean deregisterForSearchByTrending(SeriesSearchListener listener){
+        return this.searchByTrendingListeners.deregister(listener);
+    }
+
+    private void notifyOnStart(ListenerSet<SeriesSearchListener> listeners) {
+        for (SeriesSearchListener l : listeners) {
             l.onStart();
         }
     }
 
-    private void notifyOnSucess(List<Series> results) {
-        for (SeriesSearchListener l : this.listenerSet) {
+    private void notifyOnSucess(ListenerSet<SeriesSearchListener> listeners, List<Series> results) {
+        for (SeriesSearchListener l : listeners) {
             l.onSucess(results);
         }
     }
 
-    private void notifyOnFailure(Exception failure) {
-        for (SeriesSearchListener l : this.listenerSet) {
+    private void notifyOnFailure(ListenerSet<SeriesSearchListener> listeners, Exception failure) {
+        for (SeriesSearchListener l : listeners) {
             l.onFailure(failure);
         }
     }
 
-    private void notifyOnFinish() {
-        for (SeriesSearchListener l : this.listenerSet) {
+    private void notifyOnFinish(ListenerSet<SeriesSearchListener> listeners) {
+        for (SeriesSearchListener l : listeners) {
             l.onFinish();
         }
     }
 
-    private abstract class BaseTask extends AsyncTask<String, Void, AsyncTaskResult<List<Series>>> {
+    private abstract class SearchTask extends AsyncTask<String, Void, AsyncTaskResult<List<Series>>> {
         @Override
         protected final void onPreExecute() {
-            SeriesSearch.this.notifyOnStart();
+            SeriesSearch.this.notifyOnStart(this.listeners());
+        }
+
+        @Override
+        protected AsyncTaskResult<List<Series>> doInBackground(String... params) {
+            try {
+                return new AsyncTaskResult<List<Series>>(this.downloadSeriesList(params));
+            } catch (SeriesSearchException e) {
+                return new AsyncTaskResult<List<Series>>(e);
+            }
         }
 
         @Override
         protected final void onPostExecute(AsyncTaskResult<List<Series>> taskResult) {
             if (taskResult.error() == null) {
-                SeriesSearch.this.notifyOnSucess(taskResult.result());
+                SeriesSearch.this.notifyOnSucess(this.listeners(), taskResult.result());
             } else {
-                SeriesSearch.this.notifyOnFailure(taskResult.error());
+                SeriesSearch.this.notifyOnFailure(this.listeners(), taskResult.error());
             }
 
-            SeriesSearch.this.notifyOnFinish();
+            SeriesSearch.this.notifyOnFinish(this.listeners());
         }
+
+        protected abstract List<Series> downloadSeriesList(String... params);
+        protected abstract ListenerSet<SeriesSearchListener> listeners();
     }
 
-    private class SearchTask extends BaseTask {
+    private class SearchByNameTask extends SearchTask {
         @Override
-        protected AsyncTaskResult<List<Series>> doInBackground(String... params) {
+        protected List<Series> downloadSeriesList(String... params) {
             String seriesName = params[0];
             String language = params[1];
 
             try {
-                Log.d(TAG, "trying to search for " + seriesName + "...");
-                List<Series> seriesList = SeriesSearch.this.seriesSource.searchFor(seriesName, language);
-
-                Log.d(TAG, "found " + seriesList.size() + " results");
-                return new AsyncTaskResult<List<Series>>(seriesList);
+                return SeriesSearch.this.seriesSource.searchFor(seriesName, language);
             } catch (Exception e) {
-                Log.e(TAG, "search failure caused by " + e.getClass().getSimpleName());
-                return new AsyncTaskResult<List<Series>>(new SeriesSearchException(e));
+                throw new SeriesSearchException(e);
             }
+        }
+
+        @Override
+        protected ListenerSet<SeriesSearchListener> listeners() {
+            return SeriesSearch.this.searchByNameListeners;
+        }
+    }
+
+    private class SearchByTrendingTask extends SearchTask {
+        @Override
+        protected List<Series> downloadSeriesList(String... params) {
+            return SeriesSearch.this.trendingSource.listTrending();
+        }
+
+        @Override
+        protected ListenerSet<SeriesSearchListener> listeners() {
+            return SeriesSearch.this.searchByTrendingListeners;
         }
     }
 }

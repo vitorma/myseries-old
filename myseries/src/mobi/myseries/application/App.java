@@ -33,7 +33,6 @@ import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.search.SeriesSearch;
-import mobi.myseries.application.search.TrendingSeriesService;
 import mobi.myseries.application.update.UpdateService;
 import android.app.Application;
 import android.content.Context;
@@ -51,7 +50,6 @@ public class App extends Application {
     private static SeriesProvider seriesProvider;
     private static BackupService backupService;
     private static BroadcastService broadcastService;
-    private static TrendingSeriesService trendingSeriesService;
 
     @Override
     public void onCreate() {
@@ -71,7 +69,7 @@ public class App extends Application {
 
         seriesSearch = new SeriesSearch(
                 environment.seriesSource(),
-                environment.localizationProvider());
+                environment.trendingSource());
 
         followSeriesService = new FollowSeriesService(
                 environment.seriesSource(),
@@ -99,8 +97,6 @@ public class App extends Application {
 
         seriesProvider = new SeriesProvider(environment.seriesRepository(), broadcastService);
 
-        trendingSeriesService = new TrendingSeriesService();
-
         this.startService(ConfigurationChangeService.newIntent(this));
     }
 
@@ -114,10 +110,6 @@ public class App extends Application {
 
     public static ErrorService errorService(){
         return errorService;
-    }
-
-    public static TrendingSeriesService trendingSeriesService() {
-        return trendingSeriesService;
     }
 
     /* SERIES SEARCHING */
