@@ -4,14 +4,9 @@ import java.util.List;
 
 import mobi.myseries.domain.model.Series;
 
-public interface SearchSeriesListener {
-
-    public void onSucess(List<Series> series);
-
-    public void onFaluire(Throwable exception);
-
+public interface SeriesSearchListener {
     public void onStart();
-    
     public void onFinish();
-
+    public void onSucess(List<Series> series);
+    public void onFailure(Exception exception);
 }

@@ -32,7 +32,8 @@ import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.schedule.Schedule;
-import mobi.myseries.application.search.SearchSeriesService;
+import mobi.myseries.application.search.SeriesSearch;
+import mobi.myseries.application.search.TrendingSeriesService;
 import mobi.myseries.application.update.UpdateService;
 import android.app.Application;
 import android.content.Context;
@@ -40,7 +41,7 @@ import android.content.res.Resources;
 
 public class App extends Application {
     private static Environment environment;
-    private static SearchSeriesService searchService;
+    private static SeriesSearch searchService;
     private static FollowSeriesService followSeriesService;
     private static Schedule schedule;
     private static UpdateService updateService;
@@ -68,7 +69,7 @@ public class App extends Application {
 
         errorService = new ErrorService();
 
-        searchService = new SearchSeriesService(
+        searchService = new SeriesSearch(
                 environment.seriesSource(),
                 environment.localizationProvider());
 
@@ -121,7 +122,7 @@ public class App extends Application {
 
     /* SERIES SEARCHING */
 
-    public static SearchSeriesService searchSeriesService() {
+    public static SeriesSearch searchSeriesService() {
         return searchService;
     }
 

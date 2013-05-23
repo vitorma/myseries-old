@@ -25,14 +25,13 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.search.SearchSeriesListener;
 import mobi.myseries.application.search.SeriesSearchException;
+import mobi.myseries.application.search.SeriesSearchListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
-import mobi.myseries.domain.source.SeriesNotFoundException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -45,8 +44,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class SearchFragment extends AddSeriesFragment {
 
-    private SearchSeriesListener searchListener;
-    private boolean isSearching;
+    private SeriesSearchListener searchListener;
     private String seriesName;
 
     @Override
@@ -64,18 +62,18 @@ public class SearchFragment extends AddSeriesFragment {
 
     @Override
     protected void onStartFired() {
-        App.searchSeriesService().registerListener(this.searchListener);
+        App.searchSeriesService().register(this.searchListener);
 
-        if (this.adapter != null) {
-            this.setUpNumberOfResults(this.adapter.getCount());
-        } else if (this.isSearching) {
+        if (this.results != null) {
+            this.setUpNumberOfResults(this.results.size());
+        } else if (this.isLoading) {
             this.searchListener.onStart();
         }
     }
 
     @Override
     protected void onStopFired() {
-        App.searchSeriesService().deregisterListener(this.searchListener);
+        App.searchSeriesService().deregister(this.searchListener);
     }
 
     private void setUpSearchFieldActionListeners() {
@@ -140,16 +138,16 @@ public class SearchFragment extends AddSeriesFragment {
     }
 
     private void performSearch() {
-        App.searchSeriesService().search(this.searchField().getText().toString());
+        App.searchSeriesService().bySeriesName(this.searchField().getText().toString());
     }
 
     private void setUpSearchListener() {
-        this.searchListener = new SearchSeriesListener() {
+        this.searchListener = new SeriesSearchListener() {
             @Override
             public void onStart() {
                 SearchFragment.this.disableSearch();
 
-                SearchFragment.this.isSearching = true;
+                SearchFragment.this.isLoading = true;
                 SearchFragment.this.activity().onSearchStart();
             }
 
@@ -157,7 +155,7 @@ public class SearchFragment extends AddSeriesFragment {
             public void onFinish() {
                 SearchFragment.this.enableSearch();
 
-                SearchFragment.this.isSearching = false;
+                SearchFragment.this.isLoading = false;
                 SearchFragment.this.activity().onSearchFinish();
             }
 
@@ -167,7 +165,7 @@ public class SearchFragment extends AddSeriesFragment {
             }
 
             @Override
-            public void onFaluire(Throwable exception) {
+            public void onFailure(Exception exception) {
                 if (exception instanceof SeriesSearchException) {
                     if (exception.getCause() instanceof ConnectionFailedException) {
                         SearchFragment.this.activity().onSearchFailure(
@@ -177,10 +175,6 @@ public class SearchFragment extends AddSeriesFragment {
                         SearchFragment.this.activity().onSearchFailure(
                                 R.string.invalid_criteria_title,
                                 R.string.invalid_criteria_message);
-                    } else if (exception.getCause() instanceof SeriesNotFoundException) {
-                        SearchFragment.this.activity().onSearchFailure(
-                                R.string.no_results_title,
-                                R.string.no_results_message);
                     } else if (exception.getCause() instanceof ParsingFailedException) {
                         SearchFragment.this.activity().onSearchFailure(
                                 R.string.parsing_failed_title,
@@ -198,7 +192,7 @@ public class SearchFragment extends AddSeriesFragment {
     private void showResults(List<Series> results) {
         this.seriesName = this.searchField().getText().toString();
 
-        this.setUpAdapter(results);
+        this.setResults(results);
         this.setUpNumberOfResults(results.size());
     }
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.TrendingSeriesListener;
+import mobi.myseries.application.search.TrendingSeriesListener;
 import mobi.myseries.domain.model.Series;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 public class TrendingFragment extends AddSeriesFragment {
 
     private TrendingSeriesListener listener;
-    private boolean isDownloadInProgress;
 
     @Override
     protected int layoutResource() {
@@ -29,12 +28,12 @@ public class TrendingFragment extends AddSeriesFragment {
     protected void onStartFired() {
         App.trendingSeriesService().register(this.listener);
 
-        if (this.adapter == null) {
+        if (this.results == null) {
             App.trendingSeriesService().downloadTrendingList();
-        } else if (this.isDownloadInProgress) {
+        } else if (this.isLoading) {
             this.listener.onStartLoading();
         } else {
-            this.setUpNumberOfResults(this.adapter.getCount());
+            this.setUpNumberOfResults(this.results.size());
             this.showContent();
         }
     }
@@ -53,21 +52,21 @@ public class TrendingFragment extends AddSeriesFragment {
             @Override
             public void onStartLoading() {
                 TrendingFragment.this.showProgress();
-                TrendingFragment.this.isDownloadInProgress = true;
+                TrendingFragment.this.isLoading = true;
             }
 
             @Override
             public void onFinishLoading(List<Series> result) {
                 TrendingFragment.this.setUpContent(result);
                 TrendingFragment.this.showContent();
-                TrendingFragment.this.isDownloadInProgress = false;
+                TrendingFragment.this.isLoading = false;
             }
         };
     }
 
     private void setUpContent(List<Series> result) {
         this.setUpNumberOfResults(result.size());
-        this.setUpAdapter(result);
+        this.setResults(result);
     }
 
     private void setUpNumberOfResults(int n) {

@@ -14,8 +14,11 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public abstract class AddSeriesFragment extends SherlockFragment {
 
-    protected GridView grid;
-    protected AddAdapter adapter;
+    private GridView grid;
+    private AddAdapter adapter;
+
+    protected boolean isLoading;
+    protected List<Series> results;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,8 @@ public abstract class AddSeriesFragment extends SherlockFragment {
         this.onStopFired();
     }
 
+    //-------------------------------------------------------------------------------------------------------
+
     protected AddSeriesActivity activity() {
         return (AddSeriesActivity) this.getSherlockActivity();
     }
@@ -59,6 +64,12 @@ public abstract class AddSeriesFragment extends SherlockFragment {
     protected abstract void setUp();
     protected abstract void onStartFired();
     protected abstract void onStopFired();
+
+    protected void setResults(List<Series> results) {
+        this.results = results;
+        this.adapter = new AddAdapter(this.activity(), results);
+        this.grid.setAdapter(this.adapter);
+    }
 
     private void setUpGrid() {
         this.grid = (GridView) this.getView().findViewById(android.R.id.list);
@@ -76,10 +87,5 @@ public abstract class AddSeriesFragment extends SherlockFragment {
                 AddSeriesFragment.this.activity().onRequestAdd(selectedItem);
             }
         });
-    }
-
-    protected void setUpAdapter(List<Series> results) {
-        this.adapter = new AddAdapter(this.activity(), results);
-        this.grid.setAdapter(this.adapter);
     }
 }
