@@ -31,12 +31,12 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
 import net.simonvt.menudrawer.MenuDrawer;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class EpisodesActivity extends BaseActivity {
@@ -91,7 +91,7 @@ public class EpisodesActivity extends BaseActivity {
 
         List<Episode> episodes = series.episodes();
 
-        this.adapter = new EpisodePagerAdapter(this, this.getSupportFragmentManager(), episodes);
+        this.adapter = new EpisodePagerAdapter(this, this.getFragmentManager(), episodes);
         this.pager = (ViewPager) this.findViewById(R.id.pager);
         this.pager.setAdapter(this.adapter);
         this.pageIndicator = (TitlePageIndicator) this.findViewById(R.id.titles);
@@ -100,12 +100,12 @@ public class EpisodesActivity extends BaseActivity {
         Episode current = series.season(this.seasonNumber).episode(this.episodeNumber);
         this.pager.setCurrentItem(this.adapter.positionOf(current));
 
-        ActionBar ab = this.getSupportActionBar();
+        ActionBar ab = this.getActionBar();
         ab.setTitle(series.name());
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
 
-        Object retained = this.getLastCustomNonConfigurationInstance();
+        Object retained = this.getLastNonConfigurationInstance();
         if ((retained != null) && (retained instanceof StateHolder)) {
             this.state = (StateHolder) retained;
             this.messageLauncher = this.state.messageLauncher;
@@ -135,7 +135,7 @@ public class EpisodesActivity extends BaseActivity {
     }
 
     @Override
-    public Object onRetainCustomNonConfigurationInstance() {
+    public Object onRetainNonConfigurationInstance() {
         return this.state;
     }
 

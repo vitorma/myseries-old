@@ -4,14 +4,13 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-
-public class EpisodeFragment extends SherlockListFragment {
+public class EpisodeFragment extends ListFragment {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final String EPISODE_NUMBER = "episodeNumber";
     private static final String SEASON_NUMBER = "seasonNumber";
@@ -62,6 +61,6 @@ public class EpisodeFragment extends SherlockListFragment {
         Episode episode =
             SERIES_PROVIDER.getSeries(this.seriesId).season(this.seasonNumber).episode(this.episodeNumber);
 
-        this.setListAdapter(new EpisodeAdapter(getActivity(), episode));
+        this.setListAdapter(new EpisodeAdapter(this.getActivity(), episode));
     }
 }

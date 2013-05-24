@@ -7,12 +7,11 @@ import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.TabsAdapter;
 import net.simonvt.menudrawer.MenuDrawer;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-
-import com.actionbarsherlock.app.ActionBar;
 
 public class SeriesActivity extends BaseActivity {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
@@ -55,7 +54,7 @@ public class SeriesActivity extends BaseActivity {
     }
 
     private void setUpActionBar() {
-        ActionBar actionBar = this.getSupportActionBar();
+        ActionBar actionBar = this.getActionBar();
 
         actionBar.setTitle(SERIES_PROVIDER.getSeries(this.seriesId).name());
         actionBar.setDisplayShowTitleEnabled(true);

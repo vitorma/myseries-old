@@ -6,6 +6,7 @@ import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Extra;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,9 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-public class SeasonsFragment extends SherlockFragment {
+public class SeasonsFragment extends Fragment {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     private int seriesId;

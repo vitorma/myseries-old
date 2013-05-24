@@ -1,16 +1,50 @@
 package mobi.myseries.gui.appwidget;
 
+import mobi.myseries.R;
 import mobi.myseries.application.broadcast.BroadcastAction;
+import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.preferences.Preferences;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.RemoteViews;
 
-public abstract class AppWidget extends AppWidgetProvider {
-    private static final String TAG = "AppWidget";
+public class AppWidget extends AppWidgetProvider {
+    private static final String TAG = AppWidget.class.getSimpleName();
+
+    public static void setUp(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.appwidget);
+
+        ActionBar.from(context, appWidgetView).setUpFor(appWidgetId);
+        TabBar.from(context, appWidgetView).setUpFor(appWidgetId);
+
+        appWidgetView.setRemoteAdapter(R.id.episodeList, adapterIntentFrom(context, appWidgetId));
+
+        appWidgetView.setPendingIntentTemplate(R.id.episodeList, episodesIntentTemplateFrom(context, appWidgetId));
+        appWidgetView.setEmptyView(R.id.episodeList, R.id.emptyView);
+
+        appWidgetManager.updateAppWidget(appWidgetId, appWidgetView);
+
+        refresh(context, appWidgetId);
+    }
+
+    public static void refresh(Context context, int appWidgetId) {
+        AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.episodeList);
+    }
+
+    private static Intent adapterIntentFrom(Context context, int appWidgetId) {
+        return AdapterViewsService.newIntent(context, appWidgetId);
+    }
+
+    private static PendingIntent episodesIntentTemplateFrom(Context context, int appWidgetId) {
+        Intent intent = new Intent(context, EpisodesActivity.class);
+
+        return PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
 
     @Override
     public void onEnabled(Context context) {
@@ -40,15 +74,13 @@ public abstract class AppWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int i = 0; i < appWidgetIds.length; i++) {
-            this.onUpdate(context, appWidgetManager, appWidgetIds[i]);
+            setUp(context, appWidgetManager, appWidgetIds[i]);
 
             Log.d(TAG, "appwidget " + appWidgetIds[i] + " was updated");
         }
 
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
-
-    protected abstract void onUpdate(Context context, AppWidgetManager appWidgetManager, int appWidgetId);
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -65,8 +97,7 @@ public abstract class AppWidget extends AppWidgetProvider {
         return BroadcastAction.SEEN_MARKUP.equals(action) ||
                BroadcastAction.UPDATE.equals(action) ||
                BroadcastAction.ADDITION.equals(action) ||
-               BroadcastAction.REMOVAL.equals(action) ||
-               BroadcastAction.CONFIGURATION_CHANGE.equals(action);
+               BroadcastAction.REMOVAL.equals(action);
     }
 
     private void callOnUpdate(Context context) {

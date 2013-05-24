@@ -9,7 +9,6 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
 import mobi.myseries.gui.shared.SortMode;
-import mobi.myseries.shared.Android;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -24,9 +23,7 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
-public class AppWidgetPreferenceActivity extends SherlockActivity {
+public class AppWidgetPreferenceActivity extends Activity {
 
     public static Intent newIntent(Context context, int appWidgetId) {
         Intent intent = new Intent(context, AppWidgetPreferenceActivity.class);
@@ -53,7 +50,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         this.setContentView(R.layout.appwidget_preferences);
         this.getExtraAppWidgetIdOrFinish();
         this.setUpViews();
-        this.getSupportActionBar().setTitle(R.string.widget_preferences);
+        this.getActionBar().setTitle(R.string.widget_preferences);
     }
 
     private void getExtraAppWidgetIdOrFinish() {
@@ -204,16 +201,10 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     }
 
     private void updateAppWidget() {
-        if (Android.isHoneycombOrHigher()) {
-            AppWidgetV11.setUp(
-                    this.getApplicationContext(),
-                    AppWidgetManager.getInstance(this.getApplicationContext()),
-                    this.appWidgetId);
-        } else {
-            AppWidgetV8.setUp(
-                    this.getApplicationContext(),
-                    this.appWidgetId);
-        }
+        AppWidget.setUp(
+            this.getApplicationContext(),
+            AppWidgetManager.getInstance(this.getApplicationContext()),
+            this.appWidgetId);
     }
 
     private void finishOk() {

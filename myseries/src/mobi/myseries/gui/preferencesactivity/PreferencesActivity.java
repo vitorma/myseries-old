@@ -23,22 +23,18 @@ package mobi.myseries.gui.preferencesactivity;
 
 import mobi.myseries.R;
 import mobi.myseries.gui.preferences.PreferencesProvider;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
-
-public class PreferencesActivity extends SherlockActivity {
+public class PreferencesActivity extends Activity {
     private RadioGroup automaticUpdatesRadioGroup;
     private Button cancelButton;
     private Button saveButton;
@@ -57,7 +53,7 @@ public class PreferencesActivity extends SherlockActivity {
     }
 
     private void setupActionBar() {
-        ActionBar actionBar = this.getSupportActionBar();
+        ActionBar actionBar = this.getActionBar();
 
         actionBar.setTitle(R.string.settings);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -71,7 +67,7 @@ public class PreferencesActivity extends SherlockActivity {
 
 
     private void loadSettings() {
-        PreferencesProvider settings = settingsProviderFor(this);
+        PreferencesProvider settings = this.settingsProviderFor(this);
 
         if (!settings.updateAutomatically()) {
             this.automaticUpdatesRadioGroup.check(R.id.doNotUpdateRadioButton);
@@ -116,17 +112,17 @@ public class PreferencesActivity extends SherlockActivity {
     private void saveSettings() {
         switch (this.automaticUpdatesRadioGroup.getCheckedRadioButtonId()) {
         case R.id.doNotUpdateRadioButton:
-            settingsProviderFor(this).putUpdateAutomatically(false);
+            this.settingsProviderFor(this).putUpdateAutomatically(false);
             break;
 
         case R.id.wifiOnlyRadioButton:
-            settingsProviderFor(this).putUpdateAutomatically(true)
+            this.settingsProviderFor(this).putUpdateAutomatically(true)
                     .putUpdateOnDataPlan(false);
 
             break;
 
         case R.id.wifiOrDataPlanRadioButton:
-            settingsProviderFor(this).putUpdateAutomatically(true)
+            this.settingsProviderFor(this).putUpdateAutomatically(true)
                     .putUpdateOnDataPlan(true);
 
             break;

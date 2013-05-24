@@ -29,24 +29,21 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.backup.ExternalStorageNotAvailableException;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.backup.BackupActivity;
-import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
+import mobi.myseries.gui.backup.BackupActivity;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
-import mobi.myseries.gui.shared.BackupDialogBuilder;
-import mobi.myseries.gui.shared.DialogButtonOnClickListener;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
-import mobi.myseries.gui.shared.FailureDialogBuilder;
+import mobi.myseries.gui.shared.DialogButtonOnClickListener;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
 import mobi.myseries.gui.shared.ToastBuilder;
 import mobi.myseries.gui.shared.TopActivity;
 import net.simonvt.menudrawer.MenuDrawer;
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -54,11 +51,9 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Window;
 
 public class MySeriesActivity extends TopActivity implements UpdateListener {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
@@ -77,9 +72,9 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
 
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.myseries);
-        this.setSupportProgressBarIndeterminateVisibility(false);
+        this.setProgressBarIndeterminateVisibility(false);
 
-        ActionBar ab = this.getSupportActionBar();
+        ActionBar ab = this.getActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
         ab.setTitle(R.string.my_series);
@@ -87,7 +82,7 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
         App.updateSeriesService().register(this);
         App.updateSeriesService().withHandler(new Handler());
 
-        Object retained = this.getLastCustomNonConfigurationInstance();
+        Object retained = this.getLastNonConfigurationInstance();
         if ((retained != null) && (retained instanceof StateHolder)) {
             this.state = (StateHolder) retained;
             this.messageLauncher = this.state.messageLauncher;
@@ -117,7 +112,7 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
     protected void onResume() {
         super.onResume();
         this.loadState();
-        this.setSupportProgressBarIndeterminateVisibility(App.updateSeriesService().isUpdating());
+        this.setProgressBarIndeterminateVisibility(App.updateSeriesService().isUpdating());
     }
 
     private void loadState() {
@@ -128,7 +123,7 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
     }
 
     @Override
-    public Object onRetainCustomNonConfigurationInstance() {
+    public Object onRetainNonConfigurationInstance() {
         return this.state;
     }
 
@@ -315,7 +310,7 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
 //            .setMessage(R.string.backup_storage_failure)
 //            .build().show();
 //        }
-//        
+//
 //    }
     @Override
     public boolean onSearchRequested() {
@@ -326,25 +321,25 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
     @Override
     public void onUpdateStart() {
         Log.d(this.getClass().getName(), "update started");
-        this.setSupportProgressBarIndeterminateVisibility(true);
+        this.setProgressBarIndeterminateVisibility(true);
     }
 
     @Override
     public void onUpdateFailure(Exception e) {
         Log.d(this.getClass().getName(), "update failure");
-        this.setSupportProgressBarIndeterminateVisibility(false);
+        this.setProgressBarIndeterminateVisibility(false);
     }
 
     @Override
     public void onUpdateSuccess() {
         Log.d(this.getClass().getName(), "update complete");
-        this.setSupportProgressBarIndeterminateVisibility(false);
+        this.setProgressBarIndeterminateVisibility(false);
     }
 
     @Override
     public void onUpdateNotNecessary() {
         Log.d(this.getClass().getName(), "update not necessary yet");
-        this.setSupportProgressBarIndeterminateVisibility(false);
+        this.setProgressBarIndeterminateVisibility(false);
     }
 
     // Search----------------------------------------------------------------------------------------

@@ -33,19 +33,13 @@
     <dimen name="appwidget_actionbar_button_height">40dp</dimen>
     <dimen name="appwidget_actionbar_button_width">40dp</dimen>
     <dimen name="appwidget_item_height">63dp</dimen>
-    <dimen name="appwidget_item_poster_height">51dp</dimen>
-    <dimen name="appwidget_item_poster_width">35dp</dimen>
+    <dimen name="appwidget_item_poster_height">56dp</dimen>
+    <dimen name="appwidget_item_poster_width">38dp</dimen>
     <dimen name="appwidget_item_gap">6dp</dimen>
 
-    <integer name="appwidget_number_of_items">3</integer>
-    <dimen name="appwidget_content_height">189dp</dimen>
-    <dimen name="appwidget_min_height">250dp</dimen>
+    <dimen name="appwidget_min_height">143dp</dimen>
     <dimen name="appwidget_min_width">250dp</dimen>
-    <dimen name="appwidget_margin">8dp</dimen>
-
-    <dimen name="appwidget_min_height_resizable">143dp</dimen>
-    <dimen name="appwidget_min_width_resizable">250dp</dimen>
-    <dimen name="appwidget_margin_resizable">0dp</dimen>
+    <dimen name="appwidget_margin">0dp</dimen>
 
     <!-- SlidingMenu -->
 

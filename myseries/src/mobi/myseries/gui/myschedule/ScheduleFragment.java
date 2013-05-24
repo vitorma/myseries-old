@@ -25,14 +25,13 @@ import mobi.myseries.R;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Extra;
+import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-
-public class ScheduleFragment extends SherlockListFragment implements ScheduleAdapter.Listener {
+public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Listener {
     private int scheduleMode;
     private ScheduleAdapter adapter;
 

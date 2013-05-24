@@ -29,7 +29,6 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.appwidget.ItemPageBrowser;
 import mobi.myseries.gui.shared.SortMode;
 
 public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
@@ -150,8 +149,6 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
         private static final String NAME = "AppWidgetPreferences";
         private static final String SCHEDULE_MODE_KEY = "ScheduleMode";
         private static final int SCHEDULE_MODE_DEFAULT_VALUE = ScheduleMode.NEXT;
-        private static final String CURRENT_PAGE_KEY = "CurrentPage";
-        private static final int CURRENT_PAGE_DEFAULT_VALUE = ItemPageBrowser.FIRST_PAGE;
 
         private AppWidgetPreferences() {
             super(NAME);
@@ -161,16 +158,8 @@ public abstract class SchedulePreferences<T extends SchedulePreferences<T>> {
             return this.primitive.getInt(SCHEDULE_MODE_KEY, SCHEDULE_MODE_DEFAULT_VALUE);
         }
 
-        public int currentPage() {
-            return this.primitive.getInt(CURRENT_PAGE_KEY, CURRENT_PAGE_DEFAULT_VALUE);
-        }
-
         public void setScheduleMode(int scheduleMode) {
             this.primitive.putInt(SCHEDULE_MODE_KEY, scheduleMode);
-        }
-
-        public void setCurrentPage(int currentPage) {
-            this.primitive.putInt(CURRENT_PAGE_KEY, currentPage);
         }
 
         public void removeEntriesRelatedToAppWidget(int appWidgetId) {

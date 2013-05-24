@@ -94,7 +94,7 @@ public final class ImageService {
         } catch (ImageNotFoundException e) {}
     }
 
-    // TODO(Gabriel) Should we pass the listener as a parameter, to avoid the
+    // TODO(Gabriel) Should we pass the seriesSearchListener as a parameter, to avoid the
     // users not registering their listeners?
     public void downloadImageOf(Episode episode) {
         Validate.isNonNull(episode, "episode");

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<resources>
-
-    <bool name="appwidget_v8_enabled">false</bool>
-    <bool name="appwidget_v11_enabled">true</bool>
-
-</resources>

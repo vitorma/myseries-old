@@ -2,15 +2,14 @@ package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
 import net.simonvt.menudrawer.MenuDrawer;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
-
-public abstract class BaseActivity extends SherlockFragmentActivity {
+public abstract class BaseActivity extends Activity {
 
     private MenuDrawer menuDrawer;
 
@@ -27,7 +26,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
         this.menuDrawer.setMenuSize((int) this.getResources().getDimension(R.dimen.sliding_menu_width));
         this.menuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_FULLSCREEN);
 
-        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = this.getFragmentManager().beginTransaction();
         Fragment f = new SlidingMenuFragment();
         ft.replace(R.id.menu_frame, f);
         ft.commit();

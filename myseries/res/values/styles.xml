@@ -369,13 +369,6 @@
 
     <style name="DialogAnimation" parent="android:Animation.Dialog"/>
 
-    <!-- ActionBar -->
-
-    <style name="ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-        <item name="backgroundStacked">@drawable/abs__ab_bottom_solid_inverse_holo</item>
-        <item name="android:backgroundStacked">@drawable/abs__ab_bottom_solid_inverse_holo</item>
-    </style>
-
     <!-- CoverFlow -->
 
     <style name="CoverFlow">

@@ -38,14 +38,13 @@ import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
 import mobi.myseries.gui.shared.TabPagerAdapter;
 import mobi.myseries.gui.shared.TopActivity;
 import net.simonvt.menudrawer.MenuDrawer;
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.Holder {
     private State state;
@@ -81,13 +80,13 @@ public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.H
     }
 
     @Override
-    public Object onRetainCustomNonConfigurationInstance() {
+    public Object onRetainNonConfigurationInstance() {
        return this.state;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.getSupportMenuInflater().inflate(R.menu.myschedule, menu);
+        this.getMenuInflater().inflate(R.menu.myschedule, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -145,7 +144,7 @@ public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.H
     }
 
     private void setUpState() {
-        Object retainedState = this.getLastCustomNonConfigurationInstance();
+        Object retainedState = this.getLastNonConfigurationInstance();
 
         if (retainedState != null) {
             this.state = (State) retainedState;
@@ -164,7 +163,7 @@ public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.H
     }
 
     private void setUpActionBar() {
-        ActionBar actionBar = this.getSupportActionBar();
+        ActionBar actionBar = this.getActionBar();
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);

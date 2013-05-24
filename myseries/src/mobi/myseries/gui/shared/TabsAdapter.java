@@ -4,17 +4,15 @@ import java.util.ArrayList;
 
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class TabsAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, ActionBar.TabListener, Publisher<TabsAdapter.Listener> {
     private final Context context;
@@ -26,8 +24,8 @@ public class TabsAdapter extends FragmentPagerAdapter implements ViewPager.OnPag
 
     private final ListenerSet<TabsAdapter.Listener> listeners = new ListenerSet<TabsAdapter.Listener>();
 
-    public TabsAdapter(SherlockFragmentActivity activity, ActionBar actionBar, ViewPager viewPager) {
-        super(activity.getSupportFragmentManager());
+    public TabsAdapter(Activity activity, ActionBar actionBar, ViewPager viewPager) {
+        super(activity.getFragmentManager());
 
         this.context = activity;
         this.actionBar = actionBar;
@@ -52,7 +50,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements ViewPager.OnPag
 
     @Override
     public Fragment getItem(int position) {
-        return SherlockFragment.instantiate(
+        return Fragment.instantiate(
                 this.context, this.fragmentClassNames.get(position), this.fragmentExtras.get(position));
     }
 
@@ -75,7 +73,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements ViewPager.OnPag
     public void onPageScrollStateChanged(int state) {}
 
     @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         this.viewPager.setCurrentItem(tab.getPosition());
         this.notifyListeners(tab.getPosition());
     }

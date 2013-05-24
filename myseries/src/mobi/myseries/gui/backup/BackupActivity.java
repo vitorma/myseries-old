@@ -29,11 +29,13 @@ import mobi.myseries.application.backup.DriveBackup;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.accounts.Account;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -42,13 +44,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
-public class BackupActivity extends SherlockActivity implements BackupListener {
+public class BackupActivity extends Activity implements BackupListener {
 
     private Spinner gDriveAccountSpinner;
     private Button gDriveBackupButton;
@@ -59,14 +58,14 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
 
     private GoogleAccountManager accountManager;
     private String currentAccount;
-    
+
     private BackupMode currentMode;
     private int STATE;
     private MessageLauncher messageLauncher;
 
     private static final int STATE_RESTORING = 0;
     private static final int STATE_BACKUPING = 1;
-    
+
     private static final int REQUEST_AUTHORIZATION = 0;
 
     @Override
@@ -75,7 +74,7 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
         this.messageLauncher = new MessageLauncher(this);
 
         App.backupService().register(this);
-        accountManager = new GoogleAccountManager(this);
+        this.accountManager = new GoogleAccountManager(this);
 
         this.setContentView(R.layout.backup);
         this.setResult(Activity.RESULT_CANCELED);
@@ -87,12 +86,12 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
         this.setupGoogleDriveAccountSpinner();
         this.setupGoogleDriveBackupButton();
         this.setupGoogleDriveRestoreButton();
-        
+
     }
 
 
     private void setupActionBar() {
-        ActionBar actionBar = this.getSupportActionBar();
+        ActionBar actionBar = this.getActionBar();
 
         actionBar.setTitle(R.string.backup_restore);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -110,15 +109,15 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
         this.gDriveRestoreButton = (Button) this
                 .findViewById(R.id.google_drive_restore_button);
     }
-    
+
     private void setupSDCardRestoreButton() {
         this.SDCardRestoreButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                restoreBackup(new SdcardBackup());
+                BackupActivity.this.restoreBackup(new SdcardBackup());
             }
         });
-        
+
     }
 
     private void setupSdCardBackupButton() {
@@ -126,18 +125,18 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
 
             @Override
             public void onClick(View v) {
-                doBackup(new SdcardBackup());
+                BackupActivity.this.doBackup(new SdcardBackup());
             }
         });
-        
+
     }
 
     private void setUpSDCardLocationTextView() {
         this.SDCardLocationTextView.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
-                
+
             }
         });
     }
@@ -145,10 +144,10 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
     private void setupGoogleDriveAccountSpinner() {
         ArrayAdapter<String> spinnerAccountAdapter = new ArrayAdapter<String>(
                 this, R.layout.sherlock_spinner_item);
-        for (Account a : accountManager.getAccounts()) {
+        for (Account a : this.accountManager.getAccounts()) {
             spinnerAccountAdapter.add(a.name);
         }
-        gDriveAccountSpinner.setAdapter(spinnerAccountAdapter);
+        this.gDriveAccountSpinner.setAdapter(spinnerAccountAdapter);
 
         this.gDriveAccountSpinner
                 .setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -159,7 +158,7 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
                         String selectedAccount = (String) arg0
                                 .getItemAtPosition(arg2);
                         //saveGoogleAccount(selectedAccount);
-                        currentAccount = selectedAccount;
+                        BackupActivity.this.currentAccount = selectedAccount;
 
                     }
 
@@ -176,7 +175,7 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
 
             @Override
             public void onClick(View v) {
-                doBackup(new DriveBackup(currentAccount));
+                BackupActivity.this.doBackup(new DriveBackup(BackupActivity.this.currentAccount));
             }
         });
     }
@@ -185,7 +184,7 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
         this.gDriveRestoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                restoreBackup(new DriveBackup(currentAccount));
+                BackupActivity.this.restoreBackup(new DriveBackup(BackupActivity.this.currentAccount));
             }
         });
     }
@@ -228,7 +227,7 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
     @Override
     public void onBackupFailure(Exception e) {
         if (e instanceof UserRecoverableAuthIOException) {
-            startActivityForResult(((UserRecoverableAuthIOException) e).getIntent(), REQUEST_AUTHORIZATION);
+            this.startActivityForResult(((UserRecoverableAuthIOException) e).getIntent(), REQUEST_AUTHORIZATION);
         } else {
             e.printStackTrace();
         }
@@ -237,14 +236,14 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
 
     @Override
     public void onRestoreSucess() {
-        
+
 
     }
 
     @Override
     public void onRestoreFailure(Exception e) {
         if (e instanceof UserRecoverableAuthIOException) {
-            startActivityForResult(((UserRecoverableAuthIOException) e).getIntent(), REQUEST_AUTHORIZATION);
+            this.startActivityForResult(((UserRecoverableAuthIOException) e).getIntent(), REQUEST_AUTHORIZATION);
         }
         e.printStackTrace();
     }
@@ -254,10 +253,10 @@ public class BackupActivity extends SherlockActivity implements BackupListener {
         switch (requestCode) {
         case REQUEST_AUTHORIZATION:
             if (resultCode == Activity.RESULT_OK) {
-                if(STATE == STATE_BACKUPING) {
+                if(this.STATE == STATE_BACKUPING) {
                     this.doBackup(this.currentMode);
                 }
-                if(STATE == STATE_RESTORING) {
+                if(this.STATE == STATE_RESTORING) {
                     this.restoreBackup(this.currentMode);
                 }
             }
