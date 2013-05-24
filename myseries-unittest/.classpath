@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="libs/mockito-core-1.9.5.jar"/>
 	<classpathentry kind="lib" path="libs/com.springsource.org.objenesis-1.0.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/myseries"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
