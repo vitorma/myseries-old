@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/gap_medium" >
 
     <TextView
-        style="@style/TextView.Label.Medium.Bold"
+        style="@style/TextView.Medium.MediumGray.Bold"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/gap_medium"
@@ -70,7 +70,7 @@
     </RelativeLayout>
 
     <TextView
-        style="@style/TextView.Label.Medium.Bold"
+        style="@style/TextView.Medium.MediumGray.Bold"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/gap_medium"

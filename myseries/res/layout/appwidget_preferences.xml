@@ -92,7 +92,7 @@
             <CheckedTextView
                 android:id="@+id/showSpecialEpisodes"
                 android:text="@string/showSpecialEpisodes"
-                style = "@style/TextView.Dialog.Message"
+                style = "@style/TextView.Medium.DarkGray"
                 android:background="@drawable/list_selector_holo_light"
                 android:checkMark="@drawable/checkbox"
                 android:clickable="true"
@@ -109,7 +109,7 @@
 
             <TextView
                 android:text="@string/seen_episodes_upper"
-                style="@style/TextView.Label.Medium.Bold"
+                style="@style/TextView.Medium.MediumGray.Bold"
                 android:gravity="bottom|left"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
@@ -124,7 +124,7 @@
             <CheckedTextView
                 android:id="@+id/showSeenEpisodes"
                 android:text="@string/showSeenEpisodes"
-                style = "@style/TextView.Dialog.Message"
+                style = "@style/TextView.Medium.DarkGray"
                 android:background="@drawable/list_selector_holo_light"
                 android:checkMark="@drawable/checkbox"
                 android:clickable="true"
