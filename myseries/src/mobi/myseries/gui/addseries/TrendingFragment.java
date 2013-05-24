@@ -6,101 +6,66 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.search.SeriesSearchListener;
 import mobi.myseries.domain.model.Series;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 public class TrendingFragment extends AddSeriesFragment {
 
-    private SeriesSearchListener listener;
-
     @Override
-    protected int layoutResource() {
-        return R.layout.addseries_trending;
+    protected boolean hasSearchPanel() {
+        return false;
     }
 
     @Override
-    protected void setUp() {
-        this.setUpTrendingSeriesListener();
+    protected int sourceTextResource() {
+        return R.string.powered_by_trakt;
     }
 
     @Override
-    protected void onStartFired() {
-        App.seriesSearch().registerForSearchByTrending(this.listener);
-
-        if (this.results == null) {
-            App.seriesSearch().byTrending();
-        } else if (this.isLoading) {
-            this.listener.onStart();
-        } else {
-            this.setUpNumberOfResults(this.results.size());
-            this.showContent();
-        }
+    protected int numberOfResultsFormatResource() {
+        return R.string.number_of_results_for_search_by_trending;
     }
 
     @Override
-    protected void onStopFired() {
-        App.seriesSearch().deregisterForSearchByTrending(this.listener);
+    protected boolean shouldPerformSearchOnStartLifeCycle() {
+        return true;
     }
 
-    private void setUpTrendingSeriesListener() {
-        this.listener = this.newTrendingSeriesListener();
+    @Override
+    protected void performSearch() {
+        App.seriesSearch().byTrending();
     }
 
-    private SeriesSearchListener newTrendingSeriesListener() {
+    @Override
+    protected void registerListenerForSeriesSearch() {
+        App.seriesSearch().registerForSearchByTrending(this.seriesSearchListener);
+    }
+
+    @Override
+    protected void deregisterListenerForSeriesSearch() {
+        App.seriesSearch().deregisterForSearchByTrending(this.seriesSearchListener);
+    }
+
+    @Override
+    protected SeriesSearchListener seriesSearchListener() {
         return new SeriesSearchListener() {
             @Override
             public void onStart() {
+                TrendingFragment.this.isSearching = true;
                 TrendingFragment.this.showProgress();
-                TrendingFragment.this.isLoading = true;
             }
 
             @Override
             public void onFinish() {
-                TrendingFragment.this.showContent();
-                TrendingFragment.this.isLoading = false;
+                TrendingFragment.this.isSearching = false;
+                TrendingFragment.this.showResults();
             }
 
             @Override
             public void onSucess(List<Series> results) {
-                TrendingFragment.this.setUpContent(results);
+                TrendingFragment.this.setResults(results);
             }
 
             @Override
             public void onFailure(Exception exception) { }
         };
-    }
-
-    private void setUpContent(List<Series> result) {
-        this.setUpNumberOfResults(result.size());
-        this.setResults(result);
-    }
-
-    private void setUpNumberOfResults(int n) {
-        String format = this.getString(R.string.number_of_trending_results);
-
-        this.numberOfResults().setText(String.format(format, n));
-    }
-
-    private void showProgress() {
-        this.content().setVisibility(View.INVISIBLE);
-        this.progress().setVisibility(View.VISIBLE);
-    }
-
-    private void showContent() {
-        this.content().setVisibility(View.VISIBLE);
-        this.progress().setVisibility(View.INVISIBLE);
-    }
-
-    private ProgressBar progress() {
-        return (ProgressBar) this.getView().findViewById(R.id.progress);
-    }
-
-    private View content() {
-        return this.getView().findViewById(R.id.content);
-    }
-
-    private TextView numberOfResults() {
-        return (TextView) this.getView().findViewById(R.id.numberOfResults);
     }
 }

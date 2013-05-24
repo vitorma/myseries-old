@@ -103,14 +103,6 @@ public class AddSeriesActivity extends BaseActivity {
         ab.setSelectedNavigationItem(this.state.selectedTab);
     }
 
-    void onSearchStart() {
-        this.setSupportProgressBarIndeterminateVisibility(true);
-    }
-
-    void onSearchFinish() {
-        this.setSupportProgressBarIndeterminateVisibility(false);
-    }
-
     void onSearchFailure(int searchFailureTitleResourceId, int searchFailureMessageResourceId) {
         this.state.dialog = new FailureDialogBuilder(this)
             .setTitle(searchFailureTitleResourceId)

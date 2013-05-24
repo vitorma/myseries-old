@@ -51,7 +51,7 @@ public class ListenerSet<L> implements Iterable<L> {
     public boolean register(L listener) {
         Validate.isNonNull(listener, "listener");
 
-        if (isRegistered(listener)) {
+        if (this.isRegistered(listener)) {
             return false;
         }
 

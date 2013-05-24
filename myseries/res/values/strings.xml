@@ -46,11 +46,11 @@
     <string name="relative_time_future">In %d days</string>
     <string name="status_continuing">Continuing</string>
     <string name="status_ended">Ended</string>
-    <string name="number_of_search_results" formatted="false">%d results for \'%s\'</string>
+    <string name="number_of_results_for_search_by_name" formatted="false">%d series found</string>
     <string name="fraction" formatted="false">%d of %d</string>
     <string name="trending">TRENDING</string>
     <string name="powered_by_trakt">Powered by Trakt.tv</string>
-    <string name="number_of_trending_results">%d series being watched right now</string>
+    <string name="number_of_results_for_search_by_trending">%d series being watched right now</string>
 
     <plurals name="plural_episode">
         <item quantity="one">episode</item>
