@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_margin="@dimen/appwidget_margin">
 
     <include
@@ -15,12 +15,19 @@
     <include
         layout="@layout/appwidget_tabbar"/>
 
-    <LinearLayout android:id="@+id/episodes"
-        android:orientation="vertical"
+    <ListView
+        android:id="@+id/episodeList"
+        style="@style/ListView.AppWidget"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/appwidget_content_height"/>
+        android:layout_height="match_parent"/>
 
-    <include
-        layout="@layout/appwidget_pagebar"/>
+    <TextView
+        android:id="@+id/emptyView"
+        android:text="@string/no_episodes_to_see"
+        style="@style/TextView.Small.DarkGray"
+        android:gravity="center"
+        android:minHeight="@dimen/appwidget_item_height"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

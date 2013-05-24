@@ -3,7 +3,13 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/appwidget"
-    android:updatePeriodMillis="0"
     android:minWidth="@dimen/appwidget_min_width"
     android:minHeight="@dimen/appwidget_min_height"
-    android:configure="mobi.myseries.gui.appwidget.AppWidgetPreferenceActivity"/>
+    android:minResizeWidth="@dimen/appwidget_min_width"
+    android:minResizeHeight="@dimen/appwidget_min_height"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:configure="mobi.myseries.gui.appwidget.AppWidgetPreferenceActivity"
+    android:previewImage="@drawable/appwidget_preview"
+    android:widgetCategory="home_screen|keyguard"
+    android:initialKeyguardLayout="@layout/appwidget"/>

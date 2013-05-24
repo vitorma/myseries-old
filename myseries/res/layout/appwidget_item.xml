@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/appwidget_item_gap"
     android:paddingRight="@dimen/appwidget_item_gap"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/appwidget_item_height">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/seriesPoster"
@@ -20,7 +20,8 @@
 
     <TextView
         android:id="@+id/seriesName"
-        style="@style/TextView.Small.DarkGray.Ellipsized"
+        style="@style/TextView.Large.DarkGray.Ellipsized"
+        android:textSize="16sp"
         android:paddingLeft="@dimen/appwidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +39,7 @@
 
     <TextView
         android:id="@+id/episodeAirDate"
-        style="@style/TextView.Small.MediumGray"
+        style="@style/TextView.Small"
         android:textColor="@color/dark_blue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

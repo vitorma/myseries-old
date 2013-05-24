@@ -1,24 +1,3 @@
-/*
- *   ScheduleRemoteViewsFactory.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.gui.appwidget;
 
 import java.util.List;
@@ -35,13 +14,13 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-public class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+public class AdapterViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context context;
     private int appWidgetId;
     private RemoteViews loadingView;
     private List<Episode> episodes;
 
-    public ScheduleRemoteViewsFactory(Context context, Intent intent) {
+    public AdapterViewsFactory(Context context, Intent intent) {
         this.context = context;
         this.appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
         this.loadingView = Item.from(context).loading();

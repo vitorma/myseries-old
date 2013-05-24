@@ -9,7 +9,6 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
 import mobi.myseries.gui.shared.SortMode;
-import mobi.myseries.shared.Android;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -204,16 +203,10 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
     }
 
     private void updateAppWidget() {
-        if (Android.isHoneycombOrHigher()) {
-            AppWidgetV11.setUp(
-                    this.getApplicationContext(),
-                    AppWidgetManager.getInstance(this.getApplicationContext()),
-                    this.appWidgetId);
-        } else {
-            AppWidgetV8.setUp(
-                    this.getApplicationContext(),
-                    this.appWidgetId);
-        }
+        AppWidget.setUp(
+            this.getApplicationContext(),
+            AppWidgetManager.getInstance(this.getApplicationContext()),
+            this.appWidgetId);
     }
 
     private void finishOk() {

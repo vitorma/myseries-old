@@ -76,9 +76,9 @@
         </activity>
 
         <receiver
-            android:name=".gui.appwidget.AppWidgetV8"
+            android:name=".gui.appwidget.AppWidget"
             android:label="@string/appwidget"
-            android:enabled="@bool/appwidget_v8_enabled">
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -93,38 +93,6 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.CONFIGURATION_CHANGE"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.SCHEDULE_MODE_CHANGE"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_info"/>
-        </receiver>
-        <receiver
-            android:name=".gui.appwidget.AppWidgetV11"
-            android:label="@string/appwidget"
-            android:enabled="@bool/appwidget_v11_enabled">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.UPDATE"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.ADDITION"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.CONFIGURATION_CHANGE"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
@@ -132,14 +100,10 @@
         </receiver>
 
         <service
-            android:name="mobi.myseries.gui.appwidget.RefreshService"/>
+            android:name="mobi.myseries.gui.appwidget.AdapterViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
         <service
             android:name="mobi.myseries.gui.appwidget.TabService"/>
-        <service
-            android:name="mobi.myseries.gui.appwidget.SetupService"/>
-        <service
-            android:name="mobi.myseries.gui.appwidget.AdapterService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
         <service
             android:name="mobi.myseries.application.broadcast.ConfigurationChangeService"/>
 
