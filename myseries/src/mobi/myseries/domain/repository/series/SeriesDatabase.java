@@ -47,6 +47,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository {
+    private static final String TAG = SeriesDatabase.class.getSimpleName();
+
     private static final String DATABASE_NAME = "myseries_db";
     private static final int DATABASE_VERSION = 1;
 
@@ -321,14 +323,10 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         return result;
     }
 
-    public void doBackupTo(String destinationFilePath) throws IOException{
-        FilesUtil.copy(this.dbFile(), new File(destinationFilePath));
-    }
-
     public void restoreDBFrom(String sourceFilePath) throws IOException, InvalidDBSourceFileException {
         this.testDatabase(sourceFilePath);
         FilesUtil.copy(new File(sourceFilePath), this.dbFile());
-        Log.d(this.getClass().getName(), "database sucessfully restored");
+        Log.d(TAG, "database sucessfully restored");
     }
 
     private void testDatabase(String sourceFilePath) throws InvalidDBSourceFileException {
@@ -338,14 +336,14 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             db = SQLiteDatabase.openDatabase(sourceFilePath, null, SQLiteDatabase.OPEN_READONLY);
             c = db.rawQuery(SELECT_ALL_SERIES, null);
             if(c.getCount() == 0) {
-                Log.d(this.getClass().getName(), "there are no series to restore on backup file");
+                Log.d(TAG, "there are no series to restore on backup file");
                 throw new NoSeriesToRestoreException();
             }
             if(db.getVersion() > DATABASE_VERSION) {
-                Log.d(this.getClass().getName(), "backup file seems to be invalid, the database version is higher than actual version");
+                Log.d(TAG, "backup file seems to be invalid, the database version is higher than actual version");
                 throw new InvalidBackupVersionException();
             }
-            Log.d(this.getClass().getName(), "backup file sucessfully tested");
+            Log.d(TAG, "backup file sucessfully tested");
         } catch (SQLiteException e) {
             Log.d(this.getClass().getName(), "backup file does not contains a valid database");
             throw new InvalidDBSourceFileException();
