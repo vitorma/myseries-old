@@ -1,6 +1,6 @@
 package mobi.myseries.gui.shared;
 
-import com.actionbarsherlock.view.MenuItem;
+import android.view.MenuItem;
 
 public abstract class TopActivity extends BaseActivity {
 

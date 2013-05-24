@@ -25,14 +25,13 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.series.SeriesActivity;
+import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-
-public class SeriesListFragment extends SherlockListFragment {
+public class SeriesListFragment extends ListFragment {
     private SeriesListAdapter adapter;
 
     @Override

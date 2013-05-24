@@ -30,11 +30,10 @@ import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.TabPagerAdapter;
 import net.simonvt.menudrawer.MenuDrawer;
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.os.Bundle;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Window;
+import android.view.Window;
 
 public class AddSeriesActivity extends BaseActivity {
     private static final int DEFAULT_SELECTED_TAB = 0;
@@ -55,7 +54,7 @@ public class AddSeriesActivity extends BaseActivity {
     }
 
     @Override
-    public Object onRetainCustomNonConfigurationInstance() {
+    public Object onRetainNonConfigurationInstance() {
         return this.state;
     }
 
@@ -74,7 +73,7 @@ public class AddSeriesActivity extends BaseActivity {
     }
 
     private void setUpState() {
-        Object retainedState = this.getLastCustomNonConfigurationInstance();
+        Object retainedState = this.getLastNonConfigurationInstance();
 
         if (retainedState != null) {
             this.state = (State) retainedState;
@@ -86,9 +85,9 @@ public class AddSeriesActivity extends BaseActivity {
     }
 
     private void setUpActionBar() {
-        ActionBar ab = this.getSupportActionBar();
+        ActionBar ab = this.getActionBar();
 
-        this.setSupportProgressBarIndeterminateVisibility(false);
+        this.setProgressBarIndeterminateVisibility(false);
 
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);

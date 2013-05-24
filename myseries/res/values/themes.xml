@@ -2,9 +2,8 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="MySeriesTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="MySeriesTheme" parent="@android:Theme.Holo.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="windowContentOverlay">@null</item>
         <item name="android:checkboxStyle">@style/CheckBox</item>
         <item name="android:buttonStyle">@style/Button</item>
         <item name="android:imageButtonStyle">@style/ImageButton</item>
@@ -17,11 +16,6 @@
         <!-- Custom -->
         <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
         <item name="coverFlowStyle">@style/CoverFlow</item>
-
-        <!-- Tabs -->
-
-        <item name="actionBarStyle">@style/ActionBar</item>
-        <item name="android:actionBarStyle">@style/ActionBar</item>
 
         <!-- Scroll -->
 

@@ -13,6 +13,7 @@ import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Strings;
+import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -23,9 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-public class DetailsFragment extends SherlockFragment {
+public class DetailsFragment extends Fragment {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final Context CONTEXT = App.context();

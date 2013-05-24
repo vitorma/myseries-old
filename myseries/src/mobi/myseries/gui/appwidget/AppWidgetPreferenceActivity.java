@@ -23,9 +23,7 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
-public class AppWidgetPreferenceActivity extends SherlockActivity {
+public class AppWidgetPreferenceActivity extends Activity {
 
     public static Intent newIntent(Context context, int appWidgetId) {
         Intent intent = new Intent(context, AppWidgetPreferenceActivity.class);
@@ -52,7 +50,7 @@ public class AppWidgetPreferenceActivity extends SherlockActivity {
         this.setContentView(R.layout.appwidget_preferences);
         this.getExtraAppWidgetIdOrFinish();
         this.setUpViews();
-        this.getSupportActionBar().setTitle(R.string.widget_preferences);
+        this.getActionBar().setTitle(R.string.widget_preferences);
     }
 
     private void getExtraAppWidgetIdOrFinish() {

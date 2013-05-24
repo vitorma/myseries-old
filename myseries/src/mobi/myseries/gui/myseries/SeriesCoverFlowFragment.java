@@ -30,7 +30,6 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.update.UpdateFinishListener;
-import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
@@ -41,6 +40,7 @@ import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -52,9 +52,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-public class SeriesCoverFlowFragment extends SherlockFragment implements SeriesListener {
+public class SeriesCoverFlowFragment extends Fragment implements SeriesListener {
     /* TODO(Reul): Use MessageService instead of UpdateService*/
     private static final FollowSeriesService FOLLOW_SERIES_SERVICE = App.followSeriesService();
     private static final UpdateService UPDATE_SERIES_SERVICE = App.updateSeriesService();

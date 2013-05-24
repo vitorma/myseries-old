@@ -6,24 +6,23 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, ActionBar.TabListener, Publisher<TabPagerAdapter.Listener> {
     private ActionBar actionBar;
     private ViewPager viewPager;
     private List<Fragment> fragments;
 
-    public TabPagerAdapter(SherlockFragmentActivity activity) {
-        super(activity.getSupportFragmentManager());
+    public TabPagerAdapter(Activity activity) {
+        super(activity.getFragmentManager());
 
-        this.actionBar = activity.getSupportActionBar();
+        this.actionBar = activity.getActionBar();
 
         this.viewPager = (ViewPager) activity.findViewById(R.id.viewPager);
         this.viewPager.setAdapter(this);

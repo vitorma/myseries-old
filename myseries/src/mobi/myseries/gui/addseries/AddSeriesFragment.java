@@ -5,6 +5,7 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.search.SeriesSearchListener;
 import mobi.myseries.domain.model.Series;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,9 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-public abstract class AddSeriesFragment extends SherlockFragment {
+public abstract class AddSeriesFragment extends Fragment {
 
     protected EditText searchField;
     private View buttonPanel;
@@ -308,6 +307,6 @@ public abstract class AddSeriesFragment extends SherlockFragment {
     /* Activity */
 
     protected AddSeriesActivity activity() {
-        return (AddSeriesActivity) this.getSherlockActivity();
+        return (AddSeriesActivity) this.getActivity();
     }
 }
