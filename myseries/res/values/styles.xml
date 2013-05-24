@@ -140,7 +140,6 @@
     <!-- EditText -->
 
     <style name="EditText" parent="android:Widget.EditText">
-        <item name="android:background">@drawable/edittext</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textColor">@color/text_medium_gray</item>
         <item name="android:textColorHint">@color/text_light_gray</item>
@@ -153,26 +152,6 @@
 
     <style name="EditText.PlainText.ActionDone">
         <item name="android:imeOptions">actionDone</item>
-    </style>
-
-    <!-- CheckBox -->
-
-    <style name="CheckBox">
-        <item name="android:button">@drawable/checkbox</item>
-        <item name="android:focusable">false</item>
-        <item name="android:focusableInTouchMode">false</item>
-    </style>
-
-    <!-- Button -->
-
-    <style name="Button" parent="android:Widget.Button">
-        <item name="android:background">@drawable/button</item>
-    </style>
-
-    <!-- ImageButton -->
-
-    <style name="ImageButton" parent="android:Widget.ImageButton">
-        <item name="android:background">@drawable/button</item>
     </style>
 
     <!-- DialogButton -->
@@ -270,22 +249,6 @@
         <item name="selectedColor">@color/black</item>
         <item name="selectedBold">true</item>
     </style>
-
-    <!-- ProgressBar -->
-
-    <style name="ProgressBar" parent="android:Widget.ProgressBar">
-        <item name="android:indeterminateDrawable">@drawable/progress_medium_holo</item>
-        <item name="android:animationResolution">33</item>
-    </style>
-
-    <style name="ProgressBar.Large" parent="android:Widget.ProgressBar.Large">
-        <item name="android:indeterminateDrawable">@drawable/progress_large_holo</item>
-        <item name="android:animationResolution">33</item>
-    </style>
-
-    <!-- Animation -->
-
-    <style name="DialogAnimation" parent="android:Animation.Dialog"/>
 
     <!-- CoverFlow -->
 

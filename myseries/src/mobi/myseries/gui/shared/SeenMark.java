@@ -41,10 +41,12 @@ public class SeenMark extends ImageButton implements Checkable {
         this.setUpDrawables();
     }
 
+    @Override
     public boolean isChecked() {
         return this.isChecked;
     }
 
+    @Override
     public void setChecked(boolean checked) {
         if (this.isChecked != checked) {
             this.isChecked = checked;
@@ -52,6 +54,7 @@ public class SeenMark extends ImageButton implements Checkable {
         }
     }
 
+    @Override
     public void toggle() {
         this.setChecked(!this.isChecked);
     }
@@ -78,6 +81,6 @@ public class SeenMark extends ImageButton implements Checkable {
         Drawable d = this.getResources().getDrawable(R.drawable.checkbox);
 
         this.setImageDrawable(d);
-        this.setBackgroundDrawable(null);
+        this.setBackgroundResource(0);
     }
 }
