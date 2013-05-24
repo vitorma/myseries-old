@@ -8,7 +8,7 @@
 
     <CheckedTextView
         android:id="@+id/seriesCheck"
-        style = "@style/TextView.Dialog.Message"
+        style = "@style/TextView.Medium.DarkGray"
         android:background="@drawable/list_selector_holo_light"
         android:checkMark="@drawable/checkbox"
         android:clickable="true"

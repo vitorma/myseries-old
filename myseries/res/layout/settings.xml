@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                style="@style/TextView.Label.Medium.Bold"
+                style="@style/TextView.Medium.MediumGray.Bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/gap_medium"

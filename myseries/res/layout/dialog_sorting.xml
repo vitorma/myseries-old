@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/TextView.Dialog.Title"
+        style="@style/TextView.Large.Blue"
         android:padding="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

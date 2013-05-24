@@ -2,93 +2,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- TextView -Old - DELETEME ASAP -->
-
     <style name="TextView" parent="android:Widget.TextView"/>
-
-    <style name="TextView.Data">
-        <item name="android:textColor">@color/text_dark_gray</item>
-    </style>
-
-    <style name="TextView.Data.Small">
-        <item name="android:textSize">@dimen/text_size_small</item>
-    </style>
-
-    <style name="TextView.Data.Small.Bold">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextView.Data.Medium">
-        <item name="android:textSize">@dimen/text_size_medium</item>
-    </style>
-
-    <style name="TextView.Data.Medium.Bold">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextView.Data.Large">
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:singleLine">true</item>
-    </style>
-
-    <style name="TextView.Data.Large.Bold">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextView.Label">
-        <item name="android:textColor">@color/gray</item>
-    </style>
-
-    <style name="TextView.Label.Small">
-        <item name="android:textSize">@dimen/text_size_small</item>
-    </style>
-
-    <style name="TextView.Label.Small.Bold">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextView.Label.Medium">
-        <item name="android:textSize">@dimen/text_size_medium</item>
-    </style>
-
-    <style name="TextView.Label.Medium.Bold">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextView.Section">
-        <item name="android:textSize">@dimen/text_size_small</item>
-    </style>
-
-    <style name="TextView.Section.Left">
-        <item name="android:textColor">@color/blue</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextView.Section.Right">
-        <item name="android:textColor">@color/gray</item>
-    </style>
-
-    <style name="TextView.Dialog"/>
-
-    <style name="TextView.Dialog.Title">
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:textColor">@color/blue</item>
-    </style>
-
-    <style name="TextView.Dialog.Message">
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="TextView.Toast">
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:shadowColor">@color/shadow</item>
-        <item name="android:shadowRadius">2.75</item>
-    </style>
-
-    <!-- TextView -->
 
     <style name="TextView.Small">
         <item name="android:textSize">@dimen/text_size_small</item>
@@ -211,6 +125,10 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="TextView.Large.Blue">
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
     <style name="TextView.XLarge">
         <item name="android:textSize">@dimen/text_size_xlarge</item>
     </style>
@@ -266,7 +184,7 @@
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textAppearance">@style/TextView.Dialog.Message</item>
+        <item name="android:textAppearance">@style/TextView.Medium.DarkGray</item>
     </style>
 
     <!-- RadioGroup -->
