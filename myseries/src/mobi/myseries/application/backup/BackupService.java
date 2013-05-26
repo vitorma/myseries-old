@@ -11,12 +11,12 @@ public class BackupService {
 
     private SeriesRepository repository;
 
-    //private SharedPreferences preferences;
+    private DropboxHelper dropboxHelper;
 
-    public BackupService(SeriesRepository repository) {
+    public BackupService(SeriesRepository repository, DropboxHelper dropboxHelper) {
         this.listeners = new ListenerSet<BackupListener>();
         this.repository = repository;
-        //this.preferences = App.context().getSharedPreferences("mobi.myseries.gui.settings.MySeriesPreferences", 0);
+        this.dropboxHelper = dropboxHelper;
 }
     public void doBackup(BackupMode backupMode) {
         new doBackupAsyncTask(backupMode).execute();
@@ -24,6 +24,10 @@ public class BackupService {
 
     public void restoreBackup(BackupMode backupMode) {
         new restoreBackupAsyncTask(backupMode).execute();
+    }
+    
+    public DropboxHelper getDropboxHelper() {
+        return this.dropboxHelper;
     }
 
     private class doBackupAsyncTask extends AsyncTask<Void, Void, AsyncTaskResult<Void>> {
@@ -38,7 +42,6 @@ public class BackupService {
         protected AsyncTaskResult<Void> doInBackground(Void... params) {
             try {
                 backupMode.backupDB(repository.db());
-                //backupMode.backupPreferences(preferences);
             } catch (Exception e) {
                 return new AsyncTaskResult<Void>(e);
             }

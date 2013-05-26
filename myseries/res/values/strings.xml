@@ -182,6 +182,7 @@
     <string name="remote_location">Remote Location</string>
     <string name="sd_card">SD Card</string>
     <string name="sd_card_location">Backup folder location</string>
+    <string name="dropbox">Dropbox</string>
 
     <!-- Menu -->
     <string name="menu_add">ADD SERIES</string>

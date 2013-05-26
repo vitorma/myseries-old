@@ -26,6 +26,8 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.DriveBackup;
+import mobi.myseries.application.backup.DropboxBackup;
+import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.accounts.Account;
@@ -44,10 +46,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 public class BackupActivity extends Activity implements BackupListener {
+
+    enum Operation {
+        BACKUPING, RESTORING
+    }
+
+    enum Event {
+        DRIVE_AUTHORIZATION, DROPBOX_AUTHORIZATION
+    }
 
     private Spinner gDriveAccountSpinner;
     private Button gDriveBackupButton;
@@ -55,18 +68,17 @@ public class BackupActivity extends Activity implements BackupListener {
     private TextView SDCardLocationTextView;
     private Button SDCardBackupButton;
     private Button SDCardRestoreButton;
+    private Button dropboxBackupButton;
+    private Button dropboxRestoreButton;
 
     private GoogleAccountManager accountManager;
     private String currentAccount;
 
     private BackupMode currentMode;
-    private int STATE;
+    private Event event;
+    private Operation operation;
     private MessageLauncher messageLauncher;
-
-    private static final int STATE_RESTORING = 0;
-    private static final int STATE_BACKUPING = 1;
-
-    private static final int REQUEST_AUTHORIZATION = 0;
+    private DropboxHelper dropbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,21 +86,22 @@ public class BackupActivity extends Activity implements BackupListener {
         this.messageLauncher = new MessageLauncher(this);
 
         App.backupService().register(this);
+        this.dropbox = App.backupService().getDropboxHelper();
         this.accountManager = new GoogleAccountManager(this);
 
         this.setContentView(R.layout.backup);
         this.setResult(Activity.RESULT_CANCELED);
         this.setupActionBar();
         this.setupViews();
-        this.setUpSDCardLocationTextView();
         this.setupSdCardBackupButton();
         this.setupSDCardRestoreButton();
         this.setupGoogleDriveAccountSpinner();
         this.setupGoogleDriveBackupButton();
         this.setupGoogleDriveRestoreButton();
+        this.setupDropboxBackupButton();
+        this.setupDropboxRestoreButton();
 
     }
-
 
     private void setupActionBar() {
         ActionBar actionBar = this.getActionBar();
@@ -99,15 +112,20 @@ public class BackupActivity extends Activity implements BackupListener {
     }
 
     private void setupViews() {
-        this.SDCardLocationTextView = (TextView) this.findViewById(R.id.sd_card_location_text_view);
-        this.SDCardBackupButton = (Button) this.findViewById(R.id.sd_card_backup_button);
-        this.SDCardRestoreButton = (Button) this.findViewById(R.id.sd_card_restore_button);
+        this.SDCardBackupButton = (Button) this
+                .findViewById(R.id.sd_card_backup_button);
+        this.SDCardRestoreButton = (Button) this
+                .findViewById(R.id.sd_card_restore_button);
         this.gDriveAccountSpinner = (Spinner) this
                 .findViewById(R.id.account_spinner);
         this.gDriveBackupButton = (Button) this
                 .findViewById(R.id.google_drive_backup_button);
         this.gDriveRestoreButton = (Button) this
                 .findViewById(R.id.google_drive_restore_button);
+        this.dropboxBackupButton = (Button) this
+                .findViewById(R.id.dropbox_backup_button);
+        this.dropboxRestoreButton = (Button) this
+                .findViewById(R.id.dropbox_restore_button);
     }
 
     private void setupSDCardRestoreButton() {
@@ -131,16 +149,6 @@ public class BackupActivity extends Activity implements BackupListener {
 
     }
 
-    private void setUpSDCardLocationTextView() {
-        this.SDCardLocationTextView.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-    }
-
     private void setupGoogleDriveAccountSpinner() {
         ArrayAdapter<String> spinnerAccountAdapter = new ArrayAdapter<String>(
                 this, R.layout.sherlock_spinner_item);
@@ -157,7 +165,7 @@ public class BackupActivity extends Activity implements BackupListener {
                             int arg2, long arg3) {
                         String selectedAccount = (String) arg0
                                 .getItemAtPosition(arg2);
-                        //saveGoogleAccount(selectedAccount);
+                        // saveGoogleAccount(selectedAccount);
                         BackupActivity.this.currentAccount = selectedAccount;
 
                     }
@@ -175,7 +183,7 @@ public class BackupActivity extends Activity implements BackupListener {
 
             @Override
             public void onClick(View v) {
-                BackupActivity.this.doBackup(new DriveBackup(BackupActivity.this.currentAccount));
+                BackupActivity.this.doBackup(new DriveBackup(currentAccount));
             }
         });
     }
@@ -184,7 +192,26 @@ public class BackupActivity extends Activity implements BackupListener {
         this.gDriveRestoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BackupActivity.this.restoreBackup(new DriveBackup(BackupActivity.this.currentAccount));
+                BackupActivity.this.restoreBackup(new DriveBackup(currentAccount));
+            }
+        });
+    }
+    
+    private void setupDropboxRestoreButton() {
+        this.dropboxRestoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BackupActivity.this.restoreBackup(new DropboxBackup());
+            }
+        });
+    }
+
+    private void setupDropboxBackupButton() {
+        this.dropboxBackupButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                BackupActivity.this.doBackup(new DropboxBackup());
             }
         });
     }
@@ -205,19 +232,6 @@ public class BackupActivity extends Activity implements BackupListener {
         return intent;
     }
 
-//    private void saveGoogleAccount(String selectedAccount) {
-//        backupSettingsProviderFor(this).putGoogleDriveAccount(selectedAccount);
-//    }
-//
-//    private Account getPreferenceAccount() {
-//        return accountManager.getAccountByName(backupSettingsProviderFor(this)
-//                .googleDriveAccount());
-//    }
-//
-//    private BackupPreferences backupSettingsProviderFor(Context context) {
-//        return new BackupPreferences(context);
-//    }
-
     @Override
     public void onBackupSucess() {
         // TODO Auto-generated method stub
@@ -227,7 +241,11 @@ public class BackupActivity extends Activity implements BackupListener {
     @Override
     public void onBackupFailure(Exception e) {
         if (e instanceof UserRecoverableAuthIOException) {
-            this.startActivityForResult(((UserRecoverableAuthIOException) e).getIntent(), REQUEST_AUTHORIZATION);
+            this.startActivityForResult(
+                    ((UserRecoverableAuthIOException) e).getIntent(),
+                    Event.DRIVE_AUTHORIZATION.ordinal());
+        } else if (e instanceof DropboxUnlinkedException) {
+            this.linkDropboxAccount();
         } else {
             e.printStackTrace();
         }
@@ -235,43 +253,66 @@ public class BackupActivity extends Activity implements BackupListener {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Event.DRIVE_AUTHORIZATION.ordinal()) {
+            if (resultCode == Activity.RESULT_OK) {
+                this.resumeOperation();
+            }
+        }
+    }
+
+    private void linkDropboxAccount() {
+        dropbox.getApi().getSession();
+        AndroidAuthSession session = dropbox.getApi().getSession();
+        this.event = Event.DROPBOX_AUTHORIZATION;
+        session.startAuthentication(BackupActivity.this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (event == Event.DROPBOX_AUTHORIZATION) {
+            dropbox.onResume();
+            this.resumeOperation();
+            this.event = null;
+        }
+    }
+
+    private void resumeOperation() {
+        if (this.operation == Operation.BACKUPING) {
+            this.doBackup(currentMode);
+        } else if (this.operation == Operation.RESTORING) {
+            this.restoreBackup(currentMode);
+        }
+    }
+
+    @Override
     public void onRestoreSucess() {
-
-
     }
 
     @Override
     public void onRestoreFailure(Exception e) {
         if (e instanceof UserRecoverableAuthIOException) {
-            this.startActivityForResult(((UserRecoverableAuthIOException) e).getIntent(), REQUEST_AUTHORIZATION);
+            requestDropboxUserPermission(e);
+        } else if (e instanceof DropboxUnlinkedException) {
+            this.linkDropboxAccount();
         }
-        e.printStackTrace();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-        case REQUEST_AUTHORIZATION:
-            if (resultCode == Activity.RESULT_OK) {
-                if(this.STATE == STATE_BACKUPING) {
-                    this.doBackup(this.currentMode);
-                }
-                if(this.STATE == STATE_RESTORING) {
-                    this.restoreBackup(this.currentMode);
-                }
-            }
-        }
+    private void requestDropboxUserPermission(Exception e) {
+        this.event = Event.DRIVE_AUTHORIZATION;
+        this.startActivity(((UserRecoverableAuthIOException) e).getIntent());
     }
 
     private void doBackup(BackupMode backupMode) {
         this.currentMode = backupMode;
-        this.STATE = STATE_BACKUPING;
+        this.operation = Operation.BACKUPING;
         App.backupService().doBackup(backupMode);
     }
 
     private void restoreBackup(BackupMode backupMode) {
         this.currentMode = backupMode;
-        this.STATE = STATE_RESTORING;
+        this.operation = Operation.RESTORING;
         App.backupService().restoreBackup(backupMode);
     }
 }

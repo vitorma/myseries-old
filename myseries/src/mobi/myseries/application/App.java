@@ -91,7 +91,7 @@ public class App extends Application {
                 followSeriesService,
                 updateService);
 
-        backupService = new BackupService(environment.seriesRepository());
+        backupService = new BackupService(environment.seriesRepository(), environment.dropboxHelper());
 
         messageService = new MessageService(followSeriesService, updateService, backupService);
 
