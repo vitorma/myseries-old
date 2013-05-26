@@ -4,43 +4,18 @@
 
     <style name="MySeriesTheme" parent="@android:Theme.Holo.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:checkboxStyle">@style/CheckBox</item>
-        <item name="android:buttonStyle">@style/Button</item>
-        <item name="android:imageButtonStyle">@style/ImageButton</item>
         <item name="android:listViewStyle">@style/ListView</item>
         <item name="android:expandableListViewStyle">@style/ExpandableListView</item>
-        <item name="android:progressBarStyle">@style/ProgressBar</item>
-        <item name="android:progressBarStyleLarge">@style/ProgressBar.Large</item>
-        <item name="android:scrollViewStyle">@style/ScrollView</item>
 
-        <!-- Custom -->
+        <item name="android:scrollViewStyle">@style/ScrollView</item>
         <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
         <item name="coverFlowStyle">@style/CoverFlow</item>
-
-        <!-- Scroll -->
-
-        <item name="android:scrollbarFadeDuration">250</item>
-        <item name="android:scrollbarDefaultDelayBeforeFade">300</item>
-        <item name="android:scrollbarSize">10dip</item>
-        <item name="android:scrollbarThumbHorizontal">@drawable/scrollbar_handle_holo_light</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_handle_holo_light</item>
-        <item name="android:scrollbarTrackHorizontal">@null</item>
-        <item name="android:scrollbarTrackVertical">@null</item>
-
-        <!-- API 11 and later -->
-
-        <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
-        <item name="android:fastScrollPreviewBackgroundLeft">@drawable/fastscroll_label_left_holo_light</item>
-        <item name="android:fastScrollPreviewBackgroundRight">@drawable/fastscroll_label_right_holo_light</item>
-        <item name="android:fastScrollTrackDrawable">@drawable/fastscroll_track_holo_light</item>
-        <item name="android:fastScrollOverlayPosition">floating</item>
     </style>
 
     <style name="MySeriesTheme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowIsFloating">true</item>
-        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
