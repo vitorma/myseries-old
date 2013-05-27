@@ -36,6 +36,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,7 +86,7 @@ public class BackupActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.messageLauncher = new MessageLauncher(this);
 
-        
+        App.backupService().withHandler(new Handler());
         this.dropbox = App.backupService().getDropboxHelper();
         this.accountManager = new GoogleAccountManager(this);
 
@@ -318,10 +319,15 @@ public class BackupActivity extends Activity {
         this.startActivity(((UserRecoverableAuthIOException) e).getIntent());
     }
 
-    private void doBackup(BackupMode backupMode) {
+    private void doBackup(final BackupMode backupMode) {
         this.currentMode = backupMode;
         this.operation = Operation.BACKUPING;
-        App.backupService().doBackup(backupMode);
+        new Thread() {
+            @Override
+            public void run() {
+                App.backupService().doBackup(backupMode);
+            }
+        }.start();
     }
 
     private void restoreBackup(BackupMode backupMode) {
