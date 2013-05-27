@@ -10,4 +10,6 @@ public interface BackupListener {
 
     public void onRestoreFailure(Exception e);
 
+    public void onStart();
+
 }

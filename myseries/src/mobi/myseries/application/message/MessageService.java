@@ -163,4 +163,10 @@ public class MessageService implements
     public void onRestoreFailure(Exception e) {
         notifyRestoreFailure(e);
     }
+
+    @Override
+    public void onStart() {
+        // TODO Auto-generated method stub
+        
+    }
 }

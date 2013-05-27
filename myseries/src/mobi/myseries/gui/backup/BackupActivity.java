@@ -52,7 +52,7 @@ import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
-public class BackupActivity extends Activity implements BackupListener {
+public class BackupActivity extends Activity {
 
     enum Operation {
         BACKUPING, RESTORING
@@ -65,7 +65,6 @@ public class BackupActivity extends Activity implements BackupListener {
     private Spinner gDriveAccountSpinner;
     private Button gDriveBackupButton;
     private Button gDriveRestoreButton;
-    private TextView SDCardLocationTextView;
     private Button SDCardBackupButton;
     private Button SDCardRestoreButton;
     private Button dropboxBackupButton;
@@ -79,13 +78,14 @@ public class BackupActivity extends Activity implements BackupListener {
     private Operation operation;
     private MessageLauncher messageLauncher;
     private DropboxHelper dropbox;
+    private BackupListener backupListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.messageLauncher = new MessageLauncher(this);
 
-        App.backupService().register(this);
+        
         this.dropbox = App.backupService().getDropboxHelper();
         this.accountManager = new GoogleAccountManager(this);
 
@@ -100,7 +100,53 @@ public class BackupActivity extends Activity implements BackupListener {
         this.setupGoogleDriveRestoreButton();
         this.setupDropboxBackupButton();
         this.setupDropboxRestoreButton();
+        this.setupBackupListener();
+        
+        
 
+    }
+
+    private void setupBackupListener() {
+        backupListener = new BackupListener() {
+            
+            @Override
+            public void onBackupSucess() {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onBackupFailure(Exception e) {
+                if (e instanceof UserRecoverableAuthIOException) {
+                    startActivityForResult(
+                            ((UserRecoverableAuthIOException) e).getIntent(),
+                            Event.DRIVE_AUTHORIZATION.ordinal());
+                } else if (e instanceof DropboxUnlinkedException) {
+                    linkDropboxAccount();
+                } else {
+                    e.printStackTrace();
+                }
+
+            }
+
+            
+            @Override
+            public void onRestoreSucess() {
+            }
+
+            @Override
+            public void onRestoreFailure(Exception e) {
+                if (e instanceof UserRecoverableAuthIOException) {
+                    requestDropboxUserPermission(e);
+                } else if (e instanceof DropboxUnlinkedException) {
+                    linkDropboxAccount();
+                }
+            }
+
+            @Override
+            public void onStart() {}
+        };
+        App.backupService().register(backupListener);
     }
 
     private void setupActionBar() {
@@ -233,26 +279,6 @@ public class BackupActivity extends Activity implements BackupListener {
     }
 
     @Override
-    public void onBackupSucess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onBackupFailure(Exception e) {
-        if (e instanceof UserRecoverableAuthIOException) {
-            this.startActivityForResult(
-                    ((UserRecoverableAuthIOException) e).getIntent(),
-                    Event.DRIVE_AUTHORIZATION.ordinal());
-        } else if (e instanceof DropboxUnlinkedException) {
-            this.linkDropboxAccount();
-        } else {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Event.DRIVE_AUTHORIZATION.ordinal()) {
             if (resultCode == Activity.RESULT_OK) {
@@ -286,18 +312,6 @@ public class BackupActivity extends Activity implements BackupListener {
         }
     }
 
-    @Override
-    public void onRestoreSucess() {
-    }
-
-    @Override
-    public void onRestoreFailure(Exception e) {
-        if (e instanceof UserRecoverableAuthIOException) {
-            requestDropboxUserPermission(e);
-        } else if (e instanceof DropboxUnlinkedException) {
-            this.linkDropboxAccount();
-        }
-    }
 
     private void requestDropboxUserPermission(Exception e) {
         this.event = Event.DRIVE_AUTHORIZATION;
