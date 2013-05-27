@@ -42,9 +42,12 @@ public class Episode implements Publisher<EpisodeListener> {
     private String writers;
     private String guestStars;
     private String imageFileName;
+
+    // TODO(Gabriel): Use AtomicBoolean or synchronized or maybe locks
     private boolean seenMark;
-    private ListenerSet<EpisodeListener> listeners;
     private boolean beingMarkedBySeason;
+
+    private ListenerSet<EpisodeListener> listeners;
 
     private Episode(int id, int seriesId, int number, int seasonNumber) {
         Validate.isTrue(id >= 0, "id should be non-negative");
@@ -152,6 +155,7 @@ public class Episode implements Publisher<EpisodeListener> {
     }
 
     public void mergeWith(Episode other) {
+        // TODO(Gabriel): Replace all these verifications with a single this.isTheSameAs(other)?
         Validate.isNonNull(other, "other");
         Validate.isTrue(other.seriesId == this.seriesId, "other should have the same seriesId as this");
         Validate.isTrue(other.seasonNumber == this.seasonNumber, "other should have the same seasonNumber as this");
@@ -198,6 +202,13 @@ public class Episode implements Publisher<EpisodeListener> {
         }
     }
 
+    public boolean isTheSameAs(Episode that) {
+        return that != null
+                && this.number == that.number
+                && this.seasonNumber == that.seasonNumber
+                && this.seriesId == that.seriesId;
+    }
+
     @Override
     public int hashCode() {
         return this.id;
@@ -209,9 +220,9 @@ public class Episode implements Publisher<EpisodeListener> {
             return false;
         }
 
-        Episode other = (Episode) obj;
+        Episode that = (Episode) obj;
 
-        return this.number == other.number && this.seasonNumber == other.seasonNumber && this.seriesId == other.seriesId;
+        return this.id == that.id;
     }
 
     public static class Builder {

@@ -23,13 +23,14 @@ package mobi.myseries.test.unit.domain.model;
 
 import java.util.Date;
 
-import junit.framework.Assert;
 import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.junit.Assert.*;
 
 public class EpisodeTest {
     private static final int ID1 = 1;
@@ -141,21 +142,21 @@ public class EpisodeTest {
             .withSeasonNumber(SEASON_NUMBER1)
             .build();
 
-        Assert.assertEquals(ID1, episode.id());
-        Assert.assertEquals(SERIES_ID1, episode.seriesId());
-        Assert.assertEquals(NUMBER1, episode.number());
-        Assert.assertEquals(SEASON_NUMBER1, episode.seasonNumber());
+        assertEquals(ID1, episode.id());
+        assertEquals(SERIES_ID1, episode.seriesId());
+        assertEquals(NUMBER1, episode.number());
+        assertEquals(SEASON_NUMBER1, episode.seasonNumber());
 
-        Assert.assertNull(episode.name());
-        Assert.assertNull(episode.airDate());
-        Assert.assertNull(episode.overview());
-        Assert.assertNull(episode.directors());
-        Assert.assertNull(episode.directors());
-        Assert.assertNull(episode.writers());
-        Assert.assertNull(episode.guestStars());
-        Assert.assertNull(episode.imageFileName());
+        assertNull(episode.name());
+        assertNull(episode.airDate());
+        assertNull(episode.overview());
+        assertNull(episode.directors());
+        assertNull(episode.directors());
+        assertNull(episode.writers());
+        assertNull(episode.guestStars());
+        assertNull(episode.imageFileName());
 
-        Assert.assertFalse(episode.wasSeen());
+        assertFalse(episode.wasSeen());
     }
 
     @Test
@@ -175,20 +176,20 @@ public class EpisodeTest {
             .withSeenMark(true)
             .build();
 
-        Assert.assertEquals(ID1, e1.id());
-        Assert.assertEquals(SERIES_ID1, e1.seriesId());
-        Assert.assertEquals(NUMBER1, e1.number());
-        Assert.assertEquals(SEASON_NUMBER1, e1.seasonNumber());
+        assertEquals(ID1, e1.id());
+        assertEquals(SERIES_ID1, e1.seriesId());
+        assertEquals(NUMBER1, e1.number());
+        assertEquals(SEASON_NUMBER1, e1.seasonNumber());
 
-        Assert.assertEquals(NAME, e1.name());
-        Assert.assertEquals(AIR_DATE, e1.airDate());
-        Assert.assertEquals(OVERVIEW, e1.overview());
-        Assert.assertEquals(DIRECTORS, e1.directors());
-        Assert.assertEquals(WRITERS, e1.writers());
-        Assert.assertEquals(GUEST_STARS, e1.guestStars());
-        Assert.assertEquals(IMAGE_FILE_NAME, e1.imageFileName());
+        assertEquals(NAME, e1.name());
+        assertEquals(AIR_DATE, e1.airDate());
+        assertEquals(OVERVIEW, e1.overview());
+        assertEquals(DIRECTORS, e1.directors());
+        assertEquals(WRITERS, e1.writers());
+        assertEquals(GUEST_STARS, e1.guestStars());
+        assertEquals(IMAGE_FILE_NAME, e1.imageFileName());
 
-        Assert.assertEquals(true, e1.wasSeen());
+        assertEquals(true, e1.wasSeen());
     }
 
     /* SeenMark */
@@ -203,11 +204,11 @@ public class EpisodeTest {
             .withSeenMark(false)
             .build();
 
-        Assert.assertFalse(episode.wasSeen());
+        assertFalse(episode.wasSeen());
 
         episode.markAsSeen();
 
-        Assert.assertTrue(episode.wasSeen());
+        assertTrue(episode.wasSeen());
     }
 
     @Test
@@ -220,11 +221,11 @@ public class EpisodeTest {
             .withSeenMark(true)
             .build();
 
-        Assert.assertTrue(episode.wasSeen());
+        assertTrue(episode.wasSeen());
 
         episode.markAsNotSeen();
 
-        Assert.assertFalse(episode.wasSeen());
+        assertFalse(episode.wasSeen());
     }
 
     /* Merge */
@@ -315,14 +316,14 @@ public class EpisodeTest {
 
         episode1.mergeWith(episode2);
 
-        Assert.assertEquals(episode2.number(), episode1.number());
-        Assert.assertEquals(episode2.name(), episode1.name());
-        Assert.assertEquals(episode2.airDate(), episode1.airDate());
-        Assert.assertEquals(episode2.overview(), episode1.overview());
-        Assert.assertEquals(episode2.directors(), episode1.directors());
-        Assert.assertEquals(episode2.writers(), episode1.writers());
-        Assert.assertEquals(episode2.guestStars(), episode1.guestStars());
-        Assert.assertEquals(episode2.imageFileName(), episode1.imageFileName());
+        assertEquals(episode2.number(), episode1.number());
+        assertEquals(episode2.name(), episode1.name());
+        assertEquals(episode2.airDate(), episode1.airDate());
+        assertEquals(episode2.overview(), episode1.overview());
+        assertEquals(episode2.directors(), episode1.directors());
+        assertEquals(episode2.writers(), episode1.writers());
+        assertEquals(episode2.guestStars(), episode1.guestStars());
+        assertEquals(episode2.imageFileName(), episode1.imageFileName());
     }
 
     @Test
@@ -350,13 +351,13 @@ public class EpisodeTest {
 
         episode1.mergeWith(episode2);
 
-        Assert.assertEquals(episode2.name(), episode1.name());
-        Assert.assertEquals(episode2.airDate(), episode1.airDate());
-        Assert.assertEquals(episode2.overview(), episode1.overview());
-        Assert.assertEquals(episode2.directors(), episode1.directors());
-        Assert.assertEquals(episode2.writers(), episode1.writers());
-        Assert.assertEquals(episode2.guestStars(), episode1.guestStars());
-        Assert.assertEquals(episode2.imageFileName(), episode1.imageFileName());
+        assertEquals(episode2.name(), episode1.name());
+        assertEquals(episode2.airDate(), episode1.airDate());
+        assertEquals(episode2.overview(), episode1.overview());
+        assertEquals(episode2.directors(), episode1.directors());
+        assertEquals(episode2.writers(), episode1.writers());
+        assertEquals(episode2.guestStars(), episode1.guestStars());
+        assertEquals(episode2.imageFileName(), episode1.imageFileName());
     }
 
     @Test
@@ -379,7 +380,7 @@ public class EpisodeTest {
 
         episode1.mergeWith(episode2);
 
-        Assert.assertTrue(episode1.wasSeen());
+        assertTrue(episode1.wasSeen());
     }
 
     //EpisodeListener---------------------------------------------------------------------------------------------------
@@ -406,8 +407,8 @@ public class EpisodeTest {
 
         EpisodeListener listener = mockListener();
 
-        Assert.assertTrue(episode.register(listener));
-        Assert.assertFalse(episode.register(listener));
+        assertTrue(episode.register(listener));
+        assertFalse(episode.register(listener));
     }
 
     @Test
@@ -419,8 +420,8 @@ public class EpisodeTest {
             .withSeasonNumber(SEASON_NUMBER1)
             .build();
 
-        Assert.assertTrue(episode.register(mockListener()));
-        Assert.assertTrue(episode.register(mockListener()));
+        assertTrue(episode.register(mockListener()));
+        assertTrue(episode.register(mockListener()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -443,7 +444,7 @@ public class EpisodeTest {
             .withSeasonNumber(SEASON_NUMBER1)
             .build();
 
-        Assert.assertFalse(episode.deregister(mockListener()));
+        assertFalse(episode.deregister(mockListener()));
     }
 
     @Test
@@ -457,11 +458,11 @@ public class EpisodeTest {
 
         EpisodeListener listener = mockListener();
 
-        Assert.assertTrue(episode.register(mockListener()));
-        Assert.assertTrue(episode.register(listener));
+        assertTrue(episode.register(mockListener()));
+        assertTrue(episode.register(listener));
 
-        Assert.assertFalse(episode.deregister(mockListener()));
-        Assert.assertTrue(episode.deregister(listener));
+        assertFalse(episode.deregister(mockListener()));
+        assertTrue(episode.deregister(listener));
     }
 
     @Test
@@ -474,17 +475,17 @@ public class EpisodeTest {
             .withSeenMark(false)
             .build();
 
-        Assert.assertFalse(episode.wasSeen());
+        assertFalse(episode.wasSeen());
 
         EpisodeListener l1 = mockListener();
         EpisodeListener l2 = mockListener();
 
-        Assert.assertTrue(episode.register(l1));
-        Assert.assertTrue(episode.register(l2));
+        assertTrue(episode.register(l1));
+        assertTrue(episode.register(l2));
 
         for (int i = 1; i <= 1000; i++) {
             episode.markAsSeen();
-            Assert.assertTrue(episode.wasSeen());
+            assertTrue(episode.wasSeen());
         }
 
         Mockito.verify(l1, Mockito.times(1)).onMarkAsSeen(episode);
@@ -501,27 +502,27 @@ public class EpisodeTest {
             .withSeenMark(true)
             .build();
 
-        Assert.assertTrue(episode.wasSeen());
+        assertTrue(episode.wasSeen());
 
         EpisodeListener l1 = mockListener();
         EpisodeListener l2 = mockListener();
 
-        Assert.assertTrue(episode.register(l1));
-        Assert.assertTrue(episode.register(l2));
+        assertTrue(episode.register(l1));
+        assertTrue(episode.register(l2));
 
         for (int i = 1; i <= 1000; i++) {
             episode.markAsNotSeen();
-            Assert.assertFalse(episode.wasSeen());
+            assertFalse(episode.wasSeen());
         }
 
         Mockito.verify(l1, Mockito.times(1)).onMarkAsNotSeen(episode);
         Mockito.verify(l2, Mockito.times(1)).onMarkAsNotSeen(episode);
     }
 
-    //Equals and hashCode-----------------------------------------------------------------------------------------------
+    //isTheSameAs------------------------------------------------------------------------------------------------------
 
     @Test
-    public void testEquals() {
+    public void testIsTheSameAs() {
         Episode e1 = Episode.builder()
             .withId(ID1)
             .withSeriesId(SERIES_ID1)
@@ -549,7 +550,7 @@ public class EpisodeTest {
             .withNumber(NUMBER2)
             .withSeasonNumber(SEASON_NUMBER1)
             .build();
-        
+
         Episode e5 = Episode.builder()
                 .withId(ID1)
                 .withSeriesId(SERIES_ID1)
@@ -563,33 +564,91 @@ public class EpisodeTest {
                 .withNumber(NUMBER1)
                 .withSeasonNumber(SEASON_NUMBER2)
                 .build();
-        
+
+        //isTheSameAs is consistent
+        for (int i = 1; i <= 1000; i++) {
+
+            //isTheSameAs returns false for null objects
+            assertFalse(e1.isTheSameAs(null));
+
+            //isTheSameAs is reflexive
+            assertTrue(e1.isTheSameAs(e1));
+
+            //isTheSameAs is symmetric
+            assertTrue(e1.isTheSameAs(e2));
+            assertTrue(e2.isTheSameAs(e1));
+
+            //isTheSameAs is transitive
+            assertTrue(e1.isTheSameAs(e2));
+            assertTrue(e2.isTheSameAs(e3));
+            assertTrue(e1.isTheSameAs(e3));
+
+            //episodes are equal if and only if they have the same series id, season number and number
+            assertFalse(e3.isTheSameAs(e4));
+            assertFalse(e3.isTheSameAs(e5));
+            assertFalse(e3.isTheSameAs(e6));
+            assertFalse(e4.isTheSameAs(e5));
+            assertFalse(e4.isTheSameAs(e6));
+            assertFalse(e5.isTheSameAs(e6));
+        }
+    }
+
+    //Equals and hashCode-----------------------------------------------------------------------------------------------
+
+    @Test
+    public void testEquals() {
+        Episode e1 = Episode.builder()
+            .withId(ID1)
+            .withSeriesId(SERIES_ID1)
+            .withNumber(NUMBER1)
+            .withSeasonNumber(SEASON_NUMBER1)
+            .build();
+
+        Episode e2 = Episode.builder()
+            .withId(ID1)
+            .withSeriesId(SERIES_ID2)
+            .withNumber(NUMBER2)
+            .withSeasonNumber(SEASON_NUMBER2)
+            .build();
+
+        Episode e3 = Episode.builder()
+            .withId(ID1)
+            .withSeriesId(SERIES_ID2)
+            .withNumber(NUMBER2)
+            .withSeasonNumber(SEASON_NUMBER2)
+            .build();
+
+        Episode e4 = Episode.builder()
+            .withId(ID2)
+            .withSeriesId(SERIES_ID2)
+            .withNumber(NUMBER2)
+            .withSeasonNumber(SEASON_NUMBER2)
+            .build();
+
 
         //equals is consistent
         for (int i = 1; i <= 1000; i++) {
 
             //equals returns false for null objects
-            Assert.assertFalse(e1.equals(null));
+            assertFalse(e1.equals(null));
 
             //equals is reflexive
-            Assert.assertTrue(e1.equals(e1));
+            assertTrue(e1.equals(e1));
 
             //equals is symmetric
-            Assert.assertTrue(e1.equals(e2));
-            Assert.assertTrue(e2.equals(e1));
+            assertTrue(e1.equals(e2));
+            assertTrue(e2.equals(e1));
 
             //equals is transitive
-            Assert.assertTrue(e1.equals(e2));
-            Assert.assertTrue(e2.equals(e3));
-            Assert.assertTrue(e1.equals(e3));
+            assertTrue(e1.equals(e2));
+            assertTrue(e2.equals(e3));
+            assertTrue(e1.equals(e3));
 
-            //episodes are equal if and only if they have the same series id and season number and number
-            Assert.assertFalse(e3.equals(e4));
-            Assert.assertFalse(e3.equals(e5));
-            Assert.assertFalse(e3.equals(e6));
-            Assert.assertFalse(e4.equals(e5));
-            Assert.assertFalse(e4.equals(e6));
-            Assert.assertFalse(e5.equals(e6));
+            //episodes are equal if and only if they have the same id
+            assertFalse(e2.equals(e4));
+            assertFalse(e3.equals(e4));
+            assertFalse(e4.equals(e2));
+            assertFalse(e4.equals(e3));
         }
     }
 
@@ -609,22 +668,11 @@ public class EpisodeTest {
             .withSeasonNumber(SEASON_NUMBER2)
             .build();
 
-        Episode e3 = Episode.builder()
-            .withId(ID2)
-            .withSeriesId(SERIES_ID2)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER2)
-            .build();
-
         //hashCode is consistent
         for (int i = 1; i <= 1000; i++) {
-
             //equal objects have the same hashCode
-            Assert.assertTrue(e1.hashCode() == e2.hashCode());
-
-            //non equal episodes have distinct hashCodes
-            Assert.assertTrue(e1.hashCode() != e3.hashCode());
-            Assert.assertTrue(e2.hashCode() != e3.hashCode());
+            assertTrue(e1.equals(e2));
+            assertTrue(e1.hashCode() == e2.hashCode());
         }
     }
 }

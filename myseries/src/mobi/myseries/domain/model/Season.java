@@ -37,7 +37,9 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     private int number;
 
     private TreeMap<Integer, Episode> episodes;
+    // FIXME(Gabriel): Use AtomicInteger or synchronized?
     private int numberOfSeenEpisodes;
+    // FIXME(Gabriel): Use AtomicReference or synchronized?
     private Episode nextEpisodeToSee;
     private ListenerSet<SeasonListener> listeners;
 
@@ -210,6 +212,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     }
 
     public Season mergeWith(Season other) {
+        // TODO(Gabriel): Replace these validations with an this.equals(other)?
         Validate.isNonNull(other, "other should be non-null");
         Validate.isTrue(other.seriesId == this.seriesId, "other's seriesId should be %d", this.seriesId);
         Validate.isTrue(other.number == this.number, "other's number should be %d", this.number);
