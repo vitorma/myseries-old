@@ -205,7 +205,7 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         return null;
     }
 
-    public SeasonSet mergeWith(SeasonSet other) {
+    public synchronized SeasonSet mergeWith(SeasonSet other) {
         Validate.isNonNull(other, "other");
         Validate.isTrue(this.seriesId == other.seriesId, "other's seriesId should be %d",
             this.seriesId);

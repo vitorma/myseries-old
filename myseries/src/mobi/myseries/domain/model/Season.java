@@ -36,14 +36,14 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     private final int seriesId;
     private final int number;
 
+    // The next 3 attributes have mutual dependency, thus all methods that read or write
+    // to them must be synchronized.
     private final TreeMap<Integer, Episode> episodes;
-    // FIXME(Gabriel): Use AtomicInteger or synchronized?
     private int numberOfSeenEpisodes;
-    // FIXME(Gabriel): Use AtomicReference or synchronized?
     private Episode nextEpisodeToSee;
-    private final ListenerSet<SeasonListener> listeners;
 
-    private boolean beingMarkedBySeries;
+    private final ListenerSet<SeasonListener> listeners;
+    private volatile boolean beingMarkedBySeries;
 
     public Season(int seriesId, int number) {
         Validate.isTrue(number >= 0, "number should be non-negative");
@@ -63,19 +63,19 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         return this.number;
     }
 
-    public int numberOfEpisodes() {
+    public synchronized int numberOfEpisodes() {
         return this.episodes.size();
     }
 
-    public boolean includes(Episode episode) {
+    public synchronized boolean includes(Episode episode) {
         return (episode != null) && this.episodes.containsKey(episode.number());
     }
 
-    public Episode episode(int number) {
+    public synchronized Episode episode(int number) {
         return this.episodes.get(number);
     }
 
-    public Episode episodeAt(int position) {
+    public synchronized Episode episodeAt(int position) {
         int i = 0;
 
         for (Integer episodeNumber : this.episodes.keySet()) {
@@ -90,11 +90,11 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
             "invalid position, " + position + ", should be in the range [0, " + this.numberOfEpisodes() + ")");
     }
 
-    public List<Episode> episodes() {
+    public synchronized List<Episode> episodes() {
         return new ArrayList<Episode>(this.episodes.values());
     }
 
-    public List<Episode> episodesBy(Specification<Episode> specification) {
+    public synchronized List<Episode> episodesBy(Specification<Episode> specification) {
         Validate.isNonNull(specification, "specification");
 
         List<Episode> result = new ArrayList<Episode>();
@@ -124,7 +124,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         Validate.isTrue(this.includes(episode), "episode is not included");
     }
 
-    public Season including(Episode episode) {
+    public synchronized Season including(Episode episode) {
         this.validateNotIncluded(episode);
 
         if (episode.wasSeen()) {
@@ -147,19 +147,19 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         return this;
     }
 
-    public int numberOfSeenEpisodes() {
+    public synchronized int numberOfSeenEpisodes() {
         return this.numberOfSeenEpisodes;
     }
 
-    public boolean wasSeen() {
+    public synchronized boolean wasSeen() {
         return this.numberOfSeenEpisodes == this.numberOfEpisodes();
     }
 
-    public Episode nextEpisodeToSee() {
+    public synchronized Episode nextEpisodeToSee() {
         return this.nextEpisodeToSee;
     }
 
-    public Season markAsSeen() {
+    public synchronized Season markAsSeen() {
         for (Episode e : this.episodes.values()) {
             e.setBeingMarkedBySeason(true);
             e.markAsSeen();
@@ -175,7 +175,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         return this;
     }
 
-    public Season markAsNotSeen() {
+    public synchronized Season markAsNotSeen() {
         for (Episode e : this.episodes.values()) {
             e.setBeingMarkedBySeason(true);
             e.markAsNotSeen();
@@ -207,38 +207,45 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         return null;
     }
 
-    public Season mergeWith(Season other) {
+    public synchronized Season mergeWith(Season other) {
         // TODO(Gabriel): Replace these validations with an this.equals(other)?
         Validate.isNonNull(other, "other should be non-null");
         Validate.isTrue(other.seriesId == this.seriesId, "other's seriesId should be %d", this.seriesId);
         Validate.isTrue(other.number == this.number, "other's number should be %d", this.number);
 
-        // merge existing episodes
+        this.mergeExistingEpisodesThatStillExistIn(other);
+        this.insertNewEpisodesFrom(other);
+        this.removeEpisodesThatDoNotExistIn(other);
+
+        return this;
+    }
+
+    private synchronized void mergeExistingEpisodesThatStillExistIn(Season other) {
         for (Episode e : this.episodes.values()) {
             if (other.includes(e)) {
                 e.mergeWith(other.episode(e.number()));
             }
         }
+    }
 
-        // insert new episodes
+    private synchronized void insertNewEpisodesFrom(Season other) {
         for (Episode e : other.episodes.values()) {
             if (!this.includes(e)) {
                 this.insert(e);
             }
         }
+    }
 
-        // remove nonexistent episodes
+    private synchronized void removeEpisodesThatDoNotExistIn(Season other) {
         List<Episode> myEpisodes = new ArrayList<Episode>(this.episodes());
         for (Episode e : myEpisodes) {
             if (!other.includes(e)) {
                 this.remove(e);
             }
         }
-
-        return this;
     }
 
-    private void insert(Episode episode) {
+    private synchronized void insert(Episode episode) {
         this.validateNotIncluded(episode);
 
         if (episode.wasSeen()) {
@@ -247,14 +254,13 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
 
         if (this.nextEpisodeToSeeShouldBe(episode)) {
             this.nextEpisodeToSee = episode;
-            this.notifyThatNextToSeeChanged();
         }
 
         this.episodes.put(episode.number(), episode);
         episode.register(this);
     }
 
-    private void remove(Episode episode) {
+    private synchronized void remove(Episode episode) {
         this.validateIncluded(episode);
 
         episode.deregister(this);
@@ -262,7 +268,6 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
 
         if (this.nextEpisodeToSee != null && this.nextEpisodeToSee.isTheSameAs(episode)) {
             this.nextEpisodeToSee = this.findNextEpisodeToSee();
-            this.notifyThatNextToSeeChanged();
         }
 
         if (episode.wasSeen()) {
@@ -313,7 +318,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     }
 
     @Override
-    public void onMarkAsSeen(Episode episode) {
+    public synchronized void onMarkAsSeen(Episode episode) {
         this.numberOfSeenEpisodes++;
         this.notifyThatNumberOfSeenEpisodesChanged();
 
@@ -330,7 +335,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     }
 
     @Override
-    public void onMarkAsNotSeen(Episode episode) {
+    public synchronized void onMarkAsNotSeen(Episode episode) {
         if (this.wasSeen()) {
             this.notifyThatWasMarkedAsNotSeen();
         }

@@ -277,7 +277,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         this.notifyThatWasMarkedAsSeen();
     }
 
-    public void mergeWith(Series other) {
+    public synchronized void mergeWith(Series other) {
         Validate.isNonNull(other, "other");
         Validate.isTrue(other.id == this.id, "other should have the same id as this");
 

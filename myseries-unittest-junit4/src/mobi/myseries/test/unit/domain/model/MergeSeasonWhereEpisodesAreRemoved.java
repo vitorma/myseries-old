@@ -13,6 +13,11 @@ import org.junit.Test;
 
 public class MergeSeasonWhereEpisodesAreRemoved {
 
+    // Almost all tests in this file verifies whether a SeasonListener has been called.
+    // Season#merge should never interact with the listeners, because it would cause a thread
+    // which is not the main thread to interact with views and it would break the app. After the
+    // merge, these views will be notified that an update has happened and redraw themselves.
+
     private static Episode mockEpisode(int id, int seriesId, int number, int seasonNumber) {
         Episode episode = Episode.builder()
                 .withId(id)
@@ -36,7 +41,12 @@ public class MergeSeasonWhereEpisodesAreRemoved {
         Season season1 = new Season(1, 1).including(episode1);
         Season season2 = new Season(1, 1).including(episode2);
 
+        SeasonListener listener = mockListener();
+        assertTrue(season1.register(listener));
+
         assertFalse(season1.mergeWith(season2).includes(episode1));
+
+        verifyZeroInteractions(listener);
     }
 
     @Test
@@ -73,9 +83,7 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode5);
 
         assertTrue(season1.mergeWith(season2).wasSeen());
-
-        verify(listener, never()).onMarkAsSeen(season1);
-        verify(listener, never()).onMarkAsNotSeen(season1);
+        verifyZeroInteractions(listener);
     }
 
     @Test
@@ -99,6 +107,9 @@ public class MergeSeasonWhereEpisodesAreRemoved {
 
         assertFalse(season1.wasSeen());
 
+        SeasonListener listener = mockListener();
+        assertTrue(season1.register(listener));
+
         Season season2 = new Season(1, 1)
                 .including(episode1)
                 .including(episode2)
@@ -107,6 +118,7 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode5);
 
         assertTrue(season1.mergeWith(season2).wasSeen());
+        verifyZeroInteractions(listener);
     }
 
     @Test
@@ -141,8 +153,7 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode5);
 
         assertThat(season1.mergeWith(season2).nextEpisodeToSee(), equalTo(episode4));
-
-        verify(listener).onChangeNextEpisodeToSee(season1);
+        verifyZeroInteractions(listener);
     }
 
     @Test
@@ -177,8 +188,7 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode5);
 
         assertThat(season1.mergeWith(season2).nextEpisodeToSee(), nullValue());
-
-        verify(listener, atLeastOnce()).onChangeNextEpisodeToSee(season1);
+        verifyZeroInteractions(listener);
     }
 
     @Test
@@ -202,6 +212,9 @@ public class MergeSeasonWhereEpisodesAreRemoved {
 
         assertThat(season1.numberOfSeenEpisodes(), equalTo(3));
 
+        SeasonListener listener = mockListener();
+        assertTrue(season1.register(listener));
+
         Season season2 = new Season(1, 1)
                 .including(episode1)
           // not.including(episode2)
@@ -210,6 +223,7 @@ public class MergeSeasonWhereEpisodesAreRemoved {
           // not.including(episode5);
 
         assertThat(season1.mergeWith(season2).numberOfSeenEpisodes(), equalTo(1));
+        verifyZeroInteractions(listener);
     }
 
     @Test
@@ -229,6 +243,9 @@ public class MergeSeasonWhereEpisodesAreRemoved {
 
         assertThat(season1.numberOfEpisodes(), equalTo(5));
 
+        SeasonListener listener = mockListener();
+        assertTrue(season1.register(listener));
+
         Season season2 = new Season(1, 1)
                 .including(episode1)
           // not.including(episode2)
@@ -237,6 +254,7 @@ public class MergeSeasonWhereEpisodesAreRemoved {
           // not.including(episode5);
 
         assertThat(season1.mergeWith(season2).numberOfEpisodes(), equalTo(2));
+        verifyZeroInteractions(listener);
     }
 
     @Test
@@ -277,7 +295,6 @@ public class MergeSeasonWhereEpisodesAreRemoved {
         episode4.markAsNotSeen();
 
         assertThat(season1.wasSeen(), equalTo(true));
-        verify(listener, never()).onChangeNumberOfSeenEpisodes(season1);
-        verify(listener, never()).onMarkAsNotSeen(season1);
+        verifyZeroInteractions(listener);
     }
 }
