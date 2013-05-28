@@ -435,7 +435,6 @@ public class SeasonTest {
         Season season2 = new Season(1, 1).including(episode2);
 
         Assert.assertTrue(season1.mergeWith(season2).includes(episode2));
-        Assert.assertTrue(season2.mergeWith(season1).includes(episode1));
     }
 
     /* SeasonListener */
