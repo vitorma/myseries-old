@@ -91,10 +91,10 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     }
 
     @Override
-    public void onPause() {
+    public void onDestroy() {
         SeasonsFragment.SERIES_PROVIDER.getSeries(this.seriesId).deregister(this);
 
-        super.onPause();
+        super.onDestroy();
     }
 
     @Override
