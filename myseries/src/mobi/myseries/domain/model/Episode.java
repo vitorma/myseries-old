@@ -22,6 +22,7 @@
 package mobi.myseries.domain.model;
 
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.shared.Time;
@@ -43,9 +44,8 @@ public class Episode implements Publisher<EpisodeListener> {
     private String guestStars;
     private String imageFileName;
 
-    // TODO(Gabriel): Use AtomicBoolean or synchronized or maybe locks
-    private boolean seenMark;
-    private boolean beingMarkedBySeason;
+    private AtomicBoolean seenMark;
+    private volatile boolean beingMarkedBySeason;
 
     private ListenerSet<EpisodeListener> listeners;
 
@@ -60,6 +60,7 @@ public class Episode implements Publisher<EpisodeListener> {
         this.number = number;
         this.seasonNumber = seasonNumber;
 
+        this.seenMark = new AtomicBoolean(false);
         this.listeners = new ListenerSet<EpisodeListener>();
     }
 
@@ -129,23 +130,21 @@ public class Episode implements Publisher<EpisodeListener> {
     }
 
     public boolean wasSeen() {
-        return this.seenMark;
+        return this.seenMark.get();
     }
 
     public boolean wasNotSeen() {
-        return !this.seenMark;
+        return !this.seenMark.get();
     }
 
     public void markAsSeen() {
-        if (!this.seenMark) {
-            this.seenMark = true;
+        if (this.seenMark.compareAndSet(false, true)) {
             this.notifyThatWasMarkedAsSeen();
         }
     }
 
     public void markAsNotSeen() {
-        if (this.seenMark) {
-            this.seenMark = false;
+        if (this.seenMark.compareAndSet(true, false)) {
             this.notifyThatWasMarkedAsNotSeen();
         }
     }
@@ -323,7 +322,7 @@ public class Episode implements Publisher<EpisodeListener> {
             episode.writers = this.writers;
             episode.guestStars = this.guestStars;
             episode.imageFileName = this.imageFileName;
-            episode.seenMark = this.seenMark;
+            episode.seenMark = new AtomicBoolean(this.seenMark);
 
             return episode;
         }
