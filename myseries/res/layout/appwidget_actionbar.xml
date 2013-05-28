@@ -3,7 +3,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/actionBar"
-    android:background="@drawable/ab_solid_dark_holo"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="@dimen/appwidget_actionbar_height">
@@ -11,6 +10,7 @@
     <ImageButton
         android:id="@+id/homeButton"
         android:src="@drawable/ic_launcher"
+        android:contentDescription="@string/description_home_button"
         android:scaleType="centerInside"
         android:background="@drawable/item_background_holo_dark"
         android:padding="@dimen/gap_medium"
@@ -20,8 +20,7 @@
     <TextView
         android:id="@+id/titleView"
         android:text="@string/my_schedule"
-        style="@style/TextView.Medium.White"
-        android:textSize="16sp"
+        style="@style/TextView.XMedium.White.Ellipsized"
         android:gravity="center_vertical|left"
         android:layout_width="0dp"
         android:layout_height="@dimen/appwidget_actionbar_button_height"
@@ -30,6 +29,7 @@
     <ImageButton
         android:id="@+id/scheduleButton"
         android:src="@drawable/actionbar_calendar"
+        android:contentDescription="@string/description_schedule_button"
         android:scaleType="centerInside"
         android:background="@drawable/item_background_holo_dark"
         android:padding="@dimen/gap_medium"
@@ -37,8 +37,9 @@
         android:layout_height="@dimen/appwidget_actionbar_button_height"/>
 
     <ImageButton
-        android:id="@+id/configureButton"
+        android:id="@+id/preferencesButton"
         android:src="@drawable/actionbar_settings"
+        android:contentDescription="@string/description_preferences_button"
         android:scaleType="centerInside"
         android:background="@drawable/item_background_holo_dark"
         android:padding="@dimen/gap_medium"

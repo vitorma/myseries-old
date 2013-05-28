@@ -26,7 +26,7 @@ public class ActionBar {
     public ActionBar setUpFor(int appWidgetId) {
         this.appWidgetView.setOnClickPendingIntent(R.id.homeButton, this.homeIntentFrom(appWidgetId));
         this.appWidgetView.setOnClickPendingIntent(R.id.scheduleButton, this.scheduleIntentFrom(appWidgetId));
-        this.appWidgetView.setOnClickPendingIntent(R.id.configureButton, this.preferencesIntentFrom(appWidgetId));
+        this.appWidgetView.setOnClickPendingIntent(R.id.preferencesButton, this.preferencesIntentFrom(appWidgetId));
 
         return this;
     }

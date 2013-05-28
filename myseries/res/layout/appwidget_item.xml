@@ -3,11 +3,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/itemPanel"
-    android:background="@drawable/list_selector_holo_light"
-    android:paddingTop="@dimen/appwidget_item_gap"
-    android:paddingBottom="@dimen/appwidget_item_gap"
-    android:paddingLeft="@dimen/appwidget_item_gap"
-    android:paddingRight="@dimen/appwidget_item_gap"
+    android:padding="@dimen/appwidget_item_gap"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -20,8 +16,7 @@
 
     <TextView
         android:id="@+id/seriesName"
-        style="@style/TextView.Large.DarkGray.Ellipsized"
-        android:textSize="16sp"
+        style="@style/TextView.XMedium.White.Ellipsized"
         android:paddingLeft="@dimen/appwidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +25,7 @@
 
     <TextView
         android:id="@+id/episodeNumber"
-        style="@style/TextView.Small.LightGray.Ellipsized"
+        style="@style/TextView.Small.TranslucentWhite.Ellipsized"
         android:paddingLeft="@dimen/appwidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,8 +34,7 @@
 
     <TextView
         android:id="@+id/episodeAirDate"
-        style="@style/TextView.Small"
-        android:textColor="@color/dark_blue"
+        style="@style/TextView.Small.LightBlue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/episodeNumber"

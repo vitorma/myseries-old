@@ -27,10 +27,10 @@ public class AdapterViewsFactory implements RemoteViewsService.RemoteViewsFactor
     }
 
     @Override
-    public void onCreate() {}
+    public void onCreate() { }
 
     @Override
-    public void onDestroy() {}
+    public void onDestroy() { }
 
     @Override
     public int getCount() {

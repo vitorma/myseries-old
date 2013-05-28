@@ -66,6 +66,9 @@
     <string name="description_poster">Series poster</string>
     <string name="description_clear_button">Clear button</string>
     <string name="description_search_button">Search button</string>
+    <string name="description_home_button">Home button</string>
+    <string name="description_schedule_button">Schedule button</string>
+    <string name="description_preferences_button">Preferences button</string>
 
     <!-- Labels -->
 

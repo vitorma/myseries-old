@@ -3,10 +3,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tabBar"
-    android:background="@color/white"
+    android:background="#424242"
     android:orientation="horizontal"
+    android:baselineAligned="false"
     android:layout_width="match_parent"
-    android:layout_height="40dp">
+    android:layout_height="@dimen/appwidget_tabbar_height">
 
     <FrameLayout
         android:id="@+id/recentTabContainer"
@@ -17,29 +18,20 @@
         <Button
             android:id="@+id/recentTab"
             android:text="@string/recent"
-            android:textSize="10sp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:background="@color/white"
+            style="@style/TabButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <ImageView
-            android:id="@+id/selectRecent"
-            android:background="@color/blue"
+            android:id="@+id/recentTabIndicator"
+            android:contentDescription="@string/recent"
+            android:background="@color/dark_red"
+            android:visibility="invisible"
             android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="bottom"
-            android:visibility="invisible"/>
+            android:layout_height="@dimen/appwidget_tabbar_tabindicator_height"
+            android:layout_gravity="bottom"/>
 
     </FrameLayout>
-
-    <ImageView
-        android:id="@+id/divider1"
-        android:background="@drawable/list_divider_holo_light"
-        android:layout_width="0.1dp"
-        android:layout_height="19dp"
-        android:layout_gravity="center_vertical"/>
 
     <FrameLayout
         android:id="@+id/nextTabContainer"
@@ -50,29 +42,20 @@
         <Button
             android:id="@+id/nextTab"
             android:text="@string/next"
-            android:textSize="10sp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:background="@color/white"
+            style="@style/TabButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <ImageView
-            android:id="@+id/selectNext"
-            android:background="@color/blue"
+            android:id="@+id/nextTabIndicator"
+            android:contentDescription="@string/next"
+            android:background="@color/dark_red"
+            android:visibility="invisible"
             android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="bottom"
-            android:visibility="invisible"/>
+            android:layout_height="@dimen/appwidget_tabbar_tabindicator_height"
+            android:layout_gravity="bottom"/>
 
     </FrameLayout>
-
-    <ImageView
-        android:id="@+id/divider2"
-        android:background="@drawable/list_divider_holo_light"
-        android:layout_width="0.1dp"
-        android:layout_height="19dp"
-        android:layout_gravity="center_vertical"/>
 
     <FrameLayout
         android:id="@+id/upcomingTabContainer"
@@ -83,20 +66,18 @@
         <Button
             android:id="@+id/upcomingTab"
             android:text="@string/upcoming"
-            android:textSize="10sp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:background="@color/white"
+            style="@style/TabButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <ImageView
-            android:id="@+id/selectUpcoming"
-            android:background="@color/blue"
+            android:id="@+id/upcomingTabIndicator"
+            android:contentDescription="@string/upcoming"
+            android:background="@color/dark_red"
+            android:visibility="invisible"
             android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="bottom"
-            android:visibility="invisible"/>
+            android:layout_height="@dimen/appwidget_tabbar_tabindicator_height"
+            android:layout_gravity="bottom"/>
 
     </FrameLayout>
 

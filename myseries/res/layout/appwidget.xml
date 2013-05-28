@@ -2,8 +2,8 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayout"
-    android:background="@color/white"
+    android:id="@+id/appwidget"
+    android:background="@color/dark_gray"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,14 +17,14 @@
 
     <ListView
         android:id="@+id/episodeList"
-        style="@style/ListView.AppWidget"
+        style="@style/ListView.Dark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <TextView
         android:id="@+id/emptyView"
         android:text="@string/no_episodes_to_see"
-        style="@style/TextView.Small.DarkGray"
+        style="@style/TextView.Small.TranslucentWhite"
         android:gravity="center"
         android:minHeight="@dimen/appwidget_item_height"
         android:layout_width="match_parent"

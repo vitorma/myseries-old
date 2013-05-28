@@ -6,6 +6,7 @@
     <color name="translucent">#bf000000</color>
     <color name="shadow">#bb000000</color>
 
+    <color name="translucent_white">#aaffffff</color>
     <color name="white">#ffffffff</color>
     <color name="light_gray">#0f000000</color>
     <color name="gray">#ff656565</color>
@@ -13,6 +14,8 @@
     <color name="black">#ff000000</color>
     <color name="blue">#ff33b5e5</color>
     <color name="dark_blue">#ff0099cc</color>
+    <color name="red">#ffff4444</color>
+    <color name="dark_red">#ffcc0000</color>
 
     <color name="chunk_bar_background_gradient_from">@color/chunk_bar_background_plain</color>
     <color name="chunk_bar_background_gradient_to">@color/chunk_bar_background_plain</color>
