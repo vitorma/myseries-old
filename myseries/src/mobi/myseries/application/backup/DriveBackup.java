@@ -6,10 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import mobi.myseries.application.App;
-import mobi.myseries.gui.preferences.BackupPreferences;
 import mobi.myseries.shared.FilesUtil;
 import android.content.Context;
-import android.content.SharedPreferences;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.FileContent;
@@ -32,18 +30,14 @@ public class DriveBackup implements BackupMode {
     private static Context context = App.context();
     private Drive service;
     private String account;
-    private GoogleAccountCredential credential;
 
     private String folderId;
     private String fileId;
     private String folderPath;
 
-    private BackupPreferences peferencesProvider;
-
     public DriveBackup(String account) {
         this.account = account;
-        //this.peferencesProvider = new BackupPreferences(context);
-        this.folderPath = FOLDER_NAME; // this.peferencesProvider.googleDriveRemoteLocation();
+        this.folderPath = FOLDER_NAME;
     }
 
     @Override
@@ -62,14 +56,12 @@ public class DriveBackup implements BackupMode {
     }
 
     private void setupDriveService() throws Exception {
-        if (this.service == null) {
-            credential = GoogleAccountCredential.usingOAuth2(context,
-                    DriveScopes.DRIVE);
-            credential.setSelectedAccountName(account);
-            this.service = new Drive.Builder(
-                    AndroidHttp.newCompatibleTransport(), new GsonFactory(),
-                    credential).build();
-        }
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context,
+                DriveScopes.DRIVE);
+        credential.setSelectedAccountName(account);
+        this.service = new Drive.Builder(AndroidHttp.newCompatibleTransport(),
+                new GsonFactory(), credential).build();
+
     }
 
     private void ensuredDriveDirectory() throws IOException {
@@ -101,12 +93,12 @@ public class DriveBackup implements BackupMode {
     private String getFileId(String parentId, String fileName, String mimeType)
             throws IOException {
         String query = getFileQuery(fileName, mimeType, false);
-        List<ChildReference> queryResult = this.service.children().list(parentId).setQ(query)
-                .execute().getItems();
+        List<ChildReference> queryResult = this.service.children()
+                .list(parentId).setQ(query).execute().getItems();
         String id = null;
-        if(!queryResult.isEmpty())
-            id = this.service.children().list(parentId).setQ(query)
-                .execute().getItems().get(0).getId();
+        if (!queryResult.isEmpty())
+            id = this.service.children().list(parentId).setQ(query).execute()
+                    .getItems().get(0).getId();
         return id;
     }
 
@@ -135,8 +127,9 @@ public class DriveBackup implements BackupMode {
         if (folderId == null)
             throw new IOException();
 
-        fileId = this.getFileId(folderId, DATABASE_FILE_NAME, DATABASE_MIME_TYPE);
-        if(fileId == null) {
+        fileId = this.getFileId(folderId, DATABASE_FILE_NAME,
+                DATABASE_MIME_TYPE);
+        if (fileId == null) {
             throw new IOException();
         }
     }
@@ -145,8 +138,7 @@ public class DriveBackup implements BackupMode {
         java.io.File cachedFile = null;
         File file = service.files().get(fileId).execute();
         InputStream input = this.downloadFile(service, file);
-        cachedFile = new java.io.File(context.getCacheDir(),
-                    DATABASE_FILE_NAME);
+        cachedFile = new java.io.File(context.getCacheDir(), DATABASE_FILE_NAME);
         FilesUtil.writeFile(input, cachedFile);
         return cachedFile;
     }
@@ -198,12 +190,4 @@ public class DriveBackup implements BackupMode {
             throw new IOException();
         }
     }
-
-    @Override
-    public void backupPreferences(SharedPreferences preferences)
-            throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
-
 }

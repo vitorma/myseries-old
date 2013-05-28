@@ -232,6 +232,9 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
 
         @Override
         public void onRestoreFailure(Exception e) {}
+
+        @Override
+        public void onStart() {}
     };
 
     /* SeriesListAdapter.Listener */

@@ -22,18 +22,6 @@
         android:layout_height="3dp"
         android:background="@drawable/list_divider_holo_light" />
 
-    <TextView
-        android:id="@+id/sd_card_location_text_view"
-        style="@style/TextView.Small.DarkGray"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toucharea_minimum_side"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/gap_medium"
-        android:paddingRight="@dimen/gap_medium"
-        android:text="@string/sd_card_location"
-        android:textSize="@dimen/text_size_medium"
-        android:onClick="onClick"
-        android:clickable="true" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/toucharea_minimum_side"
@@ -92,19 +80,6 @@
         android:layout_height="1dp"
         android:background="@drawable/list_divider_holo_light" />
 
-    <TextView
-        android:id="@+id/google_drive_location_text_view"
-        style="@style/TextView.Small.DarkGray"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toucharea_minimum_side"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/gap_medium"
-        android:paddingRight="@dimen/gap_medium"
-        android:text="@string/remote_location"
-        android:textSize="@dimen/text_size_medium"
-        android:onClick="onClick"
-        android:clickable="true" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/toucharea_minimum_side"
@@ -133,6 +108,54 @@
 
         <Button
             android:id="@+id/google_drive_restore_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toRightOf="@id/dividerVertical"
+            android:background="@drawable/item_background_holo_light"
+            android:text="@string/restore_button" />
+    </RelativeLayout>
+    
+    <TextView
+        style="@style/TextView.Medium.MediumGray.Bold"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:text="@string/dropbox" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/list_divider_holo_light" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_gravity="bottom" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/list_divider_holo_light" />
+
+        <View
+            android:id="@+id/dividerVertical"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/list_divider_holo_light" />
+
+        <Button
+            android:id="@+id/dropbox_backup_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toLeftOf="@id/dividerVertical"
+            android:background="@drawable/item_background_holo_light"
+            android:text="@string/backup_button" />
+
+        <Button
+            android:id="@+id/dropbox_restore_button"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toucharea_minimum_side"
             android:layout_toRightOf="@id/dividerVertical"

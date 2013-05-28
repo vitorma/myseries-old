@@ -37,12 +37,13 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     private int number;
 
     private TreeMap<Integer, Episode> episodes;
+    // FIXME(Gabriel): Use AtomicInteger or synchronized?
     private int numberOfSeenEpisodes;
+    // FIXME(Gabriel): Use AtomicReference or synchronized?
     private Episode nextEpisodeToSee;
     private ListenerSet<SeasonListener> listeners;
 
     public Season(int seriesId, int number) {
-        Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
         Validate.isTrue(number >= 0, "number should be non-negative");
 
         this.seriesId = seriesId;
@@ -109,27 +110,20 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         Validate.isNonNull(episode, "episode");
         Validate.isTrue(episode.seriesId() == this.seriesId, "episode's seriesId should be %d", this.seriesId);
         Validate.isTrue(episode.seasonNumber() == this.number, "episode's seasonNumber should be %d", this.number);
+    }
+
+    private void validateNotIncluded(Episode episode) {
+        validate(episode);
         Validate.isTrue(!this.includes(episode), "episode is already included");
     }
 
-    private void insert(Episode episode) {
+    private void validateIncluded(Episode episode) {
         validate(episode);
-
-        if (episode.wasSeen()) {
-            this.numberOfSeenEpisodes++;
-        }
-
-        if (this.nextEpisodeToSeeShouldBe(episode)) {
-            this.nextEpisodeToSee = episode;
-            this.notifyThatNextToSeeChanged();
-        }
-
-        this.episodes.put(episode.number(), episode);
-        episode.register(this);
+        Validate.isTrue(this.includes(episode), "episode is not included");
     }
 
     public Season including(Episode episode) {
-        validate(episode);
+        validateNotIncluded(episode);
 
         if (episode.wasSeen()) {
             this.numberOfSeenEpisodes++;
@@ -210,19 +204,60 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     }
 
     public Season mergeWith(Season other) {
+        // TODO(Gabriel): Replace these validations with an this.equals(other)?
         Validate.isNonNull(other, "other should be non-null");
         Validate.isTrue(other.seriesId == this.seriesId, "other's seriesId should be %d", this.seriesId);
         Validate.isTrue(other.number == this.number, "other's number should be %d", this.number);
 
+        // merge existing episodes 
         for (Episode e : this.episodes.values()) {
             if (other.includes(e)) e.mergeWith(other.episode(e.number()));
         }
 
+        // insert new episodes
         for (Episode e : other.episodes.values()) {
             if (!this.includes(e)) this.insert(e);
         }
 
+        // remove nonexistent episodes
+        List<Episode> myEpisodes = new ArrayList<Episode>(this.episodes());
+        for (Episode e : myEpisodes) {
+            if (!other.includes(e)) this.remove(e);
+        }
+
         return this;
+    }
+
+    private void insert(Episode episode) {
+        validateNotIncluded(episode);
+
+        if (episode.wasSeen()) {
+            this.numberOfSeenEpisodes++;
+        }
+
+        if (this.nextEpisodeToSeeShouldBe(episode)) {
+            this.nextEpisodeToSee = episode;
+            this.notifyThatNextToSeeChanged();
+        }
+
+        this.episodes.put(episode.number(), episode);
+        episode.register(this);
+    }
+
+    private void remove(Episode episode) {
+        validateIncluded(episode);
+
+        episode.deregister(this);
+        this.episodes.remove(episode.number());
+
+        if (this.nextEpisodeToSee != null && this.nextEpisodeToSee.isTheSameAs(episode)) {
+            this.nextEpisodeToSee = findNextEpisodeToSee();
+            this.notifyThatNextToSeeChanged();
+        }
+
+        if (episode.wasSeen()) {
+            this.numberOfSeenEpisodes--;
+        }
     }
 
     @Override

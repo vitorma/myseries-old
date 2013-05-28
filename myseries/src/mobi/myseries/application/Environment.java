@@ -21,6 +21,7 @@
 
 package mobi.myseries.application;
 
+import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.image.AndroidImageServiceRepository;
 import mobi.myseries.application.image.ImageServiceRepository;
 import mobi.myseries.domain.repository.series.SeriesCache;
@@ -35,11 +36,17 @@ import mobi.myseries.shared.Validate;
 import android.content.Context;
 
 public class Environment {
+    // Note that this is a really insecure way to do this, and you shouldn't
+    // ship code which contains your key & secret in such an obvious way.
+    // Obfuscation is good.
     private static final String THE_TVDB_API_KEY = "6F2B5A871C96FB05";
-    private static final String TRAKTTV_API_KEY = "2665c5546c888a02c4ceff0afccfa927";
-
+    private static final String TRAKTTV_API_KEY = "2665c5546c888a02c4ceff0afccfa927";    // Replace this with your app key and secret assigned by Dropbox.
+    private static String DROPBOX_APP_KEY = "16plq57cyv3mxdb";
+    private static String DROPBOX_APP_SECRET = "5z6c5a0ku03kyjy";
+    
     private TheTVDB theTVDB;
     private TraktTv traktTv;
+    private DropboxHelper dropboxHelper;
     private LocalizationProvider localizationProvider;
     private SeriesRepository seriesRepository;
     private ImageServiceRepository imageRepository;
@@ -53,6 +60,7 @@ public class Environment {
 
         this.theTVDB = new TheTVDB(THE_TVDB_API_KEY);
         this.traktTv = new TraktTv(TRAKTTV_API_KEY);
+        this.dropboxHelper = new DropboxHelper(this.context, DROPBOX_APP_KEY, DROPBOX_APP_SECRET);
         this.localizationProvider =  new AndroidLocalizationProvider();
         this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
         this.imageRepository = new AndroidImageServiceRepository(this.context);
@@ -72,6 +80,10 @@ public class Environment {
 
     public ImageSource imageSource() {
         return this.theTVDB;
+    }
+
+    public DropboxHelper dropboxHelper() {
+        return this.dropboxHelper;
     }
 
     public LocalizationProvider localizationProvider() {

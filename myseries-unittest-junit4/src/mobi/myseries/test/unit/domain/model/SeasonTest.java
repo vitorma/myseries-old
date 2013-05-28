@@ -76,8 +76,8 @@ public class SeasonTest {
 
     /* Construction */
 
-    @Test(expected=IllegalArgumentException.class)
-    public void constructingASeasonWithNegativeSeriesIdCausesIllegalArgumentException() {
+    @Test
+    public void constructingASeasonWithNegativeSeriesIdDoesNotCauseException() {
         new Season(-1, 0);
     }
 
@@ -129,7 +129,7 @@ public class SeasonTest {
         Season season = new Season(1, 1).including(mockEpisode(1, 1, 1, 1));
 
         Assert.assertTrue(season.includes(mockEpisode(1, 1, 1, 1)));
-        Assert.assertTrue(season.includes(mockEpisode(2, 1, 1, 1)));
+        Assert.assertTrue(season.includes(mockEpisode(2, 1, 1, 1)));  // even if their ids are different
         Assert.assertFalse(season.includes(mockEpisode(1, 1, 2, 1)));
     }
 
@@ -435,7 +435,6 @@ public class SeasonTest {
         Season season2 = new Season(1, 1).including(episode2);
 
         Assert.assertTrue(season1.mergeWith(season2).includes(episode2));
-        Assert.assertTrue(season2.mergeWith(season1).includes(episode1));
     }
 
     /* SeasonListener */

@@ -1,6 +1,5 @@
 package mobi.myseries.gui.shared;
 
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import mobi.myseries.R;
