@@ -34,10 +34,10 @@ import mobi.myseries.shared.Validate;
 
 public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     private static final int SPECIAL_EPISODES_SEASON_NUMBER = 0;
-    private int seriesId;
+    private final int seriesId;
 
-    private TreeMap<Integer, Season> seasons;
-    private ListenerSet<SeasonSetListener> listeners;
+    private final TreeMap<Integer, Season> seasons;
+    private final ListenerSet<SeasonSetListener> listeners;
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
@@ -76,8 +76,8 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         }
 
         throw new IndexOutOfBoundsException(
-                "invalid position, " + position + ", should be in the range [0, "
-                        + this.numberOfSeasons() + ")");
+            "invalid position, " + position + ", should be in the range [0, "
+                + this.numberOfSeasons() + ")");
     }
 
     private Season ensuredSeason(int number) {
@@ -166,35 +166,40 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     }
 
     public Episode nextEpisodeToSee(boolean includingSpecialEpisodes) {
-        if (!includingSpecialEpisodes)
+        if (!includingSpecialEpisodes) {
             return this.nextNonSpecialEpisodeToSee();
+        }
 
         Episode nextNonSpecialEpisodeToSee = this.nextNonSpecialEpisodeToSee();
         Episode nextSpecialEpisodeToSee = this.nextSpecialEpisodeToSee();
 
-        if (nextNonSpecialEpisodeToSee == null)
+        if (nextNonSpecialEpisodeToSee == null) {
             return nextSpecialEpisodeToSee;
-        if (nextSpecialEpisodeToSee == null)
+        }
+        if (nextSpecialEpisodeToSee == null) {
             return nextNonSpecialEpisodeToSee;
+        }
 
         return DatesAndTimes.compareByNullLast(nextNonSpecialEpisodeToSee.airDate(),
-                nextSpecialEpisodeToSee.airDate()) < 1
-                ? nextNonSpecialEpisodeToSee
+            nextSpecialEpisodeToSee.airDate()) < 1
+            ? nextNonSpecialEpisodeToSee
                 : nextSpecialEpisodeToSee;
     }
 
     private Episode nextSpecialEpisodeToSee() {
-        Season specialEpisodes = this.season(SPECIAL_EPISODES_SEASON_NUMBER);
+        Season specialEpisodes = this.season(SeasonSet.SPECIAL_EPISODES_SEASON_NUMBER);
         return specialEpisodes != null ? specialEpisodes.nextEpisodeToSee() : null;
     }
 
     private Episode nextNonSpecialEpisodeToSee() {
         for (Season s : this.seasons.values()) {
-            if (s.number() == SPECIAL_EPISODES_SEASON_NUMBER)
+            if (s.number() == SeasonSet.SPECIAL_EPISODES_SEASON_NUMBER) {
                 continue;
+            }
 
-            if (!s.wasSeen())
+            if (!s.wasSeen()) {
                 return s.nextEpisodeToSee();
+            }
         }
 
         return null;
@@ -203,7 +208,7 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     public SeasonSet mergeWith(SeasonSet other) {
         Validate.isNonNull(other, "other");
         Validate.isTrue(this.seriesId == other.seriesId, "other's seriesId should be %d",
-                this.seriesId);
+            this.seriesId);
 
         for (Season s : this.seasons.values()) {
             if (other.includes(s)) {
@@ -212,8 +217,9 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         }
 
         for (Season s : other.seasons.values()) {
-            if (!this.includes(s))
+            if (!this.includes(s)) {
                 this.including(s);
+            }
         }
 
         return this;
@@ -261,4 +267,10 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         // FIXME Notify only if the general next to see change
         this.notifyThatNextEpisodeToSeeChanged();
     }
+
+    @Override
+    public void onMarkAsSeenBySeries(Season season) { }
+
+    @Override
+    public void onMarkAsNotSeenBySeries(Season season) { }
 }

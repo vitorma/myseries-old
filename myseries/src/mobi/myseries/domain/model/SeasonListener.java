@@ -26,4 +26,6 @@ public interface SeasonListener {
     public void onMarkAsNotSeen(Season season);
     public void onChangeNumberOfSeenEpisodes(Season season);
     public void onChangeNextEpisodeToSee(Season season);
+    public void onMarkAsSeenBySeries(Season season);
+    public void onMarkAsNotSeenBySeries(Season season);
 }

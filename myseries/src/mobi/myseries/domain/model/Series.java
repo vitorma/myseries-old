@@ -37,224 +37,6 @@ import mobi.myseries.shared.Validate;
 import mobi.myseries.shared.WeekDay;
 
 public class Series implements SeasonSetListener, Publisher<SeriesListener> {
-    private int id;
-    private String name;
-    private Status status;
-    private Date airDate;
-    private WeekDay airDay;
-    private Time airtime;
-    private String runtime;
-    private String network;
-    private String overview;
-    private String genres;
-    private String actors;
-    private String posterFileName;
-    private SeasonSet seasons;
-
-    private ListenerSet<SeriesListener> listeners;
-    private Long lastUpdate;
-
-    private Series(int id, String name) {
-        Validate.isTrue(id >= 0, "id should be non-negative");
-        Validate.isNonBlank(name, "name");
-
-        this.id = id;
-        this.name = name;
-
-        this.seasons = new SeasonSet(this.id);
-        this.seasons.register(this);
-        this.listeners = new ListenerSet<SeriesListener>();
-    }
-
-    public static Series.Builder builder() {
-        return new Series.Builder();
-    }
-
-    public int id() {
-        return this.id;
-    }
-
-    public String name() {
-        return this.name;
-    }
-
-    public Status status() {
-        return this.status;
-    }
-
-    public Date airDate() {
-        return this.airDate;
-    }
-
-    public WeekDay airDay() {
-        return this.airDay;
-    }
-
-    public Time airtime() {
-        return this.airtime;
-    }
-
-    public String runtime() {
-        return this.runtime;
-    }
-
-    public String network() {
-        return this.network;
-    }
-
-    public String overview() {
-        return this.overview;
-    }
-
-    public String genres() {
-        return this.genres;
-    }
-
-    public String actors() {
-        return this.actors;
-    }
-
-    public String posterFileName() {
-        return this.posterFileName;
-    }
-
-    public boolean hasPoster() {
-        return this.posterFileName != null;
-    }
-
-    public Series setPosterFilename(String posterFileName) {
-        this.posterFileName = posterFileName;
-
-        return this;
-    }
-
-    public SeasonSet seasons() {
-        return this.seasons;
-    }
-
-    public Season season(int number) {
-        return this.seasons.season(number);
-    }
-
-    public Season seasonAt(int position) {
-        return this.seasons.seasonAt(position);
-    }
-
-    public boolean hasSpecialEpisodes() {
-        return this.seasons.hasSpecialEpisodes();
-    }
-
-    public List<Episode> episodes() {
-        return this.seasons.episodes();
-    }
-
-    public List<Episode> episodesBy(Specification<Episode> specification) {
-        return this.seasons.episodesBy(specification);
-    }
-
-    public int numberOfEpisodes() {
-        return this.seasons.numberOfEpisodes();
-    }
-
-    public int numberOfSeenEpisodes() {
-        return this.seasons.numberOfSeenEpisodes();
-    }
-
-    public Episode nextEpisodeToSee(boolean includingSpecialEpisodes) {
-        return this.seasons.nextEpisodeToSee(includingSpecialEpisodes);
-    }
-
-    public Series includingAll(Collection<Episode> episodes) {
-        Validate.isNonNull(episodes, "episodes");
-
-        for (Episode e : episodes) {
-            this.seasons.including(e.withAirtime(this.airtime));
-        }
-
-        return this;
-    }
-
-    public Long lastUpdate() {
-        return this.lastUpdate;
-    }
-
-    public Series setLastUpdate(Long lastUpdate) {
-        this.lastUpdate = lastUpdate;
-        return this;
-    }
-
-    public void mergeWith(Series other) {
-        Validate.isNonNull(other, "other");
-        Validate.isTrue(other.id == this.id, "other should have the same id as this");
-
-        this.name = other.name;
-        this.status = other.status;
-        this.airDate = other.airDate;
-        this.airDay = other.airDay;
-        this.airtime = other.airtime;
-        this.runtime = other.runtime;
-        this.network = other.network;
-        this.overview = other.overview;
-        this.genres = other.genres;
-        this.actors = other.actors;
-        this.posterFileName = other.posterFileName;
-
-        this.seasons.mergeWith(other.seasons);
-    }
-
-    @Override
-    public boolean register(SeriesListener listener) {
-        return this.listeners.register(listener);
-    }
-
-    @Override
-    public boolean deregister(SeriesListener listener) {
-        return this.listeners.deregister(listener);
-    }
-
-    private void notifyThatNumberOfSeenEpisodesChanged() {
-        for (SeriesListener l : this.listeners) {
-            l.onChangeNumberOfSeenEpisodes(this);
-        }
-    }
-
-    private void notifyThatNextEpisodeToSeeChanged() {
-        for (SeriesListener l : this.listeners) {
-            l.onChangeNextEpisodeToSee(this);
-        }
-    }
-
-    private void notifyThatNextNonSpecialEpisodeToSeeChanged() {
-        for (SeriesListener l : this.listeners) {
-            l.onChangeNextNonSpecialEpisodeToSee(this);
-        }
-    }
-
-    @Override
-    public void onChangeNumberOfSeenEpisodes(SeasonSet seasonSet) {
-        this.notifyThatNumberOfSeenEpisodesChanged();
-    }
-
-    @Override
-    public void onChangeNextEpisodeToSee(SeasonSet seasonSet) {
-        this.notifyThatNextEpisodeToSeeChanged();
-    }
-
-    @Override
-    public void onChangeNextNonSpecialEpisodeToSee(SeasonSet seasonSet) {
-        this.notifyThatNextNonSpecialEpisodeToSeeChanged();
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof Series) && (((Series) obj).id == this.id);
-    }
-
     public static class Builder {
         private int id;
         private String name;
@@ -269,77 +51,12 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         private String actors;
         private String posterFileName;
 
-        private Set<Episode> episodes;
+        private final Set<Episode> episodes;
         private Long lastUpdate;
 
         private Builder() {
             this.id = Invalid.SERIES_ID;
             this.episodes = new HashSet<Episode>();
-        }
-
-        public Builder withId(int id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder withStatus(Status status) {
-            this.status = status;
-            return this;
-        }
-
-        public Builder withAirDate(Date airDate) {
-            this.airDate = airDate;
-            return this;
-        }
-
-        public Builder withAirDay(WeekDay airDay) {
-            this.airDay = airDay;
-            return this;
-        }
-
-        public Builder withAirtime(Time airtime) {
-            this.airtime = airtime;
-            return this;
-        }
-
-        public Builder withRuntime(String runtime) {
-            this.runtime = runtime;
-            return this;
-        }
-
-        public Builder withNetwork(String network) {
-            this.network = network;
-            return this;
-        }
-
-        public Builder withOverview(String overview) {
-            this.overview = overview;
-            return this;
-        }
-
-        public Builder withGenres(String genres) {
-            this.genres = genres;
-            return this;
-        }
-
-        public Builder withActors(String actors) {
-            this.actors = actors;
-            return this;
-        }
-
-        public Builder withPosterFileName(String posterFileName) {
-            this.posterFileName = posterFileName;
-            return this;
-        }
-
-        public Builder withEpisode(Episode episode) {
-            this.episodes.add(episode);
-            return this;
         }
 
         public Series build() {
@@ -365,9 +82,326 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return series.includingAll(this.episodes);
         }
 
+        public Builder withActors(String actors) {
+            this.actors = actors;
+            return this;
+        }
+
+        public Builder withAirDate(Date airDate) {
+            this.airDate = airDate;
+            return this;
+        }
+
+        public Builder withAirDay(WeekDay airDay) {
+            this.airDay = airDay;
+            return this;
+        }
+
+        public Builder withAirtime(Time airtime) {
+            this.airtime = airtime;
+            return this;
+        }
+
+        public Builder withEpisode(Episode episode) {
+            this.episodes.add(episode);
+            return this;
+        }
+
+        public Builder withGenres(String genres) {
+            this.genres = genres;
+            return this;
+        }
+
+        public Builder withId(int id) {
+            this.id = id;
+            return this;
+        }
+
         public Builder withLastUpdate(long lastUpdate) {
             this.lastUpdate = lastUpdate;
             return this;
         }
+
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder withNetwork(String network) {
+            this.network = network;
+            return this;
+        }
+
+        public Builder withOverview(String overview) {
+            this.overview = overview;
+            return this;
+        }
+
+        public Builder withPosterFileName(String posterFileName) {
+            this.posterFileName = posterFileName;
+            return this;
+        }
+
+        public Builder withRuntime(String runtime) {
+            this.runtime = runtime;
+            return this;
+        }
+
+        public Builder withStatus(Status status) {
+            this.status = status;
+            return this;
+        }
+    }
+
+    public static Series.Builder builder() {
+        return new Series.Builder();
+    }
+
+    private final int id;
+    private String name;
+    private Status status;
+    private Date airDate;
+    private WeekDay airDay;
+    private Time airtime;
+    private String runtime;
+    private String network;
+    private String overview;
+    private String genres;
+    private String actors;
+
+    private String posterFileName;
+    private final SeasonSet seasons;
+
+    private final ListenerSet<SeriesListener> listeners;
+
+    private Long lastUpdate;
+
+    private Series(int id, String name) {
+        Validate.isTrue(id >= 0, "id should be non-negative");
+        Validate.isNonBlank(name, "name");
+
+        this.id = id;
+        this.name = name;
+
+        this.seasons = new SeasonSet(this.id);
+        this.seasons.register(this);
+        this.listeners = new ListenerSet<SeriesListener>();
+    }
+
+    public String actors() {
+        return this.actors;
+    }
+
+    public Date airDate() {
+        return this.airDate;
+    }
+
+    public WeekDay airDay() {
+        return this.airDay;
+    }
+
+    public Time airtime() {
+        return this.airtime;
+    }
+
+    @Override
+    public boolean deregister(SeriesListener listener) {
+        return this.listeners.deregister(listener);
+    }
+
+    public List<Episode> episodes() {
+        return this.seasons.episodes();
+    }
+
+    public List<Episode> episodesBy(Specification<Episode> specification) {
+        return this.seasons.episodesBy(specification);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Series) && (((Series) obj).id == this.id);
+    }
+
+    public String genres() {
+        return this.genres;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+
+    public boolean hasPoster() {
+        return this.posterFileName != null;
+    }
+
+    public boolean hasSpecialEpisodes() {
+        return this.seasons.hasSpecialEpisodes();
+    }
+
+    public int id() {
+        return this.id;
+    }
+
+    public Series includingAll(Collection<Episode> episodes) {
+        Validate.isNonNull(episodes, "episodes");
+
+        for (Episode e : episodes) {
+            this.seasons.including(e.withAirtime(this.airtime));
+        }
+
+        return this;
+    }
+
+    public Long lastUpdate() {
+        return this.lastUpdate;
+    }
+
+    public void markAsNotSeen() {
+        for (Season s : this.seasons.seasons()) {
+            s.setBeingMarkedBySeries(true);
+            s.markAsNotSeen();
+            s.setBeingMarkedBySeries(false);
+        }
+
+        this.notifyThatWasMarkedAsNotSeen();
+    }
+
+    public void markAsSeen() {
+        for (Season s : this.seasons.seasons()) {
+            s.setBeingMarkedBySeries(true);
+            s.markAsSeen();
+            s.setBeingMarkedBySeries(false);
+        }
+
+        this.notifyThatWasMarkedAsSeen();
+    }
+
+    public void mergeWith(Series other) {
+        Validate.isNonNull(other, "other");
+        Validate.isTrue(other.id == this.id, "other should have the same id as this");
+
+        this.name = other.name;
+        this.status = other.status;
+        this.airDate = other.airDate;
+        this.airDay = other.airDay;
+        this.airtime = other.airtime;
+        this.runtime = other.runtime;
+        this.network = other.network;
+        this.overview = other.overview;
+        this.genres = other.genres;
+        this.actors = other.actors;
+        this.posterFileName = other.posterFileName;
+
+        this.seasons.mergeWith(other.seasons);
+    }
+
+    public String name() {
+        return this.name;
+    }
+
+    public String network() {
+        return this.network;
+    }
+
+    public Episode nextEpisodeToSee(boolean includingSpecialEpisodes) {
+        return this.seasons.nextEpisodeToSee(includingSpecialEpisodes);
+    }
+
+    private void notifyThatNextEpisodeToSeeChanged() {
+        for (SeriesListener l : this.listeners) {
+            l.onChangeNextEpisodeToSee(this);
+        }
+    }
+
+    private void notifyThatNextNonSpecialEpisodeToSeeChanged() {
+        for (SeriesListener l : this.listeners) {
+            l.onChangeNextNonSpecialEpisodeToSee(this);
+        }
+    }
+
+    private void notifyThatNumberOfSeenEpisodesChanged() {
+        for (SeriesListener l : this.listeners) {
+            l.onChangeNumberOfSeenEpisodes(this);
+        }
+    }
+
+    private void notifyThatWasMarkedAsNotSeen() {
+        for (SeriesListener l : this.listeners) {
+            l.onMarkAsNotSeen(this);
+        }
+    }
+
+    private void notifyThatWasMarkedAsSeen() {
+        for (SeriesListener l : this.listeners) {
+            l.onMarkAsSeen(this);
+        }
+    }
+
+    public int numberOfEpisodes() {
+        return this.seasons.numberOfEpisodes();
+    }
+
+    public int numberOfSeenEpisodes() {
+        return this.seasons.numberOfSeenEpisodes();
+    }
+
+    @Override
+    public void onChangeNextEpisodeToSee(SeasonSet seasonSet) {
+        this.notifyThatNextEpisodeToSeeChanged();
+    }
+
+    @Override
+    public void onChangeNextNonSpecialEpisodeToSee(SeasonSet seasonSet) {
+        this.notifyThatNextNonSpecialEpisodeToSeeChanged();
+    }
+
+    @Override
+    public void onChangeNumberOfSeenEpisodes(SeasonSet seasonSet) {
+        this.notifyThatNumberOfSeenEpisodesChanged();
+    }
+
+    public String overview() {
+        return this.overview;
+    }
+
+    public String posterFileName() {
+        return this.posterFileName;
+    }
+
+    @Override
+    public boolean register(SeriesListener listener) {
+        return this.listeners.register(listener);
+    }
+
+    public String runtime() {
+        return this.runtime;
+    }
+
+    public Season season(int number) {
+        return this.seasons.season(number);
+    }
+
+    public Season seasonAt(int position) {
+        return this.seasons.seasonAt(position);
+    }
+
+    public SeasonSet seasons() {
+        return this.seasons;
+    }
+
+    public Series setLastUpdate(Long lastUpdate) {
+        this.lastUpdate = lastUpdate;
+        return this;
+    }
+
+    public Series setPosterFilename(String posterFileName) {
+        this.posterFileName = posterFileName;
+
+        return this;
+    }
+
+    public Status status() {
+        return this.status;
     }
 }

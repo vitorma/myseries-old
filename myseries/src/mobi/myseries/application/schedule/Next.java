@@ -57,7 +57,7 @@ public class Next extends ScheduleMode implements SeriesListener {
     /* Auxiliary */
 
     private Episode includedEpisodeOf(Series series) {
-        Specification<Episode> specification = seriesIdSpecification(series.id());
+        Specification<Episode> specification = Next.seriesIdSpecification(series.id());
 
         for (Episode e : this.episodes) {
             if (specification.isSatisfiedBy(e)) {
@@ -75,5 +75,17 @@ public class Next extends ScheduleMode implements SeriesListener {
                 return e.seriesId() == seriesId;
             }
         };
+    }
+
+    @Override
+    public void onMarkAsSeen(Series series) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onMarkAsNotSeen(Series series) {
+        // TODO Auto-generated method stub
+
     }
 }

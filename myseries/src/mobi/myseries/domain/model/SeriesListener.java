@@ -28,4 +28,8 @@ public interface SeriesListener {
     public void onChangeNextEpisodeToSee(Series series);
 
     public void onChangeNextNonSpecialEpisodeToSee(Series series);
+
+    public void onMarkAsSeen(Series series);
+
+    public void onMarkAsNotSeen(Series series);
 }
