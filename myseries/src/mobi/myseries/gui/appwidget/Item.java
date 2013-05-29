@@ -31,13 +31,13 @@ public class Item {
     }
 
     public RemoteViews loading() {
-        return new RemoteViews(this.context.getPackageName(), R.layout.appwidget_loading_view);
+        return new RemoteViews(this.context.getPackageName(), R.layout.schedulewidget_loading_view);
     }
 
     public RemoteViews createFor(Episode episode) {
         Series series = App.seriesProvider().getSeries(episode.seriesId());
 
-        RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.appwidget_item);
+        RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.schedulewidget_item);
 
         this.setUpSeriesPoster(item, series);
         this.setUpEpisodeAirdate(item, episode);

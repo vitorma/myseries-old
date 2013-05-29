@@ -14,13 +14,13 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-public class AdapterViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+public class ScheduleWidgetViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context context;
     private int appWidgetId;
     private RemoteViews loadingView;
     private List<Episode> episodes;
 
-    public AdapterViewsFactory(Context context, Intent intent) {
+    public ScheduleWidgetViewsFactory(Context context, Intent intent) {
         this.context = context;
         this.appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
         this.loadingView = Item.from(context).loading();

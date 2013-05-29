@@ -23,10 +23,10 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
-public class AppWidgetPreferenceActivity extends Activity {
+public class ScheduleWidgetPreferenceActivity extends Activity {
 
     public static Intent newIntent(Context context, int appWidgetId) {
-        Intent intent = new Intent(context, AppWidgetPreferenceActivity.class);
+        Intent intent = new Intent(context, ScheduleWidgetPreferenceActivity.class);
 
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -47,7 +47,7 @@ public class AppWidgetPreferenceActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.appwidget_preferences);
+        this.setContentView(R.layout.schedulewidget_preferences);
         this.getExtraAppWidgetIdOrFinish();
         this.setUpViews();
         this.getActionBar().setTitle(R.string.widget_preferences);
@@ -104,7 +104,7 @@ public class AppWidgetPreferenceActivity extends Activity {
         this.showSpecialEpisodes.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppWidgetPreferenceActivity.this.showSpecialEpisodes.toggle();
+                ScheduleWidgetPreferenceActivity.this.showSpecialEpisodes.toggle();
             }
         });
     }
@@ -116,7 +116,7 @@ public class AppWidgetPreferenceActivity extends Activity {
         this.showSeenEpisodes.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppWidgetPreferenceActivity.this.showSeenEpisodes.toggle();
+                ScheduleWidgetPreferenceActivity.this.showSeenEpisodes.toggle();
             }
         });
     }
@@ -127,7 +127,7 @@ public class AppWidgetPreferenceActivity extends Activity {
         this.seriesToShow = new HashMap<Series, CheckedTextView>();
 
         for (Series s : App.seriesProvider().followedSeries()) {
-            View v = inflater.inflate(R.layout.appwidget_preferences_filter_option, null);
+            View v = inflater.inflate(R.layout.schedulewidget_preferences_filter_option, null);
             final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.seriesCheck);
 
             seriesCheck.setText(s.name());
@@ -150,7 +150,7 @@ public class AppWidgetPreferenceActivity extends Activity {
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppWidgetPreferenceActivity.this.finish();
+                ScheduleWidgetPreferenceActivity.this.finish();
             }
         });
     }
@@ -161,7 +161,7 @@ public class AppWidgetPreferenceActivity extends Activity {
         this.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppWidgetPreferenceActivity.this.onSave();
+                ScheduleWidgetPreferenceActivity.this.onSave();
             }
         });
     }
@@ -201,7 +201,7 @@ public class AppWidgetPreferenceActivity extends Activity {
     }
 
     private void updateAppWidget() {
-        AppWidget.setUp(
+        ScheduleWidget.setUp(
             this.getApplicationContext(),
             AppWidgetManager.getInstance(this.getApplicationContext()),
             this.appWidgetId);

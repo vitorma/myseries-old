@@ -3,22 +3,22 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/itemPanel"
-    android:padding="@dimen/appwidget_item_gap"
+    android:padding="@dimen/schedulewidget_item_gap"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/seriesPoster"
         android:contentDescription="@string/description_poster"
-        android:layout_width="@dimen/appwidget_item_poster_width"
-        android:layout_height="@dimen/appwidget_item_poster_height"
+        android:layout_width="@dimen/schedulewidget_item_poster_width"
+        android:layout_height="@dimen/schedulewidget_item_poster_height"
         android:layout_alignParentLeft="true"/>
 
     <TextView
         android:id="@+id/seriesName"
         style="@style/TextView.Large.White.Ellipsized"
         android:fontFamily="sans-serif-light"
-        android:paddingLeft="@dimen/appwidget_item_gap"
+        android:paddingLeft="@dimen/schedulewidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -28,7 +28,7 @@
         android:id="@+id/episodeNumber"
         style="@style/TextView.Small.TranslucentWhite.Ellipsized"
         android:fontFamily="sans-serif-light"
-        android:paddingLeft="@dimen/appwidget_item_gap"
+        android:paddingLeft="@dimen/schedulewidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/seriesName"
@@ -47,7 +47,7 @@
         android:id="@+id/airtimeAndNetwork"
         style="@style/TextView.Small.LightGray.Ellipsized"
         android:fontFamily="sans-serif-light"
-        android:paddingLeft="@dimen/appwidget_item_gap"
+        android:paddingLeft="@dimen/schedulewidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/episodeNumber"

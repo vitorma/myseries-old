@@ -49,7 +49,7 @@ public class ActionBar {
     }
 
     private PendingIntent preferencesIntentFrom(int appWidgetId) {
-        Intent intent = AppWidgetPreferenceActivity.newIntent(this.context, appWidgetId);
+        Intent intent = ScheduleWidgetPreferenceActivity.newIntent(this.context, appWidgetId);
 
         return PendingIntent.getActivity(this.context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }

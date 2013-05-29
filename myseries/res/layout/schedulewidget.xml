@@ -7,13 +7,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/appwidget_margin">
+    android:layout_margin="@dimen/schedulewidget_margin">
 
     <include
-        layout="@layout/appwidget_actionbar"/>
+        layout="@layout/schedulewidget_actionbar"/>
 
     <include
-        layout="@layout/appwidget_tabbar"/>
+        layout="@layout/schedulewidget_tabbar"/>
 
     <ListView
         android:id="@+id/episodeList"
@@ -27,7 +27,7 @@
         style="@style/TextView.Medium.TranslucentWhite"
         android:fontFamily="sans-serif-light"
         android:gravity="center"
-        android:minHeight="@dimen/appwidget_item_height"
+        android:minHeight="@dimen/schedulewidget_item_height"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

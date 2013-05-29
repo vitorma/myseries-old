@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViewsService;
 
-public class AdapterViewsService extends RemoteViewsService {
+public class ScheduleWidgetViewsService extends RemoteViewsService {
 
     public static Intent newIntent(Context context, int appWidgetId) {
-        Intent intent = new Intent(context, AdapterViewsService.class);
+        Intent intent = new Intent(context, ScheduleWidgetViewsService.class);
 
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
@@ -19,6 +19,6 @@ public class AdapterViewsService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new AdapterViewsFactory(this.getApplicationContext(), intent);
+        return new ScheduleWidgetViewsFactory(this.getApplicationContext(), intent);
     }
 }

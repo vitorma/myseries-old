@@ -9,4 +9,4 @@
     android:gravity="center_vertical"
     android:padding="@dimen/gap_medium"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/appwidget_item_height"/>
+    android:layout_height="@dimen/schedulewidget_item_height"/>

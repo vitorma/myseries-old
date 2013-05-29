@@ -83,15 +83,15 @@
                 android:value=".gui.myseries.MySeriesActivity"/>
         </activity>
         <activity
-            android:name="mobi.myseries.gui.appwidget.AppWidgetPreferenceActivity">
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
         <receiver
-            android:name=".gui.appwidget.AppWidget"
-            android:label="@string/appwidget"
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidget"
+            android:label="@string/schedulewidget"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -110,11 +110,11 @@
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_info"/>
+                android:resource="@xml/schedulewidget_info"/>
         </receiver>
 
         <service
-            android:name="mobi.myseries.gui.appwidget.AdapterViewsService"
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
         <service
             android:name="mobi.myseries.gui.appwidget.TabService"/>
