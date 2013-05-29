@@ -103,12 +103,7 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
     }
 
     private void launchAutomaticUpdate() {
-        new Thread() {
-            @Override
-            public void run() {
-                App.updateSeriesService().updateDataIfNeeded();
-            }
-        }.start();
+        App.updateSeriesService().updateDataIfNeeded();
     }
 
     @Override
@@ -183,12 +178,7 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
                 return super.onMenuItemSelected(featureId, item);
             }
 
-            new Thread() {
-                @Override
-                public void run() {
-                    App.updateSeriesService().updateData();
-                }
-            }.start();
+            App.updateSeriesService().updateData();
         }
 
         if (item.getTitle().equals(this.getString(R.string.menu_remove))) {
