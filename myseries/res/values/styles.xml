@@ -4,18 +4,6 @@
 
     <style name="TextView" parent="android:Widget.TextView"/>
 
-    <style name="TextView.Micro">
-        <item name="android:textSize">@dimen/text_size_micro</item>
-    </style>
-
-    <style name="TextView.Micro.White">
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="TextView.Micro.White.Bold">
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="TextView.Small">
         <item name="android:textSize">@dimen/text_size_small</item>
     </style>
@@ -70,6 +58,14 @@
 
     <style name="TextView.Small.LightBlue">
         <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="TextView.Small.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextView.Small.White.Bold">
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextView.Small.TranslucentWhite">
@@ -132,17 +128,8 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="TextView.XMedium">
-        <item name="android:textSize">@dimen/text_size_xmedium</item>
-    </style>
-
-    <style name="TextView.XMedium.White">
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="TextView.XMedium.White.Ellipsized">
-        <item name="android:ellipsize">end</item>
-        <item name="android:singleLine">true</item>
+    <style name="TextView.Medium.TranslucentWhite">
+        <item name="android:textColor">@color/translucent_white</item>
     </style>
 
     <style name="TextView.Large">
@@ -226,7 +213,7 @@
     <!-- TabButton -->
 
     <style name="TabButton" parent="android:Widget.Button">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
         <item name="android:background">@drawable/item_background_holo_dark</item>

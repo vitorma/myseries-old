@@ -24,7 +24,8 @@
     <TextView
         android:id="@+id/emptyView"
         android:text="@string/no_episodes_to_see"
-        style="@style/TextView.Small.TranslucentWhite"
+        style="@style/TextView.Medium.TranslucentWhite"
+        android:fontFamily="sans-serif-light"
         android:gravity="center"
         android:minHeight="@dimen/appwidget_item_height"
         android:layout_width="match_parent"

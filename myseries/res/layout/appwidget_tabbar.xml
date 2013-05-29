@@ -3,7 +3,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tabBar"
-    android:background="#424242"
+    android:background="#f54d4d4d"
     android:orientation="horizontal"
     android:baselineAligned="false"
     android:layout_width="match_parent"
