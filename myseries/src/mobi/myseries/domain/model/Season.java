@@ -215,7 +215,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
 
         this.mergeExistingEpisodesThatStillExistIn(other);
         this.insertNewEpisodesFrom(other);
-        this.removeEpisodesThatDoNotExistIn(other);
+        this.removeEpisodesThatNoLongerExistIn(other);
 
         return this;
     }
@@ -236,7 +236,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         }
     }
 
-    private synchronized void removeEpisodesThatDoNotExistIn(Season other) {
+    private synchronized void removeEpisodesThatNoLongerExistIn(Season other) {
         List<Episode> myEpisodes = new ArrayList<Episode>(this.episodes());
         for (Episode e : myEpisodes) {
             if (!other.includes(e)) {

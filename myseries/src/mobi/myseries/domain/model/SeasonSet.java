@@ -105,6 +105,14 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         return this;
     }
 
+    private SeasonSet excluding(Season season) {
+        season.deregister(this);
+
+        this.seasons.remove(season.number());
+
+        return this;
+    }
+
     public int numberOfEpisodes() {
         int numberOfEpisodes = 0;
 
@@ -210,19 +218,36 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         Validate.isTrue(this.seriesId == other.seriesId, "other's seriesId should be %d",
             this.seriesId);
 
+        this.mergeExistingSeasonsThatStillExistIn(other);
+        this.insertNewSeasonsFrom(other);
+        this.removeSeasonsThatNoLongerExistIn(other);
+
+        return this;
+    }
+
+    private void mergeExistingSeasonsThatStillExistIn(SeasonSet other) {
         for (Season s : this.seasons.values()) {
             if (other.includes(s)) {
                 s.mergeWith(other.season(s.number()));
             }
         }
+    }
 
+    private void insertNewSeasonsFrom(SeasonSet other) {
         for (Season s : other.seasons.values()) {
             if (!this.includes(s)) {
                 this.including(s);
             }
         }
+    }
 
-        return this;
+    private void removeSeasonsThatNoLongerExistIn(SeasonSet other) {
+        List<Season> mySeasons = this.seasons();
+        for (Season s : mySeasons) {
+            if (!other.includes(s)) {
+                this.excluding(s);
+            }
+        }
     }
 
     @Override

@@ -113,6 +113,31 @@ public class SeriesTest {
         }
     }
 
+    @Test
+    public void mergeShouldRemoveSeasons() {
+        Series outdatedSeries = incompleteSeries();
+        Series updatedSeries = completeSeries();
+
+        List<Episode> outdatedEpisodes = episodesList(3, 10, outdatedSeries);
+        List<Episode> updatedEpisodes = episodesList(2, 6, updatedSeries);
+
+        outdatedSeries = outdatedSeries.includingAll(outdatedEpisodes);
+        updatedSeries = updatedSeries.includingAll(updatedEpisodes);
+
+        assertEquals(3, outdatedSeries.seasons().numberOfSeasons());
+        assertEquals(2, updatedSeries.seasons().numberOfSeasons());
+
+        outdatedSeries.mergeWith(updatedSeries);
+
+        assertEquals(2, outdatedSeries.seasons().numberOfSeasons());
+        assertEquals(2, updatedSeries.seasons().numberOfSeasons());
+
+        for (Episode e : updatedEpisodes) {
+            assertTrue(includes(outdatedSeries, e));
+            assertTrue(includes(updatedSeries, e));
+        }
+    }
+
     /* Auxiliary */
 
     private static Series incompleteSeries() {
