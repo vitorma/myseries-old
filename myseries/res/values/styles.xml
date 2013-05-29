@@ -81,6 +81,10 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="TextView.Small.Yellow">
+        <item name="android:textColor">@color/yellow</item>
+    </style>
+
     <style name="TextView.Medium">
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>

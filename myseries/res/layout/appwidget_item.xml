@@ -34,7 +34,7 @@
 
     <TextView
         android:id="@+id/episodeAirDate"
-        style="@style/TextView.Small.LightBlue"
+        style="@style/TextView.Small.Yellow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/episodeNumber"
