@@ -63,7 +63,7 @@ public class SeriesCoverFlowFragment extends Fragment implements SeriesListener 
     private CoverFlow coverFlow;
     private SeriesItemViewHolder seriesItemViewHolder;
 
-    private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
+    private final SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
 
         @Override
         public void onFollowing(Series followedSeries) {
@@ -93,7 +93,7 @@ public class SeriesCoverFlowFragment extends Fragment implements SeriesListener 
         public void onFollowingFailure(Series series, Exception e) {}
     };
 
-    private UpdateFinishListener updateListener = new UpdateFinishListener() {
+    private final UpdateFinishListener updateListener = new UpdateFinishListener() {
         @Override
         public void onUpdateFinish() {
             this.reload();
@@ -110,8 +110,8 @@ public class SeriesCoverFlowFragment extends Fragment implements SeriesListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UPDATE_SERIES_SERVICE.register(this.updateListener);
-        FOLLOW_SERIES_SERVICE.register(this.seriesFollowingListener);
+        SeriesCoverFlowFragment.UPDATE_SERIES_SERVICE.register(this.updateListener);
+        SeriesCoverFlowFragment.FOLLOW_SERIES_SERVICE.register(this.seriesFollowingListener);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class SeriesCoverFlowFragment extends Fragment implements SeriesListener 
     }
 
     public void reload() {
-        this.seriesAdapter = new SeriesCoverFlowAdapter().sort(COMPARATOR);
+        this.seriesAdapter = new SeriesCoverFlowAdapter().sort(SeriesCoverFlowFragment.COMPARATOR);
 
         this.coverFlow = (CoverFlow) this.getActivity().findViewById(R.id.coverflow);
         this.coverFlow.setAdapter(this.seriesAdapter);
@@ -227,5 +227,17 @@ public class SeriesCoverFlowFragment extends Fragment implements SeriesListener 
         private TextView airInfo;
         private TextView seenEpisodes;
         private SeenEpisodesBar seenEpisodesBar;
+    }
+
+    @Override
+    public void onMarkAsSeen(Series series) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onMarkAsNotSeen(Series series) {
+        // TODO Auto-generated method stub
+
     }
 }

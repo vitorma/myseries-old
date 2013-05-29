@@ -1,6 +1,8 @@
 package mobi.myseries.application.update;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,11 +15,7 @@ import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
-import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.ConnectionTimeoutException;
-import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesSource;
-import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.CollectionFilter;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
@@ -99,6 +97,24 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
     }
 
     public void updateData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                actualUpdateData();
+            }
+        }).start();
+    }
+
+    public void updateDataIfNeeded() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                actualUpdateDataIfNeeded();
+            }
+        }).start();
+    }
+
+    private void actualUpdateData() {
         if (!this.isUpdating.compareAndSet(false, true)) {
             Log.d(getClass().getName(), "Update already running");
             return;
@@ -107,7 +123,7 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         update(true);
     }
 
-    public void updateDataIfNeeded() {
+    private void actualUpdateDataIfNeeded() {
         if (!this.isUpdating.compareAndSet(false, true)) {
             Log.d(getClass().getName(), "Update already running");
             return;
@@ -131,139 +147,18 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
     }
 
     private void update(boolean forceUpdateRecent) {
-        notifyListenersOfUpdateStart();
-
-        if (!UpdatePolicy.networkAvailable()) {
-            notifyListenersOfUpdateFailure(new NetworkUnavailableException());
-            return;
-        }
-
-        boolean updateAvailable = false;
-
-        Collection<Series> seriesWithDataToUpdate = followedSeries();
-        Collection<Series> seriesWithPosterToUpdate = followedSeries();
-
-        long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
-
-        if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.downloadEverythingInterval()) {
-
-            try {
-                updateAvailable = fetchUpdateMetadataSince(lastSuccessfulUpdate);
-                Log.d(getClass().getName(), "Update Metadata Available? " + updateAvailable);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                notifyListenersOfUpdateFailure(e);
-                return;
-            }
-
-            CollectionFilter<Series> withOutdatedData =
-                    new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
-                            seriesSource.seriesUpdateMetadata()));
-
-            CollectionFilter<Series> withOutdatedPoster =
-                    new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
-                            seriesSource.posterUpdateMetadata().keySet()));
-
-            seriesWithDataToUpdate = withOutdatedData.in(followedSeries());
-            seriesWithPosterToUpdate = withOutdatedPoster.in(followedSeries());
-
-            if (!forceUpdateRecent) {
-                CollectionFilter<Series> notRecentlyUpdated =
-                        new CollectionFilter<Series>(new RecentlyUpdatedSpecification());
-
-                seriesWithDataToUpdate = notRecentlyUpdated.in(seriesWithDataToUpdate);
-                seriesWithPosterToUpdate = notRecentlyUpdated.in(seriesWithPosterToUpdate);
-            }
-
-            if (!updateAvailable
-                    || ((seriesWithDataToUpdate.isEmpty()) && (seriesWithPosterToUpdate.isEmpty()))) {
-                notifyListenersOfUpdateNotNecessary();
-                return;
-            }
-        }
-
-        try {
-            for (final Series s : followedSeries()) {
-
-                if (seriesWithDataToUpdate.contains(s)) {
-                    /* UPDATE SERIES DATA */
-
-                    UpdateTask updateSeriesTask;
-                    UpdateResult result = null;
-
-                    updateSeriesTask =
-                            new UpdateSeriesTask(seriesRepository, seriesSource,
-                                    localizationProvider, s);
-                    Future<?> future = executor.submit(updateSeriesTask);
-                    future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
-                    result = updateSeriesTask.result();
-
-                    if (!result.success()) {
-                        notifyListenersOfUpdateFailure(result.error());
-                        return;
-                    }
-                } else {
-                    Log.d(getClass().getName(), "Not updating data of " + s.name());
-                }
-
-                if (posterAvailableButNotDownloaded(s) || seriesWithPosterToUpdate.contains(s)) {
-                    /* UPDATE POSTER */
-
-                    UpdateTask updateSeriesTask;
-                    UpdateResult result = null;
-
-                    updateSeriesTask = new UpdatePosterTask(imageService, s);
-                    Future<?> future = executor.submit(updateSeriesTask);
-                    future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
-                    result = updateSeriesTask.result();
-
-                    if (!result.success()) {
-                        notifyListenersOfUpdateFailure(result.error());
-                        return;
-                    }
-                } else {
-                    Log.d(getClass().getName(), "Not updating poster of " + s.name());
-                }
-
-                s.setLastUpdate(System.currentTimeMillis());
-                seriesRepository.update(s);
-            }
-
-        } catch (InterruptedException e) {
-            // Should never happen
-            e.printStackTrace();
-            this.isUpdating.set(false);
-            return;
-
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            notifyListenersOfUpdateFailure((Exception) e.getCause());
-            return;
-
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            notifyListenersOfUpdateFailure(new UpdateTimeoutException(e));
-            return;
-
-        }
-
-        notifyListenersOfUpdateSuccess();
+        new UpdateTask2(forceUpdateRecent).run();
     }
 
-    private boolean posterAvailableButNotDownloaded(Series series) {
-        return series.hasPoster() && (imageService.getPosterOf(series) == null);
-    }
+    // Auxiliary
 
     private static long timeSince(long timestamp) {
         return System.currentTimeMillis() - timestamp;
     }
 
     private Collection<Series> followedSeries() {
-        return seriesRepository.getAll();
+        return Collections.unmodifiableCollection(seriesRepository.getAll());
     }
-
-    // Auxiliary
 
     private static long earliestUpdatedDateOf(Collection<Series> series) {
         long d = Long.MAX_VALUE;
@@ -349,9 +244,217 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         this.broadcastService.broadcastUpdate();
     }
 
-    boolean fetchUpdateMetadataSince(long dateInMiliseconds)
-            throws ConnectionFailedException, ConnectionTimeoutException,
-            ParsingFailedException, UpdateMetadataUnavailableException {
-        return seriesSource.fetchUpdateMetadataSince(dateInMiliseconds);
+    private class UpdateTask2 implements Runnable {
+        private final boolean shouldUpdateRecentlyUpdatedSeriesAsWell;
+        private final Collection<Series> followedSeries;
+
+        public UpdateTask2(boolean shouldUpdateRecentlyUpdatedSeriesAsWell) {
+            this.shouldUpdateRecentlyUpdatedSeriesAsWell = shouldUpdateRecentlyUpdatedSeriesAsWell;
+
+            this.followedSeries = followedSeries();
+        }
+
+        private class WhatHasToBeUpdated {
+            public boolean shouldUpdateAllSeries;
+            public boolean updateIsAvailable;
+            public Collection<Series> seriesWithDataToUpdate;
+            public Collection<Series> seriesWithPosterToUpdate;
+
+            public boolean isUpdateNecessary() {
+                return shouldUpdateAllSeries
+                        || updateIsAvailable
+                        || !seriesWithDataToUpdate.isEmpty()
+                        || !seriesWithPosterToUpdate.isEmpty();
+            }
+        }
+
+        @Override
+        public void run() {
+            // TODO Should we keep this?
+            notifyListenersOfUpdateStart();
+
+            if (!networkConnectionIsAvailable()) {
+                notifyListenersOfUpdateFailure(new NetworkUnavailableException());
+                return;
+            }
+
+            WhatHasToBeUpdated whatHasToBeUpdated;
+            try {
+                whatHasToBeUpdated = checkForUpdates();
+            } catch (Exception e) {
+                notifyListenersOfUpdateFailure(e);
+                return;
+            }
+            if (!whatHasToBeUpdated.isUpdateNecessary()) {
+                notifyListenersOfUpdateNotNecessary();
+                return;
+            }
+
+            Collection<Exception> errors = updateAllSeriesIn(whatHasToBeUpdated);
+            if (!errors.isEmpty()) {
+                notifyListenersOfUpdateFailure(errors.iterator().next());
+                return;
+            }
+
+            notifyListenersOfUpdateSuccess();
+        }
+
+        private boolean networkConnectionIsAvailable() {
+            return UpdatePolicy.networkAvailable();
+        }
+
+        private WhatHasToBeUpdated checkForUpdates() {
+            // TODO notifyListenersOfCheckingForUpdates();
+
+            WhatHasToBeUpdated result = new WhatHasToBeUpdated();
+
+            result.seriesWithDataToUpdate = followedSeries;
+            result.seriesWithPosterToUpdate = followedSeries;
+
+            long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries);
+            result.shouldUpdateAllSeries =
+                    !(timeSince(lastSuccessfulUpdate) < UpdatePolicy.downloadEverythingInterval());
+
+            if (!result.shouldUpdateAllSeries) {
+                // FIXME(Gabriel): SeriesSource should return all the information regarding update
+                // of series since someday at once in fetchUpdateMetadataSince
+                try {
+                    result.updateIsAvailable = seriesSource.fetchUpdateMetadataSince(lastSuccessfulUpdate);
+                    Log.d(getClass().getName(), "Is update metadata available? " + result.updateIsAvailable);
+                } catch (Throwable e) {
+                    throw new UpdateException(e);
+                }
+
+                CollectionFilter<Series> withOutdatedData =
+                        new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
+                                seriesSource.seriesUpdateMetadata()));
+
+                CollectionFilter<Series> withOutdatedPoster =
+                        new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
+                                seriesSource.posterUpdateMetadata().keySet()));
+
+                result.seriesWithDataToUpdate = withOutdatedData.in(followedSeries);
+                result.seriesWithPosterToUpdate = withOutdatedPoster.in(followedSeries);
+
+                if (!shouldUpdateRecentlyUpdatedSeriesAsWell) {
+                    CollectionFilter<Series> notRecentlyUpdated =
+                            new CollectionFilter<Series>(new RecentlyUpdatedSpecification());
+
+                    result.seriesWithDataToUpdate = notRecentlyUpdated.in(result.seriesWithDataToUpdate);
+                    result.seriesWithPosterToUpdate = notRecentlyUpdated.in(result.seriesWithPosterToUpdate);
+                }
+            }
+
+            return result;
+        }
+
+        private Collection<Exception> updateAllSeriesIn(WhatHasToBeUpdated whatHasToBeUpdated) {
+            // TODO notifyProgress
+
+            Collection<Exception> errors = new ArrayList<Exception>();
+
+            for (final Series s : followedSeries) {
+                try {
+                    if (whatHasToBeUpdated.seriesWithDataToUpdate.contains(s)) {
+                        Log.d(getClass().getName(), "Updating data of " + s.name());
+                        UpdateResult result = updateDataOf(s);
+
+                        if (!result.success()) {
+                            errors.add(result.error());
+                            continue;
+                        }
+                    } else {
+                        Log.d(getClass().getName(), "Not updating data of " + s.name());
+                    }
+
+                    if (whatHasToBeUpdated.seriesWithPosterToUpdate.contains(s) || posterAvailableButNotDownloaded(s)) {
+                        Log.d(getClass().getName(), "Updating poster of " + s.name());
+                        UpdateResult result = updatePosterOf(s); 
+
+                        if (!result.success()) {
+                            errors.add(result.error());
+                            continue;
+                        }
+                    } else {
+                        Log.d(getClass().getName(), "Not updating poster of " + s.name());
+                    }
+
+                    s.setLastUpdate(System.currentTimeMillis());
+                    seriesRepository.update(s);
+
+                } catch (InterruptedException e) {
+                    // Should never happen
+                    e.printStackTrace();
+                    errors.add(e);
+
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                    errors.add((Exception) e.getCause());
+
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                    errors.add(new UpdateTimeoutException(e));
+
+                }
+            }
+
+            return errors;
+        }
+
+        private UpdateResult updateDataOf(Series s) throws InterruptedException, ExecutionException, TimeoutException {
+            UpdateTask updateSeriesTask =
+                    new UpdateSeriesTask(seriesRepository, seriesSource, localizationProvider, s);
+
+            Future<?> future = executor.submit(updateSeriesTask);
+            future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
+
+            return updateSeriesTask.result();
+        }
+
+        private UpdateResult updatePosterOf(Series s) throws InterruptedException, ExecutionException, TimeoutException {
+            UpdateTask updatePosterTask = new UpdatePosterTask(imageService, s);
+
+            Future<?> future = executor.submit(updatePosterTask);
+            future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
+
+            return updatePosterTask.result();
+        }
+
+        private boolean posterAvailableButNotDownloaded(Series series) {
+            return series.hasPoster() && (imageService.getPosterOf(series) == null);
+        }
+
+        // Notifications ----------------------------------------------------------
+
+        /*
+        // TODO @Deprecated
+        private void notifyListenersOfUpdateStart() {
+            // TODO
+        }
+
+        private void notifyListenersOfCheckingForUpdates() {
+            // TODO
+        }
+
+        private void notifyListenersOfUpdateProgress() {
+            // TODO
+        }
+
+        private void notifyListenersOfUpdateNotNecessary() {
+            // TODO
+        }
+
+        private void notifyListenersOfUpdateSuccess() {
+            // TODO
+        }
+
+        private void notifyListenersOfUpdateFailure(Exception e) {
+            // TODO
+        }
+
+        private void notifyListenersOfUpdateFinish() {
+            // TODO
+        }
+        */
     }
 }

@@ -84,6 +84,60 @@ public class SeriesTest {
         }
     }
 
+    @Test
+    public void mergeShouldRemoveEpisodes() {
+        Series outdatedSeries = incompleteSeries();
+        Series updatedSeries = completeSeries();
+
+        List<Episode> outdatedEpisodes = episodesList(2, 10, outdatedSeries);
+        List<Episode> updatedEpisodes = episodesList(3, 6, updatedSeries);
+
+        outdatedSeries = outdatedSeries.includingAll(outdatedEpisodes);
+        updatedSeries = updatedSeries.includingAll(updatedEpisodes);
+
+        assertEquals(20, outdatedSeries.episodes().size());
+        assertEquals(20, outdatedSeries.numberOfEpisodes());
+        assertEquals(18, updatedSeries.episodes().size());
+        assertEquals(18, updatedSeries.numberOfEpisodes());
+
+        outdatedSeries.mergeWith(updatedSeries);
+
+        assertEquals(18, outdatedSeries.episodes().size());
+        assertEquals(18, outdatedSeries.numberOfEpisodes());
+        assertEquals(18, updatedSeries.episodes().size());
+        assertEquals(18, updatedSeries.numberOfEpisodes());
+
+        for (Episode e : updatedEpisodes) {
+            assertTrue(includes(outdatedSeries, e));
+            assertTrue(includes(updatedSeries, e));
+        }
+    }
+
+    @Test
+    public void mergeShouldRemoveSeasons() {
+        Series outdatedSeries = incompleteSeries();
+        Series updatedSeries = completeSeries();
+
+        List<Episode> outdatedEpisodes = episodesList(3, 10, outdatedSeries);
+        List<Episode> updatedEpisodes = episodesList(2, 6, updatedSeries);
+
+        outdatedSeries = outdatedSeries.includingAll(outdatedEpisodes);
+        updatedSeries = updatedSeries.includingAll(updatedEpisodes);
+
+        assertEquals(3, outdatedSeries.seasons().numberOfSeasons());
+        assertEquals(2, updatedSeries.seasons().numberOfSeasons());
+
+        outdatedSeries.mergeWith(updatedSeries);
+
+        assertEquals(2, outdatedSeries.seasons().numberOfSeasons());
+        assertEquals(2, updatedSeries.seasons().numberOfSeasons());
+
+        for (Episode e : updatedEpisodes) {
+            assertTrue(includes(outdatedSeries, e));
+            assertTrue(includes(updatedSeries, e));
+        }
+    }
+
     /* Auxiliary */
 
     private static Series incompleteSeries() {

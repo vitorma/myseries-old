@@ -64,18 +64,18 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = Objects.nullSafe(
-                convertView,
-                View.inflate(App.context(), R.layout.myseries_item, null));
+            convertView,
+            View.inflate(App.context(), R.layout.myseries_item, null));
 
         ViewHolder viewHolder = (view == convertView)
-                ? (ViewHolder) view.getTag()
+            ? (ViewHolder) view.getTag()
                 : new ViewHolder(view);
 
-        Series series = this.items.get(position);
+            Series series = this.items.get(position);
 
-        this.setUpView(viewHolder, series);
+            this.setUpView(viewHolder, series);
 
-        return view;
+            return view;
     }
 
     private void setUpView(ViewHolder viewHolder, Series series) {
@@ -138,12 +138,12 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
     /* ViewHolder */
 
     private static class ViewHolder {
-        private ImageView poster;
-        private TextView name;
-        private TextView status;
-        private TextView airInfo;
-        private TextView seenEpisodes;
-        private SeenEpisodesBar seenEpisodesBar;
+        private final ImageView poster;
+        private final TextView name;
+        private final TextView status;
+        private final TextView airInfo;
+        private final TextView seenEpisodes;
+        private final SeenEpisodesBar seenEpisodesBar;
 
         private ViewHolder(View view) {
             this.poster = (ImageView) view.findViewById(R.id.poster);
@@ -159,7 +159,7 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
 
     /* SeriesListener */
 
-    private SeriesListener seriesListener = new SeriesListener() {
+    private final SeriesListener seriesListener = new SeriesListener() {
         @Override
         public void onChangeNumberOfSeenEpisodes(Series series) {
             SeriesListAdapter.this.notifyDataSetChanged();
@@ -172,11 +172,23 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
         public void onChangeNextNonSpecialEpisodeToSee(Series series) {
             SeriesListAdapter.this.notifyDataSetChanged();
         }
+
+        @Override
+        public void onMarkAsSeen(Series series) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onMarkAsNotSeen(Series series) {
+            // TODO Auto-generated method stub
+
+        }
     };
 
     /* SeriesFollowingListener */
 
-    private SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
+    private final SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
         @Override
         public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
             for (Series s : allUnfollowedSeries) {
@@ -209,7 +221,7 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
 
     /* UpdateFinishListener */
 
-    private UpdateFinishListener updateListener = new UpdateFinishListener() {
+    private final UpdateFinishListener updateListener = new UpdateFinishListener() {
         @Override
         public void onUpdateFinish() {
             SeriesListAdapter.this.reload();
@@ -218,7 +230,7 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
 
     /* BackupListener */
 
-    private BackupListener backupListener = new BackupListener() {
+    private final BackupListener backupListener = new BackupListener() {
         @Override
         public void onBackupSucess() {}
 
@@ -245,7 +257,7 @@ public class SeriesListAdapter extends BaseAdapter implements Publisher<SeriesLi
     }
 
     private boolean isLoading;
-    private ListenerSet<SeriesListAdapter.Listener> listeners = new ListenerSet<SeriesListAdapter.Listener>();
+    private final ListenerSet<SeriesListAdapter.Listener> listeners = new ListenerSet<SeriesListAdapter.Listener>();
 
     public boolean isLoading() {
         return this.isLoading;

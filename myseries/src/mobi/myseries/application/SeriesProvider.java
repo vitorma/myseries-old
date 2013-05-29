@@ -31,10 +31,11 @@ import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.shared.Validate;
 
 public class SeriesProvider {
-    private SeriesRepository seriesRepository;
+    private final SeriesRepository seriesRepository;
     private BroadcastService broadcastService;
 
-    //TODO (Cleber) Remove this constructor or create a SeenMarkService receiving a BroadcastService
+    // TODO (Cleber) Remove this constructor or create a SeenMarkService
+    // receiving a BroadcastService
     public SeriesProvider(SeriesRepository seriesRepository) {
         Validate.isNonNull(seriesRepository, "seriesRepository");
 
@@ -57,7 +58,7 @@ public class SeriesProvider {
         return this.seriesRepository.get(seriesId);
     }
 
-    //SeenMark----------------------------------------------------------------------------------------------------------
+    // SeenMark----------------------------------------------------------------------------------------------------------
 
     public void markSeasonAsSeen(Season season) {
         season.markAsSeen();
@@ -80,6 +81,18 @@ public class SeriesProvider {
     public void markEpisodeAsNotSeen(Episode episode) {
         episode.markAsNotSeen();
         this.seriesRepository.update(episode);
+        this.broadcastService.broadcastSeenMarkup();
+    }
+
+    public void markSeriesAsSeen(Series series) {
+        series.markAsSeen();
+        this.seriesRepository.update(series);
+        this.broadcastService.broadcastSeenMarkup();
+    }
+
+    public void markSeriesAsNotSeen(Series series) {
+        series.markAsNotSeen();
+        this.seriesRepository.update(series);
         this.broadcastService.broadcastSeenMarkup();
     }
 }

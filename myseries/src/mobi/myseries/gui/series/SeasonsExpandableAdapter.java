@@ -22,8 +22,8 @@ import android.widget.TextView;
 public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implements SeasonListener, EpisodeListener {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
-    private Context context;
-    private Series series;
+    private final Context context;
+    private final Series series;
 
     public SeasonsExpandableAdapter(Context context, Series series) {
         this.context = context;
@@ -83,9 +83,9 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
             @Override
             public void onClick(View arg0) {
                 if (isViewedCheckBox.isChecked()) {
-                    SERIES_PROVIDER.markEpisodeAsSeen(episode);
+                    SeasonsExpandableAdapter.SERIES_PROVIDER.markEpisodeAsSeen(episode);
                 } else {
-                    SERIES_PROVIDER.markEpisodeAsNotSeen(episode);
+                    SeasonsExpandableAdapter.SERIES_PROVIDER.markEpisodeAsNotSeen(episode);
                 }
             }
         });
@@ -140,30 +140,30 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
             @Override
             public void onClick(View arg0) {
                 if (isSeasonViewed.isChecked()) {
-                    SERIES_PROVIDER.markSeasonAsSeen(season);
+                    SeasonsExpandableAdapter.SERIES_PROVIDER.markSeasonAsSeen(season);
                 } else {
-                    SERIES_PROVIDER.markSeasonAsNotSeen(season);
+                    SeasonsExpandableAdapter.SERIES_PROVIDER.markSeasonAsNotSeen(season);
                 }
             }
         });
 
         ImageView groupIndicator = (ImageView) itemView.findViewById(R.id.groupIndicator);
         groupIndicator.setImageResource(
-                isExpanded ?
+            isExpanded ?
                 R.drawable.expander_close_holo_light :
-                R.drawable.expander_open_holo_light);
+                    R.drawable.expander_open_holo_light);
 
         TextView seenEpisodes = (TextView) itemView.findViewById(R.id.seenEpisodes);
         String fraction = String.format(
-                this.context.getString(R.string.fraction),
-                season.numberOfSeenEpisodes(),
-                season.numberOfEpisodes());
+            this.context.getString(R.string.fraction),
+            season.numberOfSeenEpisodes(),
+            season.numberOfEpisodes());
         String pluralOfEpisode = this.context.getResources().getQuantityString(
-                R.plurals.plural_episode,
-                season.numberOfEpisodes());
+            R.plurals.plural_episode,
+            season.numberOfEpisodes());
         String pluralOfWasSeen = this.context.getResources().getQuantityString(
-                R.plurals.plural_was_seen,
-                season.numberOfSeenEpisodes());
+            R.plurals.plural_was_seen,
+            season.numberOfSeenEpisodes());
         seenEpisodes.setText(fraction + " " + pluralOfEpisode + " " + pluralOfWasSeen);
 
         return itemView;
@@ -218,4 +218,10 @@ public class SeasonsExpandableAdapter extends BaseExpandableListAdapter implemen
     public void onMarkAsNotSeenBySeason(Episode episode) {
         this.notifyDataSetChanged();
     }
+
+    @Override
+    public void onMarkAsSeenBySeries(Season season) { }
+
+    @Override
+    public void onMarkAsNotSeenBySeries(Season season) { }
 }
