@@ -27,22 +27,6 @@
     <integer name="coverflow_reflection_percentage">30</integer>
     <bool name="coverflow_reflection_enabled">true</bool>
 
-    <!-- AppWidget -->
-
-    <dimen name="appwidget_actionbar_height">40dp</dimen>
-    <dimen name="appwidget_actionbar_button_height">40dp</dimen>
-    <dimen name="appwidget_actionbar_button_width">40dp</dimen>
-    <dimen name="appwidget_tabbar_height">40dp</dimen>
-    <dimen name="appwidget_tabbar_tabindicator_height">5dp</dimen>
-    <dimen name="appwidget_item_height">63dp</dimen>
-    <dimen name="appwidget_item_poster_height">56dp</dimen>
-    <dimen name="appwidget_item_poster_width">38dp</dimen>
-    <dimen name="appwidget_item_gap">6dp</dimen>
-
-    <dimen name="appwidget_min_height">143dp</dimen>
-    <dimen name="appwidget_min_width">250dp</dimen>
-    <dimen name="appwidget_margin">8dp</dimen>
-
     <!-- SlidingMenu -->
 
     <dimen name="sliding_menu_width">240dp</dimen>

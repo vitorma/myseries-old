@@ -4,8 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/loadingView"
     android:text="@string/loading"
-    style="@style/TextView.Small.MediumGray"
+    style="@style/TextView.Small.LightGray"
+    android:fontFamily="sans-serif-light"
     android:gravity="center_vertical"
     android:padding="@dimen/gap_medium"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/appwidget_item_height"/>
+    android:layout_height="@dimen/schedulewidget_item_height"/>

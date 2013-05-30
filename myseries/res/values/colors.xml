@@ -16,6 +16,7 @@
     <color name="dark_blue">#ff0099cc</color>
     <color name="red">#ffff4444</color>
     <color name="dark_red">#ffcc0000</color>
+    <color name="yellow">#ffffff00</color>
 
     <color name="chunk_bar_background_gradient_from">@color/chunk_bar_background_plain</color>
     <color name="chunk_bar_background_gradient_to">@color/chunk_bar_background_plain</color>

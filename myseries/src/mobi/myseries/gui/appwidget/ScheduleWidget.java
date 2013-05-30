@@ -13,11 +13,11 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-public class AppWidget extends AppWidgetProvider {
-    private static final String TAG = AppWidget.class.getSimpleName();
+public class ScheduleWidget extends AppWidgetProvider {
+    private static final String TAG = ScheduleWidget.class.getName();
 
     public static void setUp(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.appwidget);
+        RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.schedulewidget);
 
         ActionBar.from(context, appWidgetView).setUpFor(appWidgetId);
         TabBar.from(context, appWidgetView).setUpFor(appWidgetId);
@@ -37,7 +37,7 @@ public class AppWidget extends AppWidgetProvider {
     }
 
     private static Intent adapterIntentFrom(Context context, int appWidgetId) {
-        return AdapterViewsService.newIntent(context, appWidgetId);
+        return ScheduleWidgetViewsService.newIntent(context, appWidgetId);
     }
 
     private static PendingIntent episodesIntentTemplateFrom(Context context, int appWidgetId) {

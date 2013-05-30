@@ -2,7 +2,6 @@
 
 <resources>
 
-    <dimen name="text_size_micro">10sp</dimen>
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_medium">14sp</dimen>
     <dimen name="text_size_xmedium">16sp</dimen>
@@ -27,5 +26,22 @@
     <dimen name="myseries_item_height">106dp</dimen>
     <dimen name="myseries_image_height">106dp</dimen>
     <dimen name="myseries_image_width">69dp</dimen>
+
+    <!-- AppWidget -->
+
+    <dimen name="appwidget_actionbar_height">@dimen/toucharea_minimum_side</dimen>
+    <dimen name="appwidget_actionbar_button_height">@dimen/toucharea_minimum_side</dimen>
+    <dimen name="appwidget_actionbar_button_width">@dimen/toucharea_minimum_side</dimen>
+    <dimen name="appwidget_actionbar_homebutton_width">52dp</dimen>
+    <dimen name="appwidget_tabbar_height">@dimen/toucharea_minimum_side</dimen>
+    <dimen name="appwidget_tabbar_tabindicator_height">5dp</dimen>
+
+    <dimen name="schedulewidget_item_height">63dp</dimen>
+    <dimen name="schedulewidget_item_poster_height">59dp</dimen>
+    <dimen name="schedulewidget_item_poster_width">40dp</dimen>
+    <dimen name="schedulewidget_item_gap">6dp</dimen>
+    <dimen name="schedulewidget_min_height">143dp</dimen>
+    <dimen name="schedulewidget_min_width">250dp</dimen>
+    <dimen name="schedulewidget_margin">0dp</dimen>
 
 </resources>

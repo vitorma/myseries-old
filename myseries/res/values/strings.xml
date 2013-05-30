@@ -196,8 +196,10 @@
     <string name="menu_schedule">SCHEDULE</string>
     <string name="menu_help">HELP</string>
 
+    <!-- AppWidget -->
+    <string name="schedulewidget">MySeries - Schedule</string>
+
     <!-- Do not translate -->
     <string name="app">MySeries</string>
-    <string name="appwidget">@string/app</string>
 
 </resources>
