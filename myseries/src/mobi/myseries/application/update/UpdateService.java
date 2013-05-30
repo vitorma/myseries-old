@@ -18,6 +18,7 @@ import mobi.myseries.application.update.exception.UpdateException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.application.update.listener.UpdateListener;
+import mobi.myseries.application.update.listener.UpdateProgressListener;
 import mobi.myseries.application.update.specification.RecentlyUpdatedSpecification;
 import mobi.myseries.application.update.specification.SeriesIdInCollectionSpecification;
 import mobi.myseries.application.update.task.UpdatePosterTask;
@@ -34,8 +35,8 @@ import android.os.Handler;
 import android.util.Log;
 
 // Java's type system does not allow us to declare Publisher more than once, even with different type arguments.
-// Anyway, it de facto implements this interface.
-public class UpdateService implements Publisher<UpdateListener>/*, Publisher<UpdateFinishListener>*/ {
+// Anyway, it de facto implements these interfaces.
+public class UpdateService implements Publisher<UpdateListener>/*, Publisher<UpdateFinishListener>, Publisher<UpdateProgressListener>*/ {
     private final SeriesSource seriesSource;
     private final SeriesRepository seriesRepository;
     private final ImageService imageService;
@@ -44,6 +45,7 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
 
     private final ListenerSet<UpdateListener> updateListeners;
     private final ListenerSet<UpdateFinishListener> updateFinishListeners;
+    private final ListenerSet<UpdateProgressListener> updateProgressListeners;
 
     private final AtomicBoolean isUpdating;
 
@@ -67,6 +69,7 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
 
         this.updateListeners = new ListenerSet<UpdateListener>();
         this.updateFinishListeners = new ListenerSet<UpdateFinishListener>();
+        this.updateProgressListeners = new ListenerSet<UpdateProgressListener>();
 
         this.isUpdating = new AtomicBoolean(false);
         this.executor = Executors.newSingleThreadExecutor();
@@ -98,6 +101,16 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
 
     public boolean deregister(UpdateFinishListener listener) {
         return updateFinishListeners.deregister(listener);
+    }
+
+    // interface Publisher<UpdateProgressListener>
+
+    public boolean register(UpdateProgressListener listener) {
+        return updateProgressListeners.register(listener);
+    }
+
+    public boolean deregister(UpdateProgressListener listener) {
+        return updateProgressListeners.deregister(listener);
     }
 
     // Update methods
@@ -195,6 +208,19 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         });
     }
 
+    private void notifyListenersOfCheckingForUpdates() {
+        Log.d(getClass().getName(), "Checking for updates.");
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (final UpdateProgressListener listener : updateProgressListeners) {
+                    listener.onCheckingForUpdates();
+                }
+            }
+        });
+    }
+
     private void notifyListenersOfUpdateNotNecessary() {
         Log.d(getClass().getName(), "Update is not necessary.");
         this.isUpdating.set(false);
@@ -204,6 +230,23 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
             public void run() {
                 for (final UpdateListener listener : updateListeners) {
                     listener.onUpdateNotNecessary();
+                }
+                for (final UpdateProgressListener listener : updateProgressListeners) {
+                    listener.onUpdateNotNecessary();
+                }
+            }
+        });
+    }
+
+    private void notifyListenersOfUpdateProgress(final int current, final int total) {
+        Log.d(getClass().getName(), "Update progress: " + current + "/" + total);
+        this.isUpdating.set(false);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (final UpdateProgressListener listener : updateProgressListeners) {
+                    listener.onUpdateProgress(current, total);
                 }
             }
         });
@@ -217,6 +260,9 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
             @Override
             public void run() {
                 for (final UpdateListener listener : updateListeners) {
+                    listener.onUpdateSuccess();
+                }
+                for (final UpdateProgressListener listener : updateProgressListeners) {
                     listener.onUpdateSuccess();
                 }
             }
@@ -233,6 +279,9 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
             @Override
             public void run() {
                 for (final UpdateListener listener : updateListeners) {
+                    listener.onUpdateFailure(cause);
+                }
+                for (final UpdateProgressListener listener : updateProgressListeners) {
                     listener.onUpdateFailure(cause);
                 }
             }
@@ -314,7 +363,7 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         }
 
         private WhatHasToBeUpdated checkForUpdates() {
-            // TODO notifyListenersOfCheckingForUpdates();
+            notifyListenersOfCheckingForUpdates();
 
             WhatHasToBeUpdated result = new WhatHasToBeUpdated();
 
@@ -359,11 +408,15 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         }
 
         private Collection<Exception> updateAllSeriesIn(WhatHasToBeUpdated whatHasToBeUpdated) {
-            // TODO notifyProgress
+            // XXX(Gabriel) it should be the total number of series whose data or posters should be updated
+            int totalNumberOfUpdates = followedSeries.size();
+            int currentUpdate = 1;
 
             Collection<Exception> errors = new ArrayList<Exception>();
 
             for (final Series s : followedSeries) {
+                // XXX(Gabriel) it should be in the place where it makes most sense according to what current and total means.
+                notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates);
                 try {
                     if (whatHasToBeUpdated.seriesWithDataToUpdate.contains(s)) {
                         Log.d(getClass().getName(), "Updating data of " + s.name());
