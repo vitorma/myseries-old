@@ -153,7 +153,7 @@ public class Episode implements Publisher<EpisodeListener> {
         this.beingMarkedBySeason = b;
     }
 
-    public void mergeWith(Episode other) {
+    public synchronized void mergeWith(Episode other) {
         // TODO(Gabriel): Replace all these verifications with a single this.isTheSameAs(other)?
         Validate.isNonNull(other, "other");
         Validate.isTrue(other.seriesId == this.seriesId, "other should have the same seriesId as this");
