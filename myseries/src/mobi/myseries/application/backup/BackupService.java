@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import mobi.myseries.application.update.UpdateListener;
+import mobi.myseries.application.update.listener.UpdateListener;
 import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.ListenerSet;

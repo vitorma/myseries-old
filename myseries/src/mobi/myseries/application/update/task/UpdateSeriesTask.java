@@ -1,13 +1,14 @@
-package mobi.myseries.application.update;
+package mobi.myseries.application.update.task;
 
 import mobi.myseries.application.LocalizationProvider;
+import mobi.myseries.application.update.UpdateResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.SeriesSource;
 import android.util.Log;
 
-class UpdateSeriesTask implements UpdateTask {
+public class UpdateSeriesTask implements UpdateTask {
     private final SeriesSource source;
     private final LocalizationProvider localizationProvider;
     private final SeriesRepository repository;

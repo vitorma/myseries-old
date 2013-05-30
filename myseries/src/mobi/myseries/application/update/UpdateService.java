@@ -13,6 +13,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.image.ImageService;
+import mobi.myseries.application.update.exception.NetworkUnavailableException;
+import mobi.myseries.application.update.exception.UpdateException;
+import mobi.myseries.application.update.exception.UpdateTimeoutException;
+import mobi.myseries.application.update.listener.UpdateFinishListener;
+import mobi.myseries.application.update.listener.UpdateListener;
+import mobi.myseries.application.update.specification.RecentlyUpdatedSpecification;
+import mobi.myseries.application.update.specification.SeriesIdInCollectionSpecification;
+import mobi.myseries.application.update.task.UpdatePosterTask;
+import mobi.myseries.application.update.task.UpdateSeriesTask;
+import mobi.myseries.application.update.task.UpdateTask;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.domain.source.SeriesSource;
@@ -138,8 +148,8 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
 
         if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.automaticUpdateInterval()) {
-            this.isUpdating.set(false);
             Log.d(getClass().getName(), "Update ran recently. Not running now.");
+            this.isUpdating.set(false);
         } else {
             Log.d(getClass().getName(), "Launching update.");
             update(false);

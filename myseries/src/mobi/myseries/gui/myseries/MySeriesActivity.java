@@ -30,7 +30,7 @@ import java.util.TreeMap;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.update.UpdateListener;
+import mobi.myseries.application.update.listener.UpdateListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.backup.BackupActivity;

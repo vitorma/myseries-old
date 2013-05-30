@@ -5,8 +5,8 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.message.MessageServiceListener;
-import mobi.myseries.application.update.NetworkUnavailableException;
-import mobi.myseries.application.update.UpdateTimeoutException;
+import mobi.myseries.application.update.exception.NetworkUnavailableException;
+import mobi.myseries.application.update.exception.UpdateTimeoutException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.InvalidBackupVersionException;
 import mobi.myseries.domain.repository.series.InvalidDBSourceFileException;
@@ -45,15 +45,14 @@ public class MessageLauncher implements MessageServiceListener {
                 .getString(R.string.follow_toast_message_format), series.name());
 
         showToastWith(toastMessage);
-
     }
 
     @Override
     public void onFollowingSuccess(Series series) {
         String toastMessage = String.format(this.activity.getString(R.string.add_success),
                 series.name());
-        showToastWith(toastMessage);
 
+        showToastWith(toastMessage);
     }
 
     @Override
@@ -74,13 +73,17 @@ public class MessageLauncher implements MessageServiceListener {
             this.dialogBuilder.setMessage(String.format(
                     this.activity.getString(R.string.parsing_failed_message),
                     series.name()));
+
         } else if (e instanceof ConnectionTimeoutException) {
             this.dialogBuilder.setMessage(String.format(
                     this.activity.getString(R.string.connection_timeout_message),
                     series.name()));
+
         } else {
             this.dialogBuilder.setMessage(e.getMessage());
+
         }
+
         Dialog dialog = this.dialogBuilder.build();
         dialog.show();
         this.currentDialog = dialog;
@@ -89,13 +92,11 @@ public class MessageLauncher implements MessageServiceListener {
     @Override
     public void onUpdateStart() {
         showToastWith(R.string.update_started_message);
-
     }
 
     @Override
     public void onUpdateSuccess() {
         showToastWith(R.string.update_success_message);
-
     }
 
     @Override
@@ -133,16 +134,15 @@ public class MessageLauncher implements MessageServiceListener {
         Dialog dialog = this.dialogBuilder.build();
         dialog.show();
         this.currentDialog = dialog;
-
     }
 
     public void onStop() {
         App.messageService().deregister(this);
+
         if (this.currentDialog != null) {
             this.isShowingDialog = this.currentDialog.isShowing();
             this.currentDialog.dismiss();
         }
-
     }
 
     public Dialog dialog() {
@@ -151,11 +151,11 @@ public class MessageLauncher implements MessageServiceListener {
 
     public boolean isShowingDialog() {
         return isShowingDialog;
-
     }
 
     public void loadState() {
         App.messageService().register(this);
+
         if ((currentDialog != null) && isShowingDialog()) {
             currentDialog.show();
         }
@@ -173,14 +173,14 @@ public class MessageLauncher implements MessageServiceListener {
 
     @Override
     public void onBackupSucess() {
-        // TODO(vitor) turn this a Internacionalizable string
+        // TODO(vitor) turn this a Internationalizable string
         this.showToastWith(R.string.backup_completed);
 
     }
 
     @Override
     public void onBackupFailure(Exception e) {
-        if(!(e instanceof UserRecoverableAuthIOException)) {
+        if (!(e instanceof UserRecoverableAuthIOException)) {
             // TODO(vitor) handle this exception properly
             this.dialogBuilder.setTitle(R.string.backup_failed_title);
             this.dialogBuilder.setMessage(R.string.backup_failed_message);
@@ -200,13 +200,18 @@ public class MessageLauncher implements MessageServiceListener {
         if(!(e instanceof UserRecoverableAuthIOException)) {
             this.dialogBuilder.setTitle(R.string.restore_failed_title);
             this.dialogBuilder.setMessage(R.string.restore_failed_message);
-            if(e instanceof NoSeriesToRestoreException) {
+
+            if (e instanceof NoSeriesToRestoreException) {
                 this.dialogBuilder.setMessage(R.string.no_series_to_restore);
-            } else if( e instanceof InvalidBackupVersionException) {
+
+            } else if ( e instanceof InvalidBackupVersionException) {
                 this.dialogBuilder.setMessage(R.string.restore_invalid_db_version);
+
             } else if (e instanceof InvalidDBSourceFileException) {
                 this.dialogBuilder.setMessage(R.string.restore_invalid_db_file);
+
             }
+
             Dialog dialog = this.dialogBuilder.build();
             dialog.show();
             this.currentDialog = dialog;

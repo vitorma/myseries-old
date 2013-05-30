@@ -9,7 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-class UpdatePolicy {
+public class UpdatePolicy {
     private static final long ONE_MONTH = 30L * 24L * 60L * 60L * 1000L;
     private static final long AUTOMATIC_UPDATE_INTERVAL = 12L * 60L * 60L * 1000L;
     private static final long ONE_MINUTE = 60 * 1000L;

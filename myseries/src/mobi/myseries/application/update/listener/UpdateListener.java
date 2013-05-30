@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.application.update;
+package mobi.myseries.application.update.listener;
 
 public interface UpdateListener {
     void onUpdateStart();

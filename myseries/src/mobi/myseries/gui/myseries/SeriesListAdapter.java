@@ -10,7 +10,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.follow.SeriesFollowingListener;
-import mobi.myseries.application.update.UpdateFinishListener;
+import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.shared.Images;
