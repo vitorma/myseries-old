@@ -90,8 +90,8 @@ public class MessageLauncher implements MessageServiceListener {
     }
 
     @Override
-    public void onUpdateStart() {
-        showToastWith(R.string.update_started_message);
+    public void onCheckingForUpdates() {
+        showToastWith(R.string.checking_for_updates_message);
     }
 
     @Override

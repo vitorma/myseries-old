@@ -17,7 +17,6 @@ import mobi.myseries.application.update.exception.NetworkUnavailableException;
 import mobi.myseries.application.update.exception.UpdateException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
-import mobi.myseries.application.update.listener.UpdateListener;
 import mobi.myseries.application.update.listener.UpdateProgressListener;
 import mobi.myseries.application.update.specification.RecentlyUpdatedSpecification;
 import mobi.myseries.application.update.specification.SeriesIdInCollectionSpecification;
@@ -36,14 +35,13 @@ import android.util.Log;
 
 // Java's type system does not allow us to declare Publisher more than once, even with different type arguments.
 // Anyway, it de facto implements these interfaces.
-public class UpdateService implements Publisher<UpdateListener>/*, Publisher<UpdateFinishListener>, Publisher<UpdateProgressListener>*/ {
+public class UpdateService implements Publisher<UpdateFinishListener>/*, Publisher<UpdateProgressListener>*/ {
     private final SeriesSource seriesSource;
     private final SeriesRepository seriesRepository;
     private final ImageService imageService;
     private final LocalizationProvider localizationProvider;
     private final BroadcastService broadcastService;
 
-    private final ListenerSet<UpdateListener> updateListeners;
     private final ListenerSet<UpdateFinishListener> updateFinishListeners;
     private final ListenerSet<UpdateProgressListener> updateProgressListeners;
 
@@ -67,7 +65,6 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         this.localizationProvider = localizationProvider;
         this.broadcastService = broadcastService;
 
-        this.updateListeners = new ListenerSet<UpdateListener>();
         this.updateFinishListeners = new ListenerSet<UpdateFinishListener>();
         this.updateProgressListeners = new ListenerSet<UpdateProgressListener>();
 
@@ -79,18 +76,6 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         this.handler = handler;
 
         return this;
-    }
-
-    // interface Publisher<UpdateListener>
-
-    @Override
-    public boolean register(UpdateListener listener) {
-        return updateListeners.register(listener);
-    }
-
-    @Override
-    public boolean deregister(UpdateListener listener) {
-        return updateListeners.deregister(listener);
     }
 
     // interface Publisher<UpdateFinishListener>
@@ -195,19 +180,6 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         return d;
     }
 
-    private void notifyListenersOfUpdateStart() {
-        Log.d(getClass().getName(), "Update started.");
-
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onUpdateStart();
-                }
-            }
-        });
-    }
-
     private void notifyListenersOfCheckingForUpdates() {
         Log.d(getClass().getName(), "Checking for updates.");
 
@@ -228,9 +200,6 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         handler.post(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onUpdateNotNecessary();
-                }
                 for (final UpdateProgressListener listener : updateProgressListeners) {
                     listener.onUpdateNotNecessary();
                 }
@@ -259,9 +228,6 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         handler.post(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onUpdateSuccess();
-                }
                 for (final UpdateProgressListener listener : updateProgressListeners) {
                     listener.onUpdateSuccess();
                 }
@@ -278,9 +244,6 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         handler.post(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onUpdateFailure(cause);
-                }
                 for (final UpdateProgressListener listener : updateProgressListeners) {
                     listener.onUpdateFailure(cause);
                 }
@@ -329,9 +292,6 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
 
         @Override
         public void run() {
-            // TODO Should we keep this?
-            notifyListenersOfUpdateStart();
-
             if (!networkConnectionIsAvailable()) {
                 notifyListenersOfUpdateFailure(new NetworkUnavailableException());
                 return;
@@ -486,38 +446,5 @@ public class UpdateService implements Publisher<UpdateListener>/*, Publisher<Upd
         private boolean posterAvailableButNotDownloaded(Series series) {
             return series.hasPoster() && (imageService.getPosterOf(series) == null);
         }
-
-        // Notifications ----------------------------------------------------------
-
-        /*
-        // TODO @Deprecated
-        private void notifyListenersOfUpdateStart() {
-            // TODO
-        }
-
-        private void notifyListenersOfCheckingForUpdates() {
-            // TODO
-        }
-
-        private void notifyListenersOfUpdateProgress() {
-            // TODO
-        }
-
-        private void notifyListenersOfUpdateNotNecessary() {
-            // TODO
-        }
-
-        private void notifyListenersOfUpdateSuccess() {
-            // TODO
-        }
-
-        private void notifyListenersOfUpdateFailure(Exception e) {
-            // TODO
-        }
-
-        private void notifyListenersOfUpdateFinish() {
-            // TODO
-        }
-        */
     }
 }
