@@ -299,9 +299,11 @@ public class BackupActivity extends Activity {
     protected void onResume() {
         super.onResume();
         if (event == Event.DROPBOX_AUTHORIZATION) {
-            dropbox.onResume();
-            this.resumeOperation();
-            this.event = null;
+            boolean resumeSucessful = dropbox.onResume();
+            if(resumeSucessful) {
+                this.resumeOperation();
+                this.event = null;
+            }
         }
     }
 
