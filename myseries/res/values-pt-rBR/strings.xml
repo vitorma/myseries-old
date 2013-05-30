@@ -138,7 +138,7 @@
     <string name="update_parsing_failed">Ocorreu um erro na leitura de um arquivo da web ao atualizar %s. Sua conexão pode estar muito lenta.</string>
     <string name="up_to_date_message">Os dados estão atualizados.</string>
     <string name="update_timeout">Tempo limite de download excedido. Verifique sua conexão e tente novamente.</string>
-    <string name="update_started_message">Procurando atualizações…</string>
+    <string name="checking_for_updates_message">Procurando atualizações…</string>
     <string name="update_metadata_unavailable">Os dados estão atualizados.</string>
     <string name="update_success_message">Atualização completa.</string>
 

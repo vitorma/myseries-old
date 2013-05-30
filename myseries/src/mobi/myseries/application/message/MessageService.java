@@ -6,15 +6,15 @@ import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
-import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.application.update.UpdateService;
+import mobi.myseries.application.update.listener.UpdateProgressListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 
 public class MessageService implements
         Publisher<MessageServiceListener>,
-        SeriesFollowingListener, UpdateListener, BackupListener {
+        SeriesFollowingListener, UpdateProgressListener, BackupListener {
 
     private ListenerSet<MessageServiceListener> listeners;
 
@@ -56,11 +56,10 @@ public class MessageService implements
         }
     }
 
-    private void notifyUpdateStart() {
+    private void notifyCheckingForUpdates() {
         for (MessageServiceListener l : listeners) {
-            l.onUpdateStart();
+            l.onCheckingForUpdates();
         }
-
     }
 
     private void notifyUpdateSuccess() {
@@ -125,12 +124,16 @@ public class MessageService implements
     // Update
 
     @Override
-    public void onUpdateStart() {
-        notifyUpdateStart();
+    public void onCheckingForUpdates() {
+        notifyCheckingForUpdates();
     }
 
     @Override
     public void onUpdateNotNecessary() {}
+
+
+    @Override
+    public void onUpdateProgress(int current, int total) {}
 
     @Override
     public void onUpdateFailure(Exception e) {

@@ -29,8 +29,8 @@ import java.util.List;
 
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
-import mobi.myseries.application.update.UpdateFinishListener;
 import mobi.myseries.application.update.UpdateService;
+import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;

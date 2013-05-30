@@ -31,6 +31,7 @@ import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.message.MessageService;
+import mobi.myseries.application.notification.NotificationService;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.search.SeriesSearch;
 import mobi.myseries.application.update.UpdateService;
@@ -50,6 +51,8 @@ public class App extends Application {
     private static SeriesProvider seriesProvider;
     private static BackupService backupService;
     private static BroadcastService broadcastService;
+    @SuppressWarnings("unused")
+    private static NotificationService notificationService;
 
     @Override
     public void onCreate() {
@@ -94,6 +97,8 @@ public class App extends Application {
         backupService = new BackupService(environment.seriesRepository(), environment.dropboxHelper());
 
         messageService = new MessageService(followSeriesService, updateService, backupService);
+
+        notificationService = new NotificationService(this, updateService);
 
         seriesProvider = new SeriesProvider(environment.seriesRepository(), broadcastService);
 

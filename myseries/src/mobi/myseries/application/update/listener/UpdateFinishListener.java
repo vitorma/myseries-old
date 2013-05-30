@@ -1,4 +1,4 @@
-package mobi.myseries.application.update;
+package mobi.myseries.application.update.listener;
 
 public interface UpdateFinishListener {
     // Either success or failure

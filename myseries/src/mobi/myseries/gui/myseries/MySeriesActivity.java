@@ -30,7 +30,6 @@ import java.util.TreeMap;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
-import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.backup.BackupActivity;
@@ -52,12 +51,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 
-public class MySeriesActivity extends TopActivity implements UpdateListener {
+public class MySeriesActivity extends TopActivity {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     // TODO (Reul) Refresh after a successful update
@@ -70,18 +67,14 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.myseries);
-        this.setProgressBarIndeterminateVisibility(false);
 
         ActionBar ab = this.getActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
         ab.setTitle(R.string.my_series);
 
-        App.updateSeriesService().register(this);
         App.updateSeriesService().withHandler(new Handler());
 
         Object retained = this.getLastNonConfigurationInstance();
@@ -110,7 +103,6 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
     protected void onResume() {
         super.onResume();
         this.loadState();
-        this.setProgressBarIndeterminateVisibility(App.updateSeriesService().isUpdating());
     }
 
     private void loadState() {
@@ -299,30 +291,6 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
         return true;
     }
 
-    @Override
-    public void onUpdateStart() {
-        Log.d(this.getClass().getName(), "update started");
-        this.setProgressBarIndeterminateVisibility(true);
-    }
-
-    @Override
-    public void onUpdateFailure(Exception e) {
-        Log.d(this.getClass().getName(), "update failure");
-        this.setProgressBarIndeterminateVisibility(false);
-    }
-
-    @Override
-    public void onUpdateSuccess() {
-        Log.d(this.getClass().getName(), "update complete");
-        this.setProgressBarIndeterminateVisibility(false);
-    }
-
-    @Override
-    public void onUpdateNotNecessary() {
-        Log.d(this.getClass().getName(), "update not necessary yet");
-        this.setProgressBarIndeterminateVisibility(false);
-    }
-
     // Search--------------------------------------------------------------------------------------
 
     private void showSearchActivity() {
@@ -345,5 +313,4 @@ public class MySeriesActivity extends TopActivity implements UpdateListener {
     private void showBackupActivity() {
         this.startActivity(BackupActivity.newIntent(this));
     }
-
 }

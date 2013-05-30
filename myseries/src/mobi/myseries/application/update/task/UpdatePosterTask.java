@@ -1,6 +1,7 @@
-package mobi.myseries.application.update;
+package mobi.myseries.application.update.task;
 
 import mobi.myseries.application.image.ImageService;
+import mobi.myseries.application.update.UpdateResult;
 import mobi.myseries.domain.model.Series;
 import android.util.Log;
 
