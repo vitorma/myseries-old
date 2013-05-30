@@ -8,7 +8,6 @@
         <item name="android:expandableListViewStyle">@style/ExpandableListView</item>
 
         <item name="android:scrollViewStyle">@style/ScrollView</item>
-        <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
         <item name="coverFlowStyle">@style/CoverFlow</item>
     </style>
 

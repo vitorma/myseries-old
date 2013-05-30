@@ -37,8 +37,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
-import com.viewpagerindicator.TitlePageIndicator;
-
 public class EpisodesActivity extends BaseActivity {
 
     public static interface Extra {
@@ -55,11 +53,10 @@ public class EpisodesActivity extends BaseActivity {
 
     private EpisodePagerAdapter adapter;
     private ViewPager pager;
-    private TitlePageIndicator pageIndicator;
 
-	private StateHolder state;
+    private StateHolder state;
 
-	private MessageLauncher messageLauncher;
+    private MessageLauncher messageLauncher;
 
     public static Intent newIntent(Context context, int seriesId, int seasonNumber, int episodeNumber) {
         Intent intent = new Intent(context, EpisodesActivity.class);
@@ -94,8 +91,6 @@ public class EpisodesActivity extends BaseActivity {
         this.adapter = new EpisodePagerAdapter(this, this.getFragmentManager(), episodes);
         this.pager = (ViewPager) this.findViewById(R.id.pager);
         this.pager.setAdapter(this.adapter);
-        this.pageIndicator = (TitlePageIndicator) this.findViewById(R.id.titles);
-        this.pageIndicator.setViewPager(this.pager);
 
         Episode current = series.season(this.seasonNumber).episode(this.episodeNumber);
         this.pager.setCurrentItem(this.adapter.positionOf(current));
