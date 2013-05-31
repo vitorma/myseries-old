@@ -30,8 +30,6 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
-import net.simonvt.menudrawer.MenuDrawer;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -71,7 +69,6 @@ public class EpisodesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.episodes);
 
         Bundle extras = this.getIntent().getExtras();
 
@@ -95,10 +92,7 @@ public class EpisodesActivity extends BaseActivity {
         Episode current = series.season(this.seasonNumber).episode(this.episodeNumber);
         this.pager.setCurrentItem(this.adapter.positionOf(current));
 
-        ActionBar ab = this.getActionBar();
-        ab.setTitle(series.name());
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowTitleEnabled(true);
+        this.setTitle(series.name());
 
         Object retained = this.getLastNonConfigurationInstance();
         if ((retained != null) && (retained instanceof StateHolder)) {
@@ -109,8 +103,6 @@ public class EpisodesActivity extends BaseActivity {
             this.messageLauncher = new MessageLauncher(this);
             this.state.messageLauncher = this.messageLauncher;
         }
-
-        this.getMenu().setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
     }
 
     @Override
@@ -136,5 +128,15 @@ public class EpisodesActivity extends BaseActivity {
 
     private static class StateHolder {
         MessageLauncher messageLauncher;
+    }
+
+    @Override
+    protected int layoutResource() {
+        return R.layout.activity_base_paged;
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return false;
     }
 }

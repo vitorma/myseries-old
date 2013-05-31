@@ -29,11 +29,9 @@ import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.TabPagerAdapter;
-import net.simonvt.menudrawer.MenuDrawer;
 import android.app.ActionBar;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.Window;
 
 public class AddSeriesActivity extends BaseActivity {
     private static final int DEFAULT_SELECTED_TAB = 0;
@@ -42,15 +40,11 @@ public class AddSeriesActivity extends BaseActivity {
 
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
-        this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.addseries);
 
+        this.setTitle(R.string.add_series);
         this.setUpState();
         this.setUpActionBar();
-
-        this.getMenu().setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
     }
 
     @Override
@@ -87,11 +81,6 @@ public class AddSeriesActivity extends BaseActivity {
     private void setUpActionBar() {
         ActionBar ab = this.getActionBar();
 
-        this.setProgressBarIndeterminateVisibility(false);
-
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowTitleEnabled(true);
-        ab.setTitle(R.string.add_series);
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         new TabPagerAdapter(this)
@@ -163,5 +152,15 @@ public class AddSeriesActivity extends BaseActivity {
 
             this.messageLauncher.onStop();
         }
+    }
+
+    @Override
+    protected int layoutResource() {
+        return R.layout.addseries;
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return false;
     }
 }

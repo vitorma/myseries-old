@@ -2,11 +2,9 @@ package mobi.myseries.gui.series;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.TabsAdapter;
-import net.simonvt.menudrawer.MenuDrawer;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +12,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
 public class SeriesActivity extends BaseActivity {
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
-
     private static final String SELECTED_TAB = "selectedTab";
     private static final int DETAILS = 0;
     private static final int SEASONS = 1;
@@ -33,14 +29,11 @@ public class SeriesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.setContentView(R.layout.series);
         this.setUpAttributesFrom(savedInstanceState);
-        this.setUpActionBar();
 
-        this.getMenu().setTouchMode(
-                this.selectedTab == DETAILS ?
-                MenuDrawer.TOUCH_MODE_FULLSCREEN :
-                MenuDrawer.TOUCH_MODE_BEZEL);
+        this.setTitle(App.seriesProvider().getSeries(this.seriesId).name());
+
+        this.setUpActionBar();
     }
 
     private void setUpAttributesFrom(Bundle savedInstanceState) {
@@ -55,10 +48,6 @@ public class SeriesActivity extends BaseActivity {
 
     private void setUpActionBar() {
         ActionBar actionBar = this.getActionBar();
-
-        actionBar.setTitle(SERIES_PROVIDER.getSeries(this.seriesId).name());
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         this.setUpNavigationFor(actionBar);
     }
@@ -86,5 +75,15 @@ public class SeriesActivity extends BaseActivity {
         outState.putInt(Extra.SERIES_ID, this.seriesId);
         outState.putInt(SELECTED_TAB, this.selectedTab);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected int layoutResource() {
+        return R.layout.series;
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return false;
     }
 }

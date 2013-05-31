@@ -16,19 +16,19 @@ import android.support.v4.view.ViewPager;
 
 public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, ActionBar.TabListener, Publisher<TabPagerAdapter.Listener> {
     private ActionBar actionBar;
-    private ViewPager viewPager;
     private List<Fragment> fragments;
+    private ViewPager viewPager;
 
     public TabPagerAdapter(Activity activity) {
         super(activity.getFragmentManager());
 
         this.actionBar = activity.getActionBar();
+        this.fragments = new ArrayList<Fragment>();
 
         this.viewPager = (ViewPager) activity.findViewById(R.id.viewPager);
         this.viewPager.setAdapter(this);
         this.viewPager.setOnPageChangeListener(this);
 
-        this.fragments = new ArrayList<Fragment>();
     }
 
     /* Tabs */

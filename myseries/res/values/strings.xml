@@ -70,6 +70,15 @@
     <string name="description_schedule_button">Schedule button</string>
     <string name="description_preferences_button">Preferences button</string>
 
+    <!-- SideMenu -->
+
+    <string-array name="sidemenu_items_array">
+        <item>My Series</item>
+        <item>My Schedule</item>
+    </string-array>
+    <string name="sidemenu_accessibility_open">Open navigation drawer</string>
+    <string name="sidemenu_accessibility_close">Close navigation drawer</string>
+
     <!-- Labels -->
 
     <string name="actors">ACTORS</string>

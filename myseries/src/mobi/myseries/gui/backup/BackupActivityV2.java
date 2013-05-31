@@ -7,7 +7,6 @@ import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.TabPagerAdapter;
-import net.simonvt.menudrawer.MenuDrawer;
 import android.app.ActionBar;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -23,12 +22,10 @@ public class BackupActivityV2 extends BaseActivity {
         this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.addseries);
+        this.setTitle(R.string.backup_restore);
 
         this.setUpState();
         this.setUpActionBar();
-
-        this.getMenu().setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
     }
 
     @Override
@@ -67,9 +64,6 @@ public class BackupActivityV2 extends BaseActivity {
 
         this.setProgressBarIndeterminateVisibility(false);
 
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowTitleEnabled(true);
-        ab.setTitle(R.string.add_series);
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         new TabPagerAdapter(this)
@@ -135,4 +129,13 @@ public class BackupActivityV2 extends BaseActivity {
         }
     }
 
+    @Override
+    protected int layoutResource() {
+        return R.layout.addseries;
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return false;
+    }
 }

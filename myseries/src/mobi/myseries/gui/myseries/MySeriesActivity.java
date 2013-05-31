@@ -35,6 +35,7 @@ import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.backup.BackupActivity;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
+import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.DialogButtonOnClickListener;
 import mobi.myseries.gui.shared.MessageLauncher;
@@ -42,19 +43,15 @@ import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
 import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.gui.shared.ToastBuilder;
-import mobi.myseries.gui.shared.TopActivity;
-import net.simonvt.menudrawer.MenuDrawer;
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MySeriesActivity extends TopActivity {
+public class MySeriesActivity extends BaseActivity {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
     // TODO (Reul) Refresh after a successful update
@@ -68,12 +65,8 @@ public class MySeriesActivity extends TopActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.myseries);
 
-        ActionBar ab = this.getActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowTitleEnabled(true);
-        ab.setTitle(R.string.my_series);
+        this.setTitle(R.string.my_series);
 
         App.updateSeriesService().withHandler(new Handler());
 
@@ -87,12 +80,6 @@ public class MySeriesActivity extends TopActivity {
             this.state.messageLauncher = this.messageLauncher;
             this.launchAutomaticUpdate();
         }
-
-        this.getMenu()
-            .setTouchMode(
-                this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
-                    ? MenuDrawer.TOUCH_MODE_BEZEL
-                    : MenuDrawer.TOUCH_MODE_FULLSCREEN);
     }
 
     private void launchAutomaticUpdate() {
@@ -312,5 +299,15 @@ public class MySeriesActivity extends TopActivity {
     // Backup--------------------------------------------------------------------------------------
     private void showBackupActivity() {
         this.startActivity(BackupActivity.newIntent(this));
+    }
+
+    @Override
+    protected int layoutResource() {
+        return R.layout.myseries;
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return true;
     }
 }

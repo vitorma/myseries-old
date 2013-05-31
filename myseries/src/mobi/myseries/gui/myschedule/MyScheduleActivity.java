@@ -28,6 +28,7 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
+import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
@@ -36,8 +37,6 @@ import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.gui.shared.SortingDialogBuilder;
 import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
 import mobi.myseries.gui.shared.TabPagerAdapter;
-import mobi.myseries.gui.shared.TopActivity;
-import net.simonvt.menudrawer.MenuDrawer;
 import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Context;
@@ -46,7 +45,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.Holder {
+public class MyScheduleActivity extends BaseActivity implements ScheduleAdapter.Holder {
     private State state;
 
     public static Intent newIntent(Context context, int scheduleMode) {
@@ -58,11 +57,9 @@ public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.H
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.setContentView(R.layout.myschedule);
+        this.setTitle(R.string.my_schedule);
         this.setUpState();
         this.setUpActionBar();
-
-        this.getMenu().setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
     }
 
     @Override
@@ -165,9 +162,6 @@ public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.H
     private void setUpActionBar() {
         ActionBar actionBar = this.getActionBar();
 
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(R.string.my_schedule);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         new TabPagerAdapter(this)
@@ -273,5 +267,15 @@ public class MyScheduleActivity extends TopActivity implements ScheduleAdapter.H
 
             this.messageLauncher.onStop();
         }
+    }
+
+    @Override
+    protected int layoutResource() {
+        return R.layout.myschedule;
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return true;
     }
 }
