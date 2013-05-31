@@ -26,8 +26,8 @@ import java.util.Map;
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.activity.base.TabActivity;
+import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
 import mobi.myseries.gui.shared.Extra;
@@ -40,7 +40,6 @@ import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -50,13 +49,6 @@ public class MyScheduleActivity extends TabActivity implements ScheduleAdapter.H
     public static Intent newIntent(Context context, int scheduleMode) {
         return new Intent(context, MyScheduleActivity.class)
             .putExtra(Extra.SCHEDULE_MODE, scheduleMode);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.setTitle(R.string.my_schedule);
     }
 
     @Override
@@ -263,5 +255,10 @@ public class MyScheduleActivity extends TabActivity implements ScheduleAdapter.H
     @Override
     protected int defaultSelectedTab() {
         return this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
+    }
+
+    @Override
+    protected CharSequence title() {
+        return this.getText(R.string.my_schedule);
     }
 }

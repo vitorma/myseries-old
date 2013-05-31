@@ -45,6 +45,7 @@ public abstract class BaseActivity extends Activity {
         //actionBar
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
         this.getActionBar().setHomeButtonEnabled(true);
+        this.setTitle(this.title());
 
         //sideMenu
         this.mDrawerTitle = this.getText(R.string.app);
@@ -85,6 +86,7 @@ public abstract class BaseActivity extends Activity {
     protected abstract void init();
     protected abstract int layoutResource();
     protected abstract boolean isTopLevel();
+    protected abstract CharSequence title();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

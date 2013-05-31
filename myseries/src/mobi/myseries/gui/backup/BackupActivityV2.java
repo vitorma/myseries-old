@@ -8,19 +8,11 @@ import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.app.Dialog;
-import android.os.Bundle;
 
 public class BackupActivityV2 extends TabActivity {
     private static final int DEFAULT_SELECTED_TAB = 0;
 
     private State state;
-
-    @Override
-    protected final void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.setTitle(R.string.backup_restore);
-    }
 
     @Override
     public Object onRetainNonConfigurationInstance() {
@@ -118,5 +110,10 @@ public class BackupActivityV2 extends TabActivity {
     @Override
     protected int defaultSelectedTab() {
         return DEFAULT_SELECTED_TAB;
+    }
+
+    @Override
+    protected CharSequence title() {
+        return this.getText(R.string.backup_restore);
     }
 }

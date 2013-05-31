@@ -2,12 +2,11 @@ package mobi.myseries.gui.series;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.activity.base.TabActivity;
+import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 public class SeriesActivity extends TabActivity {
     private static final int TAB_SEASONS = 1;
@@ -18,13 +17,6 @@ public class SeriesActivity extends TabActivity {
         Intent intent = new Intent(context, SeriesActivity.class);
         intent.putExtra(Extra.SERIES_ID, seriesId);
         return intent;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.setTitle(App.seriesProvider().getSeries(this.seriesId).name());
     }
 
     @Override
@@ -48,5 +40,10 @@ public class SeriesActivity extends TabActivity {
     @Override
     protected int defaultSelectedTab() {
         return TAB_SEASONS;
+    }
+
+    @Override
+    protected CharSequence title() {
+        return App.seriesProvider().getSeries(this.seriesId).name();
     }
 }

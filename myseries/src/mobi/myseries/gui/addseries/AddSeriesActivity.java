@@ -24,25 +24,17 @@ package mobi.myseries.gui.addseries;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.activity.base.TabActivity;
+import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.app.Dialog;
-import android.os.Bundle;
 
 public class AddSeriesActivity extends TabActivity {
     private static final int TRENDING_TAB = 0;
 
     private State state;
-
-    @Override
-    protected final void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.setTitle(R.string.add_series);
-    }
 
     @Override
     public Object onRetainNonConfigurationInstance() {
@@ -148,5 +140,10 @@ public class AddSeriesActivity extends TabActivity {
 
             this.messageLauncher.onStop();
         }
+    }
+
+    @Override
+    protected CharSequence title() {
+        return this.getText(R.string.add_series);
     }
 }

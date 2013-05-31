@@ -46,7 +46,6 @@ import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,28 +58,7 @@ public class MySeriesActivity extends BaseActivity {
     // TODO Menu from xml
 
     private StateHolder state;
-
     private MessageLauncher messageLauncher;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.setTitle(R.string.my_series);
-
-        App.updateSeriesService().withHandler(new Handler());
-
-        Object retained = this.getLastNonConfigurationInstance();
-        if ((retained != null) && (retained instanceof StateHolder)) {
-            this.state = (StateHolder) retained;
-            this.messageLauncher = this.state.messageLauncher;
-        } else {
-            this.state = new StateHolder();
-            this.messageLauncher = new MessageLauncher(this);
-            this.state.messageLauncher = this.messageLauncher;
-            this.launchAutomaticUpdate();
-        }
-    }
 
     private void launchAutomaticUpdate() {
         App.updateSeriesService().updateDataIfNeeded();
@@ -313,7 +291,22 @@ public class MySeriesActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        // TODO Auto-generated method stub
+        App.updateSeriesService().withHandler(new Handler());
 
+        Object retained = this.getLastNonConfigurationInstance();
+        if ((retained != null) && (retained instanceof StateHolder)) {
+            this.state = (StateHolder) retained;
+            this.messageLauncher = this.state.messageLauncher;
+        } else {
+            this.state = new StateHolder();
+            this.messageLauncher = new MessageLauncher(this);
+            this.state.messageLauncher = this.messageLauncher;
+            this.launchAutomaticUpdate();
+        }
+    }
+
+    @Override
+    protected CharSequence title() {
+        return this.getText(R.string.my_series);
     }
 }

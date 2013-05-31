@@ -48,12 +48,12 @@ public class EpisodesActivity extends BaseActivity {
     private int seriesId;
     private int seasonNumber;
     private int episodeNumber;
+    private String title;
 
     private EpisodePagerAdapter adapter;
     private ViewPager pager;
 
     private StateHolder state;
-
     private MessageLauncher messageLauncher;
 
     public static Intent newIntent(Context context, int seriesId, int seasonNumber, int episodeNumber) {
@@ -64,45 +64,6 @@ public class EpisodesActivity extends BaseActivity {
         intent.putExtra(Extra.EPISODE_NUMBER, episodeNumber);
 
         return intent;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Bundle extras = this.getIntent().getExtras();
-
-        this.seriesId = extras.getInt(Extra.SERIES_ID);
-        this.seasonNumber = extras.getInt(Extra.SEASON_NUMBER);
-        this.episodeNumber = extras.getInt(Extra.EPISODE_NUMBER);
-
-        Series series = SERIES_PROVIDER.getSeries(this.seriesId);
-
-        if (series == null) {
-            this.finish();
-            return;
-        }
-
-        List<Episode> episodes = series.episodes();
-
-        this.adapter = new EpisodePagerAdapter(this, this.getFragmentManager(), episodes);
-        this.pager = (ViewPager) this.findViewById(R.id.pager);
-        this.pager.setAdapter(this.adapter);
-
-        Episode current = series.season(this.seasonNumber).episode(this.episodeNumber);
-        this.pager.setCurrentItem(this.adapter.positionOf(current));
-
-        this.setTitle(series.name());
-
-        Object retained = this.getLastNonConfigurationInstance();
-        if ((retained != null) && (retained instanceof StateHolder)) {
-            this.state = (StateHolder) retained;
-            this.messageLauncher = this.state.messageLauncher;
-        } else {
-            this.state = new StateHolder();
-            this.messageLauncher = new MessageLauncher(this);
-            this.state.messageLauncher = this.messageLauncher;
-        }
     }
 
     @Override
@@ -126,6 +87,7 @@ public class EpisodesActivity extends BaseActivity {
         return this.state;
     }
 
+    /* STATE HOLDER */
     private static class StateHolder {
         MessageLauncher messageLauncher;
     }
@@ -142,7 +104,43 @@ public class EpisodesActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        // TODO Auto-generated method stub
+        Bundle extras = this.getIntent().getExtras();
 
+        this.seriesId = extras.getInt(Extra.SERIES_ID);
+        this.seasonNumber = extras.getInt(Extra.SEASON_NUMBER);
+        this.episodeNumber = extras.getInt(Extra.EPISODE_NUMBER);
+
+        Series series = SERIES_PROVIDER.getSeries(this.seriesId);
+
+        if (series == null) {
+            this.finish();
+            return;
+        }
+
+        this.title = series.name();
+
+        List<Episode> episodes = series.episodes();
+
+        this.adapter = new EpisodePagerAdapter(this, this.getFragmentManager(), episodes);
+        this.pager = (ViewPager) this.findViewById(R.id.pager);
+        this.pager.setAdapter(this.adapter);
+
+        Episode current = series.season(this.seasonNumber).episode(this.episodeNumber);
+        this.pager.setCurrentItem(this.adapter.positionOf(current));
+
+        Object retained = this.getLastNonConfigurationInstance();
+        if ((retained != null) && (retained instanceof StateHolder)) {
+            this.state = (StateHolder) retained;
+            this.messageLauncher = this.state.messageLauncher;
+        } else {
+            this.state = new StateHolder();
+            this.messageLauncher = new MessageLauncher(this);
+            this.state.messageLauncher = this.messageLauncher;
+        }
+    }
+
+    @Override
+    protected CharSequence title() {
+        return this.title;
     }
 }
