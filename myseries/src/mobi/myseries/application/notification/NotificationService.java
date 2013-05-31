@@ -2,7 +2,10 @@ package mobi.myseries.application.notification;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import mobi.myseries.R;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.listener.UpdateProgressListener;
@@ -12,15 +15,20 @@ public class NotificationService {
     private static int UPDATE_NOTIFICATION_ID = 0;
 
     private NotificationManager notificationManager;
-    private Notification.Builder updateNotificationBuilder;
+    private NotificationCompat.Builder updateNotificationBuilder;
 
     public NotificationService(Context context, UpdateService updateService) {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        this.updateNotificationBuilder = new Notification.Builder(context)
+        this.updateNotificationBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.actionbar_update)  // XXX R.blablabla
                 .setContentTitle("MySeries Update")  // XXX R.blablabla
-                .setAutoCancel(true);
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                // For some reason, setAutoCancel is not working with NotificationCompat.Builder,
+                // this contentIntent is an workaround for that.
+                // http://stackoverflow.com/questions/15033316/notification-setautocanceltrue-doesnt-work
+                //.setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(), 0));
 
         updateService.register(updateListener);
     }
