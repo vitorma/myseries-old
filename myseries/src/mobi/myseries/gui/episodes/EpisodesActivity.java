@@ -28,7 +28,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.BaseActivity;
+import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.content.Context;
 import android.content.Intent;
@@ -138,5 +138,11 @@ public class EpisodesActivity extends BaseActivity {
     @Override
     protected boolean isTopLevel() {
         return false;
+    }
+
+    @Override
+    protected void init() {
+        // TODO Auto-generated method stub
+
     }
 }

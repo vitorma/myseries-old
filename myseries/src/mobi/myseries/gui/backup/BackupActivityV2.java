@@ -2,30 +2,24 @@ package mobi.myseries.gui.backup;
 
 import mobi.myseries.R;
 import mobi.myseries.application.backup.BackupMode;
-import mobi.myseries.gui.shared.BaseActivity;
+import mobi.myseries.gui.activity.base.TabActivity;
+import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
-import mobi.myseries.gui.shared.TabPagerAdapter;
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.Window;
 
-public class BackupActivityV2 extends BaseActivity {
+public class BackupActivityV2 extends TabActivity {
     private static final int DEFAULT_SELECTED_TAB = 0;
 
     private State state;
 
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
-        this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
         super.onCreate(savedInstanceState);
-        this.setTitle(R.string.backup_restore);
 
-        this.setUpState();
-        this.setUpActionBar();
+        this.setTitle(R.string.backup_restore);
     }
 
     @Override
@@ -45,33 +39,6 @@ public class BackupActivityV2 extends BaseActivity {
         super.onStop();
 
         this.state.onStop();
-    }
-
-    private void setUpState() {
-        Object retainedState = this.getLastNonConfigurationInstance();
-
-        if (retainedState != null) {
-            this.state = (State) retainedState;
-        } else {
-            this.state = new State();
-            this.state.messageLauncher = new MessageLauncher(this);
-            this.state.selectedTab = DEFAULT_SELECTED_TAB;
-        }
-    }
-
-    private void setUpActionBar() {
-        ActionBar ab = this.getActionBar();
-
-        this.setProgressBarIndeterminateVisibility(false);
-
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        new TabPagerAdapter(this)
-            .addTab(R.string.backup_button, new BackupFragment())
-            .addTab(R.string.restore_button, new RestoreFragment())
-            .register(this.state);
-
-        ab.setSelectedNavigationItem(this.state.selectedTab);
     }
 
     void onSearchFailure(int searchFailureTitleResourceId, int searchFailureMessageResourceId) {
@@ -98,16 +65,10 @@ public class BackupActivityV2 extends BaseActivity {
         this.state.dialog = dialog;
     }
 
-    private static class State implements TabPagerAdapter.Listener {
-        private int selectedTab;
+    private static class State {
         private Dialog dialog;
         private boolean isShowingDialog;
         private MessageLauncher messageLauncher;
-
-        @Override
-        public void onSelected(int position) {
-            this.selectedTab = position;
-        }
 
         private void onStart() {
             if (this.isShowingDialog) {
@@ -130,12 +91,32 @@ public class BackupActivityV2 extends BaseActivity {
     }
 
     @Override
-    protected int layoutResource() {
-        return R.layout.addseries;
+    protected boolean isTopLevel() {
+        return false;
     }
 
     @Override
-    protected boolean isTopLevel() {
-        return false;
+    protected void init() {
+        Object retainedState = this.getLastNonConfigurationInstance();
+
+        if (retainedState != null) {
+            this.state = (State) retainedState;
+        } else {
+            this.state = new State();
+            this.state.messageLauncher = new MessageLauncher(this);
+        }
+    }
+
+    @Override
+    protected TabDefinition[] tabDefinitions() {
+        return new TabDefinition[] {
+            new TabDefinition(R.string.backup_button, new BackupFragment()),
+            new TabDefinition(R.string.restore_button, new RestoreFragment())
+        };
+    }
+
+    @Override
+    protected int defaultSelectedTab() {
+        return DEFAULT_SELECTED_TAB;
     }
 }

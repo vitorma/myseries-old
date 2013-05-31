@@ -1,7 +1,4 @@
-package mobi.myseries.gui.shared;
-
-import java.util.ArrayList;
-import java.util.List;
+package mobi.myseries.gui.activity.base;
 
 import mobi.myseries.R;
 import mobi.myseries.shared.ListenerSet;
@@ -14,32 +11,26 @@ import android.app.FragmentTransaction;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, ActionBar.TabListener, Publisher<TabPagerAdapter.Listener> {
+public class TabAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, ActionBar.TabListener, Publisher<TabAdapter.Listener> {
     private ActionBar actionBar;
-    private List<Fragment> fragments;
     private ViewPager viewPager;
+    private TabDefinition[] definitions;
 
-    public TabPagerAdapter(Activity activity) {
+    public TabAdapter(Activity activity, TabDefinition[] definitions, int selectedTab) {
         super(activity.getFragmentManager());
 
-        this.actionBar = activity.getActionBar();
-        this.fragments = new ArrayList<Fragment>();
+        this.definitions = definitions;
 
         this.viewPager = (ViewPager) activity.findViewById(R.id.viewPager);
         this.viewPager.setAdapter(this);
         this.viewPager.setOnPageChangeListener(this);
 
-    }
-
-    /* Tabs */
-
-    public TabPagerAdapter addTab(int nameResource, Fragment fragment) {
-        this.fragments.add(fragment);
-        this.actionBar.addTab(this.newTab(nameResource), false);
-
+        this.actionBar = activity.getActionBar();
+        for (TabDefinition td : this.definitions) {
+            this.actionBar.addTab(this.newTab(td.title()), false);
+        }
         this.notifyDataSetChanged();
-
-        return this;
+        this.actionBar.setSelectedNavigationItem(selectedTab);
     }
 
     private ActionBar.Tab newTab(int nameResource) {
@@ -50,12 +41,12 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
 
     @Override
     public int getCount() {
-        return this.fragments.size();
+        return this.definitions.length;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return this.fragments.get(position);
+        return this.definitions[position].fragment();
     }
 
     /* ViewPager.OnPageChangeListener */
@@ -92,20 +83,20 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
         public void onSelected(int position);
     }
 
-    private ListenerSet<TabPagerAdapter.Listener> listeners = new ListenerSet<TabPagerAdapter.Listener>();
+    private ListenerSet<TabAdapter.Listener> listeners = new ListenerSet<TabAdapter.Listener>();
 
     @Override
-    public boolean register(TabPagerAdapter.Listener listener) {
+    public boolean register(TabAdapter.Listener listener) {
         return this.listeners.register(listener);
     }
 
     @Override
-    public boolean deregister(TabPagerAdapter.Listener listener) {
+    public boolean deregister(TabAdapter.Listener listener) {
         return this.listeners.deregister(listener);
     }
 
     private void notifyListeners(int position) {
-        for (TabPagerAdapter.Listener l : this.listeners) {
+        for (TabAdapter.Listener l : this.listeners) {
             l.onSelected(position);
         }
     }

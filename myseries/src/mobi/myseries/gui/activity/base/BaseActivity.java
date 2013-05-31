@@ -1,4 +1,4 @@
-package mobi.myseries.gui.shared;
+package mobi.myseries.gui.activity.base;
 
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
@@ -38,6 +38,9 @@ public abstract class BaseActivity extends Activity {
         //layout
         this.setContentView(R.layout.activity_base);
         this.includeChildView();
+
+        //init
+        this.init();
 
         //actionBar
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -79,6 +82,7 @@ public abstract class BaseActivity extends Activity {
         this.getLayoutInflater().inflate(this.layoutResource(), root);
     }
 
+    protected abstract void init();
     protected abstract int layoutResource();
     protected abstract boolean isTopLevel();
 

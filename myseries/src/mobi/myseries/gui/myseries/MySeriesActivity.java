@@ -31,11 +31,11 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.backup.BackupActivity;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
-import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.DialogButtonOnClickListener;
 import mobi.myseries.gui.shared.MessageLauncher;
@@ -309,5 +309,11 @@ public class MySeriesActivity extends BaseActivity {
     @Override
     protected boolean isTopLevel() {
         return true;
+    }
+
+    @Override
+    protected void init() {
+        // TODO Auto-generated method stub
+
     }
 }

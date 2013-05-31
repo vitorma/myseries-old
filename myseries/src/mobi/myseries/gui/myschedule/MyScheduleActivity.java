@@ -26,9 +26,10 @@ import java.util.Map;
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.activity.base.TabDefinition;
+import mobi.myseries.gui.activity.base.TabActivity;
 import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
-import mobi.myseries.gui.shared.BaseActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
@@ -36,8 +37,6 @@ import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.gui.shared.SortingDialogBuilder;
 import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
-import mobi.myseries.gui.shared.TabPagerAdapter;
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -45,7 +44,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MyScheduleActivity extends BaseActivity implements ScheduleAdapter.Holder {
+public class MyScheduleActivity extends TabActivity implements ScheduleAdapter.Holder {
     private State state;
 
     public static Intent newIntent(Context context, int scheduleMode) {
@@ -58,8 +57,6 @@ public class MyScheduleActivity extends BaseActivity implements ScheduleAdapter.
         super.onCreate(savedInstanceState);
 
         this.setTitle(R.string.my_schedule);
-        this.setUpState();
-        this.setUpActionBar();
     }
 
     @Override
@@ -101,7 +98,7 @@ public class MyScheduleActivity extends BaseActivity implements ScheduleAdapter.
         hideShowSpecialEpisodes.setTitle(isShowingSpecialEpisodes ? R.string.hideSpecialEpisodes : R.string.showSpecialEpisodes);
         hideShowSeenEpisodes.setTitle(isShowingSeenEpisodes ? R.string.hideSeenEpisodes : R.string.showSeenEpisodes);
 
-        hideShowSeenEpisodes.setVisible(this.state.mode == ScheduleMode.NEXT ? false : true);
+        hideShowSeenEpisodes.setVisible(this.selectedTab() == ScheduleMode.NEXT ? false : true);
 
         return true;
     }
@@ -127,6 +124,26 @@ public class MyScheduleActivity extends BaseActivity implements ScheduleAdapter.
     }
 
     @Override
+    protected boolean isTopLevel() {
+        return true;
+    }
+
+    @Override
+    protected void init() {
+        Object retainedState = this.getLastNonConfigurationInstance();
+
+        if (retainedState != null) {
+            this.state = (State) retainedState;
+        } else {
+            this.state = new State();
+            this.state.messageLauncher = new MessageLauncher(this);
+            this.state.adapterForModeRecent = this.newAdapterForMode(ScheduleMode.RECENT);
+            this.state.adapterForModeUpcoming = this.newAdapterForMode(ScheduleMode.UPCOMING);
+            this.state.adapterForModeNext = this.newAdapterForMode(ScheduleMode.NEXT);
+        }
+    }
+
+    @Override
     public ScheduleAdapter adapterForMode(int scheduleMode) {
         switch (scheduleMode) {
             case ScheduleMode.RECENT:
@@ -140,37 +157,8 @@ public class MyScheduleActivity extends BaseActivity implements ScheduleAdapter.
         }
     }
 
-    private void setUpState() {
-        Object retainedState = this.getLastNonConfigurationInstance();
-
-        if (retainedState != null) {
-            this.state = (State) retainedState;
-        } else {
-            this.state = new State();
-            this.state.messageLauncher = new MessageLauncher(this);
-            this.state.mode = this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
-            this.state.adapterForModeRecent = this.newAdapterForMode(ScheduleMode.RECENT);
-            this.state.adapterForModeUpcoming = this.newAdapterForMode(ScheduleMode.UPCOMING);
-            this.state.adapterForModeNext = this.newAdapterForMode(ScheduleMode.NEXT);
-        }
-    }
-
     private ScheduleAdapter newAdapterForMode(int scheduleMode) {
         return new ScheduleAdapter(scheduleMode, Preferences.forMySchedule(scheduleMode));
-    }
-
-    private void setUpActionBar() {
-        ActionBar actionBar = this.getActionBar();
-
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        new TabPagerAdapter(this)
-            .addTab(R.string.recent, ScheduleFragment.newInstance(ScheduleMode.RECENT))
-            .addTab(R.string.next, ScheduleFragment.newInstance(ScheduleMode.NEXT))
-            .addTab(R.string.upcoming, ScheduleFragment.newInstance(ScheduleMode.UPCOMING))
-            .register(this.state);
-
-        actionBar.setSelectedNavigationItem(this.state.mode);
     }
 
     private void hideOrShowSpecialEpisodes() {
@@ -228,26 +216,20 @@ public class MyScheduleActivity extends BaseActivity implements ScheduleAdapter.
     }
 
     private ScheduleAdapter adapterForCurrentMode() {
-        return this.adapterForMode(this.state.mode);
+        return this.adapterForMode(this.selectedTab());
     }
 
     private MySchedulePreferences preferencesForCurrentMode() {
-        return Preferences.forMySchedule(this.state.mode);
+        return Preferences.forMySchedule(this.selectedTab());
     }
 
-    private static class State implements TabPagerAdapter.Listener {
-        private int mode;
+    private static class State {
         private Dialog dialog;
         private boolean isShowingDialog;
         private MessageLauncher messageLauncher;
         private ScheduleAdapter adapterForModeRecent;
         private ScheduleAdapter adapterForModeUpcoming;
         private ScheduleAdapter adapterForModeNext;
-
-        @Override
-        public void onSelected(int position) {
-            this.mode = position;
-        }
 
         private void onStart() {
             if (this.isShowingDialog) {
@@ -270,12 +252,16 @@ public class MyScheduleActivity extends BaseActivity implements ScheduleAdapter.
     }
 
     @Override
-    protected int layoutResource() {
-        return R.layout.myschedule;
+    protected TabDefinition[] tabDefinitions() {
+        return new TabDefinition[] {
+            new TabDefinition(R.string.recent, ScheduleFragment.newInstance(ScheduleMode.RECENT)),
+            new TabDefinition(R.string.next, ScheduleFragment.newInstance(ScheduleMode.NEXT)),
+            new TabDefinition(R.string.upcoming, ScheduleFragment.newInstance(ScheduleMode.UPCOMING))
+        };
     }
 
     @Override
-    protected boolean isTopLevel() {
-        return true;
+    protected int defaultSelectedTab() {
+        return this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
     }
 }

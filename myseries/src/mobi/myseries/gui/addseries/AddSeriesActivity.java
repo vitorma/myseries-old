@@ -24,17 +24,16 @@ package mobi.myseries.gui.addseries;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.BaseActivity;
+import mobi.myseries.gui.activity.base.TabDefinition;
+import mobi.myseries.gui.activity.base.TabActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.MessageLauncher;
-import mobi.myseries.gui.shared.TabPagerAdapter;
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.os.Bundle;
 
-public class AddSeriesActivity extends BaseActivity {
-    private static final int DEFAULT_SELECTED_TAB = 0;
+public class AddSeriesActivity extends TabActivity {
+    private static final int TRENDING_TAB = 0;
 
     private State state;
 
@@ -43,8 +42,6 @@ public class AddSeriesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         this.setTitle(R.string.add_series);
-        this.setUpState();
-        this.setUpActionBar();
     }
 
     @Override
@@ -66,7 +63,13 @@ public class AddSeriesActivity extends BaseActivity {
         this.state.onStop();
     }
 
-    private void setUpState() {
+    @Override
+    protected boolean isTopLevel() {
+        return false;
+    }
+
+    @Override
+    protected void init() {
         Object retainedState = this.getLastNonConfigurationInstance();
 
         if (retainedState != null) {
@@ -74,21 +77,20 @@ public class AddSeriesActivity extends BaseActivity {
         } else {
             this.state = new State();
             this.state.messageLauncher = new MessageLauncher(this);
-            this.state.selectedTab = DEFAULT_SELECTED_TAB;
         }
     }
 
-    private void setUpActionBar() {
-        ActionBar ab = this.getActionBar();
+    @Override
+    protected TabDefinition[] tabDefinitions() {
+        return new TabDefinition[] {
+                new TabDefinition(R.string.trending, new TrendingFragment()),
+                new TabDefinition(R.string.search, new SearchFragment())
+        };
+    }
 
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        new TabPagerAdapter(this)
-            .addTab(R.string.trending, new TrendingFragment())
-            .addTab(R.string.search, new SearchFragment())
-            .register(this.state);
-
-        ab.setSelectedNavigationItem(this.state.selectedTab);
+    @Override
+    protected int defaultSelectedTab() {
+        return TRENDING_TAB;
     }
 
     void onSearchFailure(int searchFailureTitleResourceId, int searchFailureMessageResourceId) {
@@ -123,16 +125,10 @@ public class AddSeriesActivity extends BaseActivity {
         this.state.dialog = dialog;
     }
 
-    private static class State implements TabPagerAdapter.Listener {
-        private int selectedTab;
+    private static class State {
         private Dialog dialog;
         private boolean isShowingDialog;
         private MessageLauncher messageLauncher;
-
-        @Override
-        public void onSelected(int position) {
-            this.selectedTab = position;
-        }
 
         private void onStart() {
             if (this.isShowingDialog) {
@@ -152,15 +148,5 @@ public class AddSeriesActivity extends BaseActivity {
 
             this.messageLauncher.onStop();
         }
-    }
-
-    @Override
-    protected int layoutResource() {
-        return R.layout.addseries;
-    }
-
-    @Override
-    protected boolean isTopLevel() {
-        return false;
     }
 }
