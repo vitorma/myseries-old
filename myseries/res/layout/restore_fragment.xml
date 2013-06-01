@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/gap_medium"
+            android:gravity="center" >
+            
+            <CheckBox
+                android:id="@+id/radio0"
+                style="@style/checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toucharea_minimum_side"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:text="@string/update_on_wifi_or_data_plan"
+                android:textSize="@dimen/text_size_medium" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_below="@id/radio0"
+                android:layout_marginTop="@dimen/gap_small"
+                android:background="@drawable/list_divider_holo_light" />
+
+            
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/gap_medium" >
+
+            <mobi.myseries.gui.shared.SeenMark
+                android:id="@+id/GoogleDriveCheckbox"
+                android:layout_width="@dimen/toucharea_minimum_side"
+                android:layout_height="@dimen/toucharea_minimum_side"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="20dp" />
+
+            <TextView
+                android:id="@+id/GoogleDriveTextView"
+                style="@style/TextView.Medium.MediumGray.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/gap_large"
+                android:layout_marginTop="@dimen/gap_large"
+                android:layout_toLeftOf="@id/GoogleDriveCheckbox"
+                android:text="@string/google_drive" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_below="@id/GoogleDriveTextView"
+                android:layout_marginTop="@dimen/gap_small"
+                android:background="@drawable/list_divider_holo_light" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/gap_medium" >
+
+            <mobi.myseries.gui.shared.SeenMark
+                android:id="@+id/DropboxCheckbox"
+                android:layout_width="@dimen/toucharea_minimum_side"
+                android:layout_height="@dimen/toucharea_minimum_side"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="20dp" />
+
+            <TextView
+                android:id="@+id/DropboxTextView"
+                style="@style/TextView.Medium.MediumGray.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/gap_large"
+                android:layout_marginTop="@dimen/gap_large"
+                android:layout_toLeftOf="@+id/DropboxCheckbox"
+                android:text="@string/dropbox" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_below="@id/DropboxTextView"
+                android:layout_marginTop="@dimen/gap_small"
+                android:background="@drawable/list_divider_holo_light" />
+        </RelativeLayout>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="96dp"
+        android:layout_marginTop="@dimen/toucharea_minimum_side"
+        android:text="Button" />
+
+</LinearLayout>
