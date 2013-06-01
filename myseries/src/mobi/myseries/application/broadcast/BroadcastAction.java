@@ -26,5 +26,4 @@ public class BroadcastAction {
     public static final String UPDATE = "mobi.myseries.application.broadcast.action.UPDATE";
     public static final String ADDITION = "mobi.myseries.application.broadcast.action.ADDITION";
     public static final String REMOVAL = "mobi.myseries.application.broadcast.action.REMOVAL";
-    public static final String CONFIGURATION_CHANGE = "mobi.myseries.application.broadcast.action.CONFIGURATION_CHANGE";
 }

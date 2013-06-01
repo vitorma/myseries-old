@@ -118,8 +118,6 @@
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
         <service
             android:name="mobi.myseries.gui.appwidget.TabService"/>
-        <service
-            android:name="mobi.myseries.application.broadcast.ConfigurationChangeService"/>
 
     </application>
 
