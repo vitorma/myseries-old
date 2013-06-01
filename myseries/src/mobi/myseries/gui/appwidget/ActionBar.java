@@ -32,7 +32,7 @@ public class ActionBar {
     }
 
     private PendingIntent homeIntentFrom(int appWidgetId) {
-        Intent intent = new Intent(this.context, MySeriesActivity.class);
+        Intent intent = MySeriesActivity.newIntent(this.context);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         return PendingIntent.getActivity(this.context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);

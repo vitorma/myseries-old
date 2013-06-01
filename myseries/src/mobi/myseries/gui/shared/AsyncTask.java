@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mobi.myseries.gui.addseries;
+package mobi.myseries.gui.shared;
 
 import java.util.ArrayDeque;
 import java.util.concurrent.BlockingQueue;
@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+
 
 import android.annotation.TargetApi;
 import android.os.Handler;

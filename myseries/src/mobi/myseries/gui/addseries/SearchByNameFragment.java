@@ -10,8 +10,10 @@ import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
+import mobi.myseries.gui.shared.FailureDialogBuilder;
+import android.app.Dialog;
 
-public class SearchFragment extends AddSeriesFragment {
+public class SearchByNameFragment extends AddSeriesFragment {
 
     @Override
     protected boolean hasSearchPanel() {
@@ -55,22 +57,22 @@ public class SearchFragment extends AddSeriesFragment {
 
             @Override
             public void onStart() {
-                SearchFragment.this.disableSearch();
+                SearchByNameFragment.this.disableSearch();
 
-                SearchFragment.this.isSearching = true;
-                SearchFragment.this.showProgress();
+                SearchByNameFragment.this.isSearching = true;
+                SearchByNameFragment.this.showProgress();
             }
 
             @Override
             public void onFinish() {
-                SearchFragment.this.enableSearch(this.showButtons);
+                SearchByNameFragment.this.enableSearch(this.showButtons);
 
-                SearchFragment.this.isSearching = false;
+                SearchByNameFragment.this.isSearching = false;
 
-                if (SearchFragment.this.hasResultsToShow()) {
-                    SearchFragment.this.showResults();
+                if (SearchByNameFragment.this.hasResultsToShow()) {
+                    SearchByNameFragment.this.showResults();
                 } else {
-                    SearchFragment.this.hideProgress();
+                    SearchByNameFragment.this.hideProgress();
                 }
             }
 
@@ -78,7 +80,7 @@ public class SearchFragment extends AddSeriesFragment {
             public void onSucess(List<Series> results) {
                 this.showButtons = true;
 
-                SearchFragment.this.setResults(results);
+                SearchByNameFragment.this.setResults(results);
             }
 
             @Override
@@ -86,29 +88,38 @@ public class SearchFragment extends AddSeriesFragment {
                 if (exception.getCause() instanceof ConnectionFailedException) {
                     this.showButtons = true;
 
-                    SearchFragment.this.activity().onSearchFailure(
+                    SearchByNameFragment.this.onSearchFailure(
                             R.string.connection_failed_title,
                             R.string.connection_failed_message);
                 } else if (exception.getCause() instanceof InvalidSearchCriteriaException) {
                     this.showButtons = false;
 
-                    SearchFragment.this.activity().onSearchFailure(
+                    SearchByNameFragment.this.onSearchFailure(
                             R.string.invalid_criteria_title,
                             R.string.invalid_criteria_message);
                 } else if (exception.getCause() instanceof ParsingFailedException) {
                     this.showButtons = true;
 
-                    SearchFragment.this.activity().onSearchFailure(
+                    SearchByNameFragment.this.onSearchFailure(
                             R.string.parsing_failed_title,
                             R.string.parsing_failed_message);
                 } else if (exception.getCause() instanceof ConnectionTimeoutException){
                     this.showButtons = true;
 
-                    SearchFragment.this.activity().onSearchFailure(
+                    SearchByNameFragment.this.onSearchFailure(
                             R.string.connection_timeout_title,
                             R.string.connection_timeout_message);
                 }
             }
         };
+    }
+
+    private void onSearchFailure(int searchFailureTitleResourceId, int searchFailureMessageResourceId) {
+        Dialog dialog = new FailureDialogBuilder(this.getActivity())
+            .setTitle(searchFailureTitleResourceId)
+            .setMessage(searchFailureMessageResourceId)
+            .build();
+
+        this.activity().showDialog(dialog);
     }
 }

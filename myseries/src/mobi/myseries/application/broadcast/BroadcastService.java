@@ -49,8 +49,4 @@ public class BroadcastService {
     public void broadcastRemoval() {
         this.context.sendBroadcast(new Intent(BroadcastAction.REMOVAL));
     }
-
-    public void broadcastConfigurationChange() {
-        this.context.sendBroadcast(new Intent(BroadcastAction.CONFIGURATION_CHANGE));
-    }
 }

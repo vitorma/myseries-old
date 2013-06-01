@@ -23,10 +23,6 @@ public abstract class TabActivity extends BaseActivity implements TabAdapter.Lis
         this.setUpActionBar();
     }
 
-    protected int selectedTab() {
-        return this.selectedTab;
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(SELECTED_TAB, this.selectedTab);
@@ -45,6 +41,10 @@ public abstract class TabActivity extends BaseActivity implements TabAdapter.Lis
 
     protected abstract TabDefinition[] tabDefinitions();
     protected abstract int defaultSelectedTab();
+
+    protected int selectedTab() {
+        return this.selectedTab;
+    }
 
     private void setUpActionBar() {
         this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

@@ -28,23 +28,19 @@ import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.activity.base.BaseActivity;
+import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
 public class EpisodesActivity extends BaseActivity {
-
-    public static interface Extra {
-        public String SERIES_ID = "seriesId";
-        public String SEASON_NUMBER = "seasonNumber";
-        public String EPISODE_NUMBER = "episodeNumber";
-    }
-
     private int seriesId;
     private int seasonNumber;
     private int episodeNumber;
     private String title;
+
+    //TODO (Cleber) Create superclass PagerActivity extends BaseActivity
 
     private EpisodePagerAdapter adapter;
     private ViewPager pager;

@@ -3,8 +3,13 @@ package mobi.myseries.gui.addseries;
 import java.util.List;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.application.search.SeriesSearchListener;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
+import mobi.myseries.gui.shared.DialogButtonOnClickListener;
+import mobi.myseries.gui.shared.FailureDialogBuilder;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,7 +28,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 public abstract class AddSeriesFragment extends Fragment {
-
     protected EditText searchField;
     private View buttonPanel;
     private ImageButton clearButton;
@@ -207,13 +211,46 @@ public abstract class AddSeriesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Series selectedItem = (Series) parent.getItemAtPosition(position);
-                AddSeriesFragment.this.activity().onRequestAdd(selectedItem);
+                AddSeriesFragment.this.onRequestAdd(selectedItem);
             }
         });
 
         if (this.adapter != null) {
             this.resultsGrid.setAdapter(this.adapter);
         }
+    }
+
+    private void onRequestAdd(Series seriesToAdd) {
+        Dialog dialog;
+
+        if (App.followSeriesService().follows(seriesToAdd)) {
+            String messageFormat = this.getString(R.string.add_already_followed_series_message);
+
+            dialog = new FailureDialogBuilder(this.getActivity())
+                .setMessage(String.format(messageFormat, seriesToAdd.name()))
+                .build();
+        } else {
+            dialog = new ConfirmationDialogBuilder(this.getActivity())
+                .setTitle(seriesToAdd.name())
+                .setMessage(seriesToAdd.overview())
+                .setSurrogateMessage(R.string.overview_unavailable)
+                .setPositiveButton(R.string.add, this.addButtonOnClickListener(seriesToAdd))
+                .setNegativeButton(R.string.dont_add, null)
+                .build();
+        }
+
+        this.activity().showDialog(dialog);
+    }
+
+    private DialogButtonOnClickListener addButtonOnClickListener(final Series seriesToAdd) {
+        return new DialogButtonOnClickListener() {
+            @Override
+            public void onClick(Dialog dialog) {
+                App.followSeriesService().follow(seriesToAdd);
+
+                dialog.dismiss();
+            }
+        };
     }
 
     private void prepareProgressIndicator() {

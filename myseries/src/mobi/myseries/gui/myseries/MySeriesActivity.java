@@ -50,13 +50,19 @@ import android.view.MenuItem;
 
 public class MySeriesActivity extends BaseActivity {
 
+    public static Intent newIntent(Context context) {
+        return new Intent(context, MySeriesActivity.class);
+    }
+
+    /* FIXME (Cleber)
+     * Check the behavior of updateDataIfNeeded.
+     * Maybe would be needed save a boolean with onSaveInstanceState. Such method is better than onRetainNonConfigurationInstance,
+     * because this one only works with rotations, not if the activity goes to the back stack. */
+
     @Override
     protected void init() {
         App.updateSeriesService().withHandler(new Handler());
-        App.updateSeriesService().updateDataIfNeeded(); //TODO (Cleber) Check the behavior of updateDataIfNeeded.
-                                                        //              Maybe would be needed save a boolean with onSaveInstanceState. Such
-                                                        //              method is better than onRetainInstanceState because this one only
-                                                        //              works with rotations, not if the activity goes to the back stack.
+        App.updateSeriesService().updateDataIfNeeded();
     }
 
     @Override
@@ -74,12 +80,12 @@ public class MySeriesActivity extends BaseActivity {
         return true;
     }
 
-    // FIXME (Cleber) Menu should behave according to design guide, hiding most of the options when the side menu is open, for example -----
-    // FIXME (Cleber) All activities should have a static newIntent
+    // FIXME (Cleber) Menu should behave according to design guide, hiding most of the options when the side menu is open, for example.
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(this.getString(R.string.menu_add)).setIcon(R.drawable.actionbar_add)
-            .setIntent(new Intent(this, AddSeriesActivity.class))
+            .setIntent(AddSeriesActivity.newIntent(this))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(this.getString(R.string.menu_remove)).setIcon(R.drawable.actionbar_remove)
@@ -121,7 +127,9 @@ public class MySeriesActivity extends BaseActivity {
         return super.onMenuItemSelected(featureId, item);
     }
 
-    //FIXME (Cleber) Create RemovalActivity ? If not, use showDialog to keep dialog shown after rotations
+    /* FIXME (Cleber)
+     * Create RemovalActivity?
+     * If not, use showDialog to keep dialog shown after rotations or (highly recommended) create a custom DialogFragment. */
 
     private void showRemoveDialog() {
         final Context context = this;
