@@ -45,12 +45,17 @@ public class MyScheduleActivity extends TabActivity {
     }
 
     @Override
-    protected boolean isTopLevel() {
-        return true;
+    protected void init() { /* There's nothing to initialize */ }
+
+    @Override
+    protected CharSequence title() {
+        return this.getText(R.string.my_schedule);
     }
 
     @Override
-    protected void init() { /* There's nothing to initialize */ }
+    protected boolean isTopLevel() {
+        return true;
+    }
 
     @Override
     protected TabDefinition[] tabDefinitions() {
@@ -64,10 +69,5 @@ public class MyScheduleActivity extends TabActivity {
     @Override
     protected int defaultSelectedTab() {
         return this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
-    }
-
-    @Override
-    protected CharSequence title() {
-        return this.getText(R.string.my_schedule);
     }
 }

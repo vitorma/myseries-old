@@ -20,13 +20,18 @@ public class SeriesActivity extends TabActivity {
     }
 
     @Override
-    protected boolean isTopLevel() {
-        return false;
+    protected void init() {
+        this.seriesId = this.getIntent().getExtras().getInt(Extra.SERIES_ID);
     }
 
     @Override
-    protected void init() {
-        this.seriesId = this.getIntent().getExtras().getInt(Extra.SERIES_ID);
+    protected CharSequence title() {
+        return App.seriesProvider().getSeries(this.seriesId).name();
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return false;
     }
 
     @Override
@@ -40,10 +45,5 @@ public class SeriesActivity extends TabActivity {
     @Override
     protected int defaultSelectedTab() {
         return TAB_SEASONS;
-    }
-
-    @Override
-    protected CharSequence title() {
-        return App.seriesProvider().getSeries(this.seriesId).name();
     }
 }

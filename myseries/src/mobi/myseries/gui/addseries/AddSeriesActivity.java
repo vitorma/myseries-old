@@ -59,6 +59,8 @@ public class AddSeriesActivity extends TabActivity {
         return TRENDING_TAB;
     }
 
+    //TODO (Cleber) Let AddFragment create these dialogs
+
     void onSearchFailure(int searchFailureTitleResourceId, int searchFailureMessageResourceId) {
         this.showDialog(
             new FailureDialogBuilder(this)

@@ -4,7 +4,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.episodes.EpisodesActivity;
+import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.shared.DatesAndTimes;
@@ -87,9 +87,9 @@ public class Item {
     private void setupOnClickFillInIntent(RemoteViews item, Episode episode) {
         Bundle extras = new Bundle();
 
-        extras.putInt(EpisodesActivity.Extra.SERIES_ID, episode.seriesId());
-        extras.putInt(EpisodesActivity.Extra.SEASON_NUMBER, episode.seasonNumber());
-        extras.putInt(EpisodesActivity.Extra.EPISODE_NUMBER, episode.number());
+        extras.putInt(Extra.SERIES_ID, episode.seriesId());
+        extras.putInt(Extra.SEASON_NUMBER, episode.seasonNumber());
+        extras.putInt(Extra.EPISODE_NUMBER, episode.number());
 
         Intent intent = new Intent().putExtras(extras);
 
