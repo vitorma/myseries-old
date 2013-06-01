@@ -29,7 +29,6 @@ import java.util.TreeMap;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
@@ -38,7 +37,6 @@ import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.DialogButtonOnClickListener;
-import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
 import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
 import mobi.myseries.gui.shared.SeriesComparator;
@@ -51,51 +49,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MySeriesActivity extends BaseActivity {
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
 
-    // TODO (Reul) Refresh after a successful update
-    // TODO (Reul) Refresh after removing all series
-    // TODO Menu from xml
-
-    private StateHolder state;
-    private MessageLauncher messageLauncher;
-
-    private void launchAutomaticUpdate() {
-        App.updateSeriesService().updateDataIfNeeded();
+    @Override
+    protected void init() {
+        App.updateSeriesService().withHandler(new Handler());
+        App.updateSeriesService().updateDataIfNeeded(); //TODO (Cleber) Check the behavior of updateDataIfNeeded.
+                                                        //              Maybe would be needed save a boolean with onSaveInstanceState. Such
+                                                        //              method is better than onRetainInstanceState because this one only
+                                                        //              works with rotations, not if the activity goes to the back stack.
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        this.loadState();
-    }
-
-    private void loadState() {
-        this.messageLauncher.loadState();
-        if (this.state.isShowingDialog) {
-            this.state.dialog.show();
-        }
+    protected CharSequence title() {
+        return this.getText(R.string.my_series);
     }
 
     @Override
-    public Object onRetainNonConfigurationInstance() {
-        return this.state;
+    protected int layoutResource() {
+        return R.layout.myseries;
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        this.messageLauncher.onStop();
-        if ((this.state.dialog != null) && this.state.dialog.isShowing()) {
-            this.state.dialog.dismiss();
-            this.state.isShowingDialog = true;
-        } else {
-            this.state.isShowingDialog = false;
-        }
+    protected boolean isTopLevel() {
+        return true;
     }
 
-    // Menu----------------------------------------------------------------------------------------
-
+    // FIXME (Cleber) Menu should behave according to design guide, hiding most of the options when the side menu is open, for example -----
+    // FIXME (Cleber) All activities should have a static newIntent
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(this.getString(R.string.menu_add)).setIcon(R.drawable.actionbar_add)
@@ -109,15 +89,12 @@ public class MySeriesActivity extends BaseActivity {
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         menu.add(this.getString(R.string.menu_settings)).setIcon(R.drawable.actionbar_settings)
+            .setIntent(PreferencesActivity.newIntent(this))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-        menu.add(this.getString(R.string.menu_backup_restore)).setShowAsAction(
-            MenuItem.SHOW_AS_ACTION_NEVER);
-
-        // TODO add intent
-        // menu.add(getString(R.string.menu_help))
-        // .setIcon(R.drawable.actionbar_help)
-        // .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(this.getString(R.string.menu_backup_restore))
+            .setIntent(BackupActivity.newIntent(this))
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         return true;
     }
@@ -127,8 +104,7 @@ public class MySeriesActivity extends BaseActivity {
         if (item.getTitle().equals(this.getString(R.string.menu_update))) {
 
             final Context context = this;
-            final Collection<Series> followedSeries = MySeriesActivity.SERIES_PROVIDER
-                .followedSeries();
+            final Collection<Series> followedSeries = App.seriesProvider().followedSeries();
 
             if (followedSeries.isEmpty()) {
                 new ToastBuilder(context).setMessage(R.string.no_series_to_update).build().show();
@@ -142,21 +118,16 @@ public class MySeriesActivity extends BaseActivity {
             this.showRemoveDialog();
         }
 
-        if (item.getTitle().equals(this.getString(R.string.menu_settings))) {
-            this.showSettingsActivity();
-        }
-        if (item.getTitle().equals(this.getString(R.string.menu_backup_restore))) {
-            this.showBackupActivity();
-        }
-
         return super.onMenuItemSelected(featureId, item);
     }
+
+    //FIXME (Cleber) Create RemovalActivity ? If not, use showDialog to keep dialog shown after rotations
 
     private void showRemoveDialog() {
         final Context context = this;
         final SortedMap<Series, Boolean> removalOptions = new TreeMap<Series, Boolean>(
             new SeriesComparator());
-        final Collection<Series> followedSeries = MySeriesActivity.SERIES_PROVIDER.followedSeries();
+        final Collection<Series> followedSeries = App.seriesProvider().followedSeries();
 
         if (followedSeries.isEmpty()) {
             new ToastBuilder(context).setMessage(R.string.no_series_to_remove).build().show();
@@ -198,115 +169,5 @@ public class MySeriesActivity extends BaseActivity {
                         }).build().show();
                 }
             }).build().show();
-    }
-
-    // private void showBackupDialog() {
-    // try {
-    // final BackupDialogBuilder dialogBuilder = new BackupDialogBuilder(this);
-    // String folderPath = App.backupService().backupFolderPath();
-    // dialogBuilder.setBackupFolder(folderPath);
-    // dialogBuilder.setBackupButtonListener(new ButtonOnClickListener() {
-    // @Override
-    // public void onClick(Dialog dialog) {
-    // new ConfirmationDialogBuilder(dialogBuilder.context())
-    // .setTitle(R.string.are_you_sure)
-    // .setMessage(R.string.overwrite_backup)
-    // .setNegativeButton(R.string.no, null)
-    // .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
-    // @Override
-    // public void onClick(Dialog dialog) {
-    // App.backupService().doBackup();
-    // dialog.dismiss();
-    // }
-    // })
-    // .build()
-    // .show();
-    // }
-    // });
-    // dialogBuilder.setRestoreButtonListener(new ButtonOnClickListener() {
-    // @Override
-    // public void onClick(Dialog dialog) {
-    // new ConfirmationDialogBuilder(dialogBuilder.context())
-    // .setTitle(R.string.are_you_sure)
-    // .setMessage(R.string.actual_following_series_will_be_replaced)
-    // .setNegativeButton(R.string.no, null)
-    // .setPositiveButton(R.string.yes, new ButtonOnClickListener() {
-    // @Override
-    // public void onClick(Dialog dialog) {
-    // App.backupService().restoreBackup();
-    // dialog.dismiss();
-    // }
-    // })
-    // .build()
-    // .show();
-    // }
-    // });
-    // dialogBuilder.build().show();
-    // } catch (ExternalStorageNotAvailableException e) {
-    // new FailureDialogBuilder(this)
-    // .setTitle(R.string.external_storage_not_available)
-    // .setMessage(R.string.backup_storage_failure)
-    // .build().show();
-    // }
-    //
-    // }
-    @Override
-    public boolean onSearchRequested() {
-        this.showSearchActivity();
-        return true;
-    }
-
-    // Search--------------------------------------------------------------------------------------
-
-    private void showSearchActivity() {
-        final Intent intent = new Intent(this, AddSeriesActivity.class);
-        this.startActivity(intent);
-    }
-
-    private static class StateHolder {
-        Dialog dialog;
-        boolean isShowingDialog;
-        MessageLauncher messageLauncher;
-    }
-
-    // Settings------------------------------------------------------------------------------------
-    private void showSettingsActivity() {
-        this.startActivity(PreferencesActivity.newIntent(this));
-    }
-
-    // Backup--------------------------------------------------------------------------------------
-    private void showBackupActivity() {
-        this.startActivity(BackupActivity.newIntent(this));
-    }
-
-    @Override
-    protected int layoutResource() {
-        return R.layout.myseries;
-    }
-
-    @Override
-    protected boolean isTopLevel() {
-        return true;
-    }
-
-    @Override
-    protected void init() {
-        App.updateSeriesService().withHandler(new Handler());
-
-        Object retained = this.getLastNonConfigurationInstance();
-        if ((retained != null) && (retained instanceof StateHolder)) {
-            this.state = (StateHolder) retained;
-            this.messageLauncher = this.state.messageLauncher;
-        } else {
-            this.state = new StateHolder();
-            this.messageLauncher = new MessageLauncher(this);
-            this.state.messageLauncher = this.messageLauncher;
-            this.launchAutomaticUpdate();
-        }
-    }
-
-    @Override
-    protected CharSequence title() {
-        return this.getText(R.string.my_series);
     }
 }

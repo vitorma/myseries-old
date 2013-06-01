@@ -4,7 +4,9 @@ import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.myseries.MySeriesActivity;
+import mobi.myseries.gui.shared.MessageLauncher;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -38,6 +40,9 @@ public abstract class BaseActivity extends Activity {
         //layout
         this.setContentView(R.layout.activity_base);
         this.includeChildView();
+
+        //state
+        this.loadState();
 
         //init
         this.init();
@@ -143,5 +148,69 @@ public abstract class BaseActivity extends Activity {
         super.onConfigurationChanged(newConfig);
 
         this.mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    //TODO (Cleber) Remove all the code below ASAP -----------------------------------------------------------------------------------------
+
+    public void showDialog(Dialog dialog) {
+        this.state.dialog = dialog;
+        this.state.dialog.show();
+    }
+
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        return this.state;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        this.state.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        this.state.onStop();
+    }
+
+    private void loadState() {
+        Object retainedState = this.getLastNonConfigurationInstance();
+
+        if (retainedState != null) {
+            this.state = (State) retainedState;
+        } else {
+            this.state = new State();
+            this.state.messageLauncher = new MessageLauncher(this);
+        }
+    }
+
+    private State state;
+
+    private static class State {
+        private Dialog dialog;
+        private boolean isShowingDialog;
+        private MessageLauncher messageLauncher;
+
+        private void onStart() {
+            if (this.isShowingDialog) {
+                this.dialog.show();
+            }
+
+            this.messageLauncher.loadState();
+        }
+
+        private void onStop() {
+            if (this.dialog != null && this.dialog.isShowing()) {
+                this.isShowingDialog = true;
+                this.dialog.dismiss();
+            } else {
+                this.isShowingDialog = false;
+            }
+
+            this.messageLauncher.onStop();
+        }
     }
 }

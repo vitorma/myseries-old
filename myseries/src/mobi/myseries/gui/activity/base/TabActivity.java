@@ -8,6 +8,7 @@ public abstract class TabActivity extends BaseActivity implements TabAdapter.Lis
     private static final String SELECTED_TAB = "selectedTab";
 
     private int selectedTab;
+    private TabAdapter tabAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public abstract class TabActivity extends BaseActivity implements TabAdapter.Lis
 
     private void setUpActionBar() {
         this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        new TabAdapter(this, this.tabDefinitions(), this.selectedTab).register(this);
+
+        this.tabAdapter = new TabAdapter(this, this.tabDefinitions(), this.selectedTab);
+        this.tabAdapter.register(this);
     }
 }

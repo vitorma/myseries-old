@@ -280,12 +280,6 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         }
     }
 
-    /* ScheduleAdapter.Holder */
-
-    public static interface Holder {
-        public ScheduleAdapter adapterForMode(int scheduleMode);
-    }
-
     /* ScheduleListener */
 
     @Override

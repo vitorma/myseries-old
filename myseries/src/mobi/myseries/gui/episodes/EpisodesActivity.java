@@ -25,11 +25,9 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.activity.base.BaseActivity;
-import mobi.myseries.gui.shared.MessageLauncher;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,8 +41,6 @@ public class EpisodesActivity extends BaseActivity {
         public String EPISODE_NUMBER = "episodeNumber";
     }
 
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
-
     private int seriesId;
     private int seasonNumber;
     private int episodeNumber;
@@ -52,9 +48,6 @@ public class EpisodesActivity extends BaseActivity {
 
     private EpisodePagerAdapter adapter;
     private ViewPager pager;
-
-    private StateHolder state;
-    private MessageLauncher messageLauncher;
 
     public static Intent newIntent(Context context, int seriesId, int seasonNumber, int episodeNumber) {
         Intent intent = new Intent(context, EpisodesActivity.class);
@@ -67,42 +60,6 @@ public class EpisodesActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        this.loadState();
-    }
-
-    private void loadState() {
-        this.messageLauncher.loadState();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        this.messageLauncher.onStop();
-    }
-
-    @Override
-    public Object onRetainNonConfigurationInstance() {
-        return this.state;
-    }
-
-    /* STATE HOLDER */
-    private static class StateHolder {
-        MessageLauncher messageLauncher;
-    }
-
-    @Override
-    protected int layoutResource() {
-        return R.layout.activity_base_paged;
-    }
-
-    @Override
-    protected boolean isTopLevel() {
-        return false;
-    }
-
-    @Override
     protected void init() {
         Bundle extras = this.getIntent().getExtras();
 
@@ -110,7 +67,7 @@ public class EpisodesActivity extends BaseActivity {
         this.seasonNumber = extras.getInt(Extra.SEASON_NUMBER);
         this.episodeNumber = extras.getInt(Extra.EPISODE_NUMBER);
 
-        Series series = SERIES_PROVIDER.getSeries(this.seriesId);
+        Series series = App.seriesProvider().getSeries(this.seriesId);
 
         if (series == null) {
             this.finish();
@@ -127,20 +84,20 @@ public class EpisodesActivity extends BaseActivity {
 
         Episode current = series.season(this.seasonNumber).episode(this.episodeNumber);
         this.pager.setCurrentItem(this.adapter.positionOf(current));
-
-        Object retained = this.getLastNonConfigurationInstance();
-        if ((retained != null) && (retained instanceof StateHolder)) {
-            this.state = (StateHolder) retained;
-            this.messageLauncher = this.state.messageLauncher;
-        } else {
-            this.state = new StateHolder();
-            this.messageLauncher = new MessageLauncher(this);
-            this.state.messageLauncher = this.messageLauncher;
-        }
     }
 
     @Override
     protected CharSequence title() {
         return this.title;
+    }
+
+    @Override
+    protected int layoutResource() {
+        return R.layout.activity_base_paged;
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return false;
     }
 }

@@ -28,31 +28,17 @@ import mobi.myseries.gui.activity.base.TabActivity;
 import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
-import mobi.myseries.gui.shared.MessageLauncher;
 import android.app.Dialog;
 
 public class AddSeriesActivity extends TabActivity {
     private static final int TRENDING_TAB = 0;
 
-    private State state;
+    @Override
+    protected void init() { /* There's nothing to initialize */ }
 
     @Override
-    public Object onRetainNonConfigurationInstance() {
-        return this.state;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        this.state.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        this.state.onStop();
+    protected CharSequence title() {
+        return this.getText(R.string.add_series);
     }
 
     @Override
@@ -61,22 +47,10 @@ public class AddSeriesActivity extends TabActivity {
     }
 
     @Override
-    protected void init() {
-        Object retainedState = this.getLastNonConfigurationInstance();
-
-        if (retainedState != null) {
-            this.state = (State) retainedState;
-        } else {
-            this.state = new State();
-            this.state.messageLauncher = new MessageLauncher(this);
-        }
-    }
-
-    @Override
     protected TabDefinition[] tabDefinitions() {
         return new TabDefinition[] {
-                new TabDefinition(R.string.trending, new TrendingFragment()),
-                new TabDefinition(R.string.search, new SearchFragment())
+            new TabDefinition(R.string.trending, new TrendingFragment()),
+            new TabDefinition(R.string.search, new SearchFragment())
         };
     }
 
@@ -86,12 +60,12 @@ public class AddSeriesActivity extends TabActivity {
     }
 
     void onSearchFailure(int searchFailureTitleResourceId, int searchFailureMessageResourceId) {
-        this.state.dialog = new FailureDialogBuilder(this)
-            .setTitle(searchFailureTitleResourceId)
-            .setMessage(searchFailureMessageResourceId)
-            .build();
-
-        this.state.dialog.show();
+        this.showDialog(
+            new FailureDialogBuilder(this)
+                .setTitle(searchFailureTitleResourceId)
+                .setMessage(searchFailureMessageResourceId)
+                .build()
+        );
     }
 
     void onRequestAdd(Series seriesToAdd) {
@@ -99,6 +73,7 @@ public class AddSeriesActivity extends TabActivity {
 
         if (App.followSeriesService().follows(seriesToAdd)) {
             String messageFormat = this.getString(R.string.add_already_followed_series_message);
+
             dialog = new FailureDialogBuilder(this)
                 .setMessage(String.format(messageFormat, seriesToAdd.name()))
                 .build();
@@ -112,38 +87,6 @@ public class AddSeriesActivity extends TabActivity {
                 .build();
         }
 
-        dialog.show();
-
-        this.state.dialog = dialog;
-    }
-
-    private static class State {
-        private Dialog dialog;
-        private boolean isShowingDialog;
-        private MessageLauncher messageLauncher;
-
-        private void onStart() {
-            if (this.isShowingDialog) {
-                this.dialog.show();
-            }
-
-            this.messageLauncher.loadState();
-        }
-
-        private void onStop() {
-            if (this.dialog != null && this.dialog.isShowing()) {
-                this.isShowingDialog = true;
-                this.dialog.dismiss();
-            } else {
-                this.isShowingDialog = false;
-            }
-
-            this.messageLauncher.onStop();
-        }
-    }
-
-    @Override
-    protected CharSequence title() {
-        return this.getText(R.string.add_series);
+        this.showDialog(dialog);
     }
 }
