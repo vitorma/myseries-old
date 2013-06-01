@@ -24,9 +24,15 @@ package mobi.myseries.gui.addseries;
 import mobi.myseries.R;
 import mobi.myseries.gui.activity.base.TabActivity;
 import mobi.myseries.gui.activity.base.TabDefinition;
+import android.content.Context;
+import android.content.Intent;
 
 public class AddSeriesActivity extends TabActivity {
     private static final int TRENDING_TAB = 0;
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, AddSeriesActivity.class);
+    }
 
     @Override
     protected void init() { /* There's nothing to initialize */ }

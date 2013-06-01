@@ -7,7 +7,6 @@ import mobi.myseries.gui.myseries.MySeriesActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -118,7 +117,7 @@ public abstract class BaseActivity extends Activity {
     private void selectItem(int position) {
         switch (position) {
             case MENU_ITEM_MYSERIES:
-                this.startActivity(new Intent(this, MySeriesActivity.class));
+                this.startActivity(MySeriesActivity.newIntent(this));
                 break;
             case MENU_ITEM_MYSCHEDULE:
                 this.startActivity(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT));

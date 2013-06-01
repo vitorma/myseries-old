@@ -33,8 +33,7 @@ import android.view.Menu;
 public class MyScheduleActivity extends TabActivity {
 
     public static Intent newIntent(Context context, int scheduleMode) {
-        return new Intent(context, MyScheduleActivity.class)
-            .putExtra(Extra.SCHEDULE_MODE, scheduleMode);
+        return new Intent(context, MyScheduleActivity.class).putExtra(Extra.SCHEDULE_MODE, scheduleMode);
     }
 
     @Override

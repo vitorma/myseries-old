@@ -50,6 +50,10 @@ import android.view.MenuItem;
 
 public class MySeriesActivity extends BaseActivity {
 
+    public static Intent newIntent(Context context) {
+        return new Intent(context, MySeriesActivity.class);
+    }
+
     /* FIXME (Cleber)
      * Check the behavior of updateDataIfNeeded.
      * Maybe would be needed save a boolean with onSaveInstanceState. Such method is better than onRetainNonConfigurationInstance,
@@ -77,11 +81,11 @@ public class MySeriesActivity extends BaseActivity {
     }
 
     // FIXME (Cleber) Menu should behave according to design guide, hiding most of the options when the side menu is open, for example.
-    // TODO  (Cleber) All activities should have a static newIntent
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(this.getString(R.string.menu_add)).setIcon(R.drawable.actionbar_add)
-            .setIntent(new Intent(this, AddSeriesActivity.class))
+            .setIntent(AddSeriesActivity.newIntent(this))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(this.getString(R.string.menu_remove)).setIcon(R.drawable.actionbar_remove)
