@@ -9,30 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
-        <RelativeLayout
+       <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/gap_medium"
             android:gravity="center" >
             
-            <CheckBox
-                android:id="@+id/radio0"
-                style="@style/checkbox"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toucharea_minimum_side"
-                android:paddingLeft="@dimen/gap_medium"
-                android:paddingRight="@dimen/gap_medium"
-                android:text="@string/update_on_wifi_or_data_plan"
-                android:textSize="@dimen/text_size_medium" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_below="@id/radio0"
-                android:layout_marginTop="@dimen/gap_small"
-                android:background="@drawable/list_divider_holo_light" />
-
+           
+            
             
         </RelativeLayout>
 

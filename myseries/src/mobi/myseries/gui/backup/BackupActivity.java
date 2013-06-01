@@ -31,8 +31,6 @@ import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.gui.activity.base.TabActivity;
 import mobi.myseries.gui.activity.base.TabDefinition;
-import mobi.myseries.gui.addseries.SearchFragment;
-import mobi.myseries.gui.addseries.TrendingFragment;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.accounts.Account;
 import android.app.ActionBar;
