@@ -22,13 +22,8 @@
 package mobi.myseries.gui.addseries;
 
 import mobi.myseries.R;
-import mobi.myseries.application.App;
-import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.activity.base.TabActivity;
 import mobi.myseries.gui.activity.base.TabDefinition;
-import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
-import mobi.myseries.gui.shared.FailureDialogBuilder;
-import android.app.Dialog;
 
 public class AddSeriesActivity extends TabActivity {
     private static final int TRENDING_TAB = 0;
@@ -49,46 +44,13 @@ public class AddSeriesActivity extends TabActivity {
     @Override
     protected TabDefinition[] tabDefinitions() {
         return new TabDefinition[] {
-            new TabDefinition(R.string.trending, new TrendingFragment()),
-            new TabDefinition(R.string.search, new SearchFragment())
+            new TabDefinition(R.string.trending, new SearchByTrendingFragment()),
+            new TabDefinition(R.string.search, new SearchByNameFragment())
         };
     }
 
     @Override
     protected int defaultSelectedTab() {
         return TRENDING_TAB;
-    }
-
-    //TODO (Cleber) Let AddFragment create these dialogs
-
-    void onSearchFailure(int searchFailureTitleResourceId, int searchFailureMessageResourceId) {
-        this.showDialog(
-            new FailureDialogBuilder(this)
-                .setTitle(searchFailureTitleResourceId)
-                .setMessage(searchFailureMessageResourceId)
-                .build()
-        );
-    }
-
-    void onRequestAdd(Series seriesToAdd) {
-        Dialog dialog;
-
-        if (App.followSeriesService().follows(seriesToAdd)) {
-            String messageFormat = this.getString(R.string.add_already_followed_series_message);
-
-            dialog = new FailureDialogBuilder(this)
-                .setMessage(String.format(messageFormat, seriesToAdd.name()))
-                .build();
-        } else {
-            dialog = new ConfirmationDialogBuilder(this)
-                .setTitle(seriesToAdd.name())
-                .setMessage(seriesToAdd.overview())
-                .setSurrogateMessage(R.string.overview_unavailable)
-                .setPositiveButton(R.string.add, new AddButtonOnClickListener(seriesToAdd))
-                .setNegativeButton(R.string.dont_add, null)
-                .build();
-        }
-
-        this.showDialog(dialog);
     }
 }

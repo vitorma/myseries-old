@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mobi.myseries.gui.addseries;
+package mobi.myseries.gui.shared;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,6 +26,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+
 
 import android.content.Context;
 import android.graphics.Bitmap;

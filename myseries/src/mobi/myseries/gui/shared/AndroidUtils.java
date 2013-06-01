@@ -15,7 +15,7 @@
  *
  */
 
-package mobi.myseries.gui.addseries;
+package mobi.myseries.gui.shared;
 
 import java.io.File;
 import java.io.FileInputStream;

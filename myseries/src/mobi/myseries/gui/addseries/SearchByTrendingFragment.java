@@ -7,7 +7,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.search.SeriesSearchListener;
 import mobi.myseries.domain.model.Series;
 
-public class TrendingFragment extends AddSeriesFragment {
+public class SearchByTrendingFragment extends AddSeriesFragment {
 
     @Override
     protected boolean hasSearchPanel() {
@@ -49,19 +49,19 @@ public class TrendingFragment extends AddSeriesFragment {
         return new SeriesSearchListener() {
             @Override
             public void onStart() {
-                TrendingFragment.this.isSearching = true;
-                TrendingFragment.this.showProgress();
+                SearchByTrendingFragment.this.isSearching = true;
+                SearchByTrendingFragment.this.showProgress();
             }
 
             @Override
             public void onFinish() {
-                TrendingFragment.this.isSearching = false;
-                TrendingFragment.this.showResults();
+                SearchByTrendingFragment.this.isSearching = false;
+                SearchByTrendingFragment.this.showResults();
             }
 
             @Override
             public void onSucess(List<Series> results) {
-                TrendingFragment.this.setResults(results);
+                SearchByTrendingFragment.this.setResults(results);
             }
 
             @Override
