@@ -35,6 +35,15 @@ public class SeriesListFragment extends ListFragment {
     private SeriesListAdapter adapter;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.setRetainInstance(true);
+
+        this.setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -79,9 +88,10 @@ public class SeriesListFragment extends ListFragment {
     }
 
     private void setUpListAdapter() {
-        this.adapter = new SeriesListAdapter();
-
-        this.setListAdapter(this.adapter);
+        if (this.adapter == null) {
+            this.adapter = new SeriesListAdapter();
+            this.setListAdapter(this.adapter);
+        }
     }
 
     /* SeriesListAdapter.Listener */

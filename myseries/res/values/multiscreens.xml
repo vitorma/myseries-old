@@ -4,8 +4,8 @@
 
     <!-- Poster -->
 
-    <dimen name="poster_width_thumbnail">@dimen/coverflow_poster_width</dimen>
-    <dimen name="poster_height_thumbnail">@dimen/coverflow_poster_height</dimen>
+    <dimen name="poster_width_thumbnail">@dimen/poster_width_myseries_list</dimen>
+    <dimen name="poster_height_thumbnail">@dimen/poster_height_myseries_list</dimen>
     <dimen name="poster_width_myseries_list">51dp</dimen>
     <dimen name="poster_height_myseries_list">75dp</dimen>
     <dimen name="poster_width_myschedule">40dp</dimen>
@@ -16,16 +16,6 @@
     <dimen name="poster_height_series_details_land">118dp</dimen>
     <dimen name="banner_width">300dp</dimen>
     <dimen name="banner_height">55.4dp</dimen>
-
-    <!-- CoverFlow -->
-
-    <dimen name="coverflow_padding_vertical">8dp</dimen>
-    <dimen name="coverflow_padding_horizontal">16dp</dimen>
-    <dimen name="coverflow_poster_width">71dp</dimen>
-    <dimen name="coverflow_poster_height">105dp</dimen>
-    <dimen name="coverflow_reflection_gap">0dp</dimen>
-    <integer name="coverflow_reflection_percentage">30</integer>
-    <bool name="coverflow_reflection_enabled">true</bool>
 
     <!-- SlidingMenu -->
 

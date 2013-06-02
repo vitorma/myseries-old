@@ -1,24 +1,3 @@
-/*
- *   ScheduleFragment.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.gui.myschedule;
 
 import java.util.Map;
@@ -116,16 +95,23 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
+        MenuItem hideShowSpecialEpisodes = menu.findItem(R.id.hideShowSpecialEpisodes);
+        MenuItem hideShowSeenEpisodes = menu.findItem(R.id.hideShowSeenEpisodes);
+        MenuItem seriesToShow = menu.findItem(R.id.filterSeries);
+        MenuItem sortEpisodes = menu.findItem(R.id.sorting);
+
+        boolean showOptions = !this.activity().isDrawerOpen();
+
+        hideShowSpecialEpisodes.setVisible(showOptions);
+        hideShowSeenEpisodes.setVisible(showOptions && this.scheduleMode != ScheduleMode.NEXT);
+        seriesToShow.setVisible(showOptions);
+        sortEpisodes.setVisible(showOptions);
+
         boolean isShowingSpecialEpisodes = this.preferences.showSpecialEpisodes();
         boolean isShowingSeenEpisodes = this.preferences.showSeenEpisodes();
 
-        MenuItem hideShowSpecialEpisodes = menu.findItem(R.id.hideShowSpecialEpisodes);
-        MenuItem hideShowSeenEpisodes = menu.findItem(R.id.hideShowSeenEpisodes);
-
         hideShowSpecialEpisodes.setTitle(isShowingSpecialEpisodes ? R.string.hideSpecialEpisodes : R.string.showSpecialEpisodes);
         hideShowSeenEpisodes.setTitle(isShowingSeenEpisodes ? R.string.hideSeenEpisodes : R.string.showSeenEpisodes);
-
-        hideShowSeenEpisodes.setVisible(this.scheduleMode == ScheduleMode.NEXT ? false : true);
     }
 
     @Override
@@ -198,7 +184,11 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     }
 
     private void showDialog(Dialog dialog) {
-        ((MyScheduleActivity) this.getActivity()).showDialog(dialog);
+        this.activity().showDialog(dialog);
+    }
+
+    private MyScheduleActivity activity() {
+        return (MyScheduleActivity) this.getActivity();
     }
 
     private void setUpEmptyText() {
