@@ -45,8 +45,6 @@ public class MySeriesActivity extends BaseActivity {
         return true;
     }
 
-    // FIXME (Cleber) Menu should behave according to design guide, hiding most of the options when the side menu is open, for example.
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(this.getString(R.string.menu_add)).setIcon(R.drawable.actionbar_add)
