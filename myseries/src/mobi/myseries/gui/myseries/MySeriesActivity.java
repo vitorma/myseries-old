@@ -71,6 +71,19 @@ public class MySeriesActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        if (this.isDrawerOpen()) {
+            for (int i = 0; i < menu.size(); i++) {
+                menu.getItem(i).setVisible(false);
+            }
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(this.getString(R.string.menu_update))) {
             this.runManualUpdate();
