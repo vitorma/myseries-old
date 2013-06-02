@@ -92,6 +92,10 @@ public abstract class BaseActivity extends Activity {
     protected abstract boolean isTopLevel();
     protected abstract CharSequence title();
 
+    public boolean isDrawerOpen() {
+        return this.mDrawerLayout.isDrawerOpen(this.mDrawerList);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
