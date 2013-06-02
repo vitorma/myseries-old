@@ -21,11 +21,8 @@
 
 package mobi.myseries.gui.myseries;
 
-import java.util.Collection;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.backup.BackupActivity;
@@ -97,23 +94,24 @@ public class MySeriesActivity extends BaseActivity {
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(this.getString(R.string.menu_update))) {
-
-            final Context context = this;
-            final Collection<Series> followedSeries = App.seriesProvider().followedSeries();
-
-            if (followedSeries.isEmpty()) {
-                new ToastBuilder(context).setMessage(R.string.no_series_to_update).build().show();
-                return super.onMenuItemSelected(featureId, item);
-            }
-
-            App.updateSeriesService().updateData();
+            this.runManualUpdate();
+            return true;
         }
 
         if (item.getTitle().equals(this.getString(R.string.menu_remove))) {
             this.showRemoveDialog();
+            return true;
         }
 
         return super.onMenuItemSelected(featureId, item);
+    }
+
+    private void runManualUpdate() {
+        if (App.seriesProvider().followedSeries().isEmpty()) {
+            new ToastBuilder(this).setMessage(R.string.no_series_to_update).build().show();
+        } else {
+            App.updateSeriesService().updateData();
+        }
     }
 
     private void showRemoveDialog() {
