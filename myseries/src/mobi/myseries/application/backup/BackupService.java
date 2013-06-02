@@ -55,7 +55,7 @@ public class BackupService {
             result = backupTask.result();
 
             if (!result.success()) {
-                this.notifyListenersOfFailure((result.error()));
+                this.notifyListenersOfBackupFailure((result.error()));
                 return;
             }
         } catch (InterruptedException e) {
@@ -66,12 +66,12 @@ public class BackupService {
 
         } catch (ExecutionException e) {
             e.printStackTrace();
-            notifyListenersOfFailure((Exception) e.getCause());
+            notifyListenersOfBackupFailure((Exception) e.getCause());
             return;
 
         } catch (TimeoutException e) {
             e.printStackTrace();
-            notifyListenersOfFailure(new BackupTimeoutException(e));
+            notifyListenersOfBackupFailure(new BackupTimeoutException(e));
             return;
         }
         this.notifyListenersOfBackupSucess();
@@ -108,7 +108,7 @@ public class BackupService {
             if (result == null) {
                 notifyListenersOfBackupSucess();
             } else {
-                notifyListenersOfFailure(result.error());
+                notifyListenersOfBackupFailure(result.error());
             }
         }
     }
@@ -156,12 +156,12 @@ public class BackupService {
         });
     }
 
-    private void notifyListenersOfFailure(final Exception e) {
+    private void notifyListenersOfBackupFailure(final Exception e) {
         handler.post(new Runnable() {
             @Override
             public void run() {
                 for (BackupListener listener : listeners) {
-                    listener.onRestoreFailure(e);
+                    listener.onBackupFailure(e);
                 
                 }
             }

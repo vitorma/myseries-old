@@ -86,8 +86,6 @@ public class BackupActivity extends TabActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.messageLauncher = new MessageLauncher(this);
-
         App.backupService().withHandler(new Handler());
         this.dropbox = App.backupService().getDropboxHelper();
         this.accountManager = new GoogleAccountManager(this);
@@ -103,7 +101,7 @@ public class BackupActivity extends TabActivity{
 //        this.setupGoogleDriveRestoreButton();
 //        this.setupDropboxBackupButton();
 //        this.setupDropboxRestoreButton();
-//        this.setupBackupListener();
+          this.setupBackupListener();
         
         
 
@@ -152,13 +150,6 @@ public class BackupActivity extends TabActivity{
         App.backupService().register(backupListener);
     }
 
-    private void setupActionBar() {
-        ActionBar actionBar = this.getActionBar();
-
-        actionBar.setTitle(R.string.backup_restore);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
-    }
 
     private void setupViews() {
         this.SDCardBackupButton = (Button) this
@@ -354,7 +345,8 @@ public class BackupActivity extends TabActivity{
     @Override
     protected TabDefinition[] tabDefinitions() {
         return new TabDefinition[] {
-            new TabDefinition(R.string.backup_button, new BackupFragment()),
+            new TabDefinition(R.string.backup, new BackupFragment()),
+            new TabDefinition(R.string.restore, new RestoreFragment())
         };
     }
 

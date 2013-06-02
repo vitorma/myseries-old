@@ -1,5 +1,6 @@
 package mobi.myseries.gui.shared;
 
+import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import mobi.myseries.R;
@@ -197,7 +198,8 @@ public class MessageLauncher implements MessageServiceListener {
 
     @Override
     public void onRestoreFailure(Exception e) {
-        if(!(e instanceof UserRecoverableAuthIOException)) {
+        if(!(e instanceof UserRecoverableAuthIOException)
+             || e instanceof DropboxUnlinkedException) {
             this.dialogBuilder.setTitle(R.string.restore_failed_title);
             this.dialogBuilder.setMessage(R.string.restore_failed_message);
 
