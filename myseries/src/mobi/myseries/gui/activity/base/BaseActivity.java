@@ -137,10 +137,14 @@ public abstract class BaseActivity extends Activity {
     private void selectItem(int position) {
         switch (position) {
             case MENU_ITEM_MYSERIES:
-                this.startActivity(MySeriesActivity.newIntent(this));
+                if (!this.mTitle.equals(this.sideMenuItems[MENU_ITEM_MYSERIES])) {
+                    this.startActivity(MySeriesActivity.newIntent(this));
+                }
                 break;
             case MENU_ITEM_MYSCHEDULE:
-                this.startActivity(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT));
+                if (!this.mTitle.equals(this.sideMenuItems[MENU_ITEM_MYSCHEDULE])) {
+                    this.startActivity(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT));
+                }
                 break;
         }
 
