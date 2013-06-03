@@ -20,6 +20,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+//TODO (Cleber) Clean up
+
 public abstract class BaseActivity extends Activity {
     private static final int MENU_ITEM_MYSERIES = 0;
     private static final int MENU_ITEM_MYSCHEDULE = 1;
@@ -68,12 +70,26 @@ public abstract class BaseActivity extends Activity {
                 ) {
             @Override
             public void onDrawerClosed(View view) {
+                int color = BaseActivity.this.getResources().getColor(R.color.transparent);
+
+                for (int i=0; i < BaseActivity.this.sideMenuItems.length; i++) {
+                    BaseActivity.this.mDrawerList.getChildAt(i).setBackgroundColor(color);
+                }
+
                 BaseActivity.this.getActionBar().setTitle(BaseActivity.this.mTitle);
                 BaseActivity.this.invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
+                int color = BaseActivity.this.getResources().getColor(R.color.blue);
+
+                if (BaseActivity.this.mTitle.equals(BaseActivity.this.sideMenuItems[MENU_ITEM_MYSERIES])) {
+                    BaseActivity.this.mDrawerList.getChildAt(MENU_ITEM_MYSERIES).setBackgroundColor(color);
+                } else if (BaseActivity.this.mTitle.equals(BaseActivity.this.sideMenuItems[MENU_ITEM_MYSCHEDULE])) {
+                    BaseActivity.this.mDrawerList.getChildAt(MENU_ITEM_MYSCHEDULE).setBackgroundColor(color);
+                }
+
                 BaseActivity.this.getActionBar().setTitle(BaseActivity.this.mDrawerTitle);
                 BaseActivity.this.invalidateOptionsMenu();
             }
