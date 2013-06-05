@@ -46,6 +46,11 @@ public class MySeriesActivity extends BaseActivity {
     }
 
     @Override
+    protected CharSequence titleForSideMenu() {
+        return this.getText(R.string.nav_shows);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(this.getString(R.string.menu_add)).setIcon(R.drawable.actionbar_add)
             .setIntent(AddSeriesActivity.newIntent(this))

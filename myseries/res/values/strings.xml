@@ -72,10 +72,16 @@
 
     <!-- SideMenu -->
 
+    <string name="nav_shows">Shows</string>
+    <string name="nav_schedule">Schedule</string>
+    <string name="nav_statistics">Statistics</string>
+
     <string-array name="sidemenu_items_array">
-        <item>My Series</item>
-        <item>My Schedule</item>
+        <item>@string/nav_shows</item>
+        <item>@string/nav_schedule</item>
+        <item>@string/nav_statistics</item>
     </string-array>
+
     <string name="sidemenu_accessibility_open">Open navigation drawer</string>
     <string name="sidemenu_accessibility_close">Close navigation drawer</string>
 
