@@ -140,4 +140,8 @@ public class StatisticsActivity extends BaseActivity {
         return new Intent(context, StatisticsActivity.class);
     }
 
+    @Override
+    protected CharSequence titleForSideMenu() {
+        return this.getString(R.string.nav_statistics);
+    }
 }
