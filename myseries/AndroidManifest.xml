@@ -55,7 +55,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity android:name=".gui.statistics.StatisticsActivity" >
+        <activity android:name=".gui.statistics.MyStatisticsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
