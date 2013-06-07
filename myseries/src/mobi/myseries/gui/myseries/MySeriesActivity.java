@@ -52,14 +52,17 @@ public class MySeriesActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(this.getString(R.string.menu_add)).setIcon(R.drawable.actionbar_add)
+        menu.add(this.getString(R.string.menu_add)).setIcon(R.drawable.ic_action_add)
             .setIntent(AddSeriesActivity.newIntent(this))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(this.getString(R.string.menu_remove)).setIcon(R.drawable.actionbar_remove)
+        menu.add(this.getString(R.string.menu_remove)).setIcon(R.drawable.ic_action_remove)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(this.getString(R.string.menu_update)).setIcon(R.drawable.actionbar_update)
+        menu.add(this.getString(R.string.action_filter)).setIcon(R.drawable.ic_action_filter)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(this.getString(R.string.menu_update))
             .setIntent(UpdateActivity.newIntent(this))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 

@@ -51,6 +51,7 @@
     <string name="trending">TRENDING</string>
     <string name="powered_by_trakt">Powered by Trakt.tv</string>
     <string name="number_of_results_for_search_by_trending">%d series being watched right now</string>
+    <string name="action_filter">FILTER</string>
 
     <plurals name="plural_episode">
         <item quantity="one">episode</item>
