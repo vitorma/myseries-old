@@ -112,7 +112,7 @@
     <string name="series_name">Series name</string>
     <string name="settings">Settings</string>
     <string name="special_episodes">Special Episodes</string>
-    <string name="statistics">Statistics</string>
+    <string name="my_statistics">My Statistics</string>
     <string name="stop_following">Stop following</string>
     <string name="to_be_announced">To be announced</string>
     <string name="up_to_date">UP-TO-DATE</string>
@@ -171,6 +171,8 @@
 
     <!-- Preferences Activity -->
 
+    <string name="update_data_manually">UPDATE DATA MANUALLY</string>
+    <string name="update_now">Update now</string>
     <string name="update_data_automatically">UPDATE DATA AUTOMATICALLY</string>
     <string name="update_on_wifi">Only if a wifi connection is available</string>
     <string name="update_on_wifi_or_data_plan">When any connection is available</string>
@@ -181,8 +183,8 @@
 
     <string name="backup_description"><b>Backup</b> makes a copy of your actual following series to backup folder. \nTo <b>Restore</b> your series data, make sure that theres a valid backup file in backup folder.</string>
     <string name="backup_folder_file_path">Backup Folder: <b>%s</b></string>
-    <string name="backup_button">Backup</string>
-    <string name="restore_button">Restore</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
     <string name="overwrite_backup">This operation will overwrite your actual backup.</string>
     <string name="actual_following_series_will_be_replaced">This operation will replace your actual following series by the backup ones.</string>
     <string name="external_storage_not_available">External Storage not available</string>

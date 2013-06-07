@@ -5,7 +5,7 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.myseries.MySeriesActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
-import mobi.myseries.gui.statistics.StatisticsActivity;
+import mobi.myseries.gui.statistics.MyStatisticsActivity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Configuration;
@@ -135,7 +135,7 @@ public abstract class BaseActivity extends Activity {
                 }
                 break;
             case MENU_ITEM_MYSTATISTICS:
-                this.startActivity(StatisticsActivity.newIntent(this));
+                this.startActivity(MyStatisticsActivity.newIntent(this));
                 break;
         }
 

@@ -57,7 +57,7 @@ public class NotificationService {
     }
 
     private void notifyUpdateSuccess() {
-        this.notifyUpdateWithText("Update finished successfully.");  // XXX R.blablabla
+        this.notificationManager.cancel(UPDATE_NOTIFICATION_ID);
     }
 
     private void notifyUpdateFailed() {

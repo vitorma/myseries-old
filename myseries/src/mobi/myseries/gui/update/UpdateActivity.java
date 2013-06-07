@@ -1,28 +1,9 @@
-/*
- *   SettingsActivity.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-package mobi.myseries.gui.preferencesactivity;
+package mobi.myseries.gui.update;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.gui.preferences.PreferencesProvider;
+import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -34,7 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
-public class PreferencesActivity extends Activity {
+public class UpdateActivity extends Activity {
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, UpdateActivity.class);
+    }
+
+    private Button updateButton;
+
     private RadioGroup automaticUpdatesRadioGroup;
     private Button cancelButton;
     private Button saveButton;
@@ -43,11 +31,12 @@ public class PreferencesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.setContentView(R.layout.settings);
+        this.setContentView(R.layout.update);
         this.setResult(Activity.RESULT_CANCELED);
         this.setupActionBar();
         this.setupViews();
         this.loadSettings();
+        this.setUpUpdateButton();
         this.setUpCancelButton();
         this.setUpSaveButton();
     }
@@ -65,7 +54,6 @@ public class PreferencesActivity extends Activity {
                 (RadioGroup) this.findViewById(R.id.automaticUpdatesRadioGroup);
     }
 
-
     private void loadSettings() {
         PreferencesProvider settings = this.settingsProviderFor(this);
 
@@ -81,12 +69,22 @@ public class PreferencesActivity extends Activity {
         }
     }
 
+    private void setUpUpdateButton() {
+        this.updateButton = (Button) this.findViewById(R.id.updateButton);
+        this.updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdateActivity.this.runManualUpdate();
+            }
+        });
+    }
+
     private void setUpCancelButton() {
         this.cancelButton = (Button) this.findViewById(R.id.cancelButton);
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferencesActivity.this.finish();
+                UpdateActivity.this.finish();
 
             }
         });
@@ -98,7 +96,7 @@ public class PreferencesActivity extends Activity {
         this.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferencesActivity.this.save();
+                UpdateActivity.this.save();
 
             }
         });
@@ -144,13 +142,15 @@ public class PreferencesActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, PreferencesActivity.class);
-
-        return intent;
-    }
-
     private PreferencesProvider settingsProviderFor(Context context) {
         return new PreferencesProvider(context);
+    }
+
+    private void runManualUpdate() {
+        if (App.seriesProvider().followedSeries().isEmpty()) {
+            new ToastBuilder(this).setMessage(R.string.no_series_to_update).build().show();
+        } else {
+            App.updateSeriesService().updateData();
+        }
     }
 }
