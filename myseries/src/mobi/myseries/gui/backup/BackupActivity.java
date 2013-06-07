@@ -87,8 +87,6 @@ public class BackupActivity extends TabActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.backupService().withHandler(new Handler());
-        this.dropbox = App.backupService().getDropboxHelper();
-        this.accountManager = new GoogleAccountManager(this);
 
 //        this.setContentView(R.layout.backup);
 //        this.setResult(Activity.RESULT_CANCELED);
@@ -101,7 +99,7 @@ public class BackupActivity extends TabActivity{
 //        this.setupGoogleDriveRestoreButton();
 //        this.setupDropboxBackupButton();
 //        this.setupDropboxRestoreButton();
-          this.setupBackupListener();
+//          this.setupBackupListener();
         
         
 
