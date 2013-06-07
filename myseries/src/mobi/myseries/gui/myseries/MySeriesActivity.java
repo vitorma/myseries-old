@@ -5,8 +5,8 @@ import mobi.myseries.application.App;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.backup.BackupActivity;
-import mobi.myseries.gui.preferencesactivity.PreferencesActivity;
 import mobi.myseries.gui.shared.ToastBuilder;
+import mobi.myseries.gui.update.UpdateActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -60,7 +60,7 @@ public class MySeriesActivity extends BaseActivity {
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(this.getString(R.string.menu_update)).setIcon(R.drawable.actionbar_update)
-            .setIntent(PreferencesActivity.newIntent(this))
+            .setIntent(UpdateActivity.newIntent(this))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         menu.add(this.getString(R.string.menu_backup_restore))
