@@ -36,6 +36,11 @@ public class MyScheduleActivity extends TabActivity {
     }
 
     @Override
+    protected CharSequence titleForSideMenu() {
+        return this.getText(R.string.nav_schedule);
+    }
+
+    @Override
     protected TabDefinition[] tabDefinitions() {
         return new TabDefinition[] {
             new TabDefinition(R.string.recent, ScheduleFragment.newInstance(ScheduleMode.RECENT)),

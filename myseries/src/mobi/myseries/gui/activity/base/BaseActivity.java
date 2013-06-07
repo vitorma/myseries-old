@@ -5,6 +5,7 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.myseries.MySeriesActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
+import mobi.myseries.gui.statistics.MyStatisticsActivity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Configuration;
@@ -16,21 +17,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+//TODO (Cleber) Clean up: extract methods, objects, etc.
 
 public abstract class BaseActivity extends Activity {
     private static final int MENU_ITEM_MYSERIES = 0;
     private static final int MENU_ITEM_MYSCHEDULE = 1;
+    private static final int MENU_ITEM_MYSTATISTICS = 2;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    private String[] sideMenuItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,46 +50,46 @@ public abstract class BaseActivity extends Activity {
         this.getActionBar().setHomeButtonEnabled(true);
         this.setTitle(this.title());
 
-        //sideMenu
-        this.mDrawerTitle = this.getText(R.string.app);
-        this.sideMenuItems = this.getResources().getStringArray(R.array.sidemenu_items_array);
+        //navigationDrawer
         this.mDrawerLayout = (DrawerLayout) this.findViewById(R.id.layout);
-        this.mDrawerList = (ListView) this.findViewById(R.id.drawer);
         this.mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        this.mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.activity_base_sidemenu_item, this.sideMenuItems));
-        this.mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        this.mDrawerToggle = new ActionBarDrawerToggle(
-                this,
-                this.mDrawerLayout,
-                R.drawable.ic_drawer,
-                R.string.sidemenu_accessibility_open,
-                R.string.sidemenu_accessibility_close
-                ) {
-            @Override
-            public void onDrawerClosed(View view) {
-                BaseActivity.this.getActionBar().setTitle(BaseActivity.this.mTitle);
-                BaseActivity.this.invalidateOptionsMenu();
-            }
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                BaseActivity.this.getActionBar().setTitle(BaseActivity.this.mDrawerTitle);
-                BaseActivity.this.invalidateOptionsMenu();
-            }
-        };
+        this.mDrawerList = (ListView) this.findViewById(R.id.drawer);
+        this.mDrawerList.setAdapter(new NavigationDrawerAdapter(this));
+        this.mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        this.mDrawerToggle = new NavigationDrawerToggle(this, this.mDrawerLayout);
         if (!this.isTopLevel()) { this.mDrawerToggle.setDrawerIndicatorEnabled(false); }
         this.mDrawerLayout.setDrawerListener(this.mDrawerToggle);
     }
 
-    private void includeChildView() {
-        LinearLayout root = (LinearLayout) this.findViewById(R.id.content);
-        this.getLayoutInflater().inflate(this.layoutResource(), root);
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        this.mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        this.mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        this.getActionBar().setTitle(title);
     }
 
     protected abstract void init();
+    protected abstract CharSequence title();
     protected abstract int layoutResource();
     protected abstract boolean isTopLevel();
-    protected abstract CharSequence title();
+
+    protected CharSequence titleForSideMenu() {
+        return "";
+    }
 
     public boolean isDrawerOpen() {
         return this.mDrawerLayout.isDrawerOpen(this.mDrawerList);
@@ -111,6 +110,11 @@ public abstract class BaseActivity extends Activity {
         }
     }
 
+    private void includeChildView() {
+        LinearLayout root = (LinearLayout) this.findViewById(R.id.content);
+        this.getLayoutInflater().inflate(this.layoutResource(), root);
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -121,36 +125,22 @@ public abstract class BaseActivity extends Activity {
     private void selectItem(int position) {
         switch (position) {
             case MENU_ITEM_MYSERIES:
-                this.startActivity(MySeriesActivity.newIntent(this));
+                if (this.getClass() != MySeriesActivity.class) {
+                    this.startActivity(MySeriesActivity.newIntent(this));
+                }
                 break;
             case MENU_ITEM_MYSCHEDULE:
-                this.startActivity(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT));
+                if (this.getClass() != MyScheduleActivity.class) {
+                    this.startActivity(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT));
+                }
+                break;
+            case MENU_ITEM_MYSTATISTICS:
+                this.startActivity(MyStatisticsActivity.newIntent(this));
                 break;
         }
 
         this.mDrawerList.setItemChecked(position, true);
         this.mDrawerLayout.closeDrawer(this.mDrawerList);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        this.mTitle = title;
-
-        this.getActionBar().setTitle(this.mTitle);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        this.mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        this.mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     //TODO (Cleber) Remove all the code below ASAP -----------------------------------------------------------------------------------------

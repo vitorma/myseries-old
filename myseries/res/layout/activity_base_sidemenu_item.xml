@@ -1,11 +1,8 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+    android:id="@+id/item"
+    style="@style/TextView.XLarge"
     android:gravity="center_vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:textColor="#fff"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+    android:paddingLeft="0dp"
+    android:paddingRight="56dp"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toucharea_minimum_side"/>

@@ -72,10 +72,16 @@
 
     <!-- SideMenu -->
 
+    <string name="nav_shows">Shows</string>
+    <string name="nav_schedule">Schedule</string>
+    <string name="nav_statistics">Statistics</string>
+
     <string-array name="sidemenu_items_array">
-        <item>My Series</item>
-        <item>My Schedule</item>
+        <item>@string/nav_shows</item>
+        <item>@string/nav_schedule</item>
+        <item>@string/nav_statistics</item>
     </string-array>
+
     <string name="sidemenu_accessibility_open">Open navigation drawer</string>
     <string name="sidemenu_accessibility_close">Close navigation drawer</string>
 
@@ -106,6 +112,7 @@
     <string name="series_name">Series name</string>
     <string name="settings">Settings</string>
     <string name="special_episodes">Special Episodes</string>
+    <string name="my_statistics">My Statistics</string>
     <string name="stop_following">Stop following</string>
     <string name="to_be_announced">To be announced</string>
     <string name="up_to_date">UP-TO-DATE</string>
@@ -164,6 +171,8 @@
 
     <!-- Preferences Activity -->
 
+    <string name="update_data_manually">UPDATE DATA MANUALLY</string>
+    <string name="update_now">Update now</string>
     <string name="update_data_automatically">UPDATE DATA AUTOMATICALLY</string>
     <string name="update_on_wifi">Only if a wifi connection is available</string>
     <string name="update_on_wifi_or_data_plan">When any connection is available</string>
@@ -208,6 +217,22 @@
     <!-- AppWidget -->
     <string name="schedulewidget">MySeries - Schedule</string>
 
+    <!-- Statistics -->
+
+        <!-- series, seasons and episodes of a 'tv series' -->
+        <string name="series_uppercase">SERIES</string>
+        <string name="seasons_uppercase">SEASONS</string>
+        <string name="episodes_uppercase">EPISODES</string>
+        
+        <!-- watched as in 'watched episodes of a tv series' -->
+        <string name="series_watched" formatted="false">%d WATCHED</string>
+        <string name="seasons_watched" formatted="false">%d WATCHED</string>
+        <string name="episodes_watched" formatted="false">%d WATCHED</string>
+
+        <string name="total_runtime_format" formatted="false">%d days %d hours %d minutes</string>
+        <string name="total_runtime" >OF WATCHED EPISODES</string>
+        
+        
     <!-- Do not translate -->
     <string name="app">MySeries</string>
 

@@ -45,7 +45,10 @@ public class MySeriesActivity extends BaseActivity {
         return true;
     }
 
-    // FIXME (Cleber) Menu should behave according to design guide, hiding most of the options when the side menu is open, for example.
+    @Override
+    protected CharSequence titleForSideMenu() {
+        return this.getText(R.string.nav_shows);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,9 +60,6 @@ public class MySeriesActivity extends BaseActivity {
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(this.getString(R.string.menu_update)).setIcon(R.drawable.actionbar_update)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
-        menu.add(this.getString(R.string.menu_settings)).setIcon(R.drawable.actionbar_settings)
             .setIntent(PreferencesActivity.newIntent(this))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
@@ -71,26 +71,26 @@ public class MySeriesActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        if (item.getTitle().equals(this.getString(R.string.menu_update))) {
-            this.runManualUpdate();
-            return true;
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        if (this.isDrawerOpen()) {
+            for (int i = 0; i < menu.size(); i++) {
+                menu.getItem(i).setVisible(false);
+            }
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getTitle().equals(this.getString(R.string.menu_remove))) {
             this.showRemoveDialog();
             return true;
         }
 
         return super.onMenuItemSelected(featureId, item);
-    }
-
-    private void runManualUpdate() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
-            new ToastBuilder(this).setMessage(R.string.no_series_to_update).build().show();
-        } else {
-            App.updateSeriesService().updateData();
-        }
     }
 
     private void showRemoveDialog() {
