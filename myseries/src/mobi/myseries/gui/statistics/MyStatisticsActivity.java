@@ -32,6 +32,9 @@ public class MyStatisticsActivity extends BaseActivity {
     private TextView seriesWatched;
     private ProgressBar seriesWatchedProgressBar;
     private TextView watchedEpisodesRuntime;
+    private UpdateFinishListener updateListener;
+    private SeriesFollowingListener followListener;
+    private BackupListener backupListener;
 
     @Override
     protected void init() {
@@ -55,8 +58,7 @@ public class MyStatisticsActivity extends BaseActivity {
     }
 
     private void setupBackupListener() {
-        App.backupService().register(new BackupListener() {
-
+        this.backupListener = new BackupListener() {
             @Override
             public void onBackupFailure(Exception e) {
                 // I'm not interested }
@@ -81,11 +83,14 @@ public class MyStatisticsActivity extends BaseActivity {
             public void onStart() {
                 // I'm not interested
             }
-        });
+        };
+
+        App.backupService().register(this.backupListener);
     }
 
     private void setupFollowingSeriesListener() {
-        App.followSeriesService().register(new SeriesFollowingListener() {
+
+        this.followListener = new SeriesFollowingListener() {
             @Override
             public void onFollowing(Series followedSeries) {
                 MyStatisticsActivity.this.update();
@@ -110,16 +115,20 @@ public class MyStatisticsActivity extends BaseActivity {
             public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
                 MyStatisticsActivity.this.update();
             }
-        });
+        };
+
+        App.followSeriesService().register(this.followListener);
     }
 
     private void setupUpdateFinishedListener() {
-        App.updateSeriesService().register(new UpdateFinishListener() {
+        this.updateListener = new UpdateFinishListener() {
             @Override
             public void onUpdateFinish() {
                 MyStatisticsActivity.this.update();
             }
-        });
+        };
+
+        App.updateSeriesService().register(this.updateListener);
     }
 
     private void setupViews() {
