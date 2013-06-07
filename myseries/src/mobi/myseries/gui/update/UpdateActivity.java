@@ -31,7 +31,7 @@ public class UpdateActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.setContentView(R.layout.settings);
+        this.setContentView(R.layout.update);
         this.setResult(Activity.RESULT_CANCELED);
         this.setupActionBar();
         this.setupViews();
