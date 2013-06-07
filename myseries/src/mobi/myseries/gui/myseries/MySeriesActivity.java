@@ -60,9 +60,6 @@ public class MySeriesActivity extends BaseActivity {
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(this.getString(R.string.menu_update)).setIcon(R.drawable.actionbar_update)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
-        menu.add(this.getString(R.string.menu_settings)).setIcon(R.drawable.actionbar_settings)
             .setIntent(PreferencesActivity.newIntent(this))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
@@ -88,25 +85,12 @@ public class MySeriesActivity extends BaseActivity {
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        if (item.getTitle().equals(this.getString(R.string.menu_update))) {
-            this.runManualUpdate();
-            return true;
-        }
-
         if (item.getTitle().equals(this.getString(R.string.menu_remove))) {
             this.showRemoveDialog();
             return true;
         }
 
         return super.onMenuItemSelected(featureId, item);
-    }
-
-    private void runManualUpdate() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
-            new ToastBuilder(this).setMessage(R.string.no_series_to_update).build().show();
-        } else {
-            App.updateSeriesService().updateData();
-        }
     }
 
     private void showRemoveDialog() {

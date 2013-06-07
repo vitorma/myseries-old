@@ -22,7 +22,9 @@
 package mobi.myseries.gui.preferencesactivity;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.gui.preferences.PreferencesProvider;
+import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -35,7 +37,13 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 
 public class PreferencesActivity extends Activity {
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, PreferencesActivity.class);
+    }
+
     private RadioGroup automaticUpdatesRadioGroup;
+    private Button updateButton;
     private Button cancelButton;
     private Button saveButton;
 
@@ -48,6 +56,7 @@ public class PreferencesActivity extends Activity {
         this.setupActionBar();
         this.setupViews();
         this.loadSettings();
+        this.setUpUpdateButton();
         this.setUpCancelButton();
         this.setUpSaveButton();
     }
@@ -79,6 +88,16 @@ public class PreferencesActivity extends Activity {
             this.automaticUpdatesRadioGroup.check(R.id.wifiOnlyRadioButton);
 
         }
+    }
+
+    private void setUpUpdateButton() {
+        this.updateButton = (Button) this.findViewById(R.id.updateButton);
+        this.updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PreferencesActivity.this.runManualUpdate();
+            }
+        });
     }
 
     private void setUpCancelButton() {
@@ -144,13 +163,15 @@ public class PreferencesActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, PreferencesActivity.class);
-
-        return intent;
-    }
-
     private PreferencesProvider settingsProviderFor(Context context) {
         return new PreferencesProvider(context);
+    }
+
+    private void runManualUpdate() {
+        if (App.seriesProvider().followedSeries().isEmpty()) {
+            new ToastBuilder(this).setMessage(R.string.no_series_to_update).build().show();
+        } else {
+            App.updateSeriesService().updateData();
+        }
     }
 }

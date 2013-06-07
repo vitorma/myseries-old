@@ -171,6 +171,8 @@
 
     <!-- Preferences Activity -->
 
+    <string name="update_data_manually">UPDATE DATA MANUALLY</string>
+    <string name="update_now">Update now</string>
     <string name="update_data_automatically">UPDATE DATA AUTOMATICALLY</string>
     <string name="update_on_wifi">Only if a wifi connection is available</string>
     <string name="update_on_wifi_or_data_plan">When any connection is available</string>
