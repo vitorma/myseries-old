@@ -8,13 +8,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <FrameLayout
         android:background="@drawable/card"
         android:gravity="center"
-        android:padding="@dimen/gap_medium"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:background="@drawable/list_selector_holo_light"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -69,5 +74,6 @@
             android:layout_below="@id/seenEpisodes"/>
 
     </RelativeLayout>
+    </FrameLayout>
 
 </LinearLayout>
