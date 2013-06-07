@@ -29,6 +29,8 @@ import mobi.myseries.application.backup.DriveBackup;
 import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.backup.SdcardBackup;
+import mobi.myseries.gui.activity.base.TabActivity;
+import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.accounts.Account;
 import android.app.ActionBar;
@@ -46,14 +48,12 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
-
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
-public class BackupActivity extends Activity {
+public class BackupActivity extends TabActivity{
 
     enum Operation {
         BACKUPING, RESTORING
@@ -62,6 +62,8 @@ public class BackupActivity extends Activity {
     enum Event {
         DRIVE_AUTHORIZATION, DROPBOX_AUTHORIZATION
     }
+    
+    private static final int BACKUP_TAB = 0;
 
     private Spinner gDriveAccountSpinner;
     private Button gDriveBackupButton;
@@ -84,24 +86,20 @@ public class BackupActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.messageLauncher = new MessageLauncher(this);
-
         App.backupService().withHandler(new Handler());
-        this.dropbox = App.backupService().getDropboxHelper();
-        this.accountManager = new GoogleAccountManager(this);
 
-        this.setContentView(R.layout.backup);
-        this.setResult(Activity.RESULT_CANCELED);
-        this.setupActionBar();
-        this.setupViews();
-        this.setupSdCardBackupButton();
-        this.setupSDCardRestoreButton();
-        this.setupGoogleDriveAccountSpinner();
-        this.setupGoogleDriveBackupButton();
-        this.setupGoogleDriveRestoreButton();
-        this.setupDropboxBackupButton();
-        this.setupDropboxRestoreButton();
-        this.setupBackupListener();
+//        this.setContentView(R.layout.backup);
+//        this.setResult(Activity.RESULT_CANCELED);
+//        this.setupActionBar();
+//        this.setupViews();
+//        this.setupSdCardBackupButton();
+//        this.setupSDCardRestoreButton();
+//        this.setupGoogleDriveAccountSpinner();
+//        this.setupGoogleDriveBackupButton();
+//        this.setupGoogleDriveRestoreButton();
+//        this.setupDropboxBackupButton();
+//        this.setupDropboxRestoreButton();
+//          this.setupBackupListener();
         
         
 
@@ -150,13 +148,6 @@ public class BackupActivity extends Activity {
         App.backupService().register(backupListener);
     }
 
-    private void setupActionBar() {
-        ActionBar actionBar = this.getActionBar();
-
-        actionBar.setTitle(R.string.backup_restore);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
-    }
 
     private void setupViews() {
         this.SDCardBackupButton = (Button) this
@@ -334,5 +325,31 @@ public class BackupActivity extends Activity {
         this.currentMode = backupMode;
         this.operation = Operation.RESTORING;
         App.backupService().restoreBackup(backupMode);
+    }
+
+    @Override
+    protected void init() { /* There's nothing to initialize */ }
+
+    @Override
+    protected CharSequence title() {
+        return this.getText(R.string.backup_restore);
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return false;
+    }
+
+    @Override
+    protected TabDefinition[] tabDefinitions() {
+        return new TabDefinition[] {
+            new TabDefinition(R.string.backup, new BackupFragment()),
+            new TabDefinition(R.string.restore, new RestoreFragment())
+        };
+    }
+
+    @Override
+    protected int defaultSelectedTab() {
+        return BACKUP_TAB;
     }
 }

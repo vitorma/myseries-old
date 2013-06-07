@@ -31,7 +31,6 @@ public class BackupServiceListener implements BackupListener {
     @Override
     public void onStart() {
         // TODO Auto-generated method stub
-
     }
 
 }

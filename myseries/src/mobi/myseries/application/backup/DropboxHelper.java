@@ -109,13 +109,15 @@ public class DropboxHelper {
         return prefs;
     }
 
-    public void onResume() {
+    public boolean onResume() {
         AndroidAuthSession session = api.getSession();
         if (session.authenticationSuccessful()) {
             session.finishAuthentication();
             TokenPair tokens = session.getAccessTokenPair();
             this.storeKeys(tokens.key, tokens.secret);
+            return true;
         }
+        return false;
     }
 
 }

@@ -183,8 +183,8 @@
 
     <string name="backup_description"><b>Backup</b> makes a copy of your actual following series to backup folder. \nTo <b>Restore</b> your series data, make sure that theres a valid backup file in backup folder.</string>
     <string name="backup_folder_file_path">Backup Folder: <b>%s</b></string>
-    <string name="backup_button">Backup</string>
-    <string name="restore_button">Restore</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
     <string name="overwrite_backup">This operation will overwrite your actual backup.</string>
     <string name="actual_following_series_will_be_replaced">This operation will replace your actual following series by the backup ones.</string>
     <string name="external_storage_not_available">External Storage not available</string>

@@ -9,5 +9,4 @@ public class OperationResult {
         this.error = e;
         return this;
     }
-
 }
