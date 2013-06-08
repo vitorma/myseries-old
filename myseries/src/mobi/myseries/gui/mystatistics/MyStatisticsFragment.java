@@ -1,4 +1,4 @@
-package mobi.myseries.gui.statistics;
+package mobi.myseries.gui.mystatistics;
 
 import java.util.Collection;
 
@@ -9,21 +9,20 @@ import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.SeasonSet;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.activity.base.BaseActivity;
-import android.content.Context;
-import android.content.Intent;
+import android.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-//TODO(Reul): cleanups
-public class MyStatisticsActivity extends BaseActivity {
+public class MyStatisticsFragment extends Fragment {
 
-    public static Intent newIntent(Context context) {
-        return new Intent(context, MyStatisticsActivity.class);
-    }
-
+    private BackupListener backupListener;
     private TextView episodesWatched;
     private ProgressBar episodesWatchedProgressBar;
+    private SeriesFollowingListener followListener;
     private TextView numberOfEpisodes;
     private TextView numberOfSeasons;
     private TextView numberOfSeries;
@@ -31,14 +30,15 @@ public class MyStatisticsActivity extends BaseActivity {
     private ProgressBar seasonsWatchedProgressBar;
     private TextView seriesWatched;
     private ProgressBar seriesWatchedProgressBar;
-    private TextView watchedEpisodesRuntime;
     private UpdateFinishListener updateListener;
-    private SeriesFollowingListener followListener;
-    private BackupListener backupListener;
+    private TextView watchedEpisodesRuntime;
 
     @Override
-    protected void init() {
-        this.setupViews();
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        super.onActivityCreated(savedInstanceState);
+
+        this.prepareViews();
 
         this.setupFollowingSeriesListener();
         this.setupUpdateFinishedListener();
@@ -48,13 +48,35 @@ public class MyStatisticsActivity extends BaseActivity {
     }
 
     @Override
-    protected boolean isTopLevel() {
-        return true;
+    public void onCreate(Bundle savedInstanceState) {
+        this.setRetainInstance(true);
+
+        super.onCreate(savedInstanceState);
     }
 
     @Override
-    protected int layoutResource() {
-        return R.layout.statistics;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.mystatistics_fragment, container, false);
+    }
+
+    private void prepareViews() {
+        this.numberOfSeries = (TextView) this.getActivity().findViewById(R.id.numberOfSeries);
+        this.numberOfSeasons = (TextView) this.getActivity().findViewById(R.id.numberOfSeasons);
+        this.numberOfEpisodes = (TextView) this.getActivity().findViewById(R.id.numberOfEpisodes);
+
+        this.seriesWatched = (TextView) this.getActivity().findViewById(R.id.seriesWatched);
+        this.seasonsWatched = (TextView) this.getActivity().findViewById(R.id.seasonsWatched);
+        this.episodesWatched = (TextView) this.getActivity().findViewById(R.id.episodesWatched);
+
+        this.seriesWatchedProgressBar = (ProgressBar) this.getActivity()
+            .findViewById(R.id.seriesWatchedProgressBar);
+        this.seasonsWatchedProgressBar = (ProgressBar) this.getActivity()
+            .findViewById(R.id.seasonsWatchedProgressBar);
+        this.episodesWatchedProgressBar = (ProgressBar) this.getActivity()
+            .findViewById(R.id.episodesWatchedProgressBar);
+
+        this.watchedEpisodesRuntime = (TextView) this.getActivity().findViewById(
+            R.id.watchedRuntime);
     }
 
     private void setupBackupListener() {
@@ -71,12 +93,12 @@ public class MyStatisticsActivity extends BaseActivity {
 
             @Override
             public void onRestoreFailure(Exception e) {
-                MyStatisticsActivity.this.update();
+                MyStatisticsFragment.this.update();
             }
 
             @Override
             public void onRestoreSucess() {
-                MyStatisticsActivity.this.update();
+                MyStatisticsFragment.this.update();
             }
 
             @Override
@@ -86,6 +108,7 @@ public class MyStatisticsActivity extends BaseActivity {
         };
 
         App.backupService().register(this.backupListener);
+
     }
 
     private void setupFollowingSeriesListener() {
@@ -93,71 +116,43 @@ public class MyStatisticsActivity extends BaseActivity {
         this.followListener = new SeriesFollowingListener() {
             @Override
             public void onFollowing(Series followedSeries) {
-                MyStatisticsActivity.this.update();
+                MyStatisticsFragment.this.update();
             }
 
             @Override
             public void onFollowingFailure(Series series, Exception e) {
-                MyStatisticsActivity.this.update();
+                MyStatisticsFragment.this.update();
             }
 
             @Override
             public void onFollowingStart(Series seriesToFollow) {
-                MyStatisticsActivity.this.update();
+                MyStatisticsFragment.this.update();
             }
 
             @Override
             public void onStopFollowing(Series unfollowedSeries) {
-                MyStatisticsActivity.this.update();
+                MyStatisticsFragment.this.update();
             }
 
             @Override
             public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
-                MyStatisticsActivity.this.update();
+                MyStatisticsFragment.this.update();
             }
         };
 
         App.followSeriesService().register(this.followListener);
+
     }
 
     private void setupUpdateFinishedListener() {
         this.updateListener = new UpdateFinishListener() {
             @Override
             public void onUpdateFinish() {
-                MyStatisticsActivity.this.update();
+                MyStatisticsFragment.this.update();
             }
         };
 
         App.updateSeriesService().register(this.updateListener);
-    }
-
-    private void setupViews() {
-        this.numberOfSeries = (TextView) this.findViewById(R.id.numberOfSeries);
-        this.numberOfSeasons = (TextView) this.findViewById(R.id.numberOfSeasons);
-        this.numberOfEpisodes = (TextView) this.findViewById(R.id.numberOfEpisodes);
-
-        this.seriesWatched = (TextView) this.findViewById(R.id.seriesWatched);
-        this.seasonsWatched = (TextView) this.findViewById(R.id.seasonsWatched);
-        this.episodesWatched = (TextView) this.findViewById(R.id.episodesWatched);
-
-        this.seriesWatchedProgressBar = (ProgressBar) this
-            .findViewById(R.id.seriesWatchedProgressBar);
-        this.seasonsWatchedProgressBar = (ProgressBar) this
-            .findViewById(R.id.seasonsWatchedProgressBar);
-        this.episodesWatchedProgressBar = (ProgressBar) this
-            .findViewById(R.id.episodesWatchedProgressBar);
-
-        this.watchedEpisodesRuntime = (TextView) this.findViewById(R.id.watchedRuntime);
-    }
-
-    @Override
-    protected CharSequence title() {
-        return this.getString(R.string.my_statistics);
-    }
-
-    @Override
-    protected CharSequence titleForSideMenu() {
-        return this.getString(R.string.nav_statistics);
     }
 
     private void update() {
