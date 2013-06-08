@@ -19,30 +19,19 @@ import android.widget.TextView;
 
 public class MyStatisticsFragment extends Fragment {
 
-    private TextView numberOfSeries;
-    private TextView numberOfSeasons;
-    private TextView numberOfEpisodes;
-    private TextView seriesWatched;
-    private TextView seasonsWatched;
-    private TextView episodesWatched;
-    private ProgressBar seriesWatchedProgressBar;
-    private ProgressBar seasonsWatchedProgressBar;
-    private ProgressBar episodesWatchedProgressBar;
-    private TextView watchedEpisodesRuntime;
-    private SeriesFollowingListener followListener;
-    private UpdateFinishListener updateListener;
     private BackupListener backupListener;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.mystatistics_fragment, container, false);
-    }
+    private TextView episodesWatched;
+    private ProgressBar episodesWatchedProgressBar;
+    private SeriesFollowingListener followListener;
+    private TextView numberOfEpisodes;
+    private TextView numberOfSeasons;
+    private TextView numberOfSeries;
+    private TextView seasonsWatched;
+    private ProgressBar seasonsWatchedProgressBar;
+    private TextView seriesWatched;
+    private ProgressBar seriesWatchedProgressBar;
+    private UpdateFinishListener updateListener;
+    private TextView watchedEpisodesRuntime;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -56,6 +45,114 @@ public class MyStatisticsFragment extends Fragment {
         this.setupBackupListener();
 
         this.update();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        this.setRetainInstance(true);
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.mystatistics_fragment, container, false);
+    }
+
+    private void prepareViews() {
+        this.numberOfSeries = (TextView) this.getActivity().findViewById(R.id.numberOfSeries);
+        this.numberOfSeasons = (TextView) this.getActivity().findViewById(R.id.numberOfSeasons);
+        this.numberOfEpisodes = (TextView) this.getActivity().findViewById(R.id.numberOfEpisodes);
+
+        this.seriesWatched = (TextView) this.getActivity().findViewById(R.id.seriesWatched);
+        this.seasonsWatched = (TextView) this.getActivity().findViewById(R.id.seasonsWatched);
+        this.episodesWatched = (TextView) this.getActivity().findViewById(R.id.episodesWatched);
+
+        this.seriesWatchedProgressBar = (ProgressBar) this.getActivity()
+            .findViewById(R.id.seriesWatchedProgressBar);
+        this.seasonsWatchedProgressBar = (ProgressBar) this.getActivity()
+            .findViewById(R.id.seasonsWatchedProgressBar);
+        this.episodesWatchedProgressBar = (ProgressBar) this.getActivity()
+            .findViewById(R.id.episodesWatchedProgressBar);
+
+        this.watchedEpisodesRuntime = (TextView) this.getActivity().findViewById(
+            R.id.watchedRuntime);
+    }
+
+    private void setupBackupListener() {
+        this.backupListener = new BackupListener() {
+            @Override
+            public void onBackupFailure(Exception e) {
+                // I'm not interested }
+            }
+
+            @Override
+            public void onBackupSucess() {
+                // I'm not interested
+            }
+
+            @Override
+            public void onRestoreFailure(Exception e) {
+                MyStatisticsFragment.this.update();
+            }
+
+            @Override
+            public void onRestoreSucess() {
+                MyStatisticsFragment.this.update();
+            }
+
+            @Override
+            public void onStart() {
+                // I'm not interested
+            }
+        };
+
+        App.backupService().register(this.backupListener);
+
+    }
+
+    private void setupFollowingSeriesListener() {
+
+        this.followListener = new SeriesFollowingListener() {
+            @Override
+            public void onFollowing(Series followedSeries) {
+                MyStatisticsFragment.this.update();
+            }
+
+            @Override
+            public void onFollowingFailure(Series series, Exception e) {
+                MyStatisticsFragment.this.update();
+            }
+
+            @Override
+            public void onFollowingStart(Series seriesToFollow) {
+                MyStatisticsFragment.this.update();
+            }
+
+            @Override
+            public void onStopFollowing(Series unfollowedSeries) {
+                MyStatisticsFragment.this.update();
+            }
+
+            @Override
+            public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
+                MyStatisticsFragment.this.update();
+            }
+        };
+
+        App.followSeriesService().register(this.followListener);
+
+    }
+
+    private void setupUpdateFinishedListener() {
+        this.updateListener = new UpdateFinishListener() {
+            @Override
+            public void onUpdateFinish() {
+                MyStatisticsFragment.this.update();
+            }
+        };
+
+        App.updateSeriesService().register(this.updateListener);
     }
 
     private void update() {
@@ -133,101 +230,5 @@ public class MyStatisticsFragment extends Fragment {
         this.watchedEpisodesRuntime.setText(String.format(
             this.getString(R.string.total_runtime_format), days, hours,
             minutes));
-    }
-
-    private void setupBackupListener() {
-        this.backupListener = new BackupListener() {
-            @Override
-            public void onBackupFailure(Exception e) {
-                // I'm not interested }
-            }
-
-            @Override
-            public void onBackupSucess() {
-                // I'm not interested
-            }
-
-            @Override
-            public void onRestoreFailure(Exception e) {
-                MyStatisticsFragment.this.update();
-            }
-
-            @Override
-            public void onRestoreSucess() {
-                MyStatisticsFragment.this.update();
-            }
-
-            @Override
-            public void onStart() {
-                // I'm not interested
-            }
-        };
-
-        App.backupService().register(this.backupListener);
-
-    }
-
-    private void setupUpdateFinishedListener() {
-        this.updateListener = new UpdateFinishListener() {
-            @Override
-            public void onUpdateFinish() {
-                MyStatisticsFragment.this.update();
-            }
-        };
-
-        App.updateSeriesService().register(this.updateListener);
-    }
-
-    private void setupFollowingSeriesListener() {
-
-        this.followListener = new SeriesFollowingListener() {
-            @Override
-            public void onFollowing(Series followedSeries) {
-                MyStatisticsFragment.this.update();
-            }
-
-            @Override
-            public void onFollowingFailure(Series series, Exception e) {
-                MyStatisticsFragment.this.update();
-            }
-
-            @Override
-            public void onFollowingStart(Series seriesToFollow) {
-                MyStatisticsFragment.this.update();
-            }
-
-            @Override
-            public void onStopFollowing(Series unfollowedSeries) {
-                MyStatisticsFragment.this.update();
-            }
-
-            @Override
-            public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
-                MyStatisticsFragment.this.update();
-            }
-        };
-
-        App.followSeriesService().register(this.followListener);
-
-    }
-
-    private void prepareViews() {
-        this.numberOfSeries = (TextView) this.getActivity().findViewById(R.id.numberOfSeries);
-        this.numberOfSeasons = (TextView) this.getActivity().findViewById(R.id.numberOfSeasons);
-        this.numberOfEpisodes = (TextView) this.getActivity().findViewById(R.id.numberOfEpisodes);
-
-        this.seriesWatched = (TextView) this.getActivity().findViewById(R.id.seriesWatched);
-        this.seasonsWatched = (TextView) this.getActivity().findViewById(R.id.seasonsWatched);
-        this.episodesWatched = (TextView) this.getActivity().findViewById(R.id.episodesWatched);
-
-        this.seriesWatchedProgressBar = (ProgressBar) this.getActivity()
-            .findViewById(R.id.seriesWatchedProgressBar);
-        this.seasonsWatchedProgressBar = (ProgressBar) this.getActivity()
-            .findViewById(R.id.seasonsWatchedProgressBar);
-        this.episodesWatchedProgressBar = (ProgressBar) this.getActivity()
-            .findViewById(R.id.episodesWatchedProgressBar);
-
-        this.watchedEpisodesRuntime = (TextView) this.getActivity().findViewById(
-            R.id.watchedRuntime);
     }
 }
