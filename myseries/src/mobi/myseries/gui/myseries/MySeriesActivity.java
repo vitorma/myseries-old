@@ -52,25 +52,9 @@ public class MySeriesActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(this.getString(R.string.menu_add)).setIcon(R.drawable.ic_action_add)
-            .setIntent(AddSeriesActivity.newIntent(this))
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        this.getMenuInflater().inflate(R.menu.myseries, menu);
 
-        menu.add(this.getString(R.string.menu_remove)).setIcon(R.drawable.ic_action_remove)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        menu.add(this.getString(R.string.action_filter)).setIcon(R.drawable.ic_action_filter)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        menu.add(this.getString(R.string.menu_update))
-            .setIntent(UpdateActivity.newIntent(this))
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
-        menu.add(this.getString(R.string.menu_backup_restore))
-            .setIntent(BackupActivity.newIntent(this))
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -87,13 +71,29 @@ public class MySeriesActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        if (item.getTitle().equals(this.getString(R.string.menu_remove))) {
-            this.showRemoveDialog();
-            return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.add:
+                this.startActivity(AddSeriesActivity.newIntent(this));
+                return true;
+            case R.id.remove:
+                this.showRemoveDialog();
+                return true;
+            case R.id.filter_episodes:
+                //TODO Implement
+                return true;
+            case R.id.filter_series:
+                //TODO Implement
+                return true;
+            case R.id.update:
+                this.startActivity(UpdateActivity.newIntent(this));
+                return true;
+            case R.id.backup_restore:
+                this.startActivity(BackupActivity.newIntent(this));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onMenuItemSelected(featureId, item);
     }
 
     private void showRemoveDialog() {

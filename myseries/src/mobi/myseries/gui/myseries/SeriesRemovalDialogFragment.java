@@ -28,7 +28,8 @@ public class SeriesRemovalDialogFragment extends DialogFragment {
             removalOptions.put(s, false);
         }
 
-        return new RemovingSeriesDialogBuilder(context).setDefaultRemovalOptions(removalOptions)
+        return new RemovingSeriesDialogBuilder(context)
+            .setDefaultRemovalOptions(removalOptions)
             .setOnRequestRemovalListener(new OnRequestRemovalListener() {
                 @Override
                 public void onRequestRemoval() {
