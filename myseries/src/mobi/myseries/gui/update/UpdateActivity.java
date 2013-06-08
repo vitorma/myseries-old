@@ -2,7 +2,8 @@ package mobi.myseries.gui.update;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.gui.preferences.PreferencesProvider;
+import mobi.myseries.gui.preferences.Preferences;
+import mobi.myseries.gui.preferences.UpdatePreferences;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -55,7 +56,7 @@ public class UpdateActivity extends Activity {
     }
 
     private void loadSettings() {
-        PreferencesProvider settings = this.settingsProviderFor(this);
+        UpdatePreferences settings = this.settingsProviderFor(this);
 
         if (!settings.updateAutomatically()) {
             this.automaticUpdatesRadioGroup.check(R.id.doNotUpdateRadioButton);
@@ -142,8 +143,8 @@ public class UpdateActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private PreferencesProvider settingsProviderFor(Context context) {
-        return new PreferencesProvider(context);
+    private UpdatePreferences settingsProviderFor(Context context) {
+        return Preferences.forUpdate();
     }
 
     private void runManualUpdate() {

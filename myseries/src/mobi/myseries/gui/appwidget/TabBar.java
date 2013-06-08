@@ -33,7 +33,7 @@ public class TabBar {
     }
 
     private void highlightSelectedTab(int appWidgetId) {
-        int scheduleMode = Preferences.forAppWidget(appWidgetId).scheduleMode();
+        int scheduleMode = Preferences.forScheduleWidget(appWidgetId).scheduleMode();
 
         switch (scheduleMode) {
             case ScheduleMode.RECENT:

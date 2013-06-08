@@ -1,116 +1,92 @@
-/*
- *   PrimitivePreferences.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.gui.preferences;
 
-import java.util.Collection;
-
-import mobi.myseries.application.App;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 public class PrimitivePreferences {
-    public static final String SUFFIX_SEPARATOR = ".";
+    public static final String SEPARATOR = ".";
+    private static final String DEFAULT_KEY_PREFIX = "";
     private static final String DEFAULT_KEY_SUFFIX = "";
 
+    private Context context;
     private String name;
+    private String keyPrefix;
     private String keySuffix;
 
-    public PrimitivePreferences(String name) {
+    public PrimitivePreferences(Context context, String name) {
+        Validate.isNonNull(context, "context");
         Validate.isNonBlank(name, "name");
 
+        this.context = context;
         this.name = name;
+        this.keyPrefix = DEFAULT_KEY_PREFIX;
         this.keySuffix = DEFAULT_KEY_SUFFIX;
     }
 
-    public PrimitivePreferences appendingSuffixToKeys(String suffix) {
+    public PrimitivePreferences addKeyPrefix(String prefix) {
+        Validate.isNonBlank(prefix, "prefix");
+
+        this.keyPrefix += prefix + SEPARATOR ;
+
+        return this;
+    }
+
+    public PrimitivePreferences addKeySuffix(String suffix) {
         Validate.isNonBlank(suffix, "suffix");
 
-        this.keySuffix += SUFFIX_SEPARATOR + suffix;
+        this.keySuffix += SEPARATOR + suffix;
 
         return this;
     }
 
     public int getInt(String key, int defaultValue) {
-        return this.getSharedPreferences()
-                   .getInt(this.compose(key), defaultValue);
+        return this.getSharedPreferences().getInt(this.compose(key), defaultValue);
     }
 
     public boolean getBoolean(String key, boolean defaultValue) {
-        return this.getSharedPreferences()
-                   .getBoolean(this.compose(key), defaultValue);
+        return this.getSharedPreferences().getBoolean(this.compose(key), defaultValue);
     }
-    
 
     public String getString(String key, String defaultValue) {
-        return this.getSharedPreferences()
-                   .getString(this.compose(key), defaultValue);
-    }
-
-    public Collection<String> getKeys() {
-        return this.getSharedPreferences().getAll().keySet();
+        return this.getSharedPreferences().getString(this.compose(key), defaultValue);
     }
 
     public void putInt(String key, int value) {
-        this.getEditor()
-            .putInt(this.compose(key), value)
-            .commit();
+        this.getEditor().putInt(this.compose(key), value).commit();
     }
 
     public void putBoolean(String key, boolean value) {
-        this.getEditor()
-            .putBoolean(this.compose(key), value)
-            .commit();
+        this.getEditor().putBoolean(this.compose(key), value).commit();
     }
-    
+
     public void putString(String key, String value) {
-        this.getEditor()
-            .putString(this.compose(key), value)
-            .commit();
+        this.getEditor().putString(this.compose(key), value).commit();
     }
 
     public void remove(String key) {
-        this.getEditor()
-            .remove(this.compose(key))
-            .commit();
+        this.getEditor().remove(this.compose(key)).commit();
     }
 
     public void clear() {
-        this.getEditor()
-            .clear()
-            .commit();
+        for (String key : this.getSharedPreferences().getAll().keySet()) {
+            if (key.startsWith(this.keyPrefix) && key.endsWith(this.keySuffix)) {
+                this.remove(key);
+            }
+        }
     }
 
     private SharedPreferences getSharedPreferences() {
-        return App.context().getSharedPreferences(this.name, Context.MODE_PRIVATE);
+        return this.context.getSharedPreferences(this.name, Context.MODE_PRIVATE);
     }
 
     private SharedPreferences.Editor getEditor() {
         return this.getSharedPreferences().edit();
     }
 
-    private String compose(String key) {
+    public String compose(String key) {
         Validate.isNonBlank(key, "key");
 
-        return key + this.keySuffix;
+        return this.keyPrefix + key + this.keySuffix;
     }
 }

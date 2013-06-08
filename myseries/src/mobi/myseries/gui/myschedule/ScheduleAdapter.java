@@ -31,7 +31,7 @@ import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
+import mobi.myseries.gui.preferences.MySchedulePreferences;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
@@ -167,21 +167,21 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     public void sortBy(int sortMode) {
         if (this.preferences.sortMode() != sortMode) {
-            this.preferences.setSortMode(sortMode);
+            this.preferences.putSortMode(sortMode);
             this.reload();
         }
     }
 
     public void hideOrShowSpecialEpisodes(boolean showSpecialEpisodes) {
         if (this.preferences.showSpecialEpisodes() != showSpecialEpisodes) {
-            this.preferences.setIfShowSpecialEpisodes(showSpecialEpisodes);
+            this.preferences.putIfShowSpecialEpisodes(showSpecialEpisodes);
             this.reload();
         }
     }
 
     public void hideOrShowSeenEpisodes(boolean showSeenEpisodes) {
         if (this.preferences.showSeenEpisodes() != showSeenEpisodes) {
-            this.preferences.setIfShowSeenEpisodes(showSeenEpisodes);
+            this.preferences.putIfShowSeenEpisodes(showSeenEpisodes);
             this.reload();
         }
     }
@@ -191,7 +191,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
         for (Series s: seriesFilterOptions.keySet()) {
             if (this.preferences.showSeries(s.id()) != seriesFilterOptions.get(s)) {
-                this.preferences.setIfShowSeries(s.id(), seriesFilterOptions.get(s));
+                this.preferences.putIfShowSeries(s.id(), seriesFilterOptions.get(s));
                 needReload = true;
             }
         }

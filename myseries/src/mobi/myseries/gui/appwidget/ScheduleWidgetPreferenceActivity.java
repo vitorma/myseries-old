@@ -7,7 +7,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.preferences.Preferences;
-import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
+import mobi.myseries.gui.preferences.ScheduleWidgetPreferences;
 import mobi.myseries.gui.shared.SortMode;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -36,7 +36,7 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
     }
 
     private int appWidgetId;
-    private AppWidgetPreferences preferences;
+    private ScheduleWidgetPreferences preferences;
     private RadioGroup sortModeRadioGroup;
     private CheckedTextView showSpecialEpisodes;
     private CheckedTextView showSeenEpisodes;
@@ -63,7 +63,7 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
         if (this.appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             this.finish();
         } else {
-            this.preferences = Preferences.forAppWidget(this.appWidgetId);
+            this.preferences = Preferences.forScheduleWidget(this.appWidgetId);
         }
     }
 
@@ -178,25 +178,25 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
     private void saveSortModePreference() {
         switch (this.sortModeRadioGroup.getCheckedRadioButtonId()) {
             case R.id.oldest_first:
-                this.preferences.setSortMode(SortMode.OLDEST_FIRST);
+                this.preferences.putSortMode(SortMode.OLDEST_FIRST);
                 break;
             case R.id.newest_first:
-                this.preferences.setSortMode(SortMode.NEWEST_FIRST);
+                this.preferences.putSortMode(SortMode.NEWEST_FIRST);
                 break;
         }
     }
 
     private void saveSpecialEpisodesPreference() {
-        this.preferences.setIfShowSpecialEpisodes(this.showSpecialEpisodes.isChecked());
+        this.preferences.putIfShowSpecialEpisodes(this.showSpecialEpisodes.isChecked());
     }
 
     private void saveSeenEpisodesPreference() {
-        this.preferences.setIfShowSeenEpisodes(this.showSeenEpisodes.isChecked());
+        this.preferences.putIfShowSeenEpisodes(this.showSeenEpisodes.isChecked());
     }
 
     private void saveSeriesToShowPreference() {
         for (Series s : this.seriesToShow.keySet()) {
-            this.preferences.setIfShowSeries(s.id(), this.seriesToShow.get(s).isChecked());
+            this.preferences.putIfShowSeries(s.id(), this.seriesToShow.get(s).isChecked());
         }
     }
 

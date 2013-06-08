@@ -39,7 +39,7 @@ public class ActionBar {
     }
 
     private PendingIntent scheduleIntentFrom(int appWidgetId) {
-        int scheduleMode = Preferences.forAppWidget(appWidgetId).scheduleMode();
+        int scheduleMode = Preferences.forScheduleWidget(appWidgetId).scheduleMode();
 
         Intent intent = MyScheduleActivity.newIntent(this.context, scheduleMode);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

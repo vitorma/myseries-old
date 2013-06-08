@@ -1,53 +1,75 @@
-/*
- *   Preferences.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.gui.preferences;
 
 import java.util.Collection;
 
+import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.preferences.SchedulePreferences.AppWidgetPreferences;
-import mobi.myseries.gui.preferences.SchedulePreferences.MySchedulePreferences;
 
 public class Preferences {
+    private static final String PREFERENCES_NAME = "mobi.myseries.preferences";
+    private static final String PREFERENCES_NAME_APPWIDGET = "mobi.myseries.preferences.appwidget";
+
+    private static final String KEY_PREFIX_MYSERIES = "MySeries";
+    private static final String KEY_PREFIX_MYSCHEDULE = "MySchedule";
+    private static final String KEY_PREFIX_UPDATE = "Update";
+    private static final String KEY_PREFIX_BACKUP_RESTORE = "BackupRestore";
+    private static final String KEY_PREFIX_SCHEDULEWIDGET = "ScheduleWidget";
+
+    /* For activities */
+
+    public static PrimitivePreferences forActivities() {
+        return new PrimitivePreferences(App.context(), PREFERENCES_NAME);
+    }
+
+    public static MySeriesPreferences forMySeries() {
+        return new MySeriesPreferences(forActivities().addKeyPrefix(KEY_PREFIX_MYSERIES));
+    }
+
+    public static MySchedulePreferences forMySchedule() {
+        return new MySchedulePreferences(forActivities().addKeyPrefix(KEY_PREFIX_MYSCHEDULE));
+    }
 
     public static MySchedulePreferences forMySchedule(int scheduleMode) {
-        return SchedulePreferences.forMySchedule().suffixingKeysWith(scheduleMode);
+        return new MySchedulePreferences(forActivities().addKeyPrefix(KEY_PREFIX_MYSCHEDULE).addKeyPrefix(String.valueOf(scheduleMode)));
     }
 
-    public static AppWidgetPreferences forAppWidget(int appWidgetId) {
-        return SchedulePreferences.forAppWidget().suffixingKeysWith(appWidgetId);
+    public static UpdatePreferences forUpdate() {
+        return new UpdatePreferences(forActivities().addKeyPrefix(KEY_PREFIX_UPDATE));
     }
+
+    public static BackupPreferences forBackupRestore() {
+        return new BackupPreferences(forActivities().addKeyPrefix(KEY_PREFIX_BACKUP_RESTORE));
+    }
+
+    /* For app widgets */
+
+    public static PrimitivePreferences forAppWidgets() {
+        return new PrimitivePreferences(App.context(), PREFERENCES_NAME_APPWIDGET);
+    }
+
+    public static ScheduleWidgetPreferences forScheduleWidget() {
+        return new ScheduleWidgetPreferences(forAppWidgets().addKeyPrefix(KEY_PREFIX_SCHEDULEWIDGET));
+    }
+
+    public static ScheduleWidgetPreferences forScheduleWidget(int appWidgetId) {
+        return new ScheduleWidgetPreferences(forAppWidgets().addKeyPrefix(KEY_PREFIX_SCHEDULEWIDGET).addKeyPrefix(String.valueOf(appWidgetId)));
+    }
+
+    /* Removal */
 
     public static void removeEntriesRelatedToSeries(Series series) {
-        SchedulePreferences.forMySchedule().removeEntriesRelatedToSeries(series);
-        SchedulePreferences.forAppWidget().removeEntriesRelatedToSeries(series);
+        forMySeries().removeEntriesRelatedToSeries(series);
+        forMySchedule().removeEntriesRelatedToSeries(series);
+        forScheduleWidget().removeEntriesRelatedToSeries(series);
     }
 
     public static void removeEntriesRelatedToAllSeries(Collection<Series> series) {
-        SchedulePreferences.forMySchedule().removeEntriesRelatedToAllSeries(series);
-        SchedulePreferences.forAppWidget().removeEntriesRelatedToAllSeries(series);
+        forMySeries().removeEntriesRelatedToAllSeries(series);
+        forMySchedule().removeEntriesRelatedToAllSeries(series);
+        forScheduleWidget().removeEntriesRelatedToAllSeries(series);
     }
 
     public static void removeEntriesRelatedToAppWidget(int appWidgetId) {
-        SchedulePreferences.forAppWidget().removeEntriesRelatedToAppWidget(appWidgetId);
+        forScheduleWidget(appWidgetId).clear();
     }
 }

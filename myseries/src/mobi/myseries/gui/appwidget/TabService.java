@@ -31,7 +31,7 @@ public class TabService extends IntentService {
         int appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
         int scheduleMode = intent.getExtras().getInt(Extra.SCHEDULE_MODE);
 
-        Preferences.forAppWidget(appWidgetId).setScheduleMode(scheduleMode);
+        Preferences.forScheduleWidget(appWidgetId).putScheduleMode(scheduleMode);
 
         new BroadcastService(this.getApplicationContext()).broadcastUpdate();
     }
