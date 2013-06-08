@@ -1,4 +1,4 @@
-package mobi.myseries.gui.preferences;
+package mobi.myseries.application.preferences;
 
 public class BackupPreferences {
     private static final String ACCOUNT = "Account";

@@ -2,8 +2,7 @@ package mobi.myseries.gui.update;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.gui.preferences.Preferences;
-import mobi.myseries.gui.preferences.UpdatePreferences;
+import mobi.myseries.application.preferences.UpdatePreferences;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -144,7 +143,7 @@ public class UpdateActivity extends Activity {
     }
 
     private UpdatePreferences settingsProviderFor(Context context) {
-        return Preferences.forUpdate();
+        return App.preferences().forUpdate();
     }
 
     private void runManualUpdate() {

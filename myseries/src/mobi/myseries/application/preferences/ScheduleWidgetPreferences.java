@@ -1,4 +1,4 @@
-package mobi.myseries.gui.preferences;
+package mobi.myseries.application.preferences;
 
 import mobi.myseries.application.schedule.ScheduleMode;
 

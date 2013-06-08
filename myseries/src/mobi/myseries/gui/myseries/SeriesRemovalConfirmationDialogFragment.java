@@ -5,7 +5,6 @@ import java.util.Collection;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.DialogButtonOnClickListener;
 import android.app.Dialog;
@@ -39,7 +38,7 @@ public class SeriesRemovalConfirmationDialogFragment extends DialogFragment {
                     //TODO (Cleber) Overload methods below so they can receive int[]
 
                     App.followSeriesService().stopFollowingAll(seriesToRemove);
-                    Preferences.removeEntriesRelatedToAllSeries(seriesToRemove);
+                    App.preferences().removeEntriesRelatedToAllSeries(seriesToRemove);
 
                     dialog.dismiss();
                 }

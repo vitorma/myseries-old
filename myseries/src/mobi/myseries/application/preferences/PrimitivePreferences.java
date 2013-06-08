@@ -1,4 +1,4 @@
-package mobi.myseries.gui.preferences;
+package mobi.myseries.application.preferences;
 
 import mobi.myseries.shared.Validate;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package mobi.myseries.gui.preferences;
+package mobi.myseries.application.preferences;
 
 public class UpdatePreferences {
     private static final String ENABLE_AUTOMATIC_UPDATES_KEY = "automaticUpdateEnabled";

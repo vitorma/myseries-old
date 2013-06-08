@@ -1,4 +1,4 @@
-package mobi.myseries.gui.preferences;
+package mobi.myseries.application.preferences;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -3,11 +3,10 @@ package mobi.myseries.gui.appwidget;
 import java.util.List;
 
 import mobi.myseries.application.App;
+import mobi.myseries.application.preferences.ScheduleWidgetPreferences;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.preferences.Preferences;
-import mobi.myseries.gui.preferences.ScheduleWidgetPreferences;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -68,7 +67,7 @@ public class ScheduleWidgetViewsFactory implements RemoteViewsService.RemoteView
     }
 
     private void loadEpisodes() {
-        ScheduleWidgetPreferences prefs = Preferences.forScheduleWidget(this.appWidgetId);
+        ScheduleWidgetPreferences prefs = App.preferences().forScheduleWidget(this.appWidgetId);
 
         int scheduleMode = prefs.scheduleMode();
         ScheduleSpecification specification = prefs.fullSpecification();

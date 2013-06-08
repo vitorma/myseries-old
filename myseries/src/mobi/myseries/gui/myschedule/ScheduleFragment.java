@@ -3,12 +3,12 @@ package mobi.myseries.gui.myschedule;
 import java.util.Map;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
+import mobi.myseries.application.preferences.MySchedulePreferences;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.episodes.EpisodesActivity;
-import mobi.myseries.gui.preferences.MySchedulePreferences;
-import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
@@ -45,10 +45,10 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
 
         this.setRetainInstance(true);
         this.scheduleMode = this.getArguments().getInt(Extra.SCHEDULE_MODE);
-        this.preferences = Preferences.forMySchedule(this.scheduleMode);
+        this.preferences = App.preferences().forMySchedule(this.scheduleMode);
 
         if (this.adapter == null) {
-            this.adapter = new ScheduleAdapter(this.scheduleMode, Preferences.forMySchedule(this.scheduleMode));
+            this.adapter = new ScheduleAdapter(this.scheduleMode, App.preferences().forMySchedule(this.scheduleMode));
             this.setListAdapter(this.adapter);
         }
 

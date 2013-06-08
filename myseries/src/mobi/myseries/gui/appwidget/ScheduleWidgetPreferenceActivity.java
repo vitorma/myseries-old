@@ -5,9 +5,8 @@ import java.util.Map;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.preferences.ScheduleWidgetPreferences;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.preferences.Preferences;
-import mobi.myseries.gui.preferences.ScheduleWidgetPreferences;
 import mobi.myseries.gui.shared.SortMode;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -63,7 +62,7 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
         if (this.appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             this.finish();
         } else {
-            this.preferences = Preferences.forScheduleWidget(this.appWidgetId);
+            this.preferences = App.preferences().forScheduleWidget(this.appWidgetId);
         }
     }
 

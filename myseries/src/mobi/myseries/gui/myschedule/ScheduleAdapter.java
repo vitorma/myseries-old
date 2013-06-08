@@ -27,11 +27,11 @@ import java.util.Map;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.preferences.MySchedulePreferences;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.preferences.MySchedulePreferences;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;

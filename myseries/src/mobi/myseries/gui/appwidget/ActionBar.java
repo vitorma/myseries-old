@@ -1,9 +1,9 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.myseries.MySeriesActivity;
-import mobi.myseries.gui.preferences.Preferences;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -39,7 +39,7 @@ public class ActionBar {
     }
 
     private PendingIntent scheduleIntentFrom(int appWidgetId) {
-        int scheduleMode = Preferences.forScheduleWidget(appWidgetId).scheduleMode();
+        int scheduleMode = App.preferences().forScheduleWidget(appWidgetId).scheduleMode();
 
         Intent intent = MyScheduleActivity.newIntent(this.context, scheduleMode);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
