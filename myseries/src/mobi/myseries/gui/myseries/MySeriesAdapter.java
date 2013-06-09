@@ -3,8 +3,11 @@ package mobi.myseries.gui.myseries;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -100,7 +103,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         viewHolder.seenEpisodesBar.updateWithEpisodesOf(series);
     }
 
-    private void reload() {
+    public void reload() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
@@ -124,7 +127,14 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpData() {
-        this.items = new ArrayList<Series>(App.seriesProvider().followedSeries());
+        Map<Series,Boolean> filterOptions = App.preferences().forMySeries().seriesToShow();
+        this.items = new LinkedList<Series>();
+
+        for (Entry<Series,Boolean> option : filterOptions.entrySet()) {
+            if (option.getValue()) {
+                this.items.add(option.getKey());
+            }
+        }
 
         for (Series s : this.items) {
             s.register(this.seriesListener);

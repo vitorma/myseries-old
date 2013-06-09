@@ -6,6 +6,8 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.series.SeriesActivity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +53,8 @@ public class MySeriesFragment extends Fragment {
         if (this.adapter.isLoading()) {
             this.adapterListener.onStartLoading();
         }
+
+        App.preferences().forActivities().register(this.preferencesListener);
     }
 
     @Override
@@ -58,6 +62,7 @@ public class MySeriesFragment extends Fragment {
         super.onStop();
 
         this.adapter.deregister(this.adapterListener);
+        App.preferences().forActivities().register(this.preferencesListener);
     }
 
     private void prepareViews() {
@@ -84,7 +89,7 @@ public class MySeriesFragment extends Fragment {
 
     /* MySeriesAdapter.Listener */
 
-    MySeriesAdapter.Listener adapterListener = new MySeriesAdapter.Listener() {
+    private MySeriesAdapter.Listener adapterListener = new MySeriesAdapter.Listener() {
         @Override
         public void onStartLoading() {
             MySeriesFragment.this.showsGrid.setVisibility(View.INVISIBLE);
@@ -103,6 +108,15 @@ public class MySeriesFragment extends Fragment {
                 MySeriesFragment.this.showsGrid.setVisibility(View.VISIBLE);
                 MySeriesFragment.this.empty.setVisibility(View.INVISIBLE);
             }
+        }
+    };
+
+    /* SharedPreferences.OnSharedPreferenceChangeListener */
+
+    private OnSharedPreferenceChangeListener preferencesListener = new OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            MySeriesFragment.this.adapter.reload();
         }
     };
 }

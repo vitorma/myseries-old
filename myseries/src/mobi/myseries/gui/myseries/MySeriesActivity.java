@@ -83,7 +83,7 @@ public class MySeriesActivity extends BaseActivity {
                 //TODO Implement
                 return true;
             case R.id.filter_series:
-                //TODO Implement
+                this.showSeriesFilterDialog();
                 return true;
             case R.id.update:
                 this.startActivity(UpdateActivity.newIntent(this));
@@ -101,6 +101,14 @@ public class MySeriesActivity extends BaseActivity {
             new ToastBuilder(this).setMessage(R.string.no_series_to_remove).build().show();
         } else {
             new SeriesRemovalDialogFragment().show(this.getFragmentManager(), "removalDialog");
+        }
+    }
+
+    private void showSeriesFilterDialog() {
+        if (App.seriesProvider().followedSeries().isEmpty()) {
+            new ToastBuilder(this).setMessage(R.string.no_series_to_filter).build().show();
+        } else {
+            new SeriesFilterDialogFragment().show(this.getFragmentManager(), "filterDialog");
         }
     }
 }

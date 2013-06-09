@@ -1,10 +1,12 @@
 package mobi.myseries.application.preferences;
 
+import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
-public class PrimitivePreferences {
+public class PrimitivePreferences implements Publisher<SharedPreferences.OnSharedPreferenceChangeListener>{
     public static final String SEPARATOR = ".";
     private static final String DEFAULT_KEY_PREFIX = "";
     private static final String DEFAULT_KEY_SUFFIX = "";
@@ -88,5 +90,17 @@ public class PrimitivePreferences {
         Validate.isNonBlank(key, "key");
 
         return this.keyPrefix + key + this.keySuffix;
+    }
+
+    @Override
+    public boolean register(OnSharedPreferenceChangeListener listener) {
+        this.getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+        return true;
+    }
+
+    @Override
+    public boolean deregister(OnSharedPreferenceChangeListener listener) {
+        this.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener);
+        return true;
     }
 }
