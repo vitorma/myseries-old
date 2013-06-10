@@ -80,7 +80,7 @@ public class MySeriesActivity extends BaseActivity {
                 this.showRemoveDialog();
                 return true;
             case R.id.filter_episodes:
-                //TODO Implement
+                this.showEpisodeFilterDialog();
                 return true;
             case R.id.filter_series:
                 this.showSeriesFilterDialog();
@@ -108,7 +108,15 @@ public class MySeriesActivity extends BaseActivity {
         if (App.seriesProvider().followedSeries().isEmpty()) {
             new ToastBuilder(this).setMessage(R.string.no_series_to_filter).build().show();
         } else {
-            new SeriesFilterDialogFragment().show(this.getFragmentManager(), "filterDialog");
+            new SeriesFilterDialogFragment().show(this.getFragmentManager(), "seriesFilterDialog");
+        }
+    }
+
+    private void showEpisodeFilterDialog() {
+        if (App.seriesProvider().followedSeries().isEmpty()) {
+            new ToastBuilder(this).setMessage(R.string.no_episodes_to_count).build().show();
+        } else {
+            new EpisodeFilterDialogFragment().show(this.getFragmentManager(), "episodeFilterDialog");
         }
     }
 }

@@ -40,6 +40,7 @@
     <string name="no_series_selected_to_remove">No series selected to remove.</string>
     <string name="no_series_to_remove">No series to remove.</string>
     <string name="no_series_to_filter">No series to filter.</string>
+    <string name="no_episodes_to_count">No episodes to count.</string>
     <string name="add_success">%s successfully added.</string>
     <string name="relative_time_today">Today</string>
     <string name="relative_time_tomorrow">Tomorrow</string>
@@ -216,6 +217,13 @@
     <string name="menu_backup_restore">BACKUP / RESTORE</string>
     <string name="menu_schedule">SCHEDULE</string>
     <string name="menu_help">HELP</string>
+
+    <string name="include_special_episodes">Include special episodes</string>
+    <string name="include_unaired_episodes">Include unaired episodes</string>
+    <string-array name="action_episodes_to_count_array">
+        <item>@string/include_special_episodes</item>
+        <item>@string/include_unaired_episodes</item>
+    </string-array>
 
     <!-- AppWidget -->
     <string name="schedulewidget">MySeries - Schedule</string>

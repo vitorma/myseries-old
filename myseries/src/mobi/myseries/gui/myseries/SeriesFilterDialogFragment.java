@@ -13,6 +13,7 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 
 public class SeriesFilterDialogFragment extends DialogFragment {
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Map<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(new SeriesComparator());
