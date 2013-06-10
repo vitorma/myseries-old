@@ -1,9 +1,9 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.gui.episodes.EpisodesActivity;
-import mobi.myseries.gui.preferences.Preferences;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -65,7 +65,7 @@ public class ScheduleWidget extends AppWidgetProvider {
         super.onDeleted(context, appWidgetIds);
 
         for (int appWidgetId : appWidgetIds) {
-            Preferences.removeEntriesRelatedToAppWidget(appWidgetId);
+            App.preferences().removeEntriesRelatedToAppWidget(appWidgetId);
 
             Log.d(TAG, "appwidget " + appWidgetId + " was deleted");
         }

@@ -28,6 +28,7 @@
     <string name="hideSeenEpisodes">Hide seen episodes</string>
     <string name="showSeenEpisodes">Show seen episodes</string>
     <string name="seriesToShow">Series to show</string>
+    <string name="episodesToCount">Episodes to count</string>
     <string name="showAll">Show all</string>
     <string name="showSelected">Show selected</string>
     <string name="unknown_date">Unknown date</string>
@@ -38,6 +39,9 @@
     <string name="cannot_be_undone">This removal cannot be undone.</string>
     <string name="no_series_selected_to_remove">No series selected to remove.</string>
     <string name="no_series_to_remove">No series to remove.</string>
+    <string name="no_series_to_filter">No series to filter.</string>
+    <string name="no_series_to_sort">No series to sort.</string>
+    <string name="no_episodes_to_count">No episodes to count.</string>
     <string name="add_success">%s successfully added.</string>
     <string name="relative_time_today">Today</string>
     <string name="relative_time_tomorrow">Tomorrow</string>
@@ -51,6 +55,8 @@
     <string name="trending">TRENDING</string>
     <string name="powered_by_trakt">Powered by Trakt.tv</string>
     <string name="number_of_results_for_search_by_trending">%d series being watched right now</string>
+    <string name="action_filter">FILTER</string>
+    <string name="series">series</string>
 
     <plurals name="plural_episode">
         <item quantity="one">episode</item>
@@ -69,6 +75,21 @@
     <string name="description_home_button">Home button</string>
     <string name="description_schedule_button">Schedule button</string>
     <string name="description_preferences_button">Preferences button</string>
+
+    <!-- SideMenu -->
+
+    <string name="nav_shows">Shows</string>
+    <string name="nav_schedule">Schedule</string>
+    <string name="nav_statistics">Statistics</string>
+
+    <string-array name="sidemenu_items_array">
+        <item>@string/nav_shows</item>
+        <item>@string/nav_schedule</item>
+        <item>@string/nav_statistics</item>
+    </string-array>
+
+    <string name="sidemenu_accessibility_open">Open navigation drawer</string>
+    <string name="sidemenu_accessibility_close">Close navigation drawer</string>
 
     <!-- Labels -->
 
@@ -97,6 +118,7 @@
     <string name="series_name">Series name</string>
     <string name="settings">Settings</string>
     <string name="special_episodes">Special Episodes</string>
+    <string name="my_statistics">My Statistics</string>
     <string name="stop_following">Stop following</string>
     <string name="to_be_announced">To be announced</string>
     <string name="up_to_date">UP-TO-DATE</string>
@@ -155,6 +177,8 @@
 
     <!-- Preferences Activity -->
 
+    <string name="update_data_manually">UPDATE DATA MANUALLY</string>
+    <string name="update_now">Update now</string>
     <string name="update_data_automatically">UPDATE DATA AUTOMATICALLY</string>
     <string name="update_on_wifi">Only if a wifi connection is available</string>
     <string name="update_on_wifi_or_data_plan">When any connection is available</string>
@@ -165,8 +189,8 @@
 
     <string name="backup_description"><b>Backup</b> makes a copy of your actual following series to backup folder. \nTo <b>Restore</b> your series data, make sure that theres a valid backup file in backup folder.</string>
     <string name="backup_folder_file_path">Backup Folder: <b>%s</b></string>
-    <string name="backup_button">Backup</string>
-    <string name="restore_button">Restore</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
     <string name="overwrite_backup">This operation will overwrite your actual backup.</string>
     <string name="actual_following_series_will_be_replaced">This operation will replace your actual following series by the backup ones.</string>
     <string name="external_storage_not_available">External Storage not available</string>
@@ -195,9 +219,39 @@
     <string name="menu_backup_restore">BACKUP / RESTORE</string>
     <string name="menu_schedule">SCHEDULE</string>
     <string name="menu_help">HELP</string>
+    <string name="action_sort">SORT</string>
+
+    <string name="include_special_episodes">Include special episodes</string>
+    <string name="include_unaired_episodes">Include unaired episodes</string>
+    <string-array name="action_episodes_to_count_array">
+        <item>@string/include_special_episodes</item>
+        <item>@string/include_unaired_episodes</item>
+    </string-array>
+
+    <string name="a_z">A-Z</string>
+    <string name="z_a">Z-A</string>
+    <string-array name="action_sort_series_array">
+        <item>@string/a_z</item>
+        <item>@string/z_a</item>
+    </string-array>
 
     <!-- AppWidget -->
     <string name="schedulewidget">MySeries - Schedule</string>
+
+    <!-- Statistics -->
+
+        <!-- series, seasons and episodes of a 'tv series' -->
+        <string name="series_uppercase">SERIES</string>
+        <string name="seasons_uppercase">SEASONS</string>
+        <string name="episodes_uppercase">EPISODES</string>
+        
+        <!-- watched as in 'watched episodes of a tv series' -->
+        <string name="series_watched" formatted="false">%d WATCHED</string>
+        <string name="seasons_watched" formatted="false">%d WATCHED</string>
+        <string name="episodes_watched" formatted="false">%d WATCHED</string>
+
+        <string name="total_runtime_format" formatted="false">%d days %d hours %d minutes</string>
+        <string name="total_runtime" >OF WATCHED EPISODES</string>
 
     <!-- Do not translate -->
     <string name="app">MySeries</string>

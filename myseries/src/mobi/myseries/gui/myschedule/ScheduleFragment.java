@@ -1,39 +1,33 @@
-/*
- *   ScheduleFragment.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.gui.myschedule;
 
+import java.util.Map;
+
 import mobi.myseries.R;
+import mobi.myseries.application.App;
+import mobi.myseries.application.preferences.MySchedulePreferences;
+import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
+import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
+import mobi.myseries.gui.shared.SortMode;
+import mobi.myseries.gui.shared.SortingDialogBuilder;
+import mobi.myseries.gui.shared.SortingDialogBuilder.OptionListener;
+import android.app.Dialog;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
 public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Listener {
     private int scheduleMode;
     private ScheduleAdapter adapter;
+    private MySchedulePreferences preferences;
 
     public static ScheduleFragment newInstance(int scheduleMode) {
         Bundle arguments = new Bundle();
@@ -49,7 +43,16 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.setRetainInstance(true);
         this.scheduleMode = this.getArguments().getInt(Extra.SCHEDULE_MODE);
+        this.preferences = App.preferences().forMySchedule(this.scheduleMode);
+
+        if (this.adapter == null) {
+            this.adapter = new ScheduleAdapter(this.scheduleMode, App.preferences().forMySchedule(this.scheduleMode));
+            this.setListAdapter(this.adapter);
+        }
+
+        this.setHasOptionsMenu(true);
     }
 
     @Override
@@ -58,7 +61,6 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
 
         this.setUpEmptyText();
         this.setUpItemClickListener();
-        this.setUpAdapter();
     }
 
     @Override
@@ -89,6 +91,106 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
         this.setListShown(true);
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem hideShowSpecialEpisodes = menu.findItem(R.id.hideShowSpecialEpisodes);
+        MenuItem hideShowSeenEpisodes = menu.findItem(R.id.hideShowSeenEpisodes);
+        MenuItem seriesToShow = menu.findItem(R.id.filterSeries);
+        MenuItem sortEpisodes = menu.findItem(R.id.sorting);
+
+        boolean showOptions = !this.activity().isDrawerOpen();
+
+        hideShowSpecialEpisodes.setVisible(showOptions);
+        hideShowSeenEpisodes.setVisible(showOptions && this.scheduleMode != ScheduleMode.NEXT);
+        seriesToShow.setVisible(showOptions);
+        sortEpisodes.setVisible(showOptions);
+
+        boolean isShowingSpecialEpisodes = this.preferences.showSpecialEpisodes();
+        boolean isShowingSeenEpisodes = this.preferences.showSeenEpisodes();
+
+        hideShowSpecialEpisodes.setTitle(isShowingSpecialEpisodes ? R.string.hideSpecialEpisodes : R.string.showSpecialEpisodes);
+        hideShowSeenEpisodes.setTitle(isShowingSeenEpisodes ? R.string.hideSeenEpisodes : R.string.showSeenEpisodes);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sorting:
+                this.showSortingDialog();
+                return true;
+            case R.id.hideShowSpecialEpisodes:
+                this.hideOrShowSpecialEpisodes();
+                return true;
+            case R.id.hideShowSeenEpisodes:
+                this.hideOrShowSeenEpisodes();
+                return true;
+            case R.id.filterSeries:
+                this.showFilterDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void hideOrShowSpecialEpisodes() {
+        boolean isShowingSpecialEpisodes = this.preferences.showSpecialEpisodes();
+
+        this.adapter.hideOrShowSpecialEpisodes(!isShowingSpecialEpisodes);
+    }
+
+    private void hideOrShowSeenEpisodes() {
+        boolean isShowingSeenEpisodes = this.preferences.showSeenEpisodes();
+
+        this.adapter.hideOrShowSeenEpisodes(!isShowingSeenEpisodes);
+    }
+
+    private void showSortingDialog() {
+        Dialog dialog = new SortingDialogBuilder(this.getActivity())
+            .setTitleArgument(R.string.episodes)
+            .setDefaultSortMode(this.preferences.sortMode())
+            .setNewestFirstOptionListener(new OptionListener() {
+                @Override
+                public void onClick() {
+                    ScheduleFragment.this.adapter.sortBy(SortMode.NEWEST_FIRST);
+                }
+            })
+            .setOldestFirstOptionListener(new OptionListener() {
+                @Override
+                public void onClick() {
+                    ScheduleFragment.this.adapter.sortBy(SortMode.OLDEST_FIRST);
+                }
+            })
+            .build();
+
+        this.showDialog(dialog);
+    }
+
+    private void showFilterDialog() {
+        final Map<Series, Boolean> filterOptions = this.preferences.seriesToShow();
+
+        Dialog dialog = new SeriesFilterDialogBuilder(this.getActivity())
+            .setDefaultFilterOptions(filterOptions)
+            .setOnFilterListener(new OnFilterListener() {
+                @Override
+                public void onFilter() {
+                    ScheduleFragment.this.adapter.hideOrShowSeries(filterOptions);
+                }
+            })
+            .build();
+
+        this.showDialog(dialog);
+    }
+
+    private void showDialog(Dialog dialog) {
+        this.activity().showDialog(dialog);
+    }
+
+    private MyScheduleActivity activity() {
+        return (MyScheduleActivity) this.getActivity();
+    }
+
     private void setUpEmptyText() {
         this.setEmptyText(this.getString(R.string.no_episodes_to_see));
     }
@@ -105,15 +207,5 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
                 ScheduleFragment.this.startActivity(intent);
             }
         });
-    }
-
-    private void setUpAdapter() {
-        try {
-            ScheduleAdapter.Holder adapterHolder = (ScheduleAdapter.Holder) this.getActivity();
-            this.adapter = adapterHolder.adapterForMode(this.scheduleMode);
-            this.setListAdapter(this.adapter);
-        } catch (ClassCastException e) {
-            throw new RuntimeException("Activity should implement ScheduleAdapterHolder");
-        }
     }
 }

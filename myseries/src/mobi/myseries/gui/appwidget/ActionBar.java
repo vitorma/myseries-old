@@ -1,9 +1,9 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.gui.myschedule.MyScheduleActivity;
 import mobi.myseries.gui.myseries.MySeriesActivity;
-import mobi.myseries.gui.preferences.Preferences;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -32,14 +32,14 @@ public class ActionBar {
     }
 
     private PendingIntent homeIntentFrom(int appWidgetId) {
-        Intent intent = new Intent(this.context, MySeriesActivity.class);
+        Intent intent = MySeriesActivity.newIntent(this.context);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         return PendingIntent.getActivity(this.context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private PendingIntent scheduleIntentFrom(int appWidgetId) {
-        int scheduleMode = Preferences.forAppWidget(appWidgetId).scheduleMode();
+        int scheduleMode = App.preferences().forScheduleWidget(appWidgetId).scheduleMode();
 
         Intent intent = MyScheduleActivity.newIntent(this.context, scheduleMode);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

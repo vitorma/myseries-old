@@ -1,7 +1,7 @@
 package mobi.myseries.gui.appwidget;
 
+import mobi.myseries.application.App;
 import mobi.myseries.application.broadcast.BroadcastService;
-import mobi.myseries.gui.preferences.Preferences;
 import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
@@ -31,7 +31,7 @@ public class TabService extends IntentService {
         int appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
         int scheduleMode = intent.getExtras().getInt(Extra.SCHEDULE_MODE);
 
-        Preferences.forAppWidget(appWidgetId).setScheduleMode(scheduleMode);
+        App.preferences().forScheduleWidget(appWidgetId).putScheduleMode(scheduleMode);
 
         new BroadcastService(this.getApplicationContext()).broadcastUpdate();
     }

@@ -1,62 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/list_selector_holo_light"
-    android:paddingTop="@dimen/gap_medium"
-    android:paddingBottom="@dimen/gap_medium"
+    android:background="#eeeeee"
+    android:orientation="vertical"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/poster"
-        android:contentDescription="@string/description_poster"
-        android:scaleType="centerInside"
-        android:layout_width="@dimen/poster_width_myseries_list"
-        android:layout_height="@dimen/poster_height_myseries_list"
-        android:layout_alignParentLeft="true"/>
+    <FrameLayout
+        android:background="@drawable/card"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/name"
-        style="@style/TextView.Large.DarkGray.Ellipsized"
-        android:paddingLeft="@dimen/gap_medium"
+    <RelativeLayout
+        android:background="@drawable/list_selector_holo_light"
+        android:padding="@dimen/gap_medium"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/poster"/>
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/status"
-        style="@style/TextView.Small.MediumGray"
-        android:paddingLeft="@dimen/gap_medium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/name"
-        android:layout_toRightOf="@id/poster"/>
+        <ImageView
+            android:id="@+id/poster"
+            android:contentDescription="@string/description_poster"
+            android:scaleType="centerInside"
+            android:layout_width="@dimen/poster_width_myseries_list"
+            android:layout_height="@dimen/poster_height_myseries_list"
+            android:layout_alignParentLeft="true"/>
 
-    <TextView
-        android:id="@+id/airInfo"
-        style="@style/TextView.Small.LightGray"
-        android:paddingLeft="@dimen/gap_medium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/status"
-        android:layout_toRightOf="@id/poster"/>
+        <TextView
+            android:id="@+id/name"
+            style="@style/TextView.Large.DarkGray.Ellipsized"
+            android:fontFamily="sans-serif-light"
+            android:paddingLeft="@dimen/gap_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/poster"/>
 
-    <TextView
-        android:id="@+id/seenEpisodes"
-        style="@style/TextView.Small.MediumGray.Bold"
-        android:gravity="right"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/poster"
-        android:layout_below="@id/airInfo"/>
+        <TextView
+            android:id="@+id/genres"
+            style="@style/TextView.Small.MediumGray"
+            android:paddingLeft="@dimen/gap_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:layout_toRightOf="@id/poster"/>
 
-    <mobi.myseries.gui.shared.SeenEpisodesBar
-        android:id="@+id/seenEpisodesBar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/chunkbar_height"
-        android:layout_marginTop="@dimen/gap_medium"
-        android:layout_below="@id/seenEpisodes"/>
+        <TextView
+            android:id="@+id/status"
+            style="@style/TextView.Small.LightGray"
+            android:paddingLeft="@dimen/gap_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/genres"
+            android:layout_toRightOf="@id/poster"/>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/seenEpisodes"
+            style="@style/TextView.Small.DarkGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/status"/>
+
+        <TextView
+            android:id="@+id/airInfo"
+            style="@style/TextView.Small.LightGray"
+            android:paddingLeft="@dimen/gap_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/status"
+            android:layout_toRightOf="@id/poster"
+            android:layout_toLeftOf="@id/seenEpisodes"/>
+
+        <mobi.myseries.gui.shared.SeenEpisodesBar
+            android:id="@+id/seenEpisodesBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chunkbar_height"
+            android:layout_marginTop="@dimen/gap_medium"
+            android:layout_below="@id/seenEpisodes"/>
+
+    </RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

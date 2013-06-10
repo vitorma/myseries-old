@@ -9,9 +9,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.viewpagerindicator.TitleProvider;
-
-public class EpisodePagerAdapter extends FragmentStatePagerAdapter implements TitleProvider {
+public class EpisodePagerAdapter extends FragmentStatePagerAdapter {
     private Context context;
     private List<Episode> episodes;
 
@@ -38,7 +36,7 @@ public class EpisodePagerAdapter extends FragmentStatePagerAdapter implements Ti
     }
 
     @Override
-    public String getTitle(int position) {
+    public String getPageTitle(int position) {
         Episode e = this.episodes.get(position);
         String format = this.context.getString(R.string.episode_number_format);
         return String.format(format, e.seasonNumber(), e.number());

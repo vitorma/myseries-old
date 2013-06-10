@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/add"
+        android:title="@string/menu_add"
+        android:icon="@drawable/ic_action_add"
+        android:showAsAction="always"/>
+
+    <item
+        android:id="@+id/remove"
+        android:title="@string/menu_remove"
+        android:icon="@drawable/ic_action_remove"
+        android:showAsAction="always"/>
+
+    <item
+        android:id="@+id/filter"
+        android:title="@string/action_filter"
+        android:icon="@drawable/ic_action_filter"
+        android:showAsAction="always">
+
+        <menu>
+
+            <item
+                android:id="@+id/filter_series"
+                android:title="@string/seriesToShow"/>
+
+            <item
+                android:id="@+id/filter_episodes"
+                android:title="@string/episodesToCount"/>
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/sort"
+        android:title="@string/action_sort"
+        android:icon="@drawable/ic_action_sort"
+        android:showAsAction="always"/>
+
+    <item
+        android:id="@+id/update"
+        android:title="@string/menu_update"
+        android:showAsAction="never"/>
+
+    <item
+        android:id="@+id/backup_restore"
+        android:title="@string/menu_backup_restore"
+        android:showAsAction="never"/>
+
+</menu>

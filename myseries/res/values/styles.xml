@@ -274,27 +274,4 @@
         <item name="android:fastScrollEnabled">true</item>
     </style>
 
-    <!-- TitlePageIndicator -->
-
-    <style name="TitlePageIndicator">
-        <item name="android:background">@color/white</item>
-        <item name="footerColor">@color/blue</item>
-        <item name="footerLineHeight">2dp</item>
-        <item name="footerIndicatorHeight">5dp</item>
-        <item name="footerIndicatorStyle">underline</item>
-        <item name="textColor">@color/black</item>
-        <item name="selectedColor">@color/black</item>
-        <item name="selectedBold">true</item>
-    </style>
-
-    <!-- CoverFlow -->
-
-    <style name="CoverFlow">
-        <item name="imageWidth">@dimen/coverflow_poster_width</item>
-        <item name="imageHeight">@dimen/coverflow_poster_height</item>
-        <item name="withReflection">@bool/coverflow_reflection_enabled</item>
-        <item name="imageReflectionRatio">@integer/coverflow_reflection_percentage</item>
-        <item name="reflectionGap">@dimen/coverflow_reflection_gap</item>
-    </style>
-
 </resources>

@@ -1,8 +1,8 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.gui.preferences.Preferences;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +33,7 @@ public class TabBar {
     }
 
     private void highlightSelectedTab(int appWidgetId) {
-        int scheduleMode = Preferences.forAppWidget(appWidgetId).scheduleMode();
+        int scheduleMode = App.preferences().forScheduleWidget(appWidgetId).scheduleMode();
 
         switch (scheduleMode) {
             case ScheduleMode.RECENT:

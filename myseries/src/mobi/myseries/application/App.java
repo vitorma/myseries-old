@@ -26,12 +26,12 @@ import java.text.DateFormat;
 import mobi.myseries.R;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
-import mobi.myseries.application.broadcast.ConfigurationChangeService;
 import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.notification.NotificationService;
+import mobi.myseries.application.preferences.Preferences;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.search.SeriesSearch;
 import mobi.myseries.application.update.UpdateService;
@@ -53,6 +53,7 @@ public class App extends Application {
     private static BroadcastService broadcastService;
     @SuppressWarnings("unused")
     private static NotificationService notificationService;
+    private static Preferences preferences;
 
     @Override
     public void onCreate() {
@@ -102,7 +103,7 @@ public class App extends Application {
 
         seriesProvider = new SeriesProvider(environment.seriesRepository(), broadcastService);
 
-        this.startService(ConfigurationChangeService.newIntent(this));
+        preferences = new Preferences(this);
     }
 
     public static Context context() {
@@ -165,5 +166,9 @@ public class App extends Application {
 
     public static BackupService backupService() {
         return backupService;
+    }
+
+    public static Preferences preferences() {
+        return preferences;
     }
 }

@@ -30,70 +30,72 @@ public class MessageService implements
         backupService.register(this);
     }
 
+    @Override
     public boolean register(MessageServiceListener l) {
         return this.listeners.register(l);
     }
 
+    @Override
     public boolean deregister(MessageServiceListener l) {
         return this.listeners.deregister(l);
     }
 
     private void notifyFollowingStart(Series series){
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onFollowingStart(series);
         }
     }
 
     private void notifyFollowingSuccess(Series series) {
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onFollowingSuccess(series);
         }
     }
 
     private void notifyFollowingError(Series series, Exception e) {
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onFollowingError(series, e);
         }
     }
 
     private void notifyCheckingForUpdates() {
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onCheckingForUpdates();
         }
     }
 
     private void notifyUpdateSuccess() {
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onUpdateSuccess();
         }
     }
 
     private void notifyUpdateError(Exception e) {
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onUpdateError(e);
         }
     }
 
     private void notifyBackupSuccess() {
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onBackupSucess();
         }
     }
 
     private void notifyBackupFailure(Exception e) {
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onBackupFailure(e);
         }
     }
 
     private void notifyRestoreSuccess() {
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onRestoreSucess();
         }
     }
 
     private void notifyRestoreFailure(Exception e) {
-        for (MessageServiceListener l : listeners) {
+        for (MessageServiceListener l : this.listeners) {
             l.onRestoreFailure(e);
         }
     }
@@ -102,12 +104,12 @@ public class MessageService implements
 
     @Override
     public void onFollowingStart(Series seriesToFollow) {
-        notifyFollowingStart(seriesToFollow);
+        this.notifyFollowingStart(seriesToFollow);
     }
 
     @Override
     public void onFollowing(Series followedSeries) {
-        notifyFollowingSuccess(followedSeries);
+        this.notifyFollowingSuccess(followedSeries);
     }
 
     @Override
@@ -118,14 +120,14 @@ public class MessageService implements
 
     @Override
     public void onFollowingFailure(Series series, Exception e) {
-        notifyFollowingError(series, e);
+        this.notifyFollowingError(series, e);
     }
 
     // Update
 
     @Override
     public void onCheckingForUpdates() {
-        notifyCheckingForUpdates();
+        this.notifyCheckingForUpdates();
     }
 
     @Override
@@ -137,39 +139,39 @@ public class MessageService implements
 
     @Override
     public void onUpdateFailure(Exception e) {
-        notifyUpdateError(e);
+        this.notifyUpdateError(e);
     }
 
     @Override
     public void onUpdateSuccess() {
-        notifyUpdateSuccess();
+        this.notifyUpdateSuccess();
     }
 
     // Backup and restore
 
     @Override
     public void onBackupSucess() {
-        notifyBackupSuccess();
+        this.notifyBackupSuccess();
     }
 
     @Override
     public void onBackupFailure(Exception e) {
-        notifyBackupFailure(e);
+        this.notifyBackupFailure(e);
     }
 
     @Override
     public void onRestoreSucess() {
-        notifyRestoreSuccess();
+        this.notifyRestoreSuccess();
     }
 
     @Override
     public void onRestoreFailure(Exception e) {
-        notifyRestoreFailure(e);
+        this.notifyRestoreFailure(e);
     }
 
     @Override
     public void onStart() {
         // TODO Auto-generated method stub
-        
+
     }
 }

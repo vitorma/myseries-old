@@ -2,28 +2,28 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#eeeeee"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:background="@drawable/card"
         android:orientation="vertical"
         android:gravity="center"
+        android:padding="@dimen/gap_small"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/card">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/seriesPoster"
             android:background="@drawable/list_selector_holo_light"
+            android:contentDescription="@string/description_poster"
             android:src="@drawable/generic_poster"
             android:scaleType="fitXY"
-            android:paddingTop="@dimen/gap_micro"
-            android:paddingLeft="@dimen/gap_small"
-            android:paddingRight="@dimen/gap_small"
             android:layout_height="55.4dp"
             android:layout_width="300dp"/>
 
@@ -31,8 +31,7 @@
             android:id="@+id/itemName"
             android:background="@drawable/list_selector_holo_light"
             style="@style/TextView.Small.MediumGray"
-            android:padding="@dimen/gap_small"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>

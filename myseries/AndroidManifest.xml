@@ -1,126 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mobi.myseries"
     android:versionCode="1"
-    android:versionName="1.0">
+    android:versionName="1.0" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"></uses-permission>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"></uses-permission>
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <uses-sdk
         android:minSdkVersion="15"
-        android:targetSdkVersion="17"/>
+        android:targetSdkVersion="17" />
 
     <application
+        android:name=".application.App"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app"
-        android:name=".application.App"
-        android:theme="@style/MySeriesTheme">
-
+        android:theme="@style/MySeriesTheme" >
         <activity
             android:name=".gui.myseries.MySeriesActivity"
-            android:uiOptions="splitActionBarWhenNarrow"
-            android:hardwareAccelerated="false">
+            android:hardwareAccelerated="false"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
-            android:launchMode="singleTask"
-            android:configChanges="orientation|keyboard">
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask" >
             <intent-filter>
-            <!-- Change this to be db- followed by your app key -->
+
+                <!-- Change this to be db- followed by your app key -->
                 <data android:scheme="db-16plq57cyv3mxdb" />
+
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".gui.myschedule.MyScheduleActivity">
+        <activity android:name=".gui.myschedule.MyScheduleActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity"/>
+                android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity
-            android:name=".gui.addseries.AddSeriesActivity">
+        <activity android:name="mobi.myseries.gui.mystatistics.MyStatisticsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity"/>
+                android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity
-            android:name=".gui.preferencesactivity.PreferencesActivity">
+        <activity android:name=".gui.addseries.AddSeriesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity"/>
+                android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity
-            android:name=".gui.backup.BackupActivity">
+        <activity android:name=".gui.update.UpdateActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity"/>
+                android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity
-            android:name=".gui.series.SeriesActivity">
+        <activity android:name=".gui.backup.BackupActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity"/>
+                android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity
-            android:name=".gui.episodes.EpisodesActivity">
+        <activity android:name=".gui.series.SeriesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity"/>
+                android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity
-            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity">
+        <activity android:name=".gui.episodes.EpisodesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.myseries.MySeriesActivity" />
+        </activity>
+        <activity android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity" >
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <receiver
             android:name="mobi.myseries.gui.appwidget.ScheduleWidget"
-            android:label="@string/schedulewidget"
-            android:enabled="true">
+            android:enabled="true"
+            android:label="@string/schedulewidget" >
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP"/>
+                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP" />
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.UPDATE"/>
+                <action android:name="mobi.myseries.application.broadcast.action.UPDATE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.ADDITION"/>
+                <action android:name="mobi.myseries.application.broadcast.action.ADDITION" />
             </intent-filter>
             <intent-filter>
-                <action android:name="mobi.myseries.application.broadcast.action.REMOVAL"/>
+                <action android:name="mobi.myseries.application.broadcast.action.REMOVAL" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/schedulewidget_info"/>
+                android:resource="@xml/schedulewidget_info" />
         </receiver>
 
         <service
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetViewsService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
-        <service
-            android:name="mobi.myseries.gui.appwidget.TabService"/>
-        <service
-            android:name="mobi.myseries.application.broadcast.ConfigurationChangeService"/>
-
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name="mobi.myseries.gui.appwidget.TabService" />
     </application>
 
 </manifest>

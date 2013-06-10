@@ -22,146 +22,41 @@
 package mobi.myseries.gui.addseries;
 
 import mobi.myseries.R;
-import mobi.myseries.application.App;
-import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.BaseActivity;
-import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
-import mobi.myseries.gui.shared.FailureDialogBuilder;
-import mobi.myseries.gui.shared.MessageLauncher;
-import mobi.myseries.gui.shared.TabPagerAdapter;
-import net.simonvt.menudrawer.MenuDrawer;
-import android.app.ActionBar;
-import android.app.Dialog;
-import android.os.Bundle;
-import android.view.Window;
+import mobi.myseries.gui.activity.base.TabActivity;
+import mobi.myseries.gui.activity.base.TabDefinition;
+import android.content.Context;
+import android.content.Intent;
 
-public class AddSeriesActivity extends BaseActivity {
-    private static final int DEFAULT_SELECTED_TAB = 0;
+public class AddSeriesActivity extends TabActivity {
+    private static final int TRENDING_TAB = 0;
 
-    private State state;
-
-    @Override
-    protected final void onCreate(final Bundle savedInstanceState) {
-        this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
-        super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.addseries);
-
-        this.setUpState();
-        this.setUpActionBar();
-
-        this.getMenu().setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
+    public static Intent newIntent(Context context) {
+        return new Intent(context, AddSeriesActivity.class);
     }
 
     @Override
-    public Object onRetainNonConfigurationInstance() {
-        return this.state;
+    protected void init() { /* There's nothing to initialize */ }
+
+    @Override
+    protected CharSequence title() {
+        return this.getText(R.string.add_series);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        this.state.onStart();
+    protected boolean isTopLevel() {
+        return false;
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-
-        this.state.onStop();
+    protected TabDefinition[] tabDefinitions() {
+        return new TabDefinition[] {
+            new TabDefinition(R.string.trending, new SearchByTrendingFragment()),
+            new TabDefinition(R.string.search, new SearchByNameFragment())
+        };
     }
 
-    private void setUpState() {
-        Object retainedState = this.getLastNonConfigurationInstance();
-
-        if (retainedState != null) {
-            this.state = (State) retainedState;
-        } else {
-            this.state = new State();
-            this.state.messageLauncher = new MessageLauncher(this);
-            this.state.selectedTab = DEFAULT_SELECTED_TAB;
-        }
-    }
-
-    private void setUpActionBar() {
-        ActionBar ab = this.getActionBar();
-
-        this.setProgressBarIndeterminateVisibility(false);
-
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowTitleEnabled(true);
-        ab.setTitle(R.string.add_series);
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        new TabPagerAdapter(this)
-            .addTab(R.string.trending, new TrendingFragment())
-            .addTab(R.string.search, new SearchFragment())
-            .register(this.state);
-
-        ab.setSelectedNavigationItem(this.state.selectedTab);
-    }
-
-    void onSearchFailure(int searchFailureTitleResourceId, int searchFailureMessageResourceId) {
-        this.state.dialog = new FailureDialogBuilder(this)
-            .setTitle(searchFailureTitleResourceId)
-            .setMessage(searchFailureMessageResourceId)
-            .build();
-
-        this.state.dialog.show();
-    }
-
-    void onRequestAdd(Series seriesToAdd) {
-        Dialog dialog;
-
-        if (App.followSeriesService().follows(seriesToAdd)) {
-            String messageFormat = this.getString(R.string.add_already_followed_series_message);
-            dialog = new FailureDialogBuilder(this)
-                .setMessage(String.format(messageFormat, seriesToAdd.name()))
-                .build();
-        } else {
-            dialog = new ConfirmationDialogBuilder(this)
-                .setTitle(seriesToAdd.name())
-                .setMessage(seriesToAdd.overview())
-                .setSurrogateMessage(R.string.overview_unavailable)
-                .setPositiveButton(R.string.add, new AddButtonOnClickListener(seriesToAdd))
-                .setNegativeButton(R.string.dont_add, null)
-                .build();
-        }
-
-        dialog.show();
-
-        this.state.dialog = dialog;
-    }
-
-    private static class State implements TabPagerAdapter.Listener {
-        private int selectedTab;
-        private Dialog dialog;
-        private boolean isShowingDialog;
-        private MessageLauncher messageLauncher;
-
-        @Override
-        public void onSelected(int position) {
-            this.selectedTab = position;
-        }
-
-        private void onStart() {
-            if (this.isShowingDialog) {
-                this.dialog.show();
-            }
-
-            this.messageLauncher.loadState();
-        }
-
-        private void onStop() {
-            if (this.dialog != null && this.dialog.isShowing()) {
-                this.isShowingDialog = true;
-                this.dialog.dismiss();
-            } else {
-                this.isShowingDialog = false;
-            }
-
-            this.messageLauncher.onStop();
-        }
+    @Override
+    protected int defaultSelectedTab() {
+        return TRENDING_TAB;
     }
 }

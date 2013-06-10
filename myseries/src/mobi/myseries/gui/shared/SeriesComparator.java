@@ -25,10 +25,34 @@ import java.util.Comparator;
 
 import mobi.myseries.domain.model.Series;
 
-public class SeriesComparator implements Comparator<Series> {
+public class SeriesComparator {
 
-    @Override
-    public int compare(Series series1, Series series2) {
-        return series1.name().compareTo(series2.name());
+    public static Comparator<Series> bySortMode(int sortMode) {
+        switch (sortMode) {
+            case SortMode.A_Z:
+                return byAscendingAlphabeticalOrder();
+            case SortMode.Z_A:
+                return byDescendingAlphabeticalOrder();
+            default:
+                throw new RuntimeException("invalid sort mode for series");
+        }
+    }
+
+    public static Comparator<Series> byAscendingAlphabeticalOrder() {
+        return new Comparator<Series>() {
+            @Override
+            public int compare(Series s1, Series s2) {
+                return s1.name().compareTo(s2.name());
+            }
+        };
+    }
+
+    public static Comparator<Series> byDescendingAlphabeticalOrder() {
+        return new Comparator<Series>() {
+            @Override
+            public int compare(Series s1, Series s2) {
+                return s2.name().compareTo(s1.name());
+            }
+        };
     }
 }

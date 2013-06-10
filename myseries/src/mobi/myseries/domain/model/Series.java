@@ -342,6 +342,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.seasons.numberOfEpisodes();
     }
 
+    public int numberOfEpisodes(Specification<Episode> specification) {
+        return this.episodesBy(specification).size();
+    }
+
     public int numberOfSeenEpisodes() {
         return this.seasons.numberOfSeenEpisodes();
     }

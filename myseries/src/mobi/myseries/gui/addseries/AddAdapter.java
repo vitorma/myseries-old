@@ -4,6 +4,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.ImageDownloader;
 import mobi.myseries.shared.Strings;
 import android.content.Context;
 import android.view.LayoutInflater;
