@@ -35,6 +35,12 @@
     </item>
 
     <item
+        android:id="@+id/sort"
+        android:title="@string/action_sort"
+        android:icon="@drawable/ic_action_sort"
+        android:showAsAction="always"/>
+
+    <item
         android:id="@+id/update"
         android:title="@string/menu_update"
         android:showAsAction="never"/>

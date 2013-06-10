@@ -16,7 +16,7 @@ public class SeriesFilterDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Map<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(new SeriesComparator());
+        final Map<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(SeriesComparator.byAscendingAlphabeticalOrder());
 
         filterOptions.putAll(App.preferences().forMySeries().seriesToShow());
 

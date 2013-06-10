@@ -1,5 +1,7 @@
 package mobi.myseries.gui.myseries;
 
+import java.util.Collection;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.gui.activity.base.BaseActivity;
@@ -85,6 +87,9 @@ public class MySeriesActivity extends BaseActivity {
             case R.id.filter_series:
                 this.showSeriesFilterDialog();
                 return true;
+            case R.id.sort:
+                this.showSortDialog();
+                return true;
             case R.id.update:
                 this.startActivity(UpdateActivity.newIntent(this));
                 return true;
@@ -117,6 +122,16 @@ public class MySeriesActivity extends BaseActivity {
             new ToastBuilder(this).setMessage(R.string.no_episodes_to_count).build().show();
         } else {
             new EpisodeFilterDialogFragment().show(this.getFragmentManager(), "episodeFilterDialog");
+        }
+    }
+
+    private void showSortDialog() {
+        Collection<Boolean> seriesToShow = App.preferences().forMySeries().seriesToShow().values();
+
+        if (!seriesToShow.contains(true)) {
+            new ToastBuilder(this).setMessage(R.string.no_series_to_sort).build().show();
+        } else {
+            new SeriesSortingDialogFragment().show(this.getFragmentManager(), "seriesSortingDialog");
         }
     }
 }

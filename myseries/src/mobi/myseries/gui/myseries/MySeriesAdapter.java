@@ -153,7 +153,9 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
             s.register(this.seriesListener);
         }
 
-        Collections.sort(this.items, new SeriesComparator());
+        int sortMode = App.preferences().forMySeries().sortMode();
+
+        Collections.sort(this.items, SeriesComparator.bySortMode(sortMode));
     }
 
     /* ViewHolder */

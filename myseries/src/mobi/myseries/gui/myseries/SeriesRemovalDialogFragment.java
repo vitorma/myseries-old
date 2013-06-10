@@ -22,7 +22,7 @@ public class SeriesRemovalDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = this.getActivity();
-        final SortedMap<Series, Boolean> removalOptions = new TreeMap<Series, Boolean>(new SeriesComparator());
+        final SortedMap<Series, Boolean> removalOptions = new TreeMap<Series, Boolean>(SeriesComparator.byAscendingAlphabeticalOrder());
 
         for (Series s : App.seriesProvider().followedSeries()) {
             removalOptions.put(s, false);
