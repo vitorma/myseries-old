@@ -33,6 +33,7 @@
         <TextView
             android:id="@+id/name"
             style="@style/TextView.Large.DarkGray.Ellipsized"
+            android:fontFamily="sans-serif-light"
             android:paddingLeft="@dimen/gap_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +80,7 @@
             android:id="@+id/seenEpisodesBar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/chunkbar_height"
-            android:layout_marginTop="@dimen/gap_small"
+            android:layout_marginTop="@dimen/gap_medium"
             android:layout_below="@id/seenEpisodes"/>
 
     </RelativeLayout>
