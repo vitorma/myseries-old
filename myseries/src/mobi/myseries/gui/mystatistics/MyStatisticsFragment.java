@@ -32,6 +32,7 @@ public class MyStatisticsFragment extends Fragment {
     private ProgressBar seriesWatchedProgressBar;
     private UpdateFinishListener updateListener;
     private TextView watchedEpisodesRuntime;
+    private ProgressBar timeOfWatchedEpisodesProgressBar;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -74,6 +75,8 @@ public class MyStatisticsFragment extends Fragment {
             .findViewById(R.id.seasonsWatchedProgressBar);
         this.episodesWatchedProgressBar = (ProgressBar) this.getActivity()
             .findViewById(R.id.episodesWatchedProgressBar);
+        this.timeOfWatchedEpisodesProgressBar = (ProgressBar) this.getActivity()
+            .findViewById(R.id.timeOfEpisodesWatchedProgressBar);
 
         this.watchedEpisodesRuntime = (TextView) this.getActivity().findViewById(
             R.id.watchedRuntime);
@@ -163,6 +166,7 @@ public class MyStatisticsFragment extends Fragment {
         int nEpisodes = 0;
         int watchedEpisodes = 0;
         int watchedRuntime = 0;
+        int totalRuntime = 0;
 
         final Collection<Series> series = App.seriesProvider().followedSeries();
 
@@ -188,6 +192,7 @@ public class MyStatisticsFragment extends Fragment {
 
             try {
                 watchedRuntime += (Integer.parseInt(s.runtime()) * currentSeriesSeenEpisodes);
+                totalRuntime += Integer.parseInt(s.runtime()) * s.numberOfEpisodes();
             } catch (Exception e) {
                 // Ignore missing runtimes
             }
@@ -230,5 +235,8 @@ public class MyStatisticsFragment extends Fragment {
         this.watchedEpisodesRuntime.setText(String.format(
             this.getString(R.string.total_runtime_format), days, hours,
             minutes));
+
+        this.timeOfWatchedEpisodesProgressBar.setMax(totalRuntime);
+        this.timeOfWatchedEpisodesProgressBar.setProgress(watchedRuntime);
     }
 }
