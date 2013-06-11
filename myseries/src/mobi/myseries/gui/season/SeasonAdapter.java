@@ -47,7 +47,7 @@ public class SeasonAdapter extends BaseAdapter implements SeasonListener, Episod
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = Objects.nullSafe(convertView, View.inflate(App.context(), R.layout.series_seasons_item_episode, null));
+        View view = Objects.nullSafe(convertView, View.inflate(App.context(), R.layout.season_item_episode, null));
         ViewHolder viewHolder = (view == convertView) ? (ViewHolder) view.getTag() : new ViewHolder(view);
 
         Episode episode = this.items.get(position);

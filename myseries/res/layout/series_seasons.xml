@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
     <mobi.myseries.gui.shared.SeenMark
         android:id="@+id/seenMark"
@@ -11,7 +11,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/gap_large"
-        android:layout_marginRight="@dimen/gap_large" />
+        android:layout_marginRight="@dimen/gap_large"/>
 
     <TextView
         android:id="@+id/name"
@@ -22,7 +22,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/gap_large"
         android:layout_marginTop="@dimen/gap_large"
-        android:layout_toLeftOf="@id/seenMark" />
+        android:layout_toLeftOf="@id/seenMark"/>
 
     <TextView
         android:id="@+id/seenEpisodes"
@@ -32,7 +32,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/name"
         android:layout_marginLeft="@dimen/gap_large"
-        android:layout_toLeftOf="@id/seenMark" />
+        android:layout_toLeftOf="@id/seenMark"/>
 
     <mobi.myseries.gui.shared.SeenEpisodesBar
         android:id="@+id/seenEpisodesBar"
@@ -43,14 +43,14 @@
         android:layout_below="@id/seenMark"
         android:layout_marginBottom="@dimen/gap_medium"
         android:layout_marginLeft="@dimen/gap_large"
-        android:layout_marginRight="@dimen/gap_large" />
+        android:layout_marginRight="@dimen/gap_large"/>
 
-    <ExpandableListView
+    <ListView
         android:id="@+id/seasons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/seenEpisodesBar" />
+        android:layout_below="@id/seenEpisodesBar"/>
 
 </RelativeLayout>
