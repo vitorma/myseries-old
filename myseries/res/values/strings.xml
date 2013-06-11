@@ -26,10 +26,13 @@
     <string name="showSeenEpisodes">Show seen episodes</string>
     <string name="hideSeenEpisodes">Hide seen episodes</string>
     <string name="seriesToShow">Series to show</string>
+    <string name="seriesToCount">Series to count</string>
     <string name="episodesToShow">Episodes to show</string>
     <string name="episodesToCount">Episodes to count</string>
     <string name="showAll">Show all</string>
     <string name="showSelected">Show selected</string>
+    <string name="countAll">Count all</string>
+    <string name="countSelected">Count selected</string>
     <string name="unknown_date">Unknown date</string>
     <string name="series_to_remove">Series to remove</string>
     <string name="remove_all">Remove all</string>
