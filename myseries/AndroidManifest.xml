@@ -76,10 +76,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity android:name=".gui.episodes.EpisodesActivity" >
+        <activity android:name="mobi.myseries.gui.season.SeasonActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
+        </activity>
+        <activity android:name="mobi.myseries.gui.episode.EpisodeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.myseries.SeasonActivity" />
         </activity>
         <activity android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity" >
             <intent-filter>

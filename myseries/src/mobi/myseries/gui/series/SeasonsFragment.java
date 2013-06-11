@@ -5,7 +5,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
-import mobi.myseries.gui.episodes.EpisodesActivity;
+import mobi.myseries.gui.season.SeasonActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
@@ -84,7 +84,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Series series) {
-        // TODO(Reul): if user wants special episodes to be displayed…
+        // TODO(Reul): if user wants special items to be displayed…
         this.seenEpisodesBar.updateWithEpisodesOf(series);
         this.seenMark.setChecked(series.numberOfEpisodes() == series.numberOfSeenEpisodes());
         this.updateSeenEpisodes();
@@ -170,10 +170,11 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
 
     private void showDetailsOf(int groupPosition, int childPosition) {
         int seasonNumber = this.adapter.season(groupPosition).number();
-        int episodeNumber = this.adapter.episode(groupPosition, childPosition).number();
+//        int episodeNumber = this.adapter.episode(groupPosition, childPosition).number();
 
-        Intent intent = EpisodesActivity.newIntent(this.getActivity(), this.seriesId, seasonNumber,
-            episodeNumber);
+        Intent intent = SeasonActivity.newIntent(this.getActivity(), this.seriesId, seasonNumber);
+//        Intent intent = EpisodeActivity.newIntent(this.getActivity(), this.seriesId, seasonNumber,
+//            episodeNumber);
         this.startActivity(intent);
     }
 
