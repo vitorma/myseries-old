@@ -23,7 +23,6 @@ package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Map;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -163,45 +162,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         return this.viewStates[position] == STATE_SECTIONED;
     }
 
-    /* Preferences change */
-
-    public void sortBy(int sortMode) {
-        if (this.preferences.sortMode() != sortMode) {
-            this.preferences.putSortMode(sortMode);
-            this.reload();
-        }
-    }
-
-    public void hideOrShowSpecialEpisodes(boolean showSpecialEpisodes) {
-        if (this.preferences.showSpecialEpisodes() != showSpecialEpisodes) {
-            this.preferences.putIfShowSpecialEpisodes(showSpecialEpisodes);
-            this.reload();
-        }
-    }
-
-    public void hideOrShowSeenEpisodes(boolean showSeenEpisodes) {
-        if (this.preferences.showSeenEpisodes() != showSeenEpisodes) {
-            this.preferences.putIfShowSeenEpisodes(showSeenEpisodes);
-            this.reload();
-        }
-    }
-
-    public void hideOrShowSeries(Map<Series, Boolean> seriesFilterOptions) {
-        boolean needReload = false;
-
-        for (Series s: seriesFilterOptions.keySet()) {
-            if (this.preferences.showSeries(s.id()) != seriesFilterOptions.get(s)) {
-                this.preferences.putIfShowSeries(s.id(), seriesFilterOptions.get(s));
-                needReload = true;
-            }
-        }
-
-        if (needReload) {
-            this.reload();
-        }
-    }
-
-    private void reload() {
+    public void reload() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {

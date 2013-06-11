@@ -16,8 +16,6 @@
     <string name="upcoming_episodes">Upcoming episodes</string>
     <string name="sorting">SORTING</string>
     <string name="sort_by_format" formatted="false">Sort %s by…</string>
-    <string name="oldest_first">Oldest first</string>
-    <string name="newest_first">Newest first</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="unavailable_date">UNAVAILABLE DATE</string>
@@ -25,9 +23,10 @@
     <string name="episodes">episodes</string>
     <string name="hideSpecialEpisodes">Hide special episodes</string>
     <string name="showSpecialEpisodes">Show special episodes</string>
-    <string name="hideSeenEpisodes">Hide seen episodes</string>
     <string name="showSeenEpisodes">Show seen episodes</string>
+    <string name="hideSeenEpisodes">Hide seen episodes</string>
     <string name="seriesToShow">Series to show</string>
+    <string name="episodesToShow">Episodes to show</string>
     <string name="episodesToCount">Episodes to count</string>
     <string name="showAll">Show all</string>
     <string name="showSelected">Show selected</string>
@@ -40,7 +39,10 @@
     <string name="no_series_selected_to_remove">No series selected to remove.</string>
     <string name="no_series_to_remove">No series to remove.</string>
     <string name="no_series_to_filter">No series to filter.</string>
+    <string name="no_series_to_show">No series to show.</string>
     <string name="no_series_to_sort">No series to sort.</string>
+    <string name="no_episodes_to_sort">No episodes to sort.</string>
+    <string name="no_episodes_to_show">No episodes to show.</string>
     <string name="no_episodes_to_count">No episodes to count.</string>
     <string name="add_success">%s successfully added.</string>
     <string name="relative_time_today">Today</string>
@@ -228,6 +230,16 @@
         <item>@string/include_unaired_episodes</item>
     </string-array>
 
+    <string name="show_special_episodes">Show special episodes</string>
+    <string name="show_watched_episodes">Show watched episodes</string>
+    <string-array name="action_episodes_to_show_array">
+        <item>@string/show_special_episodes</item>
+        <item>@string/show_watched_episodes</item>
+    </string-array>
+    <string-array name="action_episodes_to_show_array_for_mode_next">
+        <item>@string/show_special_episodes</item>
+    </string-array>
+
     <string name="a_z">A-Z</string>
     <string name="z_a">Z-A</string>
     <string-array name="action_sort_series_array">
@@ -235,7 +247,15 @@
         <item>@string/z_a</item>
     </string-array>
 
+    <string name="oldest_first">Oldest first</string>
+    <string name="newest_first">Newest first</string>
+    <string-array name="action_sort_episodes_array">
+        <item>@string/oldest_first</item>
+        <item>@string/newest_first</item>
+    </string-array>
+
     <!-- AppWidget -->
+
     <string name="schedulewidget">MySeries - Schedule</string>
 
     <!-- Statistics -->

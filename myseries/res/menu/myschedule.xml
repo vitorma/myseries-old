@@ -3,22 +3,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/sorting"
-        android:title="@string/sorting"
+        android:id="@+id/filter"
+        android:title="@string/action_filter"
+        android:icon="@drawable/ic_action_filter"
+        android:showAsAction="always">
+
+        <menu>
+
+            <item
+                android:id="@+id/filter_series"
+                android:title="@string/seriesToShow"/>
+
+            <item
+                android:id="@+id/filter_episodes"
+                android:title="@string/episodesToShow"/>
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/sort"
+        android:title="@string/action_sort"
         android:icon="@drawable/ic_action_sort"
         android:showAsAction="always"/>
-
-    <item
-        android:id="@+id/hideShowSpecialEpisodes"
-        android:showAsAction="never"/>
-
-    <item
-        android:id="@+id/hideShowSeenEpisodes"
-        android:showAsAction="never"/>
-
-    <item
-        android:id="@+id/filterSeries"
-        android:title="@string/seriesToShow"
-        android:showAsAction="never"/>
 
 </menu>
