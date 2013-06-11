@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/filter"
+        android:title="@string/action_filter"
+        android:icon="@drawable/ic_action_filter"
+        android:showAsAction="always">
+
+        <menu>
+
+            <item
+                android:id="@+id/filter_series"
+                android:title="@string/seriesToShow"/>
+
+            <item
+                android:id="@+id/filter_episodes"
+                android:title="@string/episodesToCount"/>
+
+        </menu>
+
+    </item>
+
+</menu>
