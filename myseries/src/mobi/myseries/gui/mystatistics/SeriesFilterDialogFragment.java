@@ -3,6 +3,7 @@ package mobi.myseries.gui.mystatistics;
 import java.util.Map;
 import java.util.TreeMap;
 
+import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.SeriesComparator;
@@ -23,6 +24,9 @@ public class SeriesFilterDialogFragment extends DialogFragment {
 
         return new SeriesFilterDialogBuilder(this.getActivity())
             .setDefaultFilterOptions(filterOptions)
+            .setTitle(R.string.seriesToCount)
+            .setAllButtonText(R.string.countAll)
+            .setSelectedButtonText(R.string.countSelected)
             .setOnFilterListener(new OnFilterListener() {
                 @Override
                 public void onFilter() {

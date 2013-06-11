@@ -12,7 +12,7 @@
 
             <item
                 android:id="@+id/filter_series"
-                android:title="@string/seriesToShow"/>
+                android:title="@string/seriesToCount"/>
 
             <item
                 android:id="@+id/filter_episodes"
