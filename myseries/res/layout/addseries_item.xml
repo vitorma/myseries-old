@@ -8,32 +8,37 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <FrameLayout
         android:background="@drawable/card"
-        android:orientation="vertical"
         android:gravity="center"
-        android:padding="@dimen/gap_small"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_width="300dp"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/seriesPoster"
+        <LinearLayout
             android:background="@drawable/list_selector_holo_light"
-            android:contentDescription="@string/description_poster"
-            android:src="@drawable/generic_poster"
-            android:scaleType="fitXY"
-            android:layout_height="55.4dp"
-            android:layout_width="300dp"/>
-
-        <TextView
-            android:id="@+id/itemName"
-            android:background="@drawable/list_selector_holo_light"
-            style="@style/TextView.Small.MediumGray"
+            android:orientation="vertical"
+            android:padding="@dimen/gap_small"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/seriesPoster"
+                android:contentDescription="@string/description_poster"
+                android:src="@drawable/generic_poster"
+                android:scaleType="fitXY"
+                android:layout_height="55.4dp"
+                android:layout_width="300dp"/>
+
+            <TextView
+                android:id="@+id/itemName"
+                style="@style/TextView.Small.MediumGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
