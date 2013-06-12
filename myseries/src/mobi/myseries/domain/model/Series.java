@@ -244,7 +244,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     }
 
     public Series includingAll(Collection<Episode> episodes) {
-        Validate.isNonNull(episodes, "episodes");
+        Validate.isNonNull(episodes, "items");
 
         for (Episode e : episodes) {
             this.seasons.including(e.withAirtime(this.airtime));
@@ -348,6 +348,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
     public int numberOfSeenEpisodes() {
         return this.seasons.numberOfSeenEpisodes();
+    }
+
+    public int numberOfUnwatchedEpisodes() {
+        return this.numberOfEpisodes() - this.numberOfSeenEpisodes();
     }
 
     @Override

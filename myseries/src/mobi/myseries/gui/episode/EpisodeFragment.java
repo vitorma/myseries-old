@@ -1,4 +1,4 @@
-package mobi.myseries.gui.episodes;
+package mobi.myseries.gui.episode;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;

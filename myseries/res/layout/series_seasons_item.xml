@@ -2,20 +2,11 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/list_selector_holo_light"
     android:descendantFocusability="blocksDescendants"
-    android:paddingTop="@dimen/gap_medium"
-    android:paddingBottom="@dimen/gap_medium"
+    android:padding="@dimen/gap_medium"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/groupIndicator"
-        android:src="@drawable/expander_open_holo_light"
-        android:scaleType="centerInside"
-        android:layout_width="@dimen/toucharea_minimum_side"
-        android:layout_height="@dimen/toucharea_minimum_side"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"/>
 
     <mobi.myseries.gui.shared.SeenMark
         android:id="@+id/seenMark"
@@ -31,17 +22,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/groupIndicator"
+        android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@id/seenMark"/>
 
     <TextView
-        android:id="@+id/seenEpisodes"
+        android:id="@+id/watchedEpisodes"
+        style="@style/TextView.Small.Green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/seasonNumber"/>
+
+    <TextView
+        android:id="@+id/unwatchedEpisodes"
         style="@style/TextView.Small.MediumGray.Ellipsized"
+        android:paddingLeft="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/seasonNumber"
-        android:layout_toRightOf="@id/groupIndicator"
-        android:layout_toLeftOf="@id/seenMark"/>
+        android:layout_toRightOf="@id/watchedEpisodes"
+        android:layout_toLeftOf="@id/seenMark"
+        android:layout_below="@id/seasonNumber"/>
 
     <mobi.myseries.gui.shared.SeenEpisodesBar
         android:id="@+id/seenEpisodesBar"

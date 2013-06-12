@@ -1,5 +1,5 @@
 /*
- *   EpisodesActivity.java
+ *   EpisodeActivity.java
  *
  *   Copyright 2012 MySeries Team.
  *
@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.gui.episodes;
+package mobi.myseries.gui.episode;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
-public class EpisodesActivity extends BaseActivity {
+public class EpisodeActivity extends BaseActivity {
     private int seriesId;
     private int seasonNumber;
     private int episodeNumber;
@@ -46,7 +46,7 @@ public class EpisodesActivity extends BaseActivity {
     private ViewPager pager;
 
     public static Intent newIntent(Context context, int seriesId, int seasonNumber, int episodeNumber) {
-        Intent intent = new Intent(context, EpisodesActivity.class);
+        Intent intent = new Intent(context, EpisodeActivity.class);
 
         intent.putExtra(Extra.SERIES_ID, seriesId);
         intent.putExtra(Extra.SEASON_NUMBER, seasonNumber);

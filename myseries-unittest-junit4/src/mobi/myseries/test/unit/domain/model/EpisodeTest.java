@@ -583,7 +583,7 @@ public class EpisodeTest {
             assertTrue(e2.isTheSameAs(e3));
             assertTrue(e1.isTheSameAs(e3));
 
-            //episodes are equal if and only if they have the same series id, season number and number
+            //items are equal if and only if they have the same series id, season number and number
             assertFalse(e3.isTheSameAs(e4));
             assertFalse(e3.isTheSameAs(e5));
             assertFalse(e3.isTheSameAs(e6));
@@ -644,7 +644,7 @@ public class EpisodeTest {
             assertTrue(e2.equals(e3));
             assertTrue(e1.equals(e3));
 
-            //episodes are equal if and only if they have the same id
+            //items are equal if and only if they have the same id
             assertFalse(e2.equals(e4));
             assertFalse(e3.equals(e4));
             assertFalse(e4.equals(e2));
