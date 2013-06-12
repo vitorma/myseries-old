@@ -48,7 +48,7 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener {
             itemView = View.inflate(App.context(), R.layout.series_seasons_item, null);
         }
 
-        TextView seasonNumber = (TextView) itemView.findViewById(R.id.seasonNumber);
+        TextView seasonNumber = (TextView) itemView.findViewById(R.id.name);
         SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.seenEpisodesBar);
         final SeenMark seasonSeenMark = (SeenMark) itemView.findViewById(R.id.seenMark);
 

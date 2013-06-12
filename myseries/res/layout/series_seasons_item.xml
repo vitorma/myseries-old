@@ -9,44 +9,44 @@
     android:layout_height="wrap_content">
 
     <mobi.myseries.gui.shared.SeenMark
-        android:id="@+id/seenMark"
-        android:gravity="center"
-        android:layout_width="@dimen/toucharea_minimum_side"
-        android:layout_height="@dimen/toucharea_minimum_side"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"/>
+            android:id="@+id/seenMark"
+            android:layout_width="@dimen/toucharea_minimum_side"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
 
-    <TextView
-        android:id="@+id/seasonNumber"
-        style="@style/TextView.Large.DarkGray.Ellipsized"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/seenMark"/>
+        <TextView
+            android:id="@+id/name"
+            style="@style/TextView.Large.DarkGray.Ellipsized"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@id/seenMark"/>
 
-    <TextView
-        android:id="@+id/watchedEpisodes"
-        style="@style/TextView.Small.Green"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/seasonNumber"/>
+        <TextView
+            android:id="@+id/watchedEpisodes"
+            style="@style/TextView.Small.Green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/name"
+            android:layout_below="@id/name"/>
 
-    <TextView
-        android:id="@+id/unwatchedEpisodes"
-        style="@style/TextView.Small.MediumGray.Ellipsized"
-        android:paddingLeft="@dimen/gap_medium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/watchedEpisodes"
-        android:layout_toLeftOf="@id/seenMark"
-        android:layout_below="@id/seasonNumber"/>
+        <TextView
+            android:id="@+id/unwatchedEpisodes"
+            style="@style/TextView.Small.MediumGray.Ellipsized"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/name"
+            android:layout_toLeftOf="@id/watchedEpisodes"/>
 
-    <mobi.myseries.gui.shared.SeenEpisodesBar
-        android:id="@+id/seenEpisodesBar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/chunkbar_height"
-        android:layout_below="@id/seenMark"/>
+        <mobi.myseries.gui.shared.SeenEpisodesBar
+            android:id="@+id/seenEpisodesBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chunkbar_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/seenMark"/>
 
 </RelativeLayout>
