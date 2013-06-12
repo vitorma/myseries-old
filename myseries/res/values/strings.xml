@@ -265,6 +265,7 @@
         <string name="series_uppercase">SERIES</string>
         <string name="seasons_uppercase">SEASONS</string>
         <string name="episodes_uppercase">EPISODES</string>
+        <string name="total_runtime_uppercase">TOTAL RUNTIME</string>
         
         <!-- watched as in 'watched episodes of a tv series' -->
         <string name="series_watched" formatted="false">%d WATCHED</string>
@@ -272,7 +273,7 @@
         <string name="episodes_watched" formatted="false">%d WATCHED</string>
 
         <string name="total_runtime_format" formatted="false">%d days %d hours %d minutes</string>
-        <string name="total_runtime" >OF WATCHED EPISODES</string>
+        <string name="watched_runtime_format" formatted="false" >%d days %d hours %d minutes\nOF WATCHED EPISODES</string>
 
     <!-- Do not translate -->
     <string name="app">MySeries</string>

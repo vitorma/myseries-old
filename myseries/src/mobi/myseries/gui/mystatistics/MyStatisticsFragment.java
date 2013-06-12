@@ -36,9 +36,10 @@ public class MyStatisticsFragment extends Fragment {
     private TextView seriesWatched;
     private ProgressBar seriesWatchedProgressBar;
     private UpdateFinishListener updateListener;
-    private TextView watchedEpisodesRuntime;
+    private TextView watchedRuntime;
     private ProgressBar timeOfWatchedEpisodesProgressBar;
     private OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
+    private TextView totalRuntime;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -97,8 +98,9 @@ public class MyStatisticsFragment extends Fragment {
         this.timeOfWatchedEpisodesProgressBar = (ProgressBar) this.getActivity()
             .findViewById(R.id.timeOfEpisodesWatchedProgressBar);
 
-        this.watchedEpisodesRuntime = (TextView) this.getActivity().findViewById(
-            R.id.watchedRuntime);
+        this.watchedRuntime = (TextView) this.getActivity().findViewById(R.id.watchedRuntime);
+
+        this.totalRuntime = (TextView) this.getActivity().findViewById(R.id.totalRuntime);
     }
 
     private void setupBackupListener() {
@@ -192,16 +194,16 @@ public class MyStatisticsFragment extends Fragment {
         final Date now = new Date(System.currentTimeMillis());
 
         final Collection<Series> series = App.seriesProvider().followedSeries();
+
         for (Series s : series) {
+            int currentSeriesEpisodes = 0;
+            int currentSeriesWatchedEpisodes = 0;
+
             if (!preferences.countSeries(s.id())) {
                 continue;
             }
 
             ++nSeries;
-
-            if (s.numberOfEpisodes() == s.numberOfSeenEpisodes()) {
-                ++watchedSeries;
-            }
 
             final SeasonSet seasons = s.seasons();
 
@@ -230,10 +232,12 @@ public class MyStatisticsFragment extends Fragment {
                     if (e.wasSeen()) {
                         ++watchedEpisodes;
                         ++currentSeasonSeenEpisodes;
+                        ++currentSeriesWatchedEpisodes;
                     }
 
                     ++nEpisodes;
                     ++currentSeasonEpisodes;
+                    ++currentSeriesEpisodes;
 
                 }
 
@@ -243,6 +247,10 @@ public class MyStatisticsFragment extends Fragment {
                 } catch (Exception e) {
                     // Ignore missing runtimes
                 }
+            }
+
+            if (currentSeriesEpisodes == currentSeriesWatchedEpisodes) {
+                ++watchedSeries;
             }
         }
 
@@ -277,7 +285,15 @@ public class MyStatisticsFragment extends Fragment {
         int hours = ((watchedRuntime / 60) % 24);
         int days = ((watchedRuntime / 3600));
 
-        this.watchedEpisodesRuntime.setText(String.format(
+        this.watchedRuntime.setText(String.format(
+            this.getString(R.string.watched_runtime_format), days, hours,
+            minutes));
+
+        minutes = (totalRuntime % 60);
+        hours = ((totalRuntime / 60) % 24);
+        days = ((totalRuntime / 3600));
+
+        this.totalRuntime.setText(String.format(
             this.getString(R.string.total_runtime_format), days, hours,
             minutes));
 
