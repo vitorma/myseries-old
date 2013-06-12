@@ -1,15 +1,20 @@
 package mobi.myseries.gui.mystatistics;
 
 import java.util.Collection;
+import java.util.Date;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.follow.SeriesFollowingListener;
+import mobi.myseries.application.preferences.MyStatisticsPreferences;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
+import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.SeasonSet;
 import mobi.myseries.domain.model.Series;
 import android.app.Fragment;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +36,10 @@ public class MyStatisticsFragment extends Fragment {
     private TextView seriesWatched;
     private ProgressBar seriesWatchedProgressBar;
     private UpdateFinishListener updateListener;
-    private TextView watchedEpisodesRuntime;
+    private TextView watchedRuntime;
+    private ProgressBar timeOfWatchedEpisodesProgressBar;
+    private OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
+    private TextView totalRuntime;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -43,8 +51,21 @@ public class MyStatisticsFragment extends Fragment {
         this.setupFollowingSeriesListener();
         this.setupUpdateFinishedListener();
         this.setupBackupListener();
+        this.setupPreferencesListener();
 
         this.update();
+    }
+
+    private void setupPreferencesListener() {
+        this.onSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                MyStatisticsFragment.this.update();
+            }
+        };
+
+        App.preferences().forActivities().register(this.onSharedPreferenceChangeListener);
+
     }
 
     @Override
@@ -74,9 +95,12 @@ public class MyStatisticsFragment extends Fragment {
             .findViewById(R.id.seasonsWatchedProgressBar);
         this.episodesWatchedProgressBar = (ProgressBar) this.getActivity()
             .findViewById(R.id.episodesWatchedProgressBar);
+        this.timeOfWatchedEpisodesProgressBar = (ProgressBar) this.getActivity()
+            .findViewById(R.id.timeOfEpisodesWatchedProgressBar);
 
-        this.watchedEpisodesRuntime = (TextView) this.getActivity().findViewById(
-            R.id.watchedRuntime);
+        this.watchedRuntime = (TextView) this.getActivity().findViewById(R.id.watchedRuntime);
+
+        this.totalRuntime = (TextView) this.getActivity().findViewById(R.id.totalRuntime);
     }
 
     private void setupBackupListener() {
@@ -156,6 +180,8 @@ public class MyStatisticsFragment extends Fragment {
     }
 
     private void update() {
+        MyStatisticsPreferences preferences = App.preferences().forMyStatistics();
+
         int nSeries = 0;
         int watchedSeries = 0;
         int nSeasons = 0;
@@ -163,37 +189,69 @@ public class MyStatisticsFragment extends Fragment {
         int nEpisodes = 0;
         int watchedEpisodes = 0;
         int watchedRuntime = 0;
+        int totalRuntime = 0;
+
+        final Date now = new Date(System.currentTimeMillis());
 
         final Collection<Series> series = App.seriesProvider().followedSeries();
 
-        nSeries = series.size();
-
         for (Series s : series) {
-            if (s.numberOfEpisodes() == s.numberOfSeenEpisodes()) {
-                ++watchedSeries;
+            int currentSeriesEpisodes = 0;
+            int currentSeriesWatchedEpisodes = 0;
+
+            if (!preferences.countSeries(s.id())) {
+                continue;
             }
 
-            nSeasons += s.seasons().numberOfSeasons();
+            ++nSeries;
 
             final SeasonSet seasons = s.seasons();
+
             for (int i = 0; i < seasons.numberOfSeasons(); ++i) {
+                if (seasons.seasonAt(i).number() == 0 && !preferences.countSpecialEpisodes()) {
+                    continue;
+                }
+
                 if (seasons.seasonAt(i).numberOfEpisodes() == seasons.seasonAt(i)
                     .numberOfSeenEpisodes()) {
                     ++watchedSeasons;
                 }
+
+                ++nSeasons;
+
+                int currentSeasonSeenEpisodes = 0;
+                int currentSeasonEpisodes = 0;
+
+                for (Episode e : seasons.seasonAt(i).episodes()) {
+                    // Assume episodes with null airDate are in the past
+                    if (!preferences.countUnairedEpisodes()
+                        && (e.airDate() != null && now.before(e.airDate()))) {
+                        continue;
+                    }
+
+                    if (e.wasSeen()) {
+                        ++watchedEpisodes;
+                        ++currentSeasonSeenEpisodes;
+                        ++currentSeriesWatchedEpisodes;
+                    }
+
+                    ++nEpisodes;
+                    ++currentSeasonEpisodes;
+                    ++currentSeriesEpisodes;
+
+                }
+
+                try {
+                    watchedRuntime += Integer.parseInt(s.runtime()) * currentSeasonSeenEpisodes;
+                    totalRuntime += Integer.parseInt(s.runtime()) * currentSeasonEpisodes;
+                } catch (Exception e) {
+                    // Ignore missing runtimes
+                }
             }
 
-            int currentSeriesSeenEpisodes = s.numberOfSeenEpisodes();
-            s.numberOfSeenEpisodes();
-
-            try {
-                watchedRuntime += (Integer.parseInt(s.runtime()) * currentSeriesSeenEpisodes);
-            } catch (Exception e) {
-                // Ignore missing runtimes
+            if (currentSeriesEpisodes == currentSeriesWatchedEpisodes) {
+                ++watchedSeries;
             }
-
-            nEpisodes += s.numberOfEpisodes();
-            watchedEpisodes += s.numberOfSeenEpisodes();
         }
 
         this.numberOfSeries.setText(String.format("%d", nSeries));
@@ -227,8 +285,19 @@ public class MyStatisticsFragment extends Fragment {
         int hours = ((watchedRuntime / 60) % 24);
         int days = ((watchedRuntime / 3600));
 
-        this.watchedEpisodesRuntime.setText(String.format(
+        this.watchedRuntime.setText(String.format(
+            this.getString(R.string.watched_runtime_format), days, hours,
+            minutes));
+
+        minutes = (totalRuntime % 60);
+        hours = ((totalRuntime / 60) % 24);
+        days = ((totalRuntime / 3600));
+
+        this.totalRuntime.setText(String.format(
             this.getString(R.string.total_runtime_format), days, hours,
             minutes));
+
+        this.timeOfWatchedEpisodesProgressBar.setMax(totalRuntime);
+        this.timeOfWatchedEpisodesProgressBar.setProgress(watchedRuntime);
     }
 }

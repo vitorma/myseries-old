@@ -12,20 +12,14 @@
 
             <item
                 android:id="@+id/filter_series"
-                android:title="@string/seriesToShow"/>
+                android:title="@string/seriesToCount"/>
 
             <item
                 android:id="@+id/filter_episodes"
-                android:title="@string/episodesToShow"/>
+                android:title="@string/episodesToCount"/>
 
         </menu>
 
     </item>
-
-    <item
-        android:id="@+id/sort"
-        android:title="@string/action_sort"
-        android:icon="@drawable/ic_action_sort"
-        android:showAsAction="always"/>
 
 </menu>

@@ -154,7 +154,7 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     }
 
     public SeasonSet includingAll(Collection<Episode> episodes) {
-        Validate.isNonNull(episodes, "episodes");
+        Validate.isNonNull(episodes, "items");
 
         for (Episode e : episodes) {
             this.including(e);

@@ -16,10 +16,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class SeriesFilterDialogBuilder {
-    private Context context;
+    private static final int DEFAULT_TITLE_RESOURCE = R.string.seriesToShow;
+    private static final int SELECTED_BUTTON_TEXT_RESOURCE = R.string.showSelected;
+    private static final int ALL_BUTTON_TEXT_RESOURCE = R.string.showAll;
+
+    private final Context context;
     private Map<Series, Boolean> options;
-    private Map<Series, CheckedTextView> views;
+    private final Map<Series, CheckedTextView> views;
     private OnFilterListener onFilterListener;
+    private int titleResource = SeriesFilterDialogBuilder.DEFAULT_TITLE_RESOURCE;
+    private int onlySelectedButtonText = SeriesFilterDialogBuilder.SELECTED_BUTTON_TEXT_RESOURCE;
+    private int allButtonText = SeriesFilterDialogBuilder.ALL_BUTTON_TEXT_RESOURCE;
 
     public SeriesFilterDialogBuilder(Context context) {
         this.context = context;
@@ -52,7 +59,7 @@ public class SeriesFilterDialogBuilder {
     private void setUpTitleFor(Dialog dialog) {
         TextView titleView = (TextView) dialog.findViewById(R.id.title);
 
-        titleView.setText(this.context.getText(R.string.seriesToShow));
+        titleView.setText(this.context.getText(this.titleResource));
     }
 
     private void setUpOptionsFor(Dialog dialog) {
@@ -81,37 +88,52 @@ public class SeriesFilterDialogBuilder {
     private void setUpShowAllButtonFor(final Dialog dialog) {
         Button showAllButton = (Button) dialog.findViewById(R.id.showAllButton);
 
-        showAllButton.setText(R.string.showAll);
+        showAllButton.setText(this.allButtonText);
         showAllButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Series s : options.keySet()) {
-                    options.put(s, true);
+                for (Series s : SeriesFilterDialogBuilder.this.options.keySet()) {
+                    SeriesFilterDialogBuilder.this.options.put(s, true);
                 }
                 dialog.dismiss();
-                onFilterListener.onFilter();
+                SeriesFilterDialogBuilder.this.onFilterListener.onFilter();
             }
         });
     }
 
     private void setUpShowSelectedButtonFor(final Dialog dialog) {
         Button showSelectedButton = (Button) dialog.findViewById(R.id.showSelectedButton);
-        showSelectedButton.setText(R.string.showSelected);
+        showSelectedButton.setText(this.onlySelectedButtonText);
 
         showSelectedButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Series s : options.keySet()) {
-                    boolean checked = views.get(s).isChecked();
-                    options.put(s, checked);
+                for (Series s : SeriesFilterDialogBuilder.this.options.keySet()) {
+                    boolean checked = SeriesFilterDialogBuilder.this.views.get(s).isChecked();
+                    SeriesFilterDialogBuilder.this.options.put(s, checked);
                 }
                 dialog.dismiss();
-                onFilterListener.onFilter();
+                SeriesFilterDialogBuilder.this.onFilterListener.onFilter();
             }
         });
     }
 
     public static interface OnFilterListener {
         public void onFilter();
+    }
+
+    public SeriesFilterDialogBuilder setTitle(int stringResource) {
+        this.titleResource = stringResource;
+        return this;
+    }
+
+    public SeriesFilterDialogBuilder setAllButtonText(int stringResource) {
+        this.allButtonText = stringResource;
+        return this;
+    }
+
+    public SeriesFilterDialogBuilder setSelectedButtonText(int stringResource) {
+        this.onlySelectedButtonText = stringResource;
+        return this;
     }
 }

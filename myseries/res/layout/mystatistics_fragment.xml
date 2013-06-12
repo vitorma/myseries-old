@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:padding="@dimen/gap_medium" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:layout_margin="@dimen/gap_large" >
+        android:animateLayoutChanges="true" >
 
         <!-- SERIES -->
 
@@ -16,7 +15,9 @@
             android:id="@+id/numberOfSeries"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:text="1"
             android:textSize="@dimen/text_size_extreme" />
 
@@ -24,23 +25,27 @@
             android:id="@+id/series"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/numberOfSeries"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:text="@string/series_uppercase"
             android:textSize="@dimen/text_size_medium" />
 
         <ProgressBar
             android:id="@+id/seriesWatchedProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/gap_large"
-            android:layout_marginRight="@dimen/gap_large" />
+            android:layout_below="@id/series"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/seriesWatched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/seriesWatchedProgressBar"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:text="@string/series_watched"
             android:textSize="@dimen/text_size_medium" />
 
@@ -50,8 +55,11 @@
             android:id="@+id/numberOfSeasons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/seriesWatched"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="@dimen/gap_large"
             android:layout_marginTop="@dimen/gap_large"
+            android:gravity="center"
             android:text="1"
             android:textSize="@dimen/text_size_extreme" />
 
@@ -59,23 +67,27 @@
             android:id="@+id/seasons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/numberOfSeasons"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:text="@string/seasons_uppercase"
             android:textSize="@dimen/text_size_medium" />
 
         <ProgressBar
             android:id="@+id/seasonsWatchedProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/gap_large"
-            android:layout_marginRight="@dimen/gap_large" />
+            android:layout_below="@id/seasons"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/seasonsWatched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/seasonsWatchedProgressBar"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:text="@string/seasons_watched"
             android:textSize="@dimen/text_size_medium" />
 
@@ -85,8 +97,10 @@
             android:id="@+id/numberOfEpisodes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/seasonsWatched"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/gap_large"
+            android:gravity="center"
             android:text="1"
             android:textSize="@dimen/text_size_extreme" />
 
@@ -94,44 +108,70 @@
             android:id="@+id/episodes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/numberOfEpisodes"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:text="@string/episodes_uppercase"
             android:textSize="@dimen/text_size_medium" />
 
         <ProgressBar
             android:id="@+id/episodesWatchedProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/gap_large"
-            android:layout_marginRight="@dimen/gap_large" />
+            android:layout_below="@id/episodes"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/episodesWatched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/episodesWatchedProgressBar"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:text="@string/episodes_watched"
             android:textSize="@dimen/text_size_medium" />
 
         <!-- HOURS -->
 
         <TextView
-            android:id="@+id/watchedRuntime"
+            android:id="@+id/totalRuntime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/episodesWatched"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/gap_large"
+            android:gravity="center"
             android:text="@string/total_runtime_format"
             android:textSize="@dimen/text_size_xlarge" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/runtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/total_runtime"
+            android:layout_below="@id/totalRuntime"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/total_runtime_uppercase"
             android:textSize="@dimen/text_size_medium" />
-    </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/timeOfEpisodesWatchedProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/runtime"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/watchedRuntime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timeOfEpisodesWatchedProgressBar"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/watched_runtime_format"
+            android:textSize="@dimen/text_size_medium" />
+    </RelativeLayout>
 
 </ScrollView>
