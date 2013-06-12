@@ -350,6 +350,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.seasons.numberOfSeenEpisodes();
     }
 
+    public int numberOfUnwatchedEpisodes() {
+        return this.numberOfEpisodes() - this.numberOfSeenEpisodes();
+    }
+
     @Override
     public void onChangeNextEpisodeToSee(SeasonSet seasonSet) {
         this.notifyThatNextEpisodeToSeeChanged();

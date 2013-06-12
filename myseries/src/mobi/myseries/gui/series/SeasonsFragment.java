@@ -34,7 +34,8 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
 
     private ListView list;
     private TextView name;
-    private TextView seenEpisodes;
+    private TextView watchedEpisodes;
+    private TextView unwatchedEpisodes;
     private SeenEpisodesBar seenEpisodesBar;
     private SeenMark seenMark;
     private int seriesId;
@@ -89,13 +90,14 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
         final View view = inflater.inflate(R.layout.series_seasons, container, false);
 
         this.name = (TextView) view.findViewById(R.id.name);
-        this.seenEpisodes = (TextView) view.findViewById(R.id.seenEpisodes);
+        this.watchedEpisodes = (TextView) view.findViewById(R.id.watchedEpisodes);
+        this.unwatchedEpisodes = (TextView) view.findViewById(R.id.unwatchedEpisodes);
         this.seenMark = (SeenMark) view.findViewById(R.id.seenMark);
         this.seenEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
 
         final Series series = App.seriesProvider().getSeries(this.seriesId);
 
-        this.name.setText(series.name());
+        this.name.setText(R.string.all_seasons);
         this.seenMark.setChecked(series.numberOfEpisodes() == series.numberOfSeenEpisodes());
         this.seenMark.setOnClickListener(new OnClickListener() {
             @Override
@@ -148,15 +150,16 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     }
 
     private void updateSeenEpisodes() {
-        final Series series = App.seriesProvider().getSeries(this.seriesId);
+        Series series = App.seriesProvider().getSeries(this.seriesId);
 
-        String fraction = String.format(this.getString(R.string.fraction),
-            series.numberOfSeenEpisodes(), series.numberOfEpisodes());
-        String pluralOfEpisode = this.getResources().getQuantityString(R.plurals.plural_episode,
-            series.numberOfEpisodes());
-        String pluralOfWasSeen = this.getResources().getQuantityString(R.plurals.plural_was_seen,
-            series.numberOfSeenEpisodes());
+        int numberOfUnwatchedEpisodes = series.numberOfUnwatchedEpisodes();
+        String pluralOfUnwatched = this.getResources().getQuantityString(R.plurals.plural_unwatched, numberOfUnwatchedEpisodes);
+        String allWatched = this.getResources().getString(R.string.all_watched);
 
-        this.seenEpisodes.setText(fraction + " " + pluralOfEpisode + " " + pluralOfWasSeen);
+        this.watchedEpisodes.setText(series.numberOfSeenEpisodes() + "/" + series.numberOfEpisodes());
+        this.unwatchedEpisodes.setText(
+            numberOfUnwatchedEpisodes > 0 ?
+            numberOfUnwatchedEpisodes + " " + pluralOfUnwatched :
+            allWatched);
     }
 }
