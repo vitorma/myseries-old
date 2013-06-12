@@ -194,16 +194,16 @@ public class MyStatisticsFragment extends Fragment {
         final Date now = new Date(System.currentTimeMillis());
 
         final Collection<Series> series = App.seriesProvider().followedSeries();
+
         for (Series s : series) {
+            int currentSeriesEpisodes = 0;
+            int currentSeriesWatchedEpisodes = 0;
+
             if (!preferences.countSeries(s.id())) {
                 continue;
             }
 
             ++nSeries;
-
-            if (s.numberOfEpisodes() == s.numberOfSeenEpisodes()) {
-                ++watchedSeries;
-            }
 
             final SeasonSet seasons = s.seasons();
 
@@ -232,10 +232,12 @@ public class MyStatisticsFragment extends Fragment {
                     if (e.wasSeen()) {
                         ++watchedEpisodes;
                         ++currentSeasonSeenEpisodes;
+                        ++currentSeriesWatchedEpisodes;
                     }
 
                     ++nEpisodes;
                     ++currentSeasonEpisodes;
+                    ++currentSeriesEpisodes;
 
                 }
 
@@ -245,6 +247,10 @@ public class MyStatisticsFragment extends Fragment {
                 } catch (Exception e) {
                     // Ignore missing runtimes
                 }
+            }
+
+            if (currentSeriesEpisodes == currentSeriesWatchedEpisodes) {
+                ++watchedSeries;
             }
         }
 
