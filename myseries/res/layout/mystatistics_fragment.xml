@@ -57,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/seriesWatched"
             android:layout_centerHorizontal="true"
+            android:paddingTop="@dimen/gap_large"
             android:layout_marginTop="@dimen/gap_large"
             android:gravity="center"
             android:text="1"
@@ -134,7 +135,7 @@
         <!-- HOURS -->
 
         <TextView
-            android:id="@+id/watchedRuntime"
+            android:id="@+id/totalRuntime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodesWatched"
@@ -145,13 +146,13 @@
             android:textSize="@dimen/text_size_xlarge" />
 
         <TextView
-            android:id="@+id/totalRuntime"
+            android:id="@+id/runtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/watchedRuntime"
+            android:layout_below="@id/totalRuntime"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:text="@string/total_runtime"
+            android:text="@string/total_runtime_uppercase"
             android:textSize="@dimen/text_size_medium" />
 
         <ProgressBar
@@ -159,8 +160,18 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/totalRuntime"
+            android:layout_below="@id/runtime"
             android:gravity="center" />
+
+        <TextView
+            android:id="@+id/watchedRuntime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timeOfEpisodesWatchedProgressBar"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/watched_runtime_format"
+            android:textSize="@dimen/text_size_medium" />
     </RelativeLayout>
 
 </ScrollView>
