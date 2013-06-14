@@ -63,8 +63,16 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
         return this.number;
     }
 
+    public boolean isSpecial() {
+        return this.number == SPECIAL_EPISODES_SEASON_NUMBER;
+    }
+
     public synchronized int numberOfEpisodes() {
         return this.episodes.size();
+    }
+
+    public synchronized int numberOfEpisodes(Specification<Episode> specification) {
+        return this.episodesBy(specification).size();
     }
 
     public synchronized boolean includes(Episode episode) {
