@@ -4,49 +4,59 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/list_selector_holo_light"
     android:descendantFocusability="blocksDescendants"
-    android:padding="@dimen/gap_medium"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="64dp">
+
+    <TextView
+        android:id="@+id/seasonNumber"
+        style="@style/TextView.Large"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentLeft="true"/>
 
     <mobi.myseries.gui.shared.SeenMark
-            android:id="@+id/seenMark"
-            android:layout_width="@dimen/toucharea_minimum_side"
-            android:layout_height="@dimen/toucharea_minimum_side"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"/>
+        android:id="@+id/seenMark"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentRight="true"/>
 
-        <TextView
-            android:id="@+id/name"
-            style="@style/TextView.Large.DarkGray.Ellipsized"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@id/seenMark"/>
+    <mobi.myseries.gui.shared.SeenEpisodesBar
+        android:id="@+id/seenEpisodesBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chunkbar_height"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/seasonNumber"
+        android:layout_toLeftOf="@id/seenMark"/>
 
-        <TextView
-            android:id="@+id/watchedEpisodes"
-            style="@style/TextView.Small.Green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@id/name"
-            android:layout_below="@id/name"/>
+    <TextView
+        android:id="@+id/watchedEpisodes"
+        style="@style/TextView.Small.Green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/gap_medium"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@id/seenEpisodesBar"/>
 
-        <TextView
-            android:id="@+id/unwatchedEpisodes"
-            style="@style/TextView.Small.MediumGray.Ellipsized"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/name"
-            android:layout_toLeftOf="@id/watchedEpisodes"/>
+    <TextView
+        android:id="@+id/unwatchedEpisodes"
+        style="@style/TextView.Small.MediumGray.Ellipsized"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/gap_medium"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/seenMark"
+        android:layout_toRightOf="@id/seasonNumber"/>
 
-        <mobi.myseries.gui.shared.SeenEpisodesBar
-            android:id="@+id/seenEpisodesBar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/chunkbar_height"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/seenMark"/>
+    <TextView
+        android:id="@+id/unairedEpisodes"
+        style="@style/TextView.Small.LightGray.Ellipsized"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="@dimen/gap_medium"
+        android:layout_toLeftOf="@id/seenMark"
+        android:layout_toRightOf="@id/seasonNumber"/>
 
 </RelativeLayout>

@@ -10,11 +10,12 @@ import android.content.Context;
 public class Preferences {
     private static final String KEY_PREFIX_BACKUP_RESTORE = "BackupRestore";
     private static final String KEY_PREFIX_MYSCHEDULE = "MySchedule";
-
     private static final String KEY_PREFIX_MYSERIES = "MySeries";
     private static final String KEY_PREFIX_MYSTATISTICS = "MyStatistics";
     private static final String KEY_PREFIX_SCHEDULEWIDGET = "ScheduleWidget";
     private static final String KEY_PREFIX_UPDATE = "Update";
+    private static final String KEY_PREFIX_SERIES_DETAILS = "Series";
+
     private static final String PREFERENCES_NAME = "mobi.myseries.preferences";
     private static final String PREFERENCES_NAME_APPWIDGET = "mobi.myseries.preferences.appwidget";
 
@@ -61,6 +62,10 @@ public class Preferences {
     public UpdatePreferences forUpdate() {
         return new UpdatePreferences(this.forActivities().addKeyPrefix(
             Preferences.KEY_PREFIX_UPDATE));
+    }
+
+    public SeriesDetailsPreferences forSeriesDetails() {
+        return new SeriesDetailsPreferences(this.forActivities().addKeyPrefix(Preferences.KEY_PREFIX_SERIES_DETAILS));
     }
 
     /* For app widgets */

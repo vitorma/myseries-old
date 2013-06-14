@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/top_panel"
+        android:id="@+id/bar"
         android:background="#eeeeee"
-        android:paddingTop="@dimen/gap_medium"
-        android:paddingBottom="@dimen/gap_medium"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
+        android:layout_height="64dp">
+
+        <ImageButton
+            android:id="@+id/sort"
+            android:src="@drawable/ic_action_sort_inverse"
+            android:background="@drawable/item_background_holo_light"
+            android:padding="@dimen/gap_medium"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentLeft="true"/>
 
         <mobi.myseries.gui.shared.SeenMark
             android:id="@+id/seenMark"
-            android:layout_width="@dimen/toucharea_minimum_side"
-            android:layout_height="@dimen/toucharea_minimum_side"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"/>
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentRight="true"/>
 
-        <TextView
-            android:id="@+id/name"
-            style="@style/TextView.Large.DarkGray.Ellipsized"
+        <mobi.myseries.gui.shared.SeenEpisodesBar
+            android:id="@+id/seenEpisodesBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_height="@dimen/chunkbar_height"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/sort"
             android:layout_toLeftOf="@id/seenMark"/>
 
         <TextView
@@ -37,34 +40,42 @@
             style="@style/TextView.Small.Green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/name"
-            android:layout_below="@id/name"/>
+            android:layout_marginTop="@dimen/gap_medium"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@id/seenEpisodesBar"/>
 
         <TextView
             android:id="@+id/unwatchedEpisodes"
             style="@style/TextView.Small.MediumGray.Ellipsized"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/name"
-            android:layout_toLeftOf="@id/watchedEpisodes"/>
+            android:layout_marginTop="@dimen/gap_medium"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@id/seenMark"
+            android:layout_toRightOf="@id/sort"/>
 
-        <mobi.myseries.gui.shared.SeenEpisodesBar
-            android:id="@+id/seenEpisodesBar"
+        <TextView
+            android:id="@+id/unairedEpisodes"
+            style="@style/TextView.Small.LightGray.Ellipsized"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/chunkbar_height"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/seenMark"/>
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/gap_medium"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/seenMark"
+            android:layout_toRightOf="@id/sort"/>
 
     </RelativeLayout>
 
+    <View
+        android:id="@+id/divider"
+        android:background="@drawable/list_divider_holo_light"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
     <ListView
         android:id="@+id/seasons"
+        android:padding="0dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/top_panel"/>
+        android:layout_height="match_parent"/>
 
-</RelativeLayout>
+</LinearLayout>

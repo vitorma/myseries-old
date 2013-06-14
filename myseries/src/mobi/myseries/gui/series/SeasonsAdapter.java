@@ -1,28 +1,43 @@
 package mobi.myseries.gui.series;
 
+import java.util.Collections;
 import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.SeasonListener;
+import mobi.myseries.gui.shared.SeasonComparator;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
+import mobi.myseries.gui.shared.UnairedEpisodeSpecification;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class SeasonsAdapter extends BaseAdapter implements SeasonListener {
+public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSharedPreferenceChangeListener {
+    private int seriesId;
     private List<Season> seasons;
 
     public SeasonsAdapter(int seriesId) {
-        this.seasons = App.seriesProvider().getSeries(seriesId).seasons().seasons();
+        this.seriesId = seriesId;
+        this.loadSeasons();
+    }
+
+    private void loadSeasons() {
+        this.seasons = App.seriesProvider().getSeries(this.seriesId).seasons().seasons();
 
         for (Season s : this.seasons) {
             s.register(this);
         }
+
+        int sortMode = App.preferences().forSeriesDetails().sortMode();
+
+        Collections.sort(this.seasons, SeasonComparator.fromSortMode(sortMode));
     }
 
     @Override
@@ -48,16 +63,17 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener {
             itemView = View.inflate(App.context(), R.layout.series_seasons_item, null);
         }
 
-        TextView seasonNumber = (TextView) itemView.findViewById(R.id.name);
+        TextView seasonNumber = (TextView) itemView.findViewById(R.id.seasonNumber);
         SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.seenEpisodesBar);
         final SeenMark seasonSeenMark = (SeenMark) itemView.findViewById(R.id.seenMark);
 
         final Season season = this.seasons.get(position);
 
-        if (season.number() == 0) {
-            seasonNumber.setText(App.resources().getString(R.string.special_episodes));
+        seasonNumber.setText(String.format(App.resources().getString(R.string.season_number_format), season.number()));
+        if (season.isSpecial()) {
+            seasonNumber.setTextColor(App.resources().getColor(R.color.lilac));
         } else {
-            seasonNumber.setText(String.format(App.resources().getString(R.string.season_number_format), season.number()));
+            seasonNumber.setTextColor(App.resources().getColor(R.color.dark_gray));
         }
 
         seenEpisodesBar.updateWithEpisodesOf(season);
@@ -76,6 +92,7 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener {
 
         TextView watchedEpisodes = (TextView) itemView.findViewById(R.id.watchedEpisodes);
         TextView unwatchedEpisodes = (TextView) itemView.findViewById(R.id.unwatchedEpisodes);
+        TextView unairedEpisodes = (TextView) itemView.findViewById(R.id.unairedEpisodes);
 
         int numberOfUnwatchedEpisodes = season.numberOfEpisodes() - season.numberOfSeenEpisodes();
         String pluralOfUnwatched = App.resources().getQuantityString(R.plurals.plural_unwatched, numberOfUnwatchedEpisodes);
@@ -86,6 +103,15 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener {
             numberOfUnwatchedEpisodes > 0 ?
             numberOfUnwatchedEpisodes + " " + pluralOfUnwatched :
             allWatched);
+
+        int numberOfUnairedEpisodes = season.numberOfEpisodes(new UnairedEpisodeSpecification());
+        String pluralOfUnaired = App.resources().getQuantityString(R.plurals.plural_unaired, numberOfUnairedEpisodes);
+        String allAired = App.resources().getString(R.string.all_aired);
+
+        unairedEpisodes.setText(
+            numberOfUnairedEpisodes > 0 ?
+            numberOfUnairedEpisodes + " " + pluralOfUnaired :
+            allAired);
 
         return itemView;
     }
@@ -115,4 +141,10 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener {
 
     @Override
     public void onMarkAsNotSeenBySeries(Season season) { }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        this.loadSeasons();
+        this.notifyDataSetChanged();
+    }
 }

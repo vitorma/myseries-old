@@ -9,6 +9,8 @@ import mobi.myseries.gui.season.SeasonActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
+import mobi.myseries.gui.shared.ToastBuilder;
+import mobi.myseries.gui.shared.UnairedEpisodeSpecification;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,11 +36,12 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     }
 
     private ListView list;
-    private TextView name;
     private TextView watchedEpisodes;
     private TextView unwatchedEpisodes;
+    private TextView unairedEpisodes;
     private SeenEpisodesBar seenEpisodesBar;
     private SeenMark seenMark;
+    private ImageButton sortButton;
     private int seriesId;
     private SeasonsAdapter adapter;
 
@@ -53,6 +57,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
         super.onStart();
 
         App.seriesProvider().getSeries(this.seriesId).register(this);
+        App.preferences().forActivities().register(this.adapter);
     }
 
     @Override
@@ -60,6 +65,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
         super.onStop();
 
         App.seriesProvider().getSeries(this.seriesId).deregister(this);
+        App.preferences().forActivities().deregister(this.adapter);
     }
 
     @Override
@@ -89,15 +95,15 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.series_seasons, container, false);
 
-        this.name = (TextView) view.findViewById(R.id.name);
         this.watchedEpisodes = (TextView) view.findViewById(R.id.watchedEpisodes);
         this.unwatchedEpisodes = (TextView) view.findViewById(R.id.unwatchedEpisodes);
+        this.unairedEpisodes = (TextView) view.findViewById(R.id.unairedEpisodes);
         this.seenMark = (SeenMark) view.findViewById(R.id.seenMark);
+        this.sortButton = (ImageButton) view.findViewById(R.id.sort);
         this.seenEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
 
         final Series series = App.seriesProvider().getSeries(this.seriesId);
 
-        this.name.setText(R.string.all_seasons);
         this.seenMark.setChecked(series.numberOfEpisodes() == series.numberOfSeenEpisodes());
         this.seenMark.setOnClickListener(new OnClickListener() {
             @Override
@@ -109,12 +115,35 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
                 }
             }
         });
+
+        this.sortButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SeasonsFragment.this.showSortingDialog();
+            }
+        });
+
         this.seenEpisodesBar.updateWithEpisodesOf(series);
         this.updateSeenEpisodes();
 
-        series.register(this);
+        int numberOfUnairedEpisodes = series.numberOfEpisodes(new UnairedEpisodeSpecification());
+        String pluralOfUnaired = App.resources().getQuantityString(R.plurals.plural_unaired, numberOfUnairedEpisodes);
+        String allAired = App.resources().getString(R.string.all_aired);
+
+        this.unairedEpisodes.setText(
+            numberOfUnairedEpisodes > 0 ?
+            numberOfUnairedEpisodes + " " + pluralOfUnaired :
+            allAired);
 
         return view;
+    }
+
+    private void showSortingDialog() {
+        if (this.adapter.isEmpty()) {
+            new ToastBuilder(this.getActivity()).setMessage(R.string.no_seasons_to_sort).build().show();
+        } else {
+            new SeasonSortingDialogFragment().show(this.getFragmentManager(), "sortingDialog");
+        }
     }
 
     @Override

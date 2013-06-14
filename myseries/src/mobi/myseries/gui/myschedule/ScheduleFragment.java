@@ -121,7 +121,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
         if (this.adapter.isEmpty()) {
             new ToastBuilder(this.getActivity()).setMessage(R.string.no_episodes_to_sort).build().show();
         } else {
-            SeriesSortingDialogFragment.newInstance(this.scheduleMode).show(this.getFragmentManager(), "seriesSortingDialog");
+            EpisodeSortingDialogFragment.newInstance(this.scheduleMode).show(this.getFragmentManager(), "seriesSortingDialog");
         }
     }
 
