@@ -14,6 +14,7 @@ import mobi.myseries.gui.shared.UnairedEpisodeSpecification;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,6 +49,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setRetainInstance(true);
 
         this.seriesId = this.getArguments().getInt(Extra.SERIES_ID);
     }
@@ -56,7 +58,6 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     public void onStart() {
         super.onStart();
 
-        App.seriesProvider().getSeries(this.seriesId).register(this);
         App.preferences().forActivities().register(this.adapter);
     }
 
@@ -64,7 +65,6 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     public void onStop() {
         super.onStop();
 
-        App.seriesProvider().getSeries(this.seriesId).deregister(this);
         App.preferences().forActivities().deregister(this.adapter);
     }
 
@@ -89,6 +89,8 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
                 SeasonsFragment.this.startActivity(intent);
             }
         });
+
+        App.seriesProvider().getSeries(this.seriesId).register(this);
     }
 
     @Override
@@ -154,7 +156,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Series series) {
-        // TODO(Reul): if user wants special items to be displayed…
+        Log.d("SeasonsFragment", "called");
         this.seenEpisodesBar.updateWithEpisodesOf(series);
         this.seenMark.setChecked(series.numberOfEpisodes() == series.numberOfSeenEpisodes());
         this.updateSeenEpisodes();
