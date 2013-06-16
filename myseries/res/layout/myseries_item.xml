@@ -42,7 +42,7 @@
 
             <TextView
                 android:id="@+id/genres"
-                style="@style/TextView.Small.MediumGray"
+                style="@style/TextView.Small.MediumGray.Ellipsized"
                 android:paddingLeft="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
 
             <TextView
                 android:id="@+id/status"
-                style="@style/TextView.Small.LightGray"
+                style="@style/TextView.Small.LightGray.Ellipsized"
                 android:paddingLeft="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
 
             <TextView
                 android:id="@+id/airInfo"
-                style="@style/TextView.Small.LightGray"
+                style="@style/TextView.Small.LightGray.Ellipsized"
                 android:paddingLeft="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
