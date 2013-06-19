@@ -51,7 +51,6 @@ public class App extends Application {
     private static SeriesProvider seriesProvider;
     private static BackupService backupService;
     private static BroadcastService broadcastService;
-    @SuppressWarnings("unused")
     private static NotificationService notificationService;
     private static Preferences preferences;
 
@@ -162,6 +161,10 @@ public class App extends Application {
 
     public static MessageService messageService() {
         return messageService;
+    }
+
+    public static NotificationService notificationService() {
+        return notificationService;
     }
 
     public static BackupService backupService() {

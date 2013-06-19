@@ -6,6 +6,7 @@ public class NotificationLauncher {
 
     private final NotificationDispatcher defaultDispatcher;
     private volatile NotificationDispatcher currentDispatcher;
+
     private volatile Notification currentNotification;
 
     public NotificationLauncher(NotificationDispatcher defaultDispatcher) {
@@ -33,17 +34,19 @@ public class NotificationLauncher {
         }
     }
 
-    public void launch(Notification notification) {
+    public synchronized void launch(Notification notification) {
         Validate.isNonNull(notification, "notification");
 
         this.currentNotification = notification;
         this.currentDispatcher.notify(this.currentNotification);
     }
 
-    public void cancel(Notification notification) {
-        if (notification == this.currentNotification) {
+    public synchronized void cancel(int notificationId) {
+        if (this.currentNotification != null && notificationId == this.currentNotification.id()) {
+            Notification lastNotification = this.currentNotification;
+
             this.currentNotification = null;
-            this.currentDispatcher.cancel(notification);
+            this.currentDispatcher.cancel(lastNotification);
         }
     }
 }

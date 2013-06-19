@@ -12,14 +12,19 @@ import mobi.myseries.application.notification.TextOnlyNotification;
 
 public class NotificationDispatchingTest {
 
-    private Notification tONotificationReference = new TextOnlyNotification();
-    private TextOnlyNotification tOTextOnlyReference = new TextOnlyNotification();
+    private static final int ID = 0;
+    private static final String MESSAGE = "Message!";
+    private static final int CURRENT_PROGRESS = 1;
+    private static final int TOTAL_PROGRESS = 2;
 
-    private Notification iPNotificationReference = new IndeterminateProgressNotification();
-    private IndeterminateProgressNotification iPIndeterminateProgressReference = new IndeterminateProgressNotification();
+    private Notification tONotificationReference = new TextOnlyNotification(ID, MESSAGE);
+    private TextOnlyNotification tOTextOnlyReference = new TextOnlyNotification(ID, MESSAGE);
 
-    private Notification dPNotificationReference = new DeterminateProgressNotification();
-    private DeterminateProgressNotification dPDeterminateProgressReference = new DeterminateProgressNotification();
+    private Notification iPNotificationReference = new IndeterminateProgressNotification(ID, MESSAGE);
+    private IndeterminateProgressNotification iPIndeterminateProgressReference = new IndeterminateProgressNotification(ID, MESSAGE);
+
+    private Notification dPNotificationReference = new DeterminateProgressNotification(ID, MESSAGE, CURRENT_PROGRESS, TOTAL_PROGRESS);
+    private DeterminateProgressNotification dPDeterminateProgressReference = new DeterminateProgressNotification(ID, MESSAGE, CURRENT_PROGRESS, TOTAL_PROGRESS);
 
     private class TestNotificationDispatcher extends NotificationDispatcher {
         public boolean textOnlyCalled = false;

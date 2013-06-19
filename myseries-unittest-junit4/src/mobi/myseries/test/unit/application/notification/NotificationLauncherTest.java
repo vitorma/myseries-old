@@ -196,9 +196,9 @@ public class NotificationLauncherTest {
     public void itIgnoresCancelingANotificationThatIsNotTheCurrentOne() {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
-        Notification notUsedNotification = mock(Notification.class);
+        int notUsedNotificationId = 0;
 
-        launcher.cancel(notUsedNotification);
+        launcher.cancel(notUsedNotificationId);
 
         verifyZeroInteractions(defaultDispatcher);
     }
@@ -207,10 +207,13 @@ public class NotificationLauncherTest {
     public void itCancelsANotificationThatIsCurrentOne() {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
+
+        int notificationId = 0;
         Notification notification = mock(Notification.class);
+        when(notification.id()).thenReturn(notificationId);
 
         launcher.launch(notification);
-        launcher.cancel(notification);
+        launcher.cancel(notificationId);
 
         verify(defaultDispatcher).cancel(notification);
     }
@@ -220,14 +223,16 @@ public class NotificationLauncherTest {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
+
+        int notificationId = 0;
         Notification notification = mock(Notification.class);
+        when(notification.id()).thenReturn(notificationId);
 
         launcher.launch(notification);
-        launcher.cancel(notification);
+        launcher.cancel(notificationId);
 
         launcher.setDispatcherTo(newDispatcher);
 
         verifyZeroInteractions(newDispatcher);
     }
 }
-

@@ -2,6 +2,11 @@ package mobi.myseries.gui.update;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.notification.DeterminateProgressNotification;
+import mobi.myseries.application.notification.IndeterminateProgressNotification;
+import mobi.myseries.application.notification.Notification;
+import mobi.myseries.application.notification.NotificationDispatcher;
+import mobi.myseries.application.notification.TextOnlyNotification;
 import mobi.myseries.application.preferences.UpdatePreferences;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.ActionBar;
@@ -13,7 +18,9 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 public class UpdateActivity extends Activity {
 
@@ -26,6 +33,9 @@ public class UpdateActivity extends Activity {
     private RadioGroup automaticUpdatesRadioGroup;
     private Button cancelButton;
     private Button saveButton;
+
+    private ProgressBar updateProgressBar;
+    private TextView updateStatusTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +54,7 @@ public class UpdateActivity extends Activity {
     private void setupActionBar() {
         ActionBar actionBar = this.getActionBar();
 
-        actionBar.setTitle(R.string.settings);
+        actionBar.setTitle(R.string.settings);  // XXX update(s?) instead of settings
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
     }
@@ -52,6 +62,11 @@ public class UpdateActivity extends Activity {
     private void setupViews() {
         this.automaticUpdatesRadioGroup =
                 (RadioGroup) this.findViewById(R.id.automaticUpdatesRadioGroup);
+
+        this.updateProgressBar =
+                (ProgressBar) this.findViewById(R.id.updateNotificationProgressBar);
+        this.updateStatusTextView =
+                (TextView) this.findViewById(R.id.updateNotificationStatusMessage);
     }
 
     private void loadSettings() {
@@ -144,6 +159,59 @@ public class UpdateActivity extends Activity {
 
     private UpdatePreferences settingsProviderFor(Context context) {
         return App.preferences().forUpdate();
+    }
+
+    private NotificationDispatcher updateNotificationDispatcher = new NotificationDispatcher() {
+
+        @Override
+        public void notifyTextOnlyNotification(TextOnlyNotification notification) {
+            updateProgressBar.setIndeterminate(false);
+            updateProgressBar.setMax(0);
+            updateProgressBar.setProgress(0);
+
+            updateStatusTextView.setText(notification.message());
+        }
+
+        @Override
+        public void notifyIndeterminateProgressNotification(
+                IndeterminateProgressNotification notification) {
+            updateProgressBar.setIndeterminate(true);
+
+            updateStatusTextView.setText(notification.message());
+        }
+
+        @Override
+        public void notifyDeterminateProgressNotification(
+                DeterminateProgressNotification notification) {
+            updateProgressBar.setIndeterminate(false);
+            updateProgressBar.setMax(notification.totalProgress());
+            updateProgressBar.setProgress(notification.currentProgress());
+
+            updateStatusTextView.setText(notification.message());
+        }
+
+        @Override
+        public void cancel(Notification notification) {
+            updateProgressBar.setIndeterminate(false);
+            updateProgressBar.setMax(0);
+            updateProgressBar.setProgress(0);
+
+            updateStatusTextView.setText(R.string.update_not_running);
+        }
+    };
+
+    @Override
+    protected void onResume() {  // TODO(Gabriel) Should this be another point of the life cycle?
+        super.onResume();
+
+        App.notificationService().setUpdateNotificationDispatcher(this.updateNotificationDispatcher);
+    }
+
+    @Override
+    protected void onPause() {  // TODO(Gabriel) Should this be another point of the life cycle?
+        super.onPause();
+
+        App.notificationService().removeUpdateNotificationDispatcher(this.updateNotificationDispatcher);
     }
 
     private void runManualUpdate() {
