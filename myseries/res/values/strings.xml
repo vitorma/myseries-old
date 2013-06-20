@@ -189,6 +189,8 @@
 
     <!-- Preferences Activity -->
 
+    <string name="update_status">UPDATE STATUS</string>
+    <string name="update_not_running">Update not running</string>
     <string name="update_data_manually">UPDATE DATA MANUALLY</string>
     <string name="update_now">Update now</string>
     <string name="update_data_automatically">UPDATE DATA AUTOMATICALLY</string>

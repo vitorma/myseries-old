@@ -1,8 +1,9 @@
 package mobi.myseries.application.update;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -207,7 +208,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         });
     }
 
-    private void notifyListenersOfUpdateProgress(final int current, final int total) {
+    private void notifyListenersOfUpdateProgress(final int current, final int total, final Series currentSeries) {
         Log.d(getClass().getName(), "Update progress: " + current + "/" + total);
         this.isUpdating.set(false);
 
@@ -215,7 +216,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             @Override
             public void run() {
                 for (final UpdateProgressListener listener : updateProgressListeners) {
-                    listener.onUpdateProgress(current, total);
+                    listener.onUpdateProgress(current, total, currentSeries);
                 }
             }
         });
@@ -246,6 +247,22 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             public void run() {
                 for (final UpdateProgressListener listener : updateProgressListeners) {
                     listener.onUpdateFailure(cause);
+                }
+            }
+        });
+
+        notifyListenersOfUpdateFinish();
+    }
+
+    private void notifyListenersOfUpdateSeriesFailure(final Map<Series, Exception> causes) {
+        Log.d(getClass().getName(), "Update finished with failure when updating series.");
+        this.isUpdating.set(false);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (final UpdateProgressListener listener : updateProgressListeners) {
+                    listener.onUpdateSeriesFailure(Collections.unmodifiableMap(causes));
                 }
             }
         });
@@ -309,9 +326,9 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                 return;
             }
 
-            Collection<Exception> errors = updateAllSeriesIn(whatHasToBeUpdated);
+            Map<Series, Exception> errors = updateAllSeriesIn(whatHasToBeUpdated);
             if (!errors.isEmpty()) {
-                notifyListenersOfUpdateFailure(errors.iterator().next());
+                notifyListenersOfUpdateSeriesFailure(errors);
                 return;
             }
 
@@ -367,27 +384,27 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             return result;
         }
 
-        private Collection<Exception> updateAllSeriesIn(WhatHasToBeUpdated whatHasToBeUpdated) {
+        private Map<Series, Exception> updateAllSeriesIn(WhatHasToBeUpdated whatHasToBeUpdated) {
             // XXX(Gabriel) it should be the total number of series whose data or posters should be updated
             int totalNumberOfUpdates = followedSeries.size();
             int currentUpdate = 1;
 
-            Collection<Exception> errors = new ArrayList<Exception>();
+            Map<Series, Exception> errors = new HashMap<Series, Exception>();
 
             for (final Series s : followedSeries) {
                 // XXX(Gabriel) it should be in the place where it makes most sense according to what current and total means.
-                notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates);
+                notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates, s);
                 try {
                     if (whatHasToBeUpdated.seriesWithDataToUpdate.contains(s)) {
                         Log.d(getClass().getName(), "Updating data of " + s.name());
                         UpdateResult result = updateDataOf(s);
 
                         if (!result.success()) {
-                            errors.add(result.error());
+                            errors.put(s, result.error());
                             continue;
                         }
                     } else {
-                        Log.d(getClass().getName(), "Not updating data of " + s.name());
+                        Log.d(getClass().getName(), "Skip updating data of " + s.name());
                     }
 
                     if (whatHasToBeUpdated.seriesWithPosterToUpdate.contains(s) || posterAvailableButNotDownloaded(s)) {
@@ -395,11 +412,11 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                         UpdateResult result = updatePosterOf(s); 
 
                         if (!result.success()) {
-                            errors.add(result.error());
+                            errors.put(s, result.error());
                             continue;
                         }
                     } else {
-                        Log.d(getClass().getName(), "Not updating poster of " + s.name());
+                        Log.d(getClass().getName(), "Skip updating poster of " + s.name());
                     }
 
                     s.setLastUpdate(System.currentTimeMillis());
@@ -408,15 +425,15 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                 } catch (InterruptedException e) {
                     // Should never happen
                     e.printStackTrace();
-                    errors.add(e);
+                    errors.put(s, e);
 
                 } catch (ExecutionException e) {
                     e.printStackTrace();
-                    errors.add((Exception) e.getCause());
+                    errors.put(s, (Exception) e.getCause());
 
                 } catch (TimeoutException e) {
                     e.printStackTrace();
-                    errors.add(new UpdateTimeoutException(e));
+                    errors.put(s, new UpdateTimeoutException(e));
 
                 }
             }

@@ -6,8 +6,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.message.MessageServiceListener;
-import mobi.myseries.application.update.exception.NetworkUnavailableException;
-import mobi.myseries.application.update.exception.UpdateTimeoutException;
+import mobi.myseries.application.update.exception.UpdateExceptionMessages;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.InvalidBackupVersionException;
 import mobi.myseries.domain.repository.series.InvalidDBSourceFileException;
@@ -16,7 +15,6 @@ import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
-import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import mobi.myseries.shared.Validate;
 import android.app.Activity;
 import android.app.Dialog;
@@ -103,37 +101,12 @@ public class MessageLauncher implements MessageServiceListener {
 
     @Override
     public void onUpdateError(Exception e) {
-        this.dialogBuilder.setTitle(R.string.update_failed_title);
+        Dialog dialog =
+                this.dialogBuilder
+                    .setTitle(R.string.update_failed_title)
+                    .setMessage(UpdateExceptionMessages.messageFor(this.activity, e))
+                    .build();
 
-        if (e instanceof ConnectionFailedException) {
-            dialogBuilder.setMessage(R.string.update_connection_failed);
-
-        } else if (e instanceof ConnectionTimeoutException) {
-            dialogBuilder.setMessage(R.string.update_connection_timeout);
-
-        } else if (e instanceof ParsingFailedException) {
-            dialogBuilder.setMessage(R.string.update_parsing_failed);
-
-        } else if (e instanceof SeriesNotFoundException) {
-            dialogBuilder.setMessage(String.format(
-                    App.context().getString(R.string.update_series_not_found),
-                    ((SeriesNotFoundException) e).seriesName()));
-
-        } else if (e instanceof UpdateMetadataUnavailableException) {
-            dialogBuilder.setMessage(R.string.update_metadata_unavailable);
-
-        } else if (e instanceof NetworkUnavailableException) {
-            dialogBuilder.setMessage(R.string.update_network_unavailable);
-
-        } else if (e instanceof UpdateTimeoutException) {
-            dialogBuilder.setMessage(R.string.update_timeout);
-
-        } else {
-            dialogBuilder.setMessage(e.getMessage());
-
-        }
-
-        Dialog dialog = this.dialogBuilder.build();
         dialog.show();
         this.currentDialog = dialog;
     }
