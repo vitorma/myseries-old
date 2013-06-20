@@ -207,7 +207,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         });
     }
 
-    private void notifyListenersOfUpdateProgress(final int current, final int total) {
+    private void notifyListenersOfUpdateProgress(final int current, final int total, final Series currentSeries) {
         Log.d(getClass().getName(), "Update progress: " + current + "/" + total);
         this.isUpdating.set(false);
 
@@ -215,7 +215,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             @Override
             public void run() {
                 for (final UpdateProgressListener listener : updateProgressListeners) {
-                    listener.onUpdateProgress(current, total);
+                    listener.onUpdateProgress(current, total, currentSeries);
                 }
             }
         });
@@ -376,7 +376,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
             for (final Series s : followedSeries) {
                 // XXX(Gabriel) it should be in the place where it makes most sense according to what current and total means.
-                notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates);
+                notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates, s);
                 try {
                     if (whatHasToBeUpdated.seriesWithDataToUpdate.contains(s)) {
                         Log.d(getClass().getName(), "Updating data of " + s.name());
@@ -387,7 +387,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                             continue;
                         }
                     } else {
-                        Log.d(getClass().getName(), "Not updating data of " + s.name());
+                        Log.d(getClass().getName(), "Skip updating data of " + s.name());
                     }
 
                     if (whatHasToBeUpdated.seriesWithPosterToUpdate.contains(s) || posterAvailableButNotDownloaded(s)) {
@@ -399,7 +399,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                             continue;
                         }
                     } else {
-                        Log.d(getClass().getName(), "Not updating poster of " + s.name());
+                        Log.d(getClass().getName(), "Skip updating poster of " + s.name());
                     }
 
                     s.setLastUpdate(System.currentTimeMillis());

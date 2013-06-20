@@ -3,6 +3,7 @@ package mobi.myseries.application.notification;
 import android.content.Context;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.listener.UpdateProgressListener;
+import mobi.myseries.domain.model.Series;
 
 public class NotificationService {
 
@@ -36,11 +37,11 @@ public class NotificationService {
         this.notifyUpdateWithText("None of your followed series have updates.");  // XXX R.blablabla
     }
 
-    private void notifyUpdateProgress(int current, int total) {
+    private void notifyUpdateProgress(int current, int total, Series currentSeries) {
         this.updateNotificationLauncher.launch(
                 new DeterminateProgressNotification(
                         UPDATE_NOTIFICATION_ID,
-                        "Updating " + current + " of " + total,
+                        "Updating \"" + currentSeries.name() + "\"",
                         current - 1,  // it is current - 1 because, when updating the first series, it should show an empty progress bar
                         total));
     }
@@ -73,8 +74,8 @@ public class NotificationService {
         }
 
         @Override
-        public void onUpdateProgress(int current, int total) {
-            notifyUpdateProgress(current, total);
+        public void onUpdateProgress(int current, int total, Series currentSeries) {
+            notifyUpdateProgress(current, total, currentSeries);
         }
 
         @Override

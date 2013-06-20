@@ -135,7 +135,7 @@ public class MessageService implements
 
 
     @Override
-    public void onUpdateProgress(int current, int total) {}
+    public void onUpdateProgress(int current, int total, Series currentSeries) {}
 
     @Override
     public void onUpdateFailure(Exception e) {

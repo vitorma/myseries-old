@@ -47,10 +47,7 @@ public class NotificationDispatchingTest {
         }
 
         @Override
-        public void cancel(Notification notification) {
-            // TODO Auto-generated method stub
-            
-        }
+        public void cancel(Notification notification) {}
     }
 
     private TestNotificationDispatcher dispatcher;
