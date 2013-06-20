@@ -1,6 +1,7 @@
 package mobi.myseries.application.message;
 
 import java.util.Collection;
+import java.util.Map;
 
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupService;
@@ -138,8 +139,14 @@ public class MessageService implements
     public void onUpdateProgress(int current, int total, Series currentSeries) {}
 
     @Override
-    public void onUpdateFailure(Exception e) {
-        this.notifyUpdateError(e);
+    public void onUpdateFailure(Exception cause) {
+        this.notifyUpdateError(cause);
+    }
+
+    @Override
+    public void onUpdateSeriesFailure(Map<Series, Exception> causes) {
+        // FIXME(Gabriel): should we show more than one error?
+        this.notifyUpdateError(causes.values().iterator().next());
     }
 
     @Override

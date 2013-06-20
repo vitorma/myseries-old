@@ -1,5 +1,7 @@
 package mobi.myseries.application.notification;
 
+import java.util.Map;
+
 import android.content.Context;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.listener.UpdateProgressListener;
@@ -41,7 +43,7 @@ public class NotificationService {
         this.updateNotificationLauncher.launch(
                 new DeterminateProgressNotification(
                         UPDATE_NOTIFICATION_ID,
-                        "Updating \"" + currentSeries.name() + "\"",
+                        "Updating \"" + currentSeries.name() + "\"...",
                         current - 1,  // it is current - 1 because, when updating the first series, it should show an empty progress bar
                         total));
     }
@@ -50,15 +52,26 @@ public class NotificationService {
         this.updateNotificationLauncher.cancel(UPDATE_NOTIFICATION_ID);
     }
 
-    private void notifyUpdateFailed() {
-        this.notifyUpdateWithText("Update failed.");  // XXX R.blablabla
+    private void notifyUpdateFailed(Exception cause) {
+        this.notifyUpdateWithText("Update failed: " + cause.getMessage());  // XXX R.blablabla
+    }
+
+    private void notifyUpdateSeriesFailed(Map<Series, Exception> causes) {
+        if (causes.size() == 1) {
+            Series failedSeries = causes.keySet().iterator().next();
+            String errorMessage = causes.values().iterator().next().getMessage();
+
+            this.notifyUpdateWithText("Failed updating \"" + failedSeries.name() + "\": " + errorMessage);  // XXX R.blablabla
+        } else {
+            String errorMessage = causes.values().iterator().next().getMessage();
+
+            this.notifyUpdateWithText("Failed updating " + causes.size() + " series: " + errorMessage);  // XXX R.blablabla
+        }
     }
 
     private void notifyUpdateWithText(CharSequence text) {
         this.updateNotificationLauncher.launch(
-                new TextOnlyNotification(
-                        UPDATE_NOTIFICATION_ID,
-                        "None of your followed series have updates."));  // XXX R.blablabla
+                new TextOnlyNotification(UPDATE_NOTIFICATION_ID, text));
     }
 
     private UpdateProgressListener updateListener = new UpdateProgressListener() {
@@ -84,8 +97,13 @@ public class NotificationService {
         }
 
         @Override
-        public void onUpdateFailure(Exception e) {
-            notifyUpdateFailed();
+        public void onUpdateFailure(Exception cause) {
+            notifyUpdateFailed(cause);
+        }
+
+        @Override
+        public void onUpdateSeriesFailure(Map<Series, Exception> causes) {
+            notifyUpdateSeriesFailed(causes);
         }
     };
 }

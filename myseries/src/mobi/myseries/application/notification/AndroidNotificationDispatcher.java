@@ -20,10 +20,10 @@ public class AndroidNotificationDispatcher extends NotificationDispatcher {
                 .setSmallIcon(R.drawable.actionbar_update)  // XXX R.blablabla
                 .setContentTitle(context.getText(R.string.app))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
-                // For some reason, setAutoCancel is not working with NotificationCompat.Builder,
+                .setAutoCancel(true)
+                // For some reason, setAutoCancel is not working properly with NotificationCompat.Builder,
                 // this contentIntent is an workaround for that.
                 // http://stackoverflow.com/questions/15033316/notification-setautocanceltrue-doesnt-work
-                //.setAutoCancel(true)
                 .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(), 0));
     }
 
