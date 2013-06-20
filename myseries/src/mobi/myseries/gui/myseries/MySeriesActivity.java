@@ -11,6 +11,7 @@ import mobi.myseries.gui.shared.ToastBuilder;
 import mobi.myseries.gui.update.UpdateActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +28,7 @@ public class MySeriesActivity extends BaseActivity {
      * because this one only works with rotations, not if the activity goes to the back stack. */
 
     @Override
-    protected void init() {
+    protected void init(Bundle savedInstanceState) {
         App.updateSeriesService().withHandler(new Handler());
         App.updateSeriesService().updateDataIfNeeded();
     }

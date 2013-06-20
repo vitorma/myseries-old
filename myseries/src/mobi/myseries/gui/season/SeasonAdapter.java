@@ -1,5 +1,6 @@
 package mobi.myseries.gui.season;
 
+import java.util.Collections;
 import java.util.List;
 
 import mobi.myseries.R;
@@ -8,25 +9,52 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.SeasonListener;
+import mobi.myseries.gui.shared.CheckableFrameLayout;
+import mobi.myseries.gui.shared.CheckableFrameLayout.OnCheckedListener;
+import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.SeenMark;
+import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.Objects;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.CheckedTextView;
 
-public class SeasonAdapter extends BaseAdapter implements SeasonListener, EpisodeListener {
-    List<Episode> items;
+public class SeasonAdapter extends BaseAdapter implements SeasonListener, EpisodeListener, OnSharedPreferenceChangeListener {
+    private int seriesId;
+    private int seasonNumber;
+
+    private List<Episode> items;
 
     public SeasonAdapter(int seriesId, int seasonNumber) {
-        Season season = App.seriesProvider().getSeries(seriesId).season(seasonNumber);
+        this.seriesId = seriesId;
+        this.seasonNumber = seasonNumber;
 
+        this.loadEpisodes();
+    }
+
+    private void loadEpisodes() {
+        Season season = App.seriesProvider().getSeries(this.seriesId).season(this.seasonNumber);
         this.items = season.episodes();
 
         season.register(this);
         for (Episode e : this.items) {
             e.register(this);
+        }
+
+        int sortMode = App.preferences().forSeason().sortMode();
+
+        switch (sortMode) {
+            case SortMode.OLDEST_FIRST:
+                Collections.sort(this.items, EpisodeComparator.byNumber());
+                break;
+            case SortMode.NEWEST_FIRST:
+            default:
+                Collections.sort(this.items, EpisodeComparator.byNumberReversed());
+                break;
         }
     }
 
@@ -42,7 +70,7 @@ public class SeasonAdapter extends BaseAdapter implements SeasonListener, Episod
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return this.items.get(position).id();
     }
 
     @Override
@@ -52,7 +80,8 @@ public class SeasonAdapter extends BaseAdapter implements SeasonListener, Episod
 
         Episode episode = this.items.get(position);
 
-        viewHolder.episodeNumber.setText(String.format("%02d", episode.number()));
+        String format = App.resources().getString(R.string.episode_number_format_ext);
+        viewHolder.episodeNumber.setText(String.format(format, episode.number()));
         viewHolder.episodeName.setText(episode.name());
         viewHolder.episodeSeenMark.setChecked(episode.wasSeen());
         viewHolder.episodeSeenMark.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
@@ -63,14 +92,16 @@ public class SeasonAdapter extends BaseAdapter implements SeasonListener, Episod
     /* ViewHolder */
 
     private static class ViewHolder {
-        private TextView episodeNumber;
-        private TextView episodeName;
+        private CheckedTextView episodeNumber;
+        private CheckedTextView episodeName;
         private SeenMark episodeSeenMark;
 
         private ViewHolder(View view) {
-            this.episodeNumber = (TextView) view.findViewById(R.id.episodeNumber);
-            this.episodeName = (TextView) view.findViewById(R.id.episodeName);
+            this.episodeNumber = (CheckedTextView) view.findViewById(R.id.episodeNumber);
+            this.episodeName = (CheckedTextView) view.findViewById(R.id.episodeName);
             this.episodeSeenMark = (SeenMark) view.findViewById(R.id.seenMark);
+
+            ((CheckableFrameLayout) view).setOnCheckedListener(this.checkableFrameLayoutListener());
 
             view.setTag(this);
         }
@@ -84,6 +115,21 @@ public class SeasonAdapter extends BaseAdapter implements SeasonListener, Episod
                     } else {
                         App.seriesProvider().markEpisodeAsNotSeen(episode);
                     }
+                }
+            };
+        }
+
+        private OnCheckedListener checkableFrameLayoutListener() {
+            return new OnCheckedListener() {
+                @Override
+                public void onChecked(boolean checked) {
+                    ViewHolder.this.episodeNumber.setChecked(checked);
+                    ViewHolder.this.episodeName.setChecked(checked);
+
+                    ViewHolder.this.episodeSeenMark.setImageDrawable(
+                        checked ?
+                        App.resources().getDrawable(R.drawable.watchmark_dark) :
+                        App.resources().getDrawable(R.drawable.watchmark_light));
                 }
             };
         }
@@ -136,6 +182,12 @@ public class SeasonAdapter extends BaseAdapter implements SeasonListener, Episod
 
     @Override
     public void onMarkAsNotSeenBySeason(Episode episode) {
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        this.loadEpisodes();
         this.notifyDataSetChanged();
     }
 }

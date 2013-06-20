@@ -43,7 +43,7 @@ public abstract class BaseActivity extends Activity {
         this.loadState();
 
         //init
-        this.init();
+        this.init(savedInstanceState);
 
         //actionBar
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,7 +82,7 @@ public abstract class BaseActivity extends Activity {
         this.getActionBar().setTitle(title);
     }
 
-    protected abstract void init();
+    protected abstract void init(Bundle savedInstanceState);
     protected abstract CharSequence title();
     protected abstract int layoutResource();
     protected abstract boolean isTopLevel();

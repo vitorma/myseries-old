@@ -57,9 +57,9 @@ public class SeenMark extends ImageButton implements Checkable {
     }
 
     private void setUpDrawables() {
-        Drawable d = this.getResources().getDrawable(R.drawable.checkbox);
+        Drawable d = this.getResources().getDrawable(R.drawable.watchmark_light);
 
         this.setImageDrawable(d);
-        this.setBackgroundResource(0);
+        this.setBackgroundResource(R.drawable.list_selector_holo_light);
     }
 }

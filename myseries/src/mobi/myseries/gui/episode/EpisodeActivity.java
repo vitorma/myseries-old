@@ -56,7 +56,7 @@ public class EpisodeActivity extends BaseActivity {
     }
 
     @Override
-    protected void init() {
+    protected void init(Bundle savedInstanceState) {
         Bundle extras = this.getIntent().getExtras();
 
         this.seriesId = extras.getInt(Extra.SERIES_ID);

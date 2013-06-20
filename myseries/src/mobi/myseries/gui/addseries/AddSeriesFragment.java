@@ -337,7 +337,9 @@ public abstract class AddSeriesFragment extends Fragment {
             this.adapter = new AddAdapter(this.activity(), this.results);
         } else {
             this.adapter.clear();
-            this.adapter.addAll(this.results);
+            for (Series s : this.results) {
+                this.adapter.add(s);
+            }
         }
     }
 

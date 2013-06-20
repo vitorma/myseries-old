@@ -29,13 +29,24 @@ import mobi.myseries.shared.Validate;
 
 public class EpisodeComparator {
 
-    public static Comparator<Episode> comparingByNumber() {
+    public static Comparator<Episode> byNumber() {
         return new Comparator<Episode>() {
             @Override
             public int compare(Episode episode1, Episode episode2) {
                 checkThatBothAreNotNull(episode1, episode2);
 
                 return compareByNumber(episode1, episode2);
+            }
+        };
+    }
+
+    public static Comparator<Episode> byNumberReversed() {
+        return new Comparator<Episode>() {
+            @Override
+            public int compare(Episode episode1, Episode episode2) {
+                checkThatBothAreNotNull(episode1, episode2);
+
+                return compareByNumber(episode2, episode1);
             }
         };
     }

@@ -4,9 +4,6 @@
 
     <style name="MySeriesTheme" parent="@android:Theme.Holo.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:listViewStyle">@style/ListView</item>
-        <item name="android:expandableListViewStyle">@style/ExpandableListView</item>
-
         <item name="android:scrollViewStyle">@style/ScrollView</item>
     </style>
 

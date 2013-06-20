@@ -3,11 +3,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/btn_check_off"
+        android:drawable="@drawable/watchmark_unchecked_light"
         android:state_checked="false"/>
 
     <item
-        android:drawable="@drawable/btn_check_on"
+        android:drawable="@drawable/watchmark_checked_light"
         android:state_checked="true"/>
 
 </selector>

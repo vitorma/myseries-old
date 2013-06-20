@@ -33,7 +33,6 @@ import mobi.myseries.gui.activity.base.TabActivity;
 import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.accounts.Account;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -48,6 +47,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
@@ -62,7 +62,7 @@ public class BackupActivity extends TabActivity{
     enum Event {
         DRIVE_AUTHORIZATION, DROPBOX_AUTHORIZATION
     }
-    
+
     private static final int BACKUP_TAB = 0;
 
     private Spinner gDriveAccountSpinner;
@@ -100,14 +100,14 @@ public class BackupActivity extends TabActivity{
 //        this.setupDropboxBackupButton();
 //        this.setupDropboxRestoreButton();
 //          this.setupBackupListener();
-        
-        
+
+
 
     }
 
     private void setupBackupListener() {
-        backupListener = new BackupListener() {
-            
+        this.backupListener = new BackupListener() {
+
             @Override
             public void onBackupSucess() {
                 // TODO Auto-generated method stub
@@ -117,18 +117,18 @@ public class BackupActivity extends TabActivity{
             @Override
             public void onBackupFailure(Exception e) {
                 if (e instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
+                    BackupActivity.this.startActivityForResult(
                             ((UserRecoverableAuthIOException) e).getIntent(),
                             Event.DRIVE_AUTHORIZATION.ordinal());
                 } else if (e instanceof DropboxUnlinkedException) {
-                    linkDropboxAccount();
+                    BackupActivity.this.linkDropboxAccount();
                 } else {
                     e.printStackTrace();
                 }
 
             }
 
-            
+
             @Override
             public void onRestoreSucess() {
             }
@@ -136,16 +136,16 @@ public class BackupActivity extends TabActivity{
             @Override
             public void onRestoreFailure(Exception e) {
                 if (e instanceof UserRecoverableAuthIOException) {
-                    requestDropboxUserPermission(e);
+                    BackupActivity.this.requestDropboxUserPermission(e);
                 } else if (e instanceof DropboxUnlinkedException) {
-                    linkDropboxAccount();
+                    BackupActivity.this.linkDropboxAccount();
                 }
             }
 
             @Override
             public void onStart() {}
         };
-        App.backupService().register(backupListener);
+        App.backupService().register(this.backupListener);
     }
 
 
@@ -221,7 +221,7 @@ public class BackupActivity extends TabActivity{
 
             @Override
             public void onClick(View v) {
-                BackupActivity.this.doBackup(new DriveBackup(currentAccount));
+                BackupActivity.this.doBackup(new DriveBackup(BackupActivity.this.currentAccount));
             }
         });
     }
@@ -230,11 +230,11 @@ public class BackupActivity extends TabActivity{
         this.gDriveRestoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BackupActivity.this.restoreBackup(new DriveBackup(currentAccount));
+                BackupActivity.this.restoreBackup(new DriveBackup(BackupActivity.this.currentAccount));
             }
         });
     }
-    
+
     private void setupDropboxRestoreButton() {
         this.dropboxRestoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,8 +280,8 @@ public class BackupActivity extends TabActivity{
     }
 
     private void linkDropboxAccount() {
-        dropbox.getApi().getSession();
-        AndroidAuthSession session = dropbox.getApi().getSession();
+        this.dropbox.getApi().getSession();
+        AndroidAuthSession session = this.dropbox.getApi().getSession();
         this.event = Event.DROPBOX_AUTHORIZATION;
         session.startAuthentication(BackupActivity.this);
     }
@@ -289,8 +289,8 @@ public class BackupActivity extends TabActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        if (event == Event.DROPBOX_AUTHORIZATION) {
-            boolean resumeSucessful = dropbox.onResume();
+        if (this.event == Event.DROPBOX_AUTHORIZATION) {
+            boolean resumeSucessful = this.dropbox.onResume();
             if(resumeSucessful) {
                 this.resumeOperation();
                 this.event = null;
@@ -300,9 +300,9 @@ public class BackupActivity extends TabActivity{
 
     private void resumeOperation() {
         if (this.operation == Operation.BACKUPING) {
-            this.doBackup(currentMode);
+            this.doBackup(this.currentMode);
         } else if (this.operation == Operation.RESTORING) {
-            this.restoreBackup(currentMode);
+            this.restoreBackup(this.currentMode);
         }
     }
 
@@ -330,7 +330,7 @@ public class BackupActivity extends TabActivity{
     }
 
     @Override
-    protected void init() { /* There's nothing to initialize */ }
+    protected void init(Bundle savedInstanceState) { /* There's nothing to initialize */ }
 
     @Override
     protected CharSequence title() {

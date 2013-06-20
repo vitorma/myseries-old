@@ -153,6 +153,10 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="TextView.Large.MediumGray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
     <style name="TextView.Large.White">
         <item name="android:textColor">@color/white</item>
     </style>
@@ -249,28 +253,6 @@
     </style>
 
     <style name="ListView.Dark" parent="android:Widget.Holo.ListView">
-        <item name="android:scrollbarStyle">outsideOverlay</item>
-        <item name="android:fastScrollEnabled">true</item>
-    </style>
-
-    <!-- ExpandableListView -->
-
-    <style name="ExpandableListView" parent="android:Widget.ExpandableListView">
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingLeft">@dimen/gap_large</item>
-        <item name="android:paddingRight">@dimen/gap_large</item>
-
-        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
-
-        <item name="android:divider">@drawable/list_divider_holo_light</item>
-        <item name="android:childDivider">@drawable/list_divider_holo_light</item>
-        <item name="android:headerDividersEnabled">true</item>
-        <item name="android:footerDividersEnabled">true</item>
-        <item name="android:showDividers">beginning|middle|end</item>
-
-        <item name="android:groupIndicator">@null</item>
-
         <item name="android:scrollbarStyle">outsideOverlay</item>
         <item name="android:fastScrollEnabled">true</item>
     </style>

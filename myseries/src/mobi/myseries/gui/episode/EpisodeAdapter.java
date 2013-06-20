@@ -29,7 +29,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
-    private static final int ITEM_LAYOUT = R.layout.episodes_item;
+    private static final int ITEM_LAYOUT = R.layout.episode_details;
 
     private final EpisodeImageDownloadListener downloadListener = new EpisodeImageDownloadListener() {
 
@@ -72,12 +72,13 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
     };
 
     private Episode episode;
-    private TextView episodeDirector;
-    private TextView episodeFirstAired;
-    private TextView episodeGuestStars;
+    private TextView episodeNumber;
     private TextView episodeName;
+    private TextView episodeAirDate;
     private TextView episodeOverview;
-    private TextView episodeWriter;
+    private TextView episodeGuestStars;
+    private TextView episodeWriters;
+    private TextView episodeDirectors;
     private Bitmap image;
     private ImageView imageView;
     private SeenMark isViewed;
@@ -102,12 +103,12 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
             itemView = this.layoutInflater.inflate(ITEM_LAYOUT, null);
         }
 
-        // The episode name TextBox is the one that belongs to the seen mark CheckBox
-        this.episodeFirstAired = (TextView) itemView.findViewById(R.id.episodeFirstAiredTextView);
+        this.episodeAirDate = (TextView) itemView.findViewById(R.id.episodeFirstAiredTextView);
         this.episodeName = (TextView) itemView.findViewById(R.id.episodeName);
+        this.episodeNumber = (TextView) itemView.findViewById(R.id.episodeNumber);
         this.episodeOverview = (TextView) itemView.findViewById(R.id.episodeOverviewTextView);
-        this.episodeDirector = (TextView) itemView.findViewById(R.id.episodeDirectorsTextView);
-        this.episodeWriter = (TextView) itemView.findViewById(R.id.episodeWritersTextView);
+        this.episodeDirectors = (TextView) itemView.findViewById(R.id.episodeDirectorsTextView);
+        this.episodeWriters = (TextView) itemView.findViewById(R.id.episodeWritersTextView);
         this.episodeGuestStars = (TextView) itemView.findViewById(R.id.episodeGuestStarsTextView);
         this.isViewed = (SeenMark) itemView.findViewById(R.id.isEpisodeViewedCheckBox);
         this.imageView = (ImageView) itemView.findViewById(R.id.imageView);
@@ -118,13 +119,49 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
         DateFormat dateformat = android.text.format.DateFormat.getDateFormat(App.context());
         String unavailable = LocalText.get(R.string.unavailable_date);
         String formattedDate = DatesAndTimes.toString(this.episode.airDate(), dateformat, unavailable);
-        this.episodeFirstAired.setText(formattedDate);
+        this.episodeAirDate.setText(formattedDate);
+
+        String formattedNumber = this.getContext().getString(R.string.episode_number_format_ext, this.episode.number());
+        this.episodeNumber.setText(formattedNumber);
 
         this.episodeName.setText(Objects.nullSafe(this.episode.name(), this.getContext().getString(R.string.to_be_announced)));
-        this.episodeDirector.setText(this.episode.directors());
-        this.episodeWriter.setText(this.episode.writers());
-        this.episodeGuestStars.setText(this.episode.guestStars());
-        this.episodeOverview.setText(this.episode.overview());
+
+        if (this.episode.directors().trim().isEmpty()) {
+            this.episodeDirectors.setVisibility(View.GONE);
+            itemView.findViewById(R.id.episodeDirectorsLabel).setVisibility(View.GONE);
+        } else {
+            this.episodeDirectors.setVisibility(View.VISIBLE);
+            itemView.findViewById(R.id.episodeDirectorsLabel).setVisibility(View.VISIBLE);
+            this.episodeDirectors.setText(this.episode.directors());
+        }
+
+        if (this.episode.writers().trim().isEmpty()) {
+            this.episodeWriters.setVisibility(View.GONE);
+            itemView.findViewById(R.id.episodeWritersLabel).setVisibility(View.GONE);
+        } else {
+            this.episodeWriters.setVisibility(View.VISIBLE);
+            itemView.findViewById(R.id.episodeWritersLabel).setVisibility(View.VISIBLE);
+            this.episodeWriters.setText(this.episode.writers());
+        }
+
+        if (this.episode.guestStars().trim().isEmpty()) {
+            this.episodeGuestStars.setVisibility(View.GONE);
+            itemView.findViewById(R.id.episodeGuestStarsLabel).setVisibility(View.GONE);
+        } else {
+            this.episodeGuestStars.setVisibility(View.VISIBLE);
+            itemView.findViewById(R.id.episodeGuestStarsLabel).setVisibility(View.VISIBLE);
+            this.episodeGuestStars.setText(this.episode.guestStars());
+        }
+
+        if (this.episode.overview().trim().isEmpty()) {
+            this.episodeOverview.setVisibility(View.GONE);
+            itemView.findViewById(R.id.episodeOverviewLabel).setVisibility(View.GONE);
+        } else {
+            this.episodeOverview.setVisibility(View.VISIBLE);
+            itemView.findViewById(R.id.episodeOverviewLabel).setVisibility(View.VISIBLE);
+            this.episodeOverview.setText(this.episode.overview());
+        }
+
         this.updateSeenCheckbox();
 
         this.loadEpisodeImage();
