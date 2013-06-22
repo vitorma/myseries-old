@@ -30,6 +30,7 @@ public class MySeriesActivity extends BaseActivity {
     protected void init() {
         App.updateSeriesService().withHandler(new Handler());
         App.updateSeriesService().updateDataIfNeeded();
+        App.followSeriesService().withHandler(new Handler());
     }
 
     @Override
