@@ -8,13 +8,13 @@
 
     <RelativeLayout
         android:paddingBottom="@dimen/gap_large"
-        android:layout_width="300dp"
+        android:layout_width="620dp"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center">
 
         <FrameLayout
             android:id="@+id/imageFrame"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true">
 
@@ -34,14 +34,14 @@
 
         <View
             android:id="@+id/divider"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="1dp"
             android:background="#ff800080"
             android:layout_below="@id/imageFrame"/>
 
         <RelativeLayout
             android:id="@+id/nameFrame"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:background="#ffececec"
             android:layout_below="@id/divider">
@@ -96,9 +96,9 @@
             style="@style/TextView.Medium.Blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gap_large"
-            android:layout_below="@id/nameFrame"
-            android:layout_alignWithParentIfMissing="true"/>
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/imageFrame"/>
 
         <TextView
             android:id="@+id/episodeOverviewTextView"
@@ -106,8 +106,9 @@
             android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:layout_below="@id/episodeOverviewLabel"
-            android:layout_alignWithParentIfMissing="true"/>
+            android:layout_toRightOf="@id/imageFrame"/>
 
         <TextView
             android:id="@+id/episodeGuestStarsLabel"
@@ -116,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_large"
-            android:layout_below="@id/episodeOverviewTextView"
+            android:layout_below="@id/nameFrame"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
@@ -126,6 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeGuestStarsLabel"
+            android:layout_toLeftOf="@id/episodeOverviewTextView"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
@@ -136,6 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_large"
             android:layout_below="@id/episodeGuestStarsTextView"
+            android:layout_toLeftOf="@id/episodeOverviewTextView"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
@@ -144,7 +147,9 @@
             android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/episodeWritersLabel"/>
+            android:layout_below="@id/episodeWritersLabel"
+            android:layout_toLeftOf="@id/episodeOverviewTextView"
+            android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
             android:id="@+id/episodeDirectorsLabel"
@@ -154,6 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_large"
             android:layout_below="@id/episodeWritersTextView"
+            android:layout_toLeftOf="@id/episodeOverviewTextView"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
@@ -163,6 +169,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeDirectorsLabel"
+            android:layout_toLeftOf="@id/episodeOverviewTextView"
             android:layout_alignWithParentIfMissing="true"/>
 
     </RelativeLayout>

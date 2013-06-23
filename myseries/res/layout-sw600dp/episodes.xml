@@ -14,12 +14,12 @@
         android:layout_weight="1"/>
 
     <FrameLayout
-        android:id="@+id/container_list"
+        android:id="@+id/container_for_list"
         android:layout_width="@dimen/fragment_episodes_master_width"
         android:layout_height="match_parent"/>
 
     <FrameLayout
-        android:id="@+id/container_details"
+        android:id="@+id/container_for_pager"
         android:layout_width="@dimen/fragment_episodes_details_width"
         android:layout_height="match_parent"/>
 

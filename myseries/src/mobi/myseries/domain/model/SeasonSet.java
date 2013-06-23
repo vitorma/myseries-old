@@ -80,6 +80,14 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
                 + this.numberOfSeasons() + ")");
     }
 
+    public int positionOf(Season season) {
+        return this.seasons().indexOf(season);
+    }
+
+    public int positionOf(int seasonNumber) {
+        return this.positionOf(this.season(seasonNumber));
+    }
+
     private Season ensuredSeason(int number) {
         if (!this.seasons.containsKey(number)) {
             Season season = new Season(this.seriesId, number);

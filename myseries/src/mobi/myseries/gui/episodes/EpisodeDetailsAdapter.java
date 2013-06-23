@@ -1,4 +1,4 @@
-package mobi.myseries.gui.episode;
+package mobi.myseries.gui.episodes;
 
 import java.text.DateFormat;
 
@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class EpisodeAdapter extends ArrayAdapter<Episode> {
+public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
@@ -35,15 +35,15 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
 
         @Override
         public void onStartDownloadingImageOf(Episode episode) {
-            if (episode.equals(EpisodeAdapter.this.episode)) {
-                EpisodeAdapter.this.startedLoadingImage();
+            if (episode.equals(EpisodeDetailsAdapter.this.episode)) {
+                EpisodeDetailsAdapter.this.startedLoadingImage();
             }
         }
 
         @Override
         public void onFinishDownloadingImageOf(Episode episode) {
-            if (episode.equals(EpisodeAdapter.this.episode)) {
-                EpisodeAdapter.this.loadEpisodeImage();
+            if (episode.equals(EpisodeDetailsAdapter.this.episode)) {
+                EpisodeDetailsAdapter.this.loadEpisodeImage();
             }
         }
     };
@@ -52,22 +52,22 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
 
         @Override
         public void onMarkAsSeenBySeason(Episode episode) {
-            EpisodeAdapter.this.updateSeenCheckbox();
+            EpisodeDetailsAdapter.this.updateSeenCheckbox();
         }
 
         @Override
         public void onMarkAsSeen(Episode episode) {
-            EpisodeAdapter.this.updateSeenCheckbox();
+            EpisodeDetailsAdapter.this.updateSeenCheckbox();
         }
 
         @Override
         public void onMarkAsNotSeenBySeason(Episode episode) {
-            EpisodeAdapter.this.updateSeenCheckbox();
+            EpisodeDetailsAdapter.this.updateSeenCheckbox();
         }
 
         @Override
         public void onMarkAsNotSeen(Episode episode) {
-            EpisodeAdapter.this.updateSeenCheckbox();
+            EpisodeDetailsAdapter.this.updateSeenCheckbox();
         }
     };
 
@@ -86,7 +86,7 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
 
     private LayoutInflater layoutInflater;
 
-    public EpisodeAdapter(Context context, Episode e) {
+    public EpisodeDetailsAdapter(Context context, Episode e) {
         super(context, ITEM_LAYOUT, new Episode[] {e});
 
         this.layoutInflater = LayoutInflater.from(context);
@@ -173,10 +173,10 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
         this.isViewed.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (EpisodeAdapter.this.isViewed.isChecked()) {
-                    SERIES_PROVIDER.markEpisodeAsSeen(EpisodeAdapter.this.episode);
+                if (EpisodeDetailsAdapter.this.isViewed.isChecked()) {
+                    SERIES_PROVIDER.markEpisodeAsSeen(EpisodeDetailsAdapter.this.episode);
                 } else {
-                    SERIES_PROVIDER.markEpisodeAsNotSeen(EpisodeAdapter.this.episode);
+                    SERIES_PROVIDER.markEpisodeAsNotSeen(EpisodeDetailsAdapter.this.episode);
                 }
             }
         });

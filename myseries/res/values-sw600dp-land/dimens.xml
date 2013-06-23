@@ -28,8 +28,8 @@
     <dimen name="myseries_image_height">106dp</dimen>
     <dimen name="myseries_image_width">69dp</dimen>
 
-    <dimen name="fragment_episodes_master_width">280dp</dimen>
-    <dimen name="fragment_episodes_details_width">320dp</dimen>
+    <dimen name="fragment_episodes_master_width">320dp</dimen>
+    <dimen name="fragment_episodes_details_width">640dp</dimen>
 
     <!-- AppWidget -->
 

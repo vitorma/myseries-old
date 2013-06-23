@@ -2,14 +2,14 @@ package mobi.myseries.application.preferences;
 
 import mobi.myseries.gui.shared.SortMode;
 
-public class SeasonPreferences {
+public class EpisodesPreferences {
     private static final String SORT_MODE_KEY = "sortMode";
 
     private static final int SORT_MODE_DEFAULT_VALUE = SortMode.OLDEST_FIRST;
 
     private PrimitivePreferences primitive;
 
-    public SeasonPreferences(PrimitivePreferences primitive) {
+    public EpisodesPreferences(PrimitivePreferences primitive) {
         this.primitive = primitive;
     }
 

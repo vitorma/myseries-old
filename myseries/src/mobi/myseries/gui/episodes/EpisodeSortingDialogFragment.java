@@ -1,4 +1,4 @@
-package mobi.myseries.gui.season;
+package mobi.myseries.gui.episodes;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -18,7 +18,7 @@ public class EpisodeSortingDialogFragment extends DialogFragment {
         String args = this.getActivity().getString(R.string.episodes);
         String title = String.format(format, args);
 
-        this.sortMode = App.preferences().forSeason().sortMode();
+        this.sortMode = App.preferences().forEpisodes().sortMode();
 
         return new AlertDialog.Builder(this.getActivity())
             .setTitle(title)
@@ -51,7 +51,7 @@ public class EpisodeSortingDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 App.preferences()
-                    .forSeason()
+                    .forEpisodes()
                     .putSortMode(EpisodeSortingDialogFragment.this.sortMode);
 
                 dialog.dismiss();

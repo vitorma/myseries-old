@@ -1,4 +1,4 @@
-package mobi.myseries.gui.season;
+package mobi.myseries.gui.episodes;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,37 +15,32 @@ import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.Objects;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 
-public class SeasonAdapter extends BaseAdapter implements SeasonListener, EpisodeListener, OnSharedPreferenceChangeListener {
-    private int seriesId;
-    private int seasonNumber;
+public class EpisodeListAdapter extends BaseAdapter implements SeasonListener, EpisodeListener {
 
+    private Season season;
     private List<Episode> items;
 
-    public SeasonAdapter(int seriesId, int seasonNumber) {
-        this.seriesId = seriesId;
-        this.seasonNumber = seasonNumber;
+    public EpisodeListAdapter(Season season) {
+        this.season = season;
 
-        this.loadEpisodes();
+        this.setUpItems();
     }
 
-    private void loadEpisodes() {
-        Season season = App.seriesProvider().getSeries(this.seriesId).season(this.seasonNumber);
-        this.items = season.episodes();
+    private void setUpItems() {
+        this.items = this.season.episodes();
 
-        season.register(this);
+        this.season.register(this);
         for (Episode e : this.items) {
             e.register(this);
         }
 
-        int sortMode = App.preferences().forSeason().sortMode();
+        int sortMode = App.preferences().forEpisodes().sortMode();
 
         switch (sortMode) {
             case SortMode.OLDEST_FIRST:
@@ -56,6 +51,16 @@ public class SeasonAdapter extends BaseAdapter implements SeasonListener, Episod
                 Collections.sort(this.items, EpisodeComparator.byNumberReversed());
                 break;
         }
+
+        this.notifyDataSetChanged();
+    }
+
+    public int positionOf(Episode e) {
+        return this.items.indexOf(e);
+    }
+
+    public Episode episodeAt(int position) {
+        return this.items.get(position);
     }
 
     @Override
@@ -75,7 +80,7 @@ public class SeasonAdapter extends BaseAdapter implements SeasonListener, Episod
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = Objects.nullSafe(convertView, View.inflate(App.context(), R.layout.season_item_episode, null));
+        View view = Objects.nullSafe(convertView, View.inflate(App.context(), R.layout.episode_list, null));
         ViewHolder viewHolder = (view == convertView) ? (ViewHolder) view.getTag() : new ViewHolder(view);
 
         Episode episode = this.items.get(position);
@@ -182,12 +187,6 @@ public class SeasonAdapter extends BaseAdapter implements SeasonListener, Episod
 
     @Override
     public void onMarkAsNotSeenBySeason(Episode episode) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        this.loadEpisodes();
         this.notifyDataSetChanged();
     }
 }
