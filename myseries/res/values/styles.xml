@@ -264,4 +264,28 @@
         <item name="android:fastScrollEnabled">true</item>
     </style>
 
+    <!-- ActionBarSpinner -->
+
+    <style name="ActionBarSpinner" parent="TextView"/>
+
+    <style name="ActionBarSpinner.Title">
+        <item name="android:textSize">@dimen/text_size_ab_spinner_title</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="ActionBarSpinner.Subtitle">
+        <item name="android:textSize">@dimen/text_size_ab_spinner_subtitle</item>
+        <item name="android:textColor">#ffeeeeee</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="ActionBarSpinner.Row">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">@dimen/gap_medium</item>
+    </style>
+
 </resources>

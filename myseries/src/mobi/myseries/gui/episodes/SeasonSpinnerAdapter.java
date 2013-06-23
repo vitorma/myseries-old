@@ -27,7 +27,7 @@ public class SeasonSpinnerAdapter extends BaseAdapter {
         title.setText(this.seriesTitle());
 
         TextView subtitle = (TextView) item.findViewById(R.id.subtitle);
-        subtitle.setText(this.seasonTitle(position));
+        subtitle.setText(this.seasonTitle(position, true));
 
         return item;
     }
@@ -37,7 +37,7 @@ public class SeasonSpinnerAdapter extends BaseAdapter {
         View item = this.inflater.inflate(R.layout.ab_spinner_dropdown_item, null);
 
         TextView title = (TextView) item.findViewById(R.id.title);
-        title.setText(this.seasonTitle(position));
+        title.setText(this.seasonTitle(position, false));
 
         return item;
     }
@@ -71,13 +71,17 @@ public class SeasonSpinnerAdapter extends BaseAdapter {
         return this.series.name();
     }
 
-    private String seasonTitle(int position) {
+    private String seasonTitle(int position, boolean capitalize) {
         Season season = this.seasonAt(position);
 
+        String title;
+
         if (season.isSpecial()) {
-            return App.resources().getString(R.string.special_episodes_upper);
+            title = App.resources().getString(R.string.special_episodes);
+        } else {
+            title = App.resources().getString(R.string.season_number_format_ext, season.number());
         }
 
-        return App.resources().getString(R.string.season_number_format_ext, season.number());
+        return capitalize ? title.toUpperCase() : title;
     }
 }
