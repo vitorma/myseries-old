@@ -8,6 +8,7 @@ import mobi.myseries.gui.shared.Extra;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
@@ -75,6 +76,11 @@ public class EpisodePagerFragment extends Fragment implements OnPageChangeListen
         this.adapter = new EpisodePagerAdapter(this.getFragmentManager(), this.season.episodes());
 
         this.pager = (ViewPager) this.getView().findViewById(R.id.pager);
+
+        PagerTabStrip titles = (PagerTabStrip) this.getView().findViewById(R.id.titles);
+        titles.setTextColor(App.resources().getColor(R.color.dark_blue));
+        titles.setTabIndicatorColorResource(R.color.dark_blue);
+
         this.pager.setAdapter(this.adapter);
         this.pager.setOnPageChangeListener(this);
 

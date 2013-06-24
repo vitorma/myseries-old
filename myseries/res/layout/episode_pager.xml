@@ -3,15 +3,15 @@
 <android.support.v4.view.ViewPager
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pager"
+    android:paddingLeft="@dimen/fragment_episodes_side_gap"
+    android:paddingRight="@dimen/fragment_episodes_side_gap"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
-    <android.support.v4.view.PagerTitleStrip
+    <android.support.v4.view.PagerTabStrip
         android:id="@+id/titles"
-        android:background="@color/blue"
         android:paddingTop="@dimen/gap_small"
         android:paddingBottom="@dimen/gap_small"
-        android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"/>

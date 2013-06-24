@@ -32,19 +32,12 @@
 
         </FrameLayout>
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#ff800080"
-            android:layout_below="@id/imageFrame"/>
-
         <RelativeLayout
             android:id="@+id/nameFrame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffececec"
-            android:layout_below="@id/divider">
+            android:layout_below="@id/imageFrame">
 
             <mobi.myseries.gui.shared.SeenMark
                 android:id="@+id/isEpisodeViewedCheckBox"
@@ -55,45 +48,37 @@
                 android:layout_alignParentRight="true"/>
 
             <TextView
-                android:id="@+id/episodeNumber"
+                android:id="@+id/episodeFirstAiredTextView"
                 android:textSize="16sp"
-                android:textColor="#ff800080"
-                android:fontFamily="sans-serif-light"
+                android:textColor="@color/gray"
                 android:layout_marginTop="@dimen/gap_medium"
                 android:layout_marginLeft="@dimen/gap_medium"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"/>
-
-            <TextView
-                android:id="@+id/episodeFirstAiredTextView"
-                style="@style/TextView.Small.MediumGray"
-                android:fontFamily="sans-serif-light"
-                android:layout_marginLeft="@dimen/gap_medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/episodeNumber"/>
+                android:layout_toLeftOf="@id/isEpisodeViewedCheckBox"/>
 
             <TextView
                 android:id="@+id/episodeName"
                 style="@style/TextView.XLarge.DarkGray"
                 android:textSize="24sp"
                 android:fontFamily="sans-serif-light"
-                android:layout_marginLeft="@dimen/gap_medium"
                 android:paddingBottom="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_marginLeft="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/episodeFirstAiredTextView"/>
+                android:layout_below="@id/episodeFirstAiredTextView"
+                android:layout_toLeftOf="@id/isEpisodeViewedCheckBox"/>
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/episodeOverviewLabel"
             android:text="@string/overview"
-            style="@style/TextView.Medium.Blue"
+            style="@style/TextView.Medium.MediumGray.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_large"
@@ -103,7 +88,6 @@
         <TextView
             android:id="@+id/episodeOverviewTextView"
             style="@style/TextView.Medium.MediumGray"
-            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeOverviewLabel"
@@ -112,7 +96,7 @@
         <TextView
             android:id="@+id/episodeGuestStarsLabel"
             android:text="@string/guest_stars"
-            style="@style/TextView.Medium.Blue"
+            style="@style/TextView.Medium.MediumGray.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_large"
@@ -122,7 +106,6 @@
         <TextView
             android:id="@+id/episodeGuestStarsTextView"
             style="@style/TextView.Medium.MediumGray"
-            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeGuestStarsLabel"
@@ -131,7 +114,7 @@
         <TextView
             android:id="@+id/episodeWritersLabel"
             android:text="@string/writers"
-            style="@style/TextView.Medium.Blue"
+            style="@style/TextView.Medium.MediumGray.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_large"
@@ -141,7 +124,6 @@
         <TextView
             android:id="@+id/episodeWritersTextView"
             style="@style/TextView.Medium.MediumGray"
-            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeWritersLabel"/>
@@ -149,7 +131,7 @@
         <TextView
             android:id="@+id/episodeDirectorsLabel"
             android:text="@string/directors"
-            style="@style/TextView.Medium.Blue"
+            style="@style/TextView.Medium.MediumGray.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_large"
@@ -159,7 +141,6 @@
         <TextView
             android:id="@+id/episodeDirectorsTextView"
             style="@style/TextView.Medium.MediumGray"
-            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeDirectorsLabel"

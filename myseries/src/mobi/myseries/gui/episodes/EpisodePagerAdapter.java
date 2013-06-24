@@ -44,8 +44,8 @@ public class EpisodePagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public String getPageTitle(int position) {
         Episode e = this.episodes.get(position);
-        String format = App.resources().getString(R.string.episode_number_format);
-        return String.format(format, e.seasonNumber(), e.number());
+        String format = App.resources().getString(R.string.episode_number_format_ext);
+        return String.format(format, e.number());
     }
 
     private void sortItems() {

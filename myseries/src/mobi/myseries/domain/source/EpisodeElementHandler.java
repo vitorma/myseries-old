@@ -94,7 +94,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(ID).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                int id = Numbers.parseInt(body, Invalid.EPISODE_ID);
+                int id = Numbers.parseInt(body.trim(), Invalid.EPISODE_ID);
                 EpisodeElementHandler.this.episodeBuilder.withId(id);
             }
         });
@@ -106,7 +106,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(SERIES_ID).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                int seriesId = Numbers.parseInt(body, Invalid.SERIES_ID);
+                int seriesId = Numbers.parseInt(body.trim(), Invalid.SERIES_ID);
                 EpisodeElementHandler.this.episodeBuilder.withSeriesId(seriesId);
             }
         });
@@ -118,7 +118,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(NUMBER).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                int number = Numbers.parseInt(body, Invalid.EPISODE_NUMBER);
+                int number = Numbers.parseInt(body.trim(), Invalid.EPISODE_NUMBER);
                 EpisodeElementHandler.this.episodeBuilder.withNumber(number);
             }
         });
@@ -130,7 +130,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(SEASON_NUMBER).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                int seasonNumber = Numbers.parseInt(body, Invalid.SEASON_NUMBER);
+                int seasonNumber = Numbers.parseInt(body.trim(), Invalid.SEASON_NUMBER);
                 EpisodeElementHandler.this.episodeBuilder.withSeasonNumber(seasonNumber);
             }
         });
@@ -142,7 +142,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                EpisodeElementHandler.this.episodeBuilder.withName(body);
+                EpisodeElementHandler.this.episodeBuilder.withName(body.trim());
             }
         });
 
@@ -153,7 +153,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                Date airDate = DatesAndTimes.parse(body, TheTVDBConstants.DATE_FORMAT, null);
+                Date airDate = DatesAndTimes.parse(body.trim(), TheTVDBConstants.DATE_FORMAT, null);
                 EpisodeElementHandler.this.episodeBuilder.withAirDate(airDate);
             }
         });
@@ -165,7 +165,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(OVERVIEW).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                EpisodeElementHandler.this.episodeBuilder.withOverview(body);
+                EpisodeElementHandler.this.episodeBuilder.withOverview(body.trim());
             }
         });
 
@@ -176,7 +176,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(DIRECTORS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                String directors = Strings.normalizePipeSeparated(body);
+                String directors = Strings.normalizePipeSeparated(body.trim());
                 EpisodeElementHandler.this.episodeBuilder.withDirectors(directors);
             }
         });
@@ -188,7 +188,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(WRITERS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                String writers = Strings.normalizePipeSeparated(body);
+                String writers = Strings.normalizePipeSeparated(body.trim());
                 EpisodeElementHandler.this.episodeBuilder.withWriters(writers);
             }
         });
@@ -200,7 +200,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(GUEST_STARS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                String guestStars = Strings.normalizePipeSeparated(body);
+                String guestStars = Strings.normalizePipeSeparated(body.trim());
                 EpisodeElementHandler.this.episodeBuilder.withGuestStars(guestStars);
             }
         });
@@ -212,7 +212,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(IMAGE_FILE_NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                EpisodeElementHandler.this.episodeBuilder.withImageFileName(body);
+                EpisodeElementHandler.this.episodeBuilder.withImageFileName(body.trim());
             }
         });
 

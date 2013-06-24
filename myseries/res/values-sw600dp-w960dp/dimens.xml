@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <dimen name="fragment_episodes_master_width">288dp</dimen>
+    <dimen name="fragment_episodes_details_width">672dp</dimen>
+
+</resources>

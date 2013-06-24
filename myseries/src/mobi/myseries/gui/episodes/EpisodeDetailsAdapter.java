@@ -72,7 +72,6 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
     };
 
     private Episode episode;
-    private TextView episodeNumber;
     private TextView episodeName;
     private TextView episodeAirDate;
     private TextView episodeOverview;
@@ -105,7 +104,6 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
 
         this.episodeAirDate = (TextView) itemView.findViewById(R.id.episodeFirstAiredTextView);
         this.episodeName = (TextView) itemView.findViewById(R.id.episodeName);
-        this.episodeNumber = (TextView) itemView.findViewById(R.id.episodeNumber);
         this.episodeOverview = (TextView) itemView.findViewById(R.id.episodeOverviewTextView);
         this.episodeDirectors = (TextView) itemView.findViewById(R.id.episodeDirectorsTextView);
         this.episodeWriters = (TextView) itemView.findViewById(R.id.episodeWritersTextView);
@@ -120,9 +118,6 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         String unavailable = LocalText.get(R.string.unavailable_date);
         String formattedDate = DatesAndTimes.toString(this.episode.airDate(), dateformat, unavailable);
         this.episodeAirDate.setText(formattedDate);
-
-        String formattedNumber = this.getContext().getString(R.string.episode_number_format_ext, this.episode.number());
-        this.episodeNumber.setText(formattedNumber);
 
         this.episodeName.setText(Objects.nullSafe(this.episode.name(), this.getContext().getString(R.string.to_be_announced)));
 

@@ -98,7 +98,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(ID).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                int id = Numbers.parseInt(body, Invalid.SERIES_ID);
+                int id = Numbers.parseInt(body.trim(), Invalid.SERIES_ID);
                 SeriesElementHandler.this.seriesBuilder.withId(id);
             }
         });
@@ -110,7 +110,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withName(body);
+                SeriesElementHandler.this.seriesBuilder.withName(body.trim());
             }
         });
 
@@ -157,7 +157,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(AIR_DATE).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                Date airDate = DatesAndTimes.parse(body, TheTVDBConstants.DATE_FORMAT, null);
+                Date airDate = DatesAndTimes.parse(body.trim(), TheTVDBConstants.DATE_FORMAT, null);
                 SeriesElementHandler.this.seriesBuilder.withAirDate(airDate);
             }
         });
@@ -169,7 +169,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(RUNTIME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withRuntime(body);
+                SeriesElementHandler.this.seriesBuilder.withRuntime(body.trim());
             }
         });
 
@@ -180,7 +180,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(NETWORK).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withNetwork(body);
+                SeriesElementHandler.this.seriesBuilder.withNetwork(body.trim());
             }
         });
 
@@ -191,7 +191,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(OVERVIEW).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withOverview(body);
+                SeriesElementHandler.this.seriesBuilder.withOverview(body.trim());
             }
         });
 
@@ -202,7 +202,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(GENRES).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                String genres = Strings.normalizePipeSeparated(body);
+                String genres = Strings.normalizePipeSeparated(body.trim());
                 SeriesElementHandler.this.seriesBuilder.withGenres(genres);
             }
         });
@@ -214,7 +214,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(ACTORS).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                String actors = Strings.normalizePipeSeparated(body);
+                String actors = Strings.normalizePipeSeparated(body.trim());
                 SeriesElementHandler.this.seriesBuilder.withActors(actors);
             }
         });
@@ -226,7 +226,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(POSTER_FILE_NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withPosterFileName(body);
+                SeriesElementHandler.this.seriesBuilder.withPosterFileName(body.trim());
             }
         });
 
