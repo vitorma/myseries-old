@@ -2,8 +2,13 @@
 
 <resources>
 
+    <!-- ActionBar -->
+
+    <dimen name="ab_height">56dp</dimen>
     <dimen name="text_size_ab_spinner_title">18sp</dimen>
     <dimen name="text_size_ab_spinner_subtitle">14sp</dimen>
+
+    <!-- Episodes -->
 
     <dimen name="fragment_episodes_master_width">248dp</dimen>
     <dimen name="fragment_episodes_details_width">352dp</dimen>

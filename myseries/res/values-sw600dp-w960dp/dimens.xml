@@ -2,6 +2,8 @@
 
 <resources>
 
+    <!-- Episodes -->
+
     <dimen name="fragment_episodes_master_width">288dp</dimen>
     <dimen name="fragment_episodes_details_width">672dp</dimen>
 
