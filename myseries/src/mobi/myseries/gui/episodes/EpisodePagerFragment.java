@@ -66,7 +66,7 @@ public class EpisodePagerFragment extends Fragment implements OnPageChangeListen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.episode_pager, container, false);
+        return inflater.inflate(R.layout.episode_pager_fragment, container, false);
     }
 
     @Override

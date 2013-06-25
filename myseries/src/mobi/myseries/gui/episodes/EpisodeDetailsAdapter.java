@@ -29,7 +29,7 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
-    private static final int ITEM_LAYOUT = R.layout.episode_details;
+    private static final int ITEM_LAYOUT = R.layout.episode_pager_item;
 
     private final EpisodeImageDownloadListener downloadListener = new EpisodeImageDownloadListener() {
 

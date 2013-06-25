@@ -75,7 +75,7 @@ public class EpisodesActivity extends BaseActivity
 
     @Override
     protected int layoutResource() {
-        return R.layout.episodes;
+        return R.layout.episodes_activity;
     }
 
     @Override

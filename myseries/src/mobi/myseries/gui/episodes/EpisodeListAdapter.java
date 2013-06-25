@@ -80,7 +80,7 @@ public class EpisodeListAdapter extends BaseAdapter implements SeasonListener, E
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = Objects.nullSafe(convertView, View.inflate(App.context(), R.layout.episode_list, null));
+        View view = Objects.nullSafe(convertView, View.inflate(App.context(), R.layout.episode_list_item, null));
         ViewHolder viewHolder = (view == convertView) ? (ViewHolder) view.getTag() : new ViewHolder(view);
 
         Episode episode = this.items.get(position);
@@ -106,7 +106,11 @@ public class EpisodeListAdapter extends BaseAdapter implements SeasonListener, E
             this.episodeName = (CheckedTextView) view.findViewById(R.id.episodeName);
             this.episodeSeenMark = (SeenMark) view.findViewById(R.id.seenMark);
 
-            ((CheckableFrameLayout) view).setOnCheckedListener(this.checkableFrameLayoutListener());
+            boolean isDualPane = App.resources().getBoolean(R.bool.isTablet);
+
+            if (isDualPane) {
+                ((CheckableFrameLayout) view).setOnCheckedListener(this.checkableFrameLayoutListener());
+            }
 
             view.setTag(this);
         }

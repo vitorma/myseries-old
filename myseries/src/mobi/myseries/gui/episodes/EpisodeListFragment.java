@@ -69,8 +69,18 @@ public class EpisodeListFragment extends ListFragment {
 
         if (this.listener.shouldHighlightSelectedItem()) {
             this.getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            this.getListView().setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
             this.checkItem(this.adapter.positionOf(this.season.episode(this.episodeNumber)));
+        }
+
+        boolean isDualPane = App.resources().getBoolean(R.bool.isTablet);
+
+        if (isDualPane) {
+            int paddingLeft = App.resources().getDimensionPixelSize(R.dimen.gap_large);
+
+            this.getListView().setPadding(paddingLeft, 0, 0, 0);
+            this.getListView().setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+            this.getListView().setDivider(null);
+            this.getView().setBackgroundResource(R.drawable.list_background_holo);
         }
     }
 

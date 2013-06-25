@@ -24,8 +24,8 @@ public class CheckableFrameLayout extends FrameLayout implements Checkable {
 
         this.setBackgroundResource(
             checked ?
-            R.drawable.list_checked :
-            R.drawable.list_unchecked);
+            R.drawable.list_activated_holo :
+            0);
 
         if (this.listener != null) {
             this.listener.onChecked(checked);

@@ -50,13 +50,6 @@ public class EpisodeDetailsFragment extends ListFragment {
 
         this.setListAdapter(new EpisodeDetailsAdapter(this.getActivity(), episode));
         this.getListView().setDivider(null);
+        this.getListView().setPadding(0, 0, 0, 0);
     }
-
-//    public void updateWith(Episode e) {
-//        this.seriesId = e.seriesId();
-//        this.seasonNumber = e.seasonNumber();
-//        this.episodeNumber = e.number();
-//
-//        this.setListAdapter(new EpisodeDetailsAdapter(this.getActivity(), e));
-//    }
 }
