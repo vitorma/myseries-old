@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <mobi.myseries.gui.shared.SeenMark
+        android:id="@+id/seenMark"
+        android:layout_width="@dimen/toucharea_minimum_side"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"/>
+
+    <CheckedTextView
+        android:id="@+id/episodeNumber"
+        style="@style/TextView.Small.MediumGray"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/seenMark"/>
+
+    <CheckedTextView
+        android:id="@+id/episodeName"
+        style="@style/TextView.Large.DarkGray"
+        android:fontFamily="sans-serif-light"
+        android:paddingBottom="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/episodeNumber"
+        android:layout_toLeftOf="@id/seenMark"/>
+
+</RelativeLayout>
