@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:paddingBottom="@dimen/gap_large"
-        android:layout_width="300dp"
+        android:layout_width="@dimen/episode_image_width"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center">
 
@@ -21,8 +21,8 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:background="@color/gray"
-                android:layout_width="300dp"
-                android:layout_height="168dp"/>
+                android:layout_width="@dimen/episode_image_width"
+                android:layout_height="@dimen/episode_image_height"/>
 
             <ProgressBar
                 android:id="@+id/imageProgressSpinner"
