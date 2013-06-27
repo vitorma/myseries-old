@@ -2,6 +2,8 @@ package mobi.myseries.application.search;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.SeriesSource;
@@ -9,14 +11,17 @@ import mobi.myseries.domain.source.TrendingSource;
 import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
-import android.os.AsyncTask;
+import android.os.Handler;
 
 public class SeriesSearch {
 
-    private SeriesSource seriesSource;
-    private TrendingSource trendingSource;
-    private ListenerSet<SeriesSearchListener> searchByNameListeners;
-    private ListenerSet<SeriesSearchListener> searchByTrendingListeners;
+    private final SeriesSource seriesSource;
+    private final TrendingSource trendingSource;
+    private final ListenerSet<SeriesSearchListener> searchByNameListeners;
+    private final ListenerSet<SeriesSearchListener> searchByTrendingListeners;
+    private final ExecutorService trendingExecutor;
+    private final ExecutorService searchExecutor;
+    private Handler handler;
 
     public SeriesSearch(SeriesSource seriesSource, TrendingSource trendingSource) {
         Validate.isNonNull(seriesSource, "seriesSource");
@@ -26,75 +31,111 @@ public class SeriesSearch {
         this.trendingSource = trendingSource;
         this.searchByNameListeners = new ListenerSet<SeriesSearchListener>();
         this.searchByTrendingListeners = new ListenerSet<SeriesSearchListener>();
+        this.trendingExecutor = Executors.newSingleThreadExecutor();
+        this.searchExecutor = Executors.newSingleThreadExecutor();
     }
 
     public void byName(String seriesName) {
         String language = Locale.getDefault().getLanguage();
 
-        new SearchByNameTask().execute(seriesName, language);
+        this.searchExecutor.execute(
+            new SearchByNameTask(new String[] { seriesName, language }));
     }
 
     public void byTrending() {
-        new SearchByTrendingTask().execute();
+        this.trendingExecutor.execute(
+            new SearchByTrendingTask());
     }
 
-    public boolean registerForSearchByName(SeriesSearchListener listener){
+    public boolean registerForSearchByName(SeriesSearchListener listener) {
         return this.searchByNameListeners.register(listener);
     }
 
-    public boolean deregisterForSearchByName(SeriesSearchListener listener){
+    public boolean deregisterForSearchByName(SeriesSearchListener listener) {
         return this.searchByNameListeners.deregister(listener);
     }
 
-    public boolean registerForSearchByTrending(SeriesSearchListener listener){
+    public boolean registerForSearchByTrending(SeriesSearchListener listener) {
         return this.searchByTrendingListeners.register(listener);
     }
 
-    public boolean deregisterForSearchByTrending(SeriesSearchListener listener){
+    public boolean deregisterForSearchByTrending(SeriesSearchListener listener) {
         return this.searchByTrendingListeners.deregister(listener);
     }
 
-    private void notifyOnStart(ListenerSet<SeriesSearchListener> listeners) {
-        for (SeriesSearchListener l : listeners) {
-            l.onStart();
-        }
+    public SeriesSearch withHandler(Handler handler) {
+        this.handler = handler;
+
+        return this;
     }
 
-    private void notifyOnSucess(ListenerSet<SeriesSearchListener> listeners, List<Series> results) {
-        for (SeriesSearchListener l : listeners) {
-            l.onSucess(results);
-        }
-    }
-
-    private void notifyOnFailure(ListenerSet<SeriesSearchListener> listeners, Exception failure) {
-        for (SeriesSearchListener l : listeners) {
-            l.onFailure(failure);
-        }
-    }
-
-    private void notifyOnFinish(ListenerSet<SeriesSearchListener> listeners) {
-        for (SeriesSearchListener l : listeners) {
-            l.onFinish();
-        }
-    }
-
-    private abstract class SearchTask extends AsyncTask<String, Void, AsyncTaskResult<List<Series>>> {
-        @Override
-        protected final void onPreExecute() {
-            SeriesSearch.this.notifyOnStart(this.listeners());
-        }
-
-        @Override
-        protected AsyncTaskResult<List<Series>> doInBackground(String... params) {
-            try {
-                return new AsyncTaskResult<List<Series>>(this.downloadSeriesList(params));
-            } catch (SeriesSearchException e) {
-                return new AsyncTaskResult<List<Series>>(e);
+    private void notifyOnStart(final ListenerSet<SeriesSearchListener> listeners) {
+        this.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (SeriesSearchListener l : listeners) {
+                    l.onStart();
+                }
             }
+        });
+    }
+
+    private void notifyOnSucess(final ListenerSet<SeriesSearchListener> listeners,
+        final List<Series> results) {
+        this.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (SeriesSearchListener l : listeners) {
+                    l.onSucess(results);
+                }
+            }
+        });
+    }
+
+    private void notifyOnFailure(final ListenerSet<SeriesSearchListener> listeners,
+        final Exception failure) {
+        this.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (SeriesSearchListener l : listeners) {
+                    l.onFailure(failure);
+                }
+            }
+        });
+    }
+
+    private void notifyOnFinish(final ListenerSet<SeriesSearchListener> listeners) {
+        this.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (SeriesSearchListener l : listeners) {
+                    l.onFinish();
+                }
+            }
+        });
+    }
+
+    private abstract class SearchTask implements Runnable {
+        private final String[] strings;
+
+        public SearchTask(String... strings) {
+            this.strings = strings;
         }
 
         @Override
-        protected final void onPostExecute(AsyncTaskResult<List<Series>> taskResult) {
+        public void run() {
+
+            AsyncTaskResult<List<Series>> taskResult;
+
+            SeriesSearch.this.notifyOnStart(this.listeners());
+
+            try {
+                taskResult = new AsyncTaskResult<List<Series>>(
+                    this.downloadSeriesList(this.strings));
+            } catch (SeriesSearchException e) {
+                taskResult = new AsyncTaskResult<List<Series>>(e);
+            }
+
             if (taskResult.error() == null) {
                 SeriesSearch.this.notifyOnSucess(this.listeners(), taskResult.result());
             } else {
@@ -102,13 +143,19 @@ public class SeriesSearch {
             }
 
             SeriesSearch.this.notifyOnFinish(this.listeners());
+
         }
 
         protected abstract List<Series> downloadSeriesList(String... params);
+
         protected abstract ListenerSet<SeriesSearchListener> listeners();
     }
 
     private class SearchByNameTask extends SearchTask {
+        public SearchByNameTask(String... strings) {
+            super(strings);
+        }
+
         @Override
         protected List<Series> downloadSeriesList(String... params) {
             String seriesName = params[0];
@@ -128,6 +175,10 @@ public class SeriesSearch {
     }
 
     private class SearchByTrendingTask extends SearchTask {
+        public SearchByTrendingTask(String... strings) {
+            super(strings);
+        }
+
         @Override
         protected List<Series> downloadSeriesList(String... params) {
             return SeriesSearch.this.trendingSource.listTrending();

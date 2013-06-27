@@ -29,8 +29,12 @@ public class MySeriesActivity extends BaseActivity {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        App.updateSeriesService().withHandler(new Handler());
+        final Handler handler = new Handler();
+
+        App.updateSeriesService().withHandler(handler);
         App.updateSeriesService().updateDataIfNeeded();
+        App.followSeriesService().withHandler(handler);
+        App.seriesSearch().withHandler(handler);
     }
 
     @Override
