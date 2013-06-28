@@ -14,8 +14,6 @@
     <RelativeLayout
         android:id="@+id/body"
         android:background="@drawable/list_selector_holo_light"
-        android:paddingTop="@dimen/gap_medium"
-        android:paddingBottom="@dimen/gap_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/section">
@@ -38,6 +36,9 @@
         <TextView
             android:id="@+id/seriesName"
             style="@style/TextView.Large.DarkGray.Ellipsized"
+            android:fontFamily="sans-serif-light"
+            android:paddingTop="@dimen/gap_medium"
+            
             android:paddingLeft="@dimen/gap_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,6 +59,7 @@
         <TextView
             android:id="@+id/airInfo"
             style="@style/TextView.Small.LightGray.Ellipsized"
+            android:paddingBottom="@dimen/gap_medium"
             android:paddingLeft="@dimen/gap_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

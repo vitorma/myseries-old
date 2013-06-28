@@ -48,6 +48,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        this.getListView().setSelector(R.color.transparent);
         this.setUpEmptyText();
         this.setUpItemClickListener();
     }

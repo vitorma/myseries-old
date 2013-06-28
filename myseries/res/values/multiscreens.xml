@@ -8,8 +8,8 @@
     <dimen name="poster_height_thumbnail">@dimen/poster_height_myseries_list</dimen>
     <dimen name="poster_width_myseries_list">51dp</dimen>
     <dimen name="poster_height_myseries_list">75dp</dimen>
-    <dimen name="poster_width_myschedule">40dp</dimen>
-    <dimen name="poster_height_myschedule">59dp</dimen>
+    <dimen name="poster_width_myschedule">51dp</dimen>
+    <dimen name="poster_height_myschedule">75dp</dimen>
     <dimen name="poster_width_series_details">300dp</dimen>
     <dimen name="poster_height_series_details">441dp</dimen>
     <dimen name="poster_width_series_details_land">80dp</dimen>
