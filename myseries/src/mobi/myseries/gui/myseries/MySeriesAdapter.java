@@ -110,8 +110,11 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         Specification<Episode> spec1 = new EpisodesToCountSpecification(countSpecialEpisodes, countUnairedEpisodes);
         Specification<Episode> spec2 = new SeenEpisodeSpecification();
 
-        String seenEpisodes = series.numberOfEpisodes(spec1.and(spec2)) + "/" + series.numberOfEpisodes(spec1);
+        String seenEpisodes = String.valueOf(series.numberOfEpisodes(spec1.and(spec2)));
         viewHolder.seenEpisodes.setText(seenEpisodes);
+
+        String allEpisodes = "/" + series.numberOfEpisodes(spec1);
+        viewHolder.allEpisodes.setText(allEpisodes);
 
         viewHolder.seenEpisodesBar.updateWith(series.episodesBy(spec1));
     }
@@ -167,6 +170,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         private final TextView status;
         private final TextView airInfo;
         private final TextView seenEpisodes;
+        private final TextView allEpisodes;
         private final SeenEpisodesBar seenEpisodesBar;
 
         private ViewHolder(View view) {
@@ -176,6 +180,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
             this.status = (TextView) view.findViewById(R.id.status);
             this.airInfo = (TextView) view.findViewById(R.id.airInfo);
             this.seenEpisodes = (TextView) view.findViewById(R.id.seenEpisodes);
+            this.allEpisodes = (TextView) view.findViewById(R.id.allEpisodes);
             this.seenEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
 
             view.setTag(this);

@@ -18,14 +18,13 @@
 
         <RelativeLayout
             android:background="@drawable/list_selector_holo_light"
-            android:padding="@dimen/gap_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/poster"
                 android:contentDescription="@string/description_poster"
-                android:scaleType="centerInside"
+                android:scaleType="fitXY"
                 android:layout_width="@dimen/poster_width_myseries_list"
                 android:layout_height="@dimen/poster_height_myseries_list"
                 android:layout_alignParentLeft="true"/>
@@ -34,7 +33,9 @@
                 android:id="@+id/name"
                 style="@style/TextView.Large.DarkGray.Ellipsized"
                 android:fontFamily="sans-serif-light"
+                android:paddingTop="@dimen/gap_medium"
                 android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -44,6 +45,7 @@
                 android:id="@+id/genres"
                 style="@style/TextView.Small.MediumGray.Ellipsized"
                 android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name"
@@ -53,23 +55,34 @@
                 android:id="@+id/status"
                 style="@style/TextView.Small.LightGray.Ellipsized"
                 android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/genres"
                 android:layout_toRightOf="@id/poster"/>
 
             <TextView
-                android:id="@+id/seenEpisodes"
-                style="@style/TextView.Small.DarkGray"
+                android:id="@+id/allEpisodes"
+                style="@style/TextView.Small.MediumGray"
+                android:paddingRight="@dimen/gap_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/status"/>
 
             <TextView
+                android:id="@+id/seenEpisodes"
+                style="@style/TextView.Small.Blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/allEpisodes"
+                android:layout_below="@id/status"/>
+
+            <TextView
                 android:id="@+id/airInfo"
                 style="@style/TextView.Small.LightGray.Ellipsized"
                 android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/status"
@@ -80,8 +93,7 @@
                 android:id="@+id/seenEpisodesBar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/chunkbar_height"
-                android:layout_marginTop="@dimen/gap_medium"
-                android:layout_below="@id/seenEpisodes"/>
+                android:layout_below="@id/poster"/>
 
         </RelativeLayout>
 
