@@ -22,6 +22,12 @@ public class WeekDay implements Comparable<WeekDay> {
         this.day = day;
     }
 
+    public static WeekDay valueOf(Date day) {
+        Validate.isNonNull(day, "day");
+
+        return new WeekDay(day);
+    }
+
     public static WeekDay valueOf(long day) {
         return new WeekDay(new Date(day));
     }

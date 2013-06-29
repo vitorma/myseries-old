@@ -3,7 +3,7 @@ package mobi.myseries.gui.appwidget;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.broadcast.BroadcastAction;
-import mobi.myseries.gui.episode.EpisodeActivity;
+import mobi.myseries.gui.episodes.EpisodesActivity;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -41,7 +41,7 @@ public class ScheduleWidget extends AppWidgetProvider {
     }
 
     private static PendingIntent episodesIntentTemplateFrom(Context context, int appWidgetId) {
-        Intent intent = new Intent(context, EpisodeActivity.class);
+        Intent intent = new Intent(context, EpisodesActivity.class);
 
         return PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }

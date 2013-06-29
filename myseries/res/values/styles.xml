@@ -128,6 +128,10 @@
         <item name="android:textColor">@color/text_blue</item>
     </style>
 
+    <style name="TextView.Medium.Blue.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="TextView.Medium.Green">
         <item name="android:textColor">@color/green</item>
     </style>
@@ -151,6 +155,10 @@
     <style name="TextView.Large.DarkGray.Ellipsized">
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextView.Large.MediumGray">
+        <item name="android:textColor">@color/gray</item>
     </style>
 
     <style name="TextView.Large.White">
@@ -235,7 +243,7 @@
         <item name="android:paddingLeft">@dimen/gap_large</item>
         <item name="android:paddingRight">@dimen/gap_large</item>
 
-        <item name="android:listSelector">@color/transparent</item>
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
 
         <item name="android:dividerHeight">0.5dp</item>
         <item name="android:headerDividersEnabled">true</item>
@@ -253,33 +261,35 @@
         <item name="android:fastScrollEnabled">true</item>
     </style>
 
-    <!-- ExpandableListView -->
-
-    <style name="ExpandableListView" parent="android:Widget.ExpandableListView">
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingLeft">@dimen/gap_large</item>
-        <item name="android:paddingRight">@dimen/gap_large</item>
-
-        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
-
-        <item name="android:divider">@drawable/list_divider_holo_light</item>
-        <item name="android:childDivider">@drawable/list_divider_holo_light</item>
-        <item name="android:headerDividersEnabled">true</item>
-        <item name="android:footerDividersEnabled">true</item>
-        <item name="android:showDividers">beginning|middle|end</item>
-
-        <item name="android:groupIndicator">@null</item>
-
-        <item name="android:scrollbarStyle">outsideOverlay</item>
-        <item name="android:fastScrollEnabled">true</item>
-    </style>
-
     <!-- ScrollView -->
 
     <style name="ScrollView" parent="android:Widget.ScrollView">
         <item name="android:scrollbarStyle">outsideOverlay</item>
         <item name="android:fastScrollEnabled">true</item>
+    </style>
+
+    <!-- ActionBarSpinner -->
+
+    <style name="ActionBarSpinner" parent="TextView"/>
+
+    <style name="ActionBarSpinner.Title">
+        <item name="android:textSize">@dimen/text_size_ab_spinner_title</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="ActionBarSpinner.Subtitle">
+        <item name="android:textSize">@dimen/text_size_ab_spinner_subtitle</item>
+        <item name="android:textColor">#ffeeeeee</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="ActionBarSpinner.Row">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">@dimen/gap_medium</item>
     </style>
 
 </resources>

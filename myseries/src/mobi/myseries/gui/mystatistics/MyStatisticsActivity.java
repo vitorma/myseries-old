@@ -6,6 +6,7 @@ import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,8 +17,7 @@ public class MyStatisticsActivity extends BaseActivity {
     }
 
     @Override
-    protected void init() {
-    }
+    protected void init(Bundle savedInstanceState) { }
 
     @Override
     protected boolean isTopLevel() {

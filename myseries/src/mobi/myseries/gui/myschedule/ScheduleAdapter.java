@@ -23,6 +23,7 @@ package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -40,6 +41,7 @@ import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.RelativeDay;
 import mobi.myseries.shared.Strings;
+import mobi.myseries.shared.WeekDay;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
@@ -103,10 +105,14 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         this.updateViewStates(position);
 
         if (this.isViewSectioned(position)) {
-            DateFormat dateformat = android.text.format.DateFormat.getDateFormat(App.context());
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(App.context());
             String unavailable = LocalText.get(R.string.unavailable_date);
-            String formattedDate = DatesAndTimes.toString(episode.airDate(), dateformat, unavailable);
+            String formattedDate = DatesAndTimes.toString(episode.airDate(), dateFormat, unavailable);
             viewHolder.date.setText(formattedDate);
+
+            WeekDay weekDay = App.seriesProvider().getSeries(episode.seriesId()).airDay();
+            String formattedWeekDay = DatesAndTimes.toShortString(weekDay, Locale.getDefault(), "").toUpperCase();
+            viewHolder.weekDay.setText(formattedWeekDay);
 
             RelativeDay relativeDay = DatesAndTimes.parse(episode.airDate(), null);
             viewHolder.relativeDay.setText(LocalText.of(relativeDay, ""));
@@ -207,6 +213,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private static class ViewHolder {
         private View section;
         private TextView date;
+        private TextView weekDay;
         private TextView relativeDay;
         private ImageView poster;
         private SeenMark seenMark;
@@ -217,6 +224,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         private ViewHolder(View view) {
             this.section = view.findViewById(R.id.section);
             this.date = (TextView) view.findViewById(R.id.date);
+            this.weekDay = (TextView) view.findViewById(R.id.weekDay);
             this.relativeDay = (TextView) view.findViewById(R.id.relativeDay);
             this.poster = (ImageView) view.findViewById(R.id.poster);
             this.seenMark = (SeenMark) view.findViewById(R.id.seenMark);

@@ -7,6 +7,7 @@ import mobi.myseries.gui.activity.base.TabDefinition;
 import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 
 public class MyScheduleActivity extends TabActivity {
@@ -38,7 +39,7 @@ public class MyScheduleActivity extends TabActivity {
     }
 
     @Override
-    protected void init() { /* There's nothing to initialize */ }
+    protected void init(Bundle savedInstanceState) { /* There's nothing to initialize */ }
 
     @Override
     protected CharSequence title() {

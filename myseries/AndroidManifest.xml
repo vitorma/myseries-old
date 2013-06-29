@@ -20,10 +20,10 @@
         android:name=".application.App"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app"
-        android:theme="@style/MySeriesTheme" >
+        android:theme="@style/MySeriesTheme"
+        android:hardwareAccelerated="true">
         <activity
             android:name=".gui.myseries.MySeriesActivity"
-            android:hardwareAccelerated="false"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -76,15 +76,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity android:name="mobi.myseries.gui.season.SeasonActivity" >
+        <activity android:name="mobi.myseries.gui.episodes.EpisodesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
-        </activity>
-        <activity android:name="mobi.myseries.gui.episode.EpisodeActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.SeasonActivity" />
         </activity>
         <activity android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity" >
             <intent-filter>

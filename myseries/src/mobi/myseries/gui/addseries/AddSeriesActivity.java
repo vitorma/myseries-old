@@ -26,6 +26,7 @@ import mobi.myseries.gui.activity.base.TabActivity;
 import mobi.myseries.gui.activity.base.TabDefinition;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 public class AddSeriesActivity extends TabActivity {
     private static final int TRENDING_TAB = 0;
@@ -35,7 +36,7 @@ public class AddSeriesActivity extends TabActivity {
     }
 
     @Override
-    protected void init() { /* There's nothing to initialize */ }
+    protected void init(Bundle savedInstanceState) { /* There's nothing to initialize */ }
 
     @Override
     protected CharSequence title() {

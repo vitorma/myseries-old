@@ -24,6 +24,7 @@ package mobi.myseries.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
@@ -380,5 +381,19 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
 
     public void setBeingMarkedBySeries(boolean b) {
         this.beingMarkedBySeries = b;
+    }
+
+    public synchronized int positionOf(int episodeNumber) {
+        int i = 0;
+
+        TreeSet<Integer> numbers = new TreeSet<Integer>(this.episodes.keySet());
+
+        for (int n : numbers) {
+            if (n == episodeNumber) { return i; }
+
+            i++;
+        }
+
+        return -1;
     }
 }

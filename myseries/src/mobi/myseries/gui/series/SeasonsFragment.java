@@ -5,7 +5,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
-import mobi.myseries.gui.season.SeasonActivity;
+import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
@@ -81,7 +81,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Season season = (Season) SeasonsFragment.this.adapter.getItem(position);
 
-                Intent intent = SeasonActivity.newIntent(
+                Intent intent = EpisodesActivity.newIntent(
                         SeasonsFragment.this.getActivity(),
                         SeasonsFragment.this.seriesId,
                         season.number());

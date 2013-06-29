@@ -15,18 +15,27 @@
         android:layout_alignParentLeft="true"/>
 
     <TextView
+        android:id="@+id/weekDay"
+        style="@style/TextView.Small.MediumGray"
+        android:paddingLeft="@dimen/gap_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/date"
+        android:layout_toRightOf="@id/date"/>
+
+    <TextView
         android:id="@+id/relativeDay"
-        style="@style/TextView.Small.LightGray"
+        style="@style/TextView.Small.LightGray.Ellipsized"
         android:gravity="right"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/date"/>
+        android:layout_toRightOf="@id/weekDay"/>
 
     <View
-        android:background="@color/blue"
+        android:background="@color/dark_blue"
         android:layout_width="match_parent"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="2dp"
         android:layout_height="1.5dp"
         android:layout_below="@id/date"/>
 

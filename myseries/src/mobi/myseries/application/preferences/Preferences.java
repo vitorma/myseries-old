@@ -15,6 +15,7 @@ public class Preferences {
     private static final String KEY_PREFIX_SCHEDULEWIDGET = "ScheduleWidget";
     private static final String KEY_PREFIX_UPDATE = "Update";
     private static final String KEY_PREFIX_SERIES_DETAILS = "Series";
+    private static final String KEY_PREFIX_EPISODES = "Episodes";
 
     private static final String PREFERENCES_NAME = "mobi.myseries.preferences";
     private static final String PREFERENCES_NAME_APPWIDGET = "mobi.myseries.preferences.appwidget";
@@ -66,6 +67,10 @@ public class Preferences {
 
     public SeriesDetailsPreferences forSeriesDetails() {
         return new SeriesDetailsPreferences(this.forActivities().addKeyPrefix(Preferences.KEY_PREFIX_SERIES_DETAILS));
+    }
+
+    public EpisodesPreferences forEpisodes() {
+        return new EpisodesPreferences(this.forActivities().addKeyPrefix(KEY_PREFIX_EPISODES));
     }
 
     /* For app widgets */

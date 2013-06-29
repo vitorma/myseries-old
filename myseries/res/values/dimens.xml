@@ -8,16 +8,13 @@
     <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_xlarge">22sp</dimen>
     <dimen name="text_size_extreme">55sp</dimen>
-    
+
     <dimen name="gap_micro">2dp</dimen>
     <dimen name="gap_small">4dp</dimen>
     <dimen name="gap_medium">8dp</dimen>
     <dimen name="gap_large">16dp</dimen>
 
     <dimen name="toucharea_minimum_side">48dp</dimen>
-
-    <dimen name="checkbox_height">32dp</dimen>
-    <dimen name="checkbox_width">32dp</dimen>
 
     <dimen name="imagebutton_height">40dp</dimen>
     <dimen name="imagebutton_width">48dp</dimen>
@@ -27,6 +24,20 @@
     <dimen name="myseries_item_height">106dp</dimen>
     <dimen name="myseries_image_height">106dp</dimen>
     <dimen name="myseries_image_width">69dp</dimen>
+
+    <!-- ActionBar -->
+
+    <dimen name="ab_height">48dp</dimen>
+    <dimen name="text_size_ab_spinner_title">16sp</dimen>
+    <dimen name="text_size_ab_spinner_subtitle">12sp</dimen>
+
+    <!-- Episodes -->
+
+    <dimen name="fragment_episodes_master_width">280dp</dimen>
+    <dimen name="fragment_episodes_details_width">320dp</dimen>
+    <dimen name="fragment_episodes_side_gap">0dp</dimen>
+    <dimen name="episode_image_width">300dp</dimen>
+    <dimen name="episode_image_height">168dp</dimen>
 
     <!-- AppWidget -->
 

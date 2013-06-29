@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:paddingBottom="@dimen/gap_large"
+        android:layout_width="@dimen/episode_image_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center">
+
+        <FrameLayout
+            android:id="@+id/imageFrame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:background="@color/gray"
+                android:layout_width="@dimen/episode_image_width"
+                android:layout_height="@dimen/episode_image_height"/>
+
+            <ProgressBar
+                android:id="@+id/imageProgressSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/nameFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffececec"
+            android:layout_below="@id/imageFrame">
+
+            <mobi.myseries.gui.shared.SeenMark
+                android:id="@+id/isEpisodeViewedCheckBox"
+                android:gravity="center"
+                android:layout_width="@dimen/toucharea_minimum_side"
+                android:layout_height="@dimen/toucharea_minimum_side"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:id="@+id/episodeFirstAiredTextView"
+                android:textSize="16sp"
+                android:textColor="@color/gray"
+                android:layout_marginTop="@dimen/gap_medium"
+                android:layout_marginLeft="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/isEpisodeViewedCheckBox"/>
+
+            <TextView
+                android:id="@+id/episodeName"
+                style="@style/TextView.XLarge.DarkGray"
+                android:textSize="24sp"
+                android:fontFamily="sans-serif-light"
+                android:paddingBottom="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_marginLeft="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/episodeFirstAiredTextView"
+                android:layout_toLeftOf="@id/isEpisodeViewedCheckBox"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/episodeOverviewLabel"
+            android:text="@string/overview"
+            style="@style/TextView.Medium.MediumGray.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap_large"
+            android:layout_below="@id/nameFrame"
+            android:layout_alignWithParentIfMissing="true"/>
+
+        <TextView
+            android:id="@+id/episodeOverviewTextView"
+            style="@style/TextView.Medium.MediumGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/episodeOverviewLabel"
+            android:layout_alignWithParentIfMissing="true"/>
+
+        <TextView
+            android:id="@+id/episodeGuestStarsLabel"
+            android:text="@string/guest_stars"
+            style="@style/TextView.Medium.MediumGray.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap_large"
+            android:layout_below="@id/episodeOverviewTextView"
+            android:layout_alignWithParentIfMissing="true"/>
+
+        <TextView
+            android:id="@+id/episodeGuestStarsTextView"
+            style="@style/TextView.Medium.MediumGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/episodeGuestStarsLabel"
+            android:layout_alignWithParentIfMissing="true"/>
+
+        <TextView
+            android:id="@+id/episodeWritersLabel"
+            android:text="@string/writers"
+            style="@style/TextView.Medium.MediumGray.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap_large"
+            android:layout_below="@id/episodeGuestStarsTextView"
+            android:layout_alignWithParentIfMissing="true"/>
+
+        <TextView
+            android:id="@+id/episodeWritersTextView"
+            style="@style/TextView.Medium.MediumGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/episodeWritersLabel"/>
+
+        <TextView
+            android:id="@+id/episodeDirectorsLabel"
+            android:text="@string/directors"
+            style="@style/TextView.Medium.MediumGray.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap_large"
+            android:layout_below="@id/episodeWritersTextView"
+            android:layout_alignWithParentIfMissing="true"/>
+
+        <TextView
+            android:id="@+id/episodeDirectorsTextView"
+            style="@style/TextView.Medium.MediumGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/episodeDirectorsLabel"
+            android:layout_alignWithParentIfMissing="true"/>
+
+    </RelativeLayout>
+
+</ScrollView>

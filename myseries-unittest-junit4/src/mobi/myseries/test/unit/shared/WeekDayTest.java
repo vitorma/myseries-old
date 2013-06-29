@@ -11,7 +11,8 @@ public class WeekDayTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void valueOfNullStringCausesIllegalArgumentException() {
-        WeekDay.valueOf(null);
+        String nullString = null;
+        WeekDay.valueOf(nullString);
     }
 
     @Test

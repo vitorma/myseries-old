@@ -22,6 +22,8 @@
 package mobi.myseries.application.follow;
 
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.broadcast.BroadcastService;
@@ -38,34 +40,38 @@ import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Validate;
-import android.os.AsyncTask;
+import android.os.Handler;
 
 public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
-    private SeriesSource seriesSource;
-    private SeriesRepository seriesRepository;
-    private LocalizationProvider localizationProvider;
-    private ImageService imageService;
-    private ErrorService errorService;
-    private BroadcastService broadcastService;
-    private SeriesFollower seriesFollower;
+    private final SeriesSource seriesSource;
+    private final SeriesRepository seriesRepository;
+    private final LocalizationProvider localizationProvider;
+    private final ImageService imageService;
+    private final ErrorService errorService;
+    private final BroadcastService broadcastService;
+    private final SeriesFollower seriesFollower;
     private final ListenerSet<SeriesFollowingListener> seriesFollowingListeners;
 
+    private Handler handler;
+    private final ExecutorService executor;
+
     public FollowSeriesService(SeriesSource seriesSource,
-            SeriesRepository seriesRepository,
-            LocalizationProvider localizationProvider,
-            ImageService imageService,
-            ErrorService errorService,
-            BroadcastService broadcastService) {
-        this(seriesSource, seriesRepository, localizationProvider, imageService, errorService, broadcastService, true);
+        SeriesRepository seriesRepository,
+        LocalizationProvider localizationProvider,
+        ImageService imageService,
+        ErrorService errorService,
+        BroadcastService broadcastService) {
+        this(seriesSource, seriesRepository, localizationProvider, imageService, errorService,
+            broadcastService, true);
     }
 
     public FollowSeriesService(SeriesSource seriesSource,
-            SeriesRepository seriesRepository,
-            LocalizationProvider localizationProvider,
-            ImageService imageService,
-            ErrorService errorService,
-            BroadcastService broadcastService,
-            boolean asyncFollowing) {
+        SeriesRepository seriesRepository,
+        LocalizationProvider localizationProvider,
+        ImageService imageService,
+        ErrorService errorService,
+        BroadcastService broadcastService,
+        boolean asyncFollowing) {
         Validate.isNonNull(seriesSource, "seriesSource");
         Validate.isNonNull(seriesRepository, "seriesRepository");
         Validate.isNonNull(localizationProvider, "localizationProvider");
@@ -79,8 +85,10 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
         this.imageService = imageService;
         this.errorService = errorService;
         this.broadcastService = broadcastService;
-        this.seriesFollower = (asyncFollowing ? new AsynchronousFollower() : new SynchronousFollower());
+        this.seriesFollower = (asyncFollowing ? new AsynchronousFollower()
+            : new SynchronousFollower());
         this.seriesFollowingListeners = new ListenerSet<SeriesFollowingListener>();
+        this.executor = Executors.newSingleThreadExecutor();
     }
 
     public void follow(Series series) {
@@ -174,13 +182,15 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
 
         private boolean failed;
 
-        protected void followSeries(Series seriesToFollow) throws ParsingFailedException, ConnectionFailedException,
-                SeriesNotFoundException, ConnectionTimeoutException {
+        protected void followSeries(Series seriesToFollow) throws ParsingFailedException,
+            ConnectionFailedException,
+            SeriesNotFoundException, ConnectionTimeoutException {
             this.failed = true;
 
             this.followedSeries =
-                    FollowSeriesService.this.seriesSource.fetchSeries(seriesToFollow.id(), FollowSeriesService.this.localizationProvider
-                            .language());
+                FollowSeriesService.this.seriesSource.fetchSeries(seriesToFollow.id(),
+                    FollowSeriesService.this.localizationProvider
+                        .language());
             FollowSeriesService.this.seriesRepository.insert(this.followedSeries);
 
             FollowSeriesService.this.imageService.downloadAndSavePosterOf(this.followedSeries);
@@ -188,13 +198,25 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
             this.failed = false;
         }
 
-        protected void beforeFollowingActions(Series seriesToFollow) {
-            FollowSeriesService.this.notifyListenersOfStartingToFollowSeries(seriesToFollow);
+        protected void beforeFollowingActions(final Series seriesToFollow) {
+            FollowSeriesService.this.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    FollowSeriesService.this
+                        .notifyListenersOfStartingToFollowSeries(seriesToFollow);
+                }
+            });
         }
 
         protected void afterFollowingActions() {
             if (!this.failed) {
-                FollowSeriesService.this.notifyListenersOfFollowedSeries(this.followedSeries);
+                FollowSeriesService.this.handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        FollowSeriesService.this
+                            .notifyListenersOfFollowedSeries(SeriesFollower.this.followedSeries);
+                    }
+                });
             }
         }
     }
@@ -202,41 +224,39 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
     private class AsynchronousFollower extends SeriesFollower {
         @Override
         public void follow(final Series series) {
-            new FollowSeriesTask(series, FollowSeriesService.this.errorService).execute();
+            FollowSeriesService.this.executor.execute(
+                new FollowSeriesTask(series, FollowSeriesService.this.errorService)
+                );
         }
     }
 
-    private class FollowSeriesTask extends AsyncTask<Series, Void, AsyncTaskResult<Series>> {
-        private Series series;
-        private ErrorService errorService; //XXX (Cleber) unused
+    private class FollowSeriesTask implements Runnable {
+        private final Series series;
+        private AsyncTaskResult<Series> result;
 
         public FollowSeriesTask(Series series, ErrorService errorService) {
             this.series = series;
-            this.errorService = errorService;
         }
 
         @Override
-        protected void onPreExecute() {
+        public void run() {
             FollowSeriesService.this.seriesFollower.beforeFollowingActions(this.series);
-        }
 
-        @Override
-        protected AsyncTaskResult<Series> doInBackground(Series... params) {
             try {
                 FollowSeriesService.this.seriesFollower.followSeries(this.series);
             } catch (Exception e) {
-                return new AsyncTaskResult<Series>(e);
-            }
-            return new AsyncTaskResult<Series>(this.series);
-        }
-
-        @Override
-        protected void onPostExecute(AsyncTaskResult<Series> result) {
-            if (result.error() != null) {
-                FollowSeriesService.this.notifyListenersOfFollowingError(this.series, result.error());
+                this.result = new AsyncTaskResult<Series>(e);
             }
 
-            FollowSeriesService.this.seriesFollower.afterFollowingActions();
+            this.result = new AsyncTaskResult<Series>(this.series);
+
+            if (this.result.error() != null) {
+                FollowSeriesService.this.notifyListenersOfFollowingError(this.series,
+                    this.result.error());
+            } else {
+                FollowSeriesService.this.seriesFollower.afterFollowingActions();
+            }
+
         }
     }
 
@@ -250,5 +270,11 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
             }
             this.afterFollowingActions();
         }
+    }
+
+    public FollowSeriesService withHandler(Handler handler2) {
+        this.handler = handler2;
+
+        return this;
     }
 }

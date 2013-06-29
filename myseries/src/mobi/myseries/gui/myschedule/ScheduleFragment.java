@@ -3,7 +3,7 @@ package mobi.myseries.gui.myschedule;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.gui.episode.EpisodeActivity;
+import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.ListFragment;
@@ -48,6 +48,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        this.getListView().setSelector(R.color.transparent);
         this.setUpEmptyText();
         this.setUpItemClickListener();
     }
@@ -135,7 +136,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Episode e = (Episode) parent.getItemAtPosition(position);
 
-                Intent intent = EpisodeActivity.newIntent(
+                Intent intent = EpisodesActivity.newIntent(
                         view.getContext(), e.seriesId(), e.seasonNumber(), e.number());
 
                 ScheduleFragment.this.startActivity(intent);
