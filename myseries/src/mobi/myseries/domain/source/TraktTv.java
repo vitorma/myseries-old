@@ -16,10 +16,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class TraktTv implements TrendingSource {
-
     private static final String TRENDING_URL = "http://api.trakt.tv/shows/trending.json/";
 
-    private final String apiKey;
+    private String apiKey;
 
     public TraktTv(String apiKey) {
         Validate.isNonNull(apiKey, "apiKey");
@@ -51,7 +50,7 @@ public class TraktTv implements TrendingSource {
             .withId(Integer.valueOf(object.get("tvdb_id").toString()))
             .withName(object.get("title").toString())
             .withOverview(object.get("overview").toString())
-            .withPosterFileName(this.compressed138(((JSONObject) object.get("images")).get("poster").toString()))
+            .withPosterFileName(((JSONObject) object.get("images")).get("banner").toString())
             .build();
     }
 
@@ -66,24 +65,11 @@ public class TraktTv implements TrendingSource {
     private InputStream get() {
         try {
             return new DefaultHttpClient()
-                .execute(new HttpGet(TraktTv.TRENDING_URL + this.apiKey))
+                .execute(new HttpGet(TRENDING_URL + this.apiKey))
                 .getEntity()
                 .getContent();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private String compressed138(String poster) {
-        int extensionIndex = poster.lastIndexOf(".");
-        if (extensionIndex == -1) { return poster; }
-
-        StringBuilder b = new StringBuilder();
-
-        b.append(poster.substring(0, extensionIndex));
-        b.append("-138");
-        b.append(poster.substring(extensionIndex));
-
-        return b.toString();
     }
 }
