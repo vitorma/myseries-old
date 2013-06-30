@@ -210,7 +210,6 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
     private void notifyListenersOfUpdateProgress(final int current, final int total, final Series currentSeries) {
         Log.d(getClass().getName(), "Update progress: " + current + "/" + total);
-        this.isUpdating.set(false);
 
         handler.post(new Runnable() {
             @Override

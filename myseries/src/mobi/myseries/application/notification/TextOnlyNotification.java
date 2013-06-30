@@ -3,7 +3,7 @@ package mobi.myseries.application.notification;
 public class TextOnlyNotification extends Notification {
 
     public TextOnlyNotification(int id, CharSequence message) {
-        super(id, message);
+        super(id, false, message);
     }
 
     @Override

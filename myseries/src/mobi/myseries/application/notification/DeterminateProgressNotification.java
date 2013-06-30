@@ -6,7 +6,7 @@ public class DeterminateProgressNotification extends Notification {
     private final int totalProgress;
 
     public DeterminateProgressNotification(int id, CharSequence message, int currentProgress, int totalProgress) {
-        super(id, message);
+        super(id, true, message);
 
         this.currentProgress = currentProgress;
         this.totalProgress = totalProgress;

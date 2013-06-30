@@ -9,6 +9,20 @@ import static org.mockito.Mockito.*;
 
 public class NotificationLauncherTest {
 
+    private static Notification continuousNotificationMock() {
+        Notification notification = mock(Notification.class);
+        when(notification.isContinuous()).thenReturn(true);
+
+        return notification;
+    }
+
+    private static Notification discreteNotificationMock() {
+        Notification notification = mock(Notification.class);
+        when(notification.isContinuous()).thenReturn(false);
+
+        return notification;        
+    }
+
     // Construction
 
     @Test(expected=IllegalArgumentException.class)
@@ -38,11 +52,11 @@ public class NotificationLauncherTest {
     }
 
     @Test
-    public void whenANewDispatcherIsSetTheNotificationInTheLastDispatcherIsCanceled() {
+    public void whenANewDispatcherIsSetTheContinuousNotificationInTheLastDispatcherIsCanceled() {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
-        Notification notification = mock(Notification.class);
+        Notification notification = continuousNotificationMock();
 
         launcher.launch(notification);
         launcher.setDispatcherTo(newDispatcher);
@@ -51,16 +65,42 @@ public class NotificationLauncherTest {
     }
 
     @Test
-    public void whenANewDispatcherIsSetTheNotificationIsRelauched() {
+    public void whenANewDispatcherIsSetTheDiscreteNotificationInTheLastDispatcherIsNotCanceled() {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
-        Notification notification = mock(Notification.class);
+        Notification notification = discreteNotificationMock();
+
+        launcher.launch(notification);
+        launcher.setDispatcherTo(newDispatcher);
+
+        verify(defaultDispatcher, never()).cancel(notification);
+    }
+
+    @Test
+    public void whenANewDispatcherIsSetTheContinuousNotificationIsRelauched() {
+        NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
+        NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
+        NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
+        Notification notification = continuousNotificationMock();
 
         launcher.launch(notification);
         launcher.setDispatcherTo(newDispatcher);
 
         verify(newDispatcher).notify(notification);
+    }
+
+    @Test
+    public void whenANewDispatcherIsSetTheDiscreteNotificationIsNotRelauched() {
+        NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
+        NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
+        NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
+        Notification notification = discreteNotificationMock();
+
+        launcher.launch(notification);
+        launcher.setDispatcherTo(newDispatcher);
+
+        verify(newDispatcher, never()).notify(notification);
     }
 
     @Test
@@ -80,8 +120,8 @@ public class NotificationLauncherTest {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
-        Notification firstNotification = mock(Notification.class);
-        Notification secondNotification = mock(Notification.class);
+        Notification firstNotification = discreteNotificationMock();
+        Notification secondNotification = discreteNotificationMock();
 
         launcher.launch(firstNotification);
 
@@ -98,7 +138,7 @@ public class NotificationLauncherTest {
     public void itIgnoresRemovingTheDefaultDispatcher() {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
-        Notification notification = mock(Notification.class);
+        Notification notification = continuousNotificationMock();
 
         launcher.launch(notification);
         verify(defaultDispatcher).notify(notification);
@@ -112,7 +152,7 @@ public class NotificationLauncherTest {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationDispatcher notUsedDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
-        Notification notification = mock(Notification.class);
+        Notification notification = continuousNotificationMock();
 
         launcher.launch(notification);
 
@@ -122,11 +162,11 @@ public class NotificationLauncherTest {
     }
 
     @Test
-    public void afterADispatcherIsRemovedTheNotificationInItIsCanceled() {
+    public void afterADispatcherIsRemovedTheContinuousNotificationInItIsCanceled() {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
-        Notification notification = mock(Notification.class);
+        Notification notification = continuousNotificationMock();
 
         launcher.setDispatcherTo(newDispatcher);
         launcher.launch(notification);
@@ -137,11 +177,26 @@ public class NotificationLauncherTest {
     }
 
     @Test
-    public void afterADispatcherIsRemovedTheNotificationIsRelaunchedThroughTheDefaultDispatcher() {
+    public void afterADispatcherIsRemovedTheDiscreteNotificationInItIsNotCanceled() {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
-        Notification notification = mock(Notification.class);
+        Notification notification = discreteNotificationMock();
+
+        launcher.setDispatcherTo(newDispatcher);
+        launcher.launch(notification);
+
+        launcher.removeDispatcher(newDispatcher);
+
+        verify(newDispatcher, never()).cancel(notification);
+    }
+
+    @Test
+    public void afterADispatcherIsRemovedTheContinuousNotificationIsRelaunchedThroughTheDefaultDispatcher() {
+        NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
+        NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
+        NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
+        Notification notification = continuousNotificationMock();
 
         launcher.setDispatcherTo(newDispatcher);
         launcher.launch(notification);
@@ -150,6 +205,22 @@ public class NotificationLauncherTest {
         launcher.removeDispatcher(newDispatcher);
 
         verify(defaultDispatcher).notify(notification);
+    }
+
+    @Test
+    public void afterADispatcherIsRemovedTheDiscreteNotificationIsNotRelaunchedThroughTheDefaultDispatcher() {
+        NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
+        NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
+        NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
+        Notification notification = discreteNotificationMock();
+
+        launcher.setDispatcherTo(newDispatcher);
+        launcher.launch(notification);
+
+        verify(defaultDispatcher, never()).notify(notification);
+        launcher.removeDispatcher(newDispatcher);
+
+        verify(defaultDispatcher, never()).notify(notification);
     }
 
     @Test
@@ -173,8 +244,8 @@ public class NotificationLauncherTest {
 
         launcher.setDispatcherTo(newDispatcher);
         launcher.removeDispatcher(newDispatcher);
-
         verifyZeroInteractions(defaultDispatcher);
+
         launcher.launch(notification);
 
         verify(defaultDispatcher).notify(notification);
@@ -204,12 +275,12 @@ public class NotificationLauncherTest {
     }
 
     @Test
-    public void itCancelsANotificationThatIsCurrentOne() {
+    public void itCancelsAContinuousNotificationThatIsCurrentOne() {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
 
         int notificationId = 0;
-        Notification notification = mock(Notification.class);
+        Notification notification = continuousNotificationMock();
         when(notification.id()).thenReturn(notificationId);
 
         launcher.launch(notification);
@@ -219,13 +290,28 @@ public class NotificationLauncherTest {
     }
 
     @Test
+    public void itIgnoresCancelingADiscreteNotificationEvenIfItIsTheLatestOne() {
+        NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
+        NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
+
+        int notificationId = 0;
+        Notification notification = discreteNotificationMock();
+        when(notification.id()).thenReturn(notificationId);
+
+        launcher.launch(notification);
+        launcher.cancel(notificationId);
+
+        verify(defaultDispatcher, never()).cancel(notification);
+    }
+
+    @Test
     public void changingDispatcherDoesNotRelaunchesACanceledNotification() {
         NotificationDispatcher defaultDispatcher = mock(NotificationDispatcher.class);
         NotificationDispatcher newDispatcher = mock(NotificationDispatcher.class);
         NotificationLauncher launcher = new NotificationLauncher(defaultDispatcher);
 
         int notificationId = 0;
-        Notification notification = mock(Notification.class);
+        Notification notification = continuousNotificationMock();
         when(notification.id()).thenReturn(notificationId);
 
         launcher.launch(notification);

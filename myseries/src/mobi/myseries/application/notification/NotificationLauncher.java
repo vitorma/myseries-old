@@ -37,8 +37,13 @@ public class NotificationLauncher {
     public synchronized void launch(Notification notification) {
         Validate.isNonNull(notification, "notification");
 
-        this.currentNotification = notification;
-        this.currentDispatcher.notify(this.currentNotification);
+        if (notification.isContinuous()) {
+            this.currentNotification = notification;
+        } else {
+            this.currentNotification = null;
+        }
+
+        this.currentDispatcher.notify(notification);
     }
 
     public synchronized void cancel(int notificationId) {
