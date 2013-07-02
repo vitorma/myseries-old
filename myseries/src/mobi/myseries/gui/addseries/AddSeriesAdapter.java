@@ -3,6 +3,7 @@ package mobi.myseries.gui.addseries;
 import java.util.List;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ImageDownloader;
 import mobi.myseries.shared.Strings;
@@ -11,14 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class AddAdapter extends ArrayAdapter<Series> {
+public class AddSeriesAdapter extends ArrayAdapter<Series> {
     private LayoutInflater layoutInflater;
     private ImageDownloader imageDownloader;
 
-    public AddAdapter(Context context, List<Series> objects) {
+    public AddSeriesAdapter(Context context, List<Series> objects) {
         super(context, R.layout.addseries_item, objects);
 
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -27,7 +30,7 @@ public class AddAdapter extends ArrayAdapter<Series> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Series item = this.getItem(position);
+        final Series series = this.getItem(position);
 
         ViewHolder viewHolder;
 
@@ -38,11 +41,26 @@ public class AddAdapter extends ArrayAdapter<Series> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText(item.name().toUpperCase());
+        viewHolder.name.setText(series.name().toUpperCase());
 
-        if (!Strings.isNullOrBlank(item.posterFileName())) {
-            this.imageDownloader.download(item.posterFileName(), viewHolder.image, false);
+        if (!Strings.isNullOrBlank(series.posterFileName())) {
+            this.imageDownloader.download(series.posterFileName(), viewHolder.image, false);
+        } else {
+            viewHolder.image.setImageDrawable(App.resources().getDrawable(R.drawable.generic_poster));
         }
+
+        viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (App.followSeriesService().follows(series)) {
+                    String message = App.resources().getString(R.string.add_already_followed_series_message, series.name());
+
+                    Toast.makeText(App.context(), message, Toast.LENGTH_SHORT).show();
+                } else {
+                    App.followSeriesService().follow(series);
+                }
+            }
+        });
 
         return convertView;
     }
@@ -50,10 +68,12 @@ public class AddAdapter extends ArrayAdapter<Series> {
     private static class ViewHolder {
         private TextView name;
         private ImageView image;
+        private ImageButton addButton;
 
         private ViewHolder(View convertView) {
             this.name = (TextView) convertView.findViewById(R.id.itemName);
             this.image = (ImageView) convertView.findViewById(R.id.seriesPoster);
+            this.addButton = (ImageButton) convertView.findViewById(R.id.addButton);
 
             convertView.setTag(this);
         }

@@ -40,7 +40,11 @@ public class TraktTv implements TrendingSource {
         List<Series> result = new ArrayList<Series>(array.size());
 
         for (Object o : array) {
-            result.add(this.seriesFrom((JSONObject) o));
+            try {
+                result.add(this.seriesFrom((JSONObject) o));
+            } catch (Exception e) {
+                continue;
+            }
         }
 
         return result;
@@ -51,7 +55,7 @@ public class TraktTv implements TrendingSource {
             .withId(Integer.valueOf(object.get("tvdb_id").toString()))
             .withName(object.get("title").toString())
             .withOverview(object.get("overview").toString())
-            .withPosterFileName(this.compressed138(((JSONObject) object.get("images")).get("poster").toString()))
+            .withPosterFileName(((JSONObject) object.get("images")).get("banner").toString())
             .build();
     }
 

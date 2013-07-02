@@ -37,7 +37,7 @@ public abstract class AddSeriesFragment extends Fragment {
     private GridView resultsGrid;
     private ProgressBar progressIndicator;
 
-    private AddAdapter adapter;
+    private AddSeriesAdapter adapter;
 
     private List<Series> results;
     protected boolean isSearching;
@@ -334,7 +334,7 @@ public abstract class AddSeriesFragment extends Fragment {
 
     private void setUpAdapter() {
         if (this.adapter == null) {
-            this.adapter = new AddAdapter(this.activity(), this.results);
+            this.adapter = new AddSeriesAdapter(this.activity(), this.results);
         } else {
             this.adapter.clear();
             for (Series s : this.results) {

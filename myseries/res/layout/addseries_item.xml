@@ -2,9 +2,10 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#eeeeee"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="#eeeeee"
+    android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -16,10 +17,8 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:background="@drawable/list_selector_holo_light"
-            android:orientation="vertical"
-            android:padding="@dimen/gap_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -29,15 +28,30 @@
                 android:src="@drawable/generic_poster"
                 android:scaleType="fitXY"
                 android:layout_height="55.4dp"
-                android:layout_width="300dp"/>
+                android:layout_width="300dp"
+                android:layout_alignParentTop="true"/>
+
+            <ImageButton
+                android:id="@+id/addButton"
+                android:src="@drawable/ic_action_add_inverse"
+                android:background="@drawable/item_background_holo_light"
+                android:layout_height="@dimen/toucharea_minimum_side"
+                android:layout_width="@dimen/toucharea_minimum_side"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/seriesPoster"/>
 
             <TextView
                 android:id="@+id/itemName"
-                style="@style/TextView.Small.MediumGray"
+                style="@style/TextView.Medium.MediumGray.Ellipsized"
+                android:gravity="center_vertical"
+                android:padding="@dimen/gap_medium"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="@dimen/toucharea_minimum_side"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/seriesPoster"
+                android:layout_toLeftOf="@id/addButton"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </FrameLayout>
 
