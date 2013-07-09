@@ -94,6 +94,21 @@ public final class ImageService {
         } catch (ImageNotFoundException e) {}
     }
 
+    public void downloadAndSaveBannerOf(Series series) {
+        Validate.isNonNull(series, "series");
+
+        if (Strings.isNullOrBlank(series.bannerFileName())) {
+            return;
+        }
+
+        try {
+            Bitmap fetchedBanner = this.imageSource.fetchSeriesBanner(series.bannerFileName());
+            this.imageRepository.saveSeriesBanner(series, fetchedBanner);
+        } catch (ConnectionFailedException e) {
+        } catch (ConnectionTimeoutException e) {
+        } catch (ImageNotFoundException e) {}
+    }
+
     // TODO(Gabriel) Should we pass the seriesSearchListener as a parameter, to avoid the
     // users not registering their listeners?
     public void downloadImageOf(Episode episode) {
@@ -153,5 +168,9 @@ public final class ImageService {
         protected void onPostExecute(Void result) {
             ImageService.this.notifyListenersOfFinishDownloadingImageOf(this.episode);
         }
+    }
+
+    public Bitmap getBannerOf(Series series) {
+        return this.imageRepository.getBannerOf(series);
     }
 }

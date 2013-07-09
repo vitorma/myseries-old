@@ -57,6 +57,7 @@ public class SeriesElementHandler {
     private static final String GENRES = "Genre";
     private static final String ACTORS = "Actors";
     private static final String POSTER_FILE_NAME = "poster";
+    private static final String BANNER_FILE_NAME = "banner";
 
     protected Element seriesElement;
     protected Series.Builder seriesBuilder;
@@ -227,6 +228,17 @@ public class SeriesElementHandler {
             @Override
             public void end(String body) {
                 SeriesElementHandler.this.seriesBuilder.withPosterFileName(body.trim());
+            }
+        });
+
+        return this;
+    }
+
+    public SeriesElementHandler handlingBannerFileName() {
+        this.seriesElement.getChild(BANNER_FILE_NAME).setEndTextElementListener(new EndTextElementListener() {
+            @Override
+            public void end(String body) {
+                SeriesElementHandler.this.seriesBuilder.withBannerFileName(body.trim());
             }
         });
 

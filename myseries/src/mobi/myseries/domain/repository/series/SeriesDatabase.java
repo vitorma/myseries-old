@@ -65,6 +65,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     private static final String SERIES_GENRES = "genres";
     private static final String SERIES_ACTORS = "actors";
     private static final String SERIES_POSTER = "poster";
+    private static final String SERIES_BANNER = "banner";
     private static final String SERIES_LASTUPDATE = "lastUpdate";
 
     private static final String EPISODE = "Episode";
@@ -96,7 +97,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             SERIES_GENRES +   " TEXT, " +
             SERIES_ACTORS +   " TEXT, " +
             SERIES_LASTUPDATE + " BIGINT, " +
-            SERIES_POSTER +   " TEXT);";
+            SERIES_POSTER +   " TEXT," +
+            SERIES_BANNER +   " TEXT);";
 
     private static final String CREATE_TABLE_EPISODES =
         "CREATE TABLE " + EPISODE + " (" +
@@ -390,6 +392,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put(SERIES_GENRES, s.genres());
         cv.put(SERIES_ACTORS, s.actors());
         cv.put(SERIES_POSTER, s.posterFileName());
+        cv.put(SERIES_BANNER, s.bannerFileName());
         cv.put(SERIES_LASTUPDATE, s.lastUpdate());
 
         return cv;
@@ -429,6 +432,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withGenres(c.getString(c.getColumnIndex(SERIES_GENRES)))
             .withActors(c.getString(c.getColumnIndex(SERIES_ACTORS)))
             .withPosterFileName(c.getString(c.getColumnIndex(SERIES_POSTER)))
+            .withBannerFileName(c.getString(c.getColumnIndex(SERIES_BANNER)))
             .withLastUpdate(c.getLong(c.getColumnIndex(SERIES_LASTUPDATE)))
             .build();
     }

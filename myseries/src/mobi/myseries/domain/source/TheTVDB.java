@@ -141,6 +141,17 @@ public class TheTVDB implements SeriesSource, ImageSource {
     }
 
     @Override
+    public Bitmap fetchSeriesBanner(String filename)
+            throws ConnectionFailedException, ImageNotFoundException, ConnectionTimeoutException {
+        try {
+            //TODO Create a specific method to SeriesBanner
+            return this.bitmapFrom(this.streamFactory.streamForSeriesPoster(filename));
+        } catch (StreamCreationFailedException e) {
+            throw new ImageNotFoundException(e);
+        }
+    }
+
+    @Override
     public Bitmap fetchEpisodeImage(String filename)
             throws ConnectionFailedException, ImageNotFoundException, ConnectionTimeoutException {
         try {

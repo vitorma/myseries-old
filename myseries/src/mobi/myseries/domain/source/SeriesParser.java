@@ -83,7 +83,8 @@ public class SeriesParser {
                 .handlingOverview()
                 .handlingGenres()
                 .handlingActors()
-                .handlingPosterFileName();
+                .handlingPosterFileName()
+                .handlingBannerFileName();
 
             this.episodeElementHandler = EpisodeElementHandler.from(this.rootElement)
                 .handlingId()

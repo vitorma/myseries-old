@@ -24,8 +24,8 @@ package mobi.myseries.application.image;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.image.ExternalStorageImageDirectory;
-import mobi.myseries.domain.repository.image.ImageRepositoryCache;
 import mobi.myseries.domain.repository.image.ImageRepository;
+import mobi.myseries.domain.repository.image.ImageRepositoryCache;
 import mobi.myseries.domain.repository.image.ImageRepositoryException;
 import mobi.myseries.domain.repository.image.LruRepositoryManager;
 import mobi.myseries.shared.Validate;
@@ -38,6 +38,7 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     private static final String SERIES_POSTERS = "series_posters";
     private static final String SMALL_SERIES_POSTERS = "small_series_posters";
     private static final String EPISODE_IMAGES = "episode_images";
+    private static final String SERIES_BANNERS = "series_banners";
 
     private static final String LOG_TAG = "Image Service Repository";
 
@@ -51,6 +52,7 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     private final ImageRepository posterDirectory;
     private final ImageRepository smallPosterDirectory;
     private final ImageRepository episodeDirectory;
+    private final ImageRepository bannerDirectory;
 
     public AndroidImageServiceRepository(Context context) {
         Validate.isNonNull(context, "context");
@@ -61,6 +63,8 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
 
         this.episodeDirectory = new LruRepositoryManager(new ExternalStorageImageDirectory(context, EPISODE_IMAGES),
                                                          NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES);
+
+        this.bannerDirectory = new ImageRepositoryCache(new ExternalStorageImageDirectory(context, SERIES_BANNERS));
     }
 
     @Override
@@ -72,6 +76,19 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
             return this.posterDirectory.fetch(series.id());
         } catch (ImageRepositoryException e) {
             Log.w(LOG_TAG, "Failed fetching poster of " + series.name(), e);
+            return null;
+        }
+    }
+
+    @Override
+    public Bitmap getBannerOf(Series series) {
+        Validate.isNonNull(series, "series");
+        Log.d(LOG_TAG, "Fetching banner of " + series.name());
+
+        try {
+            return this.bannerDirectory.fetch(series.id());
+        } catch (ImageRepositoryException e) {
+            Log.w(LOG_TAG, "Failed fetching banner of " + series.name(), e);
             return null;
         }
     }
@@ -116,6 +133,23 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
             this.posterDirectory.save(series.id(), poster);
         } catch (ImageRepositoryException e) {
             Log.w(LOG_TAG, "Failed saving poster of " + series.name(), e);
+        }
+    }
+
+    @Override
+    public void saveSeriesBanner(Series series, Bitmap banner) {
+        Validate.isNonNull(series, "series");
+
+        if (banner == null) {
+            Log.d(LOG_TAG, "Skipped saving null banner for " + series.name());
+            return;
+        }
+
+        Log.d(LOG_TAG, "Saving banner of " + series.name());
+        try {
+            this.bannerDirectory.save(series.id(), banner);
+        } catch (ImageRepositoryException e) {
+            Log.w(LOG_TAG, "Failed saving banner of " + series.name(), e);
         }
     }
 
@@ -165,6 +199,7 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
                 Series series = params[0];
 
                 AndroidImageServiceRepository.this.deleteSeriesPoster(series);
+                AndroidImageServiceRepository.this.deleteSeriesBanner(series);
 
                 AndroidImageServiceRepository.this.deleteSmallSeriesPoster(series);
 
@@ -184,6 +219,16 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
             this.posterDirectory.delete(series.id());
         } catch (ImageRepositoryException e) {
             Log.w(LOG_TAG, "Failed deleting poster of " + series.name(), e);
+        }
+    }
+
+    private void deleteSeriesBanner(Series series) {
+        Log.d(LOG_TAG, "Deleting banner of " + series.name());
+
+        try {
+            this.bannerDirectory.delete(series.id());
+        } catch (ImageRepositoryException e) {
+            Log.w(LOG_TAG, "Failed deleting banner of " + series.name(), e);
         }
     }
 

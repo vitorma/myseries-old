@@ -29,4 +29,7 @@ public interface ImageSource {
 
     Bitmap fetchEpisodeImage(String filename)
             throws ConnectionFailedException, ConnectionTimeoutException, ImageNotFoundException;
+
+    Bitmap fetchSeriesBanner(String bannerFileName)
+            throws ConnectionFailedException, ConnectionTimeoutException, ImageNotFoundException;
 }

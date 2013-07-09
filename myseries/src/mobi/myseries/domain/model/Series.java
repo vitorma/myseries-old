@@ -37,6 +37,7 @@ import mobi.myseries.shared.Validate;
 import mobi.myseries.shared.WeekDay;
 
 public class Series implements SeasonSetListener, Publisher<SeriesListener> {
+
     public static class Builder {
         private int id;
         private String name;
@@ -50,6 +51,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         private String genres;
         private String actors;
         private String posterFileName;
+        private String bannerFileName;
 
         private final Set<Episode> episodes;
         private Long lastUpdate;
@@ -72,6 +74,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             series.genres = this.genres;
             series.actors = this.actors;
             series.posterFileName = this.posterFileName;
+            series.bannerFileName = this.bannerFileName;
 
             if (this.lastUpdate == null) {
                 series.lastUpdate = System.currentTimeMillis();
@@ -142,6 +145,11 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return this;
         }
 
+        public Builder withBannerFileName(String bannerFileName) {
+            this.bannerFileName = bannerFileName;
+            return this;
+        }
+
         public Builder withRuntime(String runtime) {
             this.runtime = runtime;
             return this;
@@ -168,8 +176,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     private String overview;
     private String genres;
     private String actors;
-
     private String posterFileName;
+    private String bannerFileName;
     private final SeasonSet seasons;
 
     private final ListenerSet<SeriesListener> listeners;
@@ -377,6 +385,10 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.posterFileName;
     }
 
+    public String bannerFileName() {
+        return this.bannerFileName;
+    }
+
     @Override
     public boolean register(SeriesListener listener) {
         return this.listeners.register(listener);
@@ -405,6 +417,12 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
     public Series setPosterFilename(String posterFileName) {
         this.posterFileName = posterFileName;
+
+        return this;
+    }
+
+    public Series setBannerFilename(String bannerFileName) {
+        this.bannerFileName = bannerFileName;
 
         return this;
     }
