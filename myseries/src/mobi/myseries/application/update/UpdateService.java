@@ -102,6 +102,10 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
     // Update methods
 
+    public long latestSuccessfulUpdate() {
+        return earliestUpdatedDateOf(followedSeries());
+    }
+
     public boolean isUpdating() {
         return this.isUpdating.get();
     }
@@ -145,9 +149,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             return;
         }
 
-        long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
-        boolean updateRanRecently = timeSince(lastSuccessfulUpdate) < UpdatePolicy.automaticUpdateInterval();
-
+        boolean updateRanRecently = timeSince(earliestUpdatedDateOf(followedSeries())) < UpdatePolicy.automaticUpdateInterval();
         boolean thereAreSeriesWhosePostersAreNotDownloaded = thereAreSeriesWhosePostersAreNotDownloaded();
 
         if (updateRanRecently && !thereAreSeriesWhosePostersAreNotDownloaded) {
@@ -432,8 +434,14 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
             Map<Series, Exception> errors = new HashMap<Series, Exception>();
 
-            for (final Series s : seriesToBeUpdated) {
-                notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates, s);
+            // Even though we are only going to update series that are in seriesToBeUpdated, we also want to update
+            // each series' lastUpdate field, so we can keep the information that this series didn't have any update
+            // until now. It allows us to save data transfer by downloading shorter update data given that the earliest
+            // update date of all followed series will be later after this process.
+            for (final Series s : followedSeries()) {
+                if (seriesToBeUpdated.contains(s)) {
+                    notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates, s);
+                }
                 try {
                     // Update data of series
                     if (whatHasToBeUpdated.seriesWithDataToUpdate.contains(s)) {

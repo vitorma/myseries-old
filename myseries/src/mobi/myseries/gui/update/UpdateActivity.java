@@ -1,5 +1,7 @@
 package mobi.myseries.gui.update;
 
+import java.util.Date;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.notification.DeterminateProgressNotification;
@@ -8,6 +10,7 @@ import mobi.myseries.application.notification.Notification;
 import mobi.myseries.application.notification.NotificationDispatcher;
 import mobi.myseries.application.notification.TextOnlyNotification;
 import mobi.myseries.application.preferences.UpdatePreferences;
+import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -15,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +41,8 @@ public class UpdateActivity extends Activity {
     private ProgressBar updateProgressBar;
     private TextView updateStatusTextView;
 
+    private TextView latestSuccessfulUpdateTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +55,8 @@ public class UpdateActivity extends Activity {
         this.setUpUpdateButton();
         this.setUpCancelButton();
         this.setUpSaveButton();
+
+        App.updateSeriesService().register(this.updateFinishListener);
     }
 
     private void setupActionBar() {
@@ -67,6 +75,10 @@ public class UpdateActivity extends Activity {
                 (ProgressBar) this.findViewById(R.id.updateNotificationProgressBar);
         this.updateStatusTextView =
                 (TextView) this.findViewById(R.id.updateNotificationStatusMessage);
+
+        this.latestSuccessfulUpdateTextView =
+                (TextView) this.findViewById(R.id.latestSuccessfulUpdateMessage);
+        this.refreshLatestSuccessfulUpdateTextView();
     }
 
     private void loadSettings() {
@@ -161,7 +173,7 @@ public class UpdateActivity extends Activity {
         return App.preferences().forUpdate();
     }
 
-    private NotificationDispatcher updateNotificationDispatcher = new NotificationDispatcher() {
+    private final NotificationDispatcher updateNotificationDispatcher = new NotificationDispatcher() {
 
         @Override
         public void notifyTextOnlyNotification(TextOnlyNotification notification) {
@@ -218,5 +230,21 @@ public class UpdateActivity extends Activity {
         } else {
             App.updateSeriesService().updateData();
         }
+    }
+
+    private final UpdateFinishListener updateFinishListener = new UpdateFinishListener() {
+        @Override
+        public void onUpdateFinish() {
+            refreshLatestSuccessfulUpdateTextView();
+        }
+    };
+
+    private void refreshLatestSuccessfulUpdateTextView() {
+        Date latestSuccessfulUpdate = new Date(App.updateSeriesService().latestSuccessfulUpdate());
+
+        String date = DateFormat.getDateFormat(this).format(latestSuccessfulUpdate);
+        String time = DateFormat.getTimeFormat(this).format(latestSuccessfulUpdate);
+
+        this.latestSuccessfulUpdateTextView.setText(this.getString(R.string.latest_successful_update, date, time));
     }
 }
