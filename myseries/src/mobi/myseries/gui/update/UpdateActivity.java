@@ -201,16 +201,14 @@ public class UpdateActivity extends Activity {
     };
 
     @Override
-    protected void onResume() {  // TODO(Gabriel) Should this be another point of the life cycle?
-        super.onResume();
-
+    protected void onStart() {
+        super.onStart();
         App.notificationService().setUpdateNotificationDispatcher(this.updateNotificationDispatcher);
     }
 
     @Override
-    protected void onPause() {  // TODO(Gabriel) Should this be another point of the life cycle?
-        super.onPause();
-
+    protected void onStop() {
+        super.onStop();
         App.notificationService().removeUpdateNotificationDispatcher(this.updateNotificationDispatcher);
     }
 

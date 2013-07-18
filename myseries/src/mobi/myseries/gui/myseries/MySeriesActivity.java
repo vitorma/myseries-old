@@ -22,19 +22,28 @@ public class MySeriesActivity extends BaseActivity {
         return new Intent(context, MySeriesActivity.class);
     }
 
-    /* FIXME (Cleber)
-     * Check the behavior of updateDataIfNeeded.
-     * Maybe would be needed save a boolean with onSaveInstanceState. Such method is better than onRetainNonConfigurationInstance,
-     * because this one only works with rotations, not if the activity goes to the back stack. */
+    private static final String ALREADY_CHECKED_FOR_UPDATE = "ALREADY_CHECKED_FOR_UPDATE";
+    private boolean alreadyCheckedForUpdate = false;
 
     @Override
     protected void init(Bundle savedInstanceState) {
         final Handler handler = new Handler();
 
         App.updateSeriesService().withHandler(handler);
-        App.updateSeriesService().updateDataIfNeeded();
         App.followSeriesService().withHandler(handler);
         App.seriesSearch().withHandler(handler);
+
+        if (savedInstanceState == null
+                || (savedInstanceState != null && !savedInstanceState.getBoolean(ALREADY_CHECKED_FOR_UPDATE, false))) {
+            App.updateSeriesService().updateDataIfNeeded();
+        }
+        this.alreadyCheckedForUpdate = true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ALREADY_CHECKED_FOR_UPDATE, alreadyCheckedForUpdate);
     }
 
     @Override
