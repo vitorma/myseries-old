@@ -6,7 +6,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.message.MessageServiceListener;
-import mobi.myseries.application.update.exception.UpdateExceptionMessages;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.InvalidBackupVersionException;
 import mobi.myseries.domain.repository.series.InvalidDBSourceFileException;
@@ -90,25 +89,8 @@ public class MessageLauncher implements MessageServiceListener {
     }
 
     @Override
-    public void onCheckingForUpdates() {
-        showToastWith(R.string.checking_for_updates_message);
-    }
-
-    @Override
     public void onUpdateSuccess() {
         showToastWith(R.string.update_success_message);
-    }
-
-    @Override
-    public void onUpdateError(Exception e) {
-        Dialog dialog =
-                this.dialogBuilder
-                    .setTitle(R.string.update_failed_title)
-                    .setMessage(UpdateExceptionMessages.messageFor(this.activity, e))
-                    .build();
-
-        dialog.show();
-        this.currentDialog = dialog;
     }
 
     public void onStop() {

@@ -8,9 +8,7 @@ public interface MessageServiceListener {
     public void onFollowingSuccess(Series series); 
     public void onFollowingError(Series series, Exception e);
 
-    public void onCheckingForUpdates();
     public void onUpdateSuccess();
-    public void onUpdateError(Exception e);
 
     public void onBackupSucess();
     public void onBackupFailure(Exception e);

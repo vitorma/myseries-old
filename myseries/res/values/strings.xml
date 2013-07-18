@@ -185,7 +185,7 @@
     <string name="update_timeout">Download time limit exceeded. Check your connection and try again.</string>
     <string name="checking_for_updates_message">Checking for updates…</string>
     <string name="update_metadata_unavailable">Data us up-to-date.</string>
-    <string name="update_success_message">Update complete.</string>
+    <string name="update_success_message">Update succeeded.</string>
 
     <!-- Preferences Activity -->
 

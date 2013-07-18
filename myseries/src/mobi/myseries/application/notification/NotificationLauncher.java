@@ -23,8 +23,8 @@ public class NotificationLauncher {
         this.currentDispatcher = newDispatcher;
 
         if (this.currentNotification != null) {
-            oldDispatcher.cancel(this.currentNotification);
             newDispatcher.notify(this.currentNotification);
+            oldDispatcher.cancel(this.currentNotification);
         }
     }
 

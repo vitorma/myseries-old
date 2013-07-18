@@ -59,21 +59,9 @@ public class MessageService implements
         }
     }
 
-    private void notifyCheckingForUpdates() {
-        for (MessageServiceListener l : this.listeners) {
-            l.onCheckingForUpdates();
-        }
-    }
-
     private void notifyUpdateSuccess() {
         for (MessageServiceListener l : this.listeners) {
             l.onUpdateSuccess();
-        }
-    }
-
-    private void notifyUpdateError(Exception e) {
-        for (MessageServiceListener l : this.listeners) {
-            l.onUpdateError(e);
         }
     }
 
@@ -127,27 +115,19 @@ public class MessageService implements
     // Update
 
     @Override
-    public void onCheckingForUpdates() {
-        this.notifyCheckingForUpdates();
-    }
+    public void onCheckingForUpdates() {}
 
     @Override
     public void onUpdateNotNecessary() {}
-
 
     @Override
     public void onUpdateProgress(int current, int total, Series currentSeries) {}
 
     @Override
-    public void onUpdateFailure(Exception cause) {
-        this.notifyUpdateError(cause);
-    }
+    public void onUpdateFailure(Exception cause) {}
 
     @Override
-    public void onUpdateSeriesFailure(Map<Series, Exception> causes) {
-        // FIXME(Gabriel): should we show more than one error?
-        this.notifyUpdateError(causes.values().iterator().next());
-    }
+    public void onUpdateSeriesFailure(Map<Series, Exception> causes) {}
 
     @Override
     public void onUpdateSuccess() {

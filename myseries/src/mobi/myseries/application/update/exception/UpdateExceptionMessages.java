@@ -10,6 +10,7 @@ import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 
 public class UpdateExceptionMessages {
 
+    // FIXME(Gabriel): Simplify these messages and put them in NotificationService
     public static String messageFor(Context context, Exception e) {
         if (e instanceof ConnectionFailedException) {
             return context.getString(R.string.update_connection_failed);
@@ -39,6 +40,4 @@ public class UpdateExceptionMessages {
 
         }
     }
-
-    // TODO(Gabriel): shortMessageFor(exception) to be used in the notifications
 }
