@@ -176,16 +176,25 @@
 
     <string name="update_failed_title">Update failed</string>
     <string name="no_series_to_update">No series to update.</string>
-    <string name="update_network_unavailable">You must be connected to the Internet.</string>
-    <string name="update_connection_failed">Unable to reach TheTVDB.</string>
-    <string name="update_connection_timeout">Connection time limit exceeded. Check your connection and try again.</string>
-    <string name="update_series_not_found">The database has returned "series not found" while updating %s. Check your connection and configurations then try again.</string>
-    <string name="update_parsing_failed">Error reading from the web while updating %s. Your connection may be too slow.</string>
-    <string name="up_to_date_message">Data is up-to-date.</string>
-    <string name="update_timeout">Download time limit exceeded. Check your connection and try again.</string>
+    <string name="update_network_unavailable">No Internet connection available.</string>
+    <string name="update_connection_failed">Could not connect to TheTVDB.</string>
+    <string name="update_connection_timeout">Could not connect to TheTVDB.</string>
+    <string name="update_metadata_unavailable">Could not connect to TheTVDB.</string>
+    <string name="update_series_not_found">TheTVDB is joking with us =/.</string>
+    <string name="update_parsing_failed">Received malformed data from TheTVDB.</string>
+    <string name="up_to_date_message">Already up-to-date.</string>
+    <string name="update_timeout">Update time limit exceeded.</string>
+    
     <string name="checking_for_updates_message">Checking for updates…</string>
-    <string name="update_metadata_unavailable">Data us up-to-date.</string>
+    <string name="update_progress_message">Updating \"%s\"…</string>
     <string name="update_success_message">Update succeeded.</string>
+
+    <string name="update_failed_with_cause">Update failed: %s</string>
+    <string name="update_failed_without_cause">Update failed.</string>
+    <string name="update_single_series_failed_with_cause">Failed updating \"%1$s\": %2$s</string>
+    <string name="update_single_series_failed_without_cause">Failed updating \"%s\".</string>
+    <string name="update_many_series_failed_with_cause">Failed updating %1$d series: %2$s</string>
+    <string name="update_many_series_failed_without_cause">Failed updating %d series.</string>
 
     <!-- Preferences Activity -->
 

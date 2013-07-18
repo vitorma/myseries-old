@@ -16,11 +16,11 @@ import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.update.exception.NetworkUnavailableException;
-import mobi.myseries.application.update.exception.UpdateException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.application.update.listener.UpdateProgressListener;
 import mobi.myseries.application.update.specification.SeriesIdInCollectionSpecification;
+import mobi.myseries.application.update.task.FetchUpdateMetadataTask;
 import mobi.myseries.application.update.task.UpdatePosterTask;
 import mobi.myseries.application.update.task.UpdateSeriesTask;
 import mobi.myseries.application.update.task.UpdateTask;
@@ -230,6 +230,8 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                 }
             }
         });
+
+        notifyListenersOfUpdateFinish();
     }
 
     private void notifyListenersOfUpdateProgress(final int current, final int total, final Series currentSeries) {
@@ -262,7 +264,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
     }
 
     private void notifyListenersOfUpdateFailure(final Exception cause) {
-        Log.d(getClass().getName(), "Update finished with failure. :(");
+        Log.d(getClass().getName(), "Update finished with failure: " + cause.getClass().getName());
         this.isUpdating.set(false);
 
         handler.post(new Runnable() {
@@ -358,7 +360,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             return UpdatePolicy.networkAvailable();
         }
 
-        private WhatHasToBeUpdated checkForUpdates() {
+        private WhatHasToBeUpdated checkForUpdates() throws Exception {
             notifyListenersOfCheckingForUpdates();
 
             Collection<Series> followedSeries = followedSeries();
@@ -371,14 +373,9 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                 result.seriesWithDataToUpdate = followedSeries;
                 result.seriesWithPosterToUpdate = followedSeries;
             } else {
-                // FIXME(Gabriel): SeriesSource should return all the information regarding update
+                // TODO(Gabriel): SeriesSource should return all the information regarding update
                 // of series since someday at once in fetchUpdateMetadataSince
-                try {
-                    boolean updateIsAvailable = seriesSource.fetchUpdateMetadataSince(lastSuccessfulUpdate);
-                    Log.d(getClass().getName(), "Is update metadata available? " + updateIsAvailable);
-                } catch (Throwable e) {
-                    throw new UpdateException(e);
-                }
+                this.fetchUpdateMetadataSince(lastSuccessfulUpdate);
 
                 CollectionFilter<Series> withOutdatedData =
                         new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
@@ -405,6 +402,26 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             }
 
             return result;
+        }
+
+        private void fetchUpdateMetadataSince(long lastSuccessfulUpdate) throws Exception {
+            try {
+                FetchUpdateMetadataTask fetchUpdateMetadataTask =
+                        new FetchUpdateMetadataTask(seriesSource, lastSuccessfulUpdate);
+
+                Future<?> future = executor.submit(fetchUpdateMetadataTask);
+                future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
+
+                if (!fetchUpdateMetadataTask.result().success()) {
+                    throw fetchUpdateMetadataTask.result().error();
+                }
+            } catch (InterruptedException e) {
+                throw e;
+            } catch (ExecutionException e) {
+                throw (Exception) e.getCause();
+            } catch (TimeoutException e) {
+                throw new UpdateTimeoutException(e);
+            }
         }
 
         private Map<Series, Exception> updateAllSeriesIn(WhatHasToBeUpdated whatHasToBeUpdated) {
@@ -449,15 +466,12 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
                 } catch (InterruptedException e) {
                     // Should never happen
-                    e.printStackTrace();
                     errors.put(s, e);
 
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
                     errors.put(s, (Exception) e.getCause());
 
                 } catch (TimeoutException e) {
-                    e.printStackTrace();
                     errors.put(s, new UpdateTimeoutException(e));
 
                 }
