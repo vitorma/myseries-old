@@ -22,8 +22,7 @@ import com.google.api.services.drive.model.ParentReference;
 
 public class DriveBackup implements BackupMode {
 
-    private static final String DATABASE_FILE_NAME = "myseries.db";
-    private static final String DATABASE_MIME_TYPE = "application/octet-stream";
+    private static final String JSON_MIME_TYPE = "application/json";
     private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
     private static final String FOLDER_NAME = "Apps/MySeries";
 
@@ -48,10 +47,10 @@ public class DriveBackup implements BackupMode {
     }
 
     @Override
-    public java.io.File getBackup() throws Exception {
+    public void downloadBackupToFile(java.io.File backup) throws Exception {
         this.setupDriveService();
-        this.checkFoldersAndFiles();
-        return this.downloadBackupFile();
+        this.checkFoldersAndFiles(backup);
+        this.downloadBackupFile(backup);
 
     }
 
@@ -122,25 +121,22 @@ public class DriveBackup implements BackupMode {
         return query;
     }
 
-    private void checkFoldersAndFiles() throws IOException {
+    private void checkFoldersAndFiles(java.io.File file) throws IOException {
         folderId = this.getLastChildFolderId();
         if (folderId == null)
             throw new IOException();
 
-        fileId = this.getFileId(folderId, DATABASE_FILE_NAME,
-                DATABASE_MIME_TYPE);
+        fileId = this.getFileId(folderId, file.getName(),
+                JSON_MIME_TYPE);
         if (fileId == null) {
             throw new IOException();
         }
     }
 
-    private java.io.File downloadBackupFile() throws IOException {
-        java.io.File cachedFile = null;
+    private void downloadBackupFile(java.io.File backup) throws IOException  {
         File file = service.files().get(fileId).execute();
         InputStream input = this.downloadFile(service, file);
-        cachedFile = new java.io.File(context.getCacheDir(), DATABASE_FILE_NAME);
-        FilesUtil.writeFile(input, cachedFile);
-        return cachedFile;
+        FilesUtil.writeFile(input, backup);
     }
 
     private String getLastChildFolderId() throws IOException {
@@ -170,14 +166,14 @@ public class DriveBackup implements BackupMode {
 
     private void uploadFileToDrive(java.io.File file) throws IOException {
         File fileUploaded = null;
-        FileContent mediaContent = new FileContent(DATABASE_MIME_TYPE, file);
+        FileContent mediaContent = new FileContent(JSON_MIME_TYPE, file);
         File body = new File();
-        body.setTitle(DATABASE_FILE_NAME);
+        body.setTitle(file.getName());
         body.setParents(Arrays.asList(new ParentReference().setId(folderId)));
 
-        if (fileExists(folderId, DATABASE_FILE_NAME, DATABASE_MIME_TYPE)) {
-            this.fileId = this.getFileId(folderId, DATABASE_FILE_NAME,
-                    DATABASE_MIME_TYPE);
+        if (fileExists(folderId, file.getName(), JSON_MIME_TYPE)) {
+            this.fileId = this.getFileId(folderId, file.getName(),
+                    JSON_MIME_TYPE);
             fileUploaded = service.files().update(fileId, body, mediaContent)
                     .execute();
         } else {

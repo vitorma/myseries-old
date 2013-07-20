@@ -1,15 +1,18 @@
 package mobi.myseries.shared;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
 
 public class FilesUtil {
 
-    public static void copy(File sourceFile, File destinationFile) throws IOException {
+    public static void copy(File sourceFile, File destinationFile)
+            throws IOException {
         FileInputStream sourceInputStream = null;
         FileChannel sourceChannel = null;
         FileOutputStream destinationOutputStream = null;
@@ -38,7 +41,8 @@ public class FilesUtil {
         }
     }
 
-    public static void writeFile(InputStream inputStream, File file) throws IOException {
+    public static void writeFile(InputStream inputStream, File file)
+            throws IOException {
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(file);
@@ -55,6 +59,47 @@ public class FilesUtil {
             if (outputStream != null) {
                 outputStream.close();
             }
+        }
+    }
+
+    public static void writeStringToFile(String fileName, String data)
+            throws IOException {
+        BufferedWriter out = null;
+        try {
+            out = new BufferedWriter(new FileWriter(fileName));
+
+        } finally {
+            if (out != null) {
+                out.write(data);
+                out.close();
+            }
+        }
+
+    }
+
+    public static String readFileAsString(String fileName, String charsetName)
+            throws java.io.IOException {
+        java.io.InputStream is = new java.io.FileInputStream(fileName);
+        try {
+            final int bufsize = 4096;
+            int available = is.available();
+            byte[] data = new byte[available < bufsize ? bufsize : available];
+            int used = 0;
+            while (true) {
+                if (data.length - used < bufsize) {
+                    byte[] newData = new byte[data.length << 1];
+                    System.arraycopy(data, 0, newData, 0, used);
+                    data = newData;
+                }
+                int got = is.read(data, used, data.length - used);
+                if (got <= 0)
+                    break;
+                used += got;
+            }
+            return charsetName != null ? new String(data, 0, used, charsetName)
+                    : new String(data, 0, used);
+        } finally {
+            is.close();
         }
     }
 

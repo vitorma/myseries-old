@@ -9,9 +9,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import mobi.myseries.domain.repository.series.SeriesRepository;
-import mobi.myseries.shared.AsyncTaskResult;
 import mobi.myseries.shared.ListenerSet;
-import android.os.AsyncTask;
 import android.os.Handler;
 
 public class BackupService {
@@ -128,66 +126,6 @@ public class BackupService {
 
     public DropboxHelper getDropboxHelper() {
         return this.dropboxHelper;
-    }
-
-    private class doBackupAsyncTask extends
-            AsyncTask<Void, Void, AsyncTaskResult<Void>> {
-
-        private BackupMode backupMode;
-
-        public doBackupAsyncTask(BackupMode backupMode) {
-            this.backupMode = backupMode;
-        }
-
-        @Override
-        protected AsyncTaskResult<Void> doInBackground(Void... params) {
-            try {
-                backupMode.backupDB(repository.db());
-            } catch (Exception e) {
-                return new AsyncTaskResult<Void>(e);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(AsyncTaskResult<Void> result) {
-            if (result == null) {
-                notifyListenersOfBackupSucess();
-            } else {
-                notifyListenersOfBackupFailure(result.error());
-            }
-        }
-    }
-
-    private class restoreBackupAsyncTask extends
-            AsyncTask<Void, Void, AsyncTaskResult<Void>> {
-
-        private BackupMode backupMode;
-
-        public restoreBackupAsyncTask(BackupMode backupMode) {
-            this.backupMode = backupMode;
-        }
-
-        @Override
-        protected AsyncTaskResult<Void> doInBackground(Void... params) {
-
-            try {
-                repository.restoreFrom(this.backupMode.getBackup()
-                        .getAbsolutePath());
-            } catch (Exception e) {
-                return new AsyncTaskResult<Void>(e);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(AsyncTaskResult<Void> result) {
-            if (result == null) {
-                notifyListenersOfRestoreSucess();
-            } else {
-                notifyListenersOfRestoreFailure(result.error());
-            }
-        }
     }
 
     private void notifyListenersOfBackupSucess() {
