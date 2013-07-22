@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Map;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
@@ -20,12 +21,22 @@ public class JsonHelper {
         return gson().toJson(series);
     }
 
-    public static void toJson(Collection<Series> series, File file) throws IOException {
+    public static void seriesToJson(Collection<Series> series, File file) throws IOException {
         String json = gson().toJson(series);
         FilesUtil.writeStringToFile(file.getAbsolutePath(), json);
     }
     
-    public static Collection<Series> fromJson(String json) {
+    public static void preferencesToJson(Map<String, ?> peferences, File file) throws IOException {
+        String json = gson().toJson(peferences);
+        FilesUtil.writeStringToFile(file.getAbsolutePath(), json);
+    }
+    
+    public static Map<String, ?> preferencesFromJson(String json) {
+        Type collectionType = new TypeToken<Map<String, ?>>(){}.getType();
+        return gson().fromJson(json, collectionType);
+    }
+    
+    public static Collection<Series> seriesFromJson(String json) {
         Type collectionType = new TypeToken<Collection<Series>>(){}.getType();
         return gson().fromJson(json, collectionType);
     }
