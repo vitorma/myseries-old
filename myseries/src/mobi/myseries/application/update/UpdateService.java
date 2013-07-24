@@ -3,30 +3,31 @@ package mobi.myseries.application.update;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import mobi.myseries.application.LocalizationProvider;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.update.exception.NetworkUnavailableException;
-import mobi.myseries.application.update.exception.UpdateException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.application.update.listener.UpdateProgressListener;
-import mobi.myseries.application.update.specification.RecentlyUpdatedSpecification;
 import mobi.myseries.application.update.specification.SeriesIdInCollectionSpecification;
+import mobi.myseries.application.update.task.FetchUpdateMetadataTask;
 import mobi.myseries.application.update.task.UpdatePosterTask;
 import mobi.myseries.application.update.task.UpdateSeriesTask;
 import mobi.myseries.application.update.task.UpdateTask;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.domain.source.SeriesSource;
+import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.CollectionFilter;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
@@ -101,6 +102,10 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
     // Update methods
 
+    public long latestSuccessfulUpdate() {
+        return earliestUpdatedDateOf(followedSeries());
+    }
+
     public boolean isUpdating() {
         return this.isUpdating.get();
     }
@@ -129,7 +134,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             return;
         }
 
-        update(true);
+        update();
     }
 
     private void actualUpdateDataIfNeeded() {
@@ -144,19 +149,25 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             return;
         }
 
-        long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries());
+        boolean updateRanRecently = timeSince(earliestUpdatedDateOf(followedSeries())) < UpdatePolicy.automaticUpdateInterval();
+        boolean thereAreSeriesWhosePostersAreNotDownloaded = thereAreSeriesWhosePostersAreNotDownloaded();
 
-        if (timeSince(lastSuccessfulUpdate) < UpdatePolicy.automaticUpdateInterval()) {
+        if (updateRanRecently && !thereAreSeriesWhosePostersAreNotDownloaded) {
             Log.d(getClass().getName(), "Update ran recently. Not running now.");
             this.isUpdating.set(false);
-        } else {
-            Log.d(getClass().getName(), "Launching update.");
-            update(false);
+            return;
         }
+
+        if (thereAreSeriesWhosePostersAreNotDownloaded) {
+            Log.d(getClass().getName(), "There are series whose posters are not downloaded.");
+        }
+
+        Log.d(getClass().getName(), "Launching update.");
+        update();
     }
 
-    private void update(boolean forceUpdateRecent) {
-        new UpdateTask2(forceUpdateRecent).run();
+    private void update() {
+        new UpdateTask2().run();
     }
 
     // Auxiliary
@@ -166,7 +177,20 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
     }
 
     private Collection<Series> followedSeries() {
-        return Collections.unmodifiableCollection(seriesRepository.getAll());
+        return Collections.unmodifiableCollection(this.seriesRepository.getAll());
+    }
+
+    private boolean posterAvailableButNotDownloaded(Series series) {
+        return series.hasPoster() && (this.imageService.getPosterOf(series) == null);
+    }
+
+    private boolean thereAreSeriesWhosePostersAreNotDownloaded() {
+        for (Series s : this.followedSeries()) {
+            if (posterAvailableButNotDownloaded(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static long earliestUpdatedDateOf(Collection<Series> series) {
@@ -180,6 +204,8 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
         return d;
     }
+
+    // Notifications
 
     private void notifyListenersOfCheckingForUpdates() {
         Log.d(getClass().getName(), "Checking for updates.");
@@ -206,6 +232,8 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                 }
             }
         });
+
+        notifyListenersOfUpdateFinish();
     }
 
     private void notifyListenersOfUpdateProgress(final int current, final int total, final Series currentSeries) {
@@ -238,7 +266,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
     }
 
     private void notifyListenersOfUpdateFailure(final Exception cause) {
-        Log.d(getClass().getName(), "Update finished with failure. :(");
+        Log.d(getClass().getName(), "Update finished with failure: " + cause.getClass().getName());
         this.isUpdating.set(false);
 
         handler.post(new Runnable() {
@@ -283,26 +311,22 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
     }
 
     private class UpdateTask2 implements Runnable {
-        private final boolean shouldUpdateRecentlyUpdatedSeriesAsWell;
-        private final Collection<Series> followedSeries;
-
-        public UpdateTask2(boolean shouldUpdateRecentlyUpdatedSeriesAsWell) {
-            this.shouldUpdateRecentlyUpdatedSeriesAsWell = shouldUpdateRecentlyUpdatedSeriesAsWell;
-
-            this.followedSeries = followedSeries();
-        }
 
         private class WhatHasToBeUpdated {
-            public boolean shouldUpdateAllSeries;
-            public boolean updateIsAvailable;
             public Collection<Series> seriesWithDataToUpdate;
             public Collection<Series> seriesWithPosterToUpdate;
 
             public boolean isUpdateNecessary() {
-                return shouldUpdateAllSeries
-                        || updateIsAvailable
-                        || !seriesWithDataToUpdate.isEmpty()
-                        || !seriesWithPosterToUpdate.isEmpty();
+                return !seriesWithDataToUpdate.isEmpty() || !seriesWithPosterToUpdate.isEmpty();
+            }
+
+            public Set<Series> seriesToBeUpdated() {
+                Set<Series> seriesToBeUpdated = new HashSet<Series>();
+
+                seriesToBeUpdated.addAll(seriesWithDataToUpdate);
+                seriesToBeUpdated.addAll(seriesWithPosterToUpdate);
+
+                return seriesToBeUpdated;
             }
         }
 
@@ -338,27 +362,22 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             return UpdatePolicy.networkAvailable();
         }
 
-        private WhatHasToBeUpdated checkForUpdates() {
+        private WhatHasToBeUpdated checkForUpdates() throws Exception {
             notifyListenersOfCheckingForUpdates();
 
-            WhatHasToBeUpdated result = new WhatHasToBeUpdated();
-
-            result.seriesWithDataToUpdate = followedSeries;
-            result.seriesWithPosterToUpdate = followedSeries;
+            Collection<Series> followedSeries = followedSeries();
 
             long lastSuccessfulUpdate = earliestUpdatedDateOf(followedSeries);
-            result.shouldUpdateAllSeries =
-                    !(timeSince(lastSuccessfulUpdate) < UpdatePolicy.downloadEverythingInterval());
+            boolean shouldUpdateAllSeries = timeSince(lastSuccessfulUpdate) > UpdatePolicy.downloadEverythingInterval();
 
-            if (!result.shouldUpdateAllSeries) {
-                // FIXME(Gabriel): SeriesSource should return all the information regarding update
+            WhatHasToBeUpdated result = new WhatHasToBeUpdated();
+            if (shouldUpdateAllSeries) {
+                result.seriesWithDataToUpdate = followedSeries;
+                result.seriesWithPosterToUpdate = followedSeries;
+            } else {
+                // TODO(Gabriel): SeriesSource should return all the information regarding update
                 // of series since someday at once in fetchUpdateMetadataSince
-                try {
-                    result.updateIsAvailable = seriesSource.fetchUpdateMetadataSince(lastSuccessfulUpdate);
-                    Log.d(getClass().getName(), "Is update metadata available? " + result.updateIsAvailable);
-                } catch (Throwable e) {
-                    throw new UpdateException(e);
-                }
+                this.fetchUpdateMetadataSince(lastSuccessfulUpdate);
 
                 CollectionFilter<Series> withOutdatedData =
                         new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
@@ -368,32 +387,63 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                         new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
                                 seriesSource.posterUpdateMetadata().keySet()));
 
+
                 result.seriesWithDataToUpdate = withOutdatedData.in(followedSeries);
                 result.seriesWithPosterToUpdate = withOutdatedPoster.in(followedSeries);
 
-                if (!shouldUpdateRecentlyUpdatedSeriesAsWell) {
-                    CollectionFilter<Series> notRecentlyUpdated =
-                            new CollectionFilter<Series>(new RecentlyUpdatedSpecification());
+                // Series whose posters are not downloaded.
+                CollectionFilter<Series> whosePosterIsNotDownloaded =
+                        new CollectionFilter<Series>(new AbstractSpecification<Series>() {
+                            @Override
+                            public boolean isSatisfiedBy(Series s) {
+                                return posterAvailableButNotDownloaded(s);
+                            }
+                        });
 
-                    result.seriesWithDataToUpdate = notRecentlyUpdated.in(result.seriesWithDataToUpdate);
-                    result.seriesWithPosterToUpdate = notRecentlyUpdated.in(result.seriesWithPosterToUpdate);
-                }
+                result.seriesWithPosterToUpdate.addAll(whosePosterIsNotDownloaded.in(followedSeries));
             }
 
             return result;
         }
 
+        private void fetchUpdateMetadataSince(long lastSuccessfulUpdate) throws Exception {
+            try {
+                FetchUpdateMetadataTask fetchUpdateMetadataTask =
+                        new FetchUpdateMetadataTask(seriesSource, lastSuccessfulUpdate);
+
+                Future<?> future = executor.submit(fetchUpdateMetadataTask);
+                future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
+
+                if (!fetchUpdateMetadataTask.result().success()) {
+                    throw fetchUpdateMetadataTask.result().error();
+                }
+            } catch (InterruptedException e) {
+                throw e;
+            } catch (ExecutionException e) {
+                throw (Exception) e.getCause();
+            } catch (TimeoutException e) {
+                throw new UpdateTimeoutException(e);
+            }
+        }
+
         private Map<Series, Exception> updateAllSeriesIn(WhatHasToBeUpdated whatHasToBeUpdated) {
-            // XXX(Gabriel) it should be the total number of series whose data or posters should be updated
-            int totalNumberOfUpdates = followedSeries.size();
+            Set<Series> seriesToBeUpdated = whatHasToBeUpdated.seriesToBeUpdated();
+
+            final int totalNumberOfUpdates = seriesToBeUpdated.size();
             int currentUpdate = 1;
 
             Map<Series, Exception> errors = new HashMap<Series, Exception>();
 
-            for (final Series s : followedSeries) {
-                // XXX(Gabriel) it should be in the place where it makes most sense according to what current and total means.
-                notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates, s);
+            // Even though we are only going to update series that are in seriesToBeUpdated, we also want to update
+            // each series' lastUpdate field, so we can keep the information that this series didn't have any update
+            // until now. It allows us to save data transfer by downloading shorter update data given that the earliest
+            // update date of all followed series will be later after this process.
+            for (final Series s : followedSeries()) {
+                if (seriesToBeUpdated.contains(s)) {
+                    notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates, s);
+                }
                 try {
+                    // Update data of series
                     if (whatHasToBeUpdated.seriesWithDataToUpdate.contains(s)) {
                         Log.d(getClass().getName(), "Updating data of " + s.name());
                         UpdateResult result = updateDataOf(s);
@@ -406,7 +456,8 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                         Log.d(getClass().getName(), "Skip updating data of " + s.name());
                     }
 
-                    if (whatHasToBeUpdated.seriesWithPosterToUpdate.contains(s) || posterAvailableButNotDownloaded(s)) {
+                    // Update poster of series
+                    if (whatHasToBeUpdated.seriesWithPosterToUpdate.contains(s)) {
                         Log.d(getClass().getName(), "Updating poster of " + s.name());
                         UpdateResult result = updatePosterOf(s); 
 
@@ -423,15 +474,12 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
                 } catch (InterruptedException e) {
                     // Should never happen
-                    e.printStackTrace();
                     errors.put(s, e);
 
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
                     errors.put(s, (Exception) e.getCause());
 
                 } catch (TimeoutException e) {
-                    e.printStackTrace();
                     errors.put(s, new UpdateTimeoutException(e));
 
                 }
@@ -457,10 +505,6 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
 
             return updatePosterTask.result();
-        }
-
-        private boolean posterAvailableButNotDownloaded(Series series) {
-            return series.hasPoster() && (imageService.getPosterOf(series) == null);
         }
     }
 }

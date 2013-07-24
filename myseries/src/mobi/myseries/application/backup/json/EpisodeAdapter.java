@@ -11,6 +11,7 @@ import mobi.myseries.shared.Time;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
@@ -63,8 +64,8 @@ public class EpisodeAdapter implements JsonSerializer<Episode>,
                 .withNumber(episodeJson.get(EPISODE_NUMBER).getAsInt())
                 .withSeasonNumber(episodeJson.get(EPISODE_SEASON).getAsInt())
                 .withName(episodeJson.get(EPISODE_NAME).getAsString())
-                .withAirDate(DatesAndTimes.parse(episodeJson.get(EPISODE_AIRDATE).getAsLong(), DEFAULT_AIRDATE))
-                .withAirtime(DatesAndTimes.parse(episodeJson.get(EPISODE_AIRTIME).getAsLong(), DEFAULT_AIRTIME))
+                .withAirDate(DatesAndTimes.parse(episodeJson.get(EPISODE_AIRDATE).isJsonNull()? null : episodeJson.get(EPISODE_AIRDATE).getAsLong(), DEFAULT_AIRDATE))
+                .withAirtime(DatesAndTimes.parse(episodeJson.get(EPISODE_AIRTIME).isJsonNull()? null : episodeJson.get(EPISODE_AIRTIME).getAsLong(), DEFAULT_AIRTIME))
                 .withOverview(episodeJson.get(EPISODE_OVERVIEW).getAsString())
                 .withDirectors(episodeJson.get(EPISODE_DIRECTORS).getAsString())
                 .withWriters(episodeJson.get(EPISODE_WRITERS).getAsString())
@@ -73,6 +74,4 @@ public class EpisodeAdapter implements JsonSerializer<Episode>,
                 .withSeenMark(Boolean.valueOf(episodeJson.get(EPISODE_SEENMARK).getAsBoolean()))
                 .build();
     }
-
-
 }

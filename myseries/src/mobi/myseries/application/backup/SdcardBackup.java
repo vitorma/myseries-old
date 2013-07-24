@@ -9,10 +9,9 @@ public class SdcardBackup implements BackupMode {
             .getProperty("file.separator");
 
     private static final String BACKUP_FOLDER = "myseries_backup";
-    private static final String BACKUP_DB_FILE = "myseries.db";
 
-    public String backupFilePath() throws ExternalStorageNotAvailableException {
-        return backupFolder().getPath() + FILE_SEPARATOR + BACKUP_DB_FILE;
+    public String backupFilePath(String fileName) throws ExternalStorageNotAvailableException {
+        return backupFolder().getPath() + FILE_SEPARATOR + fileName;
     }
 
     public File backupFolder() throws ExternalStorageNotAvailableException {
@@ -35,12 +34,12 @@ public class SdcardBackup implements BackupMode {
     }
 
     @Override
-    public File getBackup() throws Exception {
-        return new File(backupFilePath());
+    public void downloadBackupToFile(File backup) throws Exception {
+        FilesUtil.copy(new File(backupFilePath(backup.getName())), backup);
     }
 
     @Override
     public void backupDB(File backup) throws Exception {
-        FilesUtil.copy(backup, new File(backupFilePath()));
+        FilesUtil.copy(backup, new File(backupFilePath(backup.getName())));
     }
 }

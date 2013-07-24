@@ -17,7 +17,7 @@ public class AndroidNotificationDispatcher extends NotificationDispatcher {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         this.updateNotificationBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.actionbar_update)  // XXX R.blablabla
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(context.getText(R.string.app))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setAutoCancel(true)
