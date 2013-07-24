@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- My Series -->
+
+    <dimen name="myseries_poster_width">168dp</dimen>
+    <dimen name="myseries_poster_height">247dp</dimen>
+    <dimen name="myseries_grid_gap">8dp</dimen>
+
+</resources>

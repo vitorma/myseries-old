@@ -1,102 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#eeeeee"
-    android:orientation="vertical"
-    android:gravity="center"
+    android:background="@drawable/card_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <FrameLayout
-        android:background="@drawable/card"
-        android:gravity="center"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/poster"
+        android:contentDescription="@string/description_poster"
+        android:scaleType="fitXY"
+        android:layout_width="@dimen/myseries_poster_width"
+        android:layout_height="@dimen/myseries_poster_height"
+        android:layout_alignParentLeft="true"/>
 
-        <RelativeLayout
-            android:background="@drawable/list_selector_holo_light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/name"
+        style="@style/TextView.Medium.DarkGray.Ellipsized"
+        android:textStyle="bold"
+        android:padding="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/poster"/>
 
-            <ImageView
-                android:id="@+id/poster"
-                android:contentDescription="@string/description_poster"
-                android:scaleType="fitXY"
-                android:layout_width="@dimen/poster_width_myseries_list"
-                android:layout_height="@dimen/poster_height_myseries_list"
-                android:layout_alignParentLeft="true"/>
+    <mobi.myseries.gui.shared.SeenEpisodesBar
+        android:id="@+id/seenEpisodesBar"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chunkbar_height"
+        android:layout_below="@id/name"/>
 
-            <TextView
-                android:id="@+id/name"
-                style="@style/TextView.Large.DarkGray.Ellipsized"
-                android:fontFamily="sans-serif-light"
-                android:paddingTop="@dimen/gap_medium"
-                android:paddingLeft="@dimen/gap_medium"
-                android:paddingRight="@dimen/gap_medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@id/poster"/>
+    <TextView
+        android:id="@+id/allEpisodes"
+        style="@style/TextView.Medium"
+        android:textColor="#ff999999"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingBottom="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/seenEpisodesBar"/>
 
-            <TextView
-                android:id="@+id/genres"
-                style="@style/TextView.Small.MediumGray.Ellipsized"
-                android:paddingLeft="@dimen/gap_medium"
-                android:paddingRight="@dimen/gap_medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/name"
-                android:layout_toRightOf="@id/poster"/>
+    <TextView
+        android:id="@+id/seenEpisodes"
+        style="@style/TextView.Medium.Blue"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingBottom="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/allEpisodes"
+        android:layout_below="@id/seenEpisodesBar"/>
 
-            <TextView
-                android:id="@+id/status"
-                style="@style/TextView.Small.LightGray.Ellipsized"
-                android:paddingLeft="@dimen/gap_medium"
-                android:paddingRight="@dimen/gap_medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/genres"
-                android:layout_toRightOf="@id/poster"/>
-
-            <TextView
-                android:id="@+id/allEpisodes"
-                style="@style/TextView.Small.MediumGray"
-                android:paddingRight="@dimen/gap_medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/status"/>
-
-            <TextView
-                android:id="@+id/seenEpisodes"
-                style="@style/TextView.Small.Blue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/allEpisodes"
-                android:layout_below="@id/status"/>
-
-            <TextView
-                android:id="@+id/airInfo"
-                style="@style/TextView.Small.LightGray.Ellipsized"
-                android:paddingLeft="@dimen/gap_medium"
-                android:paddingRight="@dimen/gap_medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/status"
-                android:layout_toRightOf="@id/poster"
-                android:layout_toLeftOf="@id/seenEpisodes"/>
-
-            <mobi.myseries.gui.shared.SeenEpisodesBar
-                android:id="@+id/seenEpisodesBar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/chunkbar_height"
-                android:layout_below="@id/poster"/>
-
-        </RelativeLayout>
-
-    </FrameLayout>
-
-</LinearLayout>
+</RelativeLayout>

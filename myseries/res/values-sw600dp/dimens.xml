@@ -8,6 +8,12 @@
     <dimen name="text_size_ab_spinner_title">18sp</dimen>
     <dimen name="text_size_ab_spinner_subtitle">14sp</dimen>
 
+    <!-- My Series -->
+
+    <dimen name="myseries_poster_width">188dp</dimen>
+    <dimen name="myseries_poster_height">276dp</dimen>
+    <dimen name="myseries_grid_gap">9dp</dimen>
+
     <!-- Episodes -->
 
     <dimen name="fragment_episodes_master_width">248dp</dimen>

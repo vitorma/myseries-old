@@ -2,6 +2,12 @@
 
 <resources>
 
+    <!-- My Series -->
+
+    <dimen name="myseries_poster_width">190dp</dimen>
+    <dimen name="myseries_poster_height">279dp</dimen>
+    <dimen name="myseries_grid_gap">8dp</dimen>
+
     <!-- Episodes -->
 
     <dimen name="fragment_episodes_master_width">288dp</dimen>

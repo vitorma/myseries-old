@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,19 +18,15 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.shared.EpisodesToCountSpecification;
 import mobi.myseries.gui.shared.Images;
-import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenEpisodeSpecification;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
-import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
-import mobi.myseries.shared.Strings;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -84,27 +79,13 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpView(ViewHolder viewHolder, Series series) {
-        Bitmap poster = App.imageService().getSmallPosterOf(series);
+        Bitmap poster = App.imageService().getPosterOf(series);
         Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
         viewHolder.poster.setImageBitmap(Objects.nullSafe(poster, genericPoster));
 
         String name = series.name();
         viewHolder.name.setText(name);
 
-        String genres = series.genres();
-        viewHolder.genres.setText(genres);
-
-        String status = LocalText.of(series.status(), "");
-        viewHolder.status.setText(status);
-
-        String airDay = DatesAndTimes.toShortString(series.airDay(), Locale.getDefault(), "");
-        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(App.context()), "");
-        String network = series.network();
-        String airInfo = Strings.concat(airDay, airtime, ", ");
-        airInfo = Strings.concat(airInfo, network, " - ");
-        viewHolder.airInfo.setText(airInfo);
-
-        //Episodes to count
         boolean countSpecialEpisodes = App.preferences().forMySeries().countSpecialEpisodes();
         boolean countUnairedEpisodes = App.preferences().forMySeries().countUnairedEpisodes();
         Specification<Episode> spec1 = new EpisodesToCountSpecification(countSpecialEpisodes, countUnairedEpisodes);
@@ -166,9 +147,6 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     private static class ViewHolder {
         private final ImageView poster;
         private final TextView name;
-        private final TextView genres;
-        private final TextView status;
-        private final TextView airInfo;
         private final TextView seenEpisodes;
         private final TextView allEpisodes;
         private final SeenEpisodesBar seenEpisodesBar;
@@ -176,9 +154,6 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         private ViewHolder(View view) {
             this.poster = (ImageView) view.findViewById(R.id.poster);
             this.name = (TextView) view.findViewById(R.id.name);
-            this.genres = (TextView) view.findViewById(R.id.genres);
-            this.status = (TextView) view.findViewById(R.id.status);
-            this.airInfo = (TextView) view.findViewById(R.id.airInfo);
             this.seenEpisodes = (TextView) view.findViewById(R.id.seenEpisodes);
             this.allEpisodes = (TextView) view.findViewById(R.id.allEpisodes);
             this.seenEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);

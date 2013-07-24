@@ -19,17 +19,19 @@
     <dimen name="imagebutton_height">40dp</dimen>
     <dimen name="imagebutton_width">48dp</dimen>
 
-    <dimen name="chunkbar_height">3dp</dimen>
-
-    <dimen name="myseries_item_height">106dp</dimen>
-    <dimen name="myseries_image_height">106dp</dimen>
-    <dimen name="myseries_image_width">69dp</dimen>
+    <dimen name="chunkbar_height">4dp</dimen>
 
     <!-- ActionBar -->
 
     <dimen name="ab_height">48dp</dimen>
     <dimen name="text_size_ab_spinner_title">16sp</dimen>
     <dimen name="text_size_ab_spinner_subtitle">12sp</dimen>
+
+    <!-- My Series -->
+
+    <dimen name="myseries_poster_width">148dp</dimen>
+    <dimen name="myseries_poster_height">218dp</dimen>
+    <dimen name="myseries_grid_gap">8dp</dimen>
 
     <!-- Episodes -->
 
