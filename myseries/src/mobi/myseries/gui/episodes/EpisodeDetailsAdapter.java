@@ -114,10 +114,10 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
 
         this.episode = this.getItem(position);
 
-        DateFormat dateformat = android.text.format.DateFormat.getDateFormat(App.context());
+        DateFormat dateformat = android.text.format.DateFormat.getMediumDateFormat(App.context());
         String unavailable = LocalText.get(R.string.unavailable_date);
         String formattedDate = DatesAndTimes.toString(this.episode.airDate(), dateformat, unavailable);
-        this.episodeAirDate.setText(formattedDate);
+        this.episodeAirDate.setText(formattedDate.toUpperCase());
 
         this.episodeName.setText(Objects.nullSafe(this.episode.name(), this.getContext().getString(R.string.to_be_announced)));
 

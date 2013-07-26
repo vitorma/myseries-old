@@ -81,6 +81,10 @@ public class EpisodeListFragment extends ListFragment {
             this.getListView().setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
             this.getListView().setDivider(null);
             this.getView().setBackgroundResource(R.drawable.list_background_holo);
+        } else {
+            int backgroundColor = App.resources().getColor(R.color.white);
+
+            this.getView().setBackgroundColor(backgroundColor);
         }
     }
 

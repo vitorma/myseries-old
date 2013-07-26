@@ -20,6 +20,7 @@
 
             <ImageView
                 android:id="@+id/imageView"
+                android:scaleType="centerCrop"
                 android:background="@color/gray"
                 android:layout_width="@dimen/episode_image_width"
                 android:layout_height="@dimen/episode_image_height"/>

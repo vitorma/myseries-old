@@ -20,7 +20,7 @@
 
         <CheckedTextView
             android:id="@+id/episodeNumber"
-            style="@style/TextView.Small"
+            style="@style/TextView.Medium"
             android:textColor="@color/mediumgray_x_lightgray"
             android:paddingTop="@dimen/gap_medium"
             android:paddingRight="@dimen/gap_medium"
