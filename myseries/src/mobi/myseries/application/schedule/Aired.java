@@ -8,9 +8,9 @@ import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Specification;
 
-public class Recent extends TimelineMode {
+public class Aired extends TimelineMode {
 
-    public Recent(ScheduleSpecification specification, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
+    public Aired(ScheduleSpecification specification, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
         super(specification, repository, following, update);
     }
 

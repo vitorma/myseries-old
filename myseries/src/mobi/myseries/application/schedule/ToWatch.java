@@ -9,9 +9,9 @@ import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.Specification;
 
-public class Next extends ScheduleMode implements SeriesListener {
+public class ToWatch extends ScheduleMode implements SeriesListener {
 
-    public Next(ScheduleSpecification specification, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
+    public ToWatch(ScheduleSpecification specification, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
         super(specification, repository, following, update);
     }
 
@@ -57,7 +57,7 @@ public class Next extends ScheduleMode implements SeriesListener {
     /* Auxiliary */
 
     private Episode includedEpisodeOf(Series series) {
-        Specification<Episode> specification = Next.seriesIdSpecification(series.id());
+        Specification<Episode> specification = ToWatch.seriesIdSpecification(series.id());
 
         for (Episode e : this.episodes) {
             if (specification.isSatisfiedBy(e)) {

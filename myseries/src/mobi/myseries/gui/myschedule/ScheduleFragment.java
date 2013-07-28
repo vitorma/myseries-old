@@ -48,6 +48,9 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        int padding = App.resources().getDimensionPixelSize(R.dimen.gap_medium);
+        this.getView().setPadding(0, 0, 0 , padding);
+        this.getView().setBackgroundColor(App.resources().getColor(R.color.white));
         this.getListView().setSelector(R.color.transparent);
         this.setUpEmptyText();
         this.setUpItemClickListener();
@@ -103,7 +106,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     }
 
     private void showSeriesFilterDialog() {
-        if (this.adapter.isEmpty()) {
+        if (App.seriesProvider().followedSeries().isEmpty()) {
             new ToastBuilder(this.getActivity()).setMessage(R.string.no_series_to_show).build().show();
         } else {
             SeriesFilterDialogFragment.newInstance(this.scheduleMode).show(this.getFragmentManager(), "seriesFilterDialog");
@@ -111,7 +114,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     }
 
     private void showEpisodeFilterDialog() {
-        if (this.adapter.isEmpty()) {
+        if (App.seriesProvider().followedSeries().isEmpty()) {
             new ToastBuilder(this.getActivity()).setMessage(R.string.no_episodes_to_show).build().show();
         } else {
             EpisodeFilterDialogFragment.newInstance(this.scheduleMode).show(this.getFragmentManager(), "episodeFilterDialog");
@@ -119,7 +122,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     }
 
     private void showSortDialog() {
-        if (this.adapter.isEmpty()) {
+        if (App.seriesProvider().followedSeries().isEmpty()) {
             new ToastBuilder(this.getActivity()).setMessage(R.string.no_episodes_to_sort).build().show();
         } else {
             EpisodeSortingDialogFragment.newInstance(this.scheduleMode).show(this.getFragmentManager(), "seriesSortingDialog");
@@ -127,7 +130,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     }
 
     private void setUpEmptyText() {
-        this.setEmptyText(this.getString(R.string.no_episodes_to_see));
+        this.setEmptyText(this.getString(R.string.no_episodes_to_show));
     }
 
     private void setUpItemClickListener() {

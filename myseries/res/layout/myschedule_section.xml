@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/date"
-        style="@style/TextView.Small.Blue.Bold"
+        style="@style/TextView.Medium.Blue.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/weekDay"
-        style="@style/TextView.Small.MediumGray"
+        style="@style/TextView.Medium.MediumGray"
         android:paddingLeft="@dimen/gap_small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
 
     <TextView
         android:id="@+id/relativeDay"
-        style="@style/TextView.Small.LightGray.Ellipsized"
+        style="@style/TextView.Medium.LightGray.Ellipsized"
         android:gravity="right"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

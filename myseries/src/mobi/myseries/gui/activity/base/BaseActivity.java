@@ -131,7 +131,7 @@ public abstract class BaseActivity extends Activity {
                 break;
             case MENU_ITEM_MYSCHEDULE:
                 if (this.getClass() != MyScheduleActivity.class) {
-                    this.startActivity(MyScheduleActivity.newIntent(this, ScheduleMode.NEXT));
+                    this.startActivity(MyScheduleActivity.newIntent(this, ScheduleMode.TO_WATCH));
                 }
                 break;
             case MENU_ITEM_MYSTATISTICS:

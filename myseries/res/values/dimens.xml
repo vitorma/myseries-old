@@ -33,6 +33,11 @@
     <dimen name="myseries_poster_height">218dp</dimen>
     <dimen name="myseries_grid_gap">8dp</dimen>
 
+    <!-- My Schedule -->
+
+    <dimen name="myschedule_poster_width">54dp</dimen>
+    <dimen name="myschedule_poster_height">79dp</dimen>
+
     <!-- Episodes -->
 
     <dimen name="fragment_episodes_master_width">280dp</dimen>

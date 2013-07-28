@@ -59,9 +59,9 @@ public class MyScheduleActivity extends TabActivity {
     @Override
     protected TabDefinition[] tabDefinitions() {
         return new TabDefinition[] {
-            new TabDefinition(R.string.recent, ScheduleFragment.newInstance(ScheduleMode.RECENT)),
-            new TabDefinition(R.string.next, ScheduleFragment.newInstance(ScheduleMode.NEXT)),
-            new TabDefinition(R.string.upcoming, ScheduleFragment.newInstance(ScheduleMode.UPCOMING))
+            new TabDefinition(R.string.schedule_to_watch, ScheduleFragment.newInstance(ScheduleMode.TO_WATCH)),
+            new TabDefinition(R.string.schedule_aired, ScheduleFragment.newInstance(ScheduleMode.AIRED)),
+            new TabDefinition(R.string.schedule_unaired, ScheduleFragment.newInstance(ScheduleMode.UNAIRED))
         };
     }
 

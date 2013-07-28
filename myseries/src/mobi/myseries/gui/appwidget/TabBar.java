@@ -25,9 +25,9 @@ public class TabBar {
     public TabBar setUpFor(int appWidgetId) {
         this.highlightSelectedTab(appWidgetId);
 
-        this.appWidgetView.setOnClickPendingIntent(R.id.recentTab, this.tabServiceIntentFrom(appWidgetId, ScheduleMode.RECENT));
-        this.appWidgetView.setOnClickPendingIntent(R.id.nextTab, this.tabServiceIntentFrom(appWidgetId, ScheduleMode.NEXT));
-        this.appWidgetView.setOnClickPendingIntent(R.id.upcomingTab, this.tabServiceIntentFrom(appWidgetId, ScheduleMode.UPCOMING));
+        this.appWidgetView.setOnClickPendingIntent(R.id.toWatchTab, this.tabServiceIntentFrom(appWidgetId, ScheduleMode.TO_WATCH));
+        this.appWidgetView.setOnClickPendingIntent(R.id.airedTab, this.tabServiceIntentFrom(appWidgetId, ScheduleMode.AIRED));
+        this.appWidgetView.setOnClickPendingIntent(R.id.unairedTab, this.tabServiceIntentFrom(appWidgetId, ScheduleMode.UNAIRED));
 
         return this;
     }
@@ -36,13 +36,13 @@ public class TabBar {
         int scheduleMode = App.preferences().forScheduleWidget(appWidgetId).scheduleMode();
 
         switch (scheduleMode) {
-            case ScheduleMode.RECENT:
+            case ScheduleMode.AIRED:
                 this.highLightRecentTab();
                 break;
-            case ScheduleMode.NEXT:
+            case ScheduleMode.TO_WATCH:
                 this.hightlightNextTab();
                 break;
-            case ScheduleMode.UPCOMING:
+            case ScheduleMode.UNAIRED:
                 this.highlightUpcomingTab();
                 break;
             default:
@@ -51,33 +51,33 @@ public class TabBar {
     }
 
     private void highLightRecentTab() {
-        this.show(R.id.recentTabIndicator);
-        this.hide(R.id.nextTabIndicator);
-        this.hide(R.id.upcomingTabIndicator);
+        this.hide(R.id.toWatchTabIndicator);
+        this.show(R.id.airedTabIndicator);
+        this.hide(R.id.unairedTabIndicator);
 
-        this.setTextColorToWhite(R.id.recentTab);
-        this.setTextColorToTranslucentWhite(R.id.nextTab);
-        this.setTextColorToTranslucentWhite(R.id.upcomingTab);
+        this.setTextColorToTranslucentWhite(R.id.toWatchTab);
+        this.setTextColorToWhite(R.id.airedTab);
+        this.setTextColorToTranslucentWhite(R.id.unairedTab);
     }
 
     private void hightlightNextTab() {
-        this.hide(R.id.recentTabIndicator);
-        this.show(R.id.nextTabIndicator);
-        this.hide(R.id.upcomingTabIndicator);
+        this.show(R.id.toWatchTabIndicator);
+        this.hide(R.id.airedTabIndicator);
+        this.hide(R.id.unairedTabIndicator);
 
-        this.setTextColorToTranslucentWhite(R.id.recentTab);
-        this.setTextColorToWhite(R.id.nextTab);
-        this.setTextColorToTranslucentWhite(R.id.upcomingTab);
+        this.setTextColorToWhite(R.id.toWatchTab);
+        this.setTextColorToTranslucentWhite(R.id.airedTab);
+        this.setTextColorToTranslucentWhite(R.id.unairedTab);
     }
 
     private void highlightUpcomingTab() {
-        this.hide(R.id.recentTabIndicator);
-        this.hide(R.id.nextTabIndicator);
-        this.show(R.id.upcomingTabIndicator);
+        this.hide(R.id.toWatchTabIndicator);
+        this.hide(R.id.airedTabIndicator);
+        this.show(R.id.unairedTabIndicator);
 
-        this.setTextColorToTranslucentWhite(R.id.recentTab);
-        this.setTextColorToTranslucentWhite(R.id.nextTab);
-        this.setTextColorToWhite(R.id.upcomingTab);
+        this.setTextColorToTranslucentWhite(R.id.toWatchTab);
+        this.setTextColorToTranslucentWhite(R.id.airedTab);
+        this.setTextColorToWhite(R.id.unairedTab);
     }
 
     private void hide(int viewId) {

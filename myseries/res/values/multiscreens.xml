@@ -4,10 +4,8 @@
 
     <!-- Poster -->
 
-    <dimen name="poster_width_thumbnail">@dimen/poster_width_myschedule</dimen>
-    <dimen name="poster_height_thumbnail">@dimen/poster_height_myschedule</dimen>
-    <dimen name="poster_width_myschedule">51dp</dimen>
-    <dimen name="poster_height_myschedule">75dp</dimen>
+    <dimen name="poster_width_thumbnail">@dimen/myschedule_poster_width</dimen>
+    <dimen name="poster_height_thumbnail">@dimen/myschedule_poster_height</dimen>
     <dimen name="poster_width_series_details">300dp</dimen>
     <dimen name="poster_height_series_details">441dp</dimen>
     <dimen name="poster_width_series_details_land">80dp</dimen>

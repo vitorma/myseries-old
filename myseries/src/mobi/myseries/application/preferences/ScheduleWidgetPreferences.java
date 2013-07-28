@@ -4,7 +4,7 @@ import mobi.myseries.application.schedule.ScheduleMode;
 
 public class ScheduleWidgetPreferences extends MySchedulePreferences {
     private static final String SCHEDULE_MODE_KEY = "scheduleMode";
-    private static final int SCHEDULE_MODE_DEFAULT_VALUE = ScheduleMode.NEXT;
+    private static final int SCHEDULE_MODE_DEFAULT_VALUE = ScheduleMode.TO_WATCH;
 
     public ScheduleWidgetPreferences(PrimitivePreferences primitive) {
         super(primitive);

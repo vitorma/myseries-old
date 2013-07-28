@@ -43,7 +43,7 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
         int episodesToShowArrayResource;
         boolean[] episodesToShow;
 
-        if (this.scheduleMode == ScheduleMode.NEXT) {
+        if (this.scheduleMode == ScheduleMode.TO_WATCH) {
             episodesToShowArrayResource = R.array.action_episodes_to_show_array_for_mode_next;
             episodesToShow = new boolean[] {
                 preferences.showSpecialEpisodes()
@@ -90,7 +90,7 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
 
                 prefs.putIfShowSpecialEpisodes(episodesToShow[SPECIAL_EPISODES_ITEM]);
 
-                if (EpisodeFilterDialogFragment.this.scheduleMode != ScheduleMode.NEXT) {
+                if (EpisodeFilterDialogFragment.this.scheduleMode != ScheduleMode.TO_WATCH) {
                     prefs.putIfShowSeenEpisodes(episodesToShow[WATCHED_EPISODES_ITEM]);
                 }
 

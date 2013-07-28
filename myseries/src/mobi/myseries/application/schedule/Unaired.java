@@ -8,9 +8,9 @@ import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Specification;
 
-public class Upcoming extends TimelineMode {
+public class Unaired extends TimelineMode {
 
-    public Upcoming(ScheduleSpecification parameters, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
+    public Unaired(ScheduleSpecification parameters, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
         super(parameters, repository, following, update);
     }
 

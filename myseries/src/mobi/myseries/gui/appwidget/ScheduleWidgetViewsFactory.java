@@ -73,14 +73,14 @@ public class ScheduleWidgetViewsFactory implements RemoteViewsService.RemoteView
         ScheduleSpecification specification = prefs.fullSpecification();
 
         switch(scheduleMode) {
-            case ScheduleMode.RECENT:
-                this.episodes = App.schedule().modeRecent(specification).episodes();
+            case ScheduleMode.AIRED:
+                this.episodes = App.schedule().aired(specification).episodes();
                 break;
-            case ScheduleMode.NEXT:
-                this.episodes = App.schedule().modeNext(specification).episodes();
+            case ScheduleMode.TO_WATCH:
+                this.episodes = App.schedule().toWatch(specification).episodes();
                 break;
-            case ScheduleMode.UPCOMING:
-                this.episodes = App.schedule().modeUpcoming(specification).episodes();
+            case ScheduleMode.UNAIRED:
+                this.episodes = App.schedule().unaired(specification).episodes();
                 break;
         }
     }
