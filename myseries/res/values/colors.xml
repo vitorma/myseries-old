@@ -32,7 +32,7 @@
     <color name="chunk_bar_foreground_gradient_from_future">#ffe2f4fb</color>
     <color name="chunk_bar_foreground_gradient_to_future">#ff0099cc</color>
 
-    <color name="text_light_gray">#ff808080</color>
+    <color name="text_light_gray">#ff999999</color>
     <color name="text_medium_gray">@color/gray</color>
     <color name="text_dark_gray">#ff272727</color>
     <color name="text_blue">@color/dark_blue</color>

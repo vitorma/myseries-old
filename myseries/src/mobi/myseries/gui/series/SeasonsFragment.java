@@ -7,14 +7,11 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Extra;
-import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.gui.shared.ToastBuilder;
-import mobi.myseries.gui.shared.UnairedEpisodeSpecification;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,10 +34,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     }
 
     private ListView list;
-    private TextView watchedEpisodes;
-    private TextView unwatchedEpisodes;
-    private TextView unairedEpisodes;
-    private SeenEpisodesBar seenEpisodesBar;
+    private TextView remainingEpisodes;
     private SeenMark seenMark;
     private ImageButton sortButton;
     private int seriesId;
@@ -97,12 +91,9 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.series_seasons, container, false);
 
-        this.watchedEpisodes = (TextView) view.findViewById(R.id.watchedEpisodes);
-        this.unwatchedEpisodes = (TextView) view.findViewById(R.id.unwatchedEpisodes);
-        this.unairedEpisodes = (TextView) view.findViewById(R.id.unairedEpisodes);
         this.seenMark = (SeenMark) view.findViewById(R.id.seenMark);
         this.sortButton = (ImageButton) view.findViewById(R.id.sort);
-        this.seenEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
+        this.remainingEpisodes = (TextView) view.findViewById(R.id.statistics);
 
         final Series series = App.seriesProvider().getSeries(this.seriesId);
 
@@ -125,17 +116,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
             }
         });
 
-        this.seenEpisodesBar.updateWithEpisodesOf(series);
-        this.updateSeenEpisodes();
-
-        int numberOfUnairedEpisodes = series.numberOfEpisodes(new UnairedEpisodeSpecification());
-        String pluralOfUnaired = App.resources().getQuantityString(R.plurals.plural_unaired, numberOfUnairedEpisodes);
-        String allAired = App.resources().getString(R.string.all_aired);
-
-        this.unairedEpisodes.setText(
-            numberOfUnairedEpisodes > 0 ?
-            numberOfUnairedEpisodes + " " + pluralOfUnaired :
-            allAired);
+        this.updateNumberOfRemainingEpisodes();
 
         return view;
     }
@@ -156,22 +137,18 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
 
     @Override
     public void onChangeNumberOfSeenEpisodes(Series series) {
-        Log.d("SeasonsFragment", "called");
-        this.seenEpisodesBar.updateWithEpisodesOf(series);
         this.seenMark.setChecked(series.numberOfEpisodes() == series.numberOfSeenEpisodes());
-        this.updateSeenEpisodes();
+        this.updateNumberOfRemainingEpisodes();
     }
 
     @Override
     public void onMarkAsNotSeen(Series series) {
-        this.seenEpisodesBar.updateWithEpisodesOf(series);
-        SeasonsFragment.this.updateSeenEpisodes();
+        SeasonsFragment.this.updateNumberOfRemainingEpisodes();
     }
 
     @Override
     public void onMarkAsSeen(Series series) {
-        this.seenEpisodesBar.updateWithEpisodesOf(series);
-        SeasonsFragment.this.updateSeenEpisodes();
+        SeasonsFragment.this.updateNumberOfRemainingEpisodes();
     }
 
     @Override
@@ -180,15 +157,14 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
         super.onSaveInstanceState(outState);
     }
 
-    private void updateSeenEpisodes() {
+    private void updateNumberOfRemainingEpisodes() {
         Series series = App.seriesProvider().getSeries(this.seriesId);
 
         int numberOfUnwatchedEpisodes = series.numberOfUnwatchedEpisodes();
         String pluralOfUnwatched = this.getResources().getQuantityString(R.plurals.plural_unwatched, numberOfUnwatchedEpisodes);
         String allWatched = this.getResources().getString(R.string.all_watched);
 
-        this.watchedEpisodes.setText(series.numberOfSeenEpisodes() + "/" + series.numberOfEpisodes());
-        this.unwatchedEpisodes.setText(
+        this.remainingEpisodes.setText(
             numberOfUnwatchedEpisodes > 0 ?
             numberOfUnwatchedEpisodes + " " + pluralOfUnwatched :
             allWatched);

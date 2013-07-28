@@ -69,10 +69,11 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSha
 
         final Season season = this.seasons.get(position);
 
-        seasonNumber.setText(String.format(App.resources().getString(R.string.season_number_format), season.number()));
         if (season.isSpecial()) {
-            seasonNumber.setTextColor(App.resources().getColor(R.color.lilac));
+            seasonNumber.setText(R.string.special_episodes);
+            seasonNumber.setTextColor(App.resources().getColor(R.color.dark_red));
         } else {
+            seasonNumber.setText(String.format(App.resources().getString(R.string.season_number_format_ext), season.number()));
             seasonNumber.setTextColor(App.resources().getColor(R.color.dark_gray));
         }
 
@@ -91,18 +92,11 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSha
         });
 
         TextView watchedEpisodes = (TextView) itemView.findViewById(R.id.watchedEpisodes);
-        TextView unwatchedEpisodes = (TextView) itemView.findViewById(R.id.unwatchedEpisodes);
+        TextView allEpisodes = (TextView) itemView.findViewById(R.id.allEpisodes);
         TextView unairedEpisodes = (TextView) itemView.findViewById(R.id.unairedEpisodes);
 
-        int numberOfUnwatchedEpisodes = season.numberOfEpisodes() - season.numberOfSeenEpisodes();
-        String pluralOfUnwatched = App.resources().getQuantityString(R.plurals.plural_unwatched, numberOfUnwatchedEpisodes);
-        String allWatched = App.resources().getString(R.string.all_watched);
-
-        watchedEpisodes.setText(season.numberOfSeenEpisodes() + "/" + season.numberOfEpisodes());
-        unwatchedEpisodes.setText(
-            numberOfUnwatchedEpisodes > 0 ?
-            numberOfUnwatchedEpisodes + " " + pluralOfUnwatched :
-            allWatched);
+        watchedEpisodes.setText(String.valueOf(season.numberOfSeenEpisodes()));
+        allEpisodes.setText("/" + season.numberOfEpisodes());
 
         int numberOfUnairedEpisodes = season.numberOfEpisodes(new UnairedEpisodeSpecification());
         String pluralOfUnaired = App.resources().getQuantityString(R.plurals.plural_unaired, numberOfUnairedEpisodes);
