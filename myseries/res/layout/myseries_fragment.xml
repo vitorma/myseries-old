@@ -24,7 +24,9 @@
 
     <TextView
         android:id="@+id/empty"
-        android:text="@string/no_followed_series"
+        style="@style/TextView.Large.DarkGray.Ellipsized"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/no_series_to_show"
         android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
