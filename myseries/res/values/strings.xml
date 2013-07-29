@@ -8,7 +8,7 @@
     <string name="schedule_mode_upper">SCHEDULE MODE</string>
     <string name="sort_episodes_by_upper">SORT EPISODES BY…</string>
     <string name="special_episodes_upper">SPECIAL EPISODES</string>
-    <string name="seen_episodes_upper">SEEN EPISODES</string>
+    <string name="watched_episodes_upper">WATCHED EPISODES</string>
     <string name="series_to_show_upper">SERIES TO SHOW</string>
 
     <string name="sorting">SORTING</string>
