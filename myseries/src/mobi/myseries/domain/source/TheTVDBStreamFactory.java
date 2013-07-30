@@ -102,6 +102,13 @@ public class TheTVDBStreamFactory implements StreamFactory {
         return stream;
     }
 
+    @Override
+    public InputStream streamForSeriesBanners(int seriesId) throws StreamCreationFailedException, ConnectionFailedException,
+            ConnectionTimeoutException {
+        URL url = this.urlFactory.urlForSeriesBannersXml(seriesId);
+        return this.buffered(this.streamFrom(this.connectionTo(url)));
+    }
+
     private ZipInputStream zipped(InputStream stream) {
         return new ZipInputStream(stream);
     }

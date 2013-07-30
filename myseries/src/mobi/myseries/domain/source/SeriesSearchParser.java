@@ -72,8 +72,7 @@ public class SeriesSearchParser {
             this.seriesElementHandler = SeriesSearchElementHandler.from(this.rootElement)
                 .handlingId()
                 .handlingName()
-                .handlingOverview()
-                .handlingPosterFileName();
+                .handlingOverview();
         }
 
         private ContentHandler handler() {

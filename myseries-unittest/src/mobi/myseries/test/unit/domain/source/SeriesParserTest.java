@@ -228,6 +228,12 @@ public class SeriesParserTest extends TestCase {
 
         @Override
         public ZipInputStream streamForUpdatesSince(long dateInMiliseconds) {return null;}
+
+        @Override
+        public InputStream streamForSeriesBanners(int seriesId) throws StreamCreationFailedException, ConnectionFailedException,
+                ConnectionTimeoutException {
+            return null;
+        }
     }
 
     /* Parser to test */

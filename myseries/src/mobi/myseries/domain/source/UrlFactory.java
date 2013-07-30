@@ -68,6 +68,12 @@ public class UrlFactory {
         return this.urlFrom(url);
     }
 
+    public URL urlForSeriesBannersXml(int seriesId) {
+        String url = this.buildUrlForSeriesBannersXml(seriesId);
+
+        return this.urlFrom(url);
+    }
+
     public URL urlForEpisodeImage(String fileName) {
         Validate.isNonBlank(fileName, "fileName");
 
@@ -77,19 +83,19 @@ public class UrlFactory {
     }
 
     public URL urlForLastDayUpdates() {
-        return this.urlFrom(buildUrlForUpdates(DAY));
+        return this.urlFrom(this.buildUrlForUpdates(DAY));
     }
 
     public URL urlForLastWeekUpdates() {
-        return this.urlFrom(buildUrlForUpdates(WEEK));
+        return this.urlFrom(this.buildUrlForUpdates(WEEK));
     }
 
     public URL urlForLastMonthUpdates() {
-        return this.urlFrom(buildUrlForUpdates(MONTH));
+        return this.urlFrom(this.buildUrlForUpdates(MONTH));
     }
 
     public URL urlForAllAvailableUpdates() {
-        return this.urlFrom(buildUrlForUpdates(ALL));
+        return this.urlFrom(this.buildUrlForUpdates(ALL));
     }
 
     private StringBuilder mirrorXml() {
@@ -124,6 +130,15 @@ public class UrlFactory {
         return this.mirrorBanners()
                 .append("_cache/")
                 .append(this.encode(fileName))
+                .toString();
+    }
+
+    private String buildUrlForSeriesBannersXml(int seriesId) {
+        return this.mirrorXml()
+                .append(this.apiKey)
+                .append("/series/")
+                .append(seriesId)
+                .append("/banners.xml")
                 .toString();
     }
 

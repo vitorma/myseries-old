@@ -162,7 +162,13 @@ public class SeriesSearch {
             String language = params[1];
 
             try {
-                return SeriesSearch.this.seriesSource.searchFor(seriesName, language);
+                List<Series> searchResult = SeriesSearch.this.seriesSource.searchFor(seriesName, language);
+
+                for (Series s : searchResult) {
+                    s.setPosterFilename(SeriesSearch.this.seriesSource.fetchSeriesPosterPath(s.id()));
+                }
+
+                return searchResult;
             } catch (Exception e) {
                 throw new SeriesSearchException(e);
             }
