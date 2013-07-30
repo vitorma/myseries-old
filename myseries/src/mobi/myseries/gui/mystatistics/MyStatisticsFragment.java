@@ -282,19 +282,17 @@ public class MyStatisticsFragment extends Fragment {
             .setProgress(watchedEpisodes);
 
         int minutes = (watchedRuntime % 60);
-        int hours = ((watchedRuntime / 60) % 24);
-        int days = ((watchedRuntime / 3600));
+        int hours = ((watchedRuntime / 60));
 
         this.watchedRuntime.setText(String.format(
-            this.getString(R.string.watched_runtime_format), days, hours,
+            this.getString(R.string.watched_runtime_format), hours,
             minutes));
 
         minutes = (totalRuntime % 60);
-        hours = ((totalRuntime / 60) % 24);
-        days = ((totalRuntime / 3600));
+        hours = ((totalRuntime / 60));
 
         this.totalRuntime.setText(String.format(
-            this.getString(R.string.total_runtime_format), days, hours,
+            this.getString(R.string.total_runtime_format), hours,
             minutes));
 
         this.timeOfWatchedEpisodesProgressBar.setMax(totalRuntime);
