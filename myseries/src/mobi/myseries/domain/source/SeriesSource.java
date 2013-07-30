@@ -36,11 +36,13 @@ public interface SeriesSource {
 
     public List<Series> fetchAllSeries(int[] seriesIds, String languageAbbreviation)
             throws ParsingFailedException, ConnectionFailedException, ConnectionTimeoutException, SeriesNotFoundException;
-    
-    public boolean fetchUpdateMetadataSince(long dateInMiliseconds) 
-            throws ConnectionFailedException, ConnectionTimeoutException, ParsingFailedException, 
+
+    public boolean fetchUpdateMetadataSince(long dateInMiliseconds)
+            throws ConnectionFailedException, ConnectionTimeoutException, ParsingFailedException,
                    UpdateMetadataUnavailableException;
 
     public Collection<Integer> seriesUpdateMetadata();
     public Map<Integer, String> posterUpdateMetadata();
+
+    public String fetchSeriesPosterPath(int seriesId);
 }

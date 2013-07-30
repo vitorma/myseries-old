@@ -174,4 +174,17 @@ public class TheTVDB implements SeriesSource, ImageSource {
     public Map<Integer, String> posterUpdateMetadata() {
         return this.fetchedPosterUpdateMetadata;
     }
+
+    @Override
+    public String fetchSeriesPosterPath(int seriesId) {
+        SeriesBannersParser parser = new SeriesBannersParser(this.streamFactory);
+        UrlFactory urlFactory = new UrlFactory(TheTVDBConstants.API_KEY);
+
+        try {
+            return urlFactory.urlForSeriesPoster(parser.parse(seriesId)).toExternalForm();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }
