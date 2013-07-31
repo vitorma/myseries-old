@@ -8,6 +8,7 @@ import mobi.myseries.gui.mystatistics.MyStatisticsActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -87,6 +88,10 @@ public abstract class BaseActivity extends Activity {
     protected abstract int layoutResource();
     protected abstract boolean isTopLevel();
 
+    protected Intent navigateUpIntent() {
+        return NavUtils.getParentActivityIntent(this);
+    }
+
     protected CharSequence titleForSideMenu() {
         return "";
     }
@@ -103,8 +108,10 @@ public abstract class BaseActivity extends Activity {
                     return this.mDrawerToggle.onOptionsItemSelected(item);
                 } else {
                     NavUtils.navigateUpFromSameTask(this);
+                    NavUtils.navigateUpTo(this, navigateUpIntent());
                     return true;
                 }
+
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -7,6 +7,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.episodes.EpisodeListFragment.EpisodeListFragmentListener;
 import mobi.myseries.gui.episodes.EpisodePagerFragment.EpisodePagerFragmentListener;
+import mobi.myseries.gui.series.SeriesActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.gui.shared.ToastBuilder;
@@ -81,6 +82,11 @@ public class EpisodesActivity extends BaseActivity
     @Override
     protected boolean isTopLevel() {
         return false;
+    }
+
+    @Override
+    protected Intent navigateUpIntent() {
+        return SeriesActivity.newIntent(this, series.id());
     }
 
     @Override
