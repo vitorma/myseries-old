@@ -8,6 +8,7 @@ import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 
 public class MyScheduleActivity extends TabActivity {
@@ -49,6 +50,11 @@ public class MyScheduleActivity extends TabActivity {
     @Override
     protected boolean isTopLevel() {
         return true;
+    }
+
+    @Override
+    protected Intent navigateUpIntent() {
+        return NavUtils.getParentActivityIntent(this);
     }
 
     @Override
