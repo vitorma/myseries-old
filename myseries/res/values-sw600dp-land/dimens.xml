@@ -2,6 +2,10 @@
 
 <resources>
 
+    <!-- My Statistics -->
+
+    <dimen name="mystatistics_side_padding">120dp</dimen>
+
     <!-- Episodes -->
 
     <dimen name="fragment_episodes_master_width">288dp</dimen>

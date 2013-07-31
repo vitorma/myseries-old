@@ -7,6 +7,7 @@
     <dimen name="text_size_xmedium">16sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_xlarge">22sp</dimen>
+    <dimen name="text_size_xxlarge">48sp</dimen>
     <dimen name="text_size_extreme">55sp</dimen>
 
     <dimen name="gap_micro">2dp</dimen>
@@ -37,6 +38,10 @@
 
     <dimen name="myschedule_poster_width">54dp</dimen>
     <dimen name="myschedule_poster_height">79dp</dimen>
+
+    <!-- My Statistics -->
+
+    <dimen name="mystatistics_side_padding">8dp</dimen>
 
     <!-- Episodes -->
 

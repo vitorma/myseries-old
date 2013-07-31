@@ -292,8 +292,9 @@
         <string name="seasons_watched" formatted="false">%d WATCHED</string>
         <string name="episodes_watched" formatted="false">%d WATCHED</string>
 
-        <string name="total_runtime_format" formatted="false">%d hours %d minutes</string>
-        <string name="watched_runtime_format" formatted="false" >%d hours %d minutes\nOF WATCHED EPISODES</string>
+        <string name="hours_symbol">h</string>
+        <string name="minutes_symbol">min</string>
+        <string name="watched_runtime_format" formatted="false" >%dh %dmin WATCHED</string>
 
     <!-- Do not translate -->
     <string name="app">MySeries</string>
