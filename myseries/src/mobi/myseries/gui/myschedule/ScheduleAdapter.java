@@ -125,7 +125,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
         Bitmap seriesPoster = App.imageService().getPosterOf(series);
-        Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
+        Bitmap genericPoster = Images.genericSeriesPosterThumbnailFrom(App.resources());
         viewHolder.poster.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
 
         viewHolder.seriesName.setText(series.name());
