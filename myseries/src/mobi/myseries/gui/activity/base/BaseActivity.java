@@ -107,7 +107,6 @@ public abstract class BaseActivity extends Activity {
                 if (this.isTopLevel()) {
                     return this.mDrawerToggle.onOptionsItemSelected(item);
                 } else {
-                    NavUtils.navigateUpFromSameTask(this);
                     NavUtils.navigateUpTo(this, navigateUpIntent());
                     return true;
                 }
