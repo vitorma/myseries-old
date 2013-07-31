@@ -33,6 +33,10 @@ public abstract class Images {
         return bitmapFrom(resources, R.drawable.generic_poster);
     }
 
+    public static Bitmap genericSeriesPosterThumbnailFrom(Resources resources) {
+        return bitmapFrom(resources, R.drawable.generic_poster_thumbnail);
+    }
+
     public static Bitmap genericEpisodeImageFrom(Resources resources) {
         return bitmapFrom(resources, R.drawable.clapperboard);
     }
