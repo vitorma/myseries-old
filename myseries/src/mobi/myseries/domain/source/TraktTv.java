@@ -51,11 +51,13 @@ public class TraktTv implements TrendingSource {
     }
 
     private Series seriesFrom(JSONObject object) {
+        String posterFileName = ((JSONObject) object.get("images")).get("poster").toString();
+
         return Series.builder()
             .withId(Integer.valueOf(object.get("tvdb_id").toString()))
             .withName(object.get("title").toString())
             .withOverview(object.get("overview").toString())
-            .withPosterFileName(((JSONObject) object.get("images")).get("banner").toString())
+            .withPosterFileName(this.compressed138(posterFileName))
             .build();
     }
 
@@ -85,7 +87,7 @@ public class TraktTv implements TrendingSource {
         StringBuilder b = new StringBuilder();
 
         b.append(poster.substring(0, extensionIndex));
-        b.append("-138");
+        b.append("-300");
         b.append(poster.substring(extensionIndex));
 
         return b.toString();

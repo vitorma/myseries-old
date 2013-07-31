@@ -66,8 +66,8 @@
 
     <TextView
         android:id="@+id/numberOfResultsLabel"
-        style="@style/TextView.Small.Blue"
-        android:paddingBottom="4dp"
+        style="@style/TextView.Medium.Blue"
+        android:paddingBottom="@dimen/myseries_grid_gap"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:layout_width="match_parent"
@@ -76,14 +76,15 @@
 
     <GridView
         android:id="@+id/resultsGrid"
-        android:listSelector="#eeeeee"
+        android:listSelector="@drawable/list_selector_holo_light"
+        android:drawSelectorOnTop="true"
         android:fastScrollEnabled="true"
         android:gravity="center"
         android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
+        android:stretchMode="spacingWidthUniform"
         android:horizontalSpacing="0dp"
-        android:verticalSpacing="0dp"
-        android:columnWidth="320dp"
+        android:verticalSpacing="@dimen/myseries_grid_gap"
+        android:columnWidth="@dimen/myseries_poster_width"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/numberOfResultsLabel"/>
@@ -95,5 +96,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
+
+    <View
+        android:id="@+id/paddingBottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/myseries_grid_gap"
+        android:layout_below="@id/resultsGrid"/>
 
 </RelativeLayout>

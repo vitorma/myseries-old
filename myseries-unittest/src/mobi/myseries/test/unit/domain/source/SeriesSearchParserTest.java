@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
+import junit.framework.TestCase;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
@@ -38,8 +39,6 @@ import mobi.myseries.domain.source.SeriesSearchParser;
 import mobi.myseries.domain.source.StreamCreationFailedException;
 import mobi.myseries.domain.source.StreamFactory;
 import mobi.myseries.shared.Validate;
-
-import junit.framework.TestCase;
 
 public class SeriesSearchParserTest extends TestCase {
 
@@ -145,7 +144,13 @@ public class SeriesSearchParserTest extends TestCase {
         @Override
         public ZipInputStream streamForUpdatesSince(long dateInMiliseconds)
                 throws StreamCreationFailedException, ConnectionFailedException {
-            // TODO (Reul) Implement me 
+            // TODO (Reul) Implement me
+            return null;
+        }
+
+        @Override
+        public InputStream streamForSeriesBanners(int seriesId) throws StreamCreationFailedException, ConnectionFailedException,
+                ConnectionTimeoutException {
             return null;
         }
     }

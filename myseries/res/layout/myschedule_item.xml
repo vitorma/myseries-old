@@ -22,15 +22,15 @@
             android:id="@+id/poster"
             android:contentDescription="@string/description_poster"
             android:scaleType="fitXY"
-            android:layout_width="@dimen/poster_width_myschedule"
-            android:layout_height="@dimen/poster_height_myschedule"
+            android:layout_width="@dimen/myschedule_poster_width"
+            android:layout_height="@dimen/myschedule_poster_height"
             android:layout_alignParentLeft="true"/>
 
         <mobi.myseries.gui.shared.SeenMark
             android:id="@+id/seenMark"
             android:gravity="center"
             android:layout_width="@dimen/toucharea_minimum_side"
-            android:layout_height="@dimen/poster_height_myschedule"
+            android:layout_height="@dimen/myschedule_poster_height"
             android:layout_alignParentRight="true"/>
 
         <TextView
@@ -47,7 +47,7 @@
 
         <TextView
             android:id="@+id/episodeName"
-            style="@style/TextView.Small.MediumGray.Ellipsized"
+            style="@style/TextView.Medium.MediumGray.Ellipsized"
             android:paddingLeft="@dimen/gap_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
 
         <TextView
             android:id="@+id/airInfo"
-            style="@style/TextView.Small.LightGray.Ellipsized"
+            style="@style/TextView.Medium.LightGray.Ellipsized"
             android:paddingBottom="@dimen/gap_medium"
             android:paddingLeft="@dimen/gap_medium"
             android:layout_width="wrap_content"

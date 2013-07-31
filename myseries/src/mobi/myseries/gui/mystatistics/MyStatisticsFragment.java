@@ -40,7 +40,8 @@ public class MyStatisticsFragment extends Fragment {
     private TextView watchedRuntime;
     private ProgressBar timeOfWatchedEpisodesProgressBar;
     private OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
-    private TextView totalRuntime;
+    private TextView hours;
+    private TextView minutes;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -101,7 +102,8 @@ public class MyStatisticsFragment extends Fragment {
 
         this.watchedRuntime = (TextView) this.getActivity().findViewById(R.id.watchedRuntime);
 
-        this.totalRuntime = (TextView) this.getActivity().findViewById(R.id.totalRuntime);
+        this.hours = (TextView) this.getActivity().findViewById(R.id.hours);
+        this.minutes = (TextView) this.getActivity().findViewById(R.id.minutes);
     }
 
     private void setupBackupListener() {
@@ -306,20 +308,17 @@ public class MyStatisticsFragment extends Fragment {
             .setProgress(watchedEpisodes);
 
         int minutes = (watchedRuntime % 60);
-        int hours = ((watchedRuntime / 60) % 24);
-        int days = ((watchedRuntime / 3600));
+        int hours = ((watchedRuntime / 60));
 
         this.watchedRuntime.setText(String.format(
-            this.getString(R.string.watched_runtime_format), days, hours,
+            this.getString(R.string.watched_runtime_format), hours,
             minutes));
 
         minutes = (totalRuntime % 60);
-        hours = ((totalRuntime / 60) % 24);
-        days = ((totalRuntime / 3600));
+        hours = ((totalRuntime / 60));
 
-        this.totalRuntime.setText(String.format(
-            this.getString(R.string.total_runtime_format), days, hours,
-            minutes));
+        this.hours.setText(String.valueOf(hours));
+        this.minutes.setText(String.valueOf(minutes));
 
         this.timeOfWatchedEpisodesProgressBar.setMax(totalRuntime);
         this.timeOfWatchedEpisodesProgressBar.setProgress(watchedRuntime);

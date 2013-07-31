@@ -41,12 +41,12 @@ public class AddSeriesAdapter extends ArrayAdapter<Series> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText(series.name().toUpperCase());
+        viewHolder.name.setText(series.name());
 
-        if (!Strings.isNullOrBlank(series.posterFileName())) {
-            this.imageDownloader.download(series.posterFileName(), viewHolder.image, false);
-        } else {
+        if (Strings.isNullOrBlank(series.posterFileName())) {
             viewHolder.image.setImageDrawable(App.resources().getDrawable(R.drawable.generic_poster));
+        } else {
+            this.imageDownloader.download(series.posterFileName(), viewHolder.image, false);
         }
 
         viewHolder.addButton.setOnClickListener(new View.OnClickListener() {

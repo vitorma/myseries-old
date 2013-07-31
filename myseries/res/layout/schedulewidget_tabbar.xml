@@ -10,21 +10,21 @@
     android:layout_height="@dimen/appwidget_tabbar_height">
 
     <FrameLayout
-        android:id="@+id/recentTabContainer"
+        android:id="@+id/toWatchTabContainer"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.3">
 
         <Button
-            android:id="@+id/recentTab"
-            android:text="@string/recent"
+            android:id="@+id/toWatchTab"
+            android:text="@string/schedule_to_watch"
             style="@style/TabButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <ImageView
-            android:id="@+id/recentTabIndicator"
-            android:contentDescription="@string/recent"
+            android:id="@+id/toWatchTabIndicator"
+            android:contentDescription="@string/schedule_to_watch"
             android:background="@color/dark_red"
             android:visibility="invisible"
             android:layout_width="match_parent"
@@ -34,21 +34,21 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/nextTabContainer"
+        android:id="@+id/airedTabContainer"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.3">
 
         <Button
-            android:id="@+id/nextTab"
-            android:text="@string/next"
+            android:id="@+id/airedTab"
+            android:text="@string/schedule_aired"
             style="@style/TabButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <ImageView
-            android:id="@+id/nextTabIndicator"
-            android:contentDescription="@string/next"
+            android:id="@+id/airedTabIndicator"
+            android:contentDescription="@string/schedule_aired"
             android:background="@color/dark_red"
             android:visibility="invisible"
             android:layout_width="match_parent"
@@ -58,21 +58,21 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/upcomingTabContainer"
+        android:id="@+id/unairedTabContainer"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.3">
 
         <Button
-            android:id="@+id/upcomingTab"
-            android:text="@string/upcoming"
+            android:id="@+id/unairedTab"
+            android:text="@string/schedule_unaired"
             style="@style/TabButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <ImageView
-            android:id="@+id/upcomingTabIndicator"
-            android:contentDescription="@string/upcoming"
+            android:id="@+id/unairedTabIndicator"
+            android:contentDescription="@string/schedule_unaired"
             android:background="@color/dark_red"
             android:visibility="invisible"
             android:layout_width="match_parent"

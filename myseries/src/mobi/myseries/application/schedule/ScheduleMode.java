@@ -40,9 +40,9 @@ import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 
 public abstract class ScheduleMode implements Publisher<ScheduleListener>, SeriesFollowingListener, UpdateFinishListener {
-    public static final int RECENT = 0;
-    public static final int NEXT = 1;
-    public static final int UPCOMING = 2;
+    public static final int TO_WATCH = 0;
+    public static final int AIRED = 1;
+    public static final int UNAIRED = 2;
 
     protected ScheduleSpecification specification;
     protected List<Episode> episodes;

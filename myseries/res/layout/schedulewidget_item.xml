@@ -27,7 +27,6 @@
     <TextView
         android:id="@+id/episodeNumber"
         style="@style/TextView.Small.TranslucentWhite.Ellipsized"
-        android:fontFamily="sans-serif-light"
         android:paddingLeft="@dimen/schedulewidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +36,6 @@
     <TextView
         android:id="@+id/episodeAirDate"
         style="@style/TextView.Small.Yellow"
-        android:fontFamily="sans-serif-light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/episodeNumber"
@@ -46,7 +44,6 @@
     <TextView
         android:id="@+id/airtimeAndNetwork"
         style="@style/TextView.Small.LightGray.Ellipsized"
-        android:fontFamily="sans-serif-light"
         android:paddingLeft="@dimen/schedulewidget_item_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

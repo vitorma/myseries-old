@@ -2,6 +2,10 @@
 
 <resources>
 
+    <!-- My Statistics -->
+
+    <dimen name="mystatistics_side_padding">120dp</dimen>
+
     <!-- My Series -->
 
     <dimen name="myseries_poster_width">170dp</dimen>

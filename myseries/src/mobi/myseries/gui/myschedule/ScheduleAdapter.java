@@ -193,14 +193,14 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     private void setUpData() {
         switch(this.scheduleMode) {
-            case ScheduleMode.RECENT:
-                this.items = App.schedule().modeRecent(this.preferences.fullSpecification());
+            case ScheduleMode.AIRED:
+                this.items = App.schedule().aired(this.preferences.fullSpecification());
                 break;
-            case ScheduleMode.NEXT:
-                this.items = App.schedule().modeNext(this.preferences.fullSpecification());
+            case ScheduleMode.TO_WATCH:
+                this.items = App.schedule().toWatch(this.preferences.fullSpecification());
                 break;
-            case ScheduleMode.UPCOMING:
-                this.items = App.schedule().modeUpcoming(this.preferences.fullSpecification());
+            case ScheduleMode.UNAIRED:
+                this.items = App.schedule().unaired(this.preferences.fullSpecification());
                 break;
         }
 

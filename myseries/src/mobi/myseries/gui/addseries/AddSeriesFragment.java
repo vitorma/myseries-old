@@ -8,7 +8,6 @@ import mobi.myseries.application.search.SeriesSearchListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.DialogButtonOnClickListener;
-import mobi.myseries.gui.shared.FailureDialogBuilder;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -26,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 public abstract class AddSeriesFragment extends Fragment {
     protected EditText searchField;
@@ -224,11 +224,9 @@ public abstract class AddSeriesFragment extends Fragment {
         Dialog dialog;
 
         if (App.followSeriesService().follows(seriesToAdd)) {
-            String messageFormat = this.getString(R.string.add_already_followed_series_message);
+            String message = App.resources().getString(R.string.add_already_followed_series_message, seriesToAdd.name());
 
-            dialog = new FailureDialogBuilder(this.getActivity())
-                .setMessage(String.format(messageFormat, seriesToAdd.name()))
-                .build();
+            Toast.makeText(App.context(), message, Toast.LENGTH_SHORT).show();
         } else {
             dialog = new ConfirmationDialogBuilder(this.getActivity())
                 .setTitle(seriesToAdd.name())
@@ -237,9 +235,9 @@ public abstract class AddSeriesFragment extends Fragment {
                 .setPositiveButton(R.string.add, this.addButtonOnClickListener(seriesToAdd))
                 .setNegativeButton(R.string.dont_add, null)
                 .build();
-        }
 
-        this.activity().showDialog(dialog);
+            this.activity().showDialog(dialog);
+        }
     }
 
     private DialogButtonOnClickListener addButtonOnClickListener(final Series seriesToAdd) {

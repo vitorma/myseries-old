@@ -1,58 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="#eeeeee"
+    android:background="@drawable/card_background"
     android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <FrameLayout
-        android:background="@drawable/card"
-        android:gravity="center"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/seriesPoster"
+        android:contentDescription="@string/description_poster"
+        android:scaleType="fitXY"
+        android:layout_width="@dimen/myseries_poster_width"
+        android:layout_height="@dimen/myseries_poster_height"
+        android:layout_alignParentTop="true"/>
 
-        <RelativeLayout
-            android:background="@drawable/list_selector_holo_light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <ImageButton
+        android:id="@+id/addButton"
+        android:src="@drawable/ic_action_add_inverse"
+        android:background="@drawable/item_background_holo_light"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_width="@dimen/toucharea_minimum_side"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/seriesPoster"/>
 
-            <ImageView
-                android:id="@+id/seriesPoster"
-                android:contentDescription="@string/description_poster"
-                android:src="@drawable/generic_poster"
-                android:scaleType="fitXY"
-                android:layout_height="55.4dp"
-                android:layout_width="300dp"
-                android:layout_alignParentTop="true"/>
+    <TextView
+        android:id="@+id/itemName"
+        style="@style/TextView.Medium.DarkGray.Ellipsized"
+        android:textStyle="bold"
+        android:singleLine="false"
+        android:maxLines="2"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_below="@id/seriesPoster"
+        android:layout_toLeftOf="@id/addButton"/>
 
-            <ImageButton
-                android:id="@+id/addButton"
-                android:src="@drawable/ic_action_add_inverse"
-                android:background="@drawable/item_background_holo_light"
-                android:layout_height="@dimen/toucharea_minimum_side"
-                android:layout_width="@dimen/toucharea_minimum_side"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/seriesPoster"/>
-
-            <TextView
-                android:id="@+id/itemName"
-                style="@style/TextView.Medium.MediumGray.Ellipsized"
-                android:gravity="center_vertical"
-                android:padding="@dimen/gap_medium"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toucharea_minimum_side"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/seriesPoster"
-                android:layout_toLeftOf="@id/addButton"/>
-
-        </RelativeLayout>
-
-    </FrameLayout>
-
-</LinearLayout>
+</RelativeLayout>

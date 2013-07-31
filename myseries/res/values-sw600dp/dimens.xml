@@ -14,6 +14,10 @@
     <dimen name="myseries_poster_height">276dp</dimen>
     <dimen name="myseries_grid_gap">9dp</dimen>
 
+    <!-- My Statistics -->
+
+    <dimen name="mystatistics_side_padding">60dp</dimen>
+
     <!-- Episodes -->
 
     <dimen name="fragment_episodes_master_width">248dp</dimen>

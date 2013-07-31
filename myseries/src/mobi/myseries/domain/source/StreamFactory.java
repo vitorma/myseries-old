@@ -30,12 +30,15 @@ public interface StreamFactory {
     public InputStream streamForSeriesSearch(String seriesName, Language language)
             throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
 
-    public InputStream streamForUpdatesSince(long dateInMiliseconds) 
+    public InputStream streamForUpdatesSince(long dateInMiliseconds)
             throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
 
     public InputStream streamForSeriesPoster(String fileName)
             throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
 
     public InputStream streamForEpisodeImage(String fileName)
+            throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
+
+    public InputStream streamForSeriesBanners(int seriesId)
             throws StreamCreationFailedException, ConnectionFailedException, ConnectionTimeoutException;
 }

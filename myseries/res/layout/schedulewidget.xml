@@ -23,8 +23,8 @@
 
     <TextView
         android:id="@+id/emptyView"
-        android:text="@string/no_episodes_to_see"
-        style="@style/TextView.Medium.TranslucentWhite"
+        android:text="@string/no_episodes_to_show"
+        style="@style/TextView.Large.White"
         android:fontFamily="sans-serif-light"
         android:gravity="center"
         android:minHeight="@dimen/schedulewidget_item_height"
