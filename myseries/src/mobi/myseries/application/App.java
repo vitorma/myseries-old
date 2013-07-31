@@ -98,7 +98,7 @@ public class App extends Application {
 
         messageService = new MessageService(followSeriesService, updateService, backupService);
 
-        notificationService = new NotificationService(this, updateService);
+        notificationService = new NotificationService(this, updateService, backupService);
 
         seriesProvider = new SeriesProvider(environment.seriesRepository(), broadcastService);
 
@@ -107,6 +107,11 @@ public class App extends Application {
 
     public static Context context() {
         return environment.context();
+    }
+
+    public static String getApplicationName() {
+        int stringId = context().getApplicationInfo().labelRes;
+        return context().getString(stringId);
     }
 
     public static Resources resources() {

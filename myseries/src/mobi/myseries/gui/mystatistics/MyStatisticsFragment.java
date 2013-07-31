@@ -6,6 +6,7 @@ import java.util.Date;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
+import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.preferences.MyStatisticsPreferences;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
@@ -108,7 +109,7 @@ public class MyStatisticsFragment extends Fragment {
     private void setupBackupListener() {
         this.backupListener = new BackupListener() {
             @Override
-            public void onBackupFailure(Exception e) {
+            public void onBackupFailure(BackupMode mode, Exception e) {
                 // I'm not interested }
             }
 
@@ -118,7 +119,7 @@ public class MyStatisticsFragment extends Fragment {
             }
 
             @Override
-            public void onRestoreFailure(Exception e) {
+            public void onRestoreFailure(BackupMode mode, Exception e) {
                 MyStatisticsFragment.this.update();
             }
 
@@ -131,6 +132,29 @@ public class MyStatisticsFragment extends Fragment {
             public void onStart() {
                 // I'm not interested
             }
+
+            @Override
+            public void onBackupCompleted(BackupMode mode) {
+                // I'm not interested
+            }
+
+            @Override
+            public void onBackupRunning(BackupMode mode) {
+                // I'm not interested
+            }
+
+            @Override
+            public void onRestoreRunning(BackupMode mode) {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void onRestoreCompleted(BackupMode mode) {
+                MyStatisticsFragment.this.update();
+                
+            }
+
         };
 
         App.backupService().register(this.backupListener);

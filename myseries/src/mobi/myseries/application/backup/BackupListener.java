@@ -4,12 +4,20 @@ public interface BackupListener {
 
     public void onBackupSucess();
 
-    public void onBackupFailure(Exception e);
+    public void onBackupFailure(BackupMode mode, Exception e);
 
     public void onRestoreSucess();
 
-    public void onRestoreFailure(Exception e);
+    public void onRestoreFailure(BackupMode mode, Exception e);
 
     public void onStart();
+
+    public void onBackupCompleted(BackupMode mode);
+
+    public void onBackupRunning(BackupMode mode);
+
+    public void onRestoreRunning(BackupMode mode);
+
+    public void onRestoreCompleted(BackupMode mode);
 
 }

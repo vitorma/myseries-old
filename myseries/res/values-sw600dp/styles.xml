@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Series - DETAILS -->
+
+    <style name="SeriesDetails_Div1">
+        <item name="android:layout_below">@id/genreTextView</item>
+    </style>
+
+    <style name="SeriesDetails_PosterColumn">
+        <item name="android:visibility">visible</item>
+    </style>
+
+</resources>

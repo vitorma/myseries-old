@@ -8,6 +8,7 @@ import mobi.myseries.application.backup.DriveBackup;
 import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.backup.SdcardBackup;
+import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.gui.backup.BackupFragment.CloudBackupType;
 
 import com.dropbox.client2.android.AndroidAuthSession;
@@ -76,6 +77,8 @@ public class RestoreFragment extends Fragment {
             boolean resumeSucess = dropboxHelper.onResume();
             if(resumeSucess) {
                 pendingRestore = null;
+                backupService.addToqueue(new DropboxBackup());
+                backupService.performBackup();
                 performDropboxRestore();
             }
         }
@@ -149,12 +152,12 @@ public class RestoreFragment extends Fragment {
     private void setupRestoreListener() {
         this.restoreListener = new BackupServiceListener() {
             @Override
-            public void onRestoreFailure(Exception e) {
-                super.onRestoreFailure(e);
-                if (e instanceof UserRecoverableAuthIOException) {
-                    requesUserPermissionToDrive(e);
-                }
-                else if(e instanceof DropboxUnlinkedException) {
+            public void onRestoreFailure(BackupMode mode, Exception e) {
+                super.onRestoreFailure(mode, e);
+                if (e instanceof GoogleDriveException 
+                    && (e.getCause() instanceof UserRecoverableAuthIOException)) {
+                    requesUserPermissionToDrive((UserRecoverableAuthIOException) e.getCause());
+                } else if (e instanceof DropboxUnlinkedException) {
                     linkDropboxAccount();
                 }
             }
@@ -167,7 +170,7 @@ public class RestoreFragment extends Fragment {
     }
     
     private void performRestore(final BackupMode backupMode){
-                backupService.restoreBackup(backupMode);
+                backupService.performRestore(backupMode);
     }
 
     private void performGoogleDriveRestore() {

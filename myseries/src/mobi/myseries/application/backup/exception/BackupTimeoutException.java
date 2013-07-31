@@ -1,4 +1,4 @@
-package mobi.myseries.application.backup;
+package mobi.myseries.application.backup.exception;
 
 import java.util.concurrent.TimeoutException;
 
