@@ -115,7 +115,7 @@ public class BackupActivity extends TabActivity{
             }
 
             @Override
-            public void onBackupFailure(Exception e) {
+            public void onBackupFailure(BackupMode mode, Exception e) {
                 if (e instanceof UserRecoverableAuthIOException) {
                     BackupActivity.this.startActivityForResult(
                             ((UserRecoverableAuthIOException) e).getIntent(),
@@ -134,7 +134,7 @@ public class BackupActivity extends TabActivity{
             }
 
             @Override
-            public void onRestoreFailure(Exception e) {
+            public void onRestoreFailure(BackupMode mode,Exception e) {
                 if (e instanceof UserRecoverableAuthIOException) {
                     BackupActivity.this.requestDropboxUserPermission(e);
                 } else if (e instanceof DropboxUnlinkedException) {
@@ -144,6 +144,31 @@ public class BackupActivity extends TabActivity{
 
             @Override
             public void onStart() {}
+
+            @Override
+            public void onBackupCompleted(BackupMode mode) {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void onBackupRunning(BackupMode mode) {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void onRestoreRunning(BackupMode mode) {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void onRestoreCompleted(BackupMode mode) {
+                // TODO Auto-generated method stub
+                
+            }
+
         };
         App.backupService().register(this.backupListener);
     }
