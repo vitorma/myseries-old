@@ -64,6 +64,12 @@ public class MySeriesFragment extends Fragment {
         this.adapter.deregister(this.adapterListener);
         App.preferences().forActivities().register(this.preferencesListener);
     }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        MySeriesFragment.this.adapter.reload();
+    }
 
     private void prepareViews() {
         this.showsGrid = (GridView) this.getActivity().findViewById(R.id.showsGrid);

@@ -2,16 +2,22 @@ package mobi.myseries.application.backup;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+
+import mobi.myseries.domain.source.ConnectionFailedException;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.DropboxAPI.DropboxFileInfo;
 import com.dropbox.client2.DropboxAPI.UploadRequest;
 import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.TokenPair;
@@ -83,7 +89,9 @@ public class DropboxHelper {
         edit.commit();
     }
 
-    public void uploadFile(File file, String destinationPath) throws Exception {
+    public void uploadFile(File file, String destinationPath) throws FileNotFoundException, DropboxException, ConnectionFailedException  {
+        if(!isOnline())
+            throw new ConnectionFailedException();
         FileInputStream inputStream = new FileInputStream(file);
         UploadRequest request = api.putFileOverwriteRequest(destinationPath, inputStream,
                 file.length(), null);
@@ -94,7 +102,9 @@ public class DropboxHelper {
         return this.api;
     }
 
-    public File downloadFile(String sourceFilename, File destinationFile ) throws Exception {
+    public File downloadFile(String sourceFilename, File destinationFile ) throws FileNotFoundException, DropboxException, ConnectionFailedException {
+        if(!isOnline())
+            throw new ConnectionFailedException();
         FileOutputStream outputStream = new FileOutputStream(destinationFile);
         DropboxFileInfo info = api.getFile(sourceFilename, null,
                 outputStream, null);
@@ -113,6 +123,16 @@ public class DropboxHelper {
             session.finishAuthentication();
             TokenPair tokens = session.getAccessTokenPair();
             this.storeKeys(tokens.key, tokens.secret);
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean isOnline() {
+        ConnectivityManager cm =
+            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;
         }
         return false;

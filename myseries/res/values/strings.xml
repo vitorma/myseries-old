@@ -236,6 +236,51 @@
     <string name="sd_card_location">Backup folder location</string>
     <string name="dropbox">Dropbox</string>
 
+        <!-- Backup  Messages -->
+
+    <string name="backup_network_unavailable">No Internet connection available.</string>
+    <string name="backup_connection_failed">Could not connect to internet.</string>
+    <string name="backup_connection_timeout">Could not connect to internet.</string>
+    <string name="backup_timeout">Backup time limit exceeded.</string>
+    
+    <string name="backing_up_your_series_and_preferences_message">Backing up your series and preferences</string>
+    <string name="backup_progress_message">Backing up to \"%s\"…</string>
+    <string name="backup_success_message">Backup to \"%s\" succeeded.</string>
+
+    <string name="backup_failed_with_cause">Backup failed: %s</string>
+    <string name="backup_failed_without_cause">Backup failed.</string>
+    <string name="backup_service_failed_with_cause">Failed backup to \"%1$s\": %2$s</string>
+    <string name="backup_service_failed_without_cause">Failed backup to \"%s\".</string>
+    
+    <string name="backup_sdcard_not_available">Your SD card is unavailable.</string>
+    <string name="backup_dropbox_full">Your Dropbox is full.</string>
+    <string name="backup_dropbox_error">Something is wrong with Dropbox.</string>
+    <string name="backup_google_drive_cannot_create_file">Cannot create the backup file in Google Drive.</string>
+    <string name="backup_google_drive_upload_error">An error occurred while uploading the file to Google Drive.</string>
+    <string name="backup_google_drive_error">Something is wrong with Google Drive.</string>
+    
+            <!-- Restore  Messages -->
+
+    <string name="restore_network_unavailable">No Internet connection available.</string>
+    <string name="restore_connection_failed">Could not connect to internet.</string>
+    <string name="restore_connection_timeout">Could not connect to internet.</string>
+    <string name="restore_timeout">Restore time limit exceeded.</string>
+    
+    <string name="restore_your_series_and_preferences_message">Restoring your series and preferences</string>
+    <string name="restore_progress_message">Restoring from \"%s\"…</string>
+    <string name="restore_success_message">Restore from \"%s\" succeeded.</string>
+
+    <string name="restore_failed_with_cause">Restore failed: %s</string>
+    <string name="restore_failed_without_cause">Restore failed.</string>
+    <string name="Restore_service_failed_with_cause">Failed restore from \"%1$s\": %2$s</string>
+    <string name="restore_service_failed_without_cause">Failed restore from \"%s\".</string>
+    
+    <string name="restore_sdcard_not_available">Your SD card is unavailable.</string>
+    <string name="restore_dropbox_error">Something is wrong with Dropbox.</string>
+    <string name="restore_google_drive_file_not_found">Backup files were not found in Google Drive.</string>
+    <string name="restore_google_drive_download_error">An error occurred while downloading the file from Google Drive.</string>
+    <string name="restore_google_drive_error">Something is wrong with Google Drive.</string>
+
     <!-- Menu -->
     <string name="menu_add">ADD SERIES</string>
     <string name="menu_remove">REMOVE SERIES</string>

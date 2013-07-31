@@ -1,7 +1,10 @@
 package mobi.myseries.application.backup;
 
 import java.io.File;
+import java.io.IOException;
+
 import android.os.Environment;
+import mobi.myseries.application.backup.exception.ExternalStorageNotAvailableException;
 import mobi.myseries.shared.FilesUtil;
 
 public class SdcardBackup implements BackupMode {
@@ -34,12 +37,17 @@ public class SdcardBackup implements BackupMode {
     }
 
     @Override
-    public void downloadBackupToFile(File backup) throws Exception {
+    public void downloadBackupToFile(File backup) throws IOException, ExternalStorageNotAvailableException {
         FilesUtil.copy(new File(backupFilePath(backup.getName())), backup);
     }
 
     @Override
-    public void backupDB(File backup) throws Exception {
+    public void backupDB(File backup) throws IOException, ExternalStorageNotAvailableException {
         FilesUtil.copy(backup, new File(backupFilePath(backup.getName())));
+    }
+
+    @Override
+    public String name() {
+        return "SD card";
     }
 }

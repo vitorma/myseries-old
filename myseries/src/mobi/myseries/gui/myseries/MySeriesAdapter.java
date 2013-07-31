@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
+import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.follow.SeriesFollowingListener;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
@@ -240,18 +241,36 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         public void onBackupSucess() {}
 
         @Override
-        public void onBackupFailure(Exception e) {}
-
-        @Override
         public void onRestoreSucess() {
             MySeriesAdapter.this.reload();
         }
 
         @Override
-        public void onRestoreFailure(Exception e) {}
+        public void onRestoreFailure(BackupMode mode, Exception e) {}
 
         @Override
         public void onStart() {}
+
+        @Override
+        public void onBackupFailure(BackupMode mode, Exception e) {}
+
+        @Override
+        public void onBackupCompleted(BackupMode mode) {}
+
+        @Override
+        public void onBackupRunning(BackupMode mode) {}
+
+        @Override
+        public void onRestoreRunning(BackupMode mode) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        @Override
+        public void onRestoreCompleted(BackupMode mode) {
+            MySeriesAdapter.this.reload();
+        }
+
     };
 
     /* MySeriesAdapter.Listener */
