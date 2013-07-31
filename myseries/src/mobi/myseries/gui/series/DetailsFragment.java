@@ -74,19 +74,44 @@ public class DetailsFragment extends Fragment {
         Series series = SERIES_PROVIDER.getSeries(this.seriesId);
 
         seriesName.setText(series.name());
-        seriesStatus.setText(LocalText.of(series.status(), ""));
+        seriesStatus.setText(LocalText.of(series.status(), this.getString(R.string.unavailable_status)));
 
         String airDay = DatesAndTimes.toString(series.airDay(), Locale.getDefault(), "");
         String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(App.context()), "");
         String network = series.network();
         String airInfo = Strings.concat(airDay, airtime, ", ");
         airInfo = Strings.concat(airInfo, network, " - ");
-        seriesAirDays.setText(airInfo);
-        seriesRuntime.setText(String.format(this.getString(R.string.runtime_minutes_format), series.runtime()));
+        String unavailableInfo = this.getString(R.string.unavailable_air_info);
+
+        seriesAirDays.setText(airInfo.isEmpty() ? unavailableInfo : airInfo);
+
+        String runtime = series.runtime().isEmpty() ?
+                this.getString(R.string.unavailable_runtime) :
+                String.format(this.getString(R.string.runtime_minutes_format), series.runtime());
+
+        seriesRuntime.setText(runtime);
 
         seriesGenre.setText(series.genres());
-        seriesActors.setText(series.actors());
-        seriesOverview.setText(series.overview());
+
+        TextView overviewLabel = (TextView) this.getActivity().findViewById(R.id.overviewLabel);
+        if (series.overview().isEmpty()) {
+            overviewLabel.setVisibility(View.GONE);
+            seriesOverview.setVisibility(View.GONE);
+        } else {
+            overviewLabel.setVisibility(View.VISIBLE);
+            seriesOverview.setVisibility(View.VISIBLE);
+            seriesOverview.setText(series.overview());
+        }
+
+        TextView actorsLabel = (TextView) this.getActivity().findViewById(R.id.actorsLabel);
+        if (series.actors().isEmpty()) {
+            actorsLabel.setVisibility(View.GONE);
+            seriesActors.setVisibility(View.GONE);
+        } else {
+            actorsLabel.setVisibility(View.VISIBLE);
+            seriesActors.setVisibility(View.VISIBLE);
+            seriesActors.setText(series.actors());
+        }
 
         Bitmap poster = IMAGE_SERVICE.getPosterOf(series);
         Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());

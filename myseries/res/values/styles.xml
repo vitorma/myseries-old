@@ -306,4 +306,14 @@
         <item name="android:padding">@dimen/gap_medium</item>
     </style>
 
+    <!-- Series - DETAILS -->
+
+    <style name="SeriesDetails_Div1">
+        <item name="android:layout_below">@id/seriesPosterImageView</item>
+    </style>
+
+    <style name="SeriesDetails_PosterColumn">
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>
