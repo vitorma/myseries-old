@@ -155,10 +155,13 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
             return;
         }
 
-        boolean updateRanRecently = timeSince(earliestUpdatedDateOf(followedSeries())) < UpdatePolicy.automaticUpdateInterval();
+        Collection<Series> followedSeries = followedSeries();
+        boolean thereMayBeSomethingToUpdate = !followedSeries.isEmpty();
+        boolean updateRanRecently = thereMayBeSomethingToUpdate &&
+                timeSince(earliestUpdatedDateOf(followedSeries)) < UpdatePolicy.automaticUpdateInterval();
         boolean thereAreSeriesWhosePostersAreNotDownloaded = thereAreSeriesWhosePostersAreNotDownloaded();
 
-        if (updateRanRecently && !thereAreSeriesWhosePostersAreNotDownloaded) {
+        if (!thereMayBeSomethingToUpdate || (updateRanRecently && !thereAreSeriesWhosePostersAreNotDownloaded)) {
             Log.d(getClass().getName(), "Update ran recently. Not running now.");
             this.isUpdating.set(false);
             return;
