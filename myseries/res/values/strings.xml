@@ -213,6 +213,8 @@
     <string name="backup_restore">Backup/Restore</string>
     <string name="backup_description"><b>Backup</b> makes a copy of your actual following series to backup folder. \nTo <b>Restore</b> your series data, make sure that theres a valid backup file in backup folder.</string>
     <string name="backup_folder_file_path">Backup Folder: <b>%s</b></string>
+    <string name="backup_button">Backup</string>
+    <string name="restore_button">Restore</string>
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>
     <string name="overwrite_backup">This operation will overwrite your actual backup.</string>
