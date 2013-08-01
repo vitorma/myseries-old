@@ -128,7 +128,8 @@
 
     </ScrollView>
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toucharea_minimum_side"
         android:layout_gravity="bottom">
@@ -136,8 +137,7 @@
         <View
             android:background="@drawable/list_divider_holo_light"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_alignParentTop="true"/>
+            android:layout_height="0.5dp"/>
 
         <Button
             android:id="@+id/updateButton"
@@ -146,6 +146,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/toucharea_minimum_side"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
