@@ -86,7 +86,7 @@ public class EpisodesActivity extends BaseActivity
 
     @Override
     protected Intent navigateUpIntent() {
-        return SeriesActivity.newIntent(this, series.id());
+        return SeriesActivity.newIntent(this, series.id()).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
 
     @Override

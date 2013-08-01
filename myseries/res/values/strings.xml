@@ -285,9 +285,9 @@
     <!-- Menu -->
     <string name="menu_add">ADD SERIES</string>
     <string name="menu_remove">REMOVE SERIES</string>
-    <string name="menu_update">UPDATE</string>
+    <string name="menu_update">UPDATES</string>
     <string name="menu_settings">SETTINGS</string>
-    <string name="menu_backup_restore">BACKUP / RESTORE</string>
+    <string name="menu_backup_restore">BACKUP/RESTORE</string>
     <string name="menu_schedule">SCHEDULE</string>
     <string name="menu_help">HELP</string>
     <string name="action_sort">SORT</string>
