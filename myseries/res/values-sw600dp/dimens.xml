@@ -18,6 +18,13 @@
 
     <dimen name="mystatistics_side_padding">60dp</dimen>
 
+    <!-- Series - DETAILS -->
+
+    <dimen name="series_details_gap">24dp</dimen>
+    <dimen name="series_details_conditional_gap">@dimen/series_details_gap</dimen>
+    <dimen name="series_details_poster_width">300dp</dimen>
+    <dimen name="series_details_poster_height">441dp</dimen>
+
     <!-- Episodes -->
 
     <dimen name="fragment_episodes_master_width">248dp</dimen>

@@ -16,6 +16,9 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="unavailable_date">UNAVAILABLE DATE</string>
+    <string name="unavailable_status">UNAVAILABLE STATUS</string>
+    <string name="unavailable_air_info">UNAVAILABLE AIR INFORMATION</string>
+    <string name="unavailable_runtime">UNAVAILABLE RUNTIME</string>
     <string name="page_info_format" formatted="false">Page %d of %d</string>
     <string name="episodes">episodes</string>
     <string name="hideSpecialEpisodes">Hide special episodes</string>

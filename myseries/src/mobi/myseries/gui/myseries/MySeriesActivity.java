@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -59,6 +60,11 @@ public class MySeriesActivity extends BaseActivity {
     @Override
     protected boolean isTopLevel() {
         return true;
+    }
+
+    @Override
+    protected Intent navigateUpIntent() {
+        return NavUtils.getParentActivityIntent(this);
     }
 
     @Override
