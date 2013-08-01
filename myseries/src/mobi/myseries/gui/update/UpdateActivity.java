@@ -240,11 +240,18 @@ public class UpdateActivity extends Activity {
     };
 
     private void refreshLatestSuccessfulUpdateTextView() {
-        Date latestSuccessfulUpdate = new Date(App.updateSeriesService().latestSuccessfulUpdate());
+        Long latestSuccessfulUpdateLong = App.updateSeriesService().latestSuccessfulUpdate();
 
-        String date = DateFormat.getDateFormat(this).format(latestSuccessfulUpdate);
-        String time = DateFormat.getTimeFormat(this).format(latestSuccessfulUpdate);
+        if (latestSuccessfulUpdateLong == null) {
+            this.latestSuccessfulUpdateTextView.setVisibility(View.INVISIBLE);
+        } else {                
+            Date latestSuccessfulUpdate = new Date(latestSuccessfulUpdateLong);
 
-        this.latestSuccessfulUpdateTextView.setText(this.getString(R.string.latest_successful_update, date, time));
+            String date = DateFormat.getDateFormat(this).format(latestSuccessfulUpdate);
+            String time = DateFormat.getTimeFormat(this).format(latestSuccessfulUpdate);
+
+            this.latestSuccessfulUpdateTextView.setText(this.getString(R.string.latest_successful_update, date, time));
+            this.latestSuccessfulUpdateTextView.setVisibility(View.VISIBLE);
+        }
     }
 }

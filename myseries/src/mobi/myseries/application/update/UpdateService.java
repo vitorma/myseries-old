@@ -102,8 +102,14 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
     // Update methods
 
-    public long latestSuccessfulUpdate() {
-        return earliestUpdatedDateOf(followedSeries());
+    public Long latestSuccessfulUpdate() {
+        Collection<Series> followedSeries = followedSeries();
+
+        if (followedSeries.isEmpty()) {
+            return null;
+        } else {
+            return earliestUpdatedDateOf(followedSeries);
+        }
     }
 
     public boolean isUpdating() {
