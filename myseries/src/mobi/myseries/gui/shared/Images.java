@@ -38,7 +38,7 @@ public abstract class Images {
     }
 
     public static Bitmap genericEpisodeImageFrom(Resources resources) {
-        return bitmapFrom(resources, R.drawable.clapperboard);
+        return bitmapFrom(resources, R.drawable.generic_episode_image);
     }
 
     private static Bitmap bitmapFrom(Resources resources, int resourceId) {
