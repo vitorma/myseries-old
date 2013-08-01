@@ -90,9 +90,9 @@
 
     <!-- SideMenu -->
 
-    <string name="nav_shows">Shows</string>
-    <string name="nav_schedule">Schedule</string>
-    <string name="nav_statistics">Statistics</string>
+    <string name="nav_shows">My Series</string>
+    <string name="nav_schedule">My Schedule</string>
+    <string name="nav_statistics">My Statistics</string>
 
     <string-array name="sidemenu_items_array">
         <item>@string/nav_shows</item>

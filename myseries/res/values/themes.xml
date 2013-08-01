@@ -7,6 +7,7 @@
         <item name="android:listViewStyle">@style/ListView</item>
         <item name="android:scrollViewStyle">@style/ScrollView</item>
         <item name="android:actionBarSize">@dimen/ab_height</item>
+        <item name="android:actionBarStyle">@style/ActionBar</item>
     </style>
 
     <style name="MySeriesTheme.Dialog">

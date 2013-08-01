@@ -282,6 +282,15 @@
         <item name="android:fastScrollEnabled">true</item>
     </style>
 
+    <!-- ActionBar -->
+    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:titleTextStyle">@style/ActionBar.Text</item>
+    </style>
+
+    <style name="ActionBar.Text" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
     <!-- ActionBarSpinner -->
 
     <style name="ActionBarSpinner" parent="TextView"/>
@@ -291,6 +300,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="ActionBarSpinner.Subtitle">
