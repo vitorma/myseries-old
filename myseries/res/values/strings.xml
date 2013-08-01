@@ -201,17 +201,16 @@
     <string name="latest_successful_update">Latest successful update on %1$s at %2$s</string>
 
     <string name="update_status">UPDATE STATUS</string>
-    <string name="update_not_running">Update not running.</string>
-    <string name="update_data_manually">UPDATE DATA MANUALLY</string>
+    <string name="update_not_running">Not running.</string>
     <string name="update_now">Update now</string>
-    <string name="update_data_automatically">UPDATE DATA AUTOMATICALLY</string>
-    <string name="update_on_wifi">Only if a wifi connection is available</string>
+    <string name="update_data_automatically">RUN AUTOMATIC UPDATES…</string>
+    <string name="update_on_wifi">Only when connected to Wi-Fi</string>
     <string name="update_on_wifi_or_data_plan">When any connection is available</string>
-    <string name="do_not_update">Do not update (not recommended)</string>
-    <string name="backup_restore">Backup/Restore</string>
+    <string name="do_not_update">Never (not recommended)</string>
 
     <!-- Backup -->
-
+    
+    <string name="backup_restore">Backup/Restore</string>
     <string name="backup_description"><b>Backup</b> makes a copy of your actual following series to backup folder. \nTo <b>Restore</b> your series data, make sure that theres a valid backup file in backup folder.</string>
     <string name="backup_folder_file_path">Backup Folder: <b>%s</b></string>
     <string name="backup">Backup</string>
