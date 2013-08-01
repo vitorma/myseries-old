@@ -1,6 +1,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item"
     style="@style/TextView.XLarge"
+    android:fontFamily="sans-serif-light"
     android:gravity="center_vertical"
     android:paddingLeft="0dp"
     android:paddingRight="56dp"
