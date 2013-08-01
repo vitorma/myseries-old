@@ -6,8 +6,7 @@
     <string name="loading">Loading…</string>
     <string name="widget_preferences">Widget Preferences</string>
     <string name="sort_episodes_by_upper">SORT EPISODES BY…</string>
-    <string name="special_episodes_upper">SPECIAL EPISODES</string>
-    <string name="watched_episodes_upper">WATCHED EPISODES</string>
+    <string name="episodes_to_show_upper">EPISODES TO SHOW</string>
     <string name="series_to_show_upper">SERIES TO SHOW</string>
 
     <string name="sort_by_format" formatted="false">Sort %s by…</string>

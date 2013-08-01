@@ -1,5 +1,6 @@
 package mobi.myseries.gui.appwidget;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -125,7 +126,10 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
         LinearLayout seriesToShowPanel = (LinearLayout) this.findViewById(R.id.seriesToShowPanel);
         this.seriesToShow = new HashMap<Series, CheckedTextView>();
 
-        for (Series s : App.seriesProvider().followedSeries()) {
+        Collection<Series> followedSeries = App.seriesProvider().followedSeries();
+        int counter = 0;
+
+        for (Series s : followedSeries) {
             View v = inflater.inflate(R.layout.schedulewidget_preferences_filter_option, null);
             final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.seriesCheck);
 
@@ -137,6 +141,13 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
                     seriesCheck.toggle();
                 }
             });
+
+            View divider = v.findViewById(R.id.divider);
+
+            counter++;
+            if (counter == followedSeries.size()) {
+                divider.setVisibility(View.INVISIBLE);
+            }
 
             seriesToShowPanel.addView(v);
             this.seriesToShow.put(s, seriesCheck);

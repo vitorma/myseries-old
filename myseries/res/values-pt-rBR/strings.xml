@@ -6,8 +6,7 @@
     <string name="loading">Carregando…</string>
     <string name="widget_preferences">Preferências do Widget</string>
     <string name="sort_episodes_by_upper">ORDENAR EPISÓDIOS POR…</string>
-    <string name="special_episodes_upper">EPISÓDIOS ESPECIAIS</string>
-    <string name="watched_episodes_upper">EPISÓDIOS ASSISTIDOS</string>
+    <string name="episodes_to_show_upper">MOSTRAR EPISÓDIOS</string>
     <string name="series_to_show_upper">MOSTRAR SÉRIES</string>
 
     <string name="sort_by_format" formatted="false">Ordenar %s por…</string>

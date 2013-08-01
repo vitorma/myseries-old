@@ -3,6 +3,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,17 +25,17 @@
             <TextView
                 android:id="@+id/sortMode"
                 android:text="@string/sort_episodes_by_upper"
-                style="@style/TextView.Medium.MediumGray.Bold"
-                android:gravity="bottom|left"
+                style="@style/TextView.Medium.Blue.Bold"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <View
-                android:background="@drawable/list_divider_holo_light"
+                android:background="@color/blue"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"/>
+                android:layout_height="1.5dp"
+                android:layout_marginTop="2dp"/>
 
             <RadioGroup
                 android:id="@+id/sortModeRadioGroup"
@@ -68,26 +69,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/toucharea_minimum_side"/>
 
-                <View
-                    android:background="@drawable/list_divider_holo_light"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"/>
-
             </RadioGroup>
 
             <TextView
-                android:text="@string/special_episodes_upper"
-                style="@style/TextView.Medium.MediumGray.Bold"
-                android:gravity="bottom|left"
+                android:text="@string/episodes_to_show_upper"
+                style="@style/TextView.Medium.Blue.Bold"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_large"/>
 
             <View
-                android:background="@drawable/list_divider_holo_light"
+                android:background="@color/blue"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"/>
+                android:layout_height="1.5dp"
+                android:layout_marginTop="2dp"/>
 
             <CheckedTextView
                 android:id="@+id/showSpecialEpisodes"
@@ -107,20 +104,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"/>
 
-            <TextView
-                android:text="@string/watched_episodes_upper"
-                style="@style/TextView.Medium.MediumGray.Bold"
-                android:gravity="bottom|left"
-                android:paddingLeft="@dimen/gap_medium"
-                android:paddingRight="@dimen/gap_medium"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <View
-                android:background="@drawable/list_divider_holo_light"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"/>
-
             <CheckedTextView
                 android:id="@+id/showSeenEpisodes"
                 android:text="@string/show_watched_episodes"
@@ -134,24 +117,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
 
-            <View
-                android:background="@drawable/list_divider_holo_light"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"/>
-
             <TextView
                 android:text="@string/series_to_show_upper"
-                style="@style/TextView.Medium.MediumGray.Bold"
-                android:gravity="bottom|left"
+                style="@style/TextView.Medium.Blue.Bold"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_large"/>
 
             <View
-                android:background="@drawable/list_divider_holo_light"
+                android:background="@color/dark_blue"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"/>
+                android:layout_height="1.5dp"
+                android:layout_marginTop="2dp"/>
 
             <LinearLayout
                 android:id="@+id/seriesToShowPanel"
