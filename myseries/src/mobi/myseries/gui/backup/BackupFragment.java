@@ -285,6 +285,7 @@ public class BackupFragment extends Fragment {
             backupProgressBar.setIndeterminate(false);
             backupProgressBar.setMax(0);
             backupProgressBar.setProgress(0);
+            backupStatusTextView.setText("");
         }
 
         @Override

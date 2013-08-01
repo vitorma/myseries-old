@@ -237,6 +237,7 @@ public class RestoreFragment extends Fragment {
             restoreProgressBar.setIndeterminate(false);
             restoreProgressBar.setMax(0);
             restoreProgressBar.setProgress(0);
+            restoreStatusTextView.setText("");
         }
 
         @Override
