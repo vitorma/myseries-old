@@ -368,6 +368,11 @@ public class BackupActivity extends TabActivity{
     }
 
     @Override
+    protected Intent navigateUpIntent() {
+        return NavUtils.getParentActivityIntent(this);
+    }
+
+    @Override
     protected TabDefinition[] tabDefinitions() {
         return new TabDefinition[] {
             new TabDefinition(R.string.backup, new BackupFragment()),

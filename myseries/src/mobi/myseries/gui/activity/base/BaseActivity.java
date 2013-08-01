@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
@@ -87,10 +88,7 @@ public abstract class BaseActivity extends Activity {
     protected abstract CharSequence title();
     protected abstract int layoutResource();
     protected abstract boolean isTopLevel();
-
-    protected Intent navigateUpIntent() {
-        return NavUtils.getParentActivityIntent(this);
-    }
+    protected abstract Intent navigateUpIntent();
 
     protected CharSequence titleForSideMenu() {
         return "";
@@ -107,7 +105,13 @@ public abstract class BaseActivity extends Activity {
                 if (this.isTopLevel()) {
                     return this.mDrawerToggle.onOptionsItemSelected(item);
                 } else {
-                    NavUtils.navigateUpTo(this, navigateUpIntent());
+                    final Intent upIntent = navigateUpIntent();
+                    if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                        TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
+                    } else {
+                        NavUtils.navigateUpTo(this, upIntent);
+                    }
+
                     return true;
                 }
 
