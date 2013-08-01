@@ -23,14 +23,16 @@
             android:paddingLeft="@dimen/gap_medium"
             android:paddingRight="@dimen/gap_medium"
             android:text="@string/sd_card"
-            android:textSize="@dimen/text_size_medium" />
+            android:textSize="@dimen/text_size_medium"
+            android:drawableLeft="@drawable/ic_sdcard"
+            android:drawablePadding="3dp" />
 
         <View
             android:id="@+id/SDCardDivider"
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:layout_marginTop="@dimen/gap_small"
-            android:background="@drawable/list_divider_holo_light" />
+            android:background="@color/dark_blue" />
 
         <RadioButton
             android:id="@+id/GoogleDriveRadioButton"
@@ -40,19 +42,21 @@
             android:paddingLeft="@dimen/gap_medium"
             android:paddingRight="@dimen/gap_medium"
             android:text="@string/google_drive"
-            android:textSize="@dimen/text_size_medium" />
-
-        <View
-            android:id="@+id/GoogleDriveDivider"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_marginTop="@dimen/gap_small"
-            android:background="@drawable/list_divider_holo_light" />
+            android:textSize="@dimen/text_size_medium"
+            android:drawableLeft="@drawable/ic_drive"
+            android:drawablePadding="3dp"/>
 
         <Spinner
             android:id="@+id/GoogleAccountSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <View
+            android:id="@+id/GoogleDriveDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/gap_small"
+            android:background="@color/dark_blue" />
 
         <RadioButton
             android:id="@+id/DropboxRadioButton"
@@ -62,10 +66,21 @@
             android:paddingLeft="@dimen/gap_medium"
             android:paddingRight="@dimen/gap_medium"
             android:text="@string/dropbox"
-            android:textSize="@dimen/text_size_medium" />
+            android:textSize="@dimen/text_size_medium"
+            android:drawableLeft="@drawable/ic_dropbox"
+            android:drawablePadding="3dp" />
     </RadioGroup>
 
-    
+    <ProgressBar
+        android:id="@+id/RestoreProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+     <TextView
+        android:id="@+id/RestoreStatusMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/RestoreButton"

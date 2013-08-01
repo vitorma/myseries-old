@@ -253,8 +253,8 @@
     <string name="backup_sdcard_not_available">Your SD card is unavailable.</string>
     <string name="backup_dropbox_full">Your Dropbox is full.</string>
     <string name="backup_dropbox_error">Something is wrong with Dropbox.</string>
-    <string name="backup_google_drive_cannot_create_file">Cannot create the backup file in Google Drive.</string>
-    <string name="backup_google_drive_upload_error">An error occurred while uploading the file to Google Drive.</string>
+    <string name="backup_google_drive_cannot_create_file">Cannot create the backup in Google Drive.</string>
+    <string name="backup_google_drive_upload_error">An error to upload to Google Drive.</string>
     <string name="backup_google_drive_error">Something is wrong with Google Drive.</string>
     
             <!-- Restore  Messages -->
@@ -272,11 +272,13 @@
     <string name="restore_failed_without_cause">Restore failed.</string>
     <string name="Restore_service_failed_with_cause">Failed restore from \"%1$s\": %2$s</string>
     <string name="restore_service_failed_without_cause">Failed restore from \"%s\".</string>
-    
+
     <string name="restore_sdcard_not_available">Your SD card is unavailable.</string>
+    <string name="restore_sdcard_file_not_found">Backup files not found in SD card.</string>
     <string name="restore_dropbox_error">Something is wrong with Dropbox.</string>
-    <string name="restore_google_drive_file_not_found">Backup files were not found in Google Drive.</string>
-    <string name="restore_google_drive_download_error">An error occurred while downloading the file from Google Drive.</string>
+    <string name="restore_dropbox_file_not_found">Backup files not found in Dropbox.</string>
+    <string name="restore_google_drive_file_not_found">Backup files not found in Google Drive.</string>
+    <string name="restore_google_drive_download_error">An error to download from Google Drive.</string>
     <string name="restore_google_drive_error">Something is wrong with Google Drive.</string>
 
     <!-- Menu -->
