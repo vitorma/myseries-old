@@ -11,8 +11,8 @@ import mobi.myseries.application.notification.NotificationDispatcher;
 import mobi.myseries.application.notification.TextOnlyNotification;
 import mobi.myseries.application.preferences.UpdatePreferences;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
+import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.shared.ToastBuilder;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,10 +26,42 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-public class UpdateActivity extends Activity {
+public class UpdateActivity extends BaseActivity {
 
     public static Intent newIntent(Context context) {
         return new Intent(context, UpdateActivity.class);
+    }
+
+    @Override
+    protected void init(Bundle savedInstanceState) {
+        this.setResult(Activity.RESULT_CANCELED);
+        this.setupViews();
+        this.loadSettings();
+        this.setUpUpdateButton();
+        this.setUpCancelButton();
+        this.setUpSaveButton();
+
+        App.updateSeriesService().register(this.updateFinishListener);
+    }
+
+    @Override
+    protected CharSequence title() {
+        return this.getText(R.string.updates);
+    }
+
+    @Override
+    protected int layoutResource() {
+        return R.layout.update;
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return false; // TODO(Cleber): It should be top level some day.
+    }
+
+    @Override
+    protected Intent navigateUpIntent() {
+        return NavUtils.getParentActivityIntent(this);
     }
 
     private Button updateButton;
@@ -42,30 +74,6 @@ public class UpdateActivity extends Activity {
     private TextView updateStatusTextView;
 
     private TextView latestSuccessfulUpdateTextView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.setContentView(R.layout.update);
-        this.setResult(Activity.RESULT_CANCELED);
-        this.setupActionBar();
-        this.setupViews();
-        this.loadSettings();
-        this.setUpUpdateButton();
-        this.setUpCancelButton();
-        this.setUpSaveButton();
-
-        App.updateSeriesService().register(this.updateFinishListener);
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = this.getActionBar();
-
-        actionBar.setTitle(R.string.settings);  // XXX update(s?) instead of settings
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
-    }
 
     private void setupViews() {
         this.automaticUpdatesRadioGroup =
