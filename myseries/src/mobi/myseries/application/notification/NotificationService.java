@@ -361,11 +361,11 @@ public class NotificationService {
         @Override
         public void onRestoreFailure(BackupMode mode, Exception e) {
             if (e.getCause() instanceof UserRecoverableAuthIOException) {
-                backupNotificationLauncher
+                restoreNotificationLauncher
                         .cancel(getBackupModeNotificationID(mode));
                 return;
             } else if (e instanceof DropboxUnlinkedException) {
-                backupNotificationLauncher
+                restoreNotificationLauncher
                         .cancel(getBackupModeNotificationID(mode));
                 return;
             }
