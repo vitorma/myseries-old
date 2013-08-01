@@ -1,6 +1,7 @@
 package mobi.myseries.application.backup;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class BackupTask implements OperationTask {
         try {
             File seriesCacheFile = new File(App.context().getCacheDir(), "myseries.json");
             Collection<Series> series = repository.getAll();
-            JsonHelper.seriesToJson(series, seriesCacheFile);
+            JsonHelper.writeSeriesJsonStream(new FileOutputStream(seriesCacheFile), series);
             backupMode.backupDB(seriesCacheFile);
             File preferencesCacheFile = new File(App.context().getCacheDir(), "preferences.json");
             Map<String, ?> preferences = App.context().getSharedPreferences("mobi.myseries.preferences", Context.MODE_PRIVATE).getAll();
