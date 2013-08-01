@@ -459,11 +459,15 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
                         if (!result.success()) {
                             errors.put(s, result.error());
+                            // TODO(Gabriel): Roll back the changes. Can we reload the series from disc?
                             continue;
                         }
                     } else {
                         Log.d(getClass().getName(), "Skip updating data of " + s.name());
                     }
+                    // If there is any error in the download of the poster, the series will be shown changed
+                    // after the update and must keep its state/data through sessions, application launches.
+                    seriesRepository.update(s);
 
                     // Update poster of series
                     if (whatHasToBeUpdated.seriesWithPosterToUpdate.contains(s)) {
