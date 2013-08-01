@@ -198,12 +198,10 @@
     <string name="update_many_series_failed_with_cause">Failed updating %1$d series: %2$s</string>
     <string name="update_many_series_failed_without_cause">Failed updating %d series.</string>
 
-    <string name="latest_successful_update">Latest successful update happened on %1$s at %2$s</string>
-
-    <!-- Preferences Activity -->
+    <string name="latest_successful_update">Latest successful update on %1$s at %2$s</string>
 
     <string name="update_status">UPDATE STATUS</string>
-    <string name="update_not_running">Update not running</string>
+    <string name="update_not_running">Update not running.</string>
     <string name="update_data_manually">UPDATE DATA MANUALLY</string>
     <string name="update_now">Update now</string>
     <string name="update_data_automatically">UPDATE DATA AUTOMATICALLY</string>
