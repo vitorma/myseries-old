@@ -5,13 +5,11 @@
 
     <string name="loading">Loading…</string>
     <string name="widget_preferences">Widget Preferences</string>
-    <string name="schedule_mode_upper">SCHEDULE MODE</string>
     <string name="sort_episodes_by_upper">SORT EPISODES BY…</string>
     <string name="special_episodes_upper">SPECIAL EPISODES</string>
     <string name="watched_episodes_upper">WATCHED EPISODES</string>
     <string name="series_to_show_upper">SERIES TO SHOW</string>
 
-    <string name="sorting">SORTING</string>
     <string name="sort_by_format" formatted="false">Sort %s by…</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
@@ -19,12 +17,8 @@
     <string name="unavailable_status">UNAVAILABLE STATUS</string>
     <string name="unavailable_air_info">UNAVAILABLE AIR INFORMATION</string>
     <string name="unavailable_runtime">UNAVAILABLE RUNTIME</string>
-    <string name="page_info_format" formatted="false">Page %d of %d</string>
     <string name="episodes">episodes</string>
-    <string name="hideSpecialEpisodes">Hide special episodes</string>
     <string name="showSpecialEpisodes">Show special episodes</string>
-    <string name="showSeenEpisodes">Show seen episodes</string>
-    <string name="hideSeenEpisodes">Hide seen episodes</string>
     <string name="seriesToShow">Series to show</string>
     <string name="seriesToCount">Series to count</string>
     <string name="episodesToShow">Episodes to show</string>
@@ -33,7 +27,6 @@
     <string name="showSelected">Show selected</string>
     <string name="countAll">Count all</string>
     <string name="countSelected">Count selected</string>
-    <string name="unknown_date">Unknown date</string>
     <string name="series_to_remove">Series to remove</string>
     <string name="remove_all">Remove all</string>
     <string name="remove_selected">Remove selected</string>
@@ -57,13 +50,11 @@
     <string name="status_continuing">Continuing</string>
     <string name="status_ended">Ended</string>
     <string name="number_of_results_for_search_by_name" formatted="false">%d series found</string>
-    <string name="fraction" formatted="false">%d of %d</string>
     <string name="trending">TRENDING</string>
     <string name="powered_by_trakt">Powered by Trakt.tv</string>
     <string name="number_of_results_for_search_by_trending">%d series being watched right now</string>
     <string name="action_filter">FILTER</string>
     <string name="series">series</string>
-    <string name="all_seasons">ALL SEASONS</string>
     <string name="schedule_to_watch">TO WATCH</string>
     <string name="schedule_aired">AIRED</string>
     <string name="schedule_unaired">UNAIRED</string>
@@ -106,19 +97,13 @@
     <!-- Labels -->
 
     <string name="actors">ACTORS</string>
-    <string name="back">Back</string>
     <string name="details">Details</string>
     <string name="directors">DIRECTORS</string>
-    <string name="follow">Follow</string>
-    <string name="genres">Genres</string>
     <string name="guest_stars">GUEST STARS</string>
-    <string name="help">Help</string>
     <string name="my_schedule">My Schedule</string>
     <string name="my_series">My Series</string>
-    <string name="next_to_see">Next to see:</string>
     <string name="no">No</string>
     <string name="no_episodes_to_see">No episodes to see.</string>
-    <string name="no_followed_series">No followed series.</string>
     <string name="ok">OK</string>
     <string name="overview">OVERVIEW</string>
     <string name="overview_unavailable">Overview is unavailable.</string>
@@ -129,10 +114,7 @@
     <string name="series_name">Series name</string>
     <string name="special_episodes">Special Episodes</string>
     <string name="my_statistics">My Statistics</string>
-    <string name="stop_following">Stop following</string>
     <string name="to_be_announced">To be announced</string>
-    <string name="up_to_date">UP-TO-DATE</string>
-    <string name="update_series_data">Update series data</string>
     <string name="writers">WRITERS</string>
     <string name="yes">Yes</string>
     <string name="add">Add</string>
@@ -141,13 +123,10 @@
     <!-- Label formats -->
 
     <string name="date_format">yyyy-MM-dd</string>
-    <string name="date_format_with_weekday">MM/dd/yyyy (EEE)</string>
     <string name="episode_number_format_ext" formatted="false">EPISODE %d</string>
     <string name="episode_number_format" formatted="false">S%02dE%02d</string>
     <string name="runtime_minutes_format" formatted="false">%s minutes</string>
-    <string name="season_number_format" formatted="false">S%02d</string>
     <string name="season_number_format_ext" formatted="false">Season %d</string>
-    <string name="special_episodes_acronym" formatted="false">SE</string>
 
     <!-- Messages -->
 
@@ -157,11 +136,8 @@
     <string name="connection_timeout_message">Connection time limit exceeded. Check your connection and try again.</string>
     <string name="invalid_criteria_title">Invalid series name</string>
     <string name="invalid_criteria_message">Type at least one word.</string>
-    <string name="no_results_title">No series found</string>
-    <string name="no_results_message">Try searching another name.</string>
     <string name="parsing_failed_title">Error reading file from the web</string>
     <string name="parsing_failed_message">Your connection may be too slow.</string>
-    <string name="stop_follow_message_format" formatted="false">Do you want to stop following %s?</string>
     <string name="follow_toast_message_format" formatted="false">The series %s will be added to your list soon.</string>
 
     <!-- Adding Error Messages -->
@@ -170,13 +146,11 @@
     <string name="add_failed_title">Adding failed</string>
     <string name="add_connection_failed_message">The connection has failed while adding %s. Check your connection and try again.</string>
     <string name="add_series_not_found">The database has returned "series not found" while adding %s. Check your connection and configurations then try again.</string>
-    <string name="add_parsing_failed">Error reading file from the web while adding %s. Your connection may be too slow.</string>
 
     <!-- Updates -->
 
     <string name="updates">Updates</string>
 
-    <string name="update_failed_title">Update failed</string>
     <string name="no_series_to_update">No series to update.</string>
     <string name="update_network_unavailable">No Internet connection available.</string>
     <string name="update_connection_failed">Could not connect to TheTVDB.</string>
@@ -184,7 +158,6 @@
     <string name="update_metadata_unavailable">Could not connect to TheTVDB.</string>
     <string name="update_series_not_found">TheTVDB is joking with us =/.</string>
     <string name="update_parsing_failed">Received malformed data from TheTVDB.</string>
-    <string name="up_to_date_message">Already up-to-date.</string>
     <string name="update_timeout">Update time limit exceeded.</string>
     
     <string name="checking_for_updates_message">Checking for updates…</string>
@@ -217,10 +190,6 @@
     <string name="restore_button">Restore</string>
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>
-    <string name="overwrite_backup">This operation will overwrite your actual backup.</string>
-    <string name="actual_following_series_will_be_replaced">This operation will replace your actual following series by the backup ones.</string>
-    <string name="external_storage_not_available">External Storage not available</string>
-    <string name="backup_storage_failure">Please make sure that your SD card is mounted before try to use backup or restore feature.</string>
     <string name="backup_completed">Backup completed!</string>
     <string name="restore_completed">Restore completed!</string>
     <string name="backup_failed_title">Backup failed</string>
@@ -231,10 +200,7 @@
     <string name="restore_invalid_db_version">The backup file that you are trying to restore from has not a valid database version.</string>
     <string name="restore_invalid_db_file">The backup file that you are trying to restore from is invalid.</string>
     <string name="google_drive">Google Drive</string>
-    <string name="select_account">Select account</string>
-    <string name="remote_location">Remote Location</string>
     <string name="sd_card">SD Card</string>
-    <string name="sd_card_location">Backup folder location</string>
     <string name="dropbox">Dropbox</string>
 
         <!-- Backup  Messages -->
@@ -244,15 +210,12 @@
     <string name="backup_connection_timeout">Could not connect to internet.</string>
     <string name="backup_timeout">Backup time limit exceeded.</string>
     
-    <string name="backing_up_your_series_and_preferences_message">Backing up your series and preferences</string>
     <string name="backup_progress_message">Backing up to \"%s\"…</string>
     <string name="backup_success_message">Backup to \"%s\" succeeded.</string>
 
     <string name="backup_failed_with_cause">Backup failed: %s</string>
     <string name="backup_failed_without_cause">Backup failed.</string>
-    <string name="backup_service_failed_with_cause">Failed backup to \"%1$s\": %2$s</string>
-    <string name="backup_service_failed_without_cause">Failed backup to \"%s\".</string>
-    
+
     <string name="backup_sdcard_not_available">Your SD card is unavailable.</string>
     <string name="backup_dropbox_full">Your Dropbox is full.</string>
     <string name="backup_dropbox_error">Something is wrong with Dropbox.</string>
@@ -267,14 +230,11 @@
     <string name="restore_connection_timeout">Could not connect to internet.</string>
     <string name="restore_timeout">Restore time limit exceeded.</string>
     
-    <string name="restore_your_series_and_preferences_message">Restoring your series and preferences</string>
     <string name="restore_progress_message">Restoring from \"%s\"…</string>
     <string name="restore_success_message">Restore from \"%s\" succeeded.</string>
 
     <string name="restore_failed_with_cause">Restore failed: %s</string>
     <string name="restore_failed_without_cause">Restore failed.</string>
-    <string name="Restore_service_failed_with_cause">Failed restore from \"%1$s\": %2$s</string>
-    <string name="restore_service_failed_without_cause">Failed restore from \"%s\".</string>
 
     <string name="restore_sdcard_not_available">Your SD card is unavailable.</string>
     <string name="restore_sdcard_file_not_found">Backup files not found in SD card.</string>
@@ -288,10 +248,7 @@
     <string name="menu_add">ADD SERIES</string>
     <string name="menu_remove">REMOVE SERIES</string>
     <string name="menu_update">UPDATES</string>
-    <string name="menu_settings">SETTINGS</string>
     <string name="menu_backup_restore">BACKUP/RESTORE</string>
-    <string name="menu_schedule">SCHEDULE</string>
-    <string name="menu_help">HELP</string>
     <string name="action_sort">SORT</string>
 
     <string name="include_special_episodes">Include special episodes</string>
