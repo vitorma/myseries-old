@@ -8,6 +8,7 @@ import mobi.myseries.gui.shared.Extra;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 
 public class SeriesActivity extends TabActivity {
     private static final int TAB_SEASONS = 1;
@@ -33,6 +34,11 @@ public class SeriesActivity extends TabActivity {
     @Override
     protected boolean isTopLevel() {
         return false;
+    }
+
+    @Override
+    protected Intent navigateUpIntent() {
+        return NavUtils.getParentActivityIntent(this);
     }
 
     @Override

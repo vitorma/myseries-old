@@ -9,8 +9,11 @@ import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.application.backup.exception.GoogleDriveException;
-import mobi.myseries.gui.backup.BackupFragment.CloudBackupType;
-
+import mobi.myseries.application.notification.DeterminateProgressNotification;
+import mobi.myseries.application.notification.IndeterminateProgressNotification;
+import mobi.myseries.application.notification.Notification;
+import mobi.myseries.application.notification.NotificationDispatcher;
+import mobi.myseries.application.notification.TextOnlyNotification;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
@@ -29,10 +32,10 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
-import android.widget.RadioButton;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class RestoreFragment extends Fragment {
@@ -43,6 +46,10 @@ public class RestoreFragment extends Fragment {
     private Spinner gDriveAccountSpinner;
     private DropboxHelper dropboxHelper = App.backupService().getDropboxHelper();
     private String account;
+    
+    private ProgressBar restoreProgressBar;
+    private TextView restoreStatusTextView;
+    
     private BackupServiceListener restoreListener;
     private CloudBackupType pendingRestore;
     private BackupService backupService;
@@ -96,7 +103,14 @@ public class RestoreFragment extends Fragment {
         this.setupRadioButtonGroup();
         this.setupRestoreButton();
         this.setupGoogleDriveAccountSpinner();
-
+        this.setupProgressBar();
+    }
+    
+    private void setupProgressBar() {
+        this.restoreProgressBar =
+                (ProgressBar) this.findView(R.id.RestoreProgressBar);
+        this.restoreStatusTextView =
+                (TextView) this.findView(R.id.RestoreStatusMessage);
     }
 
     private void setupRadioButtonGroup() {
@@ -198,5 +212,52 @@ public class RestoreFragment extends Fragment {
                 ((UserRecoverableAuthIOException) e).getIntent(),
                 CloudBackupType.DRIVE.ordinal());
     }
+    
+    private final NotificationDispatcher restoreNotificationDispatcher = new NotificationDispatcher() {
+
+        @Override
+        public void notifyTextOnlyNotification(TextOnlyNotification notification) {
+            restoreProgressBar.setIndeterminate(false);
+            restoreProgressBar.setMax(0);
+            restoreProgressBar.setProgress(0);
+
+            restoreStatusTextView.setText(notification.message());
+        }
+
+        @Override
+        public void notifyIndeterminateProgressNotification(
+                IndeterminateProgressNotification notification) {
+            restoreProgressBar.setIndeterminate(true);
+            restoreStatusTextView.setText(notification.message());
+        }
+
+ 
+        @Override
+        public void cancel(Notification notification) {
+            restoreProgressBar.setIndeterminate(false);
+            restoreProgressBar.setMax(0);
+            restoreProgressBar.setProgress(0);
+        }
+
+        @Override
+        public void notifyDeterminateProgressNotification(
+                DeterminateProgressNotification notification) {
+            // TODO Auto-generated method stub
+            
+        }
+    };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        App.notificationService().setRestoreNotificationDispatcher(this.restoreNotificationDispatcher);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        App.notificationService().removeRestoreNotificationDispatcher(this.restoreNotificationDispatcher);
+    }
+
 
 }

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.exception.DropboxLocalStorageFullException;
+import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
@@ -20,6 +21,7 @@ import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.application.backup.exception.GoogleDriveFileNotFoundException;
 import mobi.myseries.application.backup.exception.GoogleDriveUploadException;
 import mobi.myseries.application.backup.exception.RestoreTimeoutException;
+import mobi.myseries.application.backup.exception.SDcardException;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.exception.NetworkUnavailableException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
@@ -38,29 +40,40 @@ public class NotificationService {
     private final Context context;
     private final NotificationLauncher updateNotificationLauncher;
     private final NotificationLauncher backupNotificationLauncher;
+    private final NotificationLauncher restoreNotificationLauncher;
 
-    public NotificationService(Context context, UpdateService updateService, BackupService backupService) {
+    public NotificationService(Context context, UpdateService updateService,
+            BackupService backupService) {
         this.context = context;
 
-        NotificationDispatcher defaultDispatcher = new AndroidNotificationDispatcher(context);
-        this.updateNotificationLauncher = new NotificationLauncher(defaultDispatcher);
-        this.backupNotificationLauncher = new NotificationLauncher(defaultDispatcher);
-        
+        NotificationDispatcher defaultDispatcher = new AndroidNotificationDispatcher(
+                context);
+        this.updateNotificationLauncher = new NotificationLauncher(
+                defaultDispatcher);
+        this.backupNotificationLauncher = new NotificationLauncher(
+                defaultDispatcher);
+        this.restoreNotificationLauncher = new NotificationLauncher(
+                defaultDispatcher);
+
         updateService.register(updateListener);
         backupService.register(backupListener);
     }
 
-    public void setUpdateNotificationDispatcher(NotificationDispatcher newUpdateNotificationDispatcher) {
-        this.updateNotificationLauncher.setDispatcherTo(newUpdateNotificationDispatcher);
+    public void setUpdateNotificationDispatcher(
+            NotificationDispatcher newUpdateNotificationDispatcher) {
+        this.updateNotificationLauncher
+                .setDispatcherTo(newUpdateNotificationDispatcher);
     }
 
-    public void removeUpdateNotificationDispatcher(NotificationDispatcher updateNotificationDispatcher) {
-        this.updateNotificationLauncher.removeDispatcher(updateNotificationDispatcher);
+    public void removeUpdateNotificationDispatcher(
+            NotificationDispatcher updateNotificationDispatcher) {
+        this.updateNotificationLauncher
+                .removeDispatcher(updateNotificationDispatcher);
     }
 
     private void notifyCheckingForUpdates() {
-        this.updateNotificationLauncher.launch(
-                new IndeterminateProgressNotification(
+        this.updateNotificationLauncher
+                .launch(new IndeterminateProgressNotification(
                         UPDATE_NOTIFICATION_ID,
                         context.getString(R.string.checking_for_updates_message)));
     }
@@ -69,57 +82,68 @@ public class NotificationService {
         this.updateNotificationLauncher.cancel(UPDATE_NOTIFICATION_ID);
     }
 
-    private void notifyUpdateProgress(int current, int total, Series currentSeries) {
-        this.updateNotificationLauncher.launch(
-                new DeterminateProgressNotification(
-                        UPDATE_NOTIFICATION_ID,
-                        context.getString(R.string.update_progress_message, currentSeries.name()),
-                        current - 1,  // it is current - 1 because, when updating the first series, it should show an empty progress bar
+    private void notifyUpdateProgress(int current, int total,
+            Series currentSeries) {
+        this.updateNotificationLauncher
+                .launch(new DeterminateProgressNotification(
+                        UPDATE_NOTIFICATION_ID, context.getString(
+                                R.string.update_progress_message,
+                                currentSeries.name()), current - 1, // it is current - 1 because, when
+                                                                    // updating the first series,
+                                                                    // it should show an empty progress bar
                         total));
     }
 
     private void notifyUpdateSuccess() {
         this.updateNotificationLauncher.cancel(UPDATE_NOTIFICATION_ID);
     }
-    
 
     private void notifyUpdateFailed(Exception cause) {
         String causeMessage = this.updateFailedMessageFor(cause);
 
         String notificationMessage;
         if (causeMessage != null) {
-            notificationMessage = context.getString(R.string.update_failed_with_cause, causeMessage);
+            notificationMessage = context.getString(
+                    R.string.update_failed_with_cause, causeMessage);
         } else {
-            notificationMessage = context.getString(R.string.update_failed_without_cause);
+            notificationMessage = context
+                    .getString(R.string.update_failed_without_cause);
         }
 
         this.notifyUpdateWithText(notificationMessage);
     }
-    
 
     private void notifyUpdateSeriesFailed(Map<Series, Exception> causes) {
         if (causes.size() == 1) {
             Series failedSeries = causes.keySet().iterator().next();
-            String errorMessage = this.updateFailedMessageFor(causes.values().iterator().next());
+            String errorMessage = this.updateFailedMessageFor(causes.values()
+                    .iterator().next());
 
             String notificationMessage;
             if (errorMessage != null) {
-                notificationMessage = context.getString(R.string.update_single_series_failed_with_cause,
-                                                        failedSeries.name(), errorMessage);
+                notificationMessage = context.getString(
+                        R.string.update_single_series_failed_with_cause,
+                        failedSeries.name(), errorMessage);
             } else {
-                notificationMessage = context.getString(R.string.update_single_series_failed_without_cause,
-                                                        failedSeries.name());
+                notificationMessage = context.getString(
+                        R.string.update_single_series_failed_without_cause,
+                        failedSeries.name());
             }
 
             this.notifyUpdateWithText(notificationMessage);
         } else {
-            String errorMessage = this.updateFailedMessageFor(causes.values().iterator().next());
+            String errorMessage = this.updateFailedMessageFor(causes.values()
+                    .iterator().next());
 
             CharSequence notificationMessage;
             if (errorMessage != null) {
-                notificationMessage = context.getString(R.string.update_many_series_failed_with_cause, causes.size(), errorMessage);
+                notificationMessage = context.getString(
+                        R.string.update_many_series_failed_with_cause,
+                        causes.size(), errorMessage);
             } else {
-                notificationMessage = context.getString(R.string.update_many_series_failed_without_cause, causes.size());
+                notificationMessage = context.getString(
+                        R.string.update_many_series_failed_without_cause,
+                        causes.size());
             }
 
             this.notifyUpdateWithText(notificationMessage);
@@ -127,9 +151,9 @@ public class NotificationService {
     }
 
     private void notifyUpdateWithText(CharSequence text) {
-        this.updateNotificationLauncher.launch(new TextOnlyNotification(UPDATE_NOTIFICATION_ID, text));
+        this.updateNotificationLauncher.launch(new TextOnlyNotification(
+                UPDATE_NOTIFICATION_ID, text));
     }
-
 
     private UpdateProgressListener updateListener = new UpdateProgressListener() {
 
@@ -144,7 +168,8 @@ public class NotificationService {
         }
 
         @Override
-        public void onUpdateProgress(int current, int total, Series currentSeries) {
+        public void onUpdateProgress(int current, int total,
+                Series currentSeries) {
             notifyUpdateProgress(current, total, currentSeries);
         }
 
@@ -189,91 +214,114 @@ public class NotificationService {
             return context.getString(R.string.update_timeout);
 
         } else {
-            //return e.getMessage();
+            // return e.getMessage();
             return null;
 
         }
     }
 
+// ---------------------BACKUP-------------------------------------------------
 
-//---------------------------------------- BACKUP ----------------------------------------------------------------------------
-    
     private static int getBackupModeNotificationID(BackupMode mode) {
         return mode.hashCode();
-        
-    }
-    
-    public void setBackupNotificationDispatcher(NotificationDispatcher newBackupNotificationDispatcher) {
-        this.backupNotificationLauncher.setDispatcherTo(newBackupNotificationDispatcher);
+
     }
 
-    public void removebackupNotificationDispatcher(NotificationDispatcher backupNotificationDispatcher) {
-        this.backupNotificationLauncher.removeDispatcher(backupNotificationDispatcher);
+    public void setBackupNotificationDispatcher(
+            NotificationDispatcher newBackupNotificationDispatcher) {
+        this.backupNotificationLauncher
+                .setDispatcherTo(newBackupNotificationDispatcher);
     }
     
+    public void setRestoreNotificationDispatcher(
+            NotificationDispatcher newBackupNotificationDispatcher) {
+        this.restoreNotificationLauncher
+                .setDispatcherTo(newBackupNotificationDispatcher);
+    }
+
+    public void removeBackupNotificationDispatcher(
+            NotificationDispatcher backupNotificationDispatcher) {
+        this.backupNotificationLauncher
+                .removeDispatcher(backupNotificationDispatcher);
+    }
+    public void removeRestoreNotificationDispatcher(
+            NotificationDispatcher backupNotificationDispatcher) {
+        this.restoreNotificationLauncher
+                .removeDispatcher(backupNotificationDispatcher);
+    }
+
     private void notifyRunningBackup(BackupMode mode) {
-        this.backupNotificationLauncher.launch(
-                new IndeterminateProgressNotification(
-                        getBackupModeNotificationID(mode),
-                        context.getString(R.string.backup_progress_message, mode.name())));
+        this.backupNotificationLauncher
+                .launch(new IndeterminateProgressNotification(
+                        getBackupModeNotificationID(mode), context.getString(
+                                R.string.backup_progress_message, mode.name())));
     }
-    
+
     private void notifyRunningRestore(BackupMode mode) {
-        this.backupNotificationLauncher.launch(
-                new IndeterminateProgressNotification(
-                        getBackupModeNotificationID(mode),
-                        context.getString(R.string.restore_progress_message, mode.name())));
+        this.restoreNotificationLauncher
+                .launch(new IndeterminateProgressNotification(
+                        getBackupModeNotificationID(mode), context.getString(
+                                R.string.restore_progress_message, mode.name())));
     }
 
     private void notifyBackupSuccess(BackupMode mode) {
-        this.backupNotificationLauncher.cancel(getBackupModeNotificationID(mode));
-        String notificationMessage = context.getString(R.string.backup_success_message, mode.name());
-        this.notifyWithText(mode, notificationMessage);
-    }
-    
-    private void notifyRestoreSuccess(BackupMode mode) {
-        this.backupNotificationLauncher.cancel(getBackupModeNotificationID(mode));
-        String notificationMessage = context.getString(R.string.restore_success_message, mode.name());
-        this.notifyWithText(mode, notificationMessage);
+        this.backupNotificationLauncher
+                .cancel(getBackupModeNotificationID(mode));
+        String notificationMessage = context.getString(
+                R.string.backup_success_message, mode.name());
+        this.backupNotificationLauncher.launch(new TextOnlyNotification(
+                getBackupModeNotificationID(mode), notificationMessage));
     }
 
-    private void notifyWithText(BackupMode mode, CharSequence text) {
-        this.backupNotificationLauncher.launch(new TextOnlyNotification(getBackupModeNotificationID(mode), text));
+    private void notifyRestoreSuccess(BackupMode mode) {
+        this.restoreNotificationLauncher
+                .cancel(getBackupModeNotificationID(mode));
+        String notificationMessage = context.getString(
+                R.string.restore_success_message, mode.name());
+        this.restoreNotificationLauncher.launch(new TextOnlyNotification(
+                getBackupModeNotificationID(mode), notificationMessage));
     }
+
 
     private void notifyBackupFailed(BackupMode mode, Exception cause) {
         String causeMessage = this.backupFailedMessageFor(cause);
 
         String notificationMessage;
         if (causeMessage != null) {
-            notificationMessage = context.getString(R.string.backup_failed_with_cause, causeMessage);
+            notificationMessage = context.getString(
+                    R.string.backup_failed_with_cause, causeMessage);
         } else {
-            notificationMessage = context.getString(R.string.backup_failed_without_cause);
+            notificationMessage = context
+                    .getString(R.string.backup_failed_without_cause);
         }
 
-        this.notifyWithText(mode, notificationMessage);
+        this.backupNotificationLauncher.launch(new TextOnlyNotification(
+                getBackupModeNotificationID(mode), notificationMessage));
     }
-    
+
     private void notifyRestoreFailed(BackupMode mode, Exception cause) {
         String causeMessage = this.restoreFailedMessageFor(cause);
 
         String notificationMessage;
         if (causeMessage != null) {
-            notificationMessage = context.getString(R.string.restore_failed_with_cause, causeMessage);
+            notificationMessage = context.getString(
+                    R.string.restore_failed_with_cause, causeMessage);
         } else {
-            notificationMessage = context.getString(R.string.restore_failed_without_cause);
+            notificationMessage = context
+                    .getString(R.string.restore_failed_without_cause);
         }
 
-        this.notifyWithText(mode, notificationMessage);
+        this.restoreNotificationLauncher.launch(new TextOnlyNotification(
+                getBackupModeNotificationID(mode), notificationMessage));
     }
-    
+
     private BackupListener backupListener = new BackupListener() {
-        
+
         @Override
         public void onStart() {
-            
+
         }
- 
+
         @Override
         public void onRestoreSucess() {
 
@@ -286,11 +334,13 @@ public class NotificationService {
 
         @Override
         public void onBackupFailure(BackupMode mode, Exception e) {
-            if(e.getCause() instanceof UserRecoverableAuthIOException) {
-                backupNotificationLauncher.cancel(getBackupModeNotificationID(mode));
+            if (e.getCause() instanceof UserRecoverableAuthIOException) {
+                backupNotificationLauncher
+                        .cancel(getBackupModeNotificationID(mode));
                 return;
             } else if (e instanceof DropboxUnlinkedException) {
-                backupNotificationLauncher.cancel(getBackupModeNotificationID(mode));
+                backupNotificationLauncher
+                        .cancel(getBackupModeNotificationID(mode));
                 return;
             }
             notifyBackupFailed(mode, e);
@@ -299,38 +349,39 @@ public class NotificationService {
         @Override
         public void onBackupCompleted(BackupMode mode) {
             notifyBackupSuccess(mode);
-            
+
         }
 
         @Override
         public void onBackupRunning(BackupMode mode) {
             notifyRunningBackup(mode);
-            
+
         }
 
         @Override
         public void onRestoreFailure(BackupMode mode, Exception e) {
-            if(e.getCause() instanceof UserRecoverableAuthIOException) {
-                backupNotificationLauncher.cancel(getBackupModeNotificationID(mode));
+            if (e.getCause() instanceof UserRecoverableAuthIOException) {
+                backupNotificationLauncher
+                        .cancel(getBackupModeNotificationID(mode));
                 return;
             } else if (e instanceof DropboxUnlinkedException) {
-                backupNotificationLauncher.cancel(getBackupModeNotificationID(mode));
+                backupNotificationLauncher
+                        .cancel(getBackupModeNotificationID(mode));
                 return;
             }
             notifyRestoreFailed(mode, e);
         }
-            
 
         @Override
         public void onRestoreRunning(BackupMode mode) {
             notifyRunningRestore(mode);
-            
+
         }
 
         @Override
         public void onRestoreCompleted(BackupMode mode) {
             notifyRestoreSuccess(mode);
-            
+
         }
     };
 
@@ -352,12 +403,13 @@ public class NotificationService {
 
         } else if (e instanceof DropboxLocalStorageFullException) {
             return context.getString(R.string.backup_dropbox_full);
-            
+
         } else if (e instanceof DropboxException) {
             return context.getString(R.string.backup_dropbox_error);
 
         } else if (e instanceof GoogleDriveCannotCreateFileException) {
-            return context.getString(R.string.backup_google_drive_cannot_create_file);
+            return context
+                    .getString(R.string.backup_google_drive_cannot_create_file);
 
         } else if (e instanceof GoogleDriveUploadException) {
             return context.getString(R.string.backup_google_drive_upload_error);
@@ -366,12 +418,12 @@ public class NotificationService {
             return context.getString(R.string.backup_google_drive_error);
 
         } else {
-            //return e.getMessage();
+            // return e.getMessage();
             return null;
 
         }
     }
-    
+
     private String restoreFailedMessageFor(Exception e) {
         if (e instanceof ConnectionFailedException) {
             return context.getString(R.string.restore_connection_failed);
@@ -388,21 +440,30 @@ public class NotificationService {
         } else if (e instanceof ExternalStorageNotAvailableException) {
             return context.getString(R.string.restore_sdcard_not_available);
 
+        } else if (e instanceof SDcardException) {
+            return context.getString(R.string.restore_sdcard_file_not_found);
+
+        } else if (e instanceof DropboxServerException
+                   && ((DropboxServerException) e).error == DropboxServerException._404_NOT_FOUND) {
+            return context.getString(R.string.restore_dropbox_file_not_found);
+
         } else if (e instanceof DropboxException) {
             return context.getString(R.string.restore_dropbox_error);
 
         } else if (e instanceof GoogleDriveFileNotFoundException) {
-            return context.getString(R.string.restore_google_drive_file_not_found);
-        
+            return context
+                    .getString(R.string.restore_google_drive_file_not_found);
+
         } else if (e instanceof GoogleDriveDownloadException) {
-            return context.getString(R.string.restore_google_drive_download_error);
+            return context
+                    .getString(R.string.restore_google_drive_download_error);
 
         } else if (e instanceof GoogleDriveException) {
             e.getCause().printStackTrace();
-            return context.getString(R.string.backup_google_drive_error);
+            return context.getString(R.string.restore_google_drive_error);
 
         } else {
-            //return e.getMessage();
+            // return e.getMessage();
             return null;
 
         }

@@ -15,6 +15,11 @@ import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.application.backup.exception.GoogleDriveFileNotFoundException;
+import mobi.myseries.application.notification.DeterminateProgressNotification;
+import mobi.myseries.application.notification.IndeterminateProgressNotification;
+import mobi.myseries.application.notification.Notification;
+import mobi.myseries.application.notification.NotificationDispatcher;
+import mobi.myseries.application.notification.TextOnlyNotification;
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.Fragment;
@@ -30,7 +35,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class BackupFragment extends Fragment {
 
@@ -44,6 +51,10 @@ public class BackupFragment extends Fragment {
     private CheckedTextView sDcardCheckbox;
     private GoogleAccountManager accountManager;
     private Spinner gDriveAccountSpinner;
+
+    private ProgressBar backupProgressBar;
+    private TextView backupStatusTextView;
+
     private DropboxHelper dropboxHelper = App.backupService()
             .getDropboxHelper();
     private String account;
@@ -103,7 +114,16 @@ public class BackupFragment extends Fragment {
         this.setupDropboxCheckbox();
         this.setupBackupButton();
         this.setupGoogleDriveAccountSpinner();
+        this.setupProgressBar();
 
+    }
+
+    private void setupProgressBar() {
+        this.backupProgressBar =
+                (ProgressBar) this.findView(R.id.BackupProgressBar);
+        this.backupStatusTextView =
+                (TextView) this.findView(R.id.BackupStatusMessage);
+        
     }
 
     private void setupBackupButton() {
@@ -240,5 +260,52 @@ public class BackupFragment extends Fragment {
                 e.getIntent(),
                 CloudBackupType.DRIVE.ordinal());
     }
+    
+    private final NotificationDispatcher backupNotificationDispatcher = new NotificationDispatcher() {
+
+        @Override
+        public void notifyTextOnlyNotification(TextOnlyNotification notification) {
+            backupProgressBar.setIndeterminate(false);
+            backupProgressBar.setMax(0);
+            backupProgressBar.setProgress(0);
+
+            backupStatusTextView.setText(notification.message());
+        }
+
+        @Override
+        public void notifyIndeterminateProgressNotification(
+                IndeterminateProgressNotification notification) {
+            backupProgressBar.setIndeterminate(true);
+            backupStatusTextView.setText(notification.message());
+        }
+
+ 
+        @Override
+        public void cancel(Notification notification) {
+            backupProgressBar.setIndeterminate(false);
+            backupProgressBar.setMax(0);
+            backupProgressBar.setProgress(0);
+        }
+
+        @Override
+        public void notifyDeterminateProgressNotification(
+                DeterminateProgressNotification notification) {
+            // TODO Auto-generated method stub
+            
+        }
+    };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        App.notificationService().setBackupNotificationDispatcher(this.backupNotificationDispatcher);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        App.notificationService().removeBackupNotificationDispatcher(this.backupNotificationDispatcher);
+    }
+
 
 }

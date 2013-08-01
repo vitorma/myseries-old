@@ -8,3 +8,7 @@ local.properties
 *.class
 *.swp
 *~
+
+.idea/
+*.iml
+**/out/

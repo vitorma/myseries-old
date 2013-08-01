@@ -89,7 +89,7 @@ public class DropboxHelper {
         edit.commit();
     }
 
-    public void uploadFile(File file, String destinationPath) throws FileNotFoundException, DropboxException, ConnectionFailedException  {
+    public void uploadFile(File file, String destinationPath) throws DropboxException, ConnectionFailedException, FileNotFoundException  {
         if(!isOnline())
             throw new ConnectionFailedException();
         FileInputStream inputStream = new FileInputStream(file);

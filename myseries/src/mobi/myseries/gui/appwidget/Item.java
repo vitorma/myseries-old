@@ -19,7 +19,7 @@ import android.text.format.DateFormat;
 import android.widget.RemoteViews;
 
 public class Item {
-    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
+    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterThumbnailFrom(App.resources());
     private Context context;
 
     private Item(Context context) {

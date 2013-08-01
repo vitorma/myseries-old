@@ -22,7 +22,7 @@ public class DropboxBackup implements BackupMode {
     }
 
     @Override
-    public void backupDB(File backup) throws FileNotFoundException, DropboxException, ConnectionFailedException {
+    public void backupDB(File backup) throws DropboxException, ConnectionFailedException, FileNotFoundException {
         this.dropboxHelper.uploadFile(backup, DEFAULT_PATH + backup.getName());
     }
     @Override
