@@ -13,7 +13,6 @@ import mobi.myseries.application.preferences.UpdatePreferences;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.shared.ToastBuilder;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,12 +33,9 @@ public class UpdateActivity extends BaseActivity {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        this.setResult(Activity.RESULT_CANCELED);
         this.setupViews();
         this.loadSettings();
         this.setUpUpdateButton();
-        this.setUpCancelButton();
-        this.setUpSaveButton();
 
         App.updateSeriesService().register(this.updateFinishListener);
     }
@@ -67,8 +63,6 @@ public class UpdateActivity extends BaseActivity {
     private Button updateButton;
 
     private RadioGroup automaticUpdatesRadioGroup;
-    private Button cancelButton;
-    private Button saveButton;
 
     private ProgressBar updateProgressBar;
     private TextView updateStatusTextView;
@@ -76,21 +70,45 @@ public class UpdateActivity extends BaseActivity {
     private TextView latestSuccessfulUpdateTextView;
 
     private void setupViews() {
-        this.automaticUpdatesRadioGroup =
-                (RadioGroup) this.findViewById(R.id.automaticUpdatesRadioGroup);
+        this.automaticUpdatesRadioGroup = (RadioGroup) this.findViewById(R.id.automaticUpdatesRadioGroup);
+        this.automaticUpdatesRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
-        this.updateProgressBar =
-                (ProgressBar) this.findViewById(R.id.updateNotificationProgressBar);
-        this.updateStatusTextView =
-                (TextView) this.findViewById(R.id.updateNotificationStatusMessage);
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                saveSettings(checkedId);
+            }
+        });
 
-        this.latestSuccessfulUpdateTextView =
-                (TextView) this.findViewById(R.id.latestSuccessfulUpdateMessage);
+        this.updateProgressBar = (ProgressBar) this.findViewById(R.id.updateNotificationProgressBar);
+        this.updateStatusTextView = (TextView) this.findViewById(R.id.updateNotificationStatusMessage);
+
+        this.latestSuccessfulUpdateTextView = (TextView) this.findViewById(R.id.latestSuccessfulUpdateMessage);
         this.refreshLatestSuccessfulUpdateTextView();
     }
 
+    private void saveSettings(int checkedButtonId) {
+        switch (checkedButtonId) {
+        case R.id.doNotUpdateRadioButton:
+            this.updatePreferences()
+                    .putUpdateAutomatically(false);
+            break;
+
+        case R.id.wifiOnlyRadioButton:
+            this.updatePreferences()
+                    .putUpdateAutomatically(true)
+                    .putUpdateOnDataPlan(false);
+            break;
+
+        case R.id.wifiOrDataPlanRadioButton:
+            this.updatePreferences()
+                    .putUpdateAutomatically(true)
+                    .putUpdateOnDataPlan(true);
+            break;
+        }
+    }
+
     private void loadSettings() {
-        UpdatePreferences settings = this.settingsProviderFor(this);
+        UpdatePreferences settings = this.updatePreferences();
 
         if (!settings.updateAutomatically()) {
             this.automaticUpdatesRadioGroup.check(R.id.doNotUpdateRadioButton);
@@ -114,59 +132,6 @@ public class UpdateActivity extends BaseActivity {
         });
     }
 
-    private void setUpCancelButton() {
-        this.cancelButton = (Button) this.findViewById(R.id.cancelButton);
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpdateActivity.this.finish();
-
-            }
-        });
-    }
-
-    private void setUpSaveButton() {
-        this.saveButton = (Button) this.findViewById(R.id.saveButton);
-
-        this.saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpdateActivity.this.save();
-
-            }
-        });
-    }
-
-    protected void save() {
-        this.saveSettings();
-        this.finishOk();
-    }
-
-    private void saveSettings() {
-        switch (this.automaticUpdatesRadioGroup.getCheckedRadioButtonId()) {
-        case R.id.doNotUpdateRadioButton:
-            this.settingsProviderFor(this).putUpdateAutomatically(false);
-            break;
-
-        case R.id.wifiOnlyRadioButton:
-            this.settingsProviderFor(this).putUpdateAutomatically(true)
-                    .putUpdateOnDataPlan(false);
-
-            break;
-
-        case R.id.wifiOrDataPlanRadioButton:
-            this.settingsProviderFor(this).putUpdateAutomatically(true)
-                    .putUpdateOnDataPlan(true);
-
-            break;
-        }
-    }
-
-    private void finishOk() {
-        this.setResult(Activity.RESULT_OK);
-        this.finish();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -177,7 +142,7 @@ public class UpdateActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private UpdatePreferences settingsProviderFor(Context context) {
+    private UpdatePreferences updatePreferences() {
         return App.preferences().forUpdate();
     }
 
