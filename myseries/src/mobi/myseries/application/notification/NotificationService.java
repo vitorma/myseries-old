@@ -418,7 +418,7 @@ public class NotificationService {
             return context.getString(R.string.backup_google_drive_error);
 
         } else {
-            // return e.getMessage();
+             e.printStackTrace();
             return null;
 
         }

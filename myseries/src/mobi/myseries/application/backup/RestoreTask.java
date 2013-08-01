@@ -1,6 +1,7 @@
 package mobi.myseries.application.backup;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class RestoreTask implements OperationTask {
     @Override
     public void run() {
         try {
-            String seriesJson = getJsonFromFile("myseries.json");
+            Collection<Series> seriesJson = getSeriesFromFile("myseries.json");
             restoreSeries(seriesJson);
             String preferencesJson = getJsonFromFile("preferences.json");
             restorePreferences(preferencesJson);
@@ -40,7 +41,7 @@ public class RestoreTask implements OperationTask {
         this.result = new OperationResult();
 
     }
-
+    
     private String getJsonFromFile(String jsonFileName) throws Exception, IOException {
         File cacheFile = new File(App.context().getCacheDir(), jsonFileName);
         backupMode.downloadBackupToFile(cacheFile);
@@ -49,8 +50,14 @@ public class RestoreTask implements OperationTask {
         return stringContent;
     }
 
-    private void restoreSeries(String stringContent) {
-        Collection<Series> series = JsonHelper.seriesFromJson(stringContent);
+    private Collection<Series> getSeriesFromFile(String jsonFileName) throws Exception, IOException {
+        File cacheFile = new File(App.context().getCacheDir(), jsonFileName);
+        backupMode.downloadBackupToFile(cacheFile);
+        JsonHelper.readSeriesJsonStream(new FileInputStream(cacheFile));
+        return JsonHelper.readSeriesJsonStream(new FileInputStream(cacheFile));
+    }
+
+    private void restoreSeries(Collection<Series> series) {
         repository.clear();
         for (Series s : series) {
             repository.insert(s);

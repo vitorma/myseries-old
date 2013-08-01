@@ -21,7 +21,7 @@ import android.os.Handler;
 
 public class BackupService {
 
-    private static final long TIME_IN_SECONDS = 30;
+    private static final long TIME_IN_SECONDS = 90;
 
     private ListenerSet<BackupListener> listeners;
 
