@@ -21,7 +21,7 @@ import android.os.Handler;
 
 public class BackupService {
 
-    private static final long TIME_IN_SECONDS = 90;
+    private static final long TIME_IN_SECONDS = 60;
 
     private ListenerSet<BackupListener> listeners;
 
@@ -208,6 +208,7 @@ public class BackupService {
     }
 
     public void performRestore(final BackupMode mode) {
+        App.followSeriesService().stopFollowingAll(repository.getAll());
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -217,7 +218,6 @@ public class BackupService {
                     notifyListenersOfRestoreFailure(mode, result.error());
                 } else {
                     notifyListenersOfRestoreCompleted(mode);
-                    App.updateSeriesService().updateData();
                 }
             }
         }).start();

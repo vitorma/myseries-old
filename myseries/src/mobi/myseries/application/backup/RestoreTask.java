@@ -58,7 +58,6 @@ public class RestoreTask implements OperationTask {
     }
 
     private void restoreSeries(Collection<Series> series) {
-        repository.clear();
         for (Series s : series) {
             repository.insert(s);
         }

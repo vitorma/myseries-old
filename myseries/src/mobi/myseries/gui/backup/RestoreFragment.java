@@ -84,8 +84,6 @@ public class RestoreFragment extends Fragment {
             boolean resumeSucess = dropboxHelper.onResume();
             if(resumeSucess) {
                 pendingRestore = null;
-                backupService.addToqueue(new DropboxBackup());
-                backupService.performBackup();
                 performDropboxRestore();
             }
         }
@@ -174,6 +172,11 @@ public class RestoreFragment extends Fragment {
                 } else if (e instanceof DropboxUnlinkedException) {
                     linkDropboxAccount();
                 }
+            }
+            @Override
+            public void onRestoreCompleted(BackupMode mode) {
+                super.onRestoreCompleted(mode);
+                App.updateSeriesService().updateDataIfNeeded();
             }
         };
         App.backupService().register(restoreListener);

@@ -24,6 +24,8 @@ import com.google.gson.stream.JsonWriter;
 
 public class JsonHelper {
     
+    private static  Gson gson;
+    
     public static void preferencesToJson(Map<String, ?> peferences, File file) throws IOException {
         String json = gson().toJson(peferences);
         FilesUtil.writeStringToFile(file.getAbsolutePath(), json);
@@ -36,11 +38,14 @@ public class JsonHelper {
     
 
     private static Gson gson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.serializeNulls();
-        gsonBuilder.registerTypeAdapter(Series.class, new SeriesAdapter());
-        gsonBuilder.registerTypeAdapter(Episode.class, new EpisodeAdapter());
-        return gsonBuilder.create();
+        if(gson == null) {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.serializeNulls();
+            gsonBuilder.registerTypeAdapter(Series.class, new SeriesAdapter());
+            gsonBuilder.registerTypeAdapter(Episode.class, new EpisodeAdapter());
+            gson = gsonBuilder.create();
+        }
+        return gson;
     }
     
     public static void writeSeriesJsonStream(OutputStream out, Collection<Series> series) throws IOException {
@@ -48,9 +53,11 @@ public class JsonHelper {
         writer.beginArray();
         for (Series s : series) {
             gson().toJson(s, Series.class, writer);
+            Log.v("json", "serializing " + s.name());
         }
         writer.endArray();
         writer.close();
+        out.close();
     }
     
     public static Collection<Series> readSeriesJsonStream(InputStream in) throws IOException {
@@ -60,9 +67,11 @@ public class JsonHelper {
         while (reader.hasNext()) {
             Series s = gson().fromJson(reader, Series.class);
             series.add(s);
+            Log.v("json", "deserializing " + s.name());
         }
         reader.endArray();
         reader.close();
+        in.close();
         return series;
     }
 }
