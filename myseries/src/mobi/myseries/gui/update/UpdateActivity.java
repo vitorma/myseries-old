@@ -4,14 +4,11 @@ import java.util.Date;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.notification.DeterminateProgressNotification;
-import mobi.myseries.application.notification.IndeterminateProgressNotification;
-import mobi.myseries.application.notification.Notification;
 import mobi.myseries.application.notification.NotificationDispatcher;
-import mobi.myseries.application.notification.TextOnlyNotification;
 import mobi.myseries.application.preferences.UpdatePreferences;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.gui.activity.base.BaseActivity;
+import mobi.myseries.gui.shared.NotificationDispatcherForOrdinaryViews;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +32,6 @@ public class UpdateActivity extends BaseActivity {
     protected void init(Bundle savedInstanceState) {
         this.setupViews();
         this.loadSettings();
-        this.setUpUpdateButton();
 
         App.updateSeriesService().register(this.updateFinishListener);
     }
@@ -66,6 +62,7 @@ public class UpdateActivity extends BaseActivity {
 
     private ProgressBar updateProgressBar;
     private TextView updateStatusTextView;
+    private NotificationDispatcher updateNotificationDispatcher;
 
     private TextView latestSuccessfulUpdateTextView;
 
@@ -81,9 +78,19 @@ public class UpdateActivity extends BaseActivity {
 
         this.updateProgressBar = (ProgressBar) this.findViewById(R.id.updateNotificationProgressBar);
         this.updateStatusTextView = (TextView) this.findViewById(R.id.updateNotificationStatusMessage);
+        this.updateNotificationDispatcher = new NotificationDispatcherForOrdinaryViews(updateStatusTextView, updateProgressBar,
+                                                                                       this.getText(R.string.update_not_running));
 
         this.latestSuccessfulUpdateTextView = (TextView) this.findViewById(R.id.latestSuccessfulUpdateMessage);
         this.refreshLatestSuccessfulUpdateTextView();
+
+        this.updateButton = (Button) this.findViewById(R.id.updateButton);
+        this.updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdateActivity.this.runManualUpdate();
+            }
+        });
     }
 
     private void saveSettings(int checkedButtonId) {
@@ -122,14 +129,16 @@ public class UpdateActivity extends BaseActivity {
         }
     }
 
-    private void setUpUpdateButton() {
-        this.updateButton = (Button) this.findViewById(R.id.updateButton);
-        this.updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpdateActivity.this.runManualUpdate();
-            }
-        });
+    @Override
+    protected void onStart() {
+        super.onStart();
+        App.notificationService().setUpdateNotificationDispatcher(this.updateNotificationDispatcher);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        App.notificationService().removeUpdateNotificationDispatcher(this.updateNotificationDispatcher);
     }
 
     @Override
@@ -144,57 +153,6 @@ public class UpdateActivity extends BaseActivity {
 
     private UpdatePreferences updatePreferences() {
         return App.preferences().forUpdate();
-    }
-
-    private final NotificationDispatcher updateNotificationDispatcher = new NotificationDispatcher() {
-
-        @Override
-        public void notifyTextOnlyNotification(TextOnlyNotification notification) {
-            updateProgressBar.setIndeterminate(false);
-            updateProgressBar.setMax(0);
-            updateProgressBar.setProgress(0);
-
-            updateStatusTextView.setText(notification.message());
-        }
-
-        @Override
-        public void notifyIndeterminateProgressNotification(
-                IndeterminateProgressNotification notification) {
-            updateProgressBar.setIndeterminate(true);
-
-            updateStatusTextView.setText(notification.message());
-        }
-
-        @Override
-        public void notifyDeterminateProgressNotification(
-                DeterminateProgressNotification notification) {
-            updateProgressBar.setIndeterminate(false);
-            updateProgressBar.setMax(notification.totalProgress());
-            updateProgressBar.setProgress(notification.currentProgress());
-
-            updateStatusTextView.setText(notification.message());
-        }
-
-        @Override
-        public void cancel(Notification notification) {
-            updateProgressBar.setIndeterminate(false);
-            updateProgressBar.setMax(0);
-            updateProgressBar.setProgress(0);
-
-            updateStatusTextView.setText(R.string.update_not_running);
-        }
-    };
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        App.notificationService().setUpdateNotificationDispatcher(this.updateNotificationDispatcher);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        App.notificationService().removeUpdateNotificationDispatcher(this.updateNotificationDispatcher);
     }
 
     private void runManualUpdate() {
