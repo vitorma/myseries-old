@@ -6,8 +6,10 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ImageDownloader;
+import mobi.myseries.gui.shared.Images;
 import mobi.myseries.shared.Strings;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 public class AddSeriesAdapter extends ArrayAdapter<Series> {
     private LayoutInflater layoutInflater;
     private ImageDownloader imageDownloader;
+
+    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
 
     public AddSeriesAdapter(Context context, List<Series> objects) {
         super(context, R.layout.addseries_item, objects);
@@ -44,7 +48,7 @@ public class AddSeriesAdapter extends ArrayAdapter<Series> {
         viewHolder.name.setText(series.name());
 
         if (Strings.isNullOrBlank(series.posterFileName())) {
-            viewHolder.image.setImageDrawable(App.resources().getDrawable(R.drawable.generic_poster));
+            viewHolder.image.setImageBitmap(GENERIC_POSTER);
         } else {
             this.imageDownloader.download(series.posterFileName(), viewHolder.image, false);
         }
