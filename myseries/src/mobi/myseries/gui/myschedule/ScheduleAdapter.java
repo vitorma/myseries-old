@@ -56,6 +56,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     private static final int STATE_SECTIONED = 1;
     private static final int STATE_REGULAR = 2;
 
+    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterThumbnailFrom(App.resources());
+
     private int scheduleMode;
     private MySchedulePreferences preferences;
     private ScheduleMode items;
@@ -89,8 +91,15 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = Objects.nullSafe(convertView, View.inflate(App.context(), R.layout.myschedule_item, null));
-        ViewHolder viewHolder = (view == convertView) ? (ViewHolder) view.getTag() : new ViewHolder(view);
+        View view = convertView;
+        ViewHolder viewHolder;
+
+        if (view == null) {
+            view = View.inflate(App.context(), R.layout.myschedule_item, null);
+            viewHolder = new ViewHolder(view);
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
+        }
 
         Episode episode = this.items.episodeAt(position);
         Series series = App.seriesProvider().getSeries(episode.seriesId());
@@ -124,9 +133,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     }
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
-        Bitmap seriesPoster = App.imageService().getPosterOf(series);
-        Bitmap genericPoster = Images.genericSeriesPosterThumbnailFrom(App.resources());
-        viewHolder.poster.setImageBitmap(Objects.nullSafe(seriesPoster, genericPoster));
+        Bitmap seriesPoster = App.imageService().getSmallPosterOf(series);
+        viewHolder.poster.setImageBitmap(Objects.nullSafe(seriesPoster, GENERIC_POSTER));
 
         viewHolder.seriesName.setText(series.name());
 
