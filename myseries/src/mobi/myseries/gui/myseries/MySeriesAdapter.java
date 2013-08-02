@@ -68,11 +68,15 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = Objects.nullSafe(
-            convertView,
-            View.inflate(App.context(), R.layout.myseries_item, null));
+        View view = convertView;
+        ViewHolder viewHolder;
 
-        ViewHolder viewHolder = (view == convertView) ? (ViewHolder) view.getTag() : new ViewHolder(view);
+        if (view == null) {
+            view = View.inflate(App.context(), R.layout.myseries_item, null);
+            viewHolder = new ViewHolder(view);
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
+        }
 
         Series series = this.items.get(position);
 
