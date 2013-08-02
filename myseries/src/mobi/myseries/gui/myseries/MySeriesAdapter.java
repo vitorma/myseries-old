@@ -37,6 +37,8 @@ import android.widget.TextView;
 public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAdapter.Listener> {
     private List<Series> items;
 
+    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
+
     public MySeriesAdapter() {
         App.followSeriesService().register(this.seriesFollowingListener);
         App.updateSeriesService().register(this.updateListener);
@@ -81,8 +83,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
     private void setUpView(ViewHolder viewHolder, Series series) {
         Bitmap poster = App.imageService().getPosterOf(series);
-        Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
-        viewHolder.poster.setImageBitmap(Objects.nullSafe(poster, genericPoster));
+        viewHolder.poster.setImageBitmap(Objects.nullSafe(poster, GENERIC_POSTER));
 
         String name = series.name();
         viewHolder.name.setText(name);
@@ -263,7 +264,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         @Override
         public void onRestoreRunning(BackupMode mode) {
             // TODO Auto-generated method stub
-            
+
         }
 
         @Override
