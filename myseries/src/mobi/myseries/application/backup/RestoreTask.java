@@ -1,5 +1,7 @@
 package mobi.myseries.application.backup;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,21 +45,34 @@ public class RestoreTask implements OperationTask {
     }
     
     private String getJsonFromFile(String jsonFileName) throws Exception, IOException {
-        File cacheFile = new File(App.context().getCacheDir(), jsonFileName);
-        backupMode.downloadBackupToFile(cacheFile);
-        String cacheFilePath = cacheFile.getAbsolutePath();
-        String stringContent = FilesUtil.readFileAsString(cacheFilePath, null);
-        return stringContent;
+        File cacheFile = null;
+        try {
+            cacheFile = new File(App.context().getCacheDir(), jsonFileName);
+            backupMode.downloadBackupToFile(cacheFile);
+            String cacheFilePath = cacheFile.getAbsolutePath();
+            String stringContent = FilesUtil.readFileAsString(cacheFilePath, null);
+            return stringContent;
+        } finally {
+            if(cacheFile != null)
+                cacheFile.delete();
+        }
+        
     }
 
     private Collection<Series> getSeriesFromFile(String jsonFileName) throws Exception, IOException {
-        File cacheFile = new File(App.context().getCacheDir(), jsonFileName);
-        backupMode.downloadBackupToFile(cacheFile);
-        JsonHelper.readSeriesJsonStream(new FileInputStream(cacheFile));
-        return JsonHelper.readSeriesJsonStream(new FileInputStream(cacheFile));
+        File cacheFile = null;
+        try {
+            cacheFile = new File(App.context().getCacheDir(), jsonFileName);
+            backupMode.downloadBackupToFile(cacheFile);
+            return JsonHelper.readSeriesJsonStream(new BufferedInputStream(new FileInputStream(cacheFile)));
+        } finally { 
+            if(cacheFile != null)
+                cacheFile.delete();
+        }
     }
 
     private void restoreSeries(Collection<Series> series) {
+        App.followSeriesService().stopFollowingAll(repository.getAll());
         for (Series s : series) {
             repository.insert(s);
         }

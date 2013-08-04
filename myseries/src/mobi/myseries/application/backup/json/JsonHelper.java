@@ -40,7 +40,6 @@ public class JsonHelper {
     private static Gson gson() {
         if(gson == null) {
             GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.serializeNulls();
             gsonBuilder.registerTypeAdapter(Series.class, new SeriesAdapter());
             gsonBuilder.registerTypeAdapter(Episode.class, new EpisodeAdapter());
             gson = gsonBuilder.create();
@@ -52,8 +51,8 @@ public class JsonHelper {
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
         writer.beginArray();
         for (Series s : series) {
-            gson().toJson(s, Series.class, writer);
             Log.v("json", "serializing " + s.name());
+            gson().toJson(s, Series.class, writer);
         }
         writer.endArray();
         writer.close();
@@ -67,7 +66,7 @@ public class JsonHelper {
         while (reader.hasNext()) {
             Series s = gson().fromJson(reader, Series.class);
             series.add(s);
-            Log.v("json", "deserializing " + s.name());
+            Log.v("json", "deserialized" + s.name());
         }
         reader.endArray();
         reader.close();

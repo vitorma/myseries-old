@@ -1,5 +1,6 @@
 package mobi.myseries.application.backup;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Collection;
@@ -25,18 +26,25 @@ public class BackupTask implements OperationTask {
 
     @Override
     public void run() {
+        File seriesCacheFile = null;
+        File preferencesCacheFile = null;
         try {
-            File seriesCacheFile = new File(App.context().getCacheDir(), "myseries.json");
+            seriesCacheFile = new File(App.context().getCacheDir(), "myseries.json");
             Collection<Series> series = repository.getAll();
-            JsonHelper.writeSeriesJsonStream(new FileOutputStream(seriesCacheFile), series);
+            JsonHelper.writeSeriesJsonStream(new BufferedOutputStream(new FileOutputStream(seriesCacheFile)), series);
             backupMode.backupDB(seriesCacheFile);
-            File preferencesCacheFile = new File(App.context().getCacheDir(), "preferences.json");
+            preferencesCacheFile = new File(App.context().getCacheDir(), "preferences.json");
             Map<String, ?> preferences = App.context().getSharedPreferences("mobi.myseries.preferences", Context.MODE_PRIVATE).getAll();
             JsonHelper.preferencesToJson(preferences, preferencesCacheFile);
             backupMode.backupDB(preferencesCacheFile);
         } catch (Exception e) {
             this.result = new OperationResult().withError(e);
             return;
+        } finally {
+            if(seriesCacheFile != null)
+                seriesCacheFile.delete();
+            if(preferencesCacheFile != null)
+                preferencesCacheFile.delete();
         }
         this.result = new OperationResult();
     }

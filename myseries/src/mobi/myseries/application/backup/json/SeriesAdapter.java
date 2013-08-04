@@ -9,6 +9,7 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Numbers;
+import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.WeekDay;
@@ -17,8 +18,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
@@ -50,13 +53,13 @@ public class SeriesAdapter implements JsonSerializer<Series>, JsonDeserializer<S
         seriesJson.addProperty(SERIES_AIRDAY, Numbers.parseLong(series.airDay(), null));
         seriesJson.addProperty(SERIES_AIRTIME, Numbers.parseLong(series.airtime(), null));
         seriesJson.addProperty(SERIES_AIRDATE, Numbers.parseLong(series.airDate(), null));
-        seriesJson.addProperty(SERIES_RUNTIME, series.runtime());
-        seriesJson.addProperty(SERIES_NETWORK, series.network());
-        seriesJson.addProperty(SERIES_OVERVIEW, series.overview());
-        seriesJson.addProperty(SERIES_GENRES, series.genres());
-        seriesJson.addProperty(SERIES_ACTORS, series.actors());
-        seriesJson.addProperty(SERIES_POSTER, series.posterFileName());
-        seriesJson.addProperty(SERIES_LASTUPDATE, series.lastUpdate());
+        //seriesJson.addProperty(SERIES_RUNTIME, series.runtime());
+        //seriesJson.addProperty(SERIES_NETWORK, series.network());
+        //seriesJson.addProperty(SERIES_OVERVIEW, series.overview());
+        //seriesJson.addProperty(SERIES_GENRES, series.genres());
+        //seriesJson.addProperty(SERIES_ACTORS, series.actors());
+        //seriesJson.addProperty(SERIES_POSTER, series.posterFileName());
+        //seriesJson.addProperty(SERIES_LASTUPDATE, series.lastUpdate());
         JsonArray episodesArray = new JsonArray();
         seriesJson.add("episodes", episodesArray);
         for (Episode episodes : series.episodes()) {
@@ -78,16 +81,16 @@ public class SeriesAdapter implements JsonSerializer<Series>, JsonDeserializer<S
                 .withId(seriesJson.get(SERIES_ID).getAsInt())
                 .withName(seriesJson.get(SERIES_NAME).getAsString())
                 .withStatus(Status.from(seriesJson.get(SERIES_STATUS).getAsString()))
-                .withAirDay(DatesAndTimes.parse(seriesJson.get(SERIES_AIRDAY).isJsonNull()? null : seriesJson.get(SERIES_AIRDAY).getAsLong(), DEFAULT_AIRDAY))
-                .withAirtime(DatesAndTimes.parse(seriesJson.get(SERIES_AIRTIME).isJsonNull()? null : seriesJson.get(SERIES_AIRTIME).getAsLong(), DEFAULT_AIRTIME))
-                .withAirDate(DatesAndTimes.parse(seriesJson.get(SERIES_AIRDATE).isJsonNull()? null : seriesJson.get(SERIES_AIRDATE).getAsLong(), DEFAULT_AIRDATE))
-                .withRuntime(seriesJson.get(SERIES_RUNTIME).getAsString())
-                .withNetwork(seriesJson.get(SERIES_NETWORK).getAsString())
-                .withOverview(seriesJson.get(SERIES_OVERVIEW).getAsString())
-                .withGenres(seriesJson.get(SERIES_GENRES).getAsString())
-                .withActors(seriesJson.get(SERIES_ACTORS).getAsString())
-                .withPosterFileName(seriesJson.get(SERIES_POSTER).getAsString())
-                .withLastUpdate(seriesJson.get(SERIES_LASTUPDATE).getAsLong())
+                .withAirDay(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRDAY), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRDAY).getAsLong(), DEFAULT_AIRDAY))
+                .withAirtime(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRTIME), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRTIME).getAsLong(), DEFAULT_AIRTIME))
+                .withAirDate(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRDATE), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRDATE).getAsLong(), DEFAULT_AIRDATE))
+                .withRuntime(Objects.nullSafe(seriesJson.get(SERIES_RUNTIME), new JsonPrimitive("")).getAsString())
+                .withNetwork(Objects.nullSafe(seriesJson.get(SERIES_NETWORK), new JsonPrimitive("")).getAsString())
+                .withOverview(Objects.nullSafe(seriesJson.get(SERIES_OVERVIEW), new JsonPrimitive("")).getAsString())
+                .withGenres(Objects.nullSafe(seriesJson.get(SERIES_GENRES), new JsonPrimitive("")).getAsString())
+                .withActors(Objects.nullSafe(seriesJson.get(SERIES_ACTORS), new JsonPrimitive("")).getAsString())
+                .withPosterFileName(Objects.nullSafe(seriesJson.get(SERIES_POSTER), new JsonPrimitive("")).getAsString())
+                .withLastUpdate(Objects.nullSafe(seriesJson.get(SERIES_LASTUPDATE), new JsonPrimitive(Long.MIN_VALUE)).getAsLong())
                 .build()
                 .includingAll(episodes);
     }

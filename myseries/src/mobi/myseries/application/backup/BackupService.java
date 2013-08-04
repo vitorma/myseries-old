@@ -208,7 +208,6 @@ public class BackupService {
     }
 
     public void performRestore(final BackupMode mode) {
-        App.followSeriesService().stopFollowingAll(repository.getAll());
         new Thread(new Runnable() {
             @Override
             public void run() {
