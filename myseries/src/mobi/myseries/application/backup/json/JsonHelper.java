@@ -51,7 +51,7 @@ public class JsonHelper {
     public static void writeSeriesJsonStream(OutputStream out, Collection<Series> series) throws IOException {
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
         writer.beginArray();
-        writer.setIndent(INDENT);
+        //writer.setIndent(INDENT); the makes the file bigger
         for (Series s : series) {
             Log.v("json", "serializing " + s.name());
             gson().toJson(s, Series.class, writer);
