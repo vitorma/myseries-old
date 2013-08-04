@@ -23,6 +23,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 public class JsonHelper {
+    private static final String INDENT = "    ";
     
     private static  Gson gson;
     
@@ -50,6 +51,7 @@ public class JsonHelper {
     public static void writeSeriesJsonStream(OutputStream out, Collection<Series> series) throws IOException {
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
         writer.beginArray();
+        writer.setIndent(INDENT);
         for (Series s : series) {
             Log.v("json", "serializing " + s.name());
             gson().toJson(s, Series.class, writer);
@@ -66,7 +68,7 @@ public class JsonHelper {
         while (reader.hasNext()) {
             Series s = gson().fromJson(reader, Series.class);
             series.add(s);
-            Log.v("json", "deserialized" + s.name());
+            Log.v("json", "deserialized " + s.name());
         }
         reader.endArray();
         reader.close();

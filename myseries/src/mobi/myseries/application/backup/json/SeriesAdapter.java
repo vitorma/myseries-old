@@ -90,7 +90,7 @@ public class SeriesAdapter implements JsonSerializer<Series>, JsonDeserializer<S
                 .withGenres(Objects.nullSafe(seriesJson.get(SERIES_GENRES), new JsonPrimitive("")).getAsString())
                 .withActors(Objects.nullSafe(seriesJson.get(SERIES_ACTORS), new JsonPrimitive("")).getAsString())
                 .withPosterFileName(Objects.nullSafe(seriesJson.get(SERIES_POSTER), new JsonPrimitive("")).getAsString())
-                .withLastUpdate(Objects.nullSafe(seriesJson.get(SERIES_LASTUPDATE), new JsonPrimitive(Long.MIN_VALUE)).getAsLong())
+                .withLastUpdate(Objects.nullSafe(seriesJson.get(SERIES_LASTUPDATE), new JsonPrimitive(0)).getAsLong())
                 .build()
                 .includingAll(episodes);
     }
