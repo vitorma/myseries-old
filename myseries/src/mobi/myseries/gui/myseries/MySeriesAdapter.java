@@ -3,8 +3,6 @@ package mobi.myseries.gui.myseries;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -35,18 +33,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAdapter.Listener> {
-    private List<Series> items;
-
     private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
 
+    private ArrayList<Series> items;
+
     public MySeriesAdapter() {
+        this.items = new ArrayList<Series>();
+
+        this.reloadData();
+
         App.followSeriesService().register(this.seriesFollowingListener);
         App.updateSeriesService().register(this.updateListener);
         App.backupService().register(this.backupListener);
-
-        this.items = new ArrayList<Series>();
-
-        this.reload();
     }
 
     /* BaseAdapter */
@@ -106,7 +104,10 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         viewHolder.seenEpisodesBar.updateWith(series.episodesBy(spec1));
     }
 
-    public void reload() {
+    //Carregar poster assincronamente
+
+
+    public void reloadData() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
@@ -130,8 +131,8 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpData() {
+        this.items = new ArrayList<Series>();
         Map<Series,Boolean> filterOptions = App.preferences().forMySeries().seriesToShow();
-        this.items = new LinkedList<Series>();
 
         for (Entry<Series,Boolean> option : filterOptions.entrySet()) {
             if (option.getValue()) {
@@ -206,14 +207,14 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
                 s.deregister(MySeriesAdapter.this.seriesListener);
             }
 
-            MySeriesAdapter.this.reload();
+            MySeriesAdapter.this.reloadData();
         }
 
         @Override
         public void onStopFollowing(Series unfollowedSeries) {
             unfollowedSeries.deregister(MySeriesAdapter.this.seriesListener);
 
-            MySeriesAdapter.this.reload();
+            MySeriesAdapter.this.reloadData();
         }
 
         @Override
@@ -226,7 +227,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         public void onFollowing(Series followedSeries) {
             followedSeries.register(MySeriesAdapter.this.seriesListener);
 
-            MySeriesAdapter.this.reload();
+            MySeriesAdapter.this.reloadData();
         }
     };
 
@@ -235,7 +236,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     private final UpdateFinishListener updateListener = new UpdateFinishListener() {
         @Override
         public void onUpdateFinish() {
-            MySeriesAdapter.this.reload();
+            MySeriesAdapter.this.reloadData();
         }
     };
 
@@ -247,7 +248,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
         @Override
         public void onRestoreSucess() {
-            MySeriesAdapter.this.reload();
+            MySeriesAdapter.this.reloadData();
         }
 
         @Override
@@ -273,7 +274,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
         @Override
         public void onRestoreCompleted(BackupMode mode) {
-            MySeriesAdapter.this.reload();
+            MySeriesAdapter.this.reloadData();
         }
 
     };

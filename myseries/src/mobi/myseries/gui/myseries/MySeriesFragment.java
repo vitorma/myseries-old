@@ -68,7 +68,7 @@ public class MySeriesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        MySeriesFragment.this.adapter.reload();
+        MySeriesFragment.this.adapter.reloadData();
     }
 
     private void prepareViews() {
@@ -122,7 +122,7 @@ public class MySeriesFragment extends Fragment {
     private OnSharedPreferenceChangeListener preferencesListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            MySeriesFragment.this.adapter.reload();
+            MySeriesFragment.this.adapter.reloadData();
         }
     };
 }
