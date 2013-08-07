@@ -194,7 +194,6 @@ public class FollowSeriesService implements Publisher<SeriesFollowingListener> {
             FollowSeriesService.this.seriesRepository.insert(this.followedSeries);
 
             FollowSeriesService.this.imageService.downloadAndSavePosterOf(this.followedSeries);
-            FollowSeriesService.this.imageService.downloadAndSaveBannerOf(this.followedSeries);
 
             this.failed = false;
         }
