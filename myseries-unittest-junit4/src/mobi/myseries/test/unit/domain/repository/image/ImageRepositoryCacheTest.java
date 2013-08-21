@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +26,7 @@ public class ImageRepositoryCacheTest extends ImageCacheTest {
 
     @Override
     protected ImageRepository newImageCache(ImageRepository cachedRepository) {
-        return new ImageRepositoryCache(this.cachedRepository);
+        return new ImageRepositoryCache(cachedRepository);
     }
 
     /* Construction */
@@ -61,6 +62,22 @@ public class ImageRepositoryCacheTest extends ImageCacheTest {
         for (int image : returnedImages) {
             verify(cachedRepository).fetch(image);
         }
+    }
+
+    /* Fetching */
+
+    @Test
+    public void fetchingAnAlreadySavedImageImmediatelyAfterConstructionDoesNotTouchTheCachedRepository()
+            throws ImageRepositoryException {
+        List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
+        int fetchedImage = 1;
+
+        ImageRepository cachedRepository = mock(ImageRepository.class);
+        when(cachedRepository.savedImages()).thenReturn(returnedImages);
+
+        newImageCache(cachedRepository).fetch(fetchedImage);
+
+        verify(cachedRepository, times(1)).fetch(fetchedImage);  // only for prefetching
     }
 
     /* Saved Images */

@@ -6,6 +6,7 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import mobi.myseries.domain.repository.image.ImageRepository;
 import mobi.myseries.domain.repository.image.ImageRepositoryException;
 import android.graphics.Bitmap;
