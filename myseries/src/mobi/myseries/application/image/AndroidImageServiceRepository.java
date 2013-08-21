@@ -27,6 +27,7 @@ import mobi.myseries.domain.repository.image.ExternalStorageImageDirectory;
 import mobi.myseries.domain.repository.image.ImageRepository;
 import mobi.myseries.domain.repository.image.ImageRepositoryCache;
 import mobi.myseries.domain.repository.image.ImageRepositoryException;
+import mobi.myseries.domain.repository.image.LruImageCache;
 import mobi.myseries.domain.repository.image.LruRepositoryManager;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
@@ -49,6 +50,11 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     private static final int NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES = EPISODE_IMAGE_CACHE_SIZE /
                                                                              EPISODE_IMAGE_AVERAGE_SIZE;
 
+    // The number of poster cache entries was based on an experiment on Gabriel's 4.0.3 emulator
+    // where the application crashed after adding 17 series, on 2013-08-21.
+    // With 15 series, MySeriesActivity was OK, but it crashed after opening SeriesDetailsActivity.
+    private static final int NUMBER_OF_POSTER_CACHE_ENTRIES = 10;
+
     private final ImageRepository posterDirectory;
     private final ImageRepository smallPosterDirectory;
     private final ImageRepository episodeDirectory;
@@ -57,7 +63,8 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     public AndroidImageServiceRepository(Context context) {
         Validate.isNonNull(context, "context");
 
-        this.posterDirectory = new ImageRepositoryCache(new ExternalStorageImageDirectory(context, SERIES_POSTERS));
+        this.posterDirectory = new LruImageCache(new ExternalStorageImageDirectory(context, SERIES_POSTERS),
+                                                 NUMBER_OF_POSTER_CACHE_ENTRIES);
 
         this.smallPosterDirectory = new ImageRepositoryCache(new ExternalStorageImageDirectory(context, SMALL_SERIES_POSTERS));
 
