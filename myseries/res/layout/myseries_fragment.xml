@@ -27,15 +27,61 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/paddingTop"/>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/empty"
-        style="@style/TextView.Large.DarkGray.Ellipsized"
-        android:fontFamily="sans-serif-light"
-        android:text="@string/no_series_to_show"
+        android:orientation="vertical"
         android:visibility="invisible"
-        android:layout_width="wrap_content"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/title"
+            android:text="@string/no_series_to_show"
+            style="@style/TextView.XLarge.DarkGray"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/gap_medium"/>
+
+        <TextView
+            android:id="@+id/hiddenSeries"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/text_blue"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/gap_large"/>
+
+        <Button
+            android:id="@+id/filterSeries"
+            android:text="@string/btn_unhide_series"
+            android:textSize="@dimen/text_size_xmedium"
+            android:textColor="@color/text_dark_gray"
+            android:drawableLeft="@drawable/ic_action_filter_inverse"
+            android:drawablePadding="@dimen/gap_medium"
+            android:gravity="left|center_vertical"
+            android:paddingRight="@dimen/gap_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/gap_micro"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            android:id="@+id/addSeries"
+            android:text="@string/btn_add_series"
+            android:textSize="@dimen/text_size_xmedium"
+            android:textColor="@color/text_dark_gray"
+            android:drawableLeft="@drawable/ic_action_add_inverse"
+            android:drawablePadding="@dimen/gap_medium"
+            android:gravity="left|center_vertical"
+            android:paddingRight="@dimen/gap_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressIndicator"

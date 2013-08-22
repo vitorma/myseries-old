@@ -34,7 +34,7 @@
     <string name="no_series_selected_to_remove">No series selected to remove.</string>
     <string name="no_series_to_remove">No series to remove.</string>
     <string name="no_series_to_filter">No series to filter.</string>
-    <string name="no_series_to_show">No series to show.</string>
+    <string name="no_series_to_show">No series to show</string>
     <string name="no_series_to_sort">No series to sort.</string>
     <string name="no_episodes_to_sort">No episodes to sort.</string>
     <string name="no_episodes_to_show">No episodes to show.</string>
@@ -68,6 +68,13 @@
         <item quantity="other">unaired</item>
     </plurals>
     <string name="all_aired">All aired</string>
+
+    <plurals name="plural_there_are_hidden_series">
+        <item quantity="one">But there is %d hidden series</item>
+        <item quantity="other">But there are %d hidden series</item>
+    </plurals>
+    <string name="btn_add_series">Add series</string>
+    <string name="btn_unhide_series">Unhide series</string>
 
     <!-- Accessibility -->
 

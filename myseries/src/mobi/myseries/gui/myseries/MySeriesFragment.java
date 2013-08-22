@@ -3,6 +3,7 @@ package mobi.myseries.gui.myseries;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.series.SeriesActivity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -11,7 +12,9 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
@@ -19,7 +22,7 @@ import android.widget.TextView;
 
 public class MySeriesFragment extends Fragment {
     private GridView showsGrid;
-    private TextView empty;
+    private View empty;
     private ProgressBar progressIndicator;
 
     private MySeriesAdapter adapter;
@@ -64,7 +67,7 @@ public class MySeriesFragment extends Fragment {
         this.adapter.deregister(this.adapterListener);
         App.preferences().forActivities().register(this.preferencesListener);
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
@@ -73,7 +76,7 @@ public class MySeriesFragment extends Fragment {
 
     private void prepareViews() {
         this.showsGrid = (GridView) this.getActivity().findViewById(R.id.showsGrid);
-        this.empty = (TextView) this.getActivity().findViewById(R.id.empty);
+        this.empty = this.getActivity().findViewById(R.id.empty);
         this.progressIndicator = (ProgressBar) this.getActivity().findViewById(R.id.progressIndicator);
 
         this.showsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -110,9 +113,52 @@ public class MySeriesFragment extends Fragment {
             if (MySeriesFragment.this.adapter.isEmpty()) {
                 MySeriesFragment.this.showsGrid.setVisibility(View.INVISIBLE);
                 MySeriesFragment.this.empty.setVisibility(View.VISIBLE);
+
+                this.prepareEmptyView();
             } else {
                 MySeriesFragment.this.showsGrid.setVisibility(View.VISIBLE);
                 MySeriesFragment.this.empty.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        private void prepareEmptyView() {
+            View addSeries = MySeriesFragment.this.empty.findViewById(R.id.addSeries);
+            TextView hiddenSeries = (TextView) MySeriesFragment.this.empty.findViewById(R.id.hiddenSeries);
+            View filterSeries = MySeriesFragment.this.empty.findViewById(R.id.filterSeries);
+
+            addSeries.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MySeriesFragment.this.startActivity(AddSeriesActivity.newIntent(MySeriesFragment.this.getActivity()));
+                }
+            });
+
+            int numberOfFollowedSeries = App.seriesProvider().followedSeries().size();
+
+            if (numberOfFollowedSeries == 0) {
+                hiddenSeries.setVisibility(View.GONE);
+                filterSeries.setVisibility(View.GONE);
+
+                addSeries.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
+
+            } else {
+                hiddenSeries.setVisibility(View.VISIBLE);
+                filterSeries.setVisibility(View.VISIBLE);
+
+                hiddenSeries.setText(
+                        App.resources().getQuantityString(
+                                R.plurals.plural_there_are_hidden_series,
+                                numberOfFollowedSeries,
+                                numberOfFollowedSeries));
+
+                filterSeries.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new SeriesFilterDialogFragment().show(MySeriesFragment.this.getFragmentManager(), "seriesFilterDialog");
+                    }
+                });
+
+                addSeries.getLayoutParams().width = LayoutParams.MATCH_PARENT;
             }
         }
     };
