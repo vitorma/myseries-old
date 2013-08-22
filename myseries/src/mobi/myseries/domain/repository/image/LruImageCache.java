@@ -6,7 +6,6 @@ import mobi.myseries.shared.Validate;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 
 public class LruImageCache implements ImageRepository {
 
@@ -33,7 +32,7 @@ public class LruImageCache implements ImageRepository {
         Bitmap cachedImage = this.cache.get(id);
 
         if (cachedImage == null) {
-            Log.d(getClass().getName(), "Image cache miss: " + id);
+            //Log.d(getClass().getName(), "Image cache miss: " + id);
             Bitmap fetchedImage = this.cachedRepository.fetch(id);
 
             if (fetchedImage == null) {
@@ -43,7 +42,7 @@ public class LruImageCache implements ImageRepository {
                 return fetchedImage;
             }
         } else {
-            Log.d(getClass().getName(), "Image cache hit: " + id);
+            //Log.d(getClass().getName(), "Image cache hit: " + id);
             return cachedImage;
         }
     }

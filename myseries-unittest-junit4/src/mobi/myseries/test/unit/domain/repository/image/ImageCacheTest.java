@@ -6,7 +6,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,12 +13,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import mobi.myseries.domain.repository.image.ImageRepository;
-import mobi.myseries.domain.repository.image.ImageRepositoryCache;
 import mobi.myseries.domain.repository.image.ImageRepositoryException;
 import mobi.myseries.testutil.CatchAllExceptionsRule;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -30,6 +29,7 @@ import android.graphics.Bitmap;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Bitmap.class)
+@Ignore("This is just a base class thus should not be run.")
 public abstract class ImageCacheTest {
 
     private static int MAXIMUM_TIME_FOR_ASYNC_OPERATIONS = 1000;  // milliseconds
@@ -77,20 +77,6 @@ public abstract class ImageCacheTest {
     }
 
     @Test
-    public void fetchingAnAlreadySavedImageImmediatelyAfterConstructionDoesNotTouchTheCachedRepository()
-            throws ImageRepositoryException {
-        List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
-        int fetchedImage = 1;
-
-        ImageRepository cachedRepository = mock(ImageRepository.class);
-        when(cachedRepository.savedImages()).thenReturn(returnedImages);
-
-        new ImageRepositoryCache(cachedRepository).fetch(fetchedImage);
-
-        verify(cachedRepository, times(1)).fetch(fetchedImage);  // only for prefetching
-    }
-
-    @Test
     public void fetchingAnAlreadySavedImageImmediatelyAfterConstructionReturnsTheSavedImage()
             throws ImageRepositoryException {
         List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
@@ -100,7 +86,7 @@ public abstract class ImageCacheTest {
         when(cachedRepository.savedImages()).thenReturn(returnedImages);
         when(cachedRepository.fetch(fetchedImageId)).thenReturn(DEFAULT_IMAGE);
 
-        Bitmap fetchedImage = new ImageRepositoryCache(cachedRepository).fetch(fetchedImageId);
+        Bitmap fetchedImage = newImageCache(cachedRepository).fetch(fetchedImageId);
 
         assertThat(fetchedImage, sameInstance(DEFAULT_IMAGE));
     }
@@ -192,14 +178,16 @@ public abstract class ImageCacheTest {
         int imageId3 = imageId2 + 1;
         Bitmap savedImage = DEFAULT_IMAGE;
 
-        when(this.cachedRepository.savedImages())
+        ImageRepository cachedRepository = mock(ImageRepository.class);
+        when(cachedRepository.savedImages())
                 .thenReturn(Arrays.asList(imageId1, imageId2, imageId3));
+        ImageRepository cache = newImageCache(cachedRepository);
 
-        this.cache.save(imageId1, savedImage);
-        this.cache.save(imageId2, savedImage);
-        this.cache.save(imageId3, savedImage);
+        cache.save(imageId1, savedImage);
+        cache.save(imageId2, savedImage);
+        cache.save(imageId3, savedImage);
 
-        assertThat(this.cache.savedImages(), hasItems(imageId1, imageId2, imageId3));
-        assertThat(this.cache.savedImages().size(), equalTo(3));
+        assertThat(cache.savedImages(), hasItems(imageId1, imageId2, imageId3));
+        assertThat(cache.savedImages().size(), equalTo(3));
     }    
 }
