@@ -34,7 +34,7 @@
     <string name="no_series_selected_to_remove">Nenhuma série marcada para remoção.</string>
     <string name="no_series_to_remove">Nenhuma série para remover.</string>
     <string name="no_series_to_filter">Nenhuma série para filtrar.</string>
-    <string name="no_series_to_show">Nenhuma série para exibir.</string>
+    <string name="no_series_to_show">Nenhuma série para mostrar</string>
     <string name="no_series_to_sort">Nenhuma série para ordenar.</string>
     <string name="no_episodes_to_sort">Nenhum episódio para ordenar.</string>
     <string name="no_episodes_to_show">Nenhum episódio para exibir.</string>
@@ -46,8 +46,8 @@
     <string name="relative_time_yesterday">Ontem</string>
     <string name="relative_time_past">%d dias atrás</string>
     <string name="relative_time_future">Daqui a %d dias</string>
-    <string name="status_continuing">Continuando</string>
-    <string name="status_ended">Terminada</string>
+    <string name="status_continuing">Em exibição</string>
+    <string name="status_ended">Encerrada</string>
     <string name="number_of_results_for_search_by_name" formatted="false">%d séries encontradas</string>
     <string name="trending">TENDÊNCIAS</string>
     <string name="powered_by_trakt">Powered by Trakt.tv</string>
@@ -68,6 +68,13 @@
         <item quantity="other">não lançados</item>
     </plurals>
     <string name="all_aired">Todos lançados</string>
+
+    <plurals name="plural_there_are_hidden_series">
+        <item quantity="one">Mas há %d série oculta</item>
+        <item quantity="other">Mas há %d séries ocultas</item>
+    </plurals>
+    <string name="btn_add_series">Adicionar séries</string>
+    <string name="btn_unhide_series">Desocultar séries</string>
 
     <!-- Accessibility -->
 
