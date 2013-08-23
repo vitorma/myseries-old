@@ -58,6 +58,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Log.setLogger(Log.ANDROID_LOGGER);
+
         environment = new Environment(this);
 
         broadcastService = new BroadcastService(this);
