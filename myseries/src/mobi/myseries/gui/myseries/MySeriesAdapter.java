@@ -27,8 +27,10 @@ import mobi.myseries.shared.Specification;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -83,7 +85,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         return view;
     }
 
-    private void setUpView(ViewHolder viewHolder, Series series) {
+    private void setUpView(ViewHolder viewHolder, final Series series) {
         Bitmap poster = App.imageService().getPosterOf(series);
         viewHolder.poster.setImageBitmap(Objects.nullSafe(poster, GENERIC_POSTER));
 
@@ -102,10 +104,16 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         viewHolder.allEpisodes.setText(allEpisodes);
 
         viewHolder.seenEpisodesBar.updateWith(series.episodesBy(spec1));
+
+        viewHolder.moreButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MySeriesAdapter.this.notifyOnItemContextRequest(series.id());
+            }
+        });
     }
 
-    //Carregar poster assincronamente
-
+    //XXX Carregar poster assincronamente
 
     public void reloadData() {
         new AsyncTask<Void, Void, Void>() {
@@ -157,6 +165,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         private final TextView seenEpisodes;
         private final TextView allEpisodes;
         private final SeenEpisodesBar seenEpisodesBar;
+        private final ImageButton moreButton;
 
         private ViewHolder(View view) {
             this.poster = (ImageView) view.findViewById(R.id.poster);
@@ -164,6 +173,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
             this.seenEpisodes = (TextView) view.findViewById(R.id.seenEpisodes);
             this.allEpisodes = (TextView) view.findViewById(R.id.allEpisodes);
             this.seenEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
+            this.moreButton = (ImageButton) view.findViewById(R.id.moreButton);
 
             view.setTag(this);
         }
@@ -178,24 +188,16 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         }
 
         @Override
-        public void onChangeNextEpisodeToSee(Series series) {}
+        public void onChangeNextEpisodeToSee(Series series) { }
 
         @Override
-        public void onChangeNextNonSpecialEpisodeToSee(Series series) {
-            MySeriesAdapter.this.notifyDataSetChanged();
-        }
+        public void onChangeNextNonSpecialEpisodeToSee(Series series) { }
 
         @Override
-        public void onMarkAsSeen(Series series) {
-            // TODO Auto-generated method stub
-
-        }
+        public void onMarkAsSeen(Series series) { }
 
         @Override
-        public void onMarkAsNotSeen(Series series) {
-            // TODO Auto-generated method stub
-
-        }
+        public void onMarkAsNotSeen(Series series) { }
     };
 
     /* SeriesFollowingListener */
@@ -244,7 +246,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
     private final BackupListener backupListener = new BackupListener() {
         @Override
-        public void onBackupSucess() {}
+        public void onBackupSucess() { }
 
         @Override
         public void onRestoreSucess() {
@@ -252,31 +254,27 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         }
 
         @Override
-        public void onRestoreFailure(BackupMode mode, Exception e) {}
+        public void onRestoreFailure(BackupMode mode, Exception e) { }
 
         @Override
-        public void onStart() {}
+        public void onStart() { }
 
         @Override
-        public void onBackupFailure(BackupMode mode, Exception e) {}
+        public void onBackupFailure(BackupMode mode, Exception e) { }
 
         @Override
-        public void onBackupCompleted(BackupMode mode) {}
+        public void onBackupCompleted(BackupMode mode) { }
 
         @Override
-        public void onBackupRunning(BackupMode mode) {}
+        public void onBackupRunning(BackupMode mode) { }
 
         @Override
-        public void onRestoreRunning(BackupMode mode) {
-            // TODO Auto-generated method stub
-
-        }
+        public void onRestoreRunning(BackupMode mode) { }
 
         @Override
         public void onRestoreCompleted(BackupMode mode) {
             MySeriesAdapter.this.reloadData();
         }
-
     };
 
     /* MySeriesAdapter.Listener */
@@ -284,6 +282,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     public static interface Listener {
         public void onStartLoading();
         public void onFinishLoading();
+        public void onItemContextRequest(int seriesId);
     }
 
     private boolean isLoading;
@@ -312,6 +311,12 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     private void notifyFinishLoading() {
         for (MySeriesAdapter.Listener listener : this.listeners) {
             listener.onFinishLoading();
+        }
+    }
+
+    private void notifyOnItemContextRequest(int seriesId) {
+        for (MySeriesAdapter.Listener listener : this.listeners) {
+            listener.onItemContextRequest(seriesId);
         }
     }
 }

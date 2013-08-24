@@ -27,6 +27,8 @@ public class MySeriesFragment extends Fragment {
 
     private MySeriesAdapter adapter;
 
+    /* Life cycle */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +91,17 @@ public class MySeriesFragment extends Fragment {
             }
         });
 
+        this.showsGrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                int seriesId = ((Series) parent.getItemAtPosition(position)).id();
+
+                MySeriesFragment.this.adapterListener.onItemContextRequest(seriesId);
+
+                return true;
+            }
+        });
+
         if (this.adapter == null) {
             this.adapter = new MySeriesAdapter();
         }
@@ -119,6 +132,11 @@ public class MySeriesFragment extends Fragment {
                 MySeriesFragment.this.showsGrid.setVisibility(View.VISIBLE);
                 MySeriesFragment.this.empty.setVisibility(View.INVISIBLE);
             }
+        }
+
+        @Override
+        public void onItemContextRequest(int seriesId) {
+            MySeriesContextMenuDialogFragment.showDialog(seriesId, MySeriesFragment.this.getFragmentManager());
         }
 
         private void prepareEmptyView() {

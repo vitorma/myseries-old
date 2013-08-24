@@ -3,6 +3,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/card_background"
+    android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -32,6 +33,17 @@
         android:layout_below="@id/name"/>
 
     <TextView
+        android:id="@+id/seenEpisodes"
+        style="@style/TextView.Medium.Blue"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingBottom="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/seenEpisodesBar"/>
+
+    <TextView
         android:id="@+id/allEpisodes"
         style="@style/TextView.Medium"
         android:textColor="#ff999999"
@@ -40,18 +52,17 @@
         android:paddingRight="@dimen/gap_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/seenEpisodes"
         android:layout_below="@id/seenEpisodesBar"/>
 
-    <TextView
-        android:id="@+id/seenEpisodes"
-        style="@style/TextView.Medium.Blue"
-        android:paddingTop="@dimen/gap_medium"
-        android:paddingBottom="@dimen/gap_medium"
-        android:paddingLeft="@dimen/gap_medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/allEpisodes"
+    <ImageButton
+        android:id="@+id/moreButton"
+        android:background="@color/transparent"
+        android:src="@drawable/btn_context"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="-14dp"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/seenEpisodesBar"/>
 
 </RelativeLayout>
