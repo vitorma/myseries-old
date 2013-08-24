@@ -71,7 +71,7 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
         this.episodeDirectory = new LruRepositoryManager(new ExternalStorageImageDirectory(context, EPISODE_IMAGES),
                                                          NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES);
 
-        this.bannerDirectory = new ImageRepositoryCache(new ExternalStorageImageDirectory(context, SERIES_BANNERS));
+        this.bannerDirectory = new ExternalStorageImageDirectory(context, SERIES_BANNERS);
     }
 
     @Override

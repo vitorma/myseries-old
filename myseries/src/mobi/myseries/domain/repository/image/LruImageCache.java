@@ -2,6 +2,7 @@ package mobi.myseries.domain.repository.image;
 
 import java.util.Collection;
 
+import mobi.myseries.application.Log;
 import mobi.myseries.shared.Validate;
 
 import android.graphics.Bitmap;
@@ -32,7 +33,7 @@ public class LruImageCache implements ImageRepository {
         Bitmap cachedImage = this.cache.get(id);
 
         if (cachedImage == null) {
-            //Log.d(getClass().getName(), "Image cache miss: " + id);
+            Log.d(getClass().getName(), "Image cache miss: " + id);
             Bitmap fetchedImage = this.cachedRepository.fetch(id);
 
             if (fetchedImage == null) {
@@ -42,7 +43,7 @@ public class LruImageCache implements ImageRepository {
                 return fetchedImage;
             }
         } else {
-            //Log.d(getClass().getName(), "Image cache hit: " + id);
+            Log.d(getClass().getName(), "Image cache hit: " + id);
             return cachedImage;
         }
     }
