@@ -18,10 +18,10 @@
     <string name="unavailable_runtime">DURAÇÃO INDISPONÍVEL</string>
     <string name="episodes">episódios</string>
     <string name="showSpecialEpisodes">Mostrar episódios especiais</string>
-    <string name="seriesToShow">Mostrar séries</string>
-    <string name="seriesToCount">Contar com séries</string>
-    <string name="episodesToShow">Mostrar episódios</string>
-    <string name="episodesToCount">Contar com episódios</string>
+    <string name="seriesToShow">Séries a mostrar</string>
+    <string name="seriesToCount">Séries a contar</string>
+    <string name="episodesToShow">Episódios a mostrar</string>
+    <string name="episodesToCount">Episódios a contar</string>
     <string name="showAll">Mostrar todas</string>
     <string name="showSelected">Mostrar selecionadas</string>
     <string name="countAll">Contar com todas</string>
@@ -52,7 +52,6 @@
     <string name="trending">TENDÊNCIAS</string>
     <string name="powered_by_trakt">Powered by Trakt.tv</string>
     <string name="number_of_results_for_search_by_trending">%d séries sendo assistidas neste exato momento</string>
-    <string name="action_filter">FILTRAR</string>
     <string name="action_hide_single_series">Ocultar série</string>
     <string name="action_remove_single_series">Remover série</string>
     <string name="series">séries</string>
@@ -253,11 +252,13 @@
     <string name="restore_google_drive_error">Há algo errado com o Google Drive.</string>
 
     <!-- Menu -->
-    <string name="menu_add">ADICIONAR SÉRIES</string>
-    <string name="menu_remove">REMOVER SÉRIES</string>
+    <string name="menu_add">ADICIONAR</string>
+    <string name="menu_remove">REMOVER</string>
+    <string name="action_filter">FILTRAR</string>
+    <string name="action_sort">ORDENAR</string>
+
     <string name="menu_update">ATUALIZAÇÕES</string>
     <string name="menu_backup_restore">BACKUP/RESTAURAÇÃO</string>
-    <string name="action_sort">ORDENAÇÃO</string>
 
     <string name="include_special_episodes">Incluir episódios especiais</string>
     <string name="include_unaired_episodes">Incluir episódios não lançados</string>

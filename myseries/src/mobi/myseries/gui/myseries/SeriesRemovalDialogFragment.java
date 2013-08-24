@@ -8,9 +8,9 @@ import java.util.TreeMap;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder;
-import mobi.myseries.gui.shared.RemovingSeriesDialogBuilder.OnRequestRemovalListener;
 import mobi.myseries.gui.shared.SeriesComparator;
+import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
+import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -22,21 +22,22 @@ public class SeriesRemovalDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = this.getActivity();
-        final SortedMap<Series, Boolean> removalOptions = new TreeMap<Series, Boolean>(SeriesComparator.byAscendingAlphabeticalOrder());
+        final SortedMap<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(SeriesComparator.byAscendingAlphabeticalOrder());
 
         for (Series s : App.seriesProvider().followedSeries()) {
-            removalOptions.put(s, false);
+            filterOptions.put(s, false);
         }
 
-        return new RemovingSeriesDialogBuilder(context)
-            .setDefaultRemovalOptions(removalOptions)
-            .setOnRequestRemovalListener(new OnRequestRemovalListener() {
+        return new SeriesFilterDialogBuilder(context)
+            .setTitle(R.string.series_to_remove)
+            .setDefaultFilterOptions(filterOptions)
+            .setOnFilterListener(new OnFilterListener() {
                 @Override
-                public void onRequestRemoval() {
+                public void onFilter() {
                     final List<Series> allSeriesToRemove = new ArrayList<Series>();
 
-                    for (Series s : removalOptions.keySet()) {
-                        if (removalOptions.get(s)) {
+                    for (Series s : filterOptions.keySet()) {
+                        if (filterOptions.get(s)) {
                             allSeriesToRemove.add(s);
                         }
                     }

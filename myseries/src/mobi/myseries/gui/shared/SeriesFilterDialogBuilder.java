@@ -13,28 +13,32 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class SeriesFilterDialogBuilder {
     private static final int DEFAULT_TITLE_RESOURCE = R.string.seriesToShow;
-    private static final int SELECTED_BUTTON_TEXT_RESOURCE = R.string.showSelected;
-    private static final int ALL_BUTTON_TEXT_RESOURCE = R.string.showAll;
 
     private final Context context;
+    private int titleResource = DEFAULT_TITLE_RESOURCE;
     private Map<Series, Boolean> options;
-    private final Map<Series, CheckedTextView> views;
+
+    private CheckedTextView titleView;
+    private final Map<Series, CheckedTextView> optionViews;
+    private int numberOfCheckedViews;
+
     private OnFilterListener onFilterListener;
-    private int titleResource = SeriesFilterDialogBuilder.DEFAULT_TITLE_RESOURCE;
-    private int onlySelectedButtonText = SeriesFilterDialogBuilder.SELECTED_BUTTON_TEXT_RESOURCE;
-    private int allButtonText = SeriesFilterDialogBuilder.ALL_BUTTON_TEXT_RESOURCE;
 
     public SeriesFilterDialogBuilder(Context context) {
         this.context = context;
-        this.views = new HashMap<Series, CheckedTextView>();
+        this.optionViews = new HashMap<Series, CheckedTextView>();
     }
 
     public SeriesFilterDialogBuilder setDefaultFilterOptions(Map<Series, Boolean> options) {
         this.options = options;
+        return this;
+    }
+
+    public SeriesFilterDialogBuilder setTitle(int stringResource) {
+        this.titleResource = stringResource;
         return this;
     }
 
@@ -49,70 +53,105 @@ public class SeriesFilterDialogBuilder {
         dialog.setContentView(R.layout.dialog_filter);
 
         this.setUpTitleFor(dialog);
-        this.setUpOptionsFor(dialog);
-        this.setUpShowAllButtonFor(dialog);
-        this.setUpShowSelectedButtonFor(dialog);
+        this.setUpOptionViewsFor(dialog);
+        this.setUpCancelButtonFor(dialog);
+        this.setUpOkButtonFor(dialog);
 
         return dialog;
     }
 
     private void setUpTitleFor(Dialog dialog) {
-        TextView titleView = (TextView) dialog.findViewById(R.id.title);
+        this.titleView = (CheckedTextView) dialog.findViewById(R.id.title);
 
-        titleView.setText(this.context.getText(this.titleResource));
+        this.titleView.setText(this.context.getText(this.titleResource));
+
+        this.titleView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SeriesFilterDialogBuilder.this.titleView.toggle();
+
+                for (CheckedTextView tv : SeriesFilterDialogBuilder.this.optionViews.values()) {
+                    tv.setChecked(SeriesFilterDialogBuilder.this.titleView.isChecked());
+                }
+
+                if (SeriesFilterDialogBuilder.this.titleView.isChecked()) {
+                    SeriesFilterDialogBuilder.this.numberOfCheckedViews = SeriesFilterDialogBuilder.this.optionViews.size();
+                } else {
+                    SeriesFilterDialogBuilder.this.numberOfCheckedViews = 0;
+                }
+            }
+        });
     }
 
-    private void setUpOptionsFor(Dialog dialog) {
+    private void setUpOptionViewsFor(Dialog dialog) {
         LayoutInflater inflater = LayoutInflater.from(this.context);
         LinearLayout optionPanel = (LinearLayout) dialog.findViewById(R.id.optionPanel);
+        int counter = 0;
 
-        for (final Series s : this.options.keySet()) {
+        for (Series s : this.options.keySet()) {
             View v = inflater.inflate(R.layout.dialog_filter_option, null);
             final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.seriesCheck);
 
             seriesCheck.setText(s.name());
             seriesCheck.setChecked(this.options.get(s));
+
+            if (seriesCheck.isChecked()) { this.numberOfCheckedViews++; }
+
             seriesCheck.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     seriesCheck.toggle();
+
+                    if (seriesCheck.isChecked()) {
+                        SeriesFilterDialogBuilder.this.numberOfCheckedViews++;
+                    } else {
+                        SeriesFilterDialogBuilder.this.numberOfCheckedViews--;
+                    }
+
+                    SeriesFilterDialogBuilder.this.titleView.setChecked(
+                            SeriesFilterDialogBuilder.this.numberOfCheckedViews == SeriesFilterDialogBuilder.this.optionViews.size());
                 }
             });
 
+            counter++;
+            if (counter == this.options.size()) {
+                View divider = v.findViewById(R.id.divider);
+                divider.setVisibility(View.INVISIBLE);
+            }
+
             optionPanel.addView(v);
 
-            this.views.put(s, seriesCheck);
+            this.optionViews.put(s, seriesCheck);
         }
+
+        this.titleView.setChecked(this.numberOfCheckedViews == this.optionViews.size());
     }
 
-    private void setUpShowAllButtonFor(final Dialog dialog) {
-        Button showAllButton = (Button) dialog.findViewById(R.id.showAllButton);
+    private void setUpCancelButtonFor(final Dialog dialog) {
+        Button cancelButton = (Button) dialog.findViewById(R.id.cancelButton);
 
-        showAllButton.setText(this.allButtonText);
-        showAllButton.setOnClickListener(new OnClickListener() {
+        cancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Series s : SeriesFilterDialogBuilder.this.options.keySet()) {
-                    SeriesFilterDialogBuilder.this.options.put(s, true);
-                }
                 dialog.dismiss();
-                SeriesFilterDialogBuilder.this.onFilterListener.onFilter();
             }
         });
     }
 
-    private void setUpShowSelectedButtonFor(final Dialog dialog) {
-        Button showSelectedButton = (Button) dialog.findViewById(R.id.showSelectedButton);
-        showSelectedButton.setText(this.onlySelectedButtonText);
+    private void setUpOkButtonFor(final Dialog dialog) {
+        Button okButton = (Button) dialog.findViewById(R.id.okButton);
 
-        showSelectedButton.setOnClickListener(new OnClickListener() {
+        okButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (Series s : SeriesFilterDialogBuilder.this.options.keySet()) {
-                    boolean checked = SeriesFilterDialogBuilder.this.views.get(s).isChecked();
+                    boolean checked = SeriesFilterDialogBuilder.this.optionViews.get(s).isChecked();
+
                     SeriesFilterDialogBuilder.this.options.put(s, checked);
                 }
+
                 dialog.dismiss();
+
                 SeriesFilterDialogBuilder.this.onFilterListener.onFilter();
             }
         });
@@ -120,20 +159,5 @@ public class SeriesFilterDialogBuilder {
 
     public static interface OnFilterListener {
         public void onFilter();
-    }
-
-    public SeriesFilterDialogBuilder setTitle(int stringResource) {
-        this.titleResource = stringResource;
-        return this;
-    }
-
-    public SeriesFilterDialogBuilder setAllButtonText(int stringResource) {
-        this.allButtonText = stringResource;
-        return this;
-    }
-
-    public SeriesFilterDialogBuilder setSelectedButtonText(int stringResource) {
-        this.onlySelectedButtonText = stringResource;
-        return this;
     }
 }

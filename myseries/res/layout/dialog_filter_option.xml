@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<CheckedTextView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/seriesCheck"
-    style = "@style/TextView.Medium.DarkGray"
-    android:background="@drawable/list_selector_holo_light"
-    android:checkMark="@drawable/checkbox"
-    android:clickable="true"
-    android:focusable="true"
-    android:gravity="center_vertical"
-    android:padding="@dimen/gap_medium"
-    android:minHeight="48dp"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="wrap_content">
+
+    <CheckedTextView
+        android:id="@+id/seriesCheck"
+        style = "@style/TextView.Large.DarkGray"
+        android:background="@drawable/list_selector_holo_light"
+        android:checkMark="@drawable/checkbox"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingBottom="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_large"
+        android:paddingRight="@dimen/gap_large"
+        android:minHeight="48dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/divider"
+        android:background="@drawable/list_divider_holo_light"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+</LinearLayout>

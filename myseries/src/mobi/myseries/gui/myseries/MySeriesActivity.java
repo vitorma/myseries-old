@@ -1,7 +1,5 @@
 package mobi.myseries.gui.myseries;
 
-import java.util.Collection;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.gui.activity.base.BaseActivity;
@@ -44,7 +42,7 @@ public class MySeriesActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(ALREADY_CHECKED_FOR_UPDATE, alreadyCheckedForUpdate);
+        outState.putBoolean(ALREADY_CHECKED_FOR_UPDATE, this.alreadyCheckedForUpdate);
     }
 
     @Override
@@ -138,20 +136,10 @@ public class MySeriesActivity extends BaseActivity {
     }
 
     private void showEpisodeFilterDialog() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
-            new ToastBuilder(this).setMessage(R.string.no_episodes_to_count).build().show();
-        } else {
-            new EpisodeFilterDialogFragment().show(this.getFragmentManager(), "episodeFilterDialog");
-        }
+        new EpisodeFilterDialogFragment().show(this.getFragmentManager(), "episodeFilterDialog");
     }
 
     private void showSortDialog() {
-        Collection<Boolean> seriesToShow = App.preferences().forMySeries().seriesToShow().values();
-
-        if (!seriesToShow.contains(true)) {
-            new ToastBuilder(this).setMessage(R.string.no_series_to_sort).build().show();
-        } else {
-            new SeriesSortingDialogFragment().show(this.getFragmentManager(), "seriesSortingDialog");
-        }
+        new SeriesSortingDialogFragment().show(this.getFragmentManager(), "seriesSortingDialog");
     }
 }

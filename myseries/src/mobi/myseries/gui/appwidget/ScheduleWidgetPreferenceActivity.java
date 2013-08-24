@@ -142,10 +142,9 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
                 }
             });
 
-            View divider = v.findViewById(R.id.divider);
-
             counter++;
             if (counter == followedSeries.size()) {
+                View divider = v.findViewById(R.id.divider);
                 divider.setVisibility(View.INVISIBLE);
             }
 

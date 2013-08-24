@@ -25,8 +25,6 @@ public class SeriesFilterDialogFragment extends DialogFragment {
         return new SeriesFilterDialogBuilder(this.getActivity())
             .setDefaultFilterOptions(filterOptions)
             .setTitle(R.string.seriesToCount)
-            .setAllButtonText(R.string.countAll)
-            .setSelectedButtonText(R.string.countSelected)
             .setOnFilterListener(new OnFilterListener() {
                 @Override
                 public void onFilter() {

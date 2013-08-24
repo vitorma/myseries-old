@@ -52,7 +52,6 @@
     <string name="trending">TRENDING</string>
     <string name="powered_by_trakt">Powered by Trakt.tv</string>
     <string name="number_of_results_for_search_by_trending">%d series being watched right now</string>
-    <string name="action_filter">FILTER</string>
     <string name="action_hide_single_series">Hide series</string>
     <string name="action_remove_single_series">Remove series</string>
     <string name="series">series</string>
@@ -253,11 +252,12 @@
     <string name="restore_google_drive_error">Something is wrong with Google Drive.</string>
 
     <!-- Menu -->
-    <string name="menu_add">ADD SERIES</string>
-    <string name="menu_remove">REMOVE SERIES</string>
+    <string name="menu_add">ADD</string>
+    <string name="menu_remove">REMOVE</string>
+    <string name="action_filter">FILTER</string>
+    <string name="action_sort">SORT</string>
     <string name="menu_update">UPDATES</string>
     <string name="menu_backup_restore">BACKUP/RESTORE</string>
-    <string name="action_sort">SORT</string>
 
     <string name="include_special_episodes">Include special episodes</string>
     <string name="include_unaired_episodes">Include unaired episodes</string>
