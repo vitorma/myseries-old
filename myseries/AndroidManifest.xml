@@ -18,10 +18,11 @@
 
     <application
         android:name=".application.App"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app"
-        android:theme="@style/MySeriesTheme"
-        android:hardwareAccelerated="true">
+        android:theme="@style/MySeriesTheme" >
         <activity
             android:name=".gui.myseries.MySeriesActivity"
             android:uiOptions="splitActionBarWhenNarrow" >
