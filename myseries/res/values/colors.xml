@@ -37,4 +37,8 @@
     <color name="text_dark_gray">#ff272727</color>
     <color name="text_blue">@color/dark_blue</color>
 
+    <!-- Background -->
+    <color name="bg_series_overview">@color/white</color>
+    <color name="bg_series_seasons">@color/white</color>
+
 </resources>

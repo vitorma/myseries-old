@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Background -->
+
+    <color name="bg_series_overview">#ffeeeeee</color>
+    <color name="bg_series_seasons">@color/transparent</color>
+
+</resources>

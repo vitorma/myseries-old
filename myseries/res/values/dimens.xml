@@ -46,7 +46,6 @@
     <!-- Series - DETAILS -->
 
     <dimen name="series_details_gap">16dp</dimen>
-    <dimen name="series_details_conditional_gap">0dp</dimen>
     <dimen name="series_details_poster_width">110dp</dimen>
     <dimen name="series_details_poster_height">162dp</dimen>
 

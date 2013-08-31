@@ -7,8 +7,10 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.gui.shared.ToastBuilder;
+import mobi.myseries.gui.shared.UnairedEpisodeSpecification;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckedTextView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,7 +37,8 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     }
 
     private ListView list;
-    private TextView remainingEpisodes;
+    private CheckedTextView statisticsButton;
+    private View statisticsPanel;
     private SeenMark seenMark;
     private ImageButton sortButton;
     private int seriesId;
@@ -66,34 +70,12 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.adapter = new SeasonsAdapter(this.seriesId);
+        this.seriesId = this.getArguments().getInt(Extra.SERIES_ID);
 
-        this.list = (ListView) this.getActivity().findViewById(R.id.seasons);
-        this.list.setAdapter(this.adapter);
-        this.list.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Season season = (Season) SeasonsFragment.this.adapter.getItem(position);
-
-                Intent intent = EpisodesActivity.newIntent(
-                        SeasonsFragment.this.getActivity(),
-                        SeasonsFragment.this.seriesId,
-                        season.number());
-
-                SeasonsFragment.this.startActivity(intent);
-            }
-        });
-
-        App.seriesProvider().getSeries(this.seriesId).register(this);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.series_seasons, container, false);
-
-        this.seenMark = (SeenMark) view.findViewById(R.id.seenMark);
-        this.sortButton = (ImageButton) view.findViewById(R.id.sort);
-        this.remainingEpisodes = (TextView) view.findViewById(R.id.statistics);
+        this.seenMark = (SeenMark) this.getActivity().findViewById(R.id.seenMark);
+        this.sortButton = (ImageButton) this.getActivity().findViewById(R.id.sort);
+        this.statisticsButton = (CheckedTextView) this.getActivity().findViewById(R.id.statistics);
+        this.statisticsPanel = this.getActivity().findViewById(R.id.statisticsPanel);
 
         final Series series = App.seriesProvider().getSeries(this.seriesId);
 
@@ -116,9 +98,54 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
             }
         });
 
-        this.updateNumberOfRemainingEpisodes();
+        this.statisticsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SeasonsFragment.this.statisticsButton.toggle();
 
-        return view;
+                SeasonsFragment.this.updateVisibilityOfStatisticsPanel();
+            }
+        });
+
+        this.updateStatistics();
+        this.updateVisibilityOfStatisticsPanel();
+
+        this.adapter = new SeasonsAdapter(this.seriesId);
+
+        this.list = (ListView) this.getActivity().findViewById(R.id.seasons);
+        this.list.setAdapter(this.adapter);
+        this.list.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Season season = (Season) SeasonsFragment.this.adapter.getItem(position);
+
+                Intent intent = EpisodesActivity.newIntent(
+                        SeasonsFragment.this.getActivity(),
+                        SeasonsFragment.this.seriesId,
+                        season.number());
+
+                SeasonsFragment.this.startActivity(intent);
+            }
+        });
+
+        App.seriesProvider().getSeries(this.seriesId).register(this);
+    }
+
+    private void updateVisibilityOfStatisticsPanel() {
+        View divider = this.getView().findViewById(R.id.divider);
+
+        if (SeasonsFragment.this.statisticsButton.isChecked()) {
+            divider.setVisibility(View.GONE);
+            SeasonsFragment.this.statisticsPanel.setVisibility(View.VISIBLE);
+        } else {
+            divider.setVisibility(View.VISIBLE);
+            SeasonsFragment.this.statisticsPanel.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.series_seasons, container, false);
     }
 
     private void showSortingDialog() {
@@ -138,17 +165,17 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     @Override
     public void onChangeNumberOfSeenEpisodes(Series series) {
         this.seenMark.setChecked(series.numberOfEpisodes() == series.numberOfSeenEpisodes());
-        this.updateNumberOfRemainingEpisodes();
+        this.updateStatistics();
     }
 
     @Override
     public void onMarkAsNotSeen(Series series) {
-        SeasonsFragment.this.updateNumberOfRemainingEpisodes();
+        SeasonsFragment.this.updateStatistics();
     }
 
     @Override
     public void onMarkAsSeen(Series series) {
-        SeasonsFragment.this.updateNumberOfRemainingEpisodes();
+        SeasonsFragment.this.updateStatistics();
     }
 
     @Override
@@ -157,16 +184,44 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
         super.onSaveInstanceState(outState);
     }
 
-    private void updateNumberOfRemainingEpisodes() {
+    private void updateStatistics() {
         Series series = App.seriesProvider().getSeries(this.seriesId);
 
         int numberOfUnwatchedEpisodes = series.numberOfUnwatchedEpisodes();
-        String pluralOfUnwatched = this.getResources().getQuantityString(R.plurals.plural_unwatched, numberOfUnwatchedEpisodes);
-        String allWatched = this.getResources().getString(R.string.all_watched);
+        String pluralOfRemaining = this.getResources().getQuantityString(
+                R.plurals.plural_remaining,
+                numberOfUnwatchedEpisodes,
+                numberOfUnwatchedEpisodes);
+        this.statisticsButton.setText(pluralOfRemaining);
 
-        this.remainingEpisodes.setText(
-            numberOfUnwatchedEpisodes > 0 ?
-            numberOfUnwatchedEpisodes + " " + pluralOfUnwatched :
-            allWatched);
+        TextView allEpisodes = (TextView) this.statisticsPanel.findViewById(R.id.allEpisodes);
+        allEpisodes.setText("/" + series.numberOfEpisodes());
+
+        TextView watchedEpisodes = (TextView) this.statisticsPanel.findViewById(R.id.watchedEpisodes);
+        watchedEpisodes.setText(String.valueOf(series.numberOfSeenEpisodes()));
+
+        SeenEpisodesBar bar = (SeenEpisodesBar) this.statisticsPanel.findViewById(R.id.seenEpisodesBar);
+        bar.updateWithEpisodesOf(series);
+
+        TextView unairedEpisodes = (TextView) this.statisticsPanel.findViewById(R.id.unairedEpisodes);
+        int numberOfUnaired = series.numberOfEpisodes(new UnairedEpisodeSpecification());
+        String pluralOfUnaired = App.resources().getQuantityString(R.plurals.plural_unaired, numberOfUnaired);
+        String allAired = App.resources().getString(R.string.all_aired);
+        unairedEpisodes.setText(
+            numberOfUnaired > 0 ?
+            numberOfUnaired + " " + pluralOfUnaired :
+            allAired);
+
+        TextView specialEpisodes = (TextView) this.statisticsPanel.findViewById(R.id.specialEpisodes);
+        if (series.hasSpecialEpisodes()) {
+            int numberOfSpecials = series.season(Season.SPECIAL_EPISODES_SEASON_NUMBER).numberOfEpisodes();
+            String pluralOfSpecial = App.resources().getQuantityString(
+                R.plurals.plural_special,
+                numberOfSpecials,
+                numberOfSpecials);
+            specialEpisodes.setText(pluralOfSpecial);
+        } else {
+            specialEpisodes.setText(R.string.none_special);
+        }
     }
 }

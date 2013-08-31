@@ -20,10 +20,7 @@
 
     <!-- Series - DETAILS -->
 
-    <dimen name="series_details_gap">24dp</dimen>
-    <dimen name="series_details_conditional_gap">@dimen/series_details_gap</dimen>
-    <dimen name="series_details_poster_width">300dp</dimen>
-    <dimen name="series_details_poster_height">441dp</dimen>
+    <dimen name="series_details_gap">16dp</dimen>
 
     <!-- Episodes -->
 

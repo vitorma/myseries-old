@@ -2,7 +2,7 @@
 
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/white"
+    android:background="@color/bg_series_overview"
     android:paddingLeft="@dimen/series_details_gap"
     android:paddingRight="@dimen/series_details_gap"
     android:layout_width="match_parent"
@@ -22,14 +22,6 @@
             android:layout_height="@dimen/series_details_poster_height"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"/>
-
-        <View
-            android:id="@+id/seriesPosterColumn"
-            style="@style/SeriesDetails_PosterColumn"
-            android:layout_width="@dimen/series_details_poster_width"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/seriesPosterImageView"/>
 
         <TextView
             android:id="@+id/seriesName"
@@ -58,8 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/series_details_gap"
-            android:layout_marginRight="@dimen/series_details_conditional_gap"
-            android:layout_toLeftOf="@id/seriesPosterColumn"
+            android:layout_below="@id/seriesPosterImageView"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
@@ -67,12 +58,10 @@
             style="@style/TextView.Medium.MediumGray"
             android:drawableLeft="@drawable/ic_hourglass"
             android:drawablePadding="@dimen/gap_micro"
-            android:paddingRight="@dimen/series_details_conditional_gap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_medium"
             android:layout_below="@id/div1"
-            android:layout_toLeftOf="@id/seriesPosterColumn"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
@@ -80,11 +69,9 @@
             style="@style/TextView.Medium.MediumGray"
             android:drawableLeft="@drawable/ic_calendar"
             android:drawablePadding="@dimen/gap_micro"
-            android:paddingRight="@dimen/series_details_conditional_gap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/statusTextView"
-            android:layout_toLeftOf="@id/seriesPosterColumn"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
@@ -92,67 +79,54 @@
             style="@style/TextView.Medium.MediumGray"
             android:drawableLeft="@drawable/ic_runtime"
             android:drawablePadding="@dimen/gap_micro"
-            android:paddingRight="@dimen/series_details_conditional_gap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/airDaysTextView"
-            android:layout_toLeftOf="@id/seriesPosterColumn"
             android:layout_alignWithParentIfMissing="true"/>
 
         <View
             android:id="@+id/div2"
             android:background="@color/dark_blue"
-            android:paddingRight="@dimen/series_details_conditional_gap"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/gap_medium"
-            android:layout_marginRight="@dimen/series_details_conditional_gap"
             android:layout_below="@id/runtimeTextView"
-            android:layout_toLeftOf="@id/seriesPosterColumn"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
             android:id="@+id/overviewLabel"
             android:text="@string/overview"
             style="@style/TextView.Medium.MediumGray.Bold"
-            android:paddingRight="@dimen/series_details_conditional_gap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/div2"
             android:layout_marginTop="@dimen/series_details_gap"
-            android:layout_toLeftOf="@id/seriesPosterColumn"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
             android:id="@+id/seriesOverviewTextView"
             style="@style/TextView.Medium.MediumGray"
-            android:paddingRight="@dimen/series_details_conditional_gap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/overviewLabel"
-            android:layout_toLeftOf="@id/seriesPosterColumn"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
             android:id="@+id/actorsLabel"
             android:text="@string/actors"
             style="@style/TextView.Medium.MediumGray.Bold"
-            android:paddingRight="@dimen/series_details_conditional_gap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/series_details_gap"
             android:layout_below="@id/seriesOverviewTextView"
-            android:layout_toLeftOf="@id/seriesPosterColumn"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
             android:id="@+id/actorsTextView"
             style="@style/TextView.Medium.MediumGray"
-            android:paddingRight="@dimen/series_details_conditional_gap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/actorsLabel"
-            android:layout_toLeftOf="@id/seriesPosterColumn"
             android:layout_alignWithParentIfMissing="true"/>
 
     </RelativeLayout>

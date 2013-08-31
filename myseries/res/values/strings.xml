@@ -58,17 +58,24 @@
     <string name="schedule_to_watch">TO WATCH</string>
     <string name="schedule_aired">AIRED</string>
     <string name="schedule_unaired">UNAIRED</string>
+    <string name="all_seasons">All seasons</string>
 
-    <plurals name="plural_unwatched">
-        <item quantity="one">unwatched</item>
-        <item quantity="other">unwatched</item>
+    <plurals name="plural_remaining">
+        <item quantity="one">%d remaining</item>
+        <item quantity="other">%d remaining</item>
     </plurals>
-    <string name="all_watched">All watched</string>
+
     <plurals name="plural_unaired">
         <item quantity="one">unaired</item>
         <item quantity="other">unaired</item>
     </plurals>
     <string name="all_aired">All aired</string>
+
+    <plurals name="plural_special">
+        <item quantity="one">%d special</item>
+        <item quantity="other">%d specials</item>
+    </plurals>
+    <string name="none_special">No specials</string>
 
     <plurals name="plural_there_are_hidden_series">
         <item quantity="one">But there is %d hidden series</item>
