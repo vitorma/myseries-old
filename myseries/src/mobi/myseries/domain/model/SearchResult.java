@@ -17,7 +17,7 @@ public class SearchResult implements Parcelable {
         }
     };
 
-    private int tvdbId;
+    private String tvdbId;
     private String title;
     private String overview;
     private String poster;
@@ -25,7 +25,7 @@ public class SearchResult implements Parcelable {
     public SearchResult() { }
 
     public SearchResult(Parcel in) {
-        this.tvdbId = in.readInt();
+        this.tvdbId = in.readString();
         this.title = in.readString();
         this.overview = in.readString();
         this.poster = in.readString();
@@ -46,13 +46,13 @@ public class SearchResult implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.tvdbId);
+        dest.writeString(this.tvdbId);
         dest.writeString(this.title);
         dest.writeString(this.overview);
         dest.writeString(this.poster);
     }
 
-    public int tvdbId() {
+    public String tvdbId() {
         return this.tvdbId;
     }
 
@@ -68,8 +68,8 @@ public class SearchResult implements Parcelable {
         return this.poster;
     }
 
-    public SearchResult setTvdbId(int tvdbId) {
-        this.tvdbId = tvdbId;
+    public SearchResult setTvdbId(String tvdbId2) {
+        this.tvdbId = tvdbId2;
         return this;
     }
 
@@ -90,7 +90,7 @@ public class SearchResult implements Parcelable {
 
     @Override
     public int hashCode() {
-        return this.tvdbId;
+        return this.tvdbId.hashCode();
     }
 
     @Override
