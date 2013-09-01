@@ -21,16 +21,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class DetailsFragment extends Fragment {
+public class OverviewFragment extends Fragment {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
 
     private int seriesId;
 
-    public static DetailsFragment newInstance(int seriesId) {
-        DetailsFragment seriesDetailsFragment = new DetailsFragment();
+    public static OverviewFragment newInstance(int seriesId) {
+        OverviewFragment seriesDetailsFragment = new OverviewFragment();
 
         Bundle arguments = new Bundle();
         arguments.putInt(Extra.SERIES_ID, seriesId);
@@ -115,9 +116,11 @@ public class DetailsFragment extends Fragment {
         ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
         seriesPoster.setImageBitmap(ensuredPoster);
 
-//        ImageView background = (ImageView) this.getActivity().findViewById(R.id.background);
-//        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), ensuredPoster);
-//        drawable.setAlpha(30);
-//        background.setImageDrawable(drawable);
+        boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
+
+        if (isTablet) {
+            ScrollView scrollView = (ScrollView) this.getActivity().findViewById(R.id.scrollView);
+            scrollView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+        }
     }
 }

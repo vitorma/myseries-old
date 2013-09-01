@@ -11,18 +11,15 @@
 
     <FrameLayout
         android:id="@+id/overview_container"
+        android:background="@drawable/list_background_holo"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 
     <FrameLayout
         android:id="@+id/seasons_container"
-        android:background="@drawable/card_background"
-        android:minWidth="300dp"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/gap_medium"
-        android:layout_marginBottom="@dimen/gap_medium"
-        android:layout_marginRight="@dimen/gap_medium"/>
+        android:background="@color/white"
+        android:layout_width="@dimen/series_seasons_width"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -59,6 +59,8 @@
     <string name="schedule_aired">EXIBIDOS</string>
     <string name="schedule_unaired">INÉDITOS</string>
     <string name="all_seasons">Todas as temporadas</string>
+    <string name="tab_overview">VISÃO GERAL</string>
+    <string name="tab_seasons">TEMPORADAS</string>
 
     <plurals name="plural_remaining">
         <item quantity="one">%d restante</item>

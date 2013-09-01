@@ -9,7 +9,6 @@ import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
-import mobi.myseries.gui.shared.ToastBuilder;
 import mobi.myseries.gui.shared.UnairedEpisodeSpecification;
 import android.app.Fragment;
 import android.content.Intent;
@@ -43,6 +42,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     private ImageButton sortButton;
     private int seriesId;
     private SeasonsAdapter adapter;
+    private View divider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -132,13 +132,13 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     }
 
     private void updateVisibilityOfStatisticsPanel() {
-        View divider = this.getView().findViewById(R.id.divider);
+        this.divider = this.getView().findViewById(R.id.divider);
 
         if (SeasonsFragment.this.statisticsButton.isChecked()) {
-            divider.setVisibility(View.GONE);
+            this.divider.setVisibility(View.GONE);
             SeasonsFragment.this.statisticsPanel.setVisibility(View.VISIBLE);
         } else {
-            divider.setVisibility(View.VISIBLE);
+            this.divider.setVisibility(View.VISIBLE);
             SeasonsFragment.this.statisticsPanel.setVisibility(View.GONE);
         }
     }
@@ -149,11 +149,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     }
 
     private void showSortingDialog() {
-        if (this.adapter.isEmpty()) {
-            new ToastBuilder(this.getActivity()).setMessage(R.string.no_seasons_to_sort).build().show();
-        } else {
-            new SeasonSortingDialogFragment().show(this.getFragmentManager(), "sortingDialog");
-        }
+        new SeasonSortingDialogFragment().show(this.getFragmentManager(), "sortingDialog");
     }
 
     @Override

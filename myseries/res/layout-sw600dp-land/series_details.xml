@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/posterPanel"
+        android:layout_width="@dimen/series_seasons_width"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/seriesPosterImageView"
+            android:contentDescription="@string/description_poster"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:paddingLeft="@dimen/series_details_gap"
+        android:paddingRight="@dimen/series_details_gap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/series_details_gap"
+            android:paddingBottom="@dimen/series_details_gap">
+
+            <TextView
+                android:id="@+id/seriesName"
+                style="@style/TextView.XLarge.DarkGray"
+                android:fontFamily="sans-serif-light"
+                android:paddingRight="@dimen/series_details_gap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/genreTextView"
+                style="@style/TextView.Medium.Blue"
+                android:paddingRight="@dimen/series_details_gap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/div1"
+                style="@style/SeriesDetails_Div1"
+                android:background="@color/dark_blue"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/series_details_gap"/>
+
+            <TextView
+                android:id="@+id/statusTextView"
+                style="@style/TextView.Medium.MediumGray"
+                android:drawableLeft="@drawable/ic_hourglass"
+                android:drawablePadding="@dimen/gap_micro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_medium"/>
+
+            <TextView
+                android:id="@+id/airDaysTextView"
+                style="@style/TextView.Medium.MediumGray"
+                android:drawableLeft="@drawable/ic_calendar"
+                android:drawablePadding="@dimen/gap_micro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/runtimeTextView"
+                style="@style/TextView.Medium.MediumGray"
+                android:drawableLeft="@drawable/ic_runtime"
+                android:drawablePadding="@dimen/gap_micro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/div2"
+                android:background="@color/dark_blue"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/gap_medium"/>
+
+            <TextView
+                android:id="@+id/overviewLabel"
+                android:text="@string/overview"
+                style="@style/TextView.Medium.MediumGray.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/series_details_gap"/>
+
+            <TextView
+                android:id="@+id/seriesOverviewTextView"
+                style="@style/TextView.Medium.MediumGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/actorsLabel"
+                android:text="@string/actors"
+                style="@style/TextView.Medium.MediumGray.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/series_details_gap"/>
+
+            <TextView
+                android:id="@+id/actorsTextView"
+                style="@style/TextView.Medium.MediumGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

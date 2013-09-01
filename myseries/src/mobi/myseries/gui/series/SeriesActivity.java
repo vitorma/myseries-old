@@ -14,7 +14,7 @@ import android.support.v4.app.NavUtils;
 public class SeriesActivity extends TabActivity {
     private static final int TAB_SEASONS = 1;
 
-    private static final String OVERVIEW_FRAGMENT = DetailsFragment.class.getName();
+    private static final String OVERVIEW_FRAGMENT = OverviewFragment.class.getName();
     private static final String SEASONS_FRAGMENT = SeasonsFragment.class.getName();
 
     private final boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
@@ -39,7 +39,7 @@ public class SeriesActivity extends TabActivity {
         if (savedInstanceState == null) {
             FragmentTransaction ft = this.getFragmentManager().beginTransaction();
 
-            ft.add(R.id.overview_container, DetailsFragment.newInstance(this.seriesId), OVERVIEW_FRAGMENT);
+            ft.add(R.id.overview_container, OverviewFragment.newInstance(this.seriesId), OVERVIEW_FRAGMENT);
             ft.add(R.id.seasons_container, SeasonsFragment.newInstance(this.seriesId), SEASONS_FRAGMENT);
 
             ft.commit();
@@ -82,8 +82,8 @@ public class SeriesActivity extends TabActivity {
         }
 
         return new TabDefinition[] {
-            new TabDefinition(R.string.details, DetailsFragment.newInstance(this.seriesId)),
-            new TabDefinition(R.string.seasons, SeasonsFragment.newInstance(this.seriesId))
+            new TabDefinition(R.string.tab_overview, OverviewFragment.newInstance(this.seriesId)),
+            new TabDefinition(R.string.tab_seasons, SeasonsFragment.newInstance(this.seriesId))
         };
     }
 

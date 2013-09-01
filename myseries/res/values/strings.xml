@@ -59,6 +59,8 @@
     <string name="schedule_aired">AIRED</string>
     <string name="schedule_unaired">UNAIRED</string>
     <string name="all_seasons">All seasons</string>
+    <string name="tab_overview">OVERVIEW</string>
+    <string name="tab_seasons">SEASONS</string>
 
     <plurals name="plural_remaining">
         <item quantity="one">%d remaining</item>
