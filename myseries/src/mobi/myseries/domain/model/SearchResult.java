@@ -39,6 +39,15 @@ public class SearchResult implements Parcelable {
             .setPoster(this.poster);
     }
 
+    public Series toSeries() {
+        return Series.builder()
+            .withId(Integer.valueOf(this.tvdbId))
+            .withName(this.title)
+            .withOverview(this.overview)
+            .withPosterFileName(this.poster)
+            .build();
+    }
+
     @Override
     public int describeContents() {
         return this.hashCode();

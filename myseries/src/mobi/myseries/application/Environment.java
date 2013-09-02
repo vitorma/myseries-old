@@ -30,8 +30,9 @@ import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.domain.source.ImageSource;
 import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.domain.source.TheTVDB;
-import mobi.myseries.domain.source.TraktTv;
-import mobi.myseries.domain.source.TrendingSource;
+import mobi.myseries.domain.source.trakttv.SearchSource;
+import mobi.myseries.domain.source.trakttv.TraktTv;
+import mobi.myseries.domain.source.trakttv.TrendingSource;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 
@@ -43,7 +44,7 @@ public class Environment {
     private static final String TRAKTTV_API_KEY = "2665c5546c888a02c4ceff0afccfa927";    // Replace this with your app key and secret assigned by Dropbox.
     private static String DROPBOX_APP_KEY = "16plq57cyv3mxdb";
     private static String DROPBOX_APP_SECRET = "5z6c5a0ku03kyjy";
-    
+
     private TheTVDB theTVDB;
     private TraktTv traktTv;
     private DropboxHelper dropboxHelper;
@@ -75,6 +76,10 @@ public class Environment {
     }
 
     public TrendingSource trendingSource() {
+        return this.traktTv;
+    }
+
+    public SearchSource searchSource() {
         return this.traktTv;
     }
 
