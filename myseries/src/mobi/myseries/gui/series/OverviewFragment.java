@@ -14,7 +14,6 @@ import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Strings;
 import android.app.Fragment;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -22,17 +21,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class DetailsFragment extends Fragment {
+public class OverviewFragment extends Fragment {
     private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
-    private static final Context CONTEXT = App.context();
 
     private int seriesId;
 
-    public static DetailsFragment newInstance(int seriesId) {
-        DetailsFragment seriesDetailsFragment = new DetailsFragment();
+    public static OverviewFragment newInstance(int seriesId) {
+        OverviewFragment seriesDetailsFragment = new OverviewFragment();
 
         Bundle arguments = new Bundle();
         arguments.putInt(Extra.SERIES_ID, seriesId);
@@ -44,16 +43,13 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setRetainInstance(true);
 
         this.seriesId = this.getArguments().getInt(Extra.SERIES_ID);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (container == null) {
-            return null;
-        }
-
         return inflater.inflate(R.layout.series_details, container, false);
     }
 
@@ -120,9 +116,11 @@ public class DetailsFragment extends Fragment {
         ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
         seriesPoster.setImageBitmap(ensuredPoster);
 
-//        ImageView background = (ImageView) this.getActivity().findViewById(R.id.background);
-//        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), ensuredPoster);
-//        drawable.setAlpha(30);
-//        background.setImageDrawable(drawable);
+        boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
+
+        if (isTablet) {
+            ScrollView scrollView = (ScrollView) this.getActivity().findViewById(R.id.scrollView);
+            scrollView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+        }
     }
 }

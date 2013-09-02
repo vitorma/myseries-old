@@ -57,8 +57,8 @@ public class AddSeriesActivity extends TabActivity {
     @Override
     protected TabDefinition[] tabDefinitions() {
         return new TabDefinition[] {
-            new TabDefinition(R.string.trending, new SearchByTrendingFragment()),
-            new TabDefinition(R.string.search, new SearchByNameFragment())
+            new TabDefinition(R.string.trending, new TrendingFragment()),
+            new TabDefinition(R.string.search, new SearchFragment())
         };
     }
 

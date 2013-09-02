@@ -33,7 +33,8 @@ import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.notification.NotificationService;
 import mobi.myseries.application.preferences.Preferences;
 import mobi.myseries.application.schedule.Schedule;
-import mobi.myseries.application.search.SeriesSearch;
+import mobi.myseries.application.search.SearchService;
+import mobi.myseries.application.trending.TrendingService;
 import mobi.myseries.application.update.UpdateService;
 import android.app.Application;
 import android.content.Context;
@@ -41,7 +42,8 @@ import android.content.res.Resources;
 
 public class App extends Application {
     private static Environment environment;
-    private static SeriesSearch seriesSearch;
+    private static SearchService searchService;
+    private static TrendingService trendingService;
     private static FollowSeriesService followSeriesService;
     private static Schedule schedule;
     private static UpdateService updateService;
@@ -72,9 +74,9 @@ public class App extends Application {
 
         errorService = new ErrorService();
 
-        seriesSearch = new SeriesSearch(
-                environment.seriesSource(),
-                environment.trendingSource());
+        searchService = new SearchService(environment.searchSource());
+
+        trendingService = new TrendingService(environment.trendingSource());
 
         followSeriesService = new FollowSeriesService(
                 environment.seriesSource(),
@@ -124,37 +126,29 @@ public class App extends Application {
         return errorService;
     }
 
-    /* SERIES SEARCHING */
-
-    public static SeriesSearch seriesSearch() {
-        return seriesSearch;
+    public static SearchService searchService() {
+        return searchService;
     }
 
-    /* SERIES FOLLOWING */
+    public static TrendingService trendingService() {
+        return trendingService;
+    }
 
     public static FollowSeriesService followSeriesService() {
         return followSeriesService;
     }
 
-    /* UPDATE */
-
     public static UpdateService updateSeriesService() {
         return updateService;
     }
-
-    /* SERIES */
 
     public static SeriesProvider seriesProvider() {
         return seriesProvider;
     }
 
-    /* IMAGES */
-
     public static ImageService imageService() {
         return imageService;
     }
-
-    /* SCHEDULE */
 
     public static Schedule schedule() {
         return schedule;

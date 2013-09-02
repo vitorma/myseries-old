@@ -4,7 +4,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.search.SeriesSearchListener;
+import mobi.myseries.domain.model.ParcelableSeries;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.DialogButtonOnClickListener;
@@ -39,9 +39,8 @@ public abstract class AddSeriesFragment extends Fragment {
 
     private AddSeriesAdapter adapter;
 
-    private List<Series> results;
-    protected boolean isSearching;
-    protected SeriesSearchListener seriesSearchListener;
+    private List<ParcelableSeries> results;
+    protected boolean isServiceRunning;
 
     /* Fragment life cycle */
 
@@ -62,21 +61,20 @@ public abstract class AddSeriesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         this.prepareViews();
-        this.seriesSearchListener = this.seriesSearchListener();
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        this.registerListenerForSeriesSearch();
+        this.registerListenerForService();
 
         if (this.hasResultsToShow()) {
             this.showResults();
-        } else if (this.isSearching) {
-            this.seriesSearchListener.onStart();
-        } else if (this.shouldPerformSearchOnStartLifeCycle()) {
-            this.performSearch();
+        } else if (this.isServiceRunning) {
+            this.onServiceStartRunning();
+        } else if (this.shouldServiceRunOnStartLifeCycle()) {
+            this.runService();
         }
     }
 
@@ -84,7 +82,7 @@ public abstract class AddSeriesFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        this.deregisterListenerForSeriesSearch();
+        this.deregisterListenerForService();
     }
 
     /* Abstract methods */
@@ -92,11 +90,11 @@ public abstract class AddSeriesFragment extends Fragment {
     protected abstract boolean hasSearchPanel();
     protected abstract int sourceTextResource();
     protected abstract int numberOfResultsFormatResource();
-    protected abstract boolean shouldPerformSearchOnStartLifeCycle();
-    protected abstract void performSearch();
-    protected abstract void registerListenerForSeriesSearch();
-    protected abstract void deregisterListenerForSeriesSearch();
-    protected abstract SeriesSearchListener seriesSearchListener();
+    protected abstract boolean shouldServiceRunOnStartLifeCycle();
+    protected abstract void runService();
+    protected abstract void registerListenerForService();
+    protected abstract void deregisterListenerForService();
+    protected abstract void onServiceStartRunning();
 
     /* Prepare views */
 
@@ -138,7 +136,7 @@ public abstract class AddSeriesFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    AddSeriesFragment.this.performSearch();
+                    AddSeriesFragment.this.runService();
                     return true;
                 }
 
@@ -150,7 +148,7 @@ public abstract class AddSeriesFragment extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    AddSeriesFragment.this.performSearch();
+                    AddSeriesFragment.this.runService();
                     return true;
                 }
 
@@ -183,7 +181,7 @@ public abstract class AddSeriesFragment extends Fragment {
         this.searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                AddSeriesFragment.this.performSearch();
+                AddSeriesFragment.this.runService();
             }
         });
     }
@@ -210,7 +208,7 @@ public abstract class AddSeriesFragment extends Fragment {
         this.resultsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Series selectedItem = (Series) parent.getItemAtPosition(position);
+                Series selectedItem = ((ParcelableSeries) parent.getItemAtPosition(position)).toSeries();
                 AddSeriesFragment.this.onRequestAdd(selectedItem);
             }
         });
@@ -315,7 +313,7 @@ public abstract class AddSeriesFragment extends Fragment {
         return this.results != null;
     }
 
-    protected void setResults(List<Series> results) {
+    protected void setResults(List<ParcelableSeries> results) {
         this.results = results;
 
         this.setUpNumberOfResults();
@@ -335,8 +333,8 @@ public abstract class AddSeriesFragment extends Fragment {
             this.adapter = new AddSeriesAdapter(this.activity(), this.results);
         } else {
             this.adapter.clear();
-            for (Series s : this.results) {
-                this.adapter.add(s);
+            for (ParcelableSeries result : this.results) {
+                this.adapter.add(result);
             }
         }
     }

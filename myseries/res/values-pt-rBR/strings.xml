@@ -55,20 +55,28 @@
     <string name="action_hide_single_series">Ocultar série</string>
     <string name="action_remove_single_series">Remover série</string>
     <string name="series">séries</string>
-    <string name="schedule_to_watch">POR ASSISTIR</string>
-    <string name="schedule_aired">LANÇADOS</string>
-    <string name="schedule_unaired">NÃO LANÇADOS</string>
+    <string name="schedule_to_watch">ASSISTIR</string>
+    <string name="schedule_aired">EXIBIDOS</string>
+    <string name="schedule_unaired">INÉDITOS</string>
+    <string name="all_seasons">Todas as temporadas</string>
+    <string name="tab_overview">VISÃO GERAL</string>
+    <string name="tab_seasons">TEMPORADAS</string>
 
-    <plurals name="plural_unwatched">
-        <item quantity="one">não assistido</item>
-        <item quantity="other">não assistidos</item>
+    <plurals name="plural_remaining">
+        <item quantity="one">%d restante</item>
+        <item quantity="other">%d restantes</item>
     </plurals>
-    <string name="all_watched">Todos assistidos</string>
     <plurals name="plural_unaired">
-        <item quantity="one">não lançado</item>
-        <item quantity="other">não lançados</item>
+        <item quantity="one">inédito</item>
+        <item quantity="other">inéditos</item>
     </plurals>
-    <string name="all_aired">Todos lançados</string>
+    <string name="all_aired">Todos exibidos</string>
+
+    <plurals name="plural_special">
+        <item quantity="one">%d especial</item>
+        <item quantity="other">%d especiais</item>
+    </plurals>
+    <string name="none_special">Nenhum especial</string>
 
     <plurals name="plural_there_are_hidden_series">
         <item quantity="one">Mas há %d série oculta</item>

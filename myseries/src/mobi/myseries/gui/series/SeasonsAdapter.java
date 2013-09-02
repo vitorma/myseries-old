@@ -71,10 +71,8 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSha
 
         if (season.isSpecial()) {
             seasonNumber.setText(R.string.special_episodes);
-            seasonNumber.setTextColor(App.resources().getColor(R.color.dark_red));
         } else {
             seasonNumber.setText(String.format(App.resources().getString(R.string.season_number_format_ext), season.number()));
-            seasonNumber.setTextColor(App.resources().getColor(R.color.dark_gray));
         }
 
         seenEpisodesBar.updateWithEpisodesOf(season);

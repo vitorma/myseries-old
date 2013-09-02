@@ -12,4 +12,10 @@
     <dimen name="myseries_poster_height">250dp</dimen>
     <dimen name="myseries_grid_gap">8dp</dimen>
 
+    <!-- Series -->
+
+    <dimen name="series_details_gap">24dp</dimen>
+    <dimen name="series_seasons_margin">@dimen/gap_large</dimen>
+    <dimen name="series_seasons_width">320dp</dimen>
+
 </resources>

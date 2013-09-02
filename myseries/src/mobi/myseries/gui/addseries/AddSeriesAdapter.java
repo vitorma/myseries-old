@@ -4,6 +4,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.domain.model.ParcelableSeries;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ImageDownloader;
 import mobi.myseries.gui.shared.Images;
@@ -19,14 +20,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddSeriesAdapter extends ArrayAdapter<Series> {
+public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> {
     private LayoutInflater layoutInflater;
     private ImageDownloader imageDownloader;
 
     private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
 
-    public AddSeriesAdapter(Context context, List<Series> objects) {
-        super(context, R.layout.addseries_item, objects);
+    public AddSeriesAdapter(Context context, List<ParcelableSeries> results) {
+        super(context, R.layout.addseries_item, results);
 
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.imageDownloader = ImageDownloader.getInstance(context);
@@ -34,7 +35,7 @@ public class AddSeriesAdapter extends ArrayAdapter<Series> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Series series = this.getItem(position);
+        final ParcelableSeries result = this.getItem(position);
 
         ViewHolder viewHolder;
 
@@ -45,19 +46,21 @@ public class AddSeriesAdapter extends ArrayAdapter<Series> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText(series.name());
+        viewHolder.name.setText(result.title());
 
-        if (Strings.isNullOrBlank(series.posterFileName())) {
+        if (Strings.isNullOrBlank(result.poster())) {
             viewHolder.image.setImageBitmap(GENERIC_POSTER);
         } else {
-            this.imageDownloader.download(series.posterFileName(), viewHolder.image, false);
+            this.imageDownloader.download(result.poster(), viewHolder.image, false);
         }
 
         viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Series series = result.toSeries(); //XXX Let FollowSeriesService receive a seriesId in its methods ¬¬
+
                 if (App.followSeriesService().follows(series)) {
-                    String message = App.resources().getString(R.string.add_already_followed_series_message, series.name());
+                    String message = App.resources().getString(R.string.add_already_followed_series_message, result.title());
 
                     Toast.makeText(App.context(), message, Toast.LENGTH_SHORT).show();
                 } else {

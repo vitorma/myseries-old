@@ -6,13 +6,18 @@ import android.os.Bundle;
 
 public abstract class TabActivity extends BaseActivity implements TabAdapter.Listener {
     private static final String SELECTED_TAB = "selectedTab";
+    protected static final int TAB_NONE = -1;
 
-    private int selectedTab;
+    private int selectedTab = TAB_NONE;
     private TabAdapter tabAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (this.tabDefinitions() == null) {
+            return;
+        }
 
         if (savedInstanceState == null) {
             this.selectedTab = this.defaultSelectedTab();

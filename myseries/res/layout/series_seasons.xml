@@ -3,7 +3,8 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:animateLayoutChanges="true"
+    android:background="@color/bg_series_seasons"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,12 +29,13 @@
             android:layout_height="@dimen/toucharea_minimum_side"
             android:layout_toLeftOf="@id/seenMark"/>
 
-        <TextView
+        <CheckedTextView
             android:id="@+id/statistics"
             style="@style/TextView.Large.LightGray.Ellipsized"
             android:fontFamily="sans-serif-light"
+            android:drawableLeft="@drawable/btn_statistics"
+            android:background="@drawable/list_selector_holo_light"
             android:clickable="true"
-            android:paddingLeft="@dimen/gap_medium"
             android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toucharea_minimum_side"
@@ -49,9 +51,79 @@
 
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/seasons"
+    <RelativeLayout
+        android:id="@+id/statisticsPanel"
+        android:background="#ffdddddd"
+        android:paddingLeft="@dimen/gap_large"
+        android:paddingRight="@dimen/gap_large"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/watchedEpisodes"
+            style="@style/TextView.Large.Blue"
+            android:fontFamily="sans-serif-light"
+            android:paddingTop="@dimen/gap_medium"
+            android:paddingBottom="@dimen/gap_medium"
+            android:paddingLeft="@dimen/gap_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/allEpisodes"
+            style="@style/TextView.Large"
+            android:textColor="@color/text_medium_gray"
+            android:fontFamily="sans-serif-light"
+            android:paddingTop="@dimen/gap_medium"
+            android:paddingBottom="@dimen/gap_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/watchedEpisodes"/>
+
+        <mobi.myseries.gui.shared.SeenEpisodesBar
+            android:id="@+id/seenEpisodesBar"
+            android:paddingLeft="@dimen/gap_medium"
+            android:paddingRight="@dimen/gap_medium"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chunkbar_height"
+            android:layout_below="@id/allEpisodes"/>
+
+        <TextView
+            android:id="@+id/unairedEpisodes"
+            style="@style/TextView.Medium.LightGray.Ellipsized"
+            android:paddingTop="@dimen/gap_medium"
+            android:paddingLeft="@dimen/gap_medium"
+            android:paddingRight="@dimen/gap_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/seenEpisodesBar"/>
+
+        <TextView
+            android:id="@+id/specialEpisodes"
+            style="@style/TextView.Medium.LightGray.Ellipsized"
+            android:paddingBottom="@dimen/gap_medium"
+            android:paddingLeft="@dimen/gap_medium"
+            android:paddingRight="@dimen/gap_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/unairedEpisodes"/>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/seasons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
 
 </LinearLayout>
