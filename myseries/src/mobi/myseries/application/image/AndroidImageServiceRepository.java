@@ -49,11 +49,8 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     private static final int EPISODE_IMAGE_CACHE_SIZE = 1 * MiB;
     private static final int NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES = EPISODE_IMAGE_CACHE_SIZE /
                                                                              EPISODE_IMAGE_AVERAGE_SIZE;
-
-    // The number of poster cache entries was based on an experiment on Gabriel's 4.0.3 emulator
-    // where the application crashed after adding 17 series, on 2013-08-21.
-    // With 15 series, MySeriesActivity was OK, but it crashed after opening SeriesDetailsActivity.
-    private static final int NUMBER_OF_POSTER_CACHE_ENTRIES = 10;
+    private static final float PERCENTAGE_OF_MEMORY_USED_IN_BIG_POSTER_CACHE = 0.125f;
+    private static final float PERCENTAGE_OF_MEMORY_USED_IN_SMALL_POSTER_CACHE = 0.0625f;
 
     private final ImageRepository posterDirectory;
     private final ImageRepository smallPosterDirectory;
@@ -63,10 +60,17 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     public AndroidImageServiceRepository(Context context) {
         Validate.isNonNull(context, "context");
 
-        this.posterDirectory = new LruImageCache(new ExternalStorageImageDirectory(context, SERIES_POSTERS),
-                                                 NUMBER_OF_POSTER_CACHE_ENTRIES);
+        final int deviceMemoryKiB = (int) (Runtime.getRuntime().maxMemory() / KiB);
+        final int bigPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_BIG_POSTER_CACHE);
+        final int smallPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_SMALL_POSTER_CACHE);
+        
+		this.posterDirectory = new LruImageCache(
+				new ExternalStorageImageDirectory(context, SERIES_POSTERS),
+				bigPosterCacheSizeKiB);
 
-        this.smallPosterDirectory = new ImageRepositoryCache(new ExternalStorageImageDirectory(context, SMALL_SERIES_POSTERS));
+		this.smallPosterDirectory = new LruImageCache(
+				new ExternalStorageImageDirectory(context, SMALL_SERIES_POSTERS),
+				smallPosterCacheSizeKiB);
 
         this.episodeDirectory = new LruRepositoryManager(new ExternalStorageImageDirectory(context, EPISODE_IMAGES),
                                                          NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES);

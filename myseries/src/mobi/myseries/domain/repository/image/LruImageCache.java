@@ -13,10 +13,20 @@ public class LruImageCache implements ImageRepository {
     private final LruCache<Integer, Bitmap> cache;
     private final ImageRepository cachedRepository;
 
-    public LruImageCache(ImageRepository cachedRepository, int numberOfCachedImages) {
+    public LruImageCache(ImageRepository cachedRepository, int maxCacheSizeInKilobytes) {
         Validate.isNonNull(cachedRepository, "cachedRepository");
 
-        this.cache = new LruCache<Integer, Bitmap>(numberOfCachedImages);
+        Log.d(getClass().getName(), "LRU Cache size (KiB) : " + maxCacheSizeInKilobytes);
+        
+        this.cache = new LruCache<Integer, Bitmap>(maxCacheSizeInKilobytes) {
+        	@Override
+            protected int sizeOf(Integer key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
+        
         this.cachedRepository = cachedRepository;
     }
 
