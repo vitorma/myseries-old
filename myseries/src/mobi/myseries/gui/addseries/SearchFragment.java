@@ -4,16 +4,25 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.search.SeriesSearchListener;
-import mobi.myseries.domain.model.Series;
+import mobi.myseries.application.search.SearchListener;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
 import android.app.Dialog;
+import android.os.Bundle;
 
-public class SearchByNameFragment extends AddSeriesFragment {
+public class SearchFragment extends AddSeriesFragment {
+    private SearchListener searchListener;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        this.searchListener = this.newSearchListener();
+    }
 
     @Override
     protected boolean hasSearchPanel() {
@@ -31,56 +40,60 @@ public class SearchByNameFragment extends AddSeriesFragment {
     }
 
     @Override
-    protected boolean shouldPerformSearchOnStartLifeCycle() {
+    protected boolean shouldServiceRunOnStartLifeCycle() {
         return false;
     }
 
     @Override
-    protected void performSearch() {
-        App.seriesSearch().byName(this.searchField.getText().toString());
+    protected void runService() {
+        App.searchService().search(this.searchField.getText().toString());
     }
 
     @Override
-    protected void registerListenerForSeriesSearch() {
-        App.seriesSearch().registerForSearchByName(this.seriesSearchListener);
+    protected void registerListenerForService() {
+        App.searchService().register(this.searchListener);
     }
 
     @Override
-    protected void deregisterListenerForSeriesSearch() {
-        App.seriesSearch().deregisterForSearchByName(this.seriesSearchListener);
+    protected void deregisterListenerForService() {
+        App.searchService().deregister(this.searchListener);
     }
 
     @Override
-    protected SeriesSearchListener seriesSearchListener() {
-        return new SeriesSearchListener() {
+    protected void onServiceStartRunning() {
+        this.searchListener.onStart();
+    }
+
+    private SearchListener newSearchListener() {
+        return new SearchListener() {
             private boolean showButtons;
 
             @Override
             public void onStart() {
-                SearchByNameFragment.this.disableSearch();
+                SearchFragment.this.disableSearch();
 
-                SearchByNameFragment.this.isSearching = true;
-                SearchByNameFragment.this.showProgress();
+                SearchFragment.this.isServiceRunning = true;
+                SearchFragment.this.showProgress();
             }
 
             @Override
             public void onFinish() {
-                SearchByNameFragment.this.enableSearch(this.showButtons);
+                SearchFragment.this.enableSearch(this.showButtons);
 
-                SearchByNameFragment.this.isSearching = false;
+                SearchFragment.this.isServiceRunning = false;
 
-                if (SearchByNameFragment.this.hasResultsToShow()) {
-                    SearchByNameFragment.this.showResults();
+                if (SearchFragment.this.hasResultsToShow()) {
+                    SearchFragment.this.showResults();
                 } else {
-                    SearchByNameFragment.this.hideProgress();
+                    SearchFragment.this.hideProgress();
                 }
             }
 
             @Override
-            public void onSucess(List<Series> results) {
+            public void onSucess(List<SearchResult> results) {
                 this.showButtons = true;
 
-                SearchByNameFragment.this.setResults(results);
+                SearchFragment.this.setResults(results);
             }
 
             @Override
@@ -88,25 +101,25 @@ public class SearchByNameFragment extends AddSeriesFragment {
                 if (exception.getCause() instanceof ConnectionFailedException) {
                     this.showButtons = true;
 
-                    SearchByNameFragment.this.onSearchFailure(
+                    SearchFragment.this.onSearchFailure(
                             R.string.connection_failed_title,
                             R.string.connection_failed_message);
                 } else if (exception.getCause() instanceof InvalidSearchCriteriaException) {
                     this.showButtons = false;
 
-                    SearchByNameFragment.this.onSearchFailure(
+                    SearchFragment.this.onSearchFailure(
                             R.string.invalid_criteria_title,
                             R.string.invalid_criteria_message);
                 } else if (exception.getCause() instanceof ParsingFailedException) {
                     this.showButtons = true;
 
-                    SearchByNameFragment.this.onSearchFailure(
+                    SearchFragment.this.onSearchFailure(
                             R.string.parsing_failed_title,
                             R.string.parsing_failed_message);
                 } else if (exception.getCause() instanceof ConnectionTimeoutException){
                     this.showButtons = true;
 
-                    SearchByNameFragment.this.onSearchFailure(
+                    SearchFragment.this.onSearchFailure(
                             R.string.connection_timeout_title,
                             R.string.connection_timeout_message);
                 }
