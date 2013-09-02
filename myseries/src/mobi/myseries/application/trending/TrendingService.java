@@ -1,4 +1,4 @@
-package mobi.myseries.application.search;
+package mobi.myseries.application.trending;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;

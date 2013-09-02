@@ -4,7 +4,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.search.TrendingListener;
+import mobi.myseries.application.trending.TrendingListener;
 import mobi.myseries.domain.model.SearchResult;
 import android.os.Bundle;
 
