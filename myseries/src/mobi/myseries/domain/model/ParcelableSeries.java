@@ -3,17 +3,17 @@ package mobi.myseries.domain.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SearchResult implements Parcelable {
+public class ParcelableSeries implements Parcelable {
 
-    public static final Parcelable.Creator<SearchResult> CREATOR = new Parcelable.Creator<SearchResult>() {
+    public static final Parcelable.Creator<ParcelableSeries> CREATOR = new Parcelable.Creator<ParcelableSeries>() {
         @Override
-        public SearchResult createFromParcel(Parcel in) {
-            return new SearchResult(in);
+        public ParcelableSeries createFromParcel(Parcel in) {
+            return new ParcelableSeries(in);
         }
 
         @Override
-        public SearchResult[] newArray(int size) {
-            return new SearchResult[size];
+        public ParcelableSeries[] newArray(int size) {
+            return new ParcelableSeries[size];
         }
     };
 
@@ -22,17 +22,17 @@ public class SearchResult implements Parcelable {
     private String overview;
     private String poster;
 
-    public SearchResult() { }
+    public ParcelableSeries() { }
 
-    public SearchResult(Parcel in) {
+    public ParcelableSeries(Parcel in) {
         this.tvdbId = in.readString();
         this.title = in.readString();
         this.overview = in.readString();
         this.poster = in.readString();
     }
 
-    public SearchResult copy() {
-        return new SearchResult()
+    public ParcelableSeries copy() {
+        return new ParcelableSeries()
             .setTvdbId(this.tvdbId)
             .setTitle(this.title)
             .setOverview(this.overview)
@@ -77,22 +77,22 @@ public class SearchResult implements Parcelable {
         return this.poster;
     }
 
-    public SearchResult setTvdbId(String tvdbId2) {
+    public ParcelableSeries setTvdbId(String tvdbId2) {
         this.tvdbId = tvdbId2;
         return this;
     }
 
-    public SearchResult setTitle(String title) {
+    public ParcelableSeries setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public SearchResult setOverview(String overview) {
+    public ParcelableSeries setOverview(String overview) {
         this.overview = overview;
         return this;
     }
 
-    public SearchResult setPoster(String poster) {
+    public ParcelableSeries setPoster(String poster) {
         this.poster = poster;
         return this;
     }
@@ -104,6 +104,6 @@ public class SearchResult implements Parcelable {
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof SearchResult && ((SearchResult) other).tvdbId == this.tvdbId;
+        return other instanceof ParcelableSeries && ((ParcelableSeries) other).tvdbId == this.tvdbId;
     }
 }

@@ -5,9 +5,8 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.search.SearchListener;
-import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.ParcelableSeries;
 import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.gui.shared.FailureDialogBuilder;
@@ -90,7 +89,7 @@ public class SearchFragment extends AddSeriesFragment {
             }
 
             @Override
-            public void onSucess(List<SearchResult> results) {
+            public void onSucess(List<ParcelableSeries> results) {
                 this.showButtons = true;
 
                 SearchFragment.this.setResults(results);
@@ -98,30 +97,28 @@ public class SearchFragment extends AddSeriesFragment {
 
             @Override
             public void onFailure(Exception exception) {
-                if (exception.getCause() instanceof ConnectionFailedException) {
-                    this.showButtons = true;
-
-                    SearchFragment.this.onSearchFailure(
-                            R.string.connection_failed_title,
-                            R.string.connection_failed_message);
-                } else if (exception.getCause() instanceof InvalidSearchCriteriaException) {
+                if (exception instanceof InvalidSearchCriteriaException) {
                     this.showButtons = false;
 
                     SearchFragment.this.onSearchFailure(
                             R.string.invalid_criteria_title,
                             R.string.invalid_criteria_message);
-                } else if (exception.getCause() instanceof ParsingFailedException) {
+                }
+
+                if (exception instanceof ConnectionFailedException) {
+                    this.showButtons = true;
+
+                    SearchFragment.this.onSearchFailure(
+                            R.string.connection_failed_title,
+                            R.string.connection_failed_message);
+                }
+
+                if (exception instanceof ParsingFailedException) {
                     this.showButtons = true;
 
                     SearchFragment.this.onSearchFailure(
                             R.string.parsing_failed_title,
                             R.string.parsing_failed_message);
-                } else if (exception.getCause() instanceof ConnectionTimeoutException){
-                    this.showButtons = true;
-
-                    SearchFragment.this.onSearchFailure(
-                            R.string.connection_timeout_title,
-                            R.string.connection_timeout_message);
                 }
             }
         };

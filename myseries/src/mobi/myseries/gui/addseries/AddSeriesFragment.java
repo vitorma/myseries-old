@@ -4,7 +4,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.ParcelableSeries;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.DialogButtonOnClickListener;
@@ -39,7 +39,7 @@ public abstract class AddSeriesFragment extends Fragment {
 
     private AddSeriesAdapter adapter;
 
-    private List<SearchResult> results;
+    private List<ParcelableSeries> results;
     protected boolean isServiceRunning;
 
     /* Fragment life cycle */
@@ -208,7 +208,7 @@ public abstract class AddSeriesFragment extends Fragment {
         this.resultsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Series selectedItem = ((SearchResult) parent.getItemAtPosition(position)).toSeries();
+                Series selectedItem = ((ParcelableSeries) parent.getItemAtPosition(position)).toSeries();
                 AddSeriesFragment.this.onRequestAdd(selectedItem);
             }
         });
@@ -313,7 +313,7 @@ public abstract class AddSeriesFragment extends Fragment {
         return this.results != null;
     }
 
-    protected void setResults(List<SearchResult> results) {
+    protected void setResults(List<ParcelableSeries> results) {
         this.results = results;
 
         this.setUpNumberOfResults();
@@ -333,7 +333,7 @@ public abstract class AddSeriesFragment extends Fragment {
             this.adapter = new AddSeriesAdapter(this.activity(), this.results);
         } else {
             this.adapter.clear();
-            for (SearchResult result : this.results) {
+            for (ParcelableSeries result : this.results) {
                 this.adapter.add(result);
             }
         }

@@ -1,11 +1,12 @@
 package mobi.myseries.gui.addseries;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.trending.TrendingListener;
-import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.ParcelableSeries;
 import android.os.Bundle;
 
 public class TrendingFragment extends AddSeriesFragment {
@@ -69,16 +70,19 @@ public class TrendingFragment extends AddSeriesFragment {
             @Override
             public void onFinish() {
                 TrendingFragment.this.isServiceRunning = false;
+
                 TrendingFragment.this.showResults();
             }
 
             @Override
-            public void onSucess(List<SearchResult> results) {
+            public void onSucess(List<ParcelableSeries> results) {
                 TrendingFragment.this.setResults(results);
             }
 
             @Override
-            public void onFailure(Exception exception) { }
+            public void onFailure(Exception exception) {
+                TrendingFragment.this.setResults(new ArrayList<ParcelableSeries>());
+            }
         };
     }
 }

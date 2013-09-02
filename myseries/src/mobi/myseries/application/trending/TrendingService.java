@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.ParcelableSeries;
 import mobi.myseries.domain.source.trakttv.TrendingSource;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Validate;
@@ -64,7 +64,7 @@ public class TrendingService {
         });
     }
 
-    private void notifyOnSucess(final List<SearchResult> results) {
+    private void notifyOnSucess(final List<ParcelableSeries> results) {
         this.handler.post(new Runnable() {
             @Override
             public void run() {

@@ -4,7 +4,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.ParcelableSeries;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.ImageDownloader;
 import mobi.myseries.gui.shared.Images;
@@ -20,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddSeriesAdapter extends ArrayAdapter<SearchResult> {
+public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> {
     private LayoutInflater layoutInflater;
     private ImageDownloader imageDownloader;
 
     private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
 
-    public AddSeriesAdapter(Context context, List<SearchResult> results) {
+    public AddSeriesAdapter(Context context, List<ParcelableSeries> results) {
         super(context, R.layout.addseries_item, results);
 
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -35,7 +35,7 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final SearchResult result = this.getItem(position);
+        final ParcelableSeries result = this.getItem(position);
 
         ViewHolder viewHolder;
 
