@@ -16,12 +16,12 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.shared.EpisodesToCountSpecification;
+import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.SeenEpisodeSpecification;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
 import android.graphics.Bitmap;
@@ -85,9 +85,21 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         return view;
     }
 
+    //XXX Carregar poster assincronamente
     private void setUpView(ViewHolder viewHolder, final Series series) {
+        AsyncImageLoader.loadBitmapOn(
+                new AsyncImageLoader.BitmapFetchingMethod() {
+                    @Override
+                    public Bitmap loadBitmap() {
+                        return App.imageService().getPosterOf(series);
+                    }
+                },
+                GENERIC_POSTER,
+                viewHolder.poster);
+        /*
         Bitmap poster = App.imageService().getPosterOf(series);
         viewHolder.poster.setImageBitmap(Objects.nullSafe(poster, GENERIC_POSTER));
+        */
 
         String name = series.name();
         viewHolder.name.setText(name);
@@ -112,8 +124,6 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
             }
         });
     }
-
-    //XXX Carregar poster assincronamente
 
     public void reloadData() {
         new AsyncTask<Void, Void, Void>() {
