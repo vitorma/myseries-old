@@ -18,6 +18,7 @@ import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.shared.EpisodesToCountSpecification;
 import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.Images;
+import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.gui.shared.SeenEpisodeSpecification;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
@@ -85,21 +86,11 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         return view;
     }
 
-    //XXX Carregar poster assincronamente
     private void setUpView(ViewHolder viewHolder, final Series series) {
         AsyncImageLoader.loadBitmapOn(
-                new AsyncImageLoader.BitmapFetchingMethod() {
-                    @Override
-                    public Bitmap loadBitmap() {
-                        return App.imageService().getPosterOf(series);
-                    }
-                },
+                new PosterFetchingMethod(series, App.imageService()),
                 GENERIC_POSTER,
                 viewHolder.poster);
-        /*
-        Bitmap poster = App.imageService().getPosterOf(series);
-        viewHolder.poster.setImageBitmap(Objects.nullSafe(poster, GENERIC_POSTER));
-        */
 
         String name = series.name();
         viewHolder.name.setText(name);
