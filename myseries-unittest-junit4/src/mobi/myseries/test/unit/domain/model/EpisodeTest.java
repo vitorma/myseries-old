@@ -21,6 +21,11 @@
 
 package mobi.myseries.test.unit.domain.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Date;
 
 import mobi.myseries.domain.constant.Invalid;
@@ -29,8 +34,6 @@ import mobi.myseries.domain.model.EpisodeListener;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import static org.junit.Assert.*;
 
 public class EpisodeTest {
     private static final int ID1 = 1;
@@ -147,14 +150,14 @@ public class EpisodeTest {
         assertEquals(NUMBER1, episode.number());
         assertEquals(SEASON_NUMBER1, episode.seasonNumber());
 
-        assertNull(episode.title());
+        assertEquals(episode.title(), "");
         assertNull(episode.airDate());
-        assertNull(episode.overview());
-        assertNull(episode.directors());
-        assertNull(episode.directors());
-        assertNull(episode.writers());
-        assertNull(episode.guestStars());
-        assertNull(episode.screenUrl());
+        assertEquals(episode.overview(), "");
+        assertEquals(episode.directors(), "");
+        assertEquals(episode.directors(), "");
+        assertEquals(episode.writers(), "");
+        assertEquals(episode.guestStars(), "");
+        assertEquals(episode.screenUrl(), "");
 
         assertFalse(episode.watched());
     }
@@ -278,7 +281,7 @@ public class EpisodeTest {
         episode1.mergeWith(episode2);
     }
 
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void mergingAnEpisodeWithAnotherHavingADifferentSeriesIdCausesIllegalArgumentException() {
         Episode episode1 = Episode.builder()
