@@ -35,7 +35,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 // TODO(Gabriel) Log the operations of this service.
-public final class ImageService {
+public class ImageService {
 
     private final int smallPosterWidth;
     private final int smallPosterHeight;

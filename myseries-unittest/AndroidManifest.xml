@@ -24,6 +24,6 @@
                      android:targetPackage="mobi.myseries"
                      android:label="Tests for mobi.myseries"/>
 
-    <uses-sdk android:minSdkVersion="8"/>
+    <uses-sdk android:minSdkVersion="15"/>
 
 </manifest>
