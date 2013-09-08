@@ -1,7 +1,6 @@
 package mobi.myseries.application.backup;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,20 +8,19 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import android.content.Context;
-import android.content.SharedPreferences.Editor;
-
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.json.JsonHelper;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.shared.FilesUtil;
+import android.content.Context;
+import android.content.SharedPreferences.Editor;
 
 public class RestoreTask implements OperationTask {
     private BackupMode backupMode;
     private OperationResult result;
     private SeriesRepository repository;
-    
+
     public RestoreTask(BackupMode backupMode, SeriesRepository repository) {
         this.backupMode = backupMode;
         this.repository = repository;
@@ -31,10 +29,10 @@ public class RestoreTask implements OperationTask {
     @Override
     public void run() {
         try {
-            Collection<Series> seriesJson = getSeriesFromFile("myseries.json");
-            restoreSeries(seriesJson);
-            String preferencesJson = getJsonFromFile("preferences.json");
-            restorePreferences(preferencesJson);
+            Collection<Series> seriesJson = this.getSeriesFromFile("myseries.json");
+            this.restoreSeries(seriesJson);
+            String preferencesJson = this.getJsonFromFile("preferences.json");
+            this.restorePreferences(preferencesJson);
         } catch (Exception e) {
             this.result = new OperationResult().withError(e);
             e.printStackTrace();
@@ -43,12 +41,12 @@ public class RestoreTask implements OperationTask {
         this.result = new OperationResult();
 
     }
-    
+
     private String getJsonFromFile(String jsonFileName) throws Exception, IOException {
         File cacheFile = null;
         try {
             cacheFile = new File(App.context().getCacheDir(), jsonFileName);
-            backupMode.downloadBackupToFile(cacheFile);
+            this.backupMode.downloadBackupToFile(cacheFile);
             String cacheFilePath = cacheFile.getAbsolutePath();
             String stringContent = FilesUtil.readFileAsString(cacheFilePath, null);
             return stringContent;
@@ -56,25 +54,25 @@ public class RestoreTask implements OperationTask {
             if(cacheFile != null)
                 cacheFile.delete();
         }
-        
+
     }
 
     private Collection<Series> getSeriesFromFile(String jsonFileName) throws Exception, IOException {
         File cacheFile = null;
         try {
             cacheFile = new File(App.context().getCacheDir(), jsonFileName);
-            backupMode.downloadBackupToFile(cacheFile);
+            this.backupMode.downloadBackupToFile(cacheFile);
             return JsonHelper.readSeriesJsonStream(new BufferedInputStream(new FileInputStream(cacheFile)));
-        } finally { 
+        } finally {
             if(cacheFile != null)
                 cacheFile.delete();
         }
     }
 
     private void restoreSeries(Collection<Series> series) {
-        App.followSeriesService().stopFollowingAll(repository.getAll());
+        App.seriesFollowingService().unfollowAll(this.repository.getAll()); //XXX (Cleber) App methods should be called only in gui
         for (Series s : series) {
-            repository.insert(s);
+            this.repository.insert(s);
         }
     }
 

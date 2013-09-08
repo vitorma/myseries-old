@@ -405,33 +405,33 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put(EPISODE_SERIES, e.seriesId());
         cv.put(EPISODE_NUMBER, e.number());
         cv.put(EPISODE_SEASON, e.seasonNumber());
-        cv.put(EPISODE_NAME, e.name());
+        cv.put(EPISODE_NAME, e.title());
         cv.put(EPISODE_AIRDATE, Numbers.parseLong(e.airDate(), null));
-        cv.put(EPISODE_AIRTIME, Numbers.parseLong(e.airtime(), null));
+        cv.put(EPISODE_AIRTIME, Numbers.parseLong(e.airTime(), null));
         cv.put(EPISODE_OVERVIEW, e.overview());
         cv.put(EPISODE_DIRECTORS, e.directors());
         cv.put(EPISODE_WRITERS, e.writers());
         cv.put(EPISODE_GUESTSTARS, e.guestStars());
-        cv.put(EPISODE_IMAGE, e.imageFileName());
-        cv.put(EPISODE_SEENMARK, String.valueOf(e.wasSeen()));
+        cv.put(EPISODE_IMAGE, e.screenUrl());
+        cv.put(EPISODE_SEENMARK, String.valueOf(e.watched()));
 
         return cv;
     }
 
     private Series seriesByCurrentPositionOf(Cursor c) {
         return Series.builder()
-            .withId(c.getInt(c.getColumnIndex(SERIES_ID)))
-            .withName(c.getString(c.getColumnIndex(SERIES_NAME)))
+            .withTvdbId(c.getInt(c.getColumnIndex(SERIES_ID)))
+            .withTitle(c.getString(c.getColumnIndex(SERIES_NAME)))
             .withStatus(Status.from(c.getString(c.getColumnIndex(SERIES_STATUS))))
             .withAirDay(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDAY)), DEFAULT_AIRDAY))
-            .withAirtime(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), DEFAULT_AIRTIME))
+            .withAirTime(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), DEFAULT_AIRTIME))
             .withAirDate(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), DEFAULT_AIRDATE))
             .withRuntime(c.getString(c.getColumnIndex(SERIES_RUNTIME)))
             .withNetwork(c.getString(c.getColumnIndex(SERIES_NETWORK)))
             .withOverview(c.getString(c.getColumnIndex(SERIES_OVERVIEW)))
             .withGenres(c.getString(c.getColumnIndex(SERIES_GENRES)))
             .withActors(c.getString(c.getColumnIndex(SERIES_ACTORS)))
-            .withPosterFileName(c.getString(c.getColumnIndex(SERIES_POSTER)))
+            .withPoster(c.getString(c.getColumnIndex(SERIES_POSTER)))
             .withBannerFileName(c.getString(c.getColumnIndex(SERIES_BANNER)))
             .withLastUpdate(c.getLong(c.getColumnIndex(SERIES_LASTUPDATE)))
             .build();
@@ -448,15 +448,15 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             .withSeriesId(c.getInt(c.getColumnIndex(EPISODE_SERIES)))
             .withNumber(c.getInt(c.getColumnIndex(EPISODE_NUMBER)))
             .withSeasonNumber(c.getInt(c.getColumnIndex(EPISODE_SEASON)))
-            .withName(c.getString(c.getColumnIndex(EPISODE_NAME)))
+            .withTitle(c.getString(c.getColumnIndex(EPISODE_NAME)))
             .withAirDate(DatesAndTimes.parse(airDate, DEFAULT_AIRDATE))
             .withAirtime(DatesAndTimes.parse(airtime, DEFAULT_AIRTIME))
             .withOverview(c.getString(c.getColumnIndex(EPISODE_OVERVIEW)))
             .withDirectors(c.getString(c.getColumnIndex(EPISODE_DIRECTORS)))
             .withWriters(c.getString(c.getColumnIndex(EPISODE_WRITERS)))
             .withGuestStars(c.getString(c.getColumnIndex(EPISODE_GUESTSTARS)))
-            .withImageFileName(c.getString(c.getColumnIndex(EPISODE_IMAGE)))
-            .withSeenMark(Boolean.valueOf(c.getString(c.getColumnIndex(EPISODE_SEENMARK))))
+            .withScreenUrl(c.getString(c.getColumnIndex(EPISODE_IMAGE)))
+            .withWatchMark(Boolean.valueOf(c.getString(c.getColumnIndex(EPISODE_SEENMARK))))
             .build();
     }
 

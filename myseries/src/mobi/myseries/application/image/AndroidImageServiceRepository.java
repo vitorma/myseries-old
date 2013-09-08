@@ -120,12 +120,12 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     @Override
     public Bitmap getImageOf(Episode episode) {
         Validate.isNonNull(episode, "episode");
-        Log.d(LOG_TAG, "Fetching image of " + episode.name());
+        Log.d(LOG_TAG, "Fetching image of " + episode.title());
 
         try {
             return this.episodeDirectory.fetch(episode.id());
         } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed fetching image of episode " + episode.name(), e);
+            Log.w(LOG_TAG, "Failed fetching image of episode " + episode.title(), e);
             return null;
         }
     }
@@ -186,15 +186,15 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
         Validate.isNonNull(episode, "episode");
 
         if (image == null) {
-            Log.d(LOG_TAG, "Skipped saving null image for episode " + episode.name());
+            Log.d(LOG_TAG, "Skipped saving null image for episode " + episode.title());
             return;
         }
 
-        Log.d(LOG_TAG, "Saving image of episode " + episode.name());
+        Log.d(LOG_TAG, "Saving image of episode " + episode.title());
         try {
             this.episodeDirectory.save(episode.id(), image);
         } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed saving image of episode " + episode.name(), e);
+            Log.w(LOG_TAG, "Failed saving image of episode " + episode.title(), e);
         }
     }
 
@@ -254,12 +254,12 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     }
 
     private void deleteEpisodeImage(Episode episode) {
-        Log.d(LOG_TAG, "Deleting image of episode " + episode.name());
+        Log.d(LOG_TAG, "Deleting image of episode " + episode.title());
 
         try {
             this.episodeDirectory.delete(episode.id());
         } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed deleting image of episode " + episode.name(), e);
+            Log.w(LOG_TAG, "Failed deleting image of episode " + episode.title(), e);
         }
     }
 }

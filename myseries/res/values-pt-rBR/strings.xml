@@ -61,6 +61,7 @@
     <string name="all_seasons">Todas as temporadas</string>
     <string name="tab_overview">VISÃO GERAL</string>
     <string name="tab_seasons">TEMPORADAS</string>
+    <string name="confirmation_removal_single_series">Você quer mesmo remover %s?</string>
 
     <plurals name="plural_remaining">
         <item quantity="one">%d restante</item>

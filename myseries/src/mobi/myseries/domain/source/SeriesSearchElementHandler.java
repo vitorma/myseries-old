@@ -19,7 +19,7 @@ public class SeriesSearchElementHandler extends SeriesElementHandler {
         this.seriesElement.getChild(POSTER_FILE_NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesSearchElementHandler.this.seriesBuilder.withPosterFileName(SeriesSearchElementHandler.this.posterUrlFrom(body));
+                SeriesSearchElementHandler.this.seriesBuilder.withPoster(SeriesSearchElementHandler.this.posterUrlFrom(body));
             }
         });
 

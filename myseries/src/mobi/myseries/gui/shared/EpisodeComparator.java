@@ -119,6 +119,6 @@ public class EpisodeComparator {
     }
 
     private static int compareByAirtime(Episode episode1, Episode episode2) {
-        return DatesAndTimes.compareByNullLast(episode1.airtime(), episode2.airtime());
+        return DatesAndTimes.compareByNullLast(episode1.airTime(), episode2.airTime());
     }
 }

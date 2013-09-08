@@ -84,13 +84,13 @@ public class SeriesProvider {
     }
 
     public void markEpisodeAsSeen(Episode episode) {
-        episode.markAsSeen();
+        episode.markAsWatched();
         this.seriesRepository.update(episode);
         this.broadcastService.broadcastSeenMarkup();
     }
 
     public void markEpisodeAsNotSeen(Episode episode) {
-        episode.markAsNotSeen();
+        episode.markAsUnwatched();
         this.seriesRepository.update(episode);
         this.broadcastService.broadcastSeenMarkup();
     }

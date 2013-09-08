@@ -1,24 +1,3 @@
-/*
- *   App.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.application;
 
 import java.text.DateFormat;
@@ -27,7 +6,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.error.ErrorService;
-import mobi.myseries.application.follow.FollowSeriesService;
+import mobi.myseries.application.follow.SeriesFollowingService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.notification.NotificationService;
@@ -44,7 +23,7 @@ public class App extends Application {
     private static Environment environment;
     private static SearchService searchService;
     private static TrendingService trendingService;
-    private static FollowSeriesService followSeriesService;
+    private static SeriesFollowingService seriesFollowingService;
     private static Schedule schedule;
     private static UpdateService updateService;
     private static ErrorService errorService;
@@ -62,7 +41,7 @@ public class App extends Application {
 
         Log.setLogger(Log.ANDROID_LOGGER);
 
-        environment = new Environment(this);
+        environment = new EnvironmentImpl(this);
 
         broadcastService = new BroadcastService(this);
 
@@ -74,17 +53,9 @@ public class App extends Application {
 
         errorService = new ErrorService();
 
-        searchService = new SearchService(environment.searchSource());
-
-        trendingService = new TrendingService(environment.trendingSource());
-
-        followSeriesService = new FollowSeriesService(
-                environment.seriesSource(),
-                environment.seriesRepository(),
-                environment.localizationProvider(),
-                imageService,
-                errorService,
-                broadcastService);
+        searchService = new SearchService(environment);
+        trendingService = new TrendingService(environment);
+        seriesFollowingService = new SeriesFollowingService(environment, imageService);
 
         updateService = new UpdateService(
                 environment.seriesSource(),
@@ -95,12 +66,12 @@ public class App extends Application {
 
         schedule = new Schedule(
                 environment.seriesRepository(),
-                followSeriesService,
+                seriesFollowingService,
                 updateService);
 
         backupService = new BackupService(environment.seriesRepository(), environment.dropboxHelper());
 
-        messageService = new MessageService(followSeriesService, updateService, backupService);
+        messageService = new MessageService(seriesFollowingService, updateService, backupService);
 
         notificationService = new NotificationService(this, updateService, backupService);
 
@@ -134,8 +105,8 @@ public class App extends Application {
         return trendingService;
     }
 
-    public static FollowSeriesService followSeriesService() {
-        return followSeriesService;
+    public static SeriesFollowingService seriesFollowingService() {
+        return seriesFollowingService;
     }
 
     public static UpdateService updateSeriesService() {

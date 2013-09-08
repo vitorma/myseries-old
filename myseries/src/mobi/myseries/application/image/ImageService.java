@@ -41,6 +41,7 @@ public final class ImageService {
     private final int smallPosterHeight;
 
     private final ImageServiceRepository imageRepository;
+    @Deprecated
     private final ImageSource imageSource;
 
     private final ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
@@ -114,7 +115,7 @@ public final class ImageService {
     public void downloadImageOf(Episode episode) {
         Validate.isNonNull(episode, "episode");
 
-        if (Strings.isNullOrBlank(episode.imageFileName())) {return;}
+        if (Strings.isNullOrBlank(episode.screenUrl())) {return;}
 
         new EpisodeImageDownload(episode).execute();
     }
@@ -154,7 +155,7 @@ public final class ImageService {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                Bitmap fetchedImage = ImageService.this.imageSource.fetchEpisodeImage(this.episode.imageFileName());
+                Bitmap fetchedImage = ImageService.this.imageSource.fetchEpisodeImage(this.episode.screenUrl());
 
                 ImageService.this.imageRepository.saveEpisodeImage(this.episode, fetchedImage);
             } catch (ConnectionFailedException e) {

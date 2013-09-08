@@ -44,7 +44,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
         this.reloadData();
 
-        App.followSeriesService().register(this.seriesFollowingListener);
+        App.seriesFollowingService().register(this.seriesFollowingListener);
         App.updateSeriesService().register(this.updateListener);
         App.backupService().register(this.backupListener);
     }

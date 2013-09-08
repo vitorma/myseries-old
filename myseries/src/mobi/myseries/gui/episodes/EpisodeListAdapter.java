@@ -87,8 +87,8 @@ public class EpisodeListAdapter extends BaseAdapter implements SeasonListener, E
 
         String format = App.resources().getString(R.string.episode_number_format_ext);
         viewHolder.episodeNumber.setText(String.format(format, episode.number()));
-        viewHolder.episodeName.setText(episode.name());
-        viewHolder.episodeSeenMark.setChecked(episode.wasSeen());
+        viewHolder.episodeName.setText(episode.title());
+        viewHolder.episodeSeenMark.setChecked(episode.watched());
         viewHolder.episodeSeenMark.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
 
         return view;

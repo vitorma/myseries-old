@@ -1,52 +1,27 @@
 package mobi.myseries.application.trending;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import mobi.myseries.application.ApplicationService;
+import mobi.myseries.application.Environment;
 import mobi.myseries.domain.model.ParcelableSeries;
 import mobi.myseries.domain.source.trakttv.TrendingSource;
-import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.shared.Validate;
-import android.os.Handler;
 
-public class TrendingService {
-    private final TrendingSource source;
-    private final ListenerSet<TrendingListener> listeners;
-    private final ExecutorService executor;
-    private Handler handler;
+public class TrendingService extends ApplicationService<TrendingListener> {
 
-    public TrendingService(TrendingSource source) {
-        Validate.isNonNull(source, "source");
-
-        this.source = source;
-        this.listeners = new ListenerSet<TrendingListener>();
-        this.executor = Executors.newSingleThreadExecutor();
-    }
-
-    public TrendingService withHandler(Handler handler) {
-        this.handler = handler;
-
-        return this;
+    public TrendingService(Environment environment) {
+        super(environment);
     }
 
     public void listTrending() {
-        this.executor.execute(new TrendingTask());
-    }
-
-    public boolean register(TrendingListener listener) {
-        return this.listeners.register(listener);
-    }
-
-    public boolean deregister(TrendingListener listener) {
-        return this.listeners.deregister(listener);
+        this.run(new TrendingTask());
     }
 
     private void notifyOnStart() {
-        this.handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (TrendingListener l : TrendingService.this.listeners) {
+                for (TrendingListener l : TrendingService.this.listeners()) {
                     l.onStart();
                 }
             }
@@ -54,10 +29,10 @@ public class TrendingService {
     }
 
     private void notifyOnFinish() {
-        this.handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (TrendingListener l : TrendingService.this.listeners) {
+                for (TrendingListener l : TrendingService.this.listeners()) {
                     l.onFinish();
                 }
             }
@@ -65,10 +40,10 @@ public class TrendingService {
     }
 
     private void notifyOnSucess(final List<ParcelableSeries> results) {
-        this.handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (TrendingListener l : TrendingService.this.listeners) {
+                for (TrendingListener l : TrendingService.this.listeners()) {
                     l.onSucess(results);
                 }
             }
@@ -76,10 +51,10 @@ public class TrendingService {
     }
 
     private void notifyOnFailure(final Exception failure) {
-        this.handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (TrendingListener l : TrendingService.this.listeners) {
+                for (TrendingListener l : TrendingService.this.listeners()) {
                     l.onFailure(failure);
                 }
             }
@@ -92,7 +67,10 @@ public class TrendingService {
             TrendingService.this.notifyOnStart();
 
             try {
-                TrendingService.this.notifyOnSucess(TrendingService.this.source.listTrending());
+                TrendingSource source = TrendingService.this.environment().trendingSource();
+                List<ParcelableSeries> result = source.listTrending();
+
+                TrendingService.this.notifyOnSucess(result);
             } catch (Exception e) {
                 TrendingService.this.notifyOnFailure(e);
             }

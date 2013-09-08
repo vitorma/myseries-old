@@ -78,18 +78,18 @@ public class SeriesAdapter implements JsonSerializer<Series>, JsonDeserializer<S
             episodes.add(e);
         }
         return Series.builder()
-                .withId(seriesJson.get(SERIES_ID).getAsInt())
-                .withName(seriesJson.get(SERIES_NAME).getAsString())
+                .withTvdbId(seriesJson.get(SERIES_ID).getAsInt())
+                .withTitle(seriesJson.get(SERIES_NAME).getAsString())
                 .withStatus(Status.from(seriesJson.get(SERIES_STATUS).getAsString()))
                 .withAirDay(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRDAY), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRDAY).getAsLong(), DEFAULT_AIRDAY))
-                .withAirtime(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRTIME), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRTIME).getAsLong(), DEFAULT_AIRTIME))
+                .withAirTime(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRTIME), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRTIME).getAsLong(), DEFAULT_AIRTIME))
                 .withAirDate(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRDATE), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRDATE).getAsLong(), DEFAULT_AIRDATE))
                 .withRuntime(Objects.nullSafe(seriesJson.get(SERIES_RUNTIME), new JsonPrimitive("")).getAsString())
                 .withNetwork(Objects.nullSafe(seriesJson.get(SERIES_NETWORK), new JsonPrimitive("")).getAsString())
                 .withOverview(Objects.nullSafe(seriesJson.get(SERIES_OVERVIEW), new JsonPrimitive("")).getAsString())
                 .withGenres(Objects.nullSafe(seriesJson.get(SERIES_GENRES), new JsonPrimitive("")).getAsString())
                 .withActors(Objects.nullSafe(seriesJson.get(SERIES_ACTORS), new JsonPrimitive("")).getAsString())
-                .withPosterFileName(Objects.nullSafe(seriesJson.get(SERIES_POSTER), new JsonPrimitive("")).getAsString())
+                .withPoster(Objects.nullSafe(seriesJson.get(SERIES_POSTER), new JsonPrimitive("")).getAsString())
                 .withLastUpdate(Objects.nullSafe(seriesJson.get(SERIES_LASTUPDATE), new JsonPrimitive(0)).getAsLong())
                 .build()
                 .includingAll(episodes);

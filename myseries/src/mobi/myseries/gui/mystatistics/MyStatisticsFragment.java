@@ -146,13 +146,13 @@ public class MyStatisticsFragment extends Fragment {
             @Override
             public void onRestoreRunning(BackupMode mode) {
                 // TODO Auto-generated method stub
-                
+
             }
 
             @Override
             public void onRestoreCompleted(BackupMode mode) {
                 MyStatisticsFragment.this.update();
-                
+
             }
 
         };
@@ -190,7 +190,7 @@ public class MyStatisticsFragment extends Fragment {
             }
         };
 
-        App.followSeriesService().register(this.followListener);
+        App.seriesFollowingService().register(this.followListener);
 
     }
 
@@ -255,7 +255,7 @@ public class MyStatisticsFragment extends Fragment {
                         continue;
                     }
 
-                    if (e.wasSeen()) {
+                    if (e.watched()) {
                         ++watchedEpisodes;
                         ++currentSeasonSeenEpisodes;
                         ++currentSeriesWatchedEpisodes;

@@ -136,12 +136,12 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     public synchronized Season including(Episode episode) {
         this.validateNotIncluded(episode);
 
-        if (episode.wasSeen()) {
+        if (episode.watched()) {
             this.numberOfSeenEpisodes++;
             this.notifyThatNumberOfSeenEpisodesChanged();
         }
 
-        if (!episode.wasSeen() && this.wasSeen()) {
+        if (!episode.watched() && this.wasSeen()) {
             this.notifyThatWasMarkedAsNotSeen();
         }
 
@@ -171,7 +171,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     public synchronized Season markAsSeen() {
         for (Episode e : this.episodes.values()) {
             e.setBeingMarkedBySeason(true);
-            e.markAsSeen();
+            e.markAsWatched();
             e.setBeingMarkedBySeason(false);
         }
 
@@ -187,7 +187,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     public synchronized Season markAsNotSeen() {
         for (Episode e : this.episodes.values()) {
             e.setBeingMarkedBySeason(true);
-            e.markAsNotSeen();
+            e.markAsUnwatched();
             e.setBeingMarkedBySeason(false);
         }
 
@@ -203,12 +203,12 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     private boolean nextEpisodeToSeeShouldBe(Episode candidate) {
         Episode current = this.nextEpisodeToSee;
 
-        return !candidate.wasSeen() && ((current == null) || (current.number() > candidate.number()));
+        return !candidate.watched() && ((current == null) || (current.number() > candidate.number()));
     }
 
     private Episode findNextEpisodeToSee() {
         for (Episode e : this.episodes.values()) {
-            if (!e.wasSeen()) {
+            if (!e.watched()) {
                 return e;
             }
         }
@@ -257,7 +257,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
     private synchronized void insert(Episode episode) {
         this.validateNotIncluded(episode);
 
-        if (episode.wasSeen()) {
+        if (episode.watched()) {
             this.numberOfSeenEpisodes++;
         }
 
@@ -279,7 +279,7 @@ public class Season implements EpisodeListener, Publisher<SeasonListener> {
             this.nextEpisodeToSee = this.findNextEpisodeToSee();
         }
 
-        if (episode.wasSeen()) {
+        if (episode.watched()) {
             this.numberOfSeenEpisodes--;
         }
     }

@@ -142,7 +142,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                EpisodeElementHandler.this.episodeBuilder.withName(body.trim());
+                EpisodeElementHandler.this.episodeBuilder.withTitle(body.trim());
             }
         });
 
@@ -212,7 +212,7 @@ public class EpisodeElementHandler {
         this.episodeElement.getChild(IMAGE_FILE_NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                EpisodeElementHandler.this.episodeBuilder.withImageFileName(body.trim());
+                EpisodeElementHandler.this.episodeBuilder.withScreenUrl(body.trim());
             }
         });
 

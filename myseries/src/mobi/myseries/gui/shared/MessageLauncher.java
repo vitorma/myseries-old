@@ -1,8 +1,5 @@
 package mobi.myseries.gui.shared;
 
-import com.dropbox.client2.exception.DropboxUnlinkedException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.message.MessageServiceListener;
@@ -17,6 +14,11 @@ import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.shared.Validate;
 import android.app.Activity;
 import android.app.Dialog;
+import android.view.Gravity;
+import android.widget.Toast;
+
+import com.dropbox.client2.exception.DropboxUnlinkedException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 public class MessageLauncher implements MessageServiceListener {
 
@@ -25,33 +27,25 @@ public class MessageLauncher implements MessageServiceListener {
     private Activity activity;
 
     private FailureDialogBuilder dialogBuilder;
-    private ToastBuilder toastBuilder;
 
     public MessageLauncher(Activity activity) {
         Validate.isNonNull(activity, "activity");
 
         this.activity = activity;
         this.dialogBuilder = new FailureDialogBuilder(activity);
-        this.toastBuilder = new ToastBuilder(activity);
 
         App.messageService().register(this);
     }
 
     @Override
-    public void onFollowingStart(Series series) {
-        String toastMessage = String.format(
-                activity.getString(R.string.follow_toast_message_format),
-                series.name());
-
-        showToastWith(toastMessage);
-    }
+    public void onFollowingStart(Series series) { /* Do nothing */ }
 
     @Override
     public void onFollowingSuccess(Series series) {
         String toastMessage = String.format(
                 this.activity.getString(R.string.add_success), series.name());
 
-        showToastWith(toastMessage);
+        this.showToastWith(toastMessage);
     }
 
     @Override
@@ -90,7 +84,7 @@ public class MessageLauncher implements MessageServiceListener {
 
     @Override
     public void onUpdateSuccess() {
-        showToastWith(R.string.update_success_message);
+        this.showToastWith(R.string.update_success_message);
     }
 
     public void onStop() {
@@ -103,34 +97,38 @@ public class MessageLauncher implements MessageServiceListener {
     }
 
     public Dialog dialog() {
-        return currentDialog;
+        return this.currentDialog;
     }
 
     public boolean isShowingDialog() {
-        return isShowingDialog;
+        return this.isShowingDialog;
     }
 
     public void loadState() {
         App.messageService().register(this);
 
-        if ((currentDialog != null) && isShowingDialog()) {
-            currentDialog.show();
+        if ((this.currentDialog != null) && this.isShowingDialog()) {
+            this.currentDialog.show();
         }
     }
 
     private void showToastWith(String message) {
-        this.toastBuilder.setMessage(message).build().show();
+        Toast t = Toast.makeText(this.activity, message, Toast.LENGTH_SHORT);
+
+        t.setGravity(Gravity.CENTER, 0, 0);
+        t.show();
     }
 
     private void showToastWith(int messageId) {
-        this.toastBuilder.setMessage(messageId).build().show();
+        Toast t = Toast.makeText(this.activity, messageId, Toast.LENGTH_SHORT);
+
+        t.setGravity(Gravity.CENTER, 0, 0);
+        t.show();
     }
 
     @Override
     public void onBackupSucess() {
-        // TODO(vitor) turn this a Internationalizable string
         this.showToastWith(R.string.backup_completed);
-
     }
 
     @Override

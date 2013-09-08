@@ -119,7 +119,7 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         String formattedDate = DatesAndTimes.toString(this.episode.airDate(), dateformat, unavailable);
         this.episodeAirDate.setText(formattedDate.toUpperCase());
 
-        this.episodeName.setText(Objects.nullSafe(this.episode.name(), this.getContext().getString(R.string.to_be_announced)));
+        this.episodeName.setText(Objects.nullSafe(this.episode.title(), this.getContext().getString(R.string.to_be_announced)));
 
         if (this.episode.directors().trim().isEmpty()) {
             this.episodeDirectors.setVisibility(View.GONE);
@@ -196,6 +196,6 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
     }
 
     private void updateSeenCheckbox() {
-        this.isViewed.setChecked(this.episode.wasSeen());
+        this.isViewed.setChecked(this.episode.watched());
     }
 }

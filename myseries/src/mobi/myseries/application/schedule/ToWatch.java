@@ -1,6 +1,6 @@
 package mobi.myseries.application.schedule;
 
-import mobi.myseries.application.follow.FollowSeriesService;
+import mobi.myseries.application.follow.SeriesFollowingService;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
@@ -11,7 +11,7 @@ import mobi.myseries.shared.Specification;
 
 public class ToWatch extends ScheduleMode implements SeriesListener {
 
-    public ToWatch(ScheduleSpecification specification, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
+    public ToWatch(ScheduleSpecification specification, SeriesRepository repository, SeriesFollowingService following, UpdateService update) {
         super(specification, repository, following, update);
     }
 

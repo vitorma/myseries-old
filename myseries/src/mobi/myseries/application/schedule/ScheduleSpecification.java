@@ -76,7 +76,7 @@ public class ScheduleSpecification extends AbstractSpecification<Episode> {
     public boolean isSatisfiedBy(Episode episode) {
         return (episode != null) &&
                (this.isSatisfiedBySpecialEpisodes() || episode.isNotSpecial()) &&
-               (this.isSatisfiedBySeenEpisodes() || episode.wasNotSeen()) &&
+               (this.isSatisfiedBySeenEpisodes() || episode.unwatched()) &&
                (this.isSatisfiedByEpisodesOfSeries(episode.seriesId()));
     }
 }

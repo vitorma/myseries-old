@@ -7,6 +7,6 @@ public class SeenEpisodeSpecification extends AbstractSpecification<Episode>{
 
     @Override
     public boolean isSatisfiedBy(Episode e) {
-        return e != null && e.wasSeen();
+        return e != null && e.watched();
     }
 }

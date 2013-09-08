@@ -213,6 +213,12 @@
         <item name="android:imeOptions">actionDone</item>
     </style>
 
+    <!-- ProgressBar -->
+
+    <style name="ProgressBarCross" parent="android:style/Widget.Holo.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/progress_cross</item>
+    </style>
+
     <!-- DialogButton -->
 
     <style name="DialogButton">

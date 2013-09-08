@@ -312,13 +312,13 @@ public class SeriesParserTest extends TestCase {
         assertThat(episode1.seriesId(), equalTo(Integer.valueOf(FULL_SERIES_ID)));
         assertThat(episode1.number(), equalTo(Integer.valueOf(EPISODE1_NUMBER)));
         assertThat(episode1.seasonNumber(), equalTo(Integer.valueOf(SEASON_NUMBER)));
-        assertThat(episode1.name(), equalTo(EPISODE1_NAME));
+        assertThat(episode1.title(), equalTo(EPISODE1_NAME));
         assertThat(episode1.airDate(), equalTo(DatesAndTimes.parse(EPISODE1_AIR_DATE, TheTVDBConstants.DATE_FORMAT, null)));
         assertThat(episode1.overview(), equalTo(EPISODE1_OVERVIEW));
         assertThat(episode1.directors(), equalTo(Strings.normalizePipeSeparated(EPISODE1_DIRECTORS)));
         assertThat(episode1.writers(), equalTo(Strings.normalizePipeSeparated(EPISODE1_WRITERS)));
         assertThat(episode1.guestStars(), equalTo(Strings.normalizePipeSeparated(EPISODE1_GUEST_STARS)));
-        assertThat(episode1.imageFileName(), equalTo(EPISODE1_IMAGE_FILE_NAME));
+        assertThat(episode1.screenUrl(), equalTo(EPISODE1_IMAGE_FILE_NAME));
 
         Episode episode2 = fullSeries.season(Integer.valueOf(SEASON_NUMBER)).episode(Integer.valueOf(EPISODE2_NUMBER));
 
@@ -326,12 +326,12 @@ public class SeriesParserTest extends TestCase {
         assertThat(episode2.seriesId(), equalTo(Integer.valueOf(FULL_SERIES_ID)));
         assertThat(episode2.number(), equalTo(Integer.valueOf(EPISODE2_NUMBER)));
         assertThat(episode2.seasonNumber(), equalTo(Integer.valueOf(SEASON_NUMBER)));
-        assertThat(episode2.name(), equalTo(EPISODE2_NAME));
+        assertThat(episode2.title(), equalTo(EPISODE2_NAME));
         assertThat(episode2.airDate(), equalTo(DatesAndTimes.parse(EPISODE2_AIR_DATE, TheTVDBConstants.DATE_FORMAT, null)));
         assertThat(episode2.overview(), equalTo(EPISODE2_OVERVIEW));
         assertThat(episode2.directors(), equalTo(Strings.normalizePipeSeparated(EPISODE2_DIRECTORS)));
         assertThat(episode2.writers(), equalTo(Strings.normalizePipeSeparated(EPISODE2_WRITERS)));
         assertThat(episode2.guestStars(), equalTo(Strings.normalizePipeSeparated(EPISODE2_GUEST_STARS)));
-        assertThat(episode2.imageFileName(), equalTo(EPISODE2_IMAGE_FILE_NAME));
+        assertThat(episode2.screenUrl(), equalTo(EPISODE2_IMAGE_FILE_NAME));
     }
 }

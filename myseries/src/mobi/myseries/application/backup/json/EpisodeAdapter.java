@@ -45,15 +45,15 @@ public class EpisodeAdapter implements JsonSerializer<Episode>,
         episodeJson.addProperty(EPISODE_SERIES, episode.seriesId());
         episodeJson.addProperty(EPISODE_NUMBER, episode.number());
         episodeJson.addProperty(EPISODE_SEASON, episode.seasonNumber());
-        episodeJson.addProperty(EPISODE_NAME, episode.name());
+        episodeJson.addProperty(EPISODE_NAME, episode.title());
         episodeJson.addProperty(EPISODE_AIRDATE, Numbers.parseLong(episode.airDate(), null));
-        episodeJson.addProperty(EPISODE_AIRTIME, Numbers.parseLong(episode.airtime(), null));
+        episodeJson.addProperty(EPISODE_AIRTIME, Numbers.parseLong(episode.airTime(), null));
         //episodeJson.addProperty(EPISODE_OVERVIEW, episode.overview());
         //episodeJson.addProperty(EPISODE_DIRECTORS, episode.directors());
         //episodeJson.addProperty(EPISODE_WRITERS, episode.writers());
         //episodeJson.addProperty(EPISODE_GUESTSTARS, episode.guestStars());
         //episodeJson.addProperty(EPISODE_IMAGE, episode.imageFileName());
-        episodeJson.addProperty(EPISODE_SEENMARK, String.valueOf(episode.wasSeen()));
+        episodeJson.addProperty(EPISODE_SEENMARK, String.valueOf(episode.watched()));
         return episodeJson;
     }
     @Override
@@ -65,15 +65,15 @@ public class EpisodeAdapter implements JsonSerializer<Episode>,
                 .withSeriesId(episodeJson.get(EPISODE_SERIES).getAsInt())
                 .withNumber(episodeJson.get(EPISODE_NUMBER).getAsInt())
                 .withSeasonNumber(episodeJson.get(EPISODE_SEASON).getAsInt())
-                .withName(Objects.nullSafe(episodeJson.get(EPISODE_NAME), new JsonPrimitive("")).getAsString())
+                .withTitle(Objects.nullSafe(episodeJson.get(EPISODE_NAME), new JsonPrimitive("")).getAsString())
                 .withAirDate(DatesAndTimes.parse(Objects.nullSafe(episodeJson.get(EPISODE_AIRDATE), JsonNull.INSTANCE).isJsonNull()? null : episodeJson.get(EPISODE_AIRDATE).getAsLong(), DEFAULT_AIRDATE))
                 .withAirtime(DatesAndTimes.parse(Objects.nullSafe(episodeJson.get(EPISODE_AIRTIME), JsonNull.INSTANCE).isJsonNull()? null : episodeJson.get(EPISODE_AIRTIME).getAsLong(), DEFAULT_AIRTIME))
                 .withOverview(Objects.nullSafe(episodeJson.get(EPISODE_OVERVIEW), new JsonPrimitive("")).getAsString())
                 .withDirectors(Objects.nullSafe(episodeJson.get(EPISODE_DIRECTORS), new JsonPrimitive("")).getAsString())
                 .withWriters(Objects.nullSafe(episodeJson.get(EPISODE_WRITERS), new JsonPrimitive("")).getAsString())
                 .withGuestStars(Objects.nullSafe(episodeJson.get(EPISODE_GUESTSTARS), new JsonPrimitive("")).getAsString())
-                .withImageFileName(Objects.nullSafe(episodeJson.get(EPISODE_IMAGE), new JsonPrimitive("")).getAsString())
-                .withSeenMark(Objects.nullSafe(episodeJson.get(EPISODE_SEENMARK), new JsonPrimitive(false)).getAsBoolean())
+                .withScreenUrl(Objects.nullSafe(episodeJson.get(EPISODE_IMAGE), new JsonPrimitive("")).getAsString())
+                .withWatchMark(Objects.nullSafe(episodeJson.get(EPISODE_SEENMARK), new JsonPrimitive(false)).getAsBoolean())
                 .build();
     }
 }

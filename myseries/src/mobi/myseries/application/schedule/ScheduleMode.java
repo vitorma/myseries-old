@@ -27,8 +27,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
+import mobi.myseries.application.follow.SeriesFollowingService;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
@@ -49,7 +49,7 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
     protected SeriesRepository repository;
     private ListenerSet<ScheduleListener> listeners;
 
-    protected ScheduleMode(ScheduleSpecification specification, SeriesRepository repository, FollowSeriesService following, UpdateService update) {
+    protected ScheduleMode(ScheduleSpecification specification, SeriesRepository repository, SeriesFollowingService following, UpdateService update) {
         this.specification = specification;
         this.episodes = new ArrayList<Episode>();
 

@@ -30,7 +30,7 @@ public abstract class MalfunctioningImageServiceRepositoryTest extends Instrumen
     public void setUp() {
         this.testEpisode = mock(Episode.class);
         when(this.testEpisode.id()).thenReturn(TEST_EPISODE_ID);
-        when(this.testEpisode.name()).thenReturn(TEST_EPISODE_NAME);
+        when(this.testEpisode.title()).thenReturn(TEST_EPISODE_NAME);
 
         this.testSeries = mock(Series.class);
         when(this.testSeries.id()).thenReturn(TEST_SERIES_ID);

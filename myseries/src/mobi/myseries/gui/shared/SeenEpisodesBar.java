@@ -62,7 +62,7 @@ public class SeenEpisodesBar extends LinearLayout {
         }
 
         for (int i = specialEpisodes; i < (episodes.size() + specialEpisodes); ++i) {
-            parts[i - specialEpisodes] = episodes.get(i % episodes.size()).wasSeen();
+            parts[i - specialEpisodes] = episodes.get(i % episodes.size()).watched();
         }
 
         for (int i = 1; i < series.seasons().numberOfSeasons(); ++i) {
@@ -90,7 +90,7 @@ public class SeenEpisodesBar extends LinearLayout {
         boolean[] parts = new boolean[episodes.size()];
 
         for (int i = 0; i < episodes.size(); ++i) {
-            parts[i] = episodes.get(i).wasSeen();
+            parts[i] = episodes.get(i).watched();
         }
 
         ChunkBar chunkBar = new ChunkBar(this.getContext());

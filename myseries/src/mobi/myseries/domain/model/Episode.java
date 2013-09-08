@@ -1,50 +1,35 @@
-/*
- *   Episode.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.domain.model;
 
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import mobi.myseries.domain.constant.Invalid;
-import mobi.myseries.shared.Time;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
+import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
+
+/*
+ * Trakt.tv does not provide information about people (directors, writers, guest stars) of episodes,
+ * but it provides attributes (e.g. tvdb_id and tvrage_id) which allow us getting such information (and other ones) from other sources.
+ * We can do it in future.
+ */
 
 public class Episode implements Publisher<EpisodeListener> {
     private int id;
     private int seriesId;
     private int number;
     private int seasonNumber;
-    private String name;
+    private String title;
     private Date airDate;
-    private Time airtime;
+    private Time airTime;
     private String overview;
     private String directors;
     private String writers;
     private String guestStars;
-    private String imageFileName;
+    private String screenUrl;
 
-    private AtomicBoolean seenMark;
+    private AtomicBoolean watchMark;
     private volatile boolean beingMarkedBySeason;
 
     private ListenerSet<EpisodeListener> listeners;
@@ -60,7 +45,7 @@ public class Episode implements Publisher<EpisodeListener> {
         this.number = number;
         this.seasonNumber = seasonNumber;
 
-        this.seenMark = new AtomicBoolean(false);
+        this.watchMark = new AtomicBoolean(false);
         this.listeners = new ListenerSet<EpisodeListener>();
     }
 
@@ -92,20 +77,21 @@ public class Episode implements Publisher<EpisodeListener> {
         return !this.isSpecial();
     }
 
-    public String name() {
-        return this.name;
+    public String title() {
+        return this.title;
     }
 
     public Date airDate() {
         return this.airDate;
     }
 
-    public Time airtime() {
-        return this.airtime;
+    public Time airTime() {
+        return this.airTime;
     }
 
+    @Deprecated
     public Episode withAirtime(Time airtime) {
-        this.airtime = airtime;
+        this.airTime = airtime;
         return this;
     }
 
@@ -125,27 +111,27 @@ public class Episode implements Publisher<EpisodeListener> {
         return this.guestStars;
     }
 
-    public String imageFileName() {
-        return this.imageFileName;
+    public String screenUrl() {
+        return this.screenUrl;
     }
 
-    public boolean wasSeen() {
-        return this.seenMark.get();
+    public boolean watched() {
+        return this.watchMark.get();
     }
 
-    public boolean wasNotSeen() {
-        return !this.seenMark.get();
+    public boolean unwatched() {
+        return !this.watchMark.get();
     }
 
-    public void markAsSeen() {
-        if (this.seenMark.compareAndSet(false, true)) {
-            this.notifyThatWasMarkedAsSeen();
+    public void markAsWatched() {
+        if (this.watchMark.compareAndSet(false, true)) {
+            this.notifyThatWasMarkedAsWatched();
         }
     }
 
-    public void markAsNotSeen() {
-        if (this.seenMark.compareAndSet(true, false)) {
-            this.notifyThatWasMarkedAsNotSeen();
+    public void markAsUnwatched() {
+        if (this.watchMark.compareAndSet(true, false)) {
+            this.notifyThatWasMarkedAsUnwatched();
         }
     }
 
@@ -161,14 +147,14 @@ public class Episode implements Publisher<EpisodeListener> {
         Validate.isTrue(other.number == this.number, "other should have the same number as this");
 
         this.id = other.id;
-        this.name = other.name;
+        this.title = other.title;
         this.airDate = other.airDate;
-        this.airtime = other.airtime;
+        this.airTime = other.airTime;
         this.overview = other.overview;
         this.directors = other.directors;
         this.writers = other.writers;
         this.guestStars = other.guestStars;
-        this.imageFileName = other.imageFileName;
+        this.screenUrl = other.screenUrl;
     }
 
     @Override
@@ -181,7 +167,7 @@ public class Episode implements Publisher<EpisodeListener> {
         return this.listeners.deregister(listener);
     }
 
-    private void notifyThatWasMarkedAsSeen() {
+    private void notifyThatWasMarkedAsWatched() {
         for (EpisodeListener listener : this.listeners) {
             if (this.beingMarkedBySeason) {
                 listener.onMarkAsSeenBySeason(this);
@@ -191,7 +177,7 @@ public class Episode implements Publisher<EpisodeListener> {
         }
     }
 
-    private void notifyThatWasMarkedAsNotSeen() {
+    private void notifyThatWasMarkedAsUnwatched() {
         for (EpisodeListener listener : this.listeners) {
             if (this.beingMarkedBySeason) {
                 listener.onMarkAsNotSeenBySeason(this);
@@ -229,15 +215,15 @@ public class Episode implements Publisher<EpisodeListener> {
         private int seriesId;
         private int number;
         private int seasonNumber;
-        private String name;
+        private String title = "";
         private Date airDate;
-        private Time airtime;
-        private String overview;
-        private String directors;
-        private String writers;
-        private String guestStars;
-        private String imageFileName;
-        private boolean seenMark;
+        private Time airTime;
+        private String overview = "";
+        private String directors = "";
+        private String writers = "";
+        private String guestStars = "";
+        private String screenUrl = "";
+        private boolean watchMark;
 
         private Builder() {
             this.id = Invalid.EPISODE_ID;
@@ -266,8 +252,8 @@ public class Episode implements Publisher<EpisodeListener> {
             return this;
         }
 
-        public Builder withName(String name) {
-            this.name = name;
+        public Builder withTitle(String title) {
+            this.title = title;
             return this;
         }
 
@@ -276,8 +262,8 @@ public class Episode implements Publisher<EpisodeListener> {
             return this;
         }
 
-        public Builder withAirtime(Time airtime) {
-            this.airtime = airtime;
+        public Builder withAirtime(Time airTime) {
+            this.airTime = airTime;
             return this;
         }
 
@@ -301,28 +287,28 @@ public class Episode implements Publisher<EpisodeListener> {
             return this;
         }
 
-        public Builder withImageFileName(String imageFileName) {
-            this.imageFileName = imageFileName;
+        public Builder withScreenUrl(String screenUrl) {
+            this.screenUrl = screenUrl;
             return this;
         }
 
-        public Builder withSeenMark(boolean seenMark) {
-            this.seenMark = seenMark;
+        public Builder withWatchMark(boolean watchMark) {
+            this.watchMark = watchMark;
             return this;
         }
 
         public Episode build() {
             Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
 
-            episode.name = this.name;
+            episode.title = this.title;
             episode.airDate = this.airDate;
-            episode.airtime = this.airtime;
+            episode.airTime = this.airTime;
             episode.overview = this.overview;
             episode.directors = this.directors;
             episode.writers = this.writers;
             episode.guestStars = this.guestStars;
-            episode.imageFileName = this.imageFileName;
-            episode.seenMark = new AtomicBoolean(this.seenMark);
+            episode.screenUrl = this.screenUrl;
+            episode.watchMark = new AtomicBoolean(this.watchMark);
 
             return episode;
         }

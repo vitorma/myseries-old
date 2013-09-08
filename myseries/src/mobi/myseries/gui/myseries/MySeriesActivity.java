@@ -29,9 +29,6 @@ public class MySeriesActivity extends BaseActivity {
         final Handler handler = new Handler();
 
         App.updateSeriesService().withHandler(handler);
-        App.followSeriesService().withHandler(handler);
-        App.searchService().withHandler(handler);
-        App.trendingService().withHandler(handler);
 
         if (savedInstanceState == null
                 || (savedInstanceState != null && !savedInstanceState.getBoolean(ALREADY_CHECKED_FOR_UPDATE, false))) {

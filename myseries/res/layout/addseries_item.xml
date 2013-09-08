@@ -15,14 +15,38 @@
         android:layout_height="@dimen/myseries_poster_height"
         android:layout_alignParentTop="true"/>
 
-    <ImageButton
-        android:id="@+id/addButton"
-        android:src="@drawable/ic_action_add_inverse"
-        android:background="@drawable/item_background_holo_light"
+    <FrameLayout
+        android:id="@+id/addButtonPanel"
         android:layout_height="@dimen/toucharea_minimum_side"
         android:layout_width="@dimen/toucharea_minimum_side"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/seriesPoster"/>
+        android:layout_below="@id/seriesPoster">
+
+        <ImageButton
+            android:id="@+id/addButton"
+            android:src="@drawable/ic_action_add_inverse"
+            android:background="@drawable/item_background_holo_light"
+            android:visibility="invisible"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/progressView"
+            style="@style/ProgressBarCross"
+            android:visibility="invisible"
+            android:padding="@dimen/gap_medium"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/removeButton"
+            android:src="@drawable/ic_action_remove_red"
+            android:background="@drawable/item_background_holo_light"
+            android:visibility="invisible"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/itemName"
@@ -36,6 +60,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toucharea_minimum_side"
         android:layout_below="@id/seriesPoster"
-        android:layout_toLeftOf="@id/addButton"/>
+        android:layout_toLeftOf="@id/addButtonPanel"/>
 
 </RelativeLayout>

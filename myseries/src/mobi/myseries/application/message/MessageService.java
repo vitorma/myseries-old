@@ -6,8 +6,8 @@ import java.util.Map;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BackupService;
-import mobi.myseries.application.follow.FollowSeriesService;
 import mobi.myseries.application.follow.SeriesFollowingListener;
+import mobi.myseries.application.follow.SeriesFollowingService;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.listener.UpdateProgressListener;
 import mobi.myseries.domain.model.Series;
@@ -21,13 +21,13 @@ public class MessageService implements
     private ListenerSet<MessageServiceListener> listeners;
 
     public MessageService(
-            FollowSeriesService followSeriesService,
+            SeriesFollowingService seriesFollowingService,
             UpdateService updateService,
             BackupService backupService) {
 
         this.listeners = new ListenerSet<MessageServiceListener>();
 
-        followSeriesService.register(this);
+        seriesFollowingService.register(this);
         updateService.register(this);
         backupService.register(this);
     }
@@ -162,31 +162,31 @@ public class MessageService implements
     @Override
     public void onBackupCompleted(BackupMode mode) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onBackupRunning(BackupMode mode) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onRestoreFailure(BackupMode mode, Exception e) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onRestoreRunning(BackupMode mode) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onRestoreCompleted(BackupMode mode) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

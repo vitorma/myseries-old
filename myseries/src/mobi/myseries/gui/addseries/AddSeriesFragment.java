@@ -5,7 +5,7 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.ParcelableSeries;
-import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
 import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
 import mobi.myseries.gui.shared.DialogButtonOnClickListener;
 import android.app.Dialog;
@@ -25,7 +25,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 public abstract class AddSeriesFragment extends Fragment {
     protected EditText searchField;
@@ -208,8 +207,8 @@ public abstract class AddSeriesFragment extends Fragment {
         this.resultsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Series selectedItem = ((ParcelableSeries) parent.getItemAtPosition(position)).toSeries();
-                AddSeriesFragment.this.onRequestAdd(selectedItem);
+                ParcelableSeries selectedItem = ((ParcelableSeries) parent.getItemAtPosition(position));
+                AddSeriesFragment.this.showSeriesInformationDialog(selectedItem);
             }
         });
 
@@ -218,31 +217,26 @@ public abstract class AddSeriesFragment extends Fragment {
         }
     }
 
-    private void onRequestAdd(Series seriesToAdd) {
+    private void showSeriesInformationDialog(ParcelableSeries selectedItem) {
+        //XXX Create a dialog fragment
         Dialog dialog;
 
-        if (App.followSeriesService().follows(seriesToAdd)) {
-            String message = App.resources().getString(R.string.add_already_followed_series_message, seriesToAdd.name());
+        dialog = new ConfirmationDialogBuilder(this.getActivity())
+            .setTitle(selectedItem.title())
+            .setMessage(selectedItem.overview())
+            .setSurrogateMessage(R.string.overview_unavailable)
+            .setPositiveButton(R.string.add, this.addButtonOnClickListener(selectedItem))
+            .setNegativeButton(R.string.dont_add, null)
+            .build();
 
-            Toast.makeText(App.context(), message, Toast.LENGTH_SHORT).show();
-        } else {
-            dialog = new ConfirmationDialogBuilder(this.getActivity())
-                .setTitle(seriesToAdd.name())
-                .setMessage(seriesToAdd.overview())
-                .setSurrogateMessage(R.string.overview_unavailable)
-                .setPositiveButton(R.string.add, this.addButtonOnClickListener(seriesToAdd))
-                .setNegativeButton(R.string.dont_add, null)
-                .build();
-
-            this.activity().showDialog(dialog);
-        }
+        this.activity().showDialog(dialog);
     }
 
-    private DialogButtonOnClickListener addButtonOnClickListener(final Series seriesToAdd) {
+    private DialogButtonOnClickListener addButtonOnClickListener(final ParcelableSeries selectedItem) {
         return new DialogButtonOnClickListener() {
             @Override
             public void onClick(Dialog dialog) {
-                App.followSeriesService().follow(seriesToAdd);
+                App.seriesFollowingService().follow(selectedItem);
 
                 dialog.dismiss();
             }
@@ -331,6 +325,7 @@ public abstract class AddSeriesFragment extends Fragment {
     private void setUpAdapter() {
         if (this.adapter == null) {
             this.adapter = new AddSeriesAdapter(this.activity(), this.results);
+            this.adapter.register(this.adapterListener);
         } else {
             this.adapter.clear();
             for (ParcelableSeries result : this.results) {
@@ -344,4 +339,19 @@ public abstract class AddSeriesFragment extends Fragment {
     protected AddSeriesActivity activity() {
         return (AddSeriesActivity) this.getActivity();
     }
+
+    /* AddSeriesAdapterListener */
+
+    private AddSeriesAdapterListener adapterListener = new AddSeriesAdapterListener() {
+        @Override
+        public void onRequestAdd(ParcelableSeries series) {
+            App.seriesFollowingService().follow(series);
+        }
+
+        @Override
+        public void onRequestRemove(ParcelableSeries series) {
+            SeriesRemovalConfirmationDialogFragment.newInstance(series)
+                .show(AddSeriesFragment.this.getFragmentManager(), "SeriesRemovalConfirmationDialog");
+        }
+    };
 }

@@ -25,6 +25,7 @@ import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.content.Intent;
 
+@Deprecated
 public class BroadcastService {
     private Context context;
 

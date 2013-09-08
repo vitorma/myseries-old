@@ -37,7 +37,7 @@ public class SeriesRemovalConfirmationDialogFragment extends DialogFragment {
 
                     //TODO (Cleber) Overload methods below so they can receive int[]
 
-                    App.followSeriesService().stopFollowingAll(seriesToRemove);
+                    App.seriesFollowingService().unfollowAll(seriesToRemove);
                     App.preferences().removeEntriesRelatedToAllSeries(seriesToRemove);
 
                     dialog.dismiss();

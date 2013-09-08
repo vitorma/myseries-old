@@ -1,52 +1,27 @@
 package mobi.myseries.application.search;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import mobi.myseries.application.ApplicationService;
+import mobi.myseries.application.Environment;
 import mobi.myseries.domain.model.ParcelableSeries;
 import mobi.myseries.domain.source.trakttv.SearchSource;
-import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.shared.Validate;
-import android.os.Handler;
 
-public class SearchService {
-    private final SearchSource source;
-    private final ListenerSet<SearchListener> listeners;
-    private final ExecutorService executor;
-    private Handler handler;
+public class SearchService extends ApplicationService<SearchListener> {
 
-    public SearchService(SearchSource source) {
-        Validate.isNonNull(source, "source");
-
-        this.source = source;
-        this.listeners = new ListenerSet<SearchListener>();
-        this.executor = Executors.newSingleThreadExecutor();
-    }
-
-    public SearchService withHandler(Handler handler) {
-        this.handler = handler;
-
-        return this;
+    public SearchService(Environment environment) {
+        super(environment);
     }
 
     public void search(String query) {
-        this.executor.execute(new SearchTask(query));
-    }
-
-    public boolean register(SearchListener listener) {
-        return this.listeners.register(listener);
-    }
-
-    public boolean deregister(SearchListener listener) {
-        return this.listeners.deregister(listener);
+        this.run(new SearchTask(query));
     }
 
     private void notifyOnStart() {
-        this.handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (SearchListener l : SearchService.this.listeners) {
+                for (SearchListener l : SearchService.this.listeners()) {
                     l.onStart();
                 }
             }
@@ -54,10 +29,10 @@ public class SearchService {
     }
 
     private void notifyOnSucess(final List<ParcelableSeries> list) {
-        this.handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (SearchListener l : SearchService.this.listeners) {
+                for (SearchListener l : SearchService.this.listeners()) {
                     l.onSucess(list);
                 }
             }
@@ -65,10 +40,10 @@ public class SearchService {
     }
 
     private void notifyOnFailure(final Exception failure) {
-        this.handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (SearchListener l : SearchService.this.listeners) {
+                for (SearchListener l : SearchService.this.listeners()) {
                     l.onFailure(failure);
                 }
             }
@@ -76,10 +51,10 @@ public class SearchService {
     }
 
     private void notifyOnFinish() {
-        this.handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (SearchListener l : SearchService.this.listeners) {
+                for (SearchListener l : SearchService.this.listeners()) {
                     l.onFinish();
                 }
             }
@@ -98,7 +73,10 @@ public class SearchService {
             SearchService.this.notifyOnStart();
 
             try {
-                SearchService.this.notifyOnSucess(SearchService.this.source.search(this.query));
+                SearchSource source = SearchService.this.environment().searchSource();
+                List<ParcelableSeries> result = source.search(this.query);
+
+                SearchService.this.notifyOnSucess(result);
             } catch (Exception e) {
                 SearchService.this.notifyOnFailure(e);
             }

@@ -142,23 +142,23 @@ public class SeriesTest {
 
     private static Series incompleteSeries() {
         return Series.builder()
-                     .withName("Seri")
-                     .withId(ID)
+                     .withTitle("Seri")
+                     .withTvdbId(ID)
                      .build();
     }
 
     private static Series completeSeries() {
         return Series.builder()
-                     .withName(NAME)
-                     .withId(ID)
+                     .withTitle(NAME)
+                     .withTvdbId(ID)
                      .withActors(ACTORS)
                      .withAirDate(AIR_DATE)
                      .withAirDay(AIR_DAY)
-                     .withAirtime(AIR_TIME)
+                     .withAirTime(AIR_TIME)
                      .withGenres(GENRES)
                      .withNetwork(NETWORK)
                      .withOverview(OVERVIEW)
-                     .withPosterFileName(POSTER_FILENAME)
+                     .withPoster(POSTER_FILENAME)
                      .withRuntime(RUNTIME)
                      .withStatus(STATUS)
                      .build();

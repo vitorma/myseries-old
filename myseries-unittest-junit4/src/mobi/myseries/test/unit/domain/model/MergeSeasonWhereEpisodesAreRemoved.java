@@ -64,11 +64,11 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode4)
                 .including(episode5);
 
-        episode1.markAsSeen();
-        episode2.markAsSeen();
-        episode3.markAsSeen();
-        episode4.markAsSeen();
-        episode5.markAsSeen();
+        episode1.markAsWatched();
+        episode2.markAsWatched();
+        episode3.markAsWatched();
+        episode4.markAsWatched();
+        episode5.markAsWatched();
 
         assertTrue(season1.wasSeen());
 
@@ -101,9 +101,9 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode4)
                 .including(episode5);
 
-        episode1.markAsSeen();
-        episode2.markAsSeen();
-        episode5.markAsSeen();
+        episode1.markAsWatched();
+        episode2.markAsWatched();
+        episode5.markAsWatched();
 
         assertFalse(season1.wasSeen());
 
@@ -136,9 +136,9 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode4)
                 .including(episode5);
 
-        episode1.markAsSeen();
-        episode2.markAsSeen();
-        episode5.markAsSeen();
+        episode1.markAsWatched();
+        episode2.markAsWatched();
+        episode5.markAsWatched();
 
         assertThat(season1.nextEpisodeToSee(), equalTo(episode3));
 
@@ -171,9 +171,9 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode4)
                 .including(episode5);
 
-        episode1.markAsSeen();
-        episode2.markAsSeen();
-        episode5.markAsSeen();
+        episode1.markAsWatched();
+        episode2.markAsWatched();
+        episode5.markAsWatched();
 
         assertThat(season1.nextEpisodeToSee(), equalTo(episode3));
 
@@ -206,9 +206,9 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode4)
                 .including(episode5);
 
-        episode1.markAsSeen();
-        episode2.markAsSeen();
-        episode5.markAsSeen();
+        episode1.markAsWatched();
+        episode2.markAsWatched();
+        episode5.markAsWatched();
 
         assertThat(season1.numberOfSeenEpisodes(), equalTo(3));
 
@@ -272,11 +272,11 @@ public class MergeSeasonWhereEpisodesAreRemoved {
                 .including(episode4)
                 .including(episode5);
 
-        episode1.markAsSeen();
-        episode2.markAsSeen();
-        episode3.markAsSeen();
-        episode4.markAsSeen();
-        episode5.markAsSeen();
+        episode1.markAsWatched();
+        episode2.markAsWatched();
+        episode3.markAsWatched();
+        episode4.markAsWatched();
+        episode5.markAsWatched();
 
         assertThat(season1.wasSeen(), equalTo(true));
 
@@ -292,7 +292,7 @@ public class MergeSeasonWhereEpisodesAreRemoved {
 
         season1.mergeWith(season2);
 
-        episode4.markAsNotSeen();
+        episode4.markAsUnwatched();
 
         assertThat(season1.wasSeen(), equalTo(true));
         verifyZeroInteractions(listener);

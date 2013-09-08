@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
@@ -24,22 +25,30 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class TraktTv implements TrendingSource, SearchSource {
-    private static final int SOCKET_TIMEOUT = 5000;
-    private static final int CONNECTION_TIMEOUT = 5000;
+public class Trakt implements TrendingSource, SearchSource, AddSeriesSource {
+    private static final int SOCKET_TIMEOUT = 60000;
+    private static final int CONNECTION_TIMEOUT = 60000;
     private static final String TRAKT_URL = "http://api.trakt.tv/";
     private static final String TRENDING_URL = TRAKT_URL + "shows/trending.json/";
     private static final String SEARCH_URL = TRAKT_URL + "search/shows.json/";
+    private static final String SHOW_SUMMARY_URL = TRAKT_URL + "show/summary.json/";
     private static final int COMPRESSED_300 = 300;
 
     private final String apiKey;
 
     /* Interface */
 
-    public TraktTv(String apiKey) {
+    public Trakt(String apiKey) {
         Validate.isNonNull(apiKey, "apiKey");
 
         this.apiKey = apiKey;
+    }
+
+    @Override
+    public Series fetchSeries(int seriesId) throws ParsingFailedException, ConnectionFailedException {
+        String url = SHOW_SUMMARY_URL + this.apiKey + "/" + seriesId + "/extended";
+
+        return TraktParser.parseSeries(this.get(url));
     }
 
     @Override
@@ -86,6 +95,34 @@ public class TraktTv implements TrendingSource, SearchSource {
             .setPoster(this.compressedPosterUrl(poster, COMPRESSED_300));
     }
 
+    private String compressedPosterUrl(String poster, int size) {
+        int extensionIndex = poster.lastIndexOf(".");
+
+        if (extensionIndex == -1) { return poster; }
+
+        return new StringBuilder()
+            .append(poster.substring(0, extensionIndex))
+            .append("-" + size)
+            .append(poster.substring(extensionIndex))
+            .toString();
+    }
+
+    /*
+     *  FIXME (Cleber)
+     *        Today, 2013/09/05 04:32, trakt.tv server is "temporarily down for some database maintenance"
+     *        and this method thrown a ParsingFailedException.
+     *
+     *        Exception captured here [in catch clause]:
+     *            class=ParseException
+     *            cause=null
+     *            message=null
+     *
+     *        Message shown to the user:
+     *            title=Error reading file from the web
+     *            content=Your connection may be to slow
+     *
+     *        =/
+     */
     private JSONArray unmarshall(InputStream content) throws ParsingFailedException {
         try {
             return (JSONArray) new JSONParser().parse(new BufferedReader(new InputStreamReader(content)));
@@ -111,18 +148,6 @@ public class TraktTv implements TrendingSource, SearchSource {
         } catch (Exception e) {
             throw new ConnectionFailedException(e);
         }
-    }
-
-    private String compressedPosterUrl(String poster, int size) {
-        int extensionIndex = poster.lastIndexOf(".");
-
-        if (extensionIndex == -1) { return poster; }
-
-        return new StringBuilder()
-            .append(poster.substring(0, extensionIndex))
-            .append("-" + size)
-            .append(poster.substring(extensionIndex))
-            .toString();
     }
 
     private String encode(String string) {

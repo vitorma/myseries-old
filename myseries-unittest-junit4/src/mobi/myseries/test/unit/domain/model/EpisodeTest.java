@@ -147,16 +147,16 @@ public class EpisodeTest {
         assertEquals(NUMBER1, episode.number());
         assertEquals(SEASON_NUMBER1, episode.seasonNumber());
 
-        assertNull(episode.name());
+        assertNull(episode.title());
         assertNull(episode.airDate());
         assertNull(episode.overview());
         assertNull(episode.directors());
         assertNull(episode.directors());
         assertNull(episode.writers());
         assertNull(episode.guestStars());
-        assertNull(episode.imageFileName());
+        assertNull(episode.screenUrl());
 
-        assertFalse(episode.wasSeen());
+        assertFalse(episode.watched());
     }
 
     @Test
@@ -166,14 +166,14 @@ public class EpisodeTest {
             .withSeriesId(SERIES_ID1)
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
-            .withName(NAME)
+            .withTitle(NAME)
             .withAirDate(AIR_DATE)
             .withOverview(OVERVIEW)
             .withDirectors(DIRECTORS)
             .withWriters(WRITERS)
             .withGuestStars(GUEST_STARS)
-            .withImageFileName(IMAGE_FILE_NAME)
-            .withSeenMark(true)
+            .withScreenUrl(IMAGE_FILE_NAME)
+            .withWatchMark(true)
             .build();
 
         assertEquals(ID1, e1.id());
@@ -181,15 +181,15 @@ public class EpisodeTest {
         assertEquals(NUMBER1, e1.number());
         assertEquals(SEASON_NUMBER1, e1.seasonNumber());
 
-        assertEquals(NAME, e1.name());
+        assertEquals(NAME, e1.title());
         assertEquals(AIR_DATE, e1.airDate());
         assertEquals(OVERVIEW, e1.overview());
         assertEquals(DIRECTORS, e1.directors());
         assertEquals(WRITERS, e1.writers());
         assertEquals(GUEST_STARS, e1.guestStars());
-        assertEquals(IMAGE_FILE_NAME, e1.imageFileName());
+        assertEquals(IMAGE_FILE_NAME, e1.screenUrl());
 
-        assertEquals(true, e1.wasSeen());
+        assertEquals(true, e1.watched());
     }
 
     /* SeenMark */
@@ -201,14 +201,14 @@ public class EpisodeTest {
             .withSeriesId(SERIES_ID1)
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
-            .withSeenMark(false)
+            .withWatchMark(false)
             .build();
 
-        assertFalse(episode.wasSeen());
+        assertFalse(episode.watched());
 
-        episode.markAsSeen();
+        episode.markAsWatched();
 
-        assertTrue(episode.wasSeen());
+        assertTrue(episode.watched());
     }
 
     @Test
@@ -218,14 +218,14 @@ public class EpisodeTest {
             .withSeriesId(SERIES_ID1)
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
-            .withSeenMark(true)
+            .withWatchMark(true)
             .build();
 
-        assertTrue(episode.wasSeen());
+        assertTrue(episode.watched());
 
-        episode.markAsNotSeen();
+        episode.markAsUnwatched();
 
-        assertFalse(episode.wasSeen());
+        assertFalse(episode.watched());
     }
 
     /* Merge */
@@ -317,13 +317,13 @@ public class EpisodeTest {
         episode1.mergeWith(episode2);
 
         assertEquals(episode2.number(), episode1.number());
-        assertEquals(episode2.name(), episode1.name());
+        assertEquals(episode2.title(), episode1.title());
         assertEquals(episode2.airDate(), episode1.airDate());
         assertEquals(episode2.overview(), episode1.overview());
         assertEquals(episode2.directors(), episode1.directors());
         assertEquals(episode2.writers(), episode1.writers());
         assertEquals(episode2.guestStars(), episode1.guestStars());
-        assertEquals(episode2.imageFileName(), episode1.imageFileName());
+        assertEquals(episode2.screenUrl(), episode1.screenUrl());
     }
 
     @Test
@@ -340,24 +340,24 @@ public class EpisodeTest {
             .withSeriesId(SERIES_ID1)
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
-            .withName(NAME)
+            .withTitle(NAME)
             .withAirDate(AIR_DATE)
             .withOverview(OVERVIEW)
             .withDirectors(DIRECTORS)
             .withWriters(WRITERS)
             .withGuestStars(GUEST_STARS)
-            .withImageFileName(IMAGE_FILE_NAME)
+            .withScreenUrl(IMAGE_FILE_NAME)
             .build();
 
         episode1.mergeWith(episode2);
 
-        assertEquals(episode2.name(), episode1.name());
+        assertEquals(episode2.title(), episode1.title());
         assertEquals(episode2.airDate(), episode1.airDate());
         assertEquals(episode2.overview(), episode1.overview());
         assertEquals(episode2.directors(), episode1.directors());
         assertEquals(episode2.writers(), episode1.writers());
         assertEquals(episode2.guestStars(), episode1.guestStars());
-        assertEquals(episode2.imageFileName(), episode1.imageFileName());
+        assertEquals(episode2.screenUrl(), episode1.screenUrl());
     }
 
     @Test
@@ -367,7 +367,7 @@ public class EpisodeTest {
             .withSeriesId(SERIES_ID1)
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
-            .withSeenMark(true)
+            .withWatchMark(true)
             .build();
 
         Episode episode2 = Episode.builder()
@@ -375,12 +375,12 @@ public class EpisodeTest {
             .withSeriesId(SERIES_ID1)
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
-            .withSeenMark(false)
+            .withWatchMark(false)
             .build();
 
         episode1.mergeWith(episode2);
 
-        assertTrue(episode1.wasSeen());
+        assertTrue(episode1.watched());
     }
 
     //EpisodeListener---------------------------------------------------------------------------------------------------
@@ -472,10 +472,10 @@ public class EpisodeTest {
             .withSeriesId(SERIES_ID1)
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
-            .withSeenMark(false)
+            .withWatchMark(false)
             .build();
 
-        assertFalse(episode.wasSeen());
+        assertFalse(episode.watched());
 
         EpisodeListener l1 = mockListener();
         EpisodeListener l2 = mockListener();
@@ -484,8 +484,8 @@ public class EpisodeTest {
         assertTrue(episode.register(l2));
 
         for (int i = 1; i <= 1000; i++) {
-            episode.markAsSeen();
-            assertTrue(episode.wasSeen());
+            episode.markAsWatched();
+            assertTrue(episode.watched());
         }
 
         Mockito.verify(l1, Mockito.times(1)).onMarkAsSeen(episode);
@@ -499,10 +499,10 @@ public class EpisodeTest {
             .withSeriesId(SERIES_ID1)
             .withNumber(NUMBER1)
             .withSeasonNumber(SEASON_NUMBER1)
-            .withSeenMark(true)
+            .withWatchMark(true)
             .build();
 
-        assertTrue(episode.wasSeen());
+        assertTrue(episode.watched());
 
         EpisodeListener l1 = mockListener();
         EpisodeListener l2 = mockListener();
@@ -511,8 +511,8 @@ public class EpisodeTest {
         assertTrue(episode.register(l2));
 
         for (int i = 1; i <= 1000; i++) {
-            episode.markAsNotSeen();
-            assertFalse(episode.wasSeen());
+            episode.markAsUnwatched();
+            assertFalse(episode.watched());
         }
 
         Mockito.verify(l1, Mockito.times(1)).onMarkAsNotSeen(episode);

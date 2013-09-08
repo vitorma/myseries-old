@@ -37,21 +37,22 @@ import mobi.myseries.shared.Validate;
 import mobi.myseries.shared.WeekDay;
 
 public class Series implements SeasonSetListener, Publisher<SeriesListener> {
+    public static final int INVALID_SERIES_ID = -1;
 
     public static class Builder {
         private int id;
-        private String name;
+        private String title;
         private Status status;
         private Date airDate;
         private WeekDay airDay;
-        private Time airtime;
-        private String runtime;
-        private String network;
-        private String overview;
-        private String genres;
-        private String actors;
-        private String posterFileName;
-        private String bannerFileName;
+        private Time airTime;
+        private String runtime = "";
+        private String network = "";
+        private String overview = "";
+        private String genres = "";
+        private String actors = "";
+        private String posterUrl = "";
+        private String bannerFileName = "";
 
         private final Set<Episode> episodes;
         private Long lastUpdate;
@@ -62,18 +63,18 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         }
 
         public Series build() {
-            final Series series = new Series(this.id, this.name);
+            final Series series = new Series(this.id, this.title);
 
             series.status = this.status;
             series.airDay = this.airDay;
-            series.airtime = this.airtime;
+            series.airTime = this.airTime;
             series.airDate = this.airDate;
             series.runtime = this.runtime;
             series.network = this.network;
             series.overview = this.overview;
             series.genres = this.genres;
             series.actors = this.actors;
-            series.posterFileName = this.posterFileName;
+            series.posterFileName = this.posterUrl;
             series.bannerFileName = this.bannerFileName;
 
             if (this.lastUpdate == null) {
@@ -100,8 +101,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return this;
         }
 
-        public Builder withAirtime(Time airtime) {
-            this.airtime = airtime;
+        public Builder withAirTime(Time airTime) {
+            this.airTime = airTime;
             return this;
         }
 
@@ -115,7 +116,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return this;
         }
 
-        public Builder withId(int id) {
+        public Builder withTvdbId(int id) {
             this.id = id;
             return this;
         }
@@ -125,8 +126,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return this;
         }
 
-        public Builder withName(String name) {
-            this.name = name;
+        public Builder withTitle(String title) {
+            this.title = title;
             return this;
         }
 
@@ -140,8 +141,8 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
             return this;
         }
 
-        public Builder withPosterFileName(String posterFileName) {
-            this.posterFileName = posterFileName;
+        public Builder withPoster(String posterUrl) {
+            this.posterUrl = posterUrl;
             return this;
         }
 
@@ -166,11 +167,11 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     }
 
     private final int id;
-    private String name;
+    private String title;
     private Status status;
     private Date airDate;
     private WeekDay airDay;
-    private Time airtime;
+    private Time airTime;
     private String runtime;
     private String network;
     private String overview;
@@ -189,7 +190,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         Validate.isNonBlank(name, "name");
 
         this.id = id;
-        this.name = name;
+        this.title = name;
 
         this.seasons = new SeasonSet(this.id);
         this.seasons.register(this);
@@ -209,7 +210,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     }
 
     public Time airtime() {
-        return this.airtime;
+        return this.airTime;
     }
 
     @Override
@@ -251,11 +252,12 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.id;
     }
 
+    @Deprecated
     public Series includingAll(Collection<Episode> episodes) {
         Validate.isNonNull(episodes, "items");
 
         for (Episode e : episodes) {
-            this.seasons.including(e.withAirtime(this.airtime));
+            this.seasons.including(e.withAirtime(this.airTime));
         }
 
         return this;
@@ -289,11 +291,11 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         Validate.isNonNull(other, "other");
         Validate.isTrue(other.id == this.id, "other should have the same id as this");
 
-        this.name = other.name;
+        this.title = other.title;
         this.status = other.status;
         this.airDate = other.airDate;
         this.airDay = other.airDay;
-        this.airtime = other.airtime;
+        this.airTime = other.airTime;
         this.runtime = other.runtime;
         this.network = other.network;
         this.overview = other.overview;
@@ -305,7 +307,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     }
 
     public String name() {
-        return this.name;
+        return this.title;
     }
 
     public String network() {

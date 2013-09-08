@@ -77,7 +77,7 @@ public class Item {
         String format = this.context.getString(R.string.episode_number_format);
         String episodeNumber = String.format(format, episode.seasonNumber(), episode.number());
 
-        item.setTextViewText(R.id.episodeNumber, episodeNumber + " " + episode.name());
+        item.setTextViewText(R.id.episodeNumber, episodeNumber + " " + episode.title());
     }
 
     private void setUpOnClickIntent(RemoteViews item, Episode episode) {

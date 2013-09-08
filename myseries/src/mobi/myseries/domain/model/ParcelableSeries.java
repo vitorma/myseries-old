@@ -3,6 +3,7 @@ package mobi.myseries.domain.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+//TODO (Cleber) Find a better name to this class
 public class ParcelableSeries implements Parcelable {
 
     public static final Parcelable.Creator<ParcelableSeries> CREATOR = new Parcelable.Creator<ParcelableSeries>() {
@@ -41,11 +42,15 @@ public class ParcelableSeries implements Parcelable {
 
     public Series toSeries() {
         return Series.builder()
-            .withId(Integer.valueOf(this.tvdbId))
-            .withName(this.title)
+            .withTvdbId(Integer.valueOf(this.tvdbId))
+            .withTitle(this.title)
             .withOverview(this.overview)
-            .withPosterFileName(this.poster)
+            .withPoster(this.poster)
             .build();
+    }
+
+    public int tvdbIdAsInt() {
+        return Integer.valueOf(this.tvdbId);
     }
 
     @Override
@@ -104,6 +109,7 @@ public class ParcelableSeries implements Parcelable {
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof ParcelableSeries && ((ParcelableSeries) other).tvdbId == this.tvdbId;
+        return other instanceof ParcelableSeries &&
+                ((ParcelableSeries) other).tvdbId.equals(this.tvdbId);
     }
 }

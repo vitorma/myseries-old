@@ -100,7 +100,7 @@ public class SeriesElementHandler {
             @Override
             public void end(String body) {
                 int id = Numbers.parseInt(body.trim(), Invalid.SERIES_ID);
-                SeriesElementHandler.this.seriesBuilder.withId(id);
+                SeriesElementHandler.this.seriesBuilder.withTvdbId(id);
             }
         });
 
@@ -111,7 +111,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withName(body.trim());
+                SeriesElementHandler.this.seriesBuilder.withTitle(body.trim());
             }
         });
 
@@ -147,7 +147,7 @@ public class SeriesElementHandler {
             @Override
             public void end(String body) {
                 Time airtime = Time.valueOf(body.trim());
-                SeriesElementHandler.this.seriesBuilder.withAirtime(airtime);
+                SeriesElementHandler.this.seriesBuilder.withAirTime(airtime);
             }
         });
 
@@ -227,7 +227,7 @@ public class SeriesElementHandler {
         this.seriesElement.getChild(POSTER_FILE_NAME).setEndTextElementListener(new EndTextElementListener() {
             @Override
             public void end(String body) {
-                SeriesElementHandler.this.seriesBuilder.withPosterFileName(body.trim());
+                SeriesElementHandler.this.seriesBuilder.withPoster(body.trim());
             }
         });
 

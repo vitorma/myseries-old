@@ -48,13 +48,13 @@ public class SeasonTest {
 
     private static void markAsSeen(Episode... episodes) {
         for (Episode e : episodes) {
-            Mockito.when(e.wasSeen()).thenReturn(true);
+            Mockito.when(e.watched()).thenReturn(true);
         }
     }
 
     private static void markAsNotSeen(Episode... episodes) {
         for (Episode e : episodes) {
-            Mockito.when(e.wasSeen()).thenReturn(false);
+            Mockito.when(e.watched()).thenReturn(false);
         }
     }
 
@@ -159,7 +159,7 @@ public class SeasonTest {
         Specification<Episode> specification = new AbstractSpecification<Episode>() {
             @Override
             public boolean isSatisfiedBy(Episode episode) {
-                return episode.wasSeen();
+                return episode.watched();
             }
         };
 
@@ -237,7 +237,7 @@ public class SeasonTest {
         Assert.assertEquals(episode1, season.nextEpisodeToSee());
         Assert.assertEquals(0, season.numberOfSeenEpisodes());
         for (Episode e : season.episodes()) {
-            Assert.assertFalse(e.wasSeen());
+            Assert.assertFalse(e.watched());
         }
 
         season.markAsSeen();
@@ -247,7 +247,7 @@ public class SeasonTest {
         Assert.assertNull(season.nextEpisodeToSee());
         Assert.assertEquals(2, season.numberOfSeenEpisodes());
         for (Episode e : season.episodes()) {
-            Assert.assertTrue(e.wasSeen());
+            Assert.assertTrue(e.watched());
         }
     }
 
@@ -264,7 +264,7 @@ public class SeasonTest {
         Assert.assertNull(season.nextEpisodeToSee());
         Assert.assertEquals(2, season.numberOfSeenEpisodes());
         for (Episode e : season.episodes()) {
-            Assert.assertTrue(e.wasSeen());
+            Assert.assertTrue(e.watched());
         }
 
         season.markAsNotSeen();
@@ -274,7 +274,7 @@ public class SeasonTest {
         Assert.assertEquals(episode1, season.nextEpisodeToSee());
         Assert.assertEquals(0, season.numberOfSeenEpisodes());
         for (Episode e : season.episodes()) {
-            Assert.assertFalse(e.wasSeen());
+            Assert.assertFalse(e.watched());
         }
     }
 
