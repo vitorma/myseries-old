@@ -30,7 +30,7 @@ public class SearchFragment extends AddSeriesFragment {
 
     @Override
     protected int sourceTextResource() {
-        return R.string.powered_by_thetvdb;
+        return R.string.powered_by_trakt;
     }
 
     @Override
