@@ -4,9 +4,9 @@ import java.text.DateFormat;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.image.EpisodeImageDownloadListener;
 import mobi.myseries.application.image.ImageService;
+import mobi.myseries.application.marking.MarkingService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.gui.shared.Images;
@@ -26,7 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
+    private static final MarkingService SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
     private static final int ITEM_LAYOUT = R.layout.episode_pager_item;
@@ -169,9 +169,9 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
             @Override
             public void onClick(View view) {
                 if (EpisodeDetailsAdapter.this.isViewed.isChecked()) {
-                    SERIES_PROVIDER.markEpisodeAsSeen(EpisodeDetailsAdapter.this.episode);
+                    SERIES_PROVIDER.markAsWatched(EpisodeDetailsAdapter.this.episode);
                 } else {
-                    SERIES_PROVIDER.markEpisodeAsNotSeen(EpisodeDetailsAdapter.this.episode);
+                    SERIES_PROVIDER.markAsUnwatched(EpisodeDetailsAdapter.this.episode);
                 }
             }
         });

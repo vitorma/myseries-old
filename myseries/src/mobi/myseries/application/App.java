@@ -7,6 +7,7 @@ import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.image.ImageService;
+import mobi.myseries.application.marking.MarkingService;
 import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.notification.NotificationService;
 import mobi.myseries.application.preferences.Preferences;
@@ -20,14 +21,17 @@ import android.content.res.Resources;
 
 public class App extends Application {
     private static Environment environment;
+
+    /* Theses guys already extend ApplicationService */
     private static SearchService searchService;
     private static TrendingService trendingService;
     private static SeriesFollowingService seriesFollowingService;
+    private static MarkingService markingService;
+
     private static Schedule schedule;
     private static UpdateService updateService;
     private static ImageService imageService;
     private static MessageService messageService;
-    private static SeriesProvider seriesProvider;
     private static BackupService backupService;
     private static BroadcastService broadcastService;
     private static NotificationService notificationService;
@@ -54,6 +58,7 @@ public class App extends Application {
         searchService = new SearchService(environment);
         trendingService = new TrendingService(environment);
         seriesFollowingService = new SeriesFollowingService(environment, imageService);
+        markingService = new MarkingService(environment);
 
         updateService = new UpdateService(
                 environment.seriesSource(),
@@ -73,7 +78,6 @@ public class App extends Application {
 
         notificationService = new NotificationService(this, updateService, backupService);
 
-        seriesProvider = new SeriesProvider(environment.seriesRepository(), broadcastService);
 
         preferences = new Preferences(this);
     }
@@ -107,8 +111,8 @@ public class App extends Application {
         return updateService;
     }
 
-    public static SeriesProvider seriesProvider() {
-        return seriesProvider;
+    public static MarkingService seriesProvider() {
+        return markingService;
     }
 
     public static ImageService imageService() {

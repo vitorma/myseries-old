@@ -22,7 +22,7 @@
 package mobi.myseries.application.broadcast;
 
 public class BroadcastAction {
-    public static final String SEEN_MARKUP = "mobi.myseries.application.broadcast.action.SEEN_MARKUP";
+    public static final String MARKING = "mobi.myseries.application.broadcast.action.SEEN_MARKUP";
     public static final String UPDATE = "mobi.myseries.application.broadcast.action.UPDATE";
     public static final String ADDITION = "mobi.myseries.application.broadcast.action.ADDITION";
     public static final String REMOVAL = "mobi.myseries.application.broadcast.action.REMOVAL";

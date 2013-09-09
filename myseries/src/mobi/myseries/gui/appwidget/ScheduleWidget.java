@@ -94,7 +94,7 @@ public class ScheduleWidget extends AppWidgetProvider {
     }
 
     private boolean shouldCallOnUpdate(String action) {
-        return BroadcastAction.SEEN_MARKUP.equals(action) ||
+        return BroadcastAction.MARKING.equals(action) ||
                BroadcastAction.UPDATE.equals(action) ||
                BroadcastAction.ADDITION.equals(action) ||
                BroadcastAction.REMOVAL.equals(action);
