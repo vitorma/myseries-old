@@ -5,7 +5,6 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.image.ExternalStorageImageDirectory;
 import mobi.myseries.domain.repository.image.ImageRepository;
-import mobi.myseries.domain.repository.image.ImageRepositoryCache;
 import mobi.myseries.domain.repository.image.ImageRepositoryException;
 import mobi.myseries.domain.repository.image.LruImageCache;
 import mobi.myseries.domain.repository.image.LruRepositoryManager;
@@ -42,7 +41,7 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
         final int deviceMemoryKiB = (int) (Runtime.getRuntime().maxMemory() / KiB);
         final int bigPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_BIG_POSTER_CACHE);
         final int smallPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_SMALL_POSTER_CACHE);
-        
+
 		this.posterDirectory = new LruImageCache(
 				new ExternalStorageImageDirectory(context, SERIES_POSTERS),
 				bigPosterCacheSizeKiB);

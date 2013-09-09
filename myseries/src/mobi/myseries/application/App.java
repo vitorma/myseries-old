@@ -46,8 +46,10 @@ public class App extends Application {
         imageService = new ImageService(
                 environment.imageSource(),
                 environment.imageRepository(),
-                this.getResources().getDimensionPixelSize(R.dimen.poster_width_thumbnail),
-                this.getResources().getDimensionPixelSize(R.dimen.poster_height_thumbnail));
+                this.getResources().getDimensionPixelSize(R.dimen.myseries_poster_width),
+                this.getResources().getDimensionPixelSize(R.dimen.myseries_poster_height),
+                this.getResources().getDimensionPixelSize(R.dimen.myschedule_poster_width),
+                this.getResources().getDimensionPixelSize(R.dimen.myschedule_poster_height));
 
         searchService = new SearchService(environment);
         trendingService = new TrendingService(environment);

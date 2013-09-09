@@ -1,24 +1,3 @@
-/*
- *   ImageService.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.application.image;
 
 import mobi.myseries.domain.model.Episode;
@@ -37,25 +16,29 @@ import android.os.AsyncTask;
 // TODO(Gabriel) Log the operations of this service.
 public class ImageService {
 
-    private final int smallPosterWidth;
-    private final int smallPosterHeight;
+    private final int mySchedulePosterWidth;
+    private final int mySchedulePosterHeight;
 
     private final ImageServiceRepository imageRepository;
     @Deprecated
     private final ImageSource imageSource;
 
     private final ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
+    private final int mySeriesPosterWidth;
+    private final int mySeriesPosterHeight;
 
-    public ImageService(ImageSource imageSource, ImageServiceRepository imageRepository,
-                        int smallPostersWidth, int smallPostersHeight) {
+    public ImageService(ImageSource imageSource, ImageServiceRepository imageRepository, int mySeriesPosterWidth, int mySeriesPosterHeight,
+            int mySchedulePosterWidth, int mySchedulePosterHeight) {
         Validate.isNonNull(imageSource, "imageSource");
         Validate.isNonNull(imageRepository, "imageRepository");
 
         this.imageSource = imageSource;
         this.imageRepository = imageRepository;
 
-        this.smallPosterWidth = smallPostersWidth;
-        this.smallPosterHeight = smallPostersHeight;
+        this.mySeriesPosterWidth = mySeriesPosterWidth;
+        this.mySeriesPosterHeight = mySeriesPosterHeight;
+        this.mySchedulePosterWidth = mySchedulePosterWidth;
+        this.mySchedulePosterHeight = mySchedulePosterHeight;
 
         this.episodeImageDownloadListeners = new ListenerSet<EpisodeImageDownloadListener>();
     }
@@ -85,14 +68,18 @@ public class ImageService {
 
         try {
             Bitmap fetchedPoster = this.imageSource.fetchSeriesPoster(series.posterFileName());
-            this.imageRepository.saveSeriesPoster(series, fetchedPoster);
 
-            Bitmap smallPoster = new BitmapResizer(fetchedPoster).toSize(this.smallPosterWidth, this.smallPosterHeight);
+            Bitmap mySeriesPoster = new BitmapResizer(fetchedPoster).toSize(this.mySeriesPosterWidth, this.mySeriesPosterHeight);
 
-            this.imageRepository.saveSmallSeriesPoster(series, smallPoster);
+            this.imageRepository.saveSeriesPoster(series, mySeriesPoster);
+
+            Bitmap mySchedulePoster = new BitmapResizer(fetchedPoster).toSize(this.mySchedulePosterWidth, this.mySchedulePosterHeight);
+
+            this.imageRepository.saveSmallSeriesPoster(series, mySchedulePoster);
         } catch (ConnectionFailedException e) {
         } catch (ConnectionTimeoutException e) {
-        } catch (ImageNotFoundException e) {}
+        } catch (ImageNotFoundException e) {
+        }
     }
 
     public void downloadAndSaveBannerOf(Series series) {
@@ -107,15 +94,17 @@ public class ImageService {
             this.imageRepository.saveSeriesBanner(series, fetchedBanner);
         } catch (ConnectionFailedException e) {
         } catch (ConnectionTimeoutException e) {
-        } catch (ImageNotFoundException e) {}
+        } catch (ImageNotFoundException e) {
+        }
     }
 
-    // TODO(Gabriel) Should we pass the seriesSearchListener as a parameter, to avoid the
-    // users not registering their listeners?
+    // TODO(Gabriel) Should we pass the seriesSearchListener as a parameter, to avoid the users not registering their listeners?
     public void downloadImageOf(Episode episode) {
         Validate.isNonNull(episode, "episode");
 
-        if (Strings.isNullOrBlank(episode.screenUrl())) {return;}
+        if (Strings.isNullOrBlank(episode.screenUrl())) {
+            return;
+        }
 
         new EpisodeImageDownload(episode).execute();
     }
@@ -141,7 +130,7 @@ public class ImageService {
     }
 
     private class EpisodeImageDownload extends AsyncTask<Void, Void, Void> {
-        private Episode episode;
+        private final Episode episode;
 
         private EpisodeImageDownload(Episode episode) {
             this.episode = episode;
@@ -160,7 +149,8 @@ public class ImageService {
                 ImageService.this.imageRepository.saveEpisodeImage(this.episode, fetchedImage);
             } catch (ConnectionFailedException e) {
             } catch (ConnectionTimeoutException e) {
-            } catch (ImageNotFoundException e) {}
+            } catch (ImageNotFoundException e) {
+            }
 
             return null;
         }
