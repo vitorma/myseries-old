@@ -80,33 +80,32 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
         });
 
         if (App.seriesFollowingService().follows(result.toSeries())) {
-            viewHolder.addButton.setVisibility(View.INVISIBLE);
-            viewHolder.removeButton.setVisibility(View.VISIBLE);
-            viewHolder.progressView.setVisibility(View.INVISIBLE);
+            viewHolder.showRemoveButton();
         } else {
-            viewHolder.addButton.setVisibility(View.VISIBLE);
-            viewHolder.removeButton.setVisibility(View.INVISIBLE);
-            viewHolder.progressView.setVisibility(View.INVISIBLE);
+            viewHolder.showAddButton();
         }
 
         viewHolder.seriesId = result.tvdbId();
         App.seriesFollowingService().register(viewHolder);
 
         if (App.seriesFollowingService().isTryingToFollowSeries(result.tvdbIdAsInt())) {
-            viewHolder.addButton.setVisibility(View.INVISIBLE);
-            viewHolder.removeButton.setVisibility(View.INVISIBLE);
-            viewHolder.progressView.setVisibility(View.VISIBLE);
+            viewHolder.showProgressAdd();
+        } else if (App.seriesFollowingService().isTryingToUnfollowSeries(result.tvdbIdAsInt())) {
+            viewHolder.showProgressRemove();
         }
 
         return convertView;
     }
+
+    /* ViewHolder */
 
     private static class ViewHolder implements SeriesFollowingListener {
         private TextView name;
         private ImageView image;
         private ImageButton addButton;
         private ImageButton removeButton;
-        private ProgressBar progressView;
+        private ProgressBar progressAdd;
+        private ProgressBar progressRemove;
 
         private String seriesId;
 
@@ -115,44 +114,65 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
             this.image = (ImageView) convertView.findViewById(R.id.seriesPoster);
             this.addButton = (ImageButton) convertView.findViewById(R.id.addButton);
             this.removeButton = (ImageButton) convertView.findViewById(R.id.removeButton);
-            this.progressView = (ProgressBar) convertView.findViewById(R.id.progressView);
+            this.progressAdd = (ProgressBar) convertView.findViewById(R.id.progressAdd);
+            this.progressRemove = (ProgressBar) convertView.findViewById(R.id.progressRemove);
 
             convertView.setTag(this);
+        }
+
+        private void showAddButton() {
+            this.removeButton.setVisibility(View.INVISIBLE);
+            this.progressAdd.setVisibility(View.INVISIBLE);
+            this.progressRemove.setVisibility(View.INVISIBLE);
+            this.addButton.setVisibility(View.VISIBLE);
+        }
+
+        private void showRemoveButton() {
+            this.addButton.setVisibility(View.INVISIBLE);
+            this.progressAdd.setVisibility(View.INVISIBLE);
+            this.progressRemove.setVisibility(View.INVISIBLE);
+            this.removeButton.setVisibility(View.VISIBLE);
+        }
+
+        private void showProgressAdd() {
+            this.addButton.setVisibility(View.INVISIBLE);
+            this.removeButton.setVisibility(View.INVISIBLE);
+            this.progressRemove.setVisibility(View.INVISIBLE);
+            this.progressAdd.setVisibility(View.VISIBLE);
+        }
+
+        private void showProgressRemove() {
+            this.addButton.setVisibility(View.INVISIBLE);
+            this.removeButton.setVisibility(View.INVISIBLE);
+            this.progressAdd.setVisibility(View.INVISIBLE);
+            this.progressRemove.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onStartToFollow(ParcelableSeries series) {
             if (series.tvdbId().equals(this.seriesId)) {
-                ViewHolder.this.addButton.setVisibility(View.INVISIBLE);
-                ViewHolder.this.removeButton.setVisibility(View.INVISIBLE);
-                ViewHolder.this.progressView.setVisibility(View.VISIBLE);
+                this.showProgressAdd();
             }
         }
 
         @Override
         public void onSuccessToFollow(Series series) {
             if (series.id() == Integer.valueOf(this.seriesId)) {
-                ViewHolder.this.addButton.setVisibility(View.INVISIBLE);
-                ViewHolder.this.removeButton.setVisibility(View.VISIBLE);
-                ViewHolder.this.progressView.setVisibility(View.INVISIBLE);
+                this.showRemoveButton();
             }
         }
 
         @Override
         public void onFailToFollow(ParcelableSeries series, Exception e) {
             if (series.tvdbId().equals(this.seriesId)) {
-                ViewHolder.this.addButton.setVisibility(View.VISIBLE);
-                ViewHolder.this.removeButton.setVisibility(View.INVISIBLE);
-                ViewHolder.this.progressView.setVisibility(View.INVISIBLE);
+                this.showAddButton();
             }
         }
 
         @Override
         public void onSuccessToUnfollow(Series series) {
             if (series.id() == Integer.valueOf(this.seriesId)) {
-                ViewHolder.this.addButton.setVisibility(View.VISIBLE);
-                ViewHolder.this.removeButton.setVisibility(View.INVISIBLE);
-                ViewHolder.this.progressView.setVisibility(View.INVISIBLE);
+                this.showAddButton();
             }
         }
 
@@ -167,23 +187,37 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
         }
 
         @Override
-        public void onStartToUnfollow(Series seriesToUnfollow) {
-            //XXX Implement me
+        public void onStartToUnfollow(Series series) {
+            if (series.id() == Integer.valueOf(this.seriesId)) {
+                this.showProgressRemove();
+            }
         }
 
         @Override
-        public void onStartToUnfollowAll(Collection<Series> allSeriesToUnfollow) {
-            //XXX Implement me
+        public void onStartToUnfollowAll(Collection<Series> allSeries) {
+            for (Series s : allSeries) {
+                if (s.id() == Integer.valueOf(this.seriesId)) {
+                    this.onStartToUnfollow(s);
+                    break;
+                }
+            }
         }
 
         @Override
-        public void onFailToUnfollow(Series seriesToUnfollow, Exception e) {
-            //XXX Implement me
+        public void onFailToUnfollow(Series series, Exception e) {
+            if (series.id() == Integer.valueOf(this.seriesId)) {
+                this.showAddButton();
+            }
         }
 
         @Override
-        public void onFailToUnfollowAll(Collection<Series> allSeriesToUnfollow, Exception e) {
-            //XXX Implement me
+        public void onFailToUnfollowAll(Collection<Series> allSeries, Exception e) {
+            for (Series s : allSeries) {
+                if (s.id() == Integer.valueOf(this.seriesId)) {
+                    this.onFailToUnfollow(s, e);
+                    break;
+                }
+            }
         }
     }
 

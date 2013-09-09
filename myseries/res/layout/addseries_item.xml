@@ -31,8 +31,16 @@
             android:layout_width="match_parent"/>
 
         <ProgressBar
-            android:id="@+id/progressView"
-            style="@style/ProgressBarCross"
+            android:id="@+id/progressAdd"
+            style="@style/ProgressBarAdd"
+            android:visibility="invisible"
+            android:padding="@dimen/gap_medium"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/progressRemove"
+            style="@style/ProgressBarRemove"
             android:visibility="invisible"
             android:padding="@dimen/gap_medium"
             android:layout_height="match_parent"
