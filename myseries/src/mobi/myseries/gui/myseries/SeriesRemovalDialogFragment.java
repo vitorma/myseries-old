@@ -24,7 +24,7 @@ public class SeriesRemovalDialogFragment extends DialogFragment {
         final Context context = this.getActivity();
         final SortedMap<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(SeriesComparator.byAscendingAlphabeticalOrder());
 
-        for (Series s : App.seriesProvider().followedSeries()) {
+        for (Series s : App.seriesFollowingService().getAllFollowedSeries()) {
             filterOptions.put(s, false);
         }
 

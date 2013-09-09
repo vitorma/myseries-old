@@ -53,7 +53,7 @@ public class SeriesActivity extends TabActivity {
 
     @Override
     protected CharSequence title() {
-        return App.seriesProvider().getSeries(this.seriesId).name();
+        return App.seriesFollowingService().getFollowedSeries(this.seriesId).name();
     }
 
     @Override

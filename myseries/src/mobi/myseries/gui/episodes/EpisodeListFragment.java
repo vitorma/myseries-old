@@ -54,7 +54,7 @@ public class EpisodeListFragment extends ListFragment {
         int seriesId = this.getArguments().getInt(Extra.SERIES_ID);
         int seasonNumber = this.getArguments().getInt(Extra.SEASON_NUMBER);
 
-        this.season = App.seriesProvider().getSeries(seriesId).season(seasonNumber);
+        this.season = App.seriesFollowingService().getFollowedSeries(seriesId).season(seasonNumber);
         this.episodeNumber = this.getArguments().getInt(Extra.EPISODE_NUMBER);
 
         this.adapter = new EpisodeListAdapter(this.season);

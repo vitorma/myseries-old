@@ -151,7 +151,7 @@ public class MySeriesFragment extends Fragment {
                 }
             });
 
-            int numberOfFollowedSeries = App.seriesProvider().followedSeries().size();
+            int numberOfFollowedSeries = App.seriesFollowingService().getAllFollowedSeries().size();
 
             if (numberOfFollowedSeries == 0) {
                 hiddenSeries.setVisibility(View.GONE);

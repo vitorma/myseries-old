@@ -118,7 +118,7 @@ public class MySeriesActivity extends BaseActivity {
     }
 
     private void showRemoveDialog() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this).setMessage(R.string.no_series_to_remove).build().show();
         } else {
             new SeriesRemovalDialogFragment().show(this.getFragmentManager(), "removalDialog");
@@ -126,7 +126,7 @@ public class MySeriesActivity extends BaseActivity {
     }
 
     private void showSeriesFilterDialog() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this).setMessage(R.string.no_series_to_filter).build().show();
         } else {
             new SeriesFilterDialogFragment().show(this.getFragmentManager(), "seriesFilterDialog");

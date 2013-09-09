@@ -161,7 +161,7 @@ public class EpisodesActivity extends BaseActivity
         if (savedInstanceState == null) {
             Bundle extras = this.getIntent().getExtras();
 
-            this.series = App.seriesProvider().getSeries(extras.getInt(Extra.SERIES_ID));
+            this.series = App.seriesFollowingService().getFollowedSeries(extras.getInt(Extra.SERIES_ID));
             this.seasonNumber = extras.getInt(Extra.SEASON_NUMBER);
             this.episodeNumber = extras.getInt(Extra.EPISODE_NUMBER);
             this.sortMode = App.preferences().forEpisodes().sortMode();
@@ -169,7 +169,7 @@ public class EpisodesActivity extends BaseActivity
             this.isShowingListFragment = this.isDualPane() || this.wasIntentedToShowList();
             this.isShowingPagerFragment = this.isDualPane() || !this.wasIntentedToShowList();
         } else {
-            this.series = App.seriesProvider().getSeries(savedInstanceState.getInt(Extra.SERIES_ID));
+            this.series = App.seriesFollowingService().getFollowedSeries(savedInstanceState.getInt(Extra.SERIES_ID));
             this.seasonNumber = savedInstanceState.getInt(Extra.SEASON_NUMBER);
             this.episodeNumber = savedInstanceState.getInt(Extra.EPISODE_NUMBER);
             this.sortMode = savedInstanceState.getInt(Extra.SORT_MODE);

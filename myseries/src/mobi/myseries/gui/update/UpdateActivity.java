@@ -156,7 +156,7 @@ public class UpdateActivity extends BaseActivity {
     }
 
     private void runManualUpdate() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this).setMessage(R.string.no_series_to_update).build().show();
         } else {
             App.updateSeriesService().updateData();
@@ -175,7 +175,7 @@ public class UpdateActivity extends BaseActivity {
 
         if (latestSuccessfulUpdateLong == null) {
             this.latestSuccessfulUpdateTextView.setVisibility(View.INVISIBLE);
-        } else {                
+        } else {
             Date latestSuccessfulUpdate = new Date(latestSuccessfulUpdateLong);
 
             String date = DateFormat.getDateFormat(this).format(latestSuccessfulUpdate);

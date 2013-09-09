@@ -102,7 +102,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         }
 
         Episode episode = this.items.episodeAt(position);
-        Series series = App.seriesProvider().getSeries(episode.seriesId());
+        Series series = App.seriesFollowingService().getFollowedSeries(episode.seriesId());
 
         this.setUpViewSection(position, viewHolder, episode);
         this.setUpViewBody(viewHolder, series, episode);
@@ -119,7 +119,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateFormat, unavailable);
             viewHolder.date.setText(formattedDate);
 
-            WeekDay weekDay = App.seriesProvider().getSeries(episode.seriesId()).airDay();
+            WeekDay weekDay = App.seriesFollowingService().getFollowedSeries(episode.seriesId()).airDay();
             String formattedWeekDay = DatesAndTimes.toShortString(weekDay, Locale.getDefault(), "").toUpperCase();
             viewHolder.weekDay.setText(formattedWeekDay);
 

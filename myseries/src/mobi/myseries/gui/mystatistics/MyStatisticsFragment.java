@@ -205,7 +205,7 @@ public class MyStatisticsFragment extends Fragment {
 
         final Date now = new Date(System.currentTimeMillis());
 
-        final Collection<Series> series = App.seriesProvider().followedSeries();
+        final Collection<Series> series = App.seriesFollowingService().getAllFollowedSeries();
 
         for (Series s : series) {
             int currentSeriesEpisodes = 0;

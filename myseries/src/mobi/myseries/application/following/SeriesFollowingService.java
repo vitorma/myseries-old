@@ -1,5 +1,6 @@
 package mobi.myseries.application.following;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import mobi.myseries.application.ApplicationService;
@@ -54,6 +55,16 @@ public class SeriesFollowingService extends ApplicationService<SeriesFollowingLi
 
     public Series getFollowedSeries(int seriesId) {
         return environment().seriesRepository().get(seriesId);
+    }
+
+    public Collection<Series> getAllFollowedSeries(int[] seriesIds) {
+        Collection<Series> allFollowedSeries = new ArrayList<Series>();
+
+        for (int i : seriesIds) {
+            allFollowedSeries.add(this.getFollowedSeries(i));
+        }
+
+        return allFollowedSeries;
     }
 
     public Collection<Series> getAllFollowedSeries() {

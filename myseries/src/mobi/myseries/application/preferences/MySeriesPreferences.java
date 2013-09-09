@@ -46,7 +46,7 @@ public class MySeriesPreferences {
     public Map<Series, Boolean> seriesToShow() {
         Map<Series, Boolean> seriesToShow = new HashMap<Series, Boolean>();
 
-        for (Series s : App.seriesProvider().followedSeries()) {
+        for (Series s : App.seriesFollowingService().getAllFollowedSeries()) {
             seriesToShow.put(s, this.showSeries(s.id()));
         }
 

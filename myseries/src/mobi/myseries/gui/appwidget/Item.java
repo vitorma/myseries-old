@@ -35,7 +35,7 @@ public class Item {
     }
 
     public RemoteViews createFor(Episode episode) {
-        Series series = App.seriesProvider().getSeries(episode.seriesId());
+        Series series = App.seriesFollowingService().getFollowedSeries(episode.seriesId());
 
         RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.schedulewidget_item);
 

@@ -41,7 +41,7 @@ public class MyStatisticsPreferences {
     public Map<Series, Boolean> seriesToCount() {
         Map<Series, Boolean> seriesToShow = new HashMap<Series, Boolean>();
 
-        for (Series s : App.seriesProvider().followedSeries()) {
+        for (Series s : App.seriesFollowingService().getAllFollowedSeries()) {
             seriesToShow.put(s, this.countSeries(s.id()));
         }
 

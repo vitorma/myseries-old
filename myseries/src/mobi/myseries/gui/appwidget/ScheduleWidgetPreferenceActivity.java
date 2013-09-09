@@ -126,7 +126,7 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
         LinearLayout seriesToShowPanel = (LinearLayout) this.findViewById(R.id.seriesToShowPanel);
         this.seriesToShow = new HashMap<Series, CheckedTextView>();
 
-        Collection<Series> followedSeries = App.seriesProvider().followedSeries();
+        Collection<Series> followedSeries = App.seriesFollowingService().getAllFollowedSeries();
         int counter = 0;
 
         for (Series s : followedSeries) {

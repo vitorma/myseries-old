@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
@@ -25,7 +24,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class OverviewFragment extends Fragment {
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final ImageService IMAGE_SERVICE = App.imageService();
 
     private int seriesId;
@@ -67,7 +65,7 @@ public class OverviewFragment extends Fragment {
 
         TextView seriesOverview = (TextView) this.getActivity().findViewById(R.id.seriesOverviewTextView);
 
-        Series series = SERIES_PROVIDER.getSeries(this.seriesId);
+        Series series = App.seriesFollowingService().getFollowedSeries(this.seriesId);
 
         seriesName.setText(series.name());
         seriesStatus.setText(LocalText.of(series.status(), this.getString(R.string.unavailable_status)));

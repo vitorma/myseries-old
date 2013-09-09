@@ -77,7 +77,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
         this.statisticsButton = (CheckedTextView) this.getActivity().findViewById(R.id.statistics);
         this.statisticsPanel = this.getActivity().findViewById(R.id.statisticsPanel);
 
-        final Series series = App.seriesProvider().getSeries(this.seriesId);
+        final Series series = App.seriesFollowingService().getFollowedSeries(this.seriesId);
 
         this.seenMark.setChecked(series.numberOfEpisodes() == series.numberOfSeenEpisodes());
         this.seenMark.setOnClickListener(new OnClickListener() {
@@ -128,7 +128,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
             }
         });
 
-        App.seriesProvider().getSeries(this.seriesId).register(this);
+        App.seriesFollowingService().getFollowedSeries(this.seriesId).register(this);
     }
 
     private void updateVisibilityOfStatisticsPanel() {
@@ -181,7 +181,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     }
 
     private void updateStatistics() {
-        Series series = App.seriesProvider().getSeries(this.seriesId);
+        Series series = App.seriesFollowingService().getFollowedSeries(this.seriesId);
 
         int numberOfUnwatchedEpisodes = series.numberOfUnwatchedEpisodes();
         String pluralOfRemaining = this.getResources().getQuantityString(

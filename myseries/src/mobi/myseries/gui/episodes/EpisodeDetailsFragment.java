@@ -1,13 +1,11 @@
 package mobi.myseries.gui.episodes;
 
 import mobi.myseries.application.App;
-import mobi.myseries.application.SeriesProvider;
 import mobi.myseries.domain.model.Episode;
 import android.app.ListFragment;
 import android.os.Bundle;
 
 public class EpisodeDetailsFragment extends ListFragment {
-    private static final SeriesProvider SERIES_PROVIDER = App.seriesProvider();
     private static final String EPISODE_NUMBER = "episodeNumber";
     private static final String SEASON_NUMBER = "seasonNumber";
     private static final String SERIES_ID = "seriesId";
@@ -46,7 +44,7 @@ public class EpisodeDetailsFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         Episode episode =
-            SERIES_PROVIDER.getSeries(this.seriesId).season(this.seasonNumber).episode(this.episodeNumber);
+                App.seriesFollowingService().getFollowedSeries(this.seriesId).season(this.seasonNumber).episode(this.episodeNumber);
 
         this.setListAdapter(new EpisodeDetailsAdapter(this.getActivity(), episode));
         this.getListView().setDivider(null);

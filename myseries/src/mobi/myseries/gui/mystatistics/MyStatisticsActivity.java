@@ -80,7 +80,7 @@ public class MyStatisticsActivity extends BaseActivity {
     }
 
     private void showSeriesFilterDialog() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this).setMessage(R.string.no_series_to_filter).build().show();
         } else {
             new SeriesFilterDialogFragment().show(this.getFragmentManager(), "seriesFilterDialog");
@@ -88,7 +88,7 @@ public class MyStatisticsActivity extends BaseActivity {
     }
 
     private void showEpisodeFilterDialog() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this).setMessage(R.string.no_episodes_to_count).build().show();
         } else {
             new EpisodeFilterDialogFragment()

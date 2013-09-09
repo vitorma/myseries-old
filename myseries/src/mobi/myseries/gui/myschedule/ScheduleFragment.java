@@ -106,7 +106,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     }
 
     private void showSeriesFilterDialog() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this.getActivity()).setMessage(R.string.no_series_to_show).build().show();
         } else {
             SeriesFilterDialogFragment.newInstance(this.scheduleMode).show(this.getFragmentManager(), "seriesFilterDialog");
@@ -114,7 +114,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     }
 
     private void showEpisodeFilterDialog() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this.getActivity()).setMessage(R.string.no_episodes_to_show).build().show();
         } else {
             EpisodeFilterDialogFragment.newInstance(this.scheduleMode).show(this.getFragmentManager(), "episodeFilterDialog");
@@ -122,7 +122,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
     }
 
     private void showSortDialog() {
-        if (App.seriesProvider().followedSeries().isEmpty()) {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this.getActivity()).setMessage(R.string.no_episodes_to_sort).build().show();
         } else {
             EpisodeSortingDialogFragment.newInstance(this.scheduleMode).show(this.getFragmentManager(), "seriesSortingDialog");

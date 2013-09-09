@@ -21,9 +21,6 @@
 
 package mobi.myseries.application;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
@@ -49,24 +46,6 @@ public class SeriesProvider {
 
         this.seriesRepository = seriesRepository;
         this.broadcastService = broadcastService;
-    }
-
-    public Collection<Series> followedSeries() {
-        return this.seriesRepository.getAll();
-    }
-
-    public Series getSeries(int seriesId) {
-        return this.seriesRepository.get(seriesId);
-    }
-
-    public Collection<Series> getAllSeries(int[] seriesIds) {
-        Collection<Series> allSeries = new LinkedList<Series>();
-
-        for (int i : seriesIds) {
-            allSeries.add(this.getSeries(i));
-        }
-
-        return allSeries;
     }
 
     // SeenMark----------------------------------------------------------------------------------------------------------

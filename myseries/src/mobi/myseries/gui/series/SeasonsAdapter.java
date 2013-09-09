@@ -29,7 +29,7 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSha
     }
 
     private void loadSeasons() {
-        this.seasons = App.seriesProvider().getSeries(this.seriesId).seasons().seasons();
+        this.seasons = App.seriesFollowingService().getFollowedSeries(this.seriesId).seasons().seasons();
 
         for (Season s : this.seasons) {
             s.register(this);
