@@ -5,7 +5,6 @@ import java.text.DateFormat;
 import mobi.myseries.R;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
-import mobi.myseries.application.error.ErrorService;
 import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.message.MessageService;
@@ -26,7 +25,6 @@ public class App extends Application {
     private static SeriesFollowingService seriesFollowingService;
     private static Schedule schedule;
     private static UpdateService updateService;
-    private static ErrorService errorService;
     private static ImageService imageService;
     private static MessageService messageService;
     private static SeriesProvider seriesProvider;
@@ -50,8 +48,6 @@ public class App extends Application {
                 environment.imageRepository(),
                 this.getResources().getDimensionPixelSize(R.dimen.poster_width_thumbnail),
                 this.getResources().getDimensionPixelSize(R.dimen.poster_height_thumbnail));
-
-        errorService = new ErrorService();
 
         searchService = new SearchService(environment);
         trendingService = new TrendingService(environment);
@@ -91,10 +87,6 @@ public class App extends Application {
 
     public static Resources resources() {
         return context().getResources();
-    }
-
-    public static ErrorService errorService(){
-        return errorService;
     }
 
     public static SearchService searchService() {
