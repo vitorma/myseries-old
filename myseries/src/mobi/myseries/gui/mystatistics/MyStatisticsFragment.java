@@ -7,7 +7,8 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
-import mobi.myseries.application.follow.SeriesFollowingListener;
+import mobi.myseries.application.following.BaseSeriesFollowingListener;
+import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.preferences.MyStatisticsPreferences;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
@@ -152,46 +153,31 @@ public class MyStatisticsFragment extends Fragment {
             @Override
             public void onRestoreCompleted(BackupMode mode) {
                 MyStatisticsFragment.this.update();
-
             }
-
         };
 
         App.backupService().register(this.backupListener);
-
     }
 
     private void setupFollowingSeriesListener() {
-
-        this.followListener = new SeriesFollowingListener() {
+        this.followListener = new BaseSeriesFollowingListener() {
             @Override
-            public void onFollowing(Series followedSeries) {
+            public void onSuccessToFollow(Series followedSeries) {
                 MyStatisticsFragment.this.update();
             }
 
             @Override
-            public void onFollowingFailure(Series series, Exception e) {
+            public void onSuccessToUnfollow(Series unfollowedSeries) {
                 MyStatisticsFragment.this.update();
             }
 
             @Override
-            public void onFollowingStart(Series seriesToFollow) {
-                MyStatisticsFragment.this.update();
-            }
-
-            @Override
-            public void onStopFollowing(Series unfollowedSeries) {
-                MyStatisticsFragment.this.update();
-            }
-
-            @Override
-            public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
+            public void onSuccessToUnfollowAll(Collection<Series> allUnfollowedSeries) {
                 MyStatisticsFragment.this.update();
             }
         };
 
         App.seriesFollowingService().register(this.followListener);
-
     }
 
     private void setupUpdateFinishedListener() {

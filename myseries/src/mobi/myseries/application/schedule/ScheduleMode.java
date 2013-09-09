@@ -27,8 +27,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import mobi.myseries.application.follow.SeriesFollowingListener;
-import mobi.myseries.application.follow.SeriesFollowingService;
+import mobi.myseries.application.following.BaseSeriesFollowingListener;
+import mobi.myseries.application.following.SeriesFollowingListener;
+import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
@@ -39,7 +40,7 @@ import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 
-public abstract class ScheduleMode implements Publisher<ScheduleListener>, SeriesFollowingListener, UpdateFinishListener {
+public abstract class ScheduleMode implements Publisher<ScheduleListener>, UpdateFinishListener {
     public static final int TO_WATCH = 0;
     public static final int AIRED = 1;
     public static final int UNAIRED = 2;
@@ -56,7 +57,7 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
         this.repository = repository;
         this.listeners = new ListenerSet<ScheduleListener>();
 
-        following.register(this);
+        following.register(mSeriesFollowingListener);
         update.register(this);
 
         this.loadEpisodes();
@@ -118,26 +119,22 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Serie
 
     /* SeriesFollowingListener */
 
-    @Override
-    public void onFollowingStart(Series seriesToFollow) { }
+    private SeriesFollowingListener mSeriesFollowingListener = new BaseSeriesFollowingListener() {
+        @Override
+        public void onSuccessToUnfollowAll(Collection<Series> allUnfollowedSeries) {
+            notifyOnScheduleStructureChanged();
+        }
 
-    @Override
-    public final void onFollowing(Series series) {
-        this.notifyOnScheduleStructureChanged();
-    }
+        @Override
+        public void onSuccessToUnfollow(Series unfollowedSeries) {
+            notifyOnScheduleStructureChanged();
+        }
 
-    @Override
-    public void onFollowingFailure(Series series, Exception e) { }
-
-    @Override
-    public final void onStopFollowing(Series series) {
-        this.notifyOnScheduleStructureChanged();
-    }
-
-    @Override
-    public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
-        this.notifyOnScheduleStructureChanged();
-    }
+        @Override
+        public void onSuccessToFollow(Series followedSeries) {
+            notifyOnScheduleStructureChanged();
+        }
+    };
 
     /* UpdateFinishListener */
 

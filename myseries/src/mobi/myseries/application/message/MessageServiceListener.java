@@ -4,8 +4,10 @@ import mobi.myseries.domain.model.Series;
 
 public interface MessageServiceListener {
 
+    @Deprecated
     public void onFollowingStart(Series series);
-    public void onFollowingSuccess(Series series); 
+    @Deprecated
+    public void onFollowingSuccess(Series series);
     public void onFollowingError(Series series, Exception e);
 
     public void onUpdateSuccess();

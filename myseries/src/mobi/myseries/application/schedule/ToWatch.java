@@ -1,6 +1,6 @@
 package mobi.myseries.application.schedule;
 
-import mobi.myseries.application.follow.SeriesFollowingService;
+import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;

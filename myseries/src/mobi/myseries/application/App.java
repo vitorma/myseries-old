@@ -6,7 +6,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.error.ErrorService;
-import mobi.myseries.application.follow.SeriesFollowingService;
+import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.notification.NotificationService;

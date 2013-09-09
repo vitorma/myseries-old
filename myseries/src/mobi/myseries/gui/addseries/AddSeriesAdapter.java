@@ -5,7 +5,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.follow.SeriesFollowingListener;
+import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.domain.model.ParcelableSeries;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
@@ -62,7 +62,7 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
         viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewHolder.onFollowingStart(result.toSeries());
+                viewHolder.onStartToFollow(result);
 
                 for (AddSeriesAdapterListener listener : AddSeriesAdapter.this.listeners) {
                     listener.onRequestAdd(result);
@@ -121,8 +121,8 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
         }
 
         @Override
-        public void onFollowingStart(Series series) {
-            if (series.id() == Integer.valueOf(this.seriesId)) {
+        public void onStartToFollow(ParcelableSeries series) {
+            if (series.tvdbId().equals(this.seriesId)) {
                 ViewHolder.this.addButton.setVisibility(View.INVISIBLE);
                 ViewHolder.this.removeButton.setVisibility(View.INVISIBLE);
                 ViewHolder.this.progressView.setVisibility(View.VISIBLE);
@@ -130,7 +130,7 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
         }
 
         @Override
-        public void onFollowing(Series series) {
+        public void onSuccessToFollow(Series series) {
             if (series.id() == Integer.valueOf(this.seriesId)) {
                 ViewHolder.this.addButton.setVisibility(View.INVISIBLE);
                 ViewHolder.this.removeButton.setVisibility(View.VISIBLE);
@@ -139,7 +139,16 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
         }
 
         @Override
-        public void onFollowingFailure(Series series, Exception e) {
+        public void onFailToFollow(ParcelableSeries series, Exception e) {
+            if (series.tvdbId().equals(this.seriesId)) {
+                ViewHolder.this.addButton.setVisibility(View.VISIBLE);
+                ViewHolder.this.removeButton.setVisibility(View.INVISIBLE);
+                ViewHolder.this.progressView.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        @Override
+        public void onSuccessToUnfollow(Series series) {
             if (series.id() == Integer.valueOf(this.seriesId)) {
                 ViewHolder.this.addButton.setVisibility(View.VISIBLE);
                 ViewHolder.this.removeButton.setVisibility(View.INVISIBLE);
@@ -148,22 +157,33 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
         }
 
         @Override
-        public void onStopFollowing(Series series) {
-            if (series.id() == Integer.valueOf(this.seriesId)) {
-                ViewHolder.this.addButton.setVisibility(View.VISIBLE);
-                ViewHolder.this.removeButton.setVisibility(View.INVISIBLE);
-                ViewHolder.this.progressView.setVisibility(View.INVISIBLE);
-            }
-        }
-
-        @Override
-        public void onStopFollowingAll(Collection<Series> allSeries) {
+        public void onSuccessToUnfollowAll(Collection<Series> allSeries) {
             for (Series s : allSeries) {
                 if (s.id() == Integer.valueOf(this.seriesId)) {
-                    this.onStopFollowing(s);
+                    this.onSuccessToUnfollow(s);
                     break;
                 }
             }
+        }
+
+        @Override
+        public void onStartToUnfollow(Series seriesToUnfollow) {
+            //XXX Implement me
+        }
+
+        @Override
+        public void onStartToUnfollowAll(Collection<Series> allSeriesToUnfollow) {
+            //XXX Implement me
+        }
+
+        @Override
+        public void onFailToUnfollow(Series seriesToUnfollow, Exception e) {
+            //XXX Implement me
+        }
+
+        @Override
+        public void onFailToUnfollowAll(Collection<Series> allSeriesToUnfollow, Exception e) {
+            //XXX Implement me
         }
     }
 

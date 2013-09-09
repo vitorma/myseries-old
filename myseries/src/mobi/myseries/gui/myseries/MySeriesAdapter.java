@@ -10,13 +10,14 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
-import mobi.myseries.application.follow.SeriesFollowingListener;
+import mobi.myseries.application.following.BaseSeriesFollowingListener;
+import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.model.SeriesListener;
-import mobi.myseries.gui.shared.EpisodesToCountSpecification;
 import mobi.myseries.gui.shared.AsyncImageLoader;
+import mobi.myseries.gui.shared.EpisodesToCountSpecification;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.gui.shared.SeenEpisodeSpecification;
@@ -203,32 +204,26 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
     /* SeriesFollowingListener */
 
-    private final SeriesFollowingListener seriesFollowingListener = new SeriesFollowingListener() {
+    private final SeriesFollowingListener seriesFollowingListener = new BaseSeriesFollowingListener() {
         @Override
-        public void onStopFollowingAll(Collection<Series> allUnfollowedSeries) {
-            for (Series s : allUnfollowedSeries) {
-                s.deregister(MySeriesAdapter.this.seriesListener);
-            }
+        public void onSuccessToFollow(Series followedSeries) {
+            followedSeries.register(MySeriesAdapter.this.seriesListener);
 
             MySeriesAdapter.this.reloadData();
         }
 
         @Override
-        public void onStopFollowing(Series unfollowedSeries) {
+        public void onSuccessToUnfollow(Series unfollowedSeries) {
             unfollowedSeries.deregister(MySeriesAdapter.this.seriesListener);
 
             MySeriesAdapter.this.reloadData();
         }
 
         @Override
-        public void onFollowingStart(Series seriesToFollow) {}
-
-        @Override
-        public void onFollowingFailure(Series series, Exception e) {}
-
-        @Override
-        public void onFollowing(Series followedSeries) {
-            followedSeries.register(MySeriesAdapter.this.seriesListener);
+        public void onSuccessToUnfollowAll(Collection<Series> allUnfollowedSeries) {
+            for (Series s : allUnfollowedSeries) {
+                s.deregister(MySeriesAdapter.this.seriesListener);
+            }
 
             MySeriesAdapter.this.reloadData();
         }
