@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/poster"
         android:contentDescription="@string/description_poster"
-        android:scaleType="center"
+        android:scaleType="fitXY"
         android:layout_width="@dimen/myseries_poster_width"
         android:layout_height="@dimen/myseries_poster_height"
         android:layout_alignParentTop="true"/>
