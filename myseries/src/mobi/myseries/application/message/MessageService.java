@@ -11,7 +11,7 @@ import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.listener.UpdateProgressListener;
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
@@ -48,7 +48,7 @@ public class MessageService implements
 
     private SeriesFollowingListener mSeriesFollowingListener = new BaseSeriesFollowingListener() {
         @Override
-        public void onFailToFollow(ParcelableSeries series, Exception e) {
+        public void onFailToFollow(SearchResult series, Exception e) {
             for (MessageServiceListener l : listeners) {
                 //FIXME Method bellow should receive ParcelableSeries instead of Series
                 l.onFollowingError(series.toSeries(), e);

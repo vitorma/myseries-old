@@ -135,7 +135,8 @@
     <string name="writers">WRITERS</string>
     <string name="yes">Yes</string>
     <string name="add">Add</string>
-    <string name="dont_add">Don\'t add</string>
+    <string name="remove">Remove</string>
+    <string name="dismiss">Dismiss</string>
 
     <!-- Label formats -->
 

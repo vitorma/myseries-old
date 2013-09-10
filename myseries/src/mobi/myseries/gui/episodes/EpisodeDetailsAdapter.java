@@ -26,7 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
-    private static final MarkingService SERIES_PROVIDER = App.seriesProvider();
+    private static final MarkingService SERIES_PROVIDER = App.markingService();
     private static final ImageService IMAGE_SERVICE = App.imageService();
     private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
     private static final int ITEM_LAYOUT = R.layout.episode_pager_item;

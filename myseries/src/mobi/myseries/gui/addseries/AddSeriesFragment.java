@@ -4,11 +4,8 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
-import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
-import mobi.myseries.gui.shared.DialogButtonOnClickListener;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -38,7 +35,7 @@ public abstract class AddSeriesFragment extends Fragment {
 
     private AddSeriesAdapter adapter;
 
-    private List<ParcelableSeries> results;
+    private List<SearchResult> results;
     protected boolean isServiceRunning;
 
     /* Fragment life cycle */
@@ -207,40 +204,15 @@ public abstract class AddSeriesFragment extends Fragment {
         this.resultsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ParcelableSeries selectedItem = ((ParcelableSeries) parent.getItemAtPosition(position));
-                AddSeriesFragment.this.showSeriesInformationDialog(selectedItem);
+                SearchResult selectedItem = ((SearchResult) parent.getItemAtPosition(position));
+
+                SeriesFollowingDialogFragment.showDialog(selectedItem, getFragmentManager());
             }
         });
 
         if (this.adapter != null) {
             this.resultsGrid.setAdapter(this.adapter);
         }
-    }
-
-    private void showSeriesInformationDialog(ParcelableSeries selectedItem) {
-        //XXX Create a dialog fragment
-        Dialog dialog;
-
-        dialog = new ConfirmationDialogBuilder(this.getActivity())
-            .setTitle(selectedItem.title())
-            .setMessage(selectedItem.overview())
-            .setSurrogateMessage(R.string.overview_unavailable)
-            .setPositiveButton(R.string.add, this.addButtonOnClickListener(selectedItem))
-            .setNegativeButton(R.string.dont_add, null)
-            .build();
-
-        this.activity().showDialog(dialog);
-    }
-
-    private DialogButtonOnClickListener addButtonOnClickListener(final ParcelableSeries selectedItem) {
-        return new DialogButtonOnClickListener() {
-            @Override
-            public void onClick(Dialog dialog) {
-                App.seriesFollowingService().follow(selectedItem);
-
-                dialog.dismiss();
-            }
-        };
     }
 
     private void prepareProgressIndicator() {
@@ -307,7 +279,7 @@ public abstract class AddSeriesFragment extends Fragment {
         return this.results != null;
     }
 
-    protected void setResults(List<ParcelableSeries> results) {
+    protected void setResults(List<SearchResult> results) {
         this.results = results;
 
         this.setUpNumberOfResults();
@@ -328,7 +300,7 @@ public abstract class AddSeriesFragment extends Fragment {
             this.adapter.register(this.adapterListener);
         } else {
             this.adapter.clear();
-            for (ParcelableSeries result : this.results) {
+            for (SearchResult result : this.results) {
                 this.adapter.add(result);
             }
         }
@@ -344,12 +316,12 @@ public abstract class AddSeriesFragment extends Fragment {
 
     private AddSeriesAdapterListener adapterListener = new AddSeriesAdapterListener() {
         @Override
-        public void onRequestAdd(ParcelableSeries series) {
+        public void onRequestAdd(SearchResult series) {
             App.seriesFollowingService().follow(series);
         }
 
         @Override
-        public void onRequestRemove(ParcelableSeries series) {
+        public void onRequestRemove(SearchResult series) {
             SeriesRemovalConfirmationDialogFragment.newInstance(series)
                 .show(AddSeriesFragment.this.getFragmentManager(), "SeriesRemovalConfirmationDialog");
         }

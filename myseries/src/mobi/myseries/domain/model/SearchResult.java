@@ -3,40 +3,42 @@ package mobi.myseries.domain.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-//TODO (Cleber) Find a better name to this class
-public class ParcelableSeries implements Parcelable {
+public class SearchResult implements Parcelable {
 
-    public static final Parcelable.Creator<ParcelableSeries> CREATOR = new Parcelable.Creator<ParcelableSeries>() {
+    public static final Parcelable.Creator<SearchResult> CREATOR = new Parcelable.Creator<SearchResult>() {
         @Override
-        public ParcelableSeries createFromParcel(Parcel in) {
-            return new ParcelableSeries(in);
+        public SearchResult createFromParcel(Parcel in) {
+            return new SearchResult(in);
         }
 
         @Override
-        public ParcelableSeries[] newArray(int size) {
-            return new ParcelableSeries[size];
+        public SearchResult[] newArray(int size) {
+            return new SearchResult[size];
         }
     };
 
-    private String tvdbId;
-    private String title;
-    private String overview;
-    private String poster;
+    private String tvdbId = "";
+    private String title = "";
+    private String overview = "";
+    private String genres = "";
+    private String poster = "";
 
-    public ParcelableSeries() { }
+    public SearchResult() { }
 
-    public ParcelableSeries(Parcel in) {
+    public SearchResult(Parcel in) {
         this.tvdbId = in.readString();
         this.title = in.readString();
         this.overview = in.readString();
+        this.genres = in.readString();
         this.poster = in.readString();
     }
 
-    public ParcelableSeries copy() {
-        return new ParcelableSeries()
+    public SearchResult copy() {
+        return new SearchResult()
             .setTvdbId(this.tvdbId)
             .setTitle(this.title)
             .setOverview(this.overview)
+            .setGenres(this.genres)
             .setPoster(this.poster);
     }
 
@@ -45,6 +47,7 @@ public class ParcelableSeries implements Parcelable {
             .withTvdbId(Integer.valueOf(this.tvdbId))
             .withTitle(this.title)
             .withOverview(this.overview)
+            .withGenres(this.genres)
             .withPoster(this.poster)
             .build();
     }
@@ -78,26 +81,35 @@ public class ParcelableSeries implements Parcelable {
         return this.overview;
     }
 
+    public String genres() {
+        return this.genres;
+    }
+
     public String poster() {
         return this.poster;
     }
 
-    public ParcelableSeries setTvdbId(String tvdbId2) {
+    public SearchResult setTvdbId(String tvdbId2) {
         this.tvdbId = tvdbId2;
         return this;
     }
 
-    public ParcelableSeries setTitle(String title) {
+    public SearchResult setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public ParcelableSeries setOverview(String overview) {
+    public SearchResult setOverview(String overview) {
         this.overview = overview;
         return this;
     }
 
-    public ParcelableSeries setPoster(String poster) {
+    public SearchResult setGenres(String genres) {
+        this.genres = genres;
+        return this;
+    }
+
+    public SearchResult setPoster(String poster) {
         this.poster = poster;
         return this;
     }
@@ -109,7 +121,7 @@ public class ParcelableSeries implements Parcelable {
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof ParcelableSeries &&
-                ((ParcelableSeries) other).tvdbId.equals(this.tvdbId);
+        return other instanceof SearchResult &&
+                ((SearchResult) other).tvdbId.equals(this.tvdbId);
     }
 }

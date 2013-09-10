@@ -4,7 +4,7 @@ import java.util.List;
 
 import mobi.myseries.application.ApplicationService;
 import mobi.myseries.application.Environment;
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.trakttv.SearchSource;
 
 public class SearchService extends ApplicationService<SearchListener> {
@@ -28,7 +28,7 @@ public class SearchService extends ApplicationService<SearchListener> {
         });
     }
 
-    private void notifyOnSucess(final List<ParcelableSeries> list) {
+    private void notifyOnSucess(final List<SearchResult> list) {
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
@@ -74,7 +74,7 @@ public class SearchService extends ApplicationService<SearchListener> {
 
             try {
                 SearchSource source = SearchService.this.environment().searchSource();
-                List<ParcelableSeries> result = source.search(this.query);
+                List<SearchResult> result = source.search(this.query);
 
                 SearchService.this.notifyOnSucess(result);
             } catch (Exception e) {

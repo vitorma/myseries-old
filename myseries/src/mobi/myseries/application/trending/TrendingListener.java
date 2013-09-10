@@ -2,11 +2,11 @@ package mobi.myseries.application.trending;
 
 import java.util.List;
 
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 
 public interface TrendingListener {
     public void onStart();
     public void onFinish();
-    public void onSucess(List<ParcelableSeries> results);
+    public void onSucess(List<SearchResult> results);
     public void onFailure(Exception failure);
 }

@@ -82,9 +82,9 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSha
             @Override
             public void onClick(View arg0) {
                 if (seasonSeenMark.isChecked()) {
-                    App.seriesProvider().markAsWatched(season);
+                    App.markingService().markAsWatched(season);
                 } else {
-                    App.seriesProvider().markAsUnwatched(season);
+                    App.markingService().markAsUnwatched(season);
                 }
             }
         });

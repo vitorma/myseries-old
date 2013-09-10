@@ -2,7 +2,7 @@ package mobi.myseries.gui.addseries;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,7 +13,7 @@ import android.os.Bundle;
 public class SeriesRemovalConfirmationDialogFragment extends DialogFragment {
     private static final String ARGUMENT_SERIES = "Series";
 
-    public static SeriesRemovalConfirmationDialogFragment newInstance(ParcelableSeries series) {
+    public static SeriesRemovalConfirmationDialogFragment newInstance(SearchResult series) {
         Bundle arguments = new Bundle();
         arguments.putParcelable(ARGUMENT_SERIES, series);
 
@@ -25,7 +25,7 @@ public class SeriesRemovalConfirmationDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Series series = ((ParcelableSeries) this.getArguments().getParcelable(ARGUMENT_SERIES)).toSeries();
+        final Series series = ((SearchResult) this.getArguments().getParcelable(ARGUMENT_SERIES)).toSeries();
 
         String message = App.resources().getString(R.string.confirmation_removal_single_series, series.name());
 

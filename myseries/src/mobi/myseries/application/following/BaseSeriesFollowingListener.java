@@ -2,13 +2,13 @@ package mobi.myseries.application.following;
 
 import java.util.Collection;
 
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 
 public abstract class BaseSeriesFollowingListener implements SeriesFollowingListener {
 
     @Override
-    public void onStartToFollow(ParcelableSeries seriesToFollow) { }
+    public void onStartToFollow(SearchResult seriesToFollow) { }
 
     @Override
     public void onStartToUnfollow(Series seriesToUnfollow) { }
@@ -26,7 +26,7 @@ public abstract class BaseSeriesFollowingListener implements SeriesFollowingList
     public void onSuccessToUnfollowAll(Collection<Series> allUnfollowedSeries) { }
 
     @Override
-    public void onFailToFollow(ParcelableSeries series, Exception e) { }
+    public void onFailToFollow(SearchResult series, Exception e) { }
 
     @Override
     public void onFailToUnfollow(Series seriesToUnfollow, Exception e) { }

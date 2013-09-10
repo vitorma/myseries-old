@@ -6,7 +6,7 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.trending.TrendingListener;
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import android.os.Bundle;
 
 public class TrendingFragment extends AddSeriesFragment {
@@ -75,13 +75,13 @@ public class TrendingFragment extends AddSeriesFragment {
             }
 
             @Override
-            public void onSucess(List<ParcelableSeries> results) {
+            public void onSucess(List<SearchResult> results) {
                 TrendingFragment.this.setResults(results);
             }
 
             @Override
             public void onFailure(Exception exception) {
-                TrendingFragment.this.setResults(new ArrayList<ParcelableSeries>());
+                TrendingFragment.this.setResults(new ArrayList<SearchResult>());
             }
         };
     }

@@ -84,9 +84,9 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
             @Override
             public void onClick(View v) {
                 if (SeasonsFragment.this.seenMark.isChecked()) {
-                    App.seriesProvider().markAsWatched(series);
+                    App.markingService().markAsWatched(series);
                 } else {
-                    App.seriesProvider().markAsUnwatched(series);
+                    App.markingService().markAsUnwatched(series);
                 }
             }
         });

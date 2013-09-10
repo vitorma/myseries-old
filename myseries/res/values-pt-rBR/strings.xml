@@ -134,7 +134,8 @@
     <string name="writers">AUTORES</string>
     <string name="yes">Sim</string>
     <string name="add">Adicionar</string>
-    <string name="dont_add">Não adicionar</string>
+    <string name="remove">Remover</string>
+    <string name="dismiss">Fechar</string>
 
     <!-- Label formats -->
 

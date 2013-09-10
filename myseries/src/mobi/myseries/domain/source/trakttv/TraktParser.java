@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.shared.Objects;
@@ -49,6 +52,8 @@ public class TraktParser {
     private static final String EPISODE = "episode";
     private static final String NUMBER = "number";
     private static final String SCREEN = "screen";
+
+    private static final int COMPRESSED_POSTER_300 = 300;
 
     private static final JsonDeserializer<Series> SERIES_ADAPTER = new JsonDeserializer<Series>() {
         @Override
@@ -105,6 +110,20 @@ public class TraktParser {
         }
     };
 
+    private static final JsonDeserializer<SearchResult> SEARCH_RESULT_ADAPTER = new JsonDeserializer<SearchResult>() {
+        @Override
+        public SearchResult deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject resultElement = element.getAsJsonObject();
+
+            return new SearchResult()
+                    .setTvdbId(readTvdbIdAsString(resultElement))
+                    .setTitle(readTitle(resultElement))
+                    .setOverview(readOverview(resultElement))
+                    .setGenres(readGenres(resultElement))
+                    .setPoster(readPoster(resultElement));
+        }
+    };
+
     private static Gson gson;
 
     /* Interface */
@@ -124,6 +143,29 @@ public class TraktParser {
         }
     }
 
+    public static List<SearchResult> parseSearchResults(InputStream in) throws ParsingFailedException {
+        try {
+            JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(in, "UTF-8")));
+            List<SearchResult> results = new ArrayList<SearchResult>();
+
+            reader.beginArray();
+
+            while (reader.hasNext()) {
+                SearchResult result = gson().fromJson(reader, SearchResult.class);
+                results.add(result);
+            }
+
+            reader.endArray();
+            reader.close();
+            in.close();
+
+            return results;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ParsingFailedException(e);
+        }
+    }
+
     /* Auxiliary */
 
     private static Gson gson() {
@@ -131,6 +173,7 @@ public class TraktParser {
             gson = new GsonBuilder()
                 .registerTypeAdapter(Series.class, SERIES_ADAPTER)
                 .registerTypeAdapter(Episode.Builder.class, EPISODE_ADAPTER)
+                .registerTypeAdapter(SearchResult.class, SEARCH_RESULT_ADAPTER)
                 .create();
         }
 
@@ -139,6 +182,10 @@ public class TraktParser {
 
     private static int readTvdbId(JsonObject object) {
         return object.get(TVDB_ID).getAsInt();
+    }
+
+    private static String readTvdbIdAsString(JsonObject object) {
+        return object.get(TVDB_ID).getAsString();
     }
 
     private static String readTitle(JsonObject object) {
@@ -226,7 +273,9 @@ public class TraktParser {
     }
 
     private static String readPoster(JsonObject object) {
-        return readStringSafely(object.get(POSTER));
+        String posterUrl = readStringSafely(object.get(POSTER));
+
+        return posterUrl.isEmpty() ? posterUrl : compressedPosterUrl(posterUrl, COMPRESSED_POSTER_300);
     }
 
     private static int readNumber(JsonObject object) {
@@ -243,5 +292,17 @@ public class TraktParser {
 
     private static String readStringSafely(JsonElement object) {
         return Objects.nullSafe(object, new JsonPrimitive("")).getAsString();
+    }
+
+    private static String compressedPosterUrl(String poster, int size) {
+        int extensionIndex = poster.lastIndexOf(".");
+
+        if (extensionIndex == -1) { return poster; }
+
+        return new StringBuilder()
+        .append(poster.substring(0, extensionIndex))
+        .append("-" + size)
+        .append(poster.substring(extensionIndex))
+        .toString();
     }
 }

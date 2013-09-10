@@ -7,7 +7,7 @@ import mobi.myseries.application.ApplicationService;
 import mobi.myseries.application.Environment;
 import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.application.image.ImageService;
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.util.SparseBooleanArray;
@@ -29,7 +29,7 @@ public class SeriesFollowingService extends ApplicationService<SeriesFollowingLi
 
     /* Interface */
 
-    public void follow(ParcelableSeries seriesToFollow) {
+    public void follow(SearchResult seriesToFollow) {
         Validate.isNonNull(seriesToFollow, "seriesToFollow");
 
         run(new FollowSeriesTask(seriesToFollow));
@@ -81,7 +81,7 @@ public class SeriesFollowingService extends ApplicationService<SeriesFollowingLi
 
     /* Notifications */
 
-    private void notifyOnStartToFollow(final ParcelableSeries seriesToFollow) {
+    private void notifyOnStartToFollow(final SearchResult seriesToFollow) {
         runInMainThread(new Runnable() {
             @Override
             public void run() {
@@ -109,7 +109,7 @@ public class SeriesFollowingService extends ApplicationService<SeriesFollowingLi
         });
     }
 
-    private void notifyOnFailToFollow(final ParcelableSeries seriesToFollow, final Exception exception) {
+    private void notifyOnFailToFollow(final SearchResult seriesToFollow, final Exception exception) {
         runInMainThread(new Runnable() {
             @Override
             public void run() {
@@ -213,9 +213,9 @@ public class SeriesFollowingService extends ApplicationService<SeriesFollowingLi
     /* Tasks */
 
     private class FollowSeriesTask implements Runnable {
-        private final ParcelableSeries mSeriesToFollow;
+        private final SearchResult mSeriesToFollow;
 
-        public FollowSeriesTask(ParcelableSeries seriesToFollow) {
+        public FollowSeriesTask(SearchResult seriesToFollow) {
             mSeriesToFollow = seriesToFollow;
         }
 

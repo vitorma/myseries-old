@@ -22,7 +22,7 @@ import android.content.res.Resources;
 public class App extends Application {
     private static Environment environment;
 
-    /* Theses guys already extend ApplicationService */
+    /* These guys already extend ApplicationService */
     private static SearchService searchService;
     private static TrendingService trendingService;
     private static SeriesFollowingService seriesFollowingService;
@@ -111,7 +111,7 @@ public class App extends Application {
         return updateService;
     }
 
-    public static MarkingService seriesProvider() {
+    public static MarkingService markingService() {
         return markingService;
     }
 

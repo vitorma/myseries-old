@@ -4,7 +4,7 @@ import java.util.List;
 
 import mobi.myseries.application.ApplicationService;
 import mobi.myseries.application.Environment;
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.trakttv.TrendingSource;
 
 public class TrendingService extends ApplicationService<TrendingListener> {
@@ -39,7 +39,7 @@ public class TrendingService extends ApplicationService<TrendingListener> {
         });
     }
 
-    private void notifyOnSucess(final List<ParcelableSeries> results) {
+    private void notifyOnSucess(final List<SearchResult> results) {
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
@@ -68,7 +68,7 @@ public class TrendingService extends ApplicationService<TrendingListener> {
 
             try {
                 TrendingSource source = TrendingService.this.environment().trendingSource();
-                List<ParcelableSeries> result = source.listTrending();
+                List<SearchResult> result = source.listTrending();
 
                 TrendingService.this.notifyOnSucess(result);
             } catch (Exception e) {

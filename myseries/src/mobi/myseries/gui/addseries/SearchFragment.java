@@ -5,7 +5,7 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.search.SearchListener;
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
@@ -89,7 +89,7 @@ public class SearchFragment extends AddSeriesFragment {
             }
 
             @Override
-            public void onSucess(List<ParcelableSeries> results) {
+            public void onSucess(List<SearchResult> results) {
                 this.showButtons = true;
 
                 SearchFragment.this.setResults(results);

@@ -6,7 +6,7 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.following.SeriesFollowingListener;
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
 import mobi.myseries.gui.shared.ImageDownloader;
@@ -25,13 +25,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements Publisher<AddSeriesAdapterListener> {
+public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publisher<AddSeriesAdapterListener> {
     private LayoutInflater layoutInflater;
     private ImageDownloader imageDownloader;
 
     private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
 
-    public AddSeriesAdapter(Context context, List<ParcelableSeries> results) {
+    public AddSeriesAdapter(Context context, List<SearchResult> results) {
         super(context, R.layout.addseries_item, results);
 
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -40,7 +40,7 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ParcelableSeries result = this.getItem(position);
+        final SearchResult result = this.getItem(position);
 
         final ViewHolder viewHolder;
 
@@ -149,7 +149,7 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
         }
 
         @Override
-        public void onStartToFollow(ParcelableSeries series) {
+        public void onStartToFollow(SearchResult series) {
             if (series.tvdbId().equals(this.seriesId)) {
                 this.showProgressAdd();
             }
@@ -163,7 +163,7 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
         }
 
         @Override
-        public void onFailToFollow(ParcelableSeries series, Exception e) {
+        public void onFailToFollow(SearchResult series, Exception e) {
             if (series.tvdbId().equals(this.seriesId)) {
                 this.showAddButton();
             }
@@ -224,8 +224,8 @@ public class AddSeriesAdapter extends ArrayAdapter<ParcelableSeries> implements 
     /* AddSeriesAdapterListener */
 
     public static interface AddSeriesAdapterListener {
-        public void onRequestAdd(ParcelableSeries series);
-        public void onRequestRemove(ParcelableSeries series);
+        public void onRequestAdd(SearchResult series);
+        public void onRequestRemove(SearchResult series);
     }
 
     private ListenerSet<AddSeriesAdapterListener> listeners = new ListenerSet<AddSeriesAdapterListener>();

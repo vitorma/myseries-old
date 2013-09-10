@@ -1,15 +1,11 @@
 package mobi.myseries.domain.source.trakttv;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
-import mobi.myseries.domain.model.ParcelableSeries;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
@@ -20,10 +16,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 public class Trakt implements TrendingSource, SearchSource, AddSeriesSource {
     private static final int SOCKET_TIMEOUT = 60000;
@@ -32,7 +24,6 @@ public class Trakt implements TrendingSource, SearchSource, AddSeriesSource {
     private static final String TRENDING_URL = TRAKT_URL + "shows/trending.json/";
     private static final String SEARCH_URL = TRAKT_URL + "search/shows.json/";
     private static final String SHOW_SUMMARY_URL = TRAKT_URL + "show/summary.json/";
-    private static final int COMPRESSED_300 = 300;
 
     private final String apiKey;
 
@@ -52,86 +43,23 @@ public class Trakt implements TrendingSource, SearchSource, AddSeriesSource {
     }
 
     @Override
-    public List<ParcelableSeries> listTrending()
-            throws ConnectionFailedException, ParsingFailedException {
+    public List<SearchResult> listTrending() throws ConnectionFailedException, ParsingFailedException {
         String url = TRENDING_URL + this.apiKey;
 
-        return this.parcelableSeriesListFrom(this.unmarshall(this.get(url)));
+        return TraktParser.parseSearchResults(this.get(url));
     }
 
     @Override
-    public List<ParcelableSeries> search(String query)
+    public List<SearchResult> search(String query)
             throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException {
         Validate.isNonBlank(query, new InvalidSearchCriteriaException());
 
         String url = SEARCH_URL + this.apiKey + "/" + this.encode(query);
 
-        return this.parcelableSeriesListFrom(this.unmarshall(this.get(url)));
+        return TraktParser.parseSearchResults(this.get(url));
     }
 
     /* Auxiliary */
-
-    private List<ParcelableSeries> parcelableSeriesListFrom(JSONArray array) {
-        List<ParcelableSeries> parcelableSeriesList = new ArrayList<ParcelableSeries>(array.size());
-
-        for (Object o : array) {
-            try {
-                parcelableSeriesList.add(this.parcelableSeriesFrom((JSONObject) o));
-            } catch (Exception e) {
-                continue;
-            }
-        }
-
-        return parcelableSeriesList;
-    }
-
-    private ParcelableSeries parcelableSeriesFrom(JSONObject object) {
-        String poster = ((JSONObject) object.get("images")).get("poster").toString();
-
-        return new ParcelableSeries()
-            .setTvdbId(object.get("tvdb_id").toString())
-            .setTitle(object.get("title").toString())
-            .setOverview(object.get("overview").toString())
-            .setPoster(this.compressedPosterUrl(poster, COMPRESSED_300));
-    }
-
-    private String compressedPosterUrl(String poster, int size) {
-        int extensionIndex = poster.lastIndexOf(".");
-
-        if (extensionIndex == -1) { return poster; }
-
-        return new StringBuilder()
-            .append(poster.substring(0, extensionIndex))
-            .append("-" + size)
-            .append(poster.substring(extensionIndex))
-            .toString();
-    }
-
-    /*
-     *  FIXME (Cleber)
-     *        Today, 2013/09/05 04:32, trakt.tv server is "temporarily down for some database maintenance"
-     *        and this method thrown a ParsingFailedException.
-     *
-     *        Exception captured here [in catch clause]:
-     *            class=ParseException
-     *            cause=null
-     *            message=null
-     *
-     *        Message shown to the user:
-     *            title=Error reading file from the web
-     *            content=Your connection may be to slow
-     *
-     *        =/
-     */
-    private JSONArray unmarshall(InputStream content) throws ParsingFailedException {
-        try {
-            return (JSONArray) new JSONParser().parse(new BufferedReader(new InputStreamReader(content)));
-        } catch (IOException e) {
-            throw new ParsingFailedException(e);
-        } catch (ParseException e) {
-            throw new ParsingFailedException(e);
-        }
-    }
 
     private InputStream get(String url) throws ConnectionFailedException {
             DefaultHttpClient client = new DefaultHttpClient();
