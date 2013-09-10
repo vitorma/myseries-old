@@ -273,7 +273,9 @@ public class TraktParser {
     }
 
     private static String readPoster(JsonObject object) {
-        String posterUrl = readStringSafely(object.get(POSTER));
+        JsonObject imagesObject = object.getAsJsonObject(IMAGES);
+
+        String posterUrl = readStringSafely(imagesObject.get(POSTER));
 
         return posterUrl.isEmpty() ? posterUrl : compressedPosterUrl(posterUrl, COMPRESSED_POSTER_300);
     }
