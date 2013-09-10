@@ -248,9 +248,9 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
                 @Override
                 public void onClick(View v) {
                     if (ViewHolder.this.seenMark.isChecked()) {
-                        App.seriesProvider().markEpisodeAsSeen(episode);
+                        App.seriesProvider().markAsWatched(episode);
                     } else {
-                        App.seriesProvider().markEpisodeAsNotSeen(episode);
+                        App.seriesProvider().markAsUnwatched(episode);
                     }
                 }
             };

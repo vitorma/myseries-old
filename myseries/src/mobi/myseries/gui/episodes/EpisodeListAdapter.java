@@ -120,9 +120,9 @@ public class EpisodeListAdapter extends BaseAdapter implements SeasonListener, E
                 @Override
                 public void onClick(View v) {
                     if (ViewHolder.this.episodeSeenMark.isChecked()) {
-                        App.seriesProvider().markEpisodeAsSeen(episode);
+                        App.seriesProvider().markAsWatched(episode);
                     } else {
-                        App.seriesProvider().markEpisodeAsNotSeen(episode);
+                        App.seriesProvider().markAsUnwatched(episode);
                     }
                 }
             };
