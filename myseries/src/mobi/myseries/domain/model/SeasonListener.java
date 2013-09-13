@@ -20,7 +20,7 @@
  */
 
 package mobi.myseries.domain.model;
-
+@Deprecated
 public interface SeasonListener {
     public void onMarkAsSeen(Season season);
     public void onMarkAsNotSeen(Season season);

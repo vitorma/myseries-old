@@ -21,6 +21,7 @@
 
 package mobi.myseries.domain.model;
 
+@Deprecated
 public interface SeriesListener {
 
     public void onChangeNumberOfSeenEpisodes(Series series);

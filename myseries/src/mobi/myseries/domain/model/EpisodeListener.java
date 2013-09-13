@@ -20,7 +20,7 @@
  */
 
 package mobi.myseries.domain.model;
-
+@Deprecated
 public interface EpisodeListener {
 
     public void onMarkAsSeen(Episode episode);
