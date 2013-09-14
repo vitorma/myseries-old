@@ -1,91 +1,79 @@
 package mobi.myseries.application.schedule;
 
 import mobi.myseries.application.following.SeriesFollowingService;
+import mobi.myseries.application.marking.MarkingListener;
+import mobi.myseries.application.marking.MarkingService;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.model.SeriesListener;
-import mobi.myseries.domain.repository.series.SeriesRepository;
-import mobi.myseries.shared.AbstractSpecification;
-import mobi.myseries.shared.Specification;
+import mobi.myseries.shared.Objects;
 
-public class ToWatch extends ScheduleMode implements SeriesListener {
+public class ToWatch extends ScheduleMode {
 
-    public ToWatch(ScheduleSpecification specification, SeriesRepository repository, SeriesFollowingService following, UpdateService update) {
-        super(specification, repository, following, update);
+    public ToWatch(
+            ScheduleSpecification specification,
+            SeriesFollowingService following,
+            UpdateService update,
+            MarkingService marking) {
+        super(specification, following, update, marking);
     }
 
     @Override
     protected void loadEpisodes() {
-        for (Series s : this.repository.getAll()) {
-            Episode nextToSee = s.nextEpisodeToSee(this.specification.isSatisfiedBySpecialEpisodes());
+        for (Series s : mFollowing.getAllFollowedSeries()) {
+            Episode nextToWatch = s.nextEpisodeToWatch(mSpecification.isSatisfiedBySpecialEpisodes());
 
-            if (this.specification.isSatisfiedBy(nextToSee)) {
-                this.episodes.add(nextToSee);
-            }
-
-            s.register(this);
-        }
-    }
-
-    /* SeriesListener */
-
-    @Override
-    public void onChangeNextEpisodeToSee(Series series) {
-        Episode oldNextToSee = this.includedEpisodeOf(series);
-
-        if (oldNextToSee != null) {
-            this.episodes.remove(oldNextToSee);
-        }
-
-        Episode newNextToSee = series.nextEpisodeToSee(this.specification.isSatisfiedBySpecialEpisodes());
-
-        if ((newNextToSee != null) && this.specification.isSatisfiedBy(newNextToSee)) {
-            this.episodes.add(newNextToSee);
-        }
-
-        this.sortEpisodes();
-        this.notifyOnScheduleStateChanged();
-    }
-
-    @Override
-    public void onChangeNextNonSpecialEpisodeToSee(Series series) {}
-
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Series series) {}
-
-    /* Auxiliary */
-
-    private Episode includedEpisodeOf(Series series) {
-        Specification<Episode> specification = ToWatch.seriesIdSpecification(series.id());
-
-        for (Episode e : this.episodes) {
-            if (specification.isSatisfiedBy(e)) {
-                return e;
+            if (mSpecification.isSatisfiedBy(nextToWatch)) {
+                mEpisodes.add(nextToWatch);
             }
         }
-
-        return null;
     }
 
-    private static Specification<Episode> seriesIdSpecification(final int seriesId) {
-        return new AbstractSpecification<Episode>() {
+    @Override
+    protected MarkingListener markingListener() {
+        return new MarkingListener() {
             @Override
-            public boolean isSatisfiedBy(Episode e) {
-                return e.seriesId() == seriesId;
+            public void onMarked(Episode e) {
+                onSuspectNextToWatchChanged(mFollowing.getFollowedSeries(e.seriesId()));
+            }
+
+            @Override
+            public void onMarked(Season s) {
+                onSuspectNextToWatchChanged(mFollowing.getFollowedSeries(s.seriesId()));
+            }
+
+            @Override
+            public void onMarked(Series s) {
+                onSuspectNextToWatchChanged(s);
+            }
+
+            private void onSuspectNextToWatchChanged(Series s) {
+                if (!mSpecification.isSatisfiedByEpisodesOfSeries(s.id())) { return; }
+
+                Episode currentToWatch = episodeOf(s.id());
+                Episode nextToWatch = s.nextEpisodeToWatch(mSpecification.isSatisfiedBySpecialEpisodes());
+
+                if (!Objects.areDifferent(currentToWatch, nextToWatch)) { return; }
+
+                boolean removed = currentToWatch != null && mEpisodes.remove(currentToWatch);
+                boolean added = nextToWatch != null && mEpisodes.add(nextToWatch);
+
+                if (removed || added) {
+                    sortEpisodes();
+                    notifyOnScheduleStateChanged();
+                }
+            }
+
+            private Episode episodeOf(int seriesId) {
+                for (Episode e : mEpisodes) {
+                    if (e.seriesId() == seriesId) {
+                        return e;
+                    }
+                }
+
+                return null;
             }
         };
-    }
-
-    @Override
-    public void onMarkAsSeen(Series series) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onMarkAsNotSeen(Series series) {
-        // TODO Auto-generated method stub
-
     }
 }

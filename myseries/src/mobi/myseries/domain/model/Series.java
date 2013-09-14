@@ -314,7 +314,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.network;
     }
 
-    public Episode nextEpisodeToSee(boolean includingSpecialEpisodes) {
+    public Episode nextEpisodeToWatch(boolean includingSpecialEpisodes) {
         return this.seasons.nextEpisodeToSee(includingSpecialEpisodes);
     }
 

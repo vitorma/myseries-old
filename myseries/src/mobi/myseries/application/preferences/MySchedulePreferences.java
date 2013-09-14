@@ -56,7 +56,7 @@ public class MySchedulePreferences {
         return new ScheduleSpecification()
             .specifySortMode(this.sortMode())
             .specifyInclusionOfSpecialEpisodes(this.showSpecialEpisodes())
-            .specifyInclusionOfSeenEpisodes(this.showSeenEpisodes())
+            .specifyInclusionOfWatchedEpisodes(this.showSeenEpisodes())
             .specifyInclusionOfAllSeries(this.seriesToShow());
     }
 

@@ -10,33 +10,34 @@ import mobi.myseries.shared.Validate;
 import android.util.SparseBooleanArray;
 
 public class ScheduleSpecification extends AbstractSpecification<Episode> {
-    private boolean isSatisfiedBySpecialEpisodes;
-    private boolean isSatisfiedBySeenEpisodes;
-    private SparseBooleanArray seriesToInclude;
-    private int sortMode;
+    private boolean mIsSatisfiedBySpecialEpisodes;
+    private boolean mIsSatisfiedByWatchedEpisodes;
+    private SparseBooleanArray mSeriesToInclude;
+    private int mSortMode;
 
     public ScheduleSpecification() {
-        this.isSatisfiedBySpecialEpisodes = false;
-        this.isSatisfiedBySeenEpisodes = false;
-        this.seriesToInclude = new SparseBooleanArray();
-        this.sortMode = SortMode.OLDEST_FIRST;
+        mIsSatisfiedBySpecialEpisodes = false;
+        mIsSatisfiedByWatchedEpisodes = false;
+        mSeriesToInclude = new SparseBooleanArray();
+        mSortMode = SortMode.OLDEST_FIRST;
     }
 
     public ScheduleSpecification specifyInclusionOfSpecialEpisodes(boolean including) {
-        this.isSatisfiedBySpecialEpisodes = including;
+        mIsSatisfiedBySpecialEpisodes = including;
 
         return this;
     }
 
-    public ScheduleSpecification specifyInclusionOfSeenEpisodes(boolean including) {
-        this.isSatisfiedBySeenEpisodes = including;
+    public ScheduleSpecification specifyInclusionOfWatchedEpisodes(boolean including) {
+        mIsSatisfiedByWatchedEpisodes = including;
+
         return this;
     }
 
-    public ScheduleSpecification specifyInclusionOf(Series series, boolean including) {
+    public ScheduleSpecification specifyInclusionOfSeries(Series series, boolean including) {
         Validate.isNonNull(series, "series");
 
-        this.seriesToInclude.put(series.id(), including);
+        mSeriesToInclude.put(series.id(), including);
 
         return this;
     }
@@ -45,38 +46,39 @@ public class ScheduleSpecification extends AbstractSpecification<Episode> {
         Validate.isNonNull(inclusions, "inclusions");
 
         for (Series series : inclusions.keySet()) {
-            this.seriesToInclude.put(series.id(), inclusions.get(series));
+            mSeriesToInclude.put(series.id(), inclusions.get(series));
         }
 
         return this;
     }
 
     public ScheduleSpecification specifySortMode(int sortMode) {
-        this.sortMode = sortMode;
+        mSortMode = sortMode;
+
         return this;
     }
 
     public boolean isSatisfiedBySpecialEpisodes() {
-        return this.isSatisfiedBySpecialEpisodes;
+        return mIsSatisfiedBySpecialEpisodes;
     }
 
-    public boolean isSatisfiedBySeenEpisodes() {
-        return this.isSatisfiedBySeenEpisodes;
+    public boolean isSatisfiedByWatchedEpisodes() {
+        return mIsSatisfiedByWatchedEpisodes;
     }
 
     public boolean isSatisfiedByEpisodesOfSeries(int seriesId) {
-        return this.seriesToInclude.get(seriesId);
+        return mSeriesToInclude.get(seriesId);
     }
 
     public int sortMode() {
-        return this.sortMode;
+        return mSortMode;
     }
 
     @Override
     public boolean isSatisfiedBy(Episode episode) {
         return (episode != null) &&
-               (this.isSatisfiedBySpecialEpisodes() || episode.isNotSpecial()) &&
-               (this.isSatisfiedBySeenEpisodes() || episode.unwatched()) &&
-               (this.isSatisfiedByEpisodesOfSeries(episode.seriesId()));
+                (isSatisfiedBySpecialEpisodes() || episode.isNotSpecial()) &&
+                (isSatisfiedByWatchedEpisodes() || episode.unwatched()) &&
+                (isSatisfiedByEpisodesOfSeries(episode.seriesId()));
     }
 }

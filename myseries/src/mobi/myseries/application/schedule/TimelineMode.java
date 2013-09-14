@@ -1,74 +1,106 @@
 package mobi.myseries.application.schedule;
 
 import mobi.myseries.application.following.SeriesFollowingService;
+import mobi.myseries.application.marking.MarkingListener;
+import mobi.myseries.application.marking.MarkingService;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.EpisodeListener;
+import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.Specification;
 
-public abstract class TimelineMode extends ScheduleMode implements EpisodeListener {
+public abstract class TimelineMode extends ScheduleMode {
 
-    public TimelineMode(ScheduleSpecification specification, SeriesRepository repository, SeriesFollowingService following, UpdateService update) {
-        super(specification, repository, following, update);
+    public TimelineMode(
+            ScheduleSpecification specification,
+            SeriesFollowingService following,
+            UpdateService update,
+            MarkingService marking) {
+        super(specification, following, update, marking);
     }
 
     @Override
     protected void loadEpisodes() {
-        for (Series s : this.repository.getAll()) {
-            for (Episode e : s.episodes()) {
-                if (this.episodeSpecification().isSatisfiedBy(e)) {
-                    e.register(this);
-                    this.episodes.add(e);
-                }
-            }
+        for (Series s : mFollowing.getAllFollowedSeries()) {
+            mEpisodes.addAll(s.episodesBy(timelineSpecification()));
         }
     }
 
-    /* EpisodeListener */
-
-    @Override
-    public void onMarkAsSeen(Episode episode) {
-        if (!this.specification.isSatisfiedBy(episode)) {
-            this.episodes.remove(episode);
-        }
-
-        if (this.specification.isSatisfiedBy(episode) && !this.episodes.contains(episode)) {
-            this.episodes.add(episode);
-        }
-
-        this.notifyOnScheduleStateChanged();
-    }
-
-    @Override
-    public void onMarkAsNotSeen(Episode episode) {
-        this.onMarkAsSeen(episode);
-    }
-
-    @Override
-    public void onMarkAsSeenBySeason(Episode episode) {
-        this.onMarkAsSeen(episode);
-    }
-
-    @Override
-    public void onMarkAsNotSeenBySeason(Episode episode) {
-        this.onMarkAsSeen(episode);
-    }
-
-    /* Auxiliary */
-
-    private Specification<Episode> episodeSpecification() {
+    private Specification<Episode> timelineSpecification() {
         return new AbstractSpecification<Episode>() {
             @Override
             public boolean isSatisfiedBy(Episode e) {
                 return e.airDate() != null &&
-                        TimelineMode.this.airDateSpecification().isSatisfiedBy(e) &&
-                        TimelineMode.this.specification.isSatisfiedBy(e);
+                        airDateSpecification().isSatisfiedBy(e) &&
+                        mSpecification.isSatisfiedBy(e);
             }
         };
     }
 
     protected abstract Specification<Episode> airDateSpecification();
+
+    @Override
+    protected MarkingListener markingListener() {
+        return new MarkingListener() {
+
+            @Override
+            public void onMarked(Episode e) {
+                if (!mSpecification.isSatisfiedByEpisodesOfSeries(e.seriesId())) { return; }
+
+                boolean added = false;
+                boolean removed = false;
+
+                if (timelineSpecification().isSatisfiedBy(e)) {
+                    added = !mEpisodes.contains(e) && mEpisodes.add(e);
+                } else {
+                    removed = mEpisodes.remove(e);
+                }
+
+                if (added) { sortEpisodes(); }
+
+                if (added || removed) { notifyOnScheduleStateChanged(); }
+            }
+
+            @Override
+            public void onMarked(Season s) {
+                if (!mSpecification.isSatisfiedByEpisodesOfSeries(s.seriesId())) { return; }
+
+                boolean added = false;
+                boolean removed = false;
+
+                for (Episode e : s.episodes()) {
+                    if (timelineSpecification().isSatisfiedBy(e)) {
+                        added = added | (!mEpisodes.contains(e) && mEpisodes.add(e));
+                    } else {
+                        removed = removed | mEpisodes.remove(e);
+                    }
+                }
+
+                if (added) { sortEpisodes(); }
+
+                if (added || removed) { notifyOnScheduleStateChanged(); }
+            }
+
+            @Override
+            public void onMarked(Series s) {
+                if (!mSpecification.isSatisfiedByEpisodesOfSeries(s.id())) { return; }
+
+                boolean added = false;
+                boolean removed = false;
+
+                for (Episode e : s.episodes()) {
+                    if (timelineSpecification().isSatisfiedBy(e)) {
+                        added = added | (!mEpisodes.contains(e) && mEpisodes.add(e));
+                    } else {
+                        removed = removed | mEpisodes.remove(e);
+                    }
+                }
+
+                if (added) { sortEpisodes(); }
+
+                if (added || removed) { notifyOnScheduleStateChanged(); }
+            }
+        };
+    }
 }

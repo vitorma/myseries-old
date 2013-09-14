@@ -22,20 +22,29 @@ import android.content.res.Resources;
 public class App extends Application {
     private static Environment environment;
 
-    /* These guys already extend ApplicationService */
+    /* (Cleber) These guys already extend ApplicationService */
     private static SearchService searchService;
     private static TrendingService trendingService;
     private static SeriesFollowingService seriesFollowingService;
     private static MarkingService markingService;
 
-    private static Schedule schedule;
+    /* XXX (Cleber) These guys should extend ApplicationService */
     private static UpdateService updateService;
-    private static ImageService imageService;
-    private static MessageService messageService;
     private static BackupService backupService;
-    private static BroadcastService broadcastService;
+
+    /* XXX (Cleber) This guy could be in Environment. Some services depend on it. */
+    private static ImageService imageService;
+
+    /* TODO (Cleber) These guys are constructed from a set of ApplicationService. They could be grouped. */
+    private static Schedule schedule;
+    private static MessageService messageService;
     private static NotificationService notificationService;
+
+    /* (Cleber) This guy is ok */
     private static Preferences preferences;
+
+    /* XXX (Cleber) This guy should fly away */
+    private static BroadcastService broadcastService;
 
     @Override
     public void onCreate() {
@@ -66,18 +75,11 @@ public class App extends Application {
                 environment.localizationProvider(),
                 imageService,
                 broadcastService);
-
-        schedule = new Schedule(
-                environment.seriesRepository(),
-                seriesFollowingService,
-                updateService);
-
         backupService = new BackupService(environment.seriesRepository(), environment.dropboxHelper());
 
+        schedule = new Schedule(seriesFollowingService, updateService, markingService);
         messageService = new MessageService(seriesFollowingService, updateService, backupService);
-
         notificationService = new NotificationService(this, updateService, backupService);
-
 
         preferences = new Preferences(this);
     }

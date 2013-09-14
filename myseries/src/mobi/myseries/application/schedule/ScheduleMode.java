@@ -1,24 +1,3 @@
-/*
- *   ScheduleMode.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.application.schedule;
 
 import java.util.ArrayList;
@@ -30,56 +9,71 @@ import java.util.List;
 import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingService;
+import mobi.myseries.application.marking.MarkingListener;
+import mobi.myseries.application.marking.MarkingService;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
+import mobi.myseries.shared.Validate;
 
-public abstract class ScheduleMode implements Publisher<ScheduleListener>, UpdateFinishListener {
+public abstract class ScheduleMode implements Publisher<ScheduleListener> {
     public static final int TO_WATCH = 0;
     public static final int AIRED = 1;
     public static final int UNAIRED = 2;
 
-    protected ScheduleSpecification specification;
-    protected List<Episode> episodes;
-    protected SeriesRepository repository;
-    private ListenerSet<ScheduleListener> listeners;
+    protected ScheduleSpecification mSpecification;
+    protected SeriesFollowingService mFollowing;
+    private ListenerSet<ScheduleListener> mListeners;
+    protected List<Episode> mEpisodes;
 
-    protected ScheduleMode(ScheduleSpecification specification, SeriesRepository repository, SeriesFollowingService following, UpdateService update) {
-        this.specification = specification;
-        this.episodes = new ArrayList<Episode>();
+    protected ScheduleMode(
+            ScheduleSpecification specification,
+            SeriesFollowingService following,
+            UpdateService update,
+            MarkingService marking) {
+        Validate.isNonNull(specification, "specification");
+        Validate.isNonNull(following, "following");
+        Validate.isNonNull(update, "update");
+        Validate.isNonNull(marking, "marking");
 
-        this.repository = repository;
-        this.listeners = new ListenerSet<ScheduleListener>();
+        mSpecification = specification;
+        mEpisodes = new ArrayList<Episode>();
+        mListeners = new ListenerSet<ScheduleListener>();
+        mFollowing = following;
 
-        following.register(mSeriesFollowingListener);
-        update.register(this);
+        mFollowing.register(mSeriesFollowingListener);
+        update.register(mUpdateFinishListener);
+        marking.register(mMarkingListener);
 
-        this.loadEpisodes();
-        this.sortEpisodes();
+        loadEpisodes();
+        sortEpisodes();
     }
 
-    protected abstract void loadEpisodes();
+    /* Interface */
 
     public int numberOfEpisodes() {
-        return this.episodes.size();
+        return mEpisodes.size();
     }
 
     public Episode episodeAt(int position) {
-        return this.episodes.get(position);
+        return mEpisodes.get(position);
     }
 
     public List<Episode> episodes() {
-        return new ArrayList<Episode>(this.episodes);
+        return new ArrayList<Episode>(mEpisodes);
     }
 
+    /* Load and sort */
+
+    protected abstract void loadEpisodes();
+
     protected void sortEpisodes() {
-        Collections.sort(this.episodes, this.comparator(this.specification.sortMode()));
+        Collections.sort(mEpisodes, comparator(mSpecification.sortMode()));
     }
 
     private Comparator<Episode> comparator(int sortMode) {
@@ -97,22 +91,22 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Updat
 
     @Override
     public boolean register(ScheduleListener listener) {
-        return this.listeners.register(listener);
+        return mListeners.register(listener);
     }
 
     @Override
     public boolean deregister(ScheduleListener listener) {
-        return this.listeners.deregister(listener);
+        return mListeners.deregister(listener);
     }
 
     protected void notifyOnScheduleStateChanged() {
-        for (ScheduleListener listener : this.listeners) {
+        for (ScheduleListener listener : mListeners) {
             listener.onScheduleStateChanged();
         }
     }
 
     protected void notifyOnScheduleStructureChanged() {
-        for (ScheduleListener listener : this.listeners) {
+        for (ScheduleListener listener : mListeners) {
             listener.onScheduleStructureChanged();
         }
     }
@@ -138,8 +132,16 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener>, Updat
 
     /* UpdateFinishListener */
 
-    @Override
-    public void onUpdateFinish() {
-        this.notifyOnScheduleStructureChanged();
-    }
+    private UpdateFinishListener mUpdateFinishListener = new UpdateFinishListener() {
+        @Override
+        public void onUpdateFinish() {
+            notifyOnScheduleStructureChanged();
+        }
+    };
+
+    /* MarkingListener */
+
+    private MarkingListener mMarkingListener = markingListener();
+
+    protected abstract MarkingListener markingListener();
 }
