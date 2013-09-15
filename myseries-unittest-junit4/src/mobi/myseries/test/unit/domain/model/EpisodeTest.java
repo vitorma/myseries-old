@@ -30,10 +30,8 @@ import java.util.Date;
 
 import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.EpisodeListener;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 
 public class EpisodeTest {
     private static final int ID1 = 1;
@@ -51,12 +49,6 @@ public class EpisodeTest {
     private static final String WRITERS = "writers";
     private static final String GUEST_STARS = "guest stars";
     private static final String IMAGE_FILE_NAME = "image file name";
-
-    /* Mock */
-
-    private static EpisodeListener mockListener() {
-        return Mockito.mock(EpisodeListener.class);
-    }
 
     /* Build */
 
@@ -281,7 +273,6 @@ public class EpisodeTest {
         episode1.mergeWith(episode2);
     }
 
-
     @Test(expected = IllegalArgumentException.class)
     public void mergingAnEpisodeWithAnotherHavingADifferentSeriesIdCausesIllegalArgumentException() {
         Episode episode1 = Episode.builder()
@@ -386,143 +377,7 @@ public class EpisodeTest {
         assertTrue(episode1.watched());
     }
 
-    //EpisodeListener---------------------------------------------------------------------------------------------------
-
-    @Test(expected = IllegalArgumentException.class)
-    public void registeringANullListenerCausesIllegalArgumentException() {
-        Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build()
-            .register(null);
-    }
-
-    @Test
-    public void aSameListenerCannotBeRegisteredTwoTimes() {
-        Episode episode = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
-
-        EpisodeListener listener = mockListener();
-
-        assertTrue(episode.register(listener));
-        assertFalse(episode.register(listener));
-    }
-
-    @Test
-    public void equalListenersCanBeRegistered() {
-        Episode episode = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
-
-        assertTrue(episode.register(mockListener()));
-        assertTrue(episode.register(mockListener()));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void deregisteringANullListenerCausesIllegalArgumentException() {
-        Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build()
-            .deregister(null);
-    }
-
-    @Test
-    public void unregisteredListenersCannotBeDeregistered() {
-        Episode episode = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
-
-        assertFalse(episode.deregister(mockListener()));
-    }
-
-    @Test
-    public void aRegisteredListenerCanBeDeregistered() {
-        Episode episode = Episode.builder()
-        .withId(ID1)
-        .withSeriesId(SERIES_ID1)
-        .withNumber(NUMBER1)
-        .withSeasonNumber(SEASON_NUMBER1)
-        .build();
-
-        EpisodeListener listener = mockListener();
-
-        assertTrue(episode.register(mockListener()));
-        assertTrue(episode.register(listener));
-
-        assertFalse(episode.deregister(mockListener()));
-        assertTrue(episode.deregister(listener));
-    }
-
-    @Test
-    public void listenersAreNotifiedOnceWhenANotSeenEpisodeIsMarkedAsSeen() {
-        Episode episode = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .withWatchMark(false)
-            .build();
-
-        assertFalse(episode.watched());
-
-        EpisodeListener l1 = mockListener();
-        EpisodeListener l2 = mockListener();
-
-        assertTrue(episode.register(l1));
-        assertTrue(episode.register(l2));
-
-        for (int i = 1; i <= 1000; i++) {
-            episode.markAsWatched();
-            assertTrue(episode.watched());
-        }
-
-        Mockito.verify(l1, Mockito.times(1)).onMarkAsSeen(episode);
-        Mockito.verify(l2, Mockito.times(1)).onMarkAsSeen(episode);
-    }
-
-    @Test
-    public void listenersAreNotifiedOnceWhenASeenEpisodeIsMarkedAsNotSeen() {
-        Episode episode = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .withWatchMark(true)
-            .build();
-
-        assertTrue(episode.watched());
-
-        EpisodeListener l1 = mockListener();
-        EpisodeListener l2 = mockListener();
-
-        assertTrue(episode.register(l1));
-        assertTrue(episode.register(l2));
-
-        for (int i = 1; i <= 1000; i++) {
-            episode.markAsUnwatched();
-            assertFalse(episode.watched());
-        }
-
-        Mockito.verify(l1, Mockito.times(1)).onMarkAsNotSeen(episode);
-        Mockito.verify(l2, Mockito.times(1)).onMarkAsNotSeen(episode);
-    }
-
-    //isTheSameAs------------------------------------------------------------------------------------------------------
+    /* isTheSameAs */
 
     @Test
     public void testIsTheSameAs() {
@@ -596,7 +451,7 @@ public class EpisodeTest {
         }
     }
 
-    //Equals and hashCode-----------------------------------------------------------------------------------------------
+    /* Equals and hashCode */
 
     @Test
     public void testEquals() {

@@ -28,7 +28,7 @@ public class MarkingService extends ApplicationService<MarkingListener> {
     public void markAsWatched(Season seasonToMark) {
         Validate.isNonNull(seasonToMark, "seasonToMark");
 
-        seasonToMark.markAsSeen();
+        seasonToMark.markAsWatched();
         environment().seriesRepository().updateAllEpisodes(seasonToMark.episodes());
 
         notifyMarking(seasonToMark);
@@ -37,7 +37,7 @@ public class MarkingService extends ApplicationService<MarkingListener> {
     public void markAsWatched(Series seriesToMark) {
         Validate.isNonNull(seriesToMark, "seriesToMark");
 
-        seriesToMark.markAsSeen();
+        seriesToMark.markAsWatched();
         environment().seriesRepository().update(seriesToMark);
 
         notifyMarking(seriesToMark);
@@ -55,7 +55,7 @@ public class MarkingService extends ApplicationService<MarkingListener> {
     public void markAsUnwatched(Season seasonToMark) {
         Validate.isNonNull(seasonToMark, "seasonToMark");
 
-        seasonToMark.markAsNotSeen();
+        seasonToMark.markAsUnwatched();
         environment().seriesRepository().updateAllEpisodes(seasonToMark.episodes());
 
         notifyMarking(seasonToMark);
@@ -64,7 +64,7 @@ public class MarkingService extends ApplicationService<MarkingListener> {
     public void markAsUnwatched(Series seriesToMark) {
         Validate.isNonNull(seriesToMark, "seriesToMark");
 
-        seriesToMark.markAsNotSeen();
+        seriesToMark.markAsUnwatched();
         environment().seriesRepository().update(seriesToMark);
 
         notifyMarking(seriesToMark);

@@ -6,7 +6,7 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Season;
-import mobi.myseries.domain.model.SeasonListener;
+import mobi.myseries.gui.shared.EpisodeWatchMarkSpecification;
 import mobi.myseries.gui.shared.SeasonComparator;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
@@ -19,21 +19,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSharedPreferenceChangeListener {
-    private int seriesId;
+public class SeasonsAdapter extends BaseAdapter implements OnSharedPreferenceChangeListener {
+    private int mSeriesId;
     private List<Season> seasons;
 
     public SeasonsAdapter(int seriesId) {
-        this.seriesId = seriesId;
+        this.mSeriesId = seriesId;
+
         this.loadSeasons();
     }
 
     private void loadSeasons() {
-        this.seasons = App.seriesFollowingService().getFollowedSeries(this.seriesId).seasons().seasons();
-
-        for (Season s : this.seasons) {
-            s.register(this);
-        }
+        this.seasons = App.seriesFollowingService().getFollowedSeries(this.mSeriesId).seasons().seasons();
 
         int sortMode = App.preferences().forSeriesDetails().sortMode();
 
@@ -77,7 +74,9 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSha
 
         seenEpisodesBar.updateWithEpisodesOf(season);
 
-        seasonSeenMark.setChecked(season.wasSeen());
+        int numberOfWatchedEpisodes = season.numberOfEpisodes(new EpisodeWatchMarkSpecification(true));
+
+        seasonSeenMark.setChecked(numberOfWatchedEpisodes == season.numberOfEpisodes());
         seasonSeenMark.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -93,7 +92,7 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSha
         TextView allEpisodes = (TextView) itemView.findViewById(R.id.allEpisodes);
         TextView unairedEpisodes = (TextView) itemView.findViewById(R.id.unairedEpisodes);
 
-        watchedEpisodes.setText(String.valueOf(season.numberOfSeenEpisodes()));
+        watchedEpisodes.setText(String.valueOf(numberOfWatchedEpisodes));
         allEpisodes.setText("/" + season.numberOfEpisodes());
 
         int numberOfUnairedEpisodes = season.numberOfEpisodes(new UnairedEpisodeSpecification());
@@ -107,32 +106,6 @@ public class SeasonsAdapter extends BaseAdapter implements SeasonListener, OnSha
 
         return itemView;
     }
-
-    @Override
-    public void onMarkAsSeen(Season season) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMarkAsNotSeen(Season season) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Season season) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onChangeNextEpisodeToSee(Season season) {
-        //It's not my problem
-    }
-
-    @Override
-    public void onMarkAsSeenBySeries(Season season) { }
-
-    @Override
-    public void onMarkAsNotSeenBySeries(Season season) { }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

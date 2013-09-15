@@ -12,10 +12,11 @@ import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
+import mobi.myseries.application.marking.MarkingListener;
 import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.EpisodesToCountSpecification;
 import mobi.myseries.gui.shared.Images;
@@ -39,28 +40,29 @@ import android.widget.TextView;
 public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAdapter.Listener> {
     private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
 
-    private ArrayList<Series> items;
+    private ArrayList<Series> mItems;
 
     public MySeriesAdapter() {
-        this.items = new ArrayList<Series>();
+        mItems = new ArrayList<Series>();
 
-        this.reloadData();
+        reloadData();
 
-        App.seriesFollowingService().register(this.seriesFollowingListener);
-        App.updateSeriesService().register(this.updateListener);
-        App.backupService().register(this.backupListener);
+        App.seriesFollowingService().register(mSeriesFollowingListener);
+        App.updateSeriesService().register(mUpdateListener);
+        App.backupService().register(mBackupListener);
+        App.markingService().register(mMarkingListener);
     }
 
     /* BaseAdapter */
 
     @Override
     public int getCount() {
-        return this.items.size();
+        return mItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return this.items.get(position);
+        return mItems.get(position);
     }
 
     @Override
@@ -80,9 +82,9 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        Series series = this.items.get(position);
+        Series series = mItems.get(position);
 
-        this.setUpView(viewHolder, series);
+        setUpView(viewHolder, series);
 
         return view;
     }
@@ -91,10 +93,10 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         AsyncImageLoader.loadBitmapOn(
                 new PosterFetchingMethod(series, App.imageService()),
                 GENERIC_POSTER,
-                viewHolder.poster);
+                viewHolder.mPoster);
 
         String name = series.name();
-        viewHolder.name.setText(name);
+        viewHolder.mName.setText(name);
 
         boolean countSpecialEpisodes = App.preferences().forMySeries().countSpecialEpisodes();
         boolean countUnairedEpisodes = App.preferences().forMySeries().countUnairedEpisodes();
@@ -102,17 +104,17 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         Specification<Episode> spec2 = new SeenEpisodeSpecification();
 
         String seenEpisodes = String.valueOf(series.numberOfEpisodes(spec1.and(spec2)));
-        viewHolder.seenEpisodes.setText(seenEpisodes);
+        viewHolder.mWatchedEpisodes.setText(seenEpisodes);
 
         String allEpisodes = "/" + series.numberOfEpisodes(spec1);
-        viewHolder.allEpisodes.setText(allEpisodes);
+        viewHolder.mAllEpisodes.setText(allEpisodes);
 
-        viewHolder.seenEpisodesBar.updateWith(series.episodesBy(spec1));
+        viewHolder.watchedEpisodesBar.updateWith(series.episodesBy(spec1));
 
         viewHolder.moreButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                MySeriesAdapter.this.notifyOnItemContextRequest(series.id());
+                notifyOnItemContextRequest(series.id());
             }
         });
     }
@@ -121,132 +123,118 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
-                MySeriesAdapter.this.isLoading = true;
-                MySeriesAdapter.this.notifyStartLoading();
+                mIsLoading = true;
+                notifyStartLoading();
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                MySeriesAdapter.this.setUpData();
+                setUpData();
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void result) {
-                MySeriesAdapter.this.isLoading = false;
-                MySeriesAdapter.this.notifyFinishLoading();
-                MySeriesAdapter.this.notifyDataSetChanged();
+                mIsLoading = false;
+                notifyFinishLoading();
+                notifyDataSetChanged();
             }
         }.execute();
     }
 
     private void setUpData() {
-        this.items = new ArrayList<Series>();
+        mItems = new ArrayList<Series>();
         Map<Series,Boolean> filterOptions = App.preferences().forMySeries().seriesToShow();
 
         for (Entry<Series,Boolean> option : filterOptions.entrySet()) {
             if (option.getValue()) {
-                this.items.add(option.getKey());
+                mItems.add(option.getKey());
             }
-        }
-
-        for (Series s : this.items) {
-            s.register(this.seriesListener);
         }
 
         int sortMode = App.preferences().forMySeries().sortMode();
 
-        Collections.sort(this.items, SeriesComparator.bySortMode(sortMode));
+        Collections.sort(mItems, SeriesComparator.bySortMode(sortMode));
     }
 
     /* ViewHolder */
 
     private static class ViewHolder {
-        private final ImageView poster;
-        private final TextView name;
-        private final TextView seenEpisodes;
-        private final TextView allEpisodes;
-        private final SeenEpisodesBar seenEpisodesBar;
+        private final ImageView mPoster;
+        private final TextView mName;
+        private final TextView mWatchedEpisodes;
+        private final TextView mAllEpisodes;
+        private final SeenEpisodesBar watchedEpisodesBar;
         private final ImageButton moreButton;
 
         private ViewHolder(View view) {
-            this.poster = (ImageView) view.findViewById(R.id.poster);
-            this.name = (TextView) view.findViewById(R.id.name);
-            this.seenEpisodes = (TextView) view.findViewById(R.id.seenEpisodes);
-            this.allEpisodes = (TextView) view.findViewById(R.id.allEpisodes);
-            this.seenEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
-            this.moreButton = (ImageButton) view.findViewById(R.id.moreButton);
+            mPoster = (ImageView) view.findViewById(R.id.poster);
+            mName = (TextView) view.findViewById(R.id.name);
+            mWatchedEpisodes = (TextView) view.findViewById(R.id.seenEpisodes);
+            mAllEpisodes = (TextView) view.findViewById(R.id.allEpisodes);
+            watchedEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
+            moreButton = (ImageButton) view.findViewById(R.id.moreButton);
 
             view.setTag(this);
         }
     }
 
-    /* SeriesListener */
+    /* MarkingListener */
 
-    private final SeriesListener seriesListener = new SeriesListener() {
+    private final MarkingListener mMarkingListener = new MarkingListener() {
         @Override
-        public void onChangeNumberOfSeenEpisodes(Series series) {
-            MySeriesAdapter.this.notifyDataSetChanged();
+        public void onMarked(Episode markedEpisode) {
+            notifyDataSetChanged();
         }
 
         @Override
-        public void onChangeNextEpisodeToSee(Series series) { }
+        public void onMarked(Season markedSeason) {
+            notifyDataSetChanged();
+        }
 
         @Override
-        public void onChangeNextNonSpecialEpisodeToSee(Series series) { }
-
-        @Override
-        public void onMarkAsSeen(Series series) { }
-
-        @Override
-        public void onMarkAsNotSeen(Series series) { }
+        public void onMarked(Series markedSeries) {
+            notifyDataSetChanged();
+        }
     };
 
     /* SeriesFollowingListener */
 
-    private final SeriesFollowingListener seriesFollowingListener = new BaseSeriesFollowingListener() {
+    private final SeriesFollowingListener mSeriesFollowingListener = new BaseSeriesFollowingListener() {
         @Override
         public void onSuccessToFollow(Series followedSeries) {
-            followedSeries.register(MySeriesAdapter.this.seriesListener);
-
-            MySeriesAdapter.this.reloadData();
+            reloadData();
         }
 
         @Override
         public void onSuccessToUnfollow(Series unfollowedSeries) {
-            unfollowedSeries.deregister(MySeriesAdapter.this.seriesListener);
-
-            MySeriesAdapter.this.reloadData();
+            reloadData();
         }
 
         @Override
         public void onSuccessToUnfollowAll(Collection<Series> allUnfollowedSeries) {
-            for (Series s : allUnfollowedSeries) {
-                s.deregister(MySeriesAdapter.this.seriesListener);
-            }
-
-            MySeriesAdapter.this.reloadData();
+            reloadData();
         }
     };
 
     /* UpdateFinishListener */
 
-    private final UpdateFinishListener updateListener = new UpdateFinishListener() {
+    private final UpdateFinishListener mUpdateListener = new UpdateFinishListener() {
         @Override
         public void onUpdateFinish() {
-            MySeriesAdapter.this.reloadData();
+            reloadData();
         }
     };
 
     /* BackupListener */
 
-    private final BackupListener backupListener = new BackupListener() {
+    private final BackupListener mBackupListener = new BackupListener() {
         @Override
         public void onBackupSucess() { }
 
         @Override
         public void onRestoreSucess() {
-            MySeriesAdapter.this.reloadData();
+            reloadData();
         }
 
         @Override
@@ -269,7 +257,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
         @Override
         public void onRestoreCompleted(BackupMode mode) {
-            MySeriesAdapter.this.reloadData();
+            reloadData();
         }
     };
 
@@ -281,37 +269,37 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         public void onItemContextRequest(int seriesId);
     }
 
-    private boolean isLoading;
-    private final ListenerSet<MySeriesAdapter.Listener> listeners = new ListenerSet<MySeriesAdapter.Listener>();
+    private boolean mIsLoading;
+    private final ListenerSet<MySeriesAdapter.Listener> mListeners = new ListenerSet<MySeriesAdapter.Listener>();
 
     public boolean isLoading() {
-        return this.isLoading;
+        return mIsLoading;
     }
 
     @Override
     public boolean register(MySeriesAdapter.Listener listener) {
-        return this.listeners.register(listener);
+        return mListeners.register(listener);
     }
 
     @Override
     public boolean deregister(MySeriesAdapter.Listener listener) {
-        return this.listeners.deregister(listener);
+        return mListeners.deregister(listener);
     }
 
     private void notifyStartLoading() {
-        for (MySeriesAdapter.Listener listener : this.listeners) {
+        for (MySeriesAdapter.Listener listener : mListeners) {
             listener.onStartLoading();
         }
     }
 
     private void notifyFinishLoading() {
-        for (MySeriesAdapter.Listener listener : this.listeners) {
+        for (MySeriesAdapter.Listener listener : mListeners) {
             listener.onFinishLoading();
         }
     }
 
     private void notifyOnItemContextRequest(int seriesId) {
-        for (MySeriesAdapter.Listener listener : this.listeners) {
+        for (MySeriesAdapter.Listener listener : mListeners) {
             listener.onItemContextRequest(seriesId);
         }
     }

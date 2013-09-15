@@ -23,7 +23,7 @@ package mobi.myseries.test.unit.domain.model;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
-import mobi.myseries.domain.model.SeasonListener;
+import mobi.myseries.gui.shared.EpisodeWatchMarkSpecification;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.Specification;
 
@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 public class SeasonTest {
+    private static final EpisodeWatchMarkSpecification WATCHED_SPEC = new EpisodeWatchMarkSpecification(true);
 
     /* Mock */
 
@@ -46,32 +47,18 @@ public class SeasonTest {
         return episode;
     }
 
-    private static void markAsSeen(Episode... episodes) {
+    private static void markAsWatched(Episode... episodes) {
         for (Episode e : episodes) {
             Mockito.when(e.watched()).thenReturn(true);
+            Mockito.when(e.unwatched()).thenReturn(false);
         }
     }
 
-    private static void markAsNotSeen(Episode... episodes) {
+    private static void markAsUnwatched(Episode... episodes) {
         for (Episode e : episodes) {
             Mockito.when(e.watched()).thenReturn(false);
+            Mockito.when(e.unwatched()).thenReturn(true);
         }
-    }
-
-    private static void callOnMarkAsSeenFor(Season season, Episode... episodes) {
-        for (Episode e : episodes) {
-            season.onMarkAsSeen(e);
-        }
-    }
-
-    private static void callOnMarkAsNotSeenFor(Season season, Episode... episodes) {
-        for (Episode e : episodes) {
-            season.onMarkAsNotSeen(e);
-        }
-    }
-
-    public static SeasonListener mockListener() {
-        return Mockito.mock(SeasonListener.class);
     }
 
     /* Construction */
@@ -116,17 +103,17 @@ public class SeasonTest {
     public void theConstructedSeasonIncludesNoSeenEpisodesButItWasSeen() {
         Season season = new Season(1, 1);
 
-        Assert.assertEquals(0, season.numberOfSeenEpisodes());
+        Assert.assertEquals(0, season.numberOfEpisodes());
 
-        Assert.assertTrue(season.wasSeen());
-        Assert.assertNull(season.nextEpisodeToSee());
+        Assert.assertEquals(season.numberOfEpisodes(), season.numberOfEpisodes(WATCHED_SPEC));
+        Assert.assertNull(season.nextEpisodeToWatch());
     }
 
     /* Search */
 
     @Test
     public void anEpisodeIsAlreadyIncludedIfItHasTheSameNumberAsOneOfTheEpisodesOfTheSeason() {
-        Season season = new Season(1, 1).including(mockEpisode(1, 1, 1, 1));
+        Season season = new Season(1, 1).include(mockEpisode(1, 1, 1, 1));
 
         Assert.assertTrue(season.includes(mockEpisode(1, 1, 1, 1)));
         Assert.assertTrue(season.includes(mockEpisode(2, 1, 1, 1)));  // even if their ids are different
@@ -143,7 +130,7 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2 = mockEpisode(2, 1, 2, 1);
 
-        Season season = new Season(1, 1).including(episode1).including(episode2);
+        Season season = new Season(1, 1).include(episode1).include(episode2);
 
         Assert.assertEquals(episode1, season.episode(1));
         Assert.assertEquals(episode2, season.episode(2));
@@ -168,14 +155,14 @@ public class SeasonTest {
         Episode episode3 = mockEpisode(3, 1, 3, 1);
         Episode episode4 = mockEpisode(4, 1, 4, 1);
 
-        markAsSeen(episode1, episode2);
-        markAsNotSeen(episode3, episode4);
+        markAsWatched(episode1, episode2);
+        markAsUnwatched(episode3, episode4);
 
         Season season = new Season(1, 1)
-            .including(episode1)
-            .including(episode2)
-            .including(episode3)
-            .including(episode4);
+            .include(episode1)
+            .include(episode2)
+            .include(episode3)
+            .include(episode4);
 
         Assert.assertEquals(2, season.episodesBy(specification).size());
         Assert.assertTrue(season.episodesBy(specification).contains(episode1));
@@ -190,24 +177,36 @@ public class SeasonTest {
 
     /* Inclusion */
 
-    @Test(expected=IllegalArgumentException.class)
-    public void includingANullEpisodeCausesIllegalArgumentException() {
-        new Season(1, 1).including(null);
-    }
+    @Test
+    public void includingIsLenient() {
+        try {
+            Season s1 = new Season(1, 1);
 
-    @Test(expected=IllegalArgumentException.class)
-    public void includingAnEpisodeWithAnotherSeriesIdCausesIllegalArgumentException() {
-        new Season(1, 1).including(mockEpisode(1, 2, 1, 1));
-    }
+            //for null episodes
+            s1.include(null);
+            Assert.assertFalse(s1.includes(null));
 
-    @Test(expected=IllegalArgumentException.class)
-    public void includingAnEpisodeWithAnotherSeasonNumberCausesIllegalArgumentException() {
-        new Season(1, 1).including(mockEpisode(1, 1, 1, 2));
-    }
+            //for episodes with another seriesId
+            Episode e0 = mockEpisode(1, 2, 1, 1);
+            s1.include(e0);
+            Assert.assertFalse(s1.includes(e0));
 
-    @Test(expected=IllegalArgumentException.class)
-    public void includingAnAlreadyIncludedEpisodeCausesIllegalArgumentException() {
-        new Season(1, 1).including(mockEpisode(1, 1, 1, 1)).including(mockEpisode(1, 1, 1, 1));
+            //for episodes with another seasonNumber
+            Episode e1 = mockEpisode(1, 1, 1, 2);
+            s1.include(e1);
+            Assert.assertFalse(s1.includes(e1));
+
+            //for already included episodes
+            Episode e2 = mockEpisode(1, 1, 1, 1);
+            s1.include(e2);
+            Assert.assertTrue(s1.includes(e2));
+            Assert.assertEquals(1, s1.numberOfEpisodes());
+            s1.include(e2);
+            Assert.assertTrue(s1.includes(e2));
+            Assert.assertEquals(1, s1.numberOfEpisodes());
+        } catch (Exception e) {
+            Assert.fail();
+        }
     }
 
     @Test
@@ -215,7 +214,7 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2 = mockEpisode(2, 1, 2, 1);
 
-        Season season = new Season(1, 1).including(episode1).including(episode2);
+        Season season = new Season(1, 1).include(episode1).include(episode2);
 
         Assert.assertEquals(2, season.numberOfEpisodes());
         Assert.assertTrue(season.includes(episode1));
@@ -229,23 +228,21 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2  = mockEpisode(2, 1, 2, 1);
 
-        markAsNotSeen(episode1, episode2);
+        markAsUnwatched(episode1, episode2);
 
-        Season season = new Season(1, 1).including(episode1).including(episode2);
+        Season season = new Season(1, 1).include(episode1).include(episode2);
 
-        Assert.assertFalse(season.wasSeen());
-        Assert.assertEquals(episode1, season.nextEpisodeToSee());
-        Assert.assertEquals(0, season.numberOfSeenEpisodes());
+        Assert.assertEquals(episode1, season.nextEpisodeToWatch());
+        Assert.assertEquals(0, season.numberOfEpisodes(WATCHED_SPEC));
         for (Episode e : season.episodes()) {
             Assert.assertFalse(e.watched());
         }
 
-        season.markAsSeen();
-        markAsSeen(episode1, episode2);
+        season.markAsWatched();
+        markAsWatched(episode1, episode2);
 
-        Assert.assertTrue(season.wasSeen());
-        Assert.assertNull(season.nextEpisodeToSee());
-        Assert.assertEquals(2, season.numberOfSeenEpisodes());
+        Assert.assertNull(season.nextEpisodeToWatch());
+        Assert.assertEquals(2, season.numberOfEpisodes(WATCHED_SPEC));
         for (Episode e : season.episodes()) {
             Assert.assertTrue(e.watched());
         }
@@ -256,26 +253,24 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2  = mockEpisode(2, 1, 2, 1);
 
-        markAsSeen(episode1, episode2);
+        markAsWatched(episode1, episode2);
 
-        Season season = new Season(1, 1).including(episode1).including(episode2);
+        Season season = new Season(1, 1).include(episode1).include(episode2);
 
-        Assert.assertTrue(season.wasSeen());
-        Assert.assertNull(season.nextEpisodeToSee());
-        Assert.assertEquals(2, season.numberOfSeenEpisodes());
+        Assert.assertEquals(2, season.numberOfEpisodes(WATCHED_SPEC));
         for (Episode e : season.episodes()) {
             Assert.assertTrue(e.watched());
         }
+        Assert.assertNull(season.nextEpisodeToWatch());
 
-        season.markAsNotSeen();
-        markAsNotSeen(episode1, episode2);
+        season.markAsUnwatched();
+        markAsUnwatched(episode1, episode2);
 
-        Assert.assertFalse(season.wasSeen());
-        Assert.assertEquals(episode1, season.nextEpisodeToSee());
-        Assert.assertEquals(0, season.numberOfSeenEpisodes());
+        Assert.assertEquals(0, season.numberOfEpisodes(WATCHED_SPEC));
         for (Episode e : season.episodes()) {
             Assert.assertFalse(e.watched());
         }
+        Assert.assertEquals(episode1, season.nextEpisodeToWatch());
     }
 
     @Test
@@ -283,21 +278,19 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2  = mockEpisode(2, 1, 2, 1);
 
-        markAsNotSeen(episode1, episode2);
+        markAsUnwatched(episode1, episode2);
 
-        Season season = new Season(1, 1).including(episode1).including(episode2);
+        Season season = new Season(1, 1).include(episode1).include(episode2);
 
-        Assert.assertEquals(0, season.numberOfSeenEpisodes());
+        Assert.assertEquals(0, season.numberOfEpisodes(WATCHED_SPEC));
 
-        markAsSeen(episode1);
-        callOnMarkAsSeenFor(season, episode1);
+        markAsWatched(episode1);
 
-        Assert.assertEquals(1, season.numberOfSeenEpisodes());
+        Assert.assertEquals(1, season.numberOfEpisodes(WATCHED_SPEC));
 
-        markAsSeen(episode2);
-        callOnMarkAsSeenFor(season, episode2);
+        markAsWatched(episode2);
 
-        Assert.assertEquals(2, season.numberOfSeenEpisodes());
+        Assert.assertEquals(2, season.numberOfEpisodes(WATCHED_SPEC));
     }
 
     @Test
@@ -305,21 +298,19 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2  = mockEpisode(2, 1, 2, 1);
 
-        markAsNotSeen(episode1, episode2);
+        markAsUnwatched(episode1, episode2);
 
-        Season season = new Season(1, 1).including(episode1).including(episode2);
+        Season season = new Season(1, 1).include(episode1).include(episode2);
 
-        Assert.assertFalse(season.wasSeen());
+        Assert.assertNotEquals(season.numberOfEpisodes(), season.numberOfEpisodes(WATCHED_SPEC));
 
-        markAsSeen(episode1);
-        callOnMarkAsSeenFor(season, episode1);
+        markAsWatched(episode1);
 
-        Assert.assertFalse(season.wasSeen());
+        Assert.assertNotEquals(season.numberOfEpisodes(), season.numberOfEpisodes(WATCHED_SPEC));
 
-        markAsSeen(episode2);
-        callOnMarkAsSeenFor(season, episode2);
+        markAsWatched(episode2);
 
-        Assert.assertTrue(season.wasSeen());
+        Assert.assertEquals(season.numberOfEpisodes(), season.numberOfEpisodes(WATCHED_SPEC));
     }
 
     @Test
@@ -327,21 +318,19 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2  = mockEpisode(2, 1, 2, 1);
 
-        markAsNotSeen(episode1, episode2);
+        markAsUnwatched(episode1, episode2);
 
-        Season season = new Season(1, 1).including(episode1).including(episode2);
+        Season season = new Season(1, 1).include(episode1).include(episode2);
 
-        Assert.assertEquals(episode1, season.nextEpisodeToSee());
+        Assert.assertEquals(episode1, season.nextEpisodeToWatch());
 
-        markAsSeen(episode1);
-        callOnMarkAsSeenFor(season, episode1);
+        markAsWatched(episode1);
 
-        Assert.assertEquals(episode2, season.nextEpisodeToSee());
+        Assert.assertEquals(episode2, season.nextEpisodeToWatch());
 
-        markAsSeen(episode2);
-        callOnMarkAsSeenFor(season, episode2);
+        markAsWatched(episode2);
 
-        Assert.assertNull(season.nextEpisodeToSee());
+        Assert.assertNull(season.nextEpisodeToWatch());
     }
 
     @Test
@@ -349,21 +338,19 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2  = mockEpisode(2, 1, 2, 1);
 
-        markAsSeen(episode1, episode2);
+        markAsWatched(episode1, episode2);
 
-        Season season = new Season(1, 1).including(episode1).including(episode2);
+        Season season = new Season(1, 1).include(episode1).include(episode2);
 
-        Assert.assertEquals(2, season.numberOfSeenEpisodes());
+        Assert.assertEquals(2, season.numberOfEpisodes(WATCHED_SPEC));
 
-        markAsNotSeen(episode1);
-        callOnMarkAsNotSeenFor(season, episode1);
+        markAsUnwatched(episode1);
 
-        Assert.assertEquals(1, season.numberOfSeenEpisodes());
+        Assert.assertEquals(1, season.numberOfEpisodes(WATCHED_SPEC));
 
-        markAsNotSeen(episode2);
-        callOnMarkAsNotSeenFor(season, episode2);
+        markAsUnwatched(episode2);
 
-        Assert.assertEquals(0, season.numberOfSeenEpisodes());
+        Assert.assertEquals(0, season.numberOfEpisodes(WATCHED_SPEC));
     }
 
     @Test
@@ -371,21 +358,19 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2  = mockEpisode(2, 1, 2, 1);
 
-        markAsSeen(episode1, episode2);
+        markAsWatched(episode1, episode2);
 
-        Season season = new Season(1, 1).including(episode1).including(episode2);
+        Season season = new Season(1, 1).include(episode1).include(episode2);
 
-        Assert.assertNull(season.nextEpisodeToSee());
+        Assert.assertNull(season.nextEpisodeToWatch());
 
-        markAsNotSeen(episode2);
-        callOnMarkAsNotSeenFor(season, episode2);
+        markAsUnwatched(episode2);
 
-        Assert.assertEquals(episode2, season.nextEpisodeToSee());
+        Assert.assertEquals(episode2, season.nextEpisodeToWatch());
 
-        markAsNotSeen(episode1);
-        callOnMarkAsNotSeenFor(season, episode1);
+        markAsUnwatched(episode1);
 
-        Assert.assertEquals(episode1, season.nextEpisodeToSee());
+        Assert.assertEquals(episode1, season.nextEpisodeToWatch());
     }
 
     /* Merge */
@@ -412,8 +397,8 @@ public class SeasonTest {
         Episode episode3 = mockEpisode(1, 1, 1, 1);
         Episode episode4 = mockEpisode(2, 1, 2, 1);
 
-        Season season1 = new Season(1, 1).including(episode1).including(episode2);
-        Season season2 = new Season(1, 1).including(episode3).including(episode4);
+        Season season1 = new Season(1, 1).include(episode1).include(episode2);
+        Season season2 = new Season(1, 1).include(episode3).include(episode4);
 
         season1.mergeWith(season2);
 
@@ -431,373 +416,10 @@ public class SeasonTest {
         Episode episode1 = mockEpisode(1, 1, 1, 1);
         Episode episode2 = mockEpisode(2, 1, 2, 1);
 
-        Season season1 = new Season(1, 1).including(episode1);
-        Season season2 = new Season(1, 1).including(episode2);
+        Season season1 = new Season(1, 1).include(episode1);
+        Season season2 = new Season(1, 1).include(episode2);
 
         Assert.assertTrue(season1.mergeWith(season2).includes(episode2));
-    }
-
-    /* SeasonListener */
-
-    @Test(expected=IllegalArgumentException.class)
-    public void registeringANullListenerCausesIllegalArgumentException() {
-        new Season(1, 1).register(null);
-    }
-
-    @Test
-    public void aSameListenerCannotBeRegisteredTwoTimes() {
-        Season season = new Season(1, 1);
-        SeasonListener listener = mockListener();
-
-        Assert.assertTrue(season.register(listener));
-        Assert.assertFalse(season.register(listener));
-    }
-
-    @Test
-    public void equalListenersCanBeRegistered() {
-        Season season = new Season(1, 1);
-
-        Assert.assertTrue(season.register(mockListener()));
-        Assert.assertTrue(season.register(mockListener()));
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void deregisteringANullListenerCausesIllegalArgumentException() {
-        new Season(1, 1).deregister(null);
-    }
-
-    @Test
-    public void anUnregisteredListenerCannotBeDeregistered() {
-        Season season = new Season(1, 1);
-
-        Assert.assertFalse(season.deregister(mockListener()));
-}
-
-    @Test
-    public void aRegisteredListenerCanBeDeregistered() {
-        Season season = new Season(1, 1);
-        SeasonListener listener = mockListener();
-
-        Assert.assertTrue(season.register(mockListener()));
-        Assert.assertTrue(season.register(listener));
-
-        Assert.assertFalse(season.deregister(mockListener()));
-        Assert.assertTrue(season.deregister(listener));
-    }
-
-    @Test
-    public void listenersAreNotifiedWhenAnInclusionCausesTheChangeOfTheTheNumberOfSeenEpisodes() {
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Season season = new Season(1, 1);
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-
-        markAsSeen(episode1, episode2);
-
-        Assert.assertEquals(1, season.including(episode1).numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
-
-        Assert.assertEquals(2, season.including(episode2).numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
-    }
-
-    @Test
-    public void listenersAreNotifiedWhenAnInclusionCausesTheChangeOfTheNextEpisodeToSee() {
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Season season = new Season(1, 1);
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-
-        markAsNotSeen(episode1, episode2);
-
-        Assert.assertEquals(episode2, season.including(episode2).nextEpisodeToSee());
-        Mockito.verify(listener1, Mockito.times(1)).onChangeNextEpisodeToSee(season);
-        Mockito.verify(listener2, Mockito.times(1)).onChangeNextEpisodeToSee(season);
-
-        Assert.assertEquals(episode1, season.including(episode1).nextEpisodeToSee());
-        Mockito.verify(listener1, Mockito.times(2)).onChangeNextEpisodeToSee(season);
-        Mockito.verify(listener2, Mockito.times(2)).onChangeNextEpisodeToSee(season);
-    }
-
-    @Test
-    public void listenersAreNotifiedWhenAnInclusionCausesTheSeasonBeMarkedAsNotSeen() {
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Season season = new Season(1, 1);
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-
-        markAsSeen(episode1);
-
-        season.including(episode1);
-
-        Mockito.verify(listener1, Mockito.times(0)).onMarkAsNotSeen(season);
-        Mockito.verify(listener2, Mockito.times(0)).onMarkAsNotSeen(season);
-
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-
-        markAsNotSeen(episode2);
-
-        season.including(episode2);
-
-        Mockito.verify(listener1, Mockito.times(1)).onMarkAsNotSeen(season);
-        Mockito.verify(listener2, Mockito.times(1)).onMarkAsNotSeen(season);
-    }
-
-    @Test
-    public void listenersAreNotifiedWhenASeasonIsMarkedAsSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2  = mockEpisode(2, 1, 2, 1);
-
-        markAsNotSeen(episode1, episode2);
-
-        Season season = new Season(1, 1).including(episode1).including(episode2);
-
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        season.markAsSeen();
-        markAsSeen(episode1, episode2);
-        callOnMarkAsSeenFor(season, episode1, episode2);
-
-        Mockito.verify(listener1, Mockito.times(1)).onMarkAsSeen(season);
-        Mockito.verify(listener2, Mockito.times(1)).onMarkAsSeen(season);
-    }
-
-    @Test
-    public void listenersAreNotifiedWhenASeasonIsMarkedAsNotSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2  = mockEpisode(2, 1, 2, 1);
-
-        markAsSeen(episode1, episode2);
-
-        Season season = new Season(1, 1).including(episode1).including(episode2);
-
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        season.markAsNotSeen();
-        markAsNotSeen(episode1, episode2);
-        callOnMarkAsNotSeenFor(season, episode1, episode2);
-
-        Mockito.verify(listener1, Mockito.times(1)).onMarkAsNotSeen(season);
-        Mockito.verify(listener2, Mockito.times(1)).onMarkAsNotSeen(season);
-    }
-
-    @Test
-    public final void listenersAreNotifiedWhenTheNumberOfSeenEpisodesIncreasesBecauseAnEpisodeWasMarkedAsSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-
-        markAsNotSeen(episode1, episode2);
-
-        Season season = new Season(1, 1).including(episode1).including(episode2);
-
-        Assert.assertEquals(0, season.numberOfSeenEpisodes());
-
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        markAsSeen(episode1);
-        callOnMarkAsSeenFor(season, episode1);
-
-        Assert.assertEquals(1, season.numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
-
-        markAsSeen(episode2);
-        callOnMarkAsSeenFor(season, episode2);
-
-        Assert.assertEquals(2, season.numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
-    }
-
-    @Test
-    public final void listenersAreNotifiedWhenTheNextEpisodeToSeeChangesBecauseAnEpisodeWasMarkedAsSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-
-        markAsNotSeen(episode1, episode2);
-
-        Season season = new Season(1, 1).including(episode1).including(episode2);
-
-        Assert.assertEquals(episode1, season.nextEpisodeToSee());
-
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        markAsSeen(episode1);
-        callOnMarkAsSeenFor(season, episode1);
-
-        Assert.assertEquals(episode2, season.nextEpisodeToSee());
-        Mockito.verify(listener1, Mockito.times(1)).onChangeNextEpisodeToSee(season);
-        Mockito.verify(listener2, Mockito.times(1)).onChangeNextEpisodeToSee(season);
-
-        markAsSeen(episode2);
-        callOnMarkAsSeenFor(season, episode2);
-
-        Assert.assertNull(season.nextEpisodeToSee());
-        Mockito.verify(listener1, Mockito.times(2)).onChangeNextEpisodeToSee(season);
-        Mockito.verify(listener2, Mockito.times(2)).onChangeNextEpisodeToSee(season);
-    }
-
-    @Test
-    public final void listenersAreNotifiedWhenTheSeasonIsMarkedAsSeenBecauseAnEpisodeWasMarkedAsSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-
-        markAsNotSeen(episode1, episode2);
-
-        Season season = new Season(1, 1).including(episode1).including(episode2);
-
-        Assert.assertFalse(season.wasSeen());
-
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        markAsSeen(episode1);
-        callOnMarkAsSeenFor(season, episode1);
-
-        Assert.assertFalse(season.wasSeen());
-        Mockito.verify(listener1, Mockito.times(0)).onMarkAsSeen(season);
-        Mockito.verify(listener2, Mockito.times(0)).onMarkAsSeen(season);
-
-        markAsSeen(episode2);
-        callOnMarkAsSeenFor(season, episode2);
-
-        Assert.assertTrue(season.wasSeen());
-        Mockito.verify(listener1, Mockito.times(1)).onMarkAsSeen(season);
-        Mockito.verify(listener2, Mockito.times(1)).onMarkAsSeen(season);
-    }
-
-    @Test
-    public final void listenersAreNotifiedWhenTheNumberOfSeenEpisodesDecreasesBecauseAnEpisodeWasMarkedAsNotSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-
-        markAsSeen(episode1, episode2);
-
-        Season season = new Season(1, 1).including(episode1).including(episode2);
-
-        Assert.assertEquals(2, season.numberOfSeenEpisodes());
-
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        markAsNotSeen(episode1);
-        callOnMarkAsNotSeenFor(season, episode1);
-
-        Assert.assertEquals(1, season.numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(1)).onChangeNumberOfSeenEpisodes(season);
-
-        markAsNotSeen(episode2);
-        callOnMarkAsNotSeenFor(season, episode2);
-
-        Assert.assertEquals(0, season.numberOfSeenEpisodes());
-        Mockito.verify(listener1, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
-        Mockito.verify(listener2, Mockito.times(2)).onChangeNumberOfSeenEpisodes(season);
-    }
-
-    @Test
-    public final void listenersAreNotifiedWhenTheNextEpisodeToSeeChangesBecauseAnEpisodeWasMarkedAsNotSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-
-        markAsSeen(episode1, episode2);
-
-        Season season = new Season(1, 1).including(episode1).including(episode2);
-
-        Assert.assertNull(season.nextEpisodeToSee());
-
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        markAsNotSeen(episode2);
-        callOnMarkAsNotSeenFor(season, episode2);
-
-        Assert.assertEquals(episode2, season.nextEpisodeToSee());
-        Mockito.verify(listener1, Mockito.times(1)).onChangeNextEpisodeToSee(season);
-        Mockito.verify(listener2, Mockito.times(1)).onChangeNextEpisodeToSee(season);
-
-        markAsNotSeen(episode1);
-        callOnMarkAsNotSeenFor(season, episode1);
-
-        Assert.assertEquals(episode1, season.nextEpisodeToSee());
-        Mockito.verify(listener1, Mockito.times(2)).onChangeNextEpisodeToSee(season);
-        Mockito.verify(listener2, Mockito.times(2)).onChangeNextEpisodeToSee(season);
-    }
-
-    @Test
-    public final void listenersAreNotifiedWhenTheSeasonIsMarkedAsNotSeenBecauseAnEpisodeWasMarkedAsNotSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-
-        markAsSeen(episode1, episode2);
-
-        Season season = new Season(1, 1).including(episode1).including(episode2);
-
-        Assert.assertTrue(season.wasSeen());
-
-        SeasonListener listener1 = mockListener();
-        SeasonListener listener2 = mockListener();
-
-        Assert.assertTrue(season.register(listener1));
-        Assert.assertTrue(season.register(listener2));
-
-        markAsNotSeen(episode1);
-        callOnMarkAsNotSeenFor(season, episode1);
-
-        Assert.assertFalse(season.wasSeen());
-        Mockito.verify(listener1, Mockito.times(1)).onMarkAsNotSeen(season);
-        Mockito.verify(listener2, Mockito.times(1)).onMarkAsNotSeen(season);
-
-        markAsNotSeen(episode2);
-        callOnMarkAsNotSeenFor(season, episode2);
-
-        Assert.assertFalse(season.wasSeen());
-        Mockito.verify(listener1, Mockito.times(1)).onMarkAsNotSeen(season);
-        Mockito.verify(listener2, Mockito.times(1)).onMarkAsNotSeen(season);
     }
 
     /* Equals and HashCode */

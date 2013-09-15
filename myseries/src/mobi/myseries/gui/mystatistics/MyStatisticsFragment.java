@@ -14,6 +14,7 @@ import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.SeasonSet;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.EpisodeWatchMarkSpecification;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -220,12 +221,11 @@ public class MyStatisticsFragment extends Fragment {
             final SeasonSet seasons = s.seasons();
 
             for (int i = 0; i < seasons.numberOfSeasons(); ++i) {
-                if (seasons.seasonAt(i).number() == 0 && !preferences.countSpecialEpisodes()) {
+                if (seasons.seasonAt(i).isSpecial() && !preferences.countSpecialEpisodes()) {
                     continue;
                 }
 
-                if (seasons.seasonAt(i).numberOfEpisodes() == seasons.seasonAt(i)
-                    .numberOfSeenEpisodes()) {
+                if (seasons.seasonAt(i).numberOfEpisodes() == seasons.seasonAt(i).numberOfEpisodes(new EpisodeWatchMarkSpecification(true))) {
                     ++watchedSeasons;
                 }
 

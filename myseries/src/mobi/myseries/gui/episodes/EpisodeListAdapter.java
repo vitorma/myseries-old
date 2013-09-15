@@ -5,10 +5,10 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.marking.MarkingListener;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.EpisodeListener;
 import mobi.myseries.domain.model.Season;
-import mobi.myseries.domain.model.SeasonListener;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.CheckableFrameLayout;
 import mobi.myseries.gui.shared.CheckableFrameLayout.OnCheckedListener;
 import mobi.myseries.gui.shared.EpisodeComparator;
@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 
-public class EpisodeListAdapter extends BaseAdapter implements SeasonListener, EpisodeListener {
+public class EpisodeListAdapter extends BaseAdapter {
 
     private Season season;
     private List<Episode> items;
@@ -29,16 +29,13 @@ public class EpisodeListAdapter extends BaseAdapter implements SeasonListener, E
     public EpisodeListAdapter(Season season) {
         this.season = season;
 
+        App.markingService().register(mMarkingListener);
+
         this.setUpItems();
     }
 
     private void setUpItems() {
         this.items = this.season.episodes();
-
-        this.season.register(this);
-        for (Episode e : this.items) {
-            e.register(this);
-        }
 
         int sortMode = App.preferences().forEpisodes().sortMode();
 
@@ -144,53 +141,26 @@ public class EpisodeListAdapter extends BaseAdapter implements SeasonListener, E
         }
     }
 
-    @Override
-    public void onMarkAsSeen(Season season) {
-        this.notifyDataSetChanged();
-    }
+    private final MarkingListener mMarkingListener = new MarkingListener() {
+        @Override
+        public void onMarked(Episode e) {
+            if ((e.seriesId() != season.seriesId()) || (e.seasonNumber() != season.number())) { return; }
 
-    @Override
-    public void onMarkAsNotSeen(Season season) {
-        this.notifyDataSetChanged();
-    }
+            notifyDataSetChanged();
+        }
 
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Season season) {
-        this.notifyDataSetChanged();
-    }
+        @Override
+        public void onMarked(Season s) {
+            if ((s.seriesId() != season.seriesId()) || (s.number() != season.number())) { return; }
 
-    @Override
-    public void onChangeNextEpisodeToSee(Season season) {
-        /* Is not my problem */
-    }
+            notifyDataSetChanged();
+        }
 
-    @Override
-    public void onMarkAsSeenBySeries(Season season) {
-        this.notifyDataSetChanged();
-    }
+        @Override
+        public void onMarked(Series s) {
+            if (s.id() != season.seriesId()) { return; }
 
-    @Override
-    public void onMarkAsNotSeenBySeries(Season season) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMarkAsSeen(Episode episode) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMarkAsNotSeen(Episode episode) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMarkAsSeenBySeason(Episode episode) {
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMarkAsNotSeenBySeason(Episode episode) {
-        this.notifyDataSetChanged();
-    }
+            notifyDataSetChanged();
+        }
+    };
 }

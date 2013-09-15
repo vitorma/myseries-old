@@ -1,21 +1,19 @@
 package mobi.myseries.domain.model;
 
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import mobi.myseries.domain.constant.Invalid;
-import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
 
 /*
+ * (Cleber)
  * Trakt.tv does not provide information about people (directors, writers, guest stars) of episodes,
  * but it provides attributes (e.g. tvdb_id and tvrage_id) which allow us getting such information (and other ones) from other sources.
  * We can do it in future.
  */
 
-public class Episode implements Publisher<EpisodeListener> {
+public class Episode {
     private int id;
     private int seriesId;
     private int number;
@@ -29,10 +27,7 @@ public class Episode implements Publisher<EpisodeListener> {
     private String guestStars;
     private String screenUrl;
 
-    private AtomicBoolean watchMark;
-    private volatile boolean beingMarkedBySeason;
-
-    private ListenerSet<EpisodeListener> listeners;
+    private boolean watchMark;
 
     private Episode(int id, int seriesId, int number, int seasonNumber) {
         Validate.isTrue(id >= 0, "id should be non-negative");
@@ -44,9 +39,6 @@ public class Episode implements Publisher<EpisodeListener> {
         this.seriesId = seriesId;
         this.number = number;
         this.seasonNumber = seasonNumber;
-
-        this.watchMark = new AtomicBoolean(false);
-        this.listeners = new ListenerSet<EpisodeListener>();
     }
 
     public static Episode.Builder builder() {
@@ -70,7 +62,7 @@ public class Episode implements Publisher<EpisodeListener> {
     }
 
     public boolean isSpecial() {
-        return this.seasonNumber == Season.SPECIAL_EPISODES_SEASON_NUMBER;
+        return this.seasonNumber == Season.SPECIAL_SEASON_NUMBER;
     }
 
     public boolean isNotSpecial() {
@@ -116,27 +108,19 @@ public class Episode implements Publisher<EpisodeListener> {
     }
 
     public boolean watched() {
-        return this.watchMark.get();
+        return this.watchMark;
     }
 
     public boolean unwatched() {
-        return !this.watchMark.get();
+        return !this.watchMark;
     }
 
     public void markAsWatched() {
-        if (this.watchMark.compareAndSet(false, true)) {
-            this.notifyThatWasMarkedAsWatched();
-        }
+        this.watchMark = true;
     }
 
     public void markAsUnwatched() {
-        if (this.watchMark.compareAndSet(true, false)) {
-            this.notifyThatWasMarkedAsUnwatched();
-        }
-    }
-
-    void setBeingMarkedBySeason(boolean b) {
-        this.beingMarkedBySeason = b;
+        this.watchMark = false;
     }
 
     public synchronized void mergeWith(Episode other) {
@@ -155,36 +139,6 @@ public class Episode implements Publisher<EpisodeListener> {
         this.writers = other.writers;
         this.guestStars = other.guestStars;
         this.screenUrl = other.screenUrl;
-    }
-
-    @Override
-    public boolean register(EpisodeListener listener) {
-        return this.listeners.register(listener);
-    }
-
-    @Override
-    public boolean deregister(EpisodeListener listener) {
-        return this.listeners.deregister(listener);
-    }
-
-    private void notifyThatWasMarkedAsWatched() {
-        for (EpisodeListener listener : this.listeners) {
-            if (this.beingMarkedBySeason) {
-                listener.onMarkAsSeenBySeason(this);
-            } else {
-                listener.onMarkAsSeen(this);
-            }
-        }
-    }
-
-    private void notifyThatWasMarkedAsUnwatched() {
-        for (EpisodeListener listener : this.listeners) {
-            if (this.beingMarkedBySeason) {
-                listener.onMarkAsNotSeenBySeason(this);
-            } else {
-                listener.onMarkAsNotSeen(this);
-            }
-        }
     }
 
     public boolean isTheSameAs(Episode that) {
@@ -308,7 +262,7 @@ public class Episode implements Publisher<EpisodeListener> {
             episode.writers = this.writers;
             episode.guestStars = this.guestStars;
             episode.screenUrl = this.screenUrl;
-            episode.watchMark = new AtomicBoolean(this.watchMark);
+            episode.watchMark = this.watchMark;
 
             return episode;
         }

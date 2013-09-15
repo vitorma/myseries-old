@@ -2,10 +2,12 @@ package mobi.myseries.gui.series;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.marking.MarkingListener;
+import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.model.SeriesListener;
 import mobi.myseries.gui.episodes.EpisodesActivity;
+import mobi.myseries.gui.shared.EpisodeWatchMarkSpecification;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
@@ -24,7 +26,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class SeasonsFragment extends Fragment implements SeriesListener {
+public class SeasonsFragment extends Fragment {
     public static SeasonsFragment newInstance(int seriesId) {
         SeasonsFragment seasonsFragment = new SeasonsFragment();
 
@@ -38,9 +40,9 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     private ListView list;
     private CheckedTextView statisticsButton;
     private View statisticsPanel;
-    private SeenMark seenMark;
+    private SeenMark mSeenMark;
     private ImageButton sortButton;
-    private int seriesId;
+    private int mSeriesId;
     private SeasonsAdapter adapter;
     private View divider;
 
@@ -49,7 +51,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
         super.onCreate(savedInstanceState);
         this.setRetainInstance(true);
 
-        this.seriesId = this.getArguments().getInt(Extra.SERIES_ID);
+        this.mSeriesId = this.getArguments().getInt(Extra.SERIES_ID);
     }
 
     @Override
@@ -70,20 +72,22 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.seriesId = this.getArguments().getInt(Extra.SERIES_ID);
+        this.mSeriesId = this.getArguments().getInt(Extra.SERIES_ID);
 
-        this.seenMark = (SeenMark) this.getActivity().findViewById(R.id.seenMark);
+        this.mSeenMark = (SeenMark) this.getActivity().findViewById(R.id.seenMark);
         this.sortButton = (ImageButton) this.getActivity().findViewById(R.id.sort);
         this.statisticsButton = (CheckedTextView) this.getActivity().findViewById(R.id.statistics);
         this.statisticsPanel = this.getActivity().findViewById(R.id.statisticsPanel);
 
-        final Series series = App.seriesFollowingService().getFollowedSeries(this.seriesId);
+        final Series series = App.seriesFollowingService().getFollowedSeries(this.mSeriesId);
 
-        this.seenMark.setChecked(series.numberOfEpisodes() == series.numberOfSeenEpisodes());
-        this.seenMark.setOnClickListener(new OnClickListener() {
+        boolean checked = series.numberOfEpisodes(new EpisodeWatchMarkSpecification(true)) == series.numberOfEpisodes();
+
+        this.mSeenMark.setChecked(checked);
+        this.mSeenMark.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SeasonsFragment.this.seenMark.isChecked()) {
+                if (SeasonsFragment.this.mSeenMark.isChecked()) {
                     App.markingService().markAsWatched(series);
                 } else {
                     App.markingService().markAsUnwatched(series);
@@ -110,7 +114,9 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
         this.updateStatistics();
         this.updateVisibilityOfStatisticsPanel();
 
-        this.adapter = new SeasonsAdapter(this.seriesId);
+        if (this.adapter == null) {
+            this.adapter = new SeasonsAdapter(this.mSeriesId);
+        }
 
         this.list = (ListView) this.getActivity().findViewById(R.id.seasons);
         this.list.setAdapter(this.adapter);
@@ -121,14 +127,14 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
 
                 Intent intent = EpisodesActivity.newIntent(
                         SeasonsFragment.this.getActivity(),
-                        SeasonsFragment.this.seriesId,
+                        SeasonsFragment.this.mSeriesId,
                         season.number());
 
                 SeasonsFragment.this.startActivity(intent);
             }
         });
 
-        App.seriesFollowingService().getFollowedSeries(this.seriesId).register(this);
+        App.markingService().register(mMarkingListener);
     }
 
     private void updateVisibilityOfStatisticsPanel() {
@@ -153,37 +159,15 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
     }
 
     @Override
-    public void onChangeNextEpisodeToSee(Series series) { }
-
-    @Override
-    public void onChangeNextNonSpecialEpisodeToSee(Series series) { }
-
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Series series) {
-        this.seenMark.setChecked(series.numberOfEpisodes() == series.numberOfSeenEpisodes());
-        this.updateStatistics();
-    }
-
-    @Override
-    public void onMarkAsNotSeen(Series series) {
-        SeasonsFragment.this.updateStatistics();
-    }
-
-    @Override
-    public void onMarkAsSeen(Series series) {
-        SeasonsFragment.this.updateStatistics();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(Extra.SERIES_ID, this.seriesId);
+        outState.putInt(Extra.SERIES_ID, this.mSeriesId);
         super.onSaveInstanceState(outState);
     }
 
     private void updateStatistics() {
-        Series series = App.seriesFollowingService().getFollowedSeries(this.seriesId);
+        Series series = App.seriesFollowingService().getFollowedSeries(this.mSeriesId);
 
-        int numberOfUnwatchedEpisodes = series.numberOfUnwatchedEpisodes();
+        int numberOfUnwatchedEpisodes = series.numberOfEpisodes(new EpisodeWatchMarkSpecification(false));
         String pluralOfRemaining = this.getResources().getQuantityString(
                 R.plurals.plural_remaining,
                 numberOfUnwatchedEpisodes,
@@ -193,8 +177,9 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
         TextView allEpisodes = (TextView) this.statisticsPanel.findViewById(R.id.allEpisodes);
         allEpisodes.setText("/" + series.numberOfEpisodes());
 
+        int numberOfWatchedEpisodes = series.numberOfEpisodes() - numberOfUnwatchedEpisodes;
         TextView watchedEpisodes = (TextView) this.statisticsPanel.findViewById(R.id.watchedEpisodes);
-        watchedEpisodes.setText(String.valueOf(series.numberOfSeenEpisodes()));
+        watchedEpisodes.setText(String.valueOf(numberOfWatchedEpisodes));
 
         SeenEpisodesBar bar = (SeenEpisodesBar) this.statisticsPanel.findViewById(R.id.seenEpisodesBar);
         bar.updateWithEpisodesOf(series);
@@ -210,7 +195,7 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
 
         TextView specialEpisodes = (TextView) this.statisticsPanel.findViewById(R.id.specialEpisodes);
         if (series.hasSpecialEpisodes()) {
-            int numberOfSpecials = series.season(Season.SPECIAL_EPISODES_SEASON_NUMBER).numberOfEpisodes();
+            int numberOfSpecials = series.season(Season.SPECIAL_SEASON_NUMBER).numberOfEpisodes();
             String pluralOfSpecial = App.resources().getQuantityString(
                 R.plurals.plural_special,
                 numberOfSpecials,
@@ -220,4 +205,32 @@ public class SeasonsFragment extends Fragment implements SeriesListener {
             specialEpisodes.setText(R.string.none_special);
         }
     }
+
+    /* MarkingListener */
+
+    private final MarkingListener mMarkingListener = new MarkingListener() {
+        @Override
+        public void onMarked(Series s) {
+            onChangeNumberOfWatchedEpisodes(s);
+        }
+
+        @Override
+        public void onMarked(Season s) {
+            onChangeNumberOfWatchedEpisodes(App.seriesFollowingService().getFollowedSeries(s.seriesId()));
+        }
+
+        @Override
+        public void onMarked(Episode e) {
+            onChangeNumberOfWatchedEpisodes(App.seriesFollowingService().getFollowedSeries(e.seriesId()));
+        }
+
+        private void onChangeNumberOfWatchedEpisodes(Series series) {
+            if (series.id() != mSeriesId) { return; }
+
+            mSeenMark.setChecked(series.numberOfEpisodes() == series.numberOfEpisodes(new EpisodeWatchMarkSpecification(true)));
+
+            updateStatistics();
+            adapter.notifyDataSetChanged();
+        }
+    };
 }

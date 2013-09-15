@@ -1,51 +1,24 @@
-/*
- *   SeasonSet.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.domain.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import mobi.myseries.shared.DatesAndTimes;
-import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
 
-public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
-    private static final int SPECIAL_EPISODES_SEASON_NUMBER = 0;
+public class SeasonSet {
     private final int seriesId;
-
     private final TreeMap<Integer, Season> seasons;
-    private final ListenerSet<SeasonSetListener> listeners;
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
 
         this.seriesId = seriesId;
-
         this.seasons = new TreeMap<Integer, Season>();
-        this.listeners = new ListenerSet<SeasonSetListener>();
     }
 
     public int seriesId() {
@@ -56,8 +29,46 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         return this.seasons.size();
     }
 
+    public int numberOfEpisodes() {
+        int numberOfEpisodes = 0;
+
+        for (Entry<Integer, Season> entry : this.seasons.entrySet()) {
+            numberOfEpisodes += entry.getValue().numberOfEpisodes();
+        }
+
+        return numberOfEpisodes;
+    }
+
+    public int numberOfEpisodes(Specification<Episode> specification) {
+        return this.episodesBy(specification).size();
+    }
+
+    public boolean hasSpecialEpisodes() {
+        return this.seasons.containsKey(Season.SPECIAL_SEASON_NUMBER);
+    }
+
     public boolean includes(Season season) {
-        return (season != null) && this.seasons.containsKey(season.number());
+        return season != null && this.seasons.containsKey(season.number());
+    }
+
+    public int positionOf(Season season) {
+        Validate.isNonNull(season, "season");
+
+        return this.positionOf(season.number());
+    }
+
+    public int positionOf(int seasonNumber) {
+        int i = 0;
+
+        for (Entry<Integer, Season> entry : this.seasons.entrySet()) {
+            if (entry.getKey() == seasonNumber) {
+                return i;
+            }
+
+            i++;
+        }
+
+        return -1;
     }
 
     public Season season(int number) {
@@ -67,68 +78,68 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     public Season seasonAt(int position) {
         int i = 0;
 
-        for (Integer seasonNumber : this.seasons.keySet()) {
+        for (Entry<Integer,Season> entry : this.seasons.entrySet()) {
             if (i == position) {
-                return this.season(seasonNumber);
+                return entry.getValue();
             }
 
             i++;
         }
 
         throw new IndexOutOfBoundsException(
-            "invalid position, " + position + ", should be in the range [0, "
-                + this.numberOfSeasons() + ")");
-    }
-
-    public int positionOf(Season season) {
-        return this.seasons().indexOf(season);
-    }
-
-    public int positionOf(int seasonNumber) {
-        return this.positionOf(this.season(seasonNumber));
+            "position " + position + " is not in the range [0, " + this.numberOfSeasons() + ")");
     }
 
     private Season ensuredSeason(int number) {
         if (!this.seasons.containsKey(number)) {
             Season season = new Season(this.seriesId, number);
-            this.including(season);
+
+            this.seasons.put(season.number(), season);
         }
 
         return this.season(number);
     }
 
-    public List<Season> seasons() {
-        return new ArrayList<Season>(this.seasons.values());
-    }
-
-    public boolean hasSpecialEpisodes() {
-        return this.seasons.containsKey(0);
-    }
-
-    private SeasonSet including(Season season) {
-        season.register(this);
-
-        this.seasons.put(season.number(), season);
-
-        return this;
-    }
-
-    private SeasonSet excluding(Season season) {
-        season.deregister(this);
-
-        this.seasons.remove(season.number());
-
-        return this;
-    }
-
-    public int numberOfEpisodes() {
-        int numberOfEpisodes = 0;
-
-        for (Season s : this.seasons.values()) {
-            numberOfEpisodes += s.numberOfEpisodes();
+    public Episode nextEpisodeToWatch(boolean includingSpecialEpisodes) {
+        if (!includingSpecialEpisodes) {
+            return this.nextNonSpecialEpisodeToWatch();
         }
 
-        return numberOfEpisodes;
+        Episode special = this.nextNonSpecialEpisodeToWatch();
+        Episode nonSpecial = this.nextSpecialEpisodeToWatch();
+
+        if (special == null) { return nonSpecial; }
+        if (nonSpecial == null) { return special; }
+
+        boolean specialBefore = DatesAndTimes.compareByNullLast(special.airDate(), nonSpecial.airDate()) < 0;
+
+        return specialBefore ? special : nonSpecial;
+    }
+
+    private Episode nextSpecialEpisodeToWatch() {
+        Season specialEpisodes = this.season(Season.SPECIAL_SEASON_NUMBER);
+
+        if (specialEpisodes == null) { return null;}
+
+        return specialEpisodes.nextEpisodeToWatch();
+    }
+
+    private Episode nextNonSpecialEpisodeToWatch() {
+        for (Entry<Integer, Season> entry : this.seasons.entrySet()) {
+            Season s = entry.getValue();
+
+            if (s.isSpecial()) { continue; }
+
+            Episode e = s.nextEpisodeToWatch();
+
+            if (e != null) { return e; }
+        }
+
+        return null;
+    }
+
+    public List<Season> seasons() {
+        return new ArrayList<Season>(this.seasons.values());
     }
 
     public List<Episode> episodes() {
@@ -153,78 +164,43 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
         return episodes;
     }
 
-    public SeasonSet including(Episode episode) {
-        Validate.isNonNull(episode, "episode");
-
-        this.ensuredSeason(episode.seasonNumber()).including(episode);
+    public SeasonSet markAsWatched() {
+        for (Entry<Integer, Season> entry: this.seasons.entrySet()) {
+            entry.getValue().markAsWatched();
+        }
 
         return this;
     }
 
-    public SeasonSet includingAll(Collection<Episode> episodes) {
+    public SeasonSet markAsUnwatched() {
+        for (Entry<Integer, Season> entry: this.seasons.entrySet()) {
+            entry.getValue().markAsUnwatched();
+        }
+
+        return this;
+    }
+
+    public SeasonSet include(Episode episode) {
+        Validate.isNonNull(episode, "episode");
+
+        this.ensuredSeason(episode.seasonNumber()).include(episode);
+
+        return this;
+    }
+
+    public SeasonSet includeAll(Collection<Episode> episodes) {
         Validate.isNonNull(episodes, "items");
 
         for (Episode e : episodes) {
-            this.including(e);
+            this.include(e);
         }
 
         return this;
     }
 
-    public int numberOfSeenEpisodes() {
-        int numberOfSeenEpisodes = 0;
-
-        for (Season s : this.seasons.values()) {
-            numberOfSeenEpisodes += s.numberOfSeenEpisodes();
-        }
-
-        return numberOfSeenEpisodes;
-    }
-
-    public Episode nextEpisodeToSee(boolean includingSpecialEpisodes) {
-        if (!includingSpecialEpisodes) {
-            return this.nextNonSpecialEpisodeToSee();
-        }
-
-        Episode nextNonSpecialEpisodeToSee = this.nextNonSpecialEpisodeToSee();
-        Episode nextSpecialEpisodeToSee = this.nextSpecialEpisodeToSee();
-
-        if (nextNonSpecialEpisodeToSee == null) {
-            return nextSpecialEpisodeToSee;
-        }
-        if (nextSpecialEpisodeToSee == null) {
-            return nextNonSpecialEpisodeToSee;
-        }
-
-        return DatesAndTimes.compareByNullLast(nextNonSpecialEpisodeToSee.airDate(),
-            nextSpecialEpisodeToSee.airDate()) < 1
-            ? nextNonSpecialEpisodeToSee
-                : nextSpecialEpisodeToSee;
-    }
-
-    private Episode nextSpecialEpisodeToSee() {
-        Season specialEpisodes = this.season(SeasonSet.SPECIAL_EPISODES_SEASON_NUMBER);
-        return specialEpisodes != null ? specialEpisodes.nextEpisodeToSee() : null;
-    }
-
-    private Episode nextNonSpecialEpisodeToSee() {
-        for (Season s : this.seasons.values()) {
-            if (s.number() == SeasonSet.SPECIAL_EPISODES_SEASON_NUMBER) {
-                continue;
-            }
-
-            if (!s.wasSeen()) {
-                return s.nextEpisodeToSee();
-            }
-        }
-
-        return null;
-    }
-
-    public synchronized SeasonSet mergeWith(SeasonSet other) {
+    public SeasonSet mergeWith(SeasonSet other) {
         Validate.isNonNull(other, "other");
-        Validate.isTrue(this.seriesId == other.seriesId, "other's seriesId should be %d",
-            this.seriesId);
+        Validate.isTrue(this.seriesId == other.seriesId, "other should have same seriesId as this");
 
         this.mergeExistingSeasonsThatStillExistIn(other);
         this.insertNewSeasonsFrom(other);
@@ -244,66 +220,18 @@ public class SeasonSet implements SeasonListener, Publisher<SeasonSetListener> {
     private void insertNewSeasonsFrom(SeasonSet other) {
         for (Season s : other.seasons.values()) {
             if (!this.includes(s)) {
-                this.including(s);
+                this.seasons.put(s.number(), s);
             }
         }
     }
 
     private void removeSeasonsThatNoLongerExistIn(SeasonSet other) {
         List<Season> mySeasons = this.seasons();
+
         for (Season s : mySeasons) {
             if (!other.includes(s)) {
-                this.excluding(s);
+                this.seasons.remove(s.number());
             }
         }
     }
-
-    @Override
-    public boolean register(SeasonSetListener listener) {
-        return this.listeners.register(listener);
-    }
-
-    @Override
-    public boolean deregister(SeasonSetListener listener) {
-        return this.listeners.deregister(listener);
-    }
-
-    private void notifyThatNumberOfSeenEpisodesChanged() {
-        for (SeasonSetListener l : this.listeners) {
-            l.onChangeNumberOfSeenEpisodes(this);
-        }
-    }
-
-    private void notifyThatNextEpisodeToSeeChanged() {
-        for (SeasonSetListener l : this.listeners) {
-            l.onChangeNextEpisodeToSee(this);
-        }
-    }
-
-    @Override
-    public void onMarkAsSeen(Season season) {
-        // SeasonSet is not interested in this event
-    }
-
-    @Override
-    public void onMarkAsNotSeen(Season season) {
-        // SeasonSet is not interested in this event
-    }
-
-    @Override
-    public void onChangeNumberOfSeenEpisodes(Season season) {
-        this.notifyThatNumberOfSeenEpisodesChanged();
-    }
-
-    @Override
-    public void onChangeNextEpisodeToSee(Season season) {
-        // FIXME Notify only if the general next to see change
-        this.notifyThatNextEpisodeToSeeChanged();
-    }
-
-    @Override
-    public void onMarkAsSeenBySeries(Season season) { }
-
-    @Override
-    public void onMarkAsNotSeenBySeries(Season season) { }
 }

@@ -1,24 +1,3 @@
-/*
- *   Series.java
- *
- *   Copyright 2012 MySeries Team.
- *
- *   This file is part of MySeries.
- *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package mobi.myseries.domain.model;
 
 import java.util.Collection;
@@ -28,15 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import mobi.myseries.domain.constant.Invalid;
-import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
 import mobi.myseries.shared.WeekDay;
 
-public class Series implements SeasonSetListener, Publisher<SeriesListener> {
+public class Series {
     public static final int INVALID_SERIES_ID = -1;
 
     public static class Builder {
@@ -181,8 +158,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     private String bannerFileName;
     private final SeasonSet seasons;
 
-    private final ListenerSet<SeriesListener> listeners;
-
     private Long lastUpdate;
 
     private Series(int id, String name) {
@@ -193,8 +168,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         this.title = name;
 
         this.seasons = new SeasonSet(this.id);
-        this.seasons.register(this);
-        this.listeners = new ListenerSet<SeriesListener>();
     }
 
     public String actors() {
@@ -211,11 +184,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
     public Time airtime() {
         return this.airTime;
-    }
-
-    @Override
-    public boolean deregister(SeriesListener listener) {
-        return this.listeners.deregister(listener);
     }
 
     public List<Episode> episodes() {
@@ -257,7 +225,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         Validate.isNonNull(episodes, "items");
 
         for (Episode e : episodes) {
-            this.seasons.including(e.withAirtime(this.airTime));
+            this.seasons.include(e.withAirtime(this.airTime));
         }
 
         return this;
@@ -267,24 +235,12 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
         return this.lastUpdate;
     }
 
-    public void markAsNotSeen() {
-        for (Season s : this.seasons.seasons()) {
-            s.setBeingMarkedBySeries(true);
-            s.markAsNotSeen();
-            s.setBeingMarkedBySeries(false);
-        }
-
-        this.notifyThatWasMarkedAsNotSeen();
+    public void markAsUnwatched() {
+        this.seasons.markAsUnwatched();
     }
 
-    public void markAsSeen() {
-        for (Season s : this.seasons.seasons()) {
-            s.setBeingMarkedBySeries(true);
-            s.markAsSeen();
-            s.setBeingMarkedBySeries(false);
-        }
-
-        this.notifyThatWasMarkedAsSeen();
+    public void markAsWatched() {
+        this.seasons.markAsWatched();
     }
 
     public synchronized void mergeWith(Series other) {
@@ -315,37 +271,7 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
     }
 
     public Episode nextEpisodeToWatch(boolean includingSpecialEpisodes) {
-        return this.seasons.nextEpisodeToSee(includingSpecialEpisodes);
-    }
-
-    private void notifyThatNextEpisodeToSeeChanged() {
-        for (SeriesListener l : this.listeners) {
-            l.onChangeNextEpisodeToSee(this);
-        }
-    }
-
-    private void notifyThatNextNonSpecialEpisodeToSeeChanged() {
-        for (SeriesListener l : this.listeners) {
-            l.onChangeNextNonSpecialEpisodeToSee(this);
-        }
-    }
-
-    private void notifyThatNumberOfSeenEpisodesChanged() {
-        for (SeriesListener l : this.listeners) {
-            l.onChangeNumberOfSeenEpisodes(this);
-        }
-    }
-
-    private void notifyThatWasMarkedAsNotSeen() {
-        for (SeriesListener l : this.listeners) {
-            l.onMarkAsNotSeen(this);
-        }
-    }
-
-    private void notifyThatWasMarkedAsSeen() {
-        for (SeriesListener l : this.listeners) {
-            l.onMarkAsSeen(this);
-        }
+        return this.seasons.nextEpisodeToWatch(includingSpecialEpisodes);
     }
 
     public int numberOfEpisodes() {
@@ -354,29 +280,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
     public int numberOfEpisodes(Specification<Episode> specification) {
         return this.episodesBy(specification).size();
-    }
-
-    public int numberOfSeenEpisodes() {
-        return this.seasons.numberOfSeenEpisodes();
-    }
-
-    public int numberOfUnwatchedEpisodes() {
-        return this.numberOfEpisodes() - this.numberOfSeenEpisodes();
-    }
-
-    @Override
-    public void onChangeNextEpisodeToSee(SeasonSet seasonSet) {
-        this.notifyThatNextEpisodeToSeeChanged();
-    }
-
-    @Override
-    public void onChangeNextNonSpecialEpisodeToSee(SeasonSet seasonSet) {
-        this.notifyThatNextNonSpecialEpisodeToSeeChanged();
-    }
-
-    @Override
-    public void onChangeNumberOfSeenEpisodes(SeasonSet seasonSet) {
-        this.notifyThatNumberOfSeenEpisodesChanged();
     }
 
     public String overview() {
@@ -389,11 +292,6 @@ public class Series implements SeasonSetListener, Publisher<SeriesListener> {
 
     public String bannerFileName() {
         return this.bannerFileName;
-    }
-
-    @Override
-    public boolean register(SeriesListener listener) {
-        return this.listeners.register(listener);
     }
 
     public String runtime() {

@@ -6,9 +6,11 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.image.EpisodeImageDownloadListener;
 import mobi.myseries.application.image.ImageService;
+import mobi.myseries.application.marking.MarkingListener;
 import mobi.myseries.application.marking.MarkingService;
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.EpisodeListener;
+import mobi.myseries.domain.model.Season;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
@@ -48,29 +50,6 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         }
     };
 
-    private EpisodeListener seenMarkListener = new EpisodeListener() {
-
-        @Override
-        public void onMarkAsSeenBySeason(Episode episode) {
-            EpisodeDetailsAdapter.this.updateSeenCheckbox();
-        }
-
-        @Override
-        public void onMarkAsSeen(Episode episode) {
-            EpisodeDetailsAdapter.this.updateSeenCheckbox();
-        }
-
-        @Override
-        public void onMarkAsNotSeenBySeason(Episode episode) {
-            EpisodeDetailsAdapter.this.updateSeenCheckbox();
-        }
-
-        @Override
-        public void onMarkAsNotSeen(Episode episode) {
-            EpisodeDetailsAdapter.this.updateSeenCheckbox();
-        }
-    };
-
     private Episode episode;
     private TextView episodeName;
     private TextView episodeAirDate;
@@ -91,7 +70,7 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         this.layoutInflater = LayoutInflater.from(context);
 
         IMAGE_SERVICE.register(this.downloadListener);
-        e.register(this.seenMarkListener);
+        App.markingService().register(mMarkingListener);
     }
 
     @Override
@@ -157,7 +136,7 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
             this.episodeOverview.setText(this.episode.overview());
         }
 
-        this.updateSeenCheckbox();
+        this.updateWatchMark();
 
         this.loadEpisodeImage();
 
@@ -195,7 +174,30 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         this.finishedLoadingImage();
     }
 
-    private void updateSeenCheckbox() {
+    private void updateWatchMark() {
         this.isViewed.setChecked(this.episode.watched());
     }
+
+    private final MarkingListener mMarkingListener = new MarkingListener() {
+        @Override
+        public void onMarked(Episode e) {
+            if (e.id() != episode.id()) { return; }
+
+            updateWatchMark();
+        }
+
+        @Override
+        public void onMarked(Season s) {
+            if (s.number() != episode.seasonNumber()) { return; }
+
+            updateWatchMark();
+        }
+
+        @Override
+        public void onMarked(Series s) {
+            if (s.id() != episode.seriesId()) { return; }
+
+            updateWatchMark();
+        }
+    };
 }
