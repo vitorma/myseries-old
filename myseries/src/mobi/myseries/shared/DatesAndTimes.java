@@ -1,22 +1,17 @@
 /*
- *   DatesAndTimes.java
+ * DatesAndTimes.java
  *
- *   Copyright 2012 MySeries Team.
+ * Copyright 2012 MySeries Team.
  *
- *   This file is part of MySeries.
+ * This file is part of MySeries.
  *
- *   MySeries is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * MySeries is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *   MySeries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * MySeries is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with MySeries. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package mobi.myseries.shared;
@@ -40,7 +35,7 @@ public class DatesAndTimes {
     public static Date parse(String date, DateFormat format, Date defaultDate) {
         Validate.isNonNull(format, "format");
 
-        if (date == null || Strings.isBlank(date)) {
+        if ((date == null) || Strings.isBlank(date)) {
             return defaultDate;
         }
 
@@ -128,13 +123,11 @@ public class DatesAndTimes {
     /* Comparison */
 
     public static int compareByNullLast(Date date1, Date date2) {
-        return Objects.nullSafe(date1, MAX_DATE).compareTo(
-               Objects.nullSafe(date2, MAX_DATE));
+        return Objects.nullSafe(date1, MAX_DATE).compareTo(Objects.nullSafe(date2, MAX_DATE));
     }
 
     public static int compareByNullLast(Time time1, Time time2) {
-        return Objects.nullSafe(time1, Time.MAX_VALUE).compareTo(
-               Objects.nullSafe(time2, Time.MAX_VALUE));
+        return Objects.nullSafe(time1, Time.MAX_VALUE).compareTo(Objects.nullSafe(time2, Time.MAX_VALUE));
     }
 
     /* Calculus */
@@ -158,6 +151,6 @@ public class DatesAndTimes {
         Validate.isNonNull(date1, "date1");
         Validate.isNonNull(date2, "date2");
 
-        return (int) ((date2.getTime() - date1.getTime())/DAY_IN_MILLIS);
+        return (int) ((date2.getTime() - date1.getTime()) / DAY_IN_MILLIS);
     }
 }
