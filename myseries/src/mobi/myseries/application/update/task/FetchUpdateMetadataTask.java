@@ -1,24 +1,24 @@
 package mobi.myseries.application.update.task;
 
+import mobi.myseries.application.Environment;
 import mobi.myseries.application.update.UpdateResult;
-import mobi.myseries.domain.source.SeriesSource;
 import android.util.Log;
 
 public class FetchUpdateMetadataTask implements UpdateTask {
-    private final SeriesSource seriesSource;
+    private final Environment environment;
     private final long lastSuccessfulUpdate;
 
     private UpdateResult result;
 
-    public FetchUpdateMetadataTask(SeriesSource seriesSource, long lastSuccessfulUpdate) {
-        this.seriesSource = seriesSource;
+    public FetchUpdateMetadataTask(Environment environment, long lastSuccessfulUpdate) {
+        this.environment = environment;
         this.lastSuccessfulUpdate = lastSuccessfulUpdate;
     }
 
     @Override
     public void run() {
         try {
-            boolean updateIsAvailable = seriesSource.fetchUpdateMetadataSince(lastSuccessfulUpdate);
+            boolean updateIsAvailable = environment.seriesSource().fetchUpdateMetadataSince(lastSuccessfulUpdate);
             Log.d(getClass().getName(), "Is update metadata available? " + updateIsAvailable);
 
             this.result = new UpdateResult();

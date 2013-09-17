@@ -13,7 +13,8 @@ import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.marking.MarkingListener;
-import mobi.myseries.application.update.listener.UpdateFinishListener;
+import mobi.myseries.application.update.BaseUpdateListener;
+import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
@@ -217,9 +218,9 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         }
     };
 
-    /* UpdateFinishListener */
+    /* UpdateListener */
 
-    private final UpdateFinishListener mUpdateListener = new UpdateFinishListener() {
+    private final UpdateListener mUpdateListener = new BaseUpdateListener() {
         @Override
         public void onUpdateFinish() {
             reloadData();

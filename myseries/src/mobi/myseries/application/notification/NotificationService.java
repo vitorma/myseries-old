@@ -2,13 +2,6 @@ package mobi.myseries.application.notification;
 
 import java.util.Map;
 
-import com.dropbox.client2.exception.DropboxException;
-import com.dropbox.client2.exception.DropboxLocalStorageFullException;
-import com.dropbox.client2.exception.DropboxServerException;
-import com.dropbox.client2.exception.DropboxUnlinkedException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-
-import android.content.Context;
 import mobi.myseries.R;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
@@ -22,16 +15,24 @@ import mobi.myseries.application.backup.exception.GoogleDriveFileNotFoundExcepti
 import mobi.myseries.application.backup.exception.GoogleDriveUploadException;
 import mobi.myseries.application.backup.exception.RestoreTimeoutException;
 import mobi.myseries.application.backup.exception.SDcardException;
+import mobi.myseries.application.update.BaseUpdateListener;
+import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.exception.NetworkUnavailableException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
-import mobi.myseries.application.update.listener.UpdateProgressListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
+import android.content.Context;
+
+import com.dropbox.client2.exception.DropboxException;
+import com.dropbox.client2.exception.DropboxLocalStorageFullException;
+import com.dropbox.client2.exception.DropboxServerException;
+import com.dropbox.client2.exception.DropboxUnlinkedException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 public class NotificationService {
 
@@ -155,7 +156,7 @@ public class NotificationService {
                 UPDATE_NOTIFICATION_ID, text));
     }
 
-    private UpdateProgressListener updateListener = new UpdateProgressListener() {
+    private UpdateListener updateListener = new BaseUpdateListener() {
 
         @Override
         public void onCheckingForUpdates() {
@@ -232,7 +233,7 @@ public class NotificationService {
         this.backupNotificationLauncher
                 .setDispatcherTo(newBackupNotificationDispatcher);
     }
-    
+
     public void setRestoreNotificationDispatcher(
             NotificationDispatcher newBackupNotificationDispatcher) {
         this.restoreNotificationLauncher

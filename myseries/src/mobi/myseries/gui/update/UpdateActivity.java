@@ -6,7 +6,8 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.notification.NotificationDispatcher;
 import mobi.myseries.application.preferences.UpdatePreferences;
-import mobi.myseries.application.update.listener.UpdateFinishListener;
+import mobi.myseries.application.update.BaseUpdateListener;
+import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.shared.NotificationDispatcherForOrdinaryViews;
 import mobi.myseries.gui.shared.ToastBuilder;
@@ -33,7 +34,7 @@ public class UpdateActivity extends BaseActivity {
         this.setupViews();
         this.loadSettings();
 
-        App.updateSeriesService().register(this.updateFinishListener);
+        App.updateSeriesService().register(this.updateListener);
     }
 
     @Override
@@ -163,7 +164,7 @@ public class UpdateActivity extends BaseActivity {
         }
     }
 
-    private final UpdateFinishListener updateFinishListener = new UpdateFinishListener() {
+    private final UpdateListener updateListener = new BaseUpdateListener() {
         @Override
         public void onUpdateFinish() {
             refreshLatestSuccessfulUpdateTextView();

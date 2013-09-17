@@ -10,7 +10,6 @@ import mobi.myseries.gui.update.UpdateActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,15 +25,12 @@ public class MySeriesActivity extends BaseActivity {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        final Handler handler = new Handler();
-
-        App.updateSeriesService().withHandler(handler);
-
         if (savedInstanceState == null
                 || (savedInstanceState != null && !savedInstanceState.getBoolean(ALREADY_CHECKED_FOR_UPDATE, false))) {
             //XXX Let UpdateService getting data from trakt and uncomment the following line
             //App.updateSeriesService().updateDataIfNeeded();
         }
+
         this.alreadyCheckedForUpdate = true;
     }
 

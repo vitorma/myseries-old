@@ -11,8 +11,9 @@ import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.marking.MarkingListener;
 import mobi.myseries.application.marking.MarkingService;
+import mobi.myseries.application.update.BaseUpdateListener;
+import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.application.update.UpdateService;
-import mobi.myseries.application.update.listener.UpdateFinishListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.EpisodeComparator;
@@ -132,7 +133,7 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener> {
 
     /* UpdateFinishListener */
 
-    private UpdateFinishListener mUpdateFinishListener = new UpdateFinishListener() {
+    private UpdateListener mUpdateFinishListener = new BaseUpdateListener() {
         @Override
         public void onUpdateFinish() {
             notifyOnScheduleStructureChanged();
