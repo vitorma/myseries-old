@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DatesAndTimes {
     public static final long DAY_IN_MILLIS = 24L * 60L * 60L * 1000L;
@@ -29,6 +30,9 @@ public class DatesAndTimes {
     public static final int DAYS_IN_A_WEEK = 7;
 
     private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
+
+    private static final TimeZone PST_TIME_ZONE = TimeZone.getTimeZone("GMT-8");
+    private static final TimeZone LOCAL_TIME_ZONE = TimeZone.getDefault();
 
     /* Parsing */
 
@@ -152,5 +156,14 @@ public class DatesAndTimes {
         Validate.isNonNull(date2, "date2");
 
         return (int) ((date2.getTime() - date1.getTime()) / DAY_IN_MILLIS);
+    }
+
+    public static long toPstTime(long utcTimeStamp) {
+        return utcTimeStamp + PST_TIME_ZONE.getRawOffset();
+    }
+
+    public static Date toLocalTimezone(final Date utcDate) {
+        Date date = new Date(utcDate.getTime() + LOCAL_TIME_ZONE.getRawOffset());
+        return date;
     }
 }
