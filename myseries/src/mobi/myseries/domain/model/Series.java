@@ -286,7 +286,7 @@ public class Series {
         return this.overview;
     }
 
-    public String posterFileName() {
+    public String posterUrl() {
         return this.posterFileName;
     }
 

@@ -1,5 +1,8 @@
 package mobi.myseries.application.image;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
@@ -10,11 +13,20 @@ import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
 import mobi.myseries.shared.imageprocessing.BitmapResizer;
+
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 // TODO(Gabriel) Log the operations of this service.
 public class ImageService {
+    private static final int CONNECTION_TIMEOUT = 60000;
+    private static final int SOCKET_TIMEOUT = 60000;
 
     private final int mySchedulePosterWidth;
     private final int mySchedulePosterHeight;
@@ -27,8 +39,13 @@ public class ImageService {
     private final int mySeriesPosterWidth;
     private final int mySeriesPosterHeight;
 
-    public ImageService(ImageSource imageSource, ImageServiceRepository imageRepository, int mySeriesPosterWidth, int mySeriesPosterHeight,
-            int mySchedulePosterWidth, int mySchedulePosterHeight) {
+    public ImageService(
+            ImageSource imageSource,
+            ImageServiceRepository imageRepository,
+            int mySeriesPosterWidth,
+            int mySeriesPosterHeight,
+            int mySchedulePosterWidth,
+            int mySchedulePosterHeight) {
         Validate.isNonNull(imageSource, "imageSource");
         Validate.isNonNull(imageRepository, "imageRepository");
 
@@ -62,23 +79,20 @@ public class ImageService {
     public void downloadAndSavePosterOf(Series series) {
         Validate.isNonNull(series, "series");
 
-        if (Strings.isNullOrBlank(series.posterFileName())) {
+        if (Strings.isNullOrBlank(series.posterUrl())) {
             return;
         }
 
         try {
-            Bitmap fetchedPoster = this.imageSource.fetchSeriesPoster(series.posterFileName());
+            InputStream posterStream = new BufferedInputStream(this.getStream(series.posterUrl()));
 
-            Bitmap mySeriesPoster = new BitmapResizer(fetchedPoster).toSize(this.mySeriesPosterWidth, this.mySeriesPosterHeight);
+            Bitmap poster = BitmapFactory.decodeStream(posterStream);
+            Bitmap smallPoster = new BitmapResizer(poster).toSize(this.mySchedulePosterWidth, this.mySchedulePosterHeight);
 
-            this.imageRepository.saveSeriesPoster(series, mySeriesPoster);
-
-            Bitmap mySchedulePoster = new BitmapResizer(fetchedPoster).toSize(this.mySchedulePosterWidth, this.mySchedulePosterHeight);
-
-            this.imageRepository.saveSmallSeriesPoster(series, mySchedulePoster);
-        } catch (ConnectionFailedException e) {
-        } catch (ConnectionTimeoutException e) {
-        } catch (ImageNotFoundException e) {
+            this.imageRepository.saveSeriesPoster(series, poster);
+            this.imageRepository.saveSmallSeriesPoster(series, smallPoster);
+        } catch (Exception e) {
+            //TODO Log
         }
     }
 
@@ -144,12 +158,12 @@ public class ImageService {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                Bitmap fetchedImage = ImageService.this.imageSource.fetchEpisodeImage(this.episode.screenUrl());
+                InputStream screenStream = new BufferedInputStream(getStream(episode.screenUrl()));
+                Bitmap screen = BitmapFactory.decodeStream(screenStream);
 
-                ImageService.this.imageRepository.saveEpisodeImage(this.episode, fetchedImage);
-            } catch (ConnectionFailedException e) {
-            } catch (ConnectionTimeoutException e) {
-            } catch (ImageNotFoundException e) {
+                ImageService.this.imageRepository.saveEpisodeImage(this.episode, screen);
+            } catch (Exception e) {
+                //TODO Log
             }
 
             return null;
@@ -163,5 +177,25 @@ public class ImageService {
 
     public Bitmap getBannerOf(Series series) {
         return this.imageRepository.getBannerOf(series);
+    }
+
+    /* Auxiliary */
+
+    //TODO (Cleber) Extract this method to allow reuse it
+    private InputStream getStream(String url) {
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpParams params = client.getParams();
+
+        HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
+
+        try {
+            return client
+                    .execute(new HttpGet(url))
+                    .getEntity()
+                    .getContent();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

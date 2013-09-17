@@ -282,7 +282,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(baseSeries.overview(), equalTo(BASE_SERIES_OVERVIEW));
         assertThat(baseSeries.genres(), equalTo(Strings.normalizePipeSeparated(BASE_SERIES_GENRES)));
         assertThat(baseSeries.actors(), equalTo(Strings.normalizePipeSeparated(BASE_SERIES_ACTORS)));
-        assertThat(baseSeries.posterFileName(), equalTo(BASE_SERIES_POSTER_FILE_NAME));
+        assertThat(baseSeries.posterUrl(), equalTo(BASE_SERIES_POSTER_FILE_NAME));
 
         assertThat(baseSeries.numberOfEpisodes(), equalTo(0));
     }
@@ -302,7 +302,7 @@ public class SeriesParserTest extends TestCase {
         assertThat(fullSeries.overview(), equalTo(FULL_SERIES_OVERVIEW));
         assertThat(fullSeries.genres(), equalTo(Strings.normalizePipeSeparated(FULL_SERIES_GENRES)));
         assertThat(fullSeries.actors(), equalTo(Strings.normalizePipeSeparated(FULL_SERIES_ACTORS)));
-        assertThat(fullSeries.posterFileName(), equalTo(FULL_SERIES_POSTER_FILE_NAME));
+        assertThat(fullSeries.posterUrl(), equalTo(FULL_SERIES_POSTER_FILE_NAME));
 
         assertThat(fullSeries.numberOfEpisodes(), equalTo(2));
 

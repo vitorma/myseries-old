@@ -50,7 +50,7 @@ public class SeriesTest {
         assertEquals(seriesUpdate.network(), series.network());
         assertEquals(seriesUpdate.name(), series.name());
         assertEquals(seriesUpdate.overview(), series.overview());
-        assertEquals(seriesUpdate.posterFileName(), series.posterFileName());
+        assertEquals(seriesUpdate.posterUrl(), series.posterUrl());
         assertEquals(seriesUpdate.runtime(), series.runtime());
         assertEquals(seriesUpdate.status(), series.status());
     }

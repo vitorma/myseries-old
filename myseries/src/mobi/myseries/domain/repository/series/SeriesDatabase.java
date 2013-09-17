@@ -391,7 +391,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put(SERIES_OVERVIEW, s.overview());
         cv.put(SERIES_GENRES, s.genres());
         cv.put(SERIES_ACTORS, s.actors());
-        cv.put(SERIES_POSTER, s.posterFileName());
+        cv.put(SERIES_POSTER, s.posterUrl());
         cv.put(SERIES_BANNER, s.bannerFileName());
         cv.put(SERIES_LASTUPDATE, s.lastUpdate());
 
