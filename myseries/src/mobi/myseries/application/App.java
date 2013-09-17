@@ -69,12 +69,7 @@ public class App extends Application {
         seriesFollowingService = new SeriesFollowingService(environment, imageService);
         markingService = new MarkingService(environment);
 
-        updateService = new UpdateService(
-                environment.seriesSource(),
-                environment.seriesRepository(),
-                environment.localizationProvider(),
-                imageService,
-                broadcastService);
+        updateService = new UpdateService(environment, imageService);
         backupService = new BackupService(environment.seriesRepository(), environment.dropboxHelper());
 
         schedule = new Schedule(seriesFollowingService, updateService, markingService);

@@ -2,6 +2,7 @@ package mobi.myseries.application;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
@@ -43,6 +44,10 @@ public class ApplicationService<L> implements Publisher<L> {
 
     protected void runInMainThread(Runnable runnable) {
         this.handler.post(runnable);
+    }
+
+    protected Future<?> submit(Runnable runnable) {
+        return this.executor.submit(runnable);
     }
 
     protected ListenerSet<L> listeners() {

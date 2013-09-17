@@ -1,7 +1,6 @@
 package mobi.myseries.application.message;
 
 import java.util.Collection;
-import java.util.Map;
 
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
@@ -9,16 +8,15 @@ import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingService;
+import mobi.myseries.application.update.BaseUpdateListener;
+import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.application.update.UpdateService;
-import mobi.myseries.application.update.listener.UpdateProgressListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 
-public class MessageService implements
-        Publisher<MessageServiceListener>,
-        UpdateProgressListener, BackupListener {
+public class MessageService implements Publisher<MessageServiceListener>, BackupListener {
 
     private ListenerSet<MessageServiceListener> listeners;
 
@@ -30,7 +28,7 @@ public class MessageService implements
         this.listeners = new ListenerSet<MessageServiceListener>();
 
         seriesFollowingService.register(mSeriesFollowingListener);
-        updateService.register(this);
+        updateService.register(mUpdateListener);
         backupService.register(this);
     }
 
@@ -68,25 +66,12 @@ public class MessageService implements
 
     /* UpdateProgressListener */
 
-    @Override
-    public void onCheckingForUpdates() {}
-
-    @Override
-    public void onUpdateNotNecessary() {}
-
-    @Override
-    public void onUpdateProgress(int current, int total, Series currentSeries) {}
-
-    @Override
-    public void onUpdateFailure(Exception cause) {}
-
-    @Override
-    public void onUpdateSeriesFailure(Map<Series, Exception> causes) {}
-
-    @Override
-    public void onUpdateSuccess() {
-        this.notifyUpdateSuccess();
-    }
+    private UpdateListener mUpdateListener = new BaseUpdateListener() {
+        @Override
+        public void onUpdateSuccess() {
+            notifyUpdateSuccess();
+        }
+    };
 
     private void notifyUpdateSuccess() {
         for (MessageServiceListener l : this.listeners) {

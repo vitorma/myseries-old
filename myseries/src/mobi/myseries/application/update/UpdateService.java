@@ -7,97 +7,38 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import mobi.myseries.application.LocalizationProvider;
-import mobi.myseries.application.broadcast.BroadcastService;
+
+import mobi.myseries.application.ApplicationService;
+import mobi.myseries.application.Environment;
+import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.update.exception.NetworkUnavailableException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
-import mobi.myseries.application.update.listener.UpdateFinishListener;
-import mobi.myseries.application.update.listener.UpdateProgressListener;
 import mobi.myseries.application.update.specification.SeriesIdInCollectionSpecification;
 import mobi.myseries.application.update.task.FetchUpdateMetadataTask;
 import mobi.myseries.application.update.task.UpdatePosterTask;
 import mobi.myseries.application.update.task.UpdateSeriesTask;
 import mobi.myseries.application.update.task.UpdateTask;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.series.SeriesRepository;
-import mobi.myseries.domain.source.SeriesSource;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.CollectionFilter;
 import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.shared.Publisher;
-import mobi.myseries.shared.Validate;
-import android.os.Handler;
 import android.util.Log;
 
-// Java's type system does not allow us to declare Publisher more than once, even with different type arguments.
-// Anyway, it de facto implements these interfaces.
-public class UpdateService implements Publisher<UpdateFinishListener>/*, Publisher<UpdateProgressListener>*/ {
-    private final SeriesSource seriesSource;
-    private final SeriesRepository seriesRepository;
+public class UpdateService extends ApplicationService<UpdateListener> {
     private final ImageService imageService;
-    private final LocalizationProvider localizationProvider;
-    private final BroadcastService broadcastService;
-
-    private final ListenerSet<UpdateFinishListener> updateFinishListeners;
-    private final ListenerSet<UpdateProgressListener> updateProgressListeners;
-
+    private final ListenerSet<UpdateListener> listeners;
     private final AtomicBoolean isUpdating;
 
-    private final ExecutorService executor;
-    private Handler handler;
+    public UpdateService(Environment environment, ImageService imageService) {
+        super(environment);
 
-    public UpdateService(SeriesSource seriesSource, SeriesRepository seriesRepository,
-            LocalizationProvider localizationProvider, ImageService imageService,
-            BroadcastService broadcastService) {
-        Validate.isNonNull(seriesSource, "seriesSource");
-        Validate.isNonNull(seriesRepository, "seriesRepository");
-        Validate.isNonNull(localizationProvider, "localizationProvider");
-        Validate.isNonNull(imageService, "imageService");
-        Validate.isNonNull(broadcastService, "broadcastService");
-
-        this.seriesSource = seriesSource;
-        this.seriesRepository = seriesRepository;
         this.imageService = imageService;
-        this.localizationProvider = localizationProvider;
-        this.broadcastService = broadcastService;
-
-        this.updateFinishListeners = new ListenerSet<UpdateFinishListener>();
-        this.updateProgressListeners = new ListenerSet<UpdateProgressListener>();
-
+        this.listeners = new ListenerSet<UpdateListener>();
         this.isUpdating = new AtomicBoolean(false);
-        this.executor = Executors.newSingleThreadExecutor();
-    }
-
-    public UpdateService withHandler(Handler handler) {
-        this.handler = handler;
-
-        return this;
-    }
-
-    // interface Publisher<UpdateFinishListener>
-
-    public boolean register(UpdateFinishListener listener) {
-        return updateFinishListeners.register(listener);
-    }
-
-    public boolean deregister(UpdateFinishListener listener) {
-        return updateFinishListeners.deregister(listener);
-    }
-
-    // interface Publisher<UpdateProgressListener>
-
-    public boolean register(UpdateProgressListener listener) {
-        return updateProgressListeners.register(listener);
-    }
-
-    public boolean deregister(UpdateProgressListener listener) {
-        return updateProgressListeners.deregister(listener);
     }
 
     // Update methods
@@ -150,7 +91,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         }
 
         if (!UpdatePolicy.shouldUpdateNow()) {
-            Log.d(getClass().getName(), "Update will not run.");
+            Log.d(getClass().getName(), "Update will not run");
             this.isUpdating.set(false);
             return;
         }
@@ -186,7 +127,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
     }
 
     private Collection<Series> followedSeries() {
-        return Collections.unmodifiableCollection(this.seriesRepository.getAll());
+        return Collections.unmodifiableCollection(this.environment().seriesRepository().getAll());
     }
 
     private boolean posterAvailableButNotDownloaded(Series series) {
@@ -219,10 +160,10 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
     private void notifyListenersOfCheckingForUpdates() {
         Log.d(getClass().getName(), "Checking for updates.");
 
-        handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateProgressListener listener : updateProgressListeners) {
+                for (final UpdateListener listener : listeners) {
                     listener.onCheckingForUpdates();
                 }
             }
@@ -233,10 +174,10 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         Log.d(getClass().getName(), "Update is not necessary.");
         this.isUpdating.set(false);
 
-        handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateProgressListener listener : updateProgressListeners) {
+                for (final UpdateListener listener : listeners) {
                     listener.onUpdateNotNecessary();
                 }
             }
@@ -248,10 +189,10 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
     private void notifyListenersOfUpdateProgress(final int current, final int total, final Series currentSeries) {
         Log.d(getClass().getName(), "Update progress: " + current + "/" + total);
 
-        handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateProgressListener listener : updateProgressListeners) {
+                for (final UpdateListener listener : listeners) {
                     listener.onUpdateProgress(current, total, currentSeries);
                 }
             }
@@ -262,10 +203,10 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         Log.d(getClass().getName(), "Update finished successfully. :)");
         this.isUpdating.set(false);
 
-        handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateProgressListener listener : updateProgressListeners) {
+                for (final UpdateListener listener : listeners) {
                     listener.onUpdateSuccess();
                 }
             }
@@ -278,10 +219,10 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         Log.d(getClass().getName(), "Update finished with failure: " + cause.getClass().getName());
         this.isUpdating.set(false);
 
-        handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateProgressListener listener : updateProgressListeners) {
+                for (final UpdateListener listener : listeners) {
                     listener.onUpdateFailure(cause);
                 }
             }
@@ -294,10 +235,10 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         Log.d(getClass().getName(), "Update finished with failure when updating series.");
         this.isUpdating.set(false);
 
-        handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateProgressListener listener : updateProgressListeners) {
+                for (final UpdateListener listener : listeners) {
                     listener.onUpdateSeriesFailure(Collections.unmodifiableMap(causes));
                 }
             }
@@ -307,16 +248,16 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
     }
 
     private void notifyListenersOfUpdateFinish() {
-        handler.post(new Runnable() {
+        this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateFinishListener listener : updateFinishListeners) {
+                for (final UpdateListener listener : listeners) {
                     listener.onUpdateFinish();
                 }
             }
         });
 
-        this.broadcastService.broadcastUpdate();
+        this.broadcast(BroadcastAction.UPDATE); //FIXME broadcast only on success
     }
 
     private class UpdateTask2 implements Runnable {
@@ -390,11 +331,11 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
                 CollectionFilter<Series> withOutdatedData =
                         new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
-                                seriesSource.seriesUpdateMetadata()));
+                                environment().seriesSource().seriesUpdateMetadata()));
 
                 CollectionFilter<Series> withOutdatedPoster =
                         new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
-                                seriesSource.posterUpdateMetadata().keySet()));
+                                environment().seriesSource().posterUpdateMetadata().keySet()));
 
 
                 result.seriesWithDataToUpdate = withOutdatedData.in(followedSeries);
@@ -418,9 +359,9 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         private void fetchUpdateMetadataSince(long lastSuccessfulUpdate) throws Exception {
             try {
                 FetchUpdateMetadataTask fetchUpdateMetadataTask =
-                        new FetchUpdateMetadataTask(seriesSource, lastSuccessfulUpdate);
+                        new FetchUpdateMetadataTask(environment(), lastSuccessfulUpdate);
 
-                Future<?> future = executor.submit(fetchUpdateMetadataTask);
+                Future<?> future = submit(fetchUpdateMetadataTask);
                 future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
 
                 if (!fetchUpdateMetadataTask.result().success()) {
@@ -465,7 +406,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
 
                         // If there is any error in the download of the poster, the series will be shown changed
                         // after the update and must keep its state/data through sessions, application launches.
-                        seriesRepository.update(s);
+                        environment().seriesRepository().update(s);
                     } else {
                         Log.d(getClass().getName(), "Skip updating data of " + s.name());
                     }
@@ -473,7 +414,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                     // Update poster of series
                     if (whatHasToBeUpdated.seriesWithPosterToUpdate.contains(s)) {
                         Log.d(getClass().getName(), "Updating poster of " + s.name());
-                        UpdateResult result = updatePosterOf(s); 
+                        UpdateResult result = updatePosterOf(s);
 
                         if (!result.success()) {
                             errors.put(s, result.error());
@@ -484,7 +425,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
                     }
 
                     s.setLastUpdate(System.currentTimeMillis());
-                    seriesRepository.update(s);
+                    environment().seriesRepository().update(s);
 
                 } catch (InterruptedException e) {
                     // Should never happen
@@ -503,10 +444,9 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         }
 
         private UpdateResult updateDataOf(Series s) throws InterruptedException, ExecutionException, TimeoutException {
-            UpdateTask updateSeriesTask =
-                    new UpdateSeriesTask(seriesRepository, seriesSource, localizationProvider, s);
+            UpdateTask updateSeriesTask = new UpdateSeriesTask(environment(), s);
 
-            Future<?> future = executor.submit(updateSeriesTask);
+            Future<?> future = submit(updateSeriesTask);
             future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
 
             return updateSeriesTask.result();
@@ -515,7 +455,7 @@ public class UpdateService implements Publisher<UpdateFinishListener>/*, Publish
         private UpdateResult updatePosterOf(Series s) throws InterruptedException, ExecutionException, TimeoutException {
             UpdateTask updatePosterTask = new UpdatePosterTask(imageService, s);
 
-            Future<?> future = executor.submit(updatePosterTask);
+            Future<?> future = submit(updatePosterTask);
             future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
 
             return updatePosterTask.result();

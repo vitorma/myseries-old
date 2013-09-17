@@ -10,7 +10,8 @@ import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.preferences.MyStatisticsPreferences;
-import mobi.myseries.application.update.listener.UpdateFinishListener;
+import mobi.myseries.application.update.BaseUpdateListener;
+import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.SeasonSet;
 import mobi.myseries.domain.model.Series;
@@ -38,7 +39,7 @@ public class MyStatisticsFragment extends Fragment {
     private ProgressBar seasonsWatchedProgressBar;
     private TextView seriesWatched;
     private ProgressBar seriesWatchedProgressBar;
-    private UpdateFinishListener updateListener;
+    private UpdateListener updateListener;
     private TextView watchedRuntime;
     private ProgressBar timeOfWatchedEpisodesProgressBar;
     private OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
@@ -53,7 +54,7 @@ public class MyStatisticsFragment extends Fragment {
         this.prepareViews();
 
         this.setupFollowingSeriesListener();
-        this.setupUpdateFinishedListener();
+        this.setupUpdateListener();
         this.setupBackupListener();
         this.setupPreferencesListener();
 
@@ -181,8 +182,8 @@ public class MyStatisticsFragment extends Fragment {
         App.seriesFollowingService().register(this.followListener);
     }
 
-    private void setupUpdateFinishedListener() {
-        this.updateListener = new UpdateFinishListener() {
+    private void setupUpdateListener() {
+        this.updateListener = new BaseUpdateListener() {
             @Override
             public void onUpdateFinish() {
                 MyStatisticsFragment.this.update();

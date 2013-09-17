@@ -1,25 +1,18 @@
 package mobi.myseries.application.update.task;
 
-import mobi.myseries.application.LocalizationProvider;
+import mobi.myseries.application.Environment;
 import mobi.myseries.application.update.UpdateResult;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.repository.series.SeriesRepository;
 import mobi.myseries.domain.source.SeriesNotFoundException;
-import mobi.myseries.domain.source.SeriesSource;
 import android.util.Log;
 
 public class UpdateSeriesTask implements UpdateTask {
-    private final SeriesSource source;
-    private final LocalizationProvider localizationProvider;
-    private final SeriesRepository repository;
+    private Environment environment;
     private final Series series;
     private UpdateResult result;
 
-    public UpdateSeriesTask(SeriesRepository repository, SeriesSource source,
-            LocalizationProvider localizationProvider, Series series) {
-        this.source = source;
-        this.localizationProvider = localizationProvider;
-        this.repository = repository;
+    public UpdateSeriesTask(Environment environment, Series series) {
+        this.environment = environment;
         this.series = series;
     }
 
@@ -28,13 +21,13 @@ public class UpdateSeriesTask implements UpdateTask {
         Series downloadedSeries;
         try {
             Log.d(getClass().getName(), "Downloading data of " + series.name());
-            downloadedSeries = source.fetchSeries(series.id(), localizationProvider.language());
+            downloadedSeries = environment.seriesSource().fetchSeries(series.id(), environment.localizationProvider().language());
 
             Log.d(getClass().getName(), "Merging " + series.name());
             series.mergeWith(downloadedSeries);
 
             Log.d(getClass().getName(), "Saving " + series.name());
-            repository.update(series);
+            environment.seriesRepository().update(series);
 
         } catch (SeriesNotFoundException e) {
             e.printStackTrace();
