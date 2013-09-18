@@ -2,8 +2,8 @@ package mobi.myseries.application.update.task;
 
 import mobi.myseries.application.Environment;
 import mobi.myseries.application.update.UpdateResult;
-import android.util.Log;
 
+@Deprecated
 public class FetchUpdateMetadataTask implements UpdateTask {
     private final Environment environment;
     private final long lastSuccessfulUpdate;
@@ -18,8 +18,8 @@ public class FetchUpdateMetadataTask implements UpdateTask {
     @Override
     public void run() {
         try {
-            boolean updateIsAvailable = environment.seriesSource().fetchUpdateMetadataSince(lastSuccessfulUpdate);
-            Log.d(getClass().getName(), "Is update metadata available? " + updateIsAvailable);
+//            boolean updateIsAvailable = environment.seriesSource().fetchUpdateMetadataSince(lastSuccessfulUpdate);
+//            Log.d(getClass().getName(), "Is update metadata available? " + updateIsAvailable);
 
             this.result = new UpdateResult();
         } catch (Exception e) {

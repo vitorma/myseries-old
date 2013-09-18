@@ -5,7 +5,6 @@ import java.util.List;
 import mobi.myseries.application.ApplicationService;
 import mobi.myseries.application.Environment;
 import mobi.myseries.domain.model.SearchResult;
-import mobi.myseries.domain.source.trakttv.SearchSource;
 
 public class SearchService extends ApplicationService<SearchListener> {
 
@@ -73,8 +72,7 @@ public class SearchService extends ApplicationService<SearchListener> {
             SearchService.this.notifyOnStart();
 
             try {
-                SearchSource source = SearchService.this.environment().searchSource();
-                List<SearchResult> result = source.search(this.query);
+                List<SearchResult> result = environment().traktApi().search(this.query);
 
                 SearchService.this.notifyOnSucess(result);
             } catch (Exception e) {

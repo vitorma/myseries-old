@@ -5,7 +5,6 @@ import java.util.List;
 import mobi.myseries.application.ApplicationService;
 import mobi.myseries.application.Environment;
 import mobi.myseries.domain.model.SearchResult;
-import mobi.myseries.domain.source.trakttv.TrendingSource;
 
 public class TrendingService extends ApplicationService<TrendingListener> {
 
@@ -67,8 +66,7 @@ public class TrendingService extends ApplicationService<TrendingListener> {
             TrendingService.this.notifyOnStart();
 
             try {
-                TrendingSource source = TrendingService.this.environment().trendingSource();
-                List<SearchResult> result = source.listTrending();
+                List<SearchResult> result = environment().traktApi().listTrending();
 
                 TrendingService.this.notifyOnSucess(result);
             } catch (Exception e) {

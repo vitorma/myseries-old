@@ -10,6 +10,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Validate;
 
 import org.apache.http.client.methods.HttpGet;
@@ -17,13 +18,16 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-public class Trakt implements TrendingSource, SearchSource, AddSeriesSource {
+import android.util.Log;
+
+public class Trakt implements TraktApi {
     private static final int SOCKET_TIMEOUT = 60000;
     private static final int CONNECTION_TIMEOUT = 60000;
     private static final String TRAKT_URL = "http://api.trakt.tv/";
     private static final String TRENDING_URL = TRAKT_URL + "shows/trending.json/";
     private static final String SEARCH_URL = TRAKT_URL + "search/shows.json/";
     private static final String SHOW_SUMMARY_URL = TRAKT_URL + "show/summary.json/";
+    private static final String UPDATE_URL = TRAKT_URL + "shows/updated.json/";
 
     private final String apiKey;
 
@@ -36,10 +40,13 @@ public class Trakt implements TrendingSource, SearchSource, AddSeriesSource {
     }
 
     @Override
-    public Series fetchSeries(int seriesId) throws ParsingFailedException, ConnectionFailedException {
-        String url = SHOW_SUMMARY_URL + this.apiKey + "/" + seriesId + "/extended";
+    public List<SearchResult> search(String query)
+            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException {
+        Validate.isNonBlank(query, new InvalidSearchCriteriaException());
 
-        return TraktParser.parseSeries(this.get(url));
+        String url = SEARCH_URL + this.apiKey + "/" + this.encode(query);
+
+        return TraktParser.parseSearchResults(this.get(url));
     }
 
     @Override
@@ -50,13 +57,21 @@ public class Trakt implements TrendingSource, SearchSource, AddSeriesSource {
     }
 
     @Override
-    public List<SearchResult> search(String query)
-            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException {
-        Validate.isNonBlank(query, new InvalidSearchCriteriaException());
+    public Series fetchSeries(int seriesId) throws ParsingFailedException, ConnectionFailedException {
+        String url = SHOW_SUMMARY_URL + this.apiKey + "/" + seriesId + "/extended";
 
-        String url = SEARCH_URL + this.apiKey + "/" + this.encode(query);
+        return TraktParser.parseSeries(this.get(url));
+    }
 
-        return TraktParser.parseSearchResults(this.get(url));
+    @Override
+    public List<Integer> updatedSeriesSince(long utcTimestamp)
+            throws ConnectionFailedException, ParsingFailedException {
+        long pstTimestamp = DatesAndTimes.toPstTime(utcTimestamp);
+
+        String url = UPDATE_URL + this.apiKey + "/" + pstTimestamp;
+        Log.d("DELETE THIS LOG", url);
+
+        return TraktParser.parseUpdateMetadata(this.get(url));
     }
 
     /* Auxiliary */

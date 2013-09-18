@@ -52,6 +52,7 @@ public class TraktParser {
     private static final String EPISODE = "episode";
     private static final String NUMBER = "number";
     private static final String SCREEN = "screen";
+    private static final String SHOWS = "shows";
 
     private static final int COMPRESSED_POSTER_300 = 300;
 
@@ -124,6 +125,27 @@ public class TraktParser {
         }
     };
 
+    private static final JsonDeserializer<List<Integer>> UPDATE_METADATA_ADAPTER = new JsonDeserializer<List<Integer>>() {
+        @Override
+        public List<Integer> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            List<Integer> updateMetadata = new ArrayList<Integer>();
+
+            JsonObject updateMetadataObject = element.getAsJsonObject();
+            JsonArray updatedSeriesArray = updateMetadataObject.getAsJsonArray(SHOWS);
+
+            for (JsonElement updatedSeriesElement : updatedSeriesArray) {
+                try {
+                    updateMetadata.add(readTvdbId(updatedSeriesElement.getAsJsonObject()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    continue;
+                }
+            }
+
+            return updateMetadata;
+        }
+    };
+
     private static Gson gson;
 
     /* Interface */
@@ -166,6 +188,22 @@ public class TraktParser {
         }
     }
 
+    public static List<Integer> parseUpdateMetadata(InputStream in) throws ParsingFailedException {
+        try {
+            JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(in, "UTF-8")));
+
+            List<Integer> series = gson().fromJson(reader, List.class);
+
+            reader.close();
+            in.close();
+
+            return series;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ParsingFailedException(e);
+        }
+    }
+
     /* Auxiliary */
 
     private static Gson gson() {
@@ -174,6 +212,7 @@ public class TraktParser {
                 .registerTypeAdapter(Series.class, SERIES_ADAPTER)
                 .registerTypeAdapter(Episode.Builder.class, EPISODE_ADAPTER)
                 .registerTypeAdapter(SearchResult.class, SEARCH_RESULT_ADAPTER)
+                .registerTypeAdapter(List.class, UPDATE_METADATA_ADAPTER) //XXX (Cleber) Create a class to encapsulate UpdateMetadata
                 .create();
         }
 

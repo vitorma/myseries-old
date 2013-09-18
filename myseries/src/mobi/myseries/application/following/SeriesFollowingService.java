@@ -224,7 +224,7 @@ public class SeriesFollowingService extends ApplicationService<SeriesFollowingLi
             notifyOnStartToFollow(mSeriesToFollow);
 
             try {
-                Series followedSeries = environment().addSeriesSource().fetchSeries(mSeriesToFollow.tvdbIdAsInt());
+                Series followedSeries = environment().traktApi().fetchSeries(mSeriesToFollow.tvdbIdAsInt());
 
                 environment().seriesRepository().insert(followedSeries);
                 mImageService.downloadAndSavePosterOf(followedSeries);

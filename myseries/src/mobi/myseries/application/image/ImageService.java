@@ -5,10 +5,6 @@ import java.io.InputStream;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.ConnectionTimeoutException;
-import mobi.myseries.domain.source.ImageNotFoundException;
-import mobi.myseries.domain.source.ImageSource;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
@@ -32,24 +28,19 @@ public class ImageService {
     private final int mySchedulePosterHeight;
 
     private final ImageServiceRepository imageRepository;
-    @Deprecated
-    private final ImageSource imageSource;
 
     private final ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
     private final int mySeriesPosterWidth;
     private final int mySeriesPosterHeight;
 
     public ImageService(
-            ImageSource imageSource,
             ImageServiceRepository imageRepository,
             int mySeriesPosterWidth,
             int mySeriesPosterHeight,
             int mySchedulePosterWidth,
             int mySchedulePosterHeight) {
-        Validate.isNonNull(imageSource, "imageSource");
         Validate.isNonNull(imageRepository, "imageRepository");
 
-        this.imageSource = imageSource;
         this.imageRepository = imageRepository;
 
         this.mySeriesPosterWidth = mySeriesPosterWidth;
@@ -93,22 +84,6 @@ public class ImageService {
             this.imageRepository.saveSmallSeriesPoster(series, smallPoster);
         } catch (Exception e) {
             //TODO Log
-        }
-    }
-
-    public void downloadAndSaveBannerOf(Series series) {
-        Validate.isNonNull(series, "series");
-
-        if (Strings.isNullOrBlank(series.bannerFileName())) {
-            return;
-        }
-
-        try {
-            Bitmap fetchedBanner = this.imageSource.fetchSeriesBanner(series.bannerFileName());
-            this.imageRepository.saveSeriesBanner(series, fetchedBanner);
-        } catch (ConnectionFailedException e) {
-        } catch (ConnectionTimeoutException e) {
-        } catch (ImageNotFoundException e) {
         }
     }
 

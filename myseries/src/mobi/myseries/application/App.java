@@ -57,7 +57,6 @@ public class App extends Application {
         broadcastService = new BroadcastService(this);
 
         imageService = new ImageService(
-                environment.imageSource(),
                 environment.imageRepository(),
                 this.getResources().getDimensionPixelSize(R.dimen.myseries_poster_width),
                 this.getResources().getDimensionPixelSize(R.dimen.myseries_poster_height),

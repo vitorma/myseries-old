@@ -27,8 +27,7 @@ public class MySeriesActivity extends BaseActivity {
     protected void init(Bundle savedInstanceState) {
         if (savedInstanceState == null
                 || (savedInstanceState != null && !savedInstanceState.getBoolean(ALREADY_CHECKED_FOR_UPDATE, false))) {
-            //XXX Let UpdateService getting data from trakt and uncomment the following line
-            //App.updateSeriesService().updateDataIfNeeded();
+            App.updateSeriesService().updateDataIfNeeded();
         }
 
         this.alreadyCheckedForUpdate = true;

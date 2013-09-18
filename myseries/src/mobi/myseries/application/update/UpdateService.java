@@ -1,5 +1,6 @@
 package mobi.myseries.application.update;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,26 +19,22 @@ import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.update.exception.NetworkUnavailableException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
 import mobi.myseries.application.update.specification.SeriesIdInCollectionSpecification;
-import mobi.myseries.application.update.task.FetchUpdateMetadataTask;
 import mobi.myseries.application.update.task.UpdatePosterTask;
 import mobi.myseries.application.update.task.UpdateSeriesTask;
 import mobi.myseries.application.update.task.UpdateTask;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.CollectionFilter;
-import mobi.myseries.shared.ListenerSet;
 import android.util.Log;
 
 public class UpdateService extends ApplicationService<UpdateListener> {
     private final ImageService imageService;
-    private final ListenerSet<UpdateListener> listeners;
     private final AtomicBoolean isUpdating;
 
     public UpdateService(Environment environment, ImageService imageService) {
         super(environment);
 
         this.imageService = imageService;
-        this.listeners = new ListenerSet<UpdateListener>();
         this.isUpdating = new AtomicBoolean(false);
     }
 
@@ -163,7 +160,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : listeners) {
+                for (final UpdateListener listener : listeners()) {
                     listener.onCheckingForUpdates();
                 }
             }
@@ -177,7 +174,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : listeners) {
+                for (final UpdateListener listener : listeners()) {
                     listener.onUpdateNotNecessary();
                 }
             }
@@ -192,7 +189,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : listeners) {
+                for (final UpdateListener listener : listeners()) {
                     listener.onUpdateProgress(current, total, currentSeries);
                 }
             }
@@ -206,7 +203,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : listeners) {
+                for (final UpdateListener listener : listeners()) {
                     listener.onUpdateSuccess();
                 }
             }
@@ -222,7 +219,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : listeners) {
+                for (final UpdateListener listener : listeners()) {
                     listener.onUpdateFailure(cause);
                 }
             }
@@ -238,7 +235,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : listeners) {
+                for (final UpdateListener listener : listeners()) {
                     listener.onUpdateSeriesFailure(Collections.unmodifiableMap(causes));
                 }
             }
@@ -251,13 +248,13 @@ public class UpdateService extends ApplicationService<UpdateListener> {
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (final UpdateListener listener : listeners) {
+                for (final UpdateListener listener : listeners()) {
                     listener.onUpdateFinish();
                 }
             }
         });
 
-        this.broadcast(BroadcastAction.UPDATE); //FIXME broadcast only on success
+        this.broadcast(BroadcastAction.UPDATE); //FIXME (Cleber) broadcast only on success
     }
 
     private class UpdateTask2 implements Runnable {
@@ -325,21 +322,12 @@ public class UpdateService extends ApplicationService<UpdateListener> {
                 result.seriesWithDataToUpdate = followedSeries;
                 result.seriesWithPosterToUpdate = followedSeries;
             } else {
-                // TODO(Gabriel): SeriesSource should return all the information regarding update
-                // of series since someday at once in fetchUpdateMetadataSince
-                this.fetchUpdateMetadataSince(lastSuccessfulUpdate);
-
                 CollectionFilter<Series> withOutdatedData =
                         new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
-                                environment().seriesSource().seriesUpdateMetadata()));
-
-                CollectionFilter<Series> withOutdatedPoster =
-                        new CollectionFilter<Series>(new SeriesIdInCollectionSpecification(
-                                environment().seriesSource().posterUpdateMetadata().keySet()));
-
+                                environment().traktApi().updatedSeriesSince(lastSuccessfulUpdate)));
 
                 result.seriesWithDataToUpdate = withOutdatedData.in(followedSeries);
-                result.seriesWithPosterToUpdate = withOutdatedPoster.in(followedSeries);
+                result.seriesWithPosterToUpdate = new ArrayList<Series>();
 
                 // Series whose posters are not downloaded.
                 CollectionFilter<Series> whosePosterIsNotDownloaded =
@@ -356,25 +344,25 @@ public class UpdateService extends ApplicationService<UpdateListener> {
             return result;
         }
 
-        private void fetchUpdateMetadataSince(long lastSuccessfulUpdate) throws Exception {
-            try {
-                FetchUpdateMetadataTask fetchUpdateMetadataTask =
-                        new FetchUpdateMetadataTask(environment(), lastSuccessfulUpdate);
-
-                Future<?> future = submit(fetchUpdateMetadataTask);
-                future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
-
-                if (!fetchUpdateMetadataTask.result().success()) {
-                    throw fetchUpdateMetadataTask.result().error();
-                }
-            } catch (InterruptedException e) {
-                throw e;
-            } catch (ExecutionException e) {
-                throw (Exception) e.getCause();
-            } catch (TimeoutException e) {
-                throw new UpdateTimeoutException(e);
-            }
-        }
+//        private void fetchUpdateMetadataSince(long lastSuccessfulUpdate) throws Exception {
+//            try {
+//                FetchUpdateMetadataTask fetchUpdateMetadataTask =
+//                        new FetchUpdateMetadataTask(environment(), lastSuccessfulUpdate);
+//
+//                Future<?> future = submit(fetchUpdateMetadataTask);
+//                future.get(UpdatePolicy.updateTimeout(), UpdatePolicy.updateTimeoutUnit());
+//
+//                if (!fetchUpdateMetadataTask.result().success()) {
+//                    throw fetchUpdateMetadataTask.result().error();
+//                }
+//            } catch (InterruptedException e) {
+//                throw e;
+//            } catch (ExecutionException e) {
+//                throw (Exception) e.getCause();
+//            } catch (TimeoutException e) {
+//                throw new UpdateTimeoutException(e);
+//            }
+//        }
 
         private Map<Series, Exception> updateAllSeriesIn(WhatHasToBeUpdated whatHasToBeUpdated) {
             Set<Series> seriesToBeUpdated = whatHasToBeUpdated.seriesToBeUpdated();
