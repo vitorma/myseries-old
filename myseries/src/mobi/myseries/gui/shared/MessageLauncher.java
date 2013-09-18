@@ -8,9 +8,7 @@ import mobi.myseries.domain.repository.series.InvalidBackupVersionException;
 import mobi.myseries.domain.repository.series.InvalidDBSourceFileException;
 import mobi.myseries.domain.repository.series.NoSeriesToRestoreException;
 import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
-import mobi.myseries.domain.source.SeriesNotFoundException;
 import mobi.myseries.shared.Validate;
 import android.app.Activity;
 import android.app.Dialog;
@@ -56,25 +54,12 @@ public class MessageLauncher implements MessageServiceListener {
             this.dialogBuilder.setMessage(String.format(this.activity
                     .getString(R.string.add_connection_failed_message), series
                     .name()));
-
-        } else if (e instanceof SeriesNotFoundException) {
-            this.dialogBuilder.setMessage(String.format(
-                    this.activity.getString(R.string.add_series_not_found),
-                    series.name()));
-
         } else if (e instanceof ParsingFailedException) {
             this.dialogBuilder.setMessage(String.format(
                     this.activity.getString(R.string.parsing_failed_message),
                     series.name()));
-
-        } else if (e instanceof ConnectionTimeoutException) {
-            this.dialogBuilder.setMessage(String.format(this.activity
-                    .getString(R.string.connection_timeout_message), series
-                    .name()));
-
         } else {
             this.dialogBuilder.setMessage(e.getMessage());
-
         }
 
         Dialog dialog = this.dialogBuilder.build();

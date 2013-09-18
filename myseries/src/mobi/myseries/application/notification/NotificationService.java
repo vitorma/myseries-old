@@ -22,10 +22,7 @@ import mobi.myseries.application.update.exception.NetworkUnavailableException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ConnectionFailedException;
-import mobi.myseries.domain.source.ConnectionTimeoutException;
 import mobi.myseries.domain.source.ParsingFailedException;
-import mobi.myseries.domain.source.SeriesNotFoundException;
-import mobi.myseries.domain.source.UpdateMetadataUnavailableException;
 import android.content.Context;
 
 import com.dropbox.client2.exception.DropboxException;
@@ -194,23 +191,15 @@ public class NotificationService {
         if (e instanceof ConnectionFailedException) {
             return context.getString(R.string.update_connection_failed);
 
-        } else if (e instanceof ConnectionTimeoutException) {
-            return context.getString(R.string.update_connection_timeout);
-
         } else if (e instanceof ParsingFailedException) {
             return context.getString(R.string.update_parsing_failed);
-
-        } else if (e instanceof SeriesNotFoundException) {
-            return context.getString(R.string.update_series_not_found);
-
-        } else if (e instanceof UpdateMetadataUnavailableException) {
-            return context.getString(R.string.update_metadata_unavailable);
 
         } else if (e instanceof NetworkUnavailableException) {
             return context.getString(R.string.update_network_unavailable);
 
         } else if (e instanceof UpdateTimeoutException) {
             return context.getString(R.string.update_timeout);
+
         } else if (e instanceof UpdateTimeoutException) {
             return context.getString(R.string.update_timeout);
 
@@ -390,9 +379,6 @@ public class NotificationService {
         if (e instanceof ConnectionFailedException) {
             return context.getString(R.string.backup_connection_failed);
 
-        } else if (e instanceof ConnectionTimeoutException) {
-            return context.getString(R.string.backup_connection_timeout);
-
         } else if (e instanceof NetworkUnavailableException) {
             return context.getString(R.string.backup_network_unavailable);
 
@@ -429,8 +415,6 @@ public class NotificationService {
         if (e instanceof ConnectionFailedException) {
             return context.getString(R.string.restore_connection_failed);
 
-        } else if (e instanceof ConnectionTimeoutException) {
-            return context.getString(R.string.restore_connection_timeout);
 
         } else if (e instanceof NetworkUnavailableException) {
             return context.getString(R.string.restore_network_unavailable);

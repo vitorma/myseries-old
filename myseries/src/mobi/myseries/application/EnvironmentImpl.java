@@ -6,8 +6,8 @@ import mobi.myseries.application.image.ImageServiceRepository;
 import mobi.myseries.domain.repository.series.SeriesCache;
 import mobi.myseries.domain.repository.series.SeriesDatabase;
 import mobi.myseries.domain.repository.series.SeriesRepository;
-import mobi.myseries.domain.source.trakttv.Trakt;
-import mobi.myseries.domain.source.trakttv.TraktApi;
+import mobi.myseries.domain.source.Trakt;
+import mobi.myseries.domain.source.TraktApi;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 

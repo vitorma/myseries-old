@@ -1,4 +1,4 @@
-package mobi.myseries.domain.source.trakttv;
+package mobi.myseries.domain.source;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -11,7 +11,6 @@ import java.util.List;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
