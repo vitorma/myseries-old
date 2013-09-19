@@ -10,7 +10,6 @@ import mobi.myseries.gui.update.UpdateActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -25,8 +24,17 @@ public class MySeriesActivity extends BaseActivity {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        if (savedInstanceState == null
-                || (savedInstanceState != null && !savedInstanceState.getBoolean(ALREADY_CHECKED_FOR_UPDATE, false))) {
+        //FIXME (Cleber) This boolean expression is always being evaluated as true. =/
+        //                    savedInstanceState == null
+        //                The onSaveInstanceState method isn't always called when an activity is being placed in the background.
+        //
+        //                From the official documentation:
+        //                The onSaveInstanceState method is called before an activity may be killed so that when it comes back some time in
+        //                the future it can restore its state. For example, if activity B is launched in front of activity A, and at
+        //                some point activity A is killed to reclaim resources, activity A will have a chance to save the current state of
+        //                its user interface via this method so that when the user returns to activity A, the state of the user interface
+        //                can be restored via onCreate(Bundle) or onRestoreInstanceState(Bundle).
+        if (savedInstanceState == null || !savedInstanceState.getBoolean(ALREADY_CHECKED_FOR_UPDATE, false)) {
             App.updateSeriesService().updateDataIfNeeded();
         }
 
@@ -52,11 +60,6 @@ public class MySeriesActivity extends BaseActivity {
     @Override
     protected boolean isTopLevel() {
         return true;
-    }
-
-    @Override
-    protected Intent navigateUpIntent() {
-        return NavUtils.getParentActivityIntent(this);
     }
 
     @Override

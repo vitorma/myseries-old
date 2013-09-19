@@ -33,7 +33,7 @@ public class ActionBar {
 
     private PendingIntent homeIntentFrom(int appWidgetId) {
         Intent intent = MySeriesActivity.newIntent(this.context);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         return PendingIntent.getActivity(this.context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -42,7 +42,7 @@ public class ActionBar {
         int scheduleMode = App.preferences().forScheduleWidget(appWidgetId).scheduleMode();
 
         Intent intent = MyScheduleActivity.newIntent(this.context, scheduleMode);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
         return PendingIntent.getActivity(this.context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -50,6 +50,7 @@ public class ActionBar {
 
     private PendingIntent preferencesIntentFrom(int appWidgetId) {
         Intent intent = ScheduleWidgetPreferenceActivity.newIntent(this.context, appWidgetId);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         return PendingIntent.getActivity(this.context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }

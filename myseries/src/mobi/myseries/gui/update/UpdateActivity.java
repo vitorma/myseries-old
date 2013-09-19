@@ -49,12 +49,7 @@ public class UpdateActivity extends BaseActivity {
 
     @Override
     protected boolean isTopLevel() {
-        return false; // TODO(Cleber): It should be top level some day.
-    }
-
-    @Override
-    protected Intent navigateUpIntent() {
-        return NavUtils.getParentActivityIntent(this);
+        return false;
     }
 
     private Button updateButton;

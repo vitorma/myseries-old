@@ -27,7 +27,6 @@ import mobi.myseries.gui.activity.base.TabDefinition;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 
 public class AddSeriesActivity extends TabActivity {
     private static final int TRENDING_TAB = 0;
@@ -47,11 +46,6 @@ public class AddSeriesActivity extends TabActivity {
     @Override
     protected boolean isTopLevel() {
         return false;
-    }
-
-    @Override
-    protected Intent navigateUpIntent() {
-        return NavUtils.getParentActivityIntent(this);
     }
 
     @Override

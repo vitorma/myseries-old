@@ -27,11 +27,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MyStatisticsFragment extends Fragment {
-
-    private BackupListener backupListener;
     private TextView episodesWatched;
     private ProgressBar episodesWatchedProgressBar;
-    private SeriesFollowingListener followListener;
     private TextView numberOfEpisodes;
     private TextView numberOfSeasons;
     private TextView numberOfSeries;
@@ -39,38 +36,37 @@ public class MyStatisticsFragment extends Fragment {
     private ProgressBar seasonsWatchedProgressBar;
     private TextView seriesWatched;
     private ProgressBar seriesWatchedProgressBar;
-    private UpdateListener updateListener;
     private TextView watchedRuntime;
     private ProgressBar timeOfWatchedEpisodesProgressBar;
-    private OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
     private TextView hours;
     private TextView minutes;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
         super.onActivityCreated(savedInstanceState);
 
         this.prepareViews();
-
-        this.setupFollowingSeriesListener();
-        this.setupUpdateListener();
-        this.setupBackupListener();
-        this.setupPreferencesListener();
-
         this.update();
     }
 
-    private void setupPreferencesListener() {
-        this.onSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                MyStatisticsFragment.this.update();
-            }
-        };
+    @Override
+    public void onStart() {
+        super.onStart();
 
-        App.preferences().forActivities().register(this.onSharedPreferenceChangeListener);
+        App.preferences().forActivities().register(mOnSharedPreferenceChangeListener);
+        App.seriesFollowingService().register(this.mSeriesFollowingListener);
+        App.updateSeriesService().register(this.mUpdateListener);
+        App.backupService().register(this.mBackupListener);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        App.preferences().forActivities().deregister(mOnSharedPreferenceChangeListener);
+        App.seriesFollowingService().deregister(this.mSeriesFollowingListener);
+        App.updateSeriesService().deregister(this.mUpdateListener);
+        App.backupService().deregister(this.mBackupListener);
     }
 
     @Override
@@ -95,13 +91,13 @@ public class MyStatisticsFragment extends Fragment {
         this.episodesWatched = (TextView) this.getActivity().findViewById(R.id.episodesWatched);
 
         this.seriesWatchedProgressBar = (ProgressBar) this.getActivity()
-            .findViewById(R.id.seriesWatchedProgressBar);
+                .findViewById(R.id.seriesWatchedProgressBar);
         this.seasonsWatchedProgressBar = (ProgressBar) this.getActivity()
-            .findViewById(R.id.seasonsWatchedProgressBar);
+                .findViewById(R.id.seasonsWatchedProgressBar);
         this.episodesWatchedProgressBar = (ProgressBar) this.getActivity()
-            .findViewById(R.id.episodesWatchedProgressBar);
+                .findViewById(R.id.episodesWatchedProgressBar);
         this.timeOfWatchedEpisodesProgressBar = (ProgressBar) this.getActivity()
-            .findViewById(R.id.timeOfEpisodesWatchedProgressBar);
+                .findViewById(R.id.timeOfEpisodesWatchedProgressBar);
 
         this.watchedRuntime = (TextView) this.getActivity().findViewById(R.id.watchedRuntime);
 
@@ -109,90 +105,75 @@ public class MyStatisticsFragment extends Fragment {
         this.minutes = (TextView) this.getActivity().findViewById(R.id.minutes);
     }
 
-    private void setupBackupListener() {
-        this.backupListener = new BackupListener() {
-            @Override
-            public void onBackupFailure(BackupMode mode, Exception e) {
-                // I'm not interested }
-            }
+    private OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            update();
+        }
+    };
 
-            @Override
-            public void onBackupSucess() {
-                // I'm not interested
-            }
+    private SeriesFollowingListener mSeriesFollowingListener = new BaseSeriesFollowingListener() {
+        @Override
+        public void onSuccessToFollow(Series followedSeries) {
+            update();
+        }
 
-            @Override
-            public void onRestoreFailure(BackupMode mode, Exception e) {
-                MyStatisticsFragment.this.update();
-            }
+        @Override
+        public void onSuccessToUnfollow(Series unfollowedSeries) {
+            update();
+        }
 
-            @Override
-            public void onRestoreSucess() {
-                MyStatisticsFragment.this.update();
-            }
+        @Override
+        public void onSuccessToUnfollowAll(Collection<Series> allUnfollowedSeries) {
+            update();
+        }
+    };
 
-            @Override
-            public void onStart() {
-                // I'm not interested
-            }
+    private UpdateListener mUpdateListener = new BaseUpdateListener() {
+        @Override
+        public void onUpdateFinish() {
+            update();
+        }
+    };
 
-            @Override
-            public void onBackupCompleted(BackupMode mode) {
-                // I'm not interested
-            }
+    //XXX (Cleber) Create class BaseBackupListener, extend it here and override just the needed methods
+    private BackupListener mBackupListener = new BackupListener() {
+        @Override
+        public void onBackupFailure(BackupMode mode, Exception e) { }
 
-            @Override
-            public void onBackupRunning(BackupMode mode) {
-                // I'm not interested
-            }
+        @Override
+        public void onBackupSucess() { }
 
-            @Override
-            public void onRestoreRunning(BackupMode mode) {
-                // TODO Auto-generated method stub
+        @Override
+        public void onRestoreFailure(BackupMode mode, Exception e) {
+            update();
+        }
 
-            }
+        @Override
+        public void onRestoreSucess() {
+            update();
+        }
 
-            @Override
-            public void onRestoreCompleted(BackupMode mode) {
-                MyStatisticsFragment.this.update();
-            }
-        };
+        @Override
+        public void onStart() { }
 
-        App.backupService().register(this.backupListener);
-    }
+        @Override
+        public void onBackupCompleted(BackupMode mode) { }
 
-    private void setupFollowingSeriesListener() {
-        this.followListener = new BaseSeriesFollowingListener() {
-            @Override
-            public void onSuccessToFollow(Series followedSeries) {
-                MyStatisticsFragment.this.update();
-            }
+        @Override
+        public void onBackupRunning(BackupMode mode) { }
 
-            @Override
-            public void onSuccessToUnfollow(Series unfollowedSeries) {
-                MyStatisticsFragment.this.update();
-            }
+        @Override
+        public void onRestoreRunning(BackupMode mode) { }
 
-            @Override
-            public void onSuccessToUnfollowAll(Collection<Series> allUnfollowedSeries) {
-                MyStatisticsFragment.this.update();
-            }
-        };
+        @Override
+        public void onRestoreCompleted(BackupMode mode) {
+            update();
+        }
+    };
 
-        App.seriesFollowingService().register(this.followListener);
-    }
-
-    private void setupUpdateListener() {
-        this.updateListener = new BaseUpdateListener() {
-            @Override
-            public void onUpdateFinish() {
-                MyStatisticsFragment.this.update();
-            }
-        };
-
-        App.updateSeriesService().register(this.updateListener);
-    }
-
+    //XXX (Cleber) Execute this method asynchronously
+    //TODO (Cleber) Break this method, please
     private void update() {
         MyStatisticsPreferences preferences = App.preferences().forMyStatistics();
 

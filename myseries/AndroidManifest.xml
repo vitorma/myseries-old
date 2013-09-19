@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mobi.myseries"
     android:versionCode="1"
@@ -23,70 +24,68 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app"
         android:theme="@style/MySeriesTheme" >
+
+        <!-- Activities -->
+
         <activity
             android:name=".gui.myseries.MySeriesActivity"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
-            android:configChanges="orientation|keyboard"
-            android:launchMode="singleTask" >
-            <intent-filter>
 
-                <!-- Change this to be db- followed by your app key -->
-                <data android:scheme="db-16plq57cyv3mxdb" />
+        <activity android:name=".gui.myschedule.MyScheduleActivity" />
 
-                <action android:name="android.intent.action.VIEW" />
+        <activity android:name="mobi.myseries.gui.mystatistics.MyStatisticsActivity" />
 
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".gui.myschedule.MyScheduleActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity" />
-        </activity>
-        <activity android:name="mobi.myseries.gui.mystatistics.MyStatisticsActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity" />
-        </activity>
         <activity android:name=".gui.addseries.AddSeriesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
         </activity>
+
         <activity android:name=".gui.update.UpdateActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
         </activity>
+
         <activity android:name=".gui.backup.BackupActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
         </activity>
+
         <activity android:name=".gui.series.SeriesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.myseries.MySeriesActivity" />
         </activity>
-        <activity android:name="mobi.myseries.gui.episodes.EpisodesActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity" />
-        </activity>
+
+        <activity android:name="mobi.myseries.gui.episodes.EpisodesActivity" />
+
         <activity android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.dropbox.client2.android.AuthActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <!-- Change this to be db- followed by your app key -->
+                <data android:scheme="db-16plq57cyv3mxdb" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Broadcast Receivers -->
 
         <receiver
             android:name="mobi.myseries.gui.appwidget.ScheduleWidget"
@@ -107,16 +106,20 @@
             <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.REMOVAL" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/schedulewidget_info" />
         </receiver>
 
+        <!-- Services -->
+
         <service
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <service android:name="mobi.myseries.gui.appwidget.TabService" />
+
+        <service
+            android:name="mobi.myseries.gui.appwidget.TabService" />
+
     </application>
 
 </manifest>

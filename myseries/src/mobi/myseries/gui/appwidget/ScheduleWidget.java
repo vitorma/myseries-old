@@ -40,9 +40,16 @@ public class ScheduleWidget extends AppWidgetProvider {
         return ScheduleWidgetViewsService.newIntent(context, appWidgetId);
     }
 
+    //XXX (Cleber) This method does not provide the right navigation. It will work as expected when MySchedule
+    //             is redesigned for showing both lists and details of episodes.
     private static PendingIntent episodesIntentTemplateFrom(Context context, int appWidgetId) {
-        Intent intent = new Intent(context, EpisodesActivity.class);
+        //XXX (Cleber) Uncomment the following lines and delete the duplicated declaration of intent.
+//        int scheduleMode = App.preferences().forScheduleWidget(appWidgetId).scheduleMode();
+//        Intent intent = MyScheduleActivity
+//                .newIntent(context, scheduleMode, seriesId, seasonNumber, episodeNumber)
+//                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        Intent intent = new Intent(context, EpisodesActivity.class);
         return PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 

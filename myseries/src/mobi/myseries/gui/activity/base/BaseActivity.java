@@ -13,7 +13,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
@@ -23,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 //TODO (Cleber) Clean up: extract methods, objects, etc.
-
 public abstract class BaseActivity extends Activity {
     private static final int MENU_ITEM_MYSERIES = 0;
     private static final int MENU_ITEM_MYSCHEDULE = 1;
@@ -88,7 +86,10 @@ public abstract class BaseActivity extends Activity {
     protected abstract CharSequence title();
     protected abstract int layoutResource();
     protected abstract boolean isTopLevel();
-    protected abstract Intent navigateUpIntent();
+
+    protected Intent upIntent() {
+        return NavUtils.getParentActivityIntent(this).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    }
 
     protected CharSequence titleForSideMenu() {
         return "";
@@ -105,16 +106,9 @@ public abstract class BaseActivity extends Activity {
                 if (this.isTopLevel()) {
                     return this.mDrawerToggle.onOptionsItemSelected(item);
                 } else {
-                    final Intent upIntent = navigateUpIntent();
-                    if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                        TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
-                    } else {
-                        NavUtils.navigateUpTo(this, upIntent);
-                    }
-
+                    NavUtils.navigateUpTo(this, upIntent());
                     return true;
                 }
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -136,21 +130,28 @@ public abstract class BaseActivity extends Activity {
         switch (position) {
             case MENU_ITEM_MYSERIES:
                 if (this.getClass() != MySeriesActivity.class) {
-                    this.startActivity(MySeriesActivity.newIntent(this));
+                    this.startActivity(topActivityIntentFrom(MySeriesActivity.newIntent(this)));
                 }
                 break;
             case MENU_ITEM_MYSCHEDULE:
                 if (this.getClass() != MyScheduleActivity.class) {
-                    this.startActivity(MyScheduleActivity.newIntent(this, ScheduleMode.TO_WATCH));
+                    this.startActivity(topActivityIntentFrom(MyScheduleActivity.newIntent(this, ScheduleMode.TO_WATCH)));
                 }
                 break;
             case MENU_ITEM_MYSTATISTICS:
-                this.startActivity(MyStatisticsActivity.newIntent(this));
+            default:
+                if (this.getClass() != MyStatisticsActivity.class) {
+                    this.startActivity(topActivityIntentFrom(MyStatisticsActivity.newIntent(this)));
+                }
                 break;
         }
 
         this.mDrawerList.setItemChecked(position, true);
         this.mDrawerLayout.closeDrawer(this.mDrawerList);
+    }
+
+    private Intent topActivityIntentFrom(Intent intent) {
+        return intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     //TODO (Cleber) Remove all the code below ASAP -----------------------------------------------------------------------------------------

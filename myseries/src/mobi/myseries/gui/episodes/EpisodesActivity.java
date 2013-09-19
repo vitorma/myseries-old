@@ -85,8 +85,10 @@ public class EpisodesActivity extends BaseActivity
     }
 
     @Override
-    protected Intent navigateUpIntent() {
-        return SeriesActivity.newIntent(this, series.id()).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    protected Intent upIntent() {
+        return SeriesActivity
+                .newIntent(this, series.id())
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
     }
 
     @Override

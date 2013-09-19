@@ -148,25 +148,25 @@ public class BackupActivity extends TabActivity{
             @Override
             public void onBackupCompleted(BackupMode mode) {
                 // TODO Auto-generated method stub
-                
+
             }
 
             @Override
             public void onBackupRunning(BackupMode mode) {
                 // TODO Auto-generated method stub
-                
+
             }
 
             @Override
             public void onRestoreRunning(BackupMode mode) {
                 // TODO Auto-generated method stub
-                
+
             }
 
             @Override
             public void onRestoreCompleted(BackupMode mode) {
                 // TODO Auto-generated method stub
-                
+
             }
 
         };
@@ -365,11 +365,6 @@ public class BackupActivity extends TabActivity{
     @Override
     protected boolean isTopLevel() {
         return false;
-    }
-
-    @Override
-    protected Intent navigateUpIntent() {
-        return NavUtils.getParentActivityIntent(this);
     }
 
     @Override
