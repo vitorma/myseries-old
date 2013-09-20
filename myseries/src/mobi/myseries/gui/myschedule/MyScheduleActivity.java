@@ -10,11 +10,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
+//TODO Remove this inheritance
 public class MyScheduleActivity extends TabActivity {
 
+    /* Intents */
+
     public static Intent newIntent(Context context, int scheduleMode) {
-        return new Intent(context, MyScheduleActivity.class).putExtra(Extra.SCHEDULE_MODE, scheduleMode);
+        return new Intent(context, MyScheduleActivity.class)
+            .putExtra(Extra.SCHEDULE_MODE, scheduleMode);
     }
+
+    public static Intent newIntent(Context context, int scheduleMode, int seriesId, int seasonNumber, int episodeNumber) {
+        return new Intent(context, MyScheduleActivity.class)
+            .putExtra(Extra.SCHEDULE_MODE, scheduleMode)
+            .putExtra(Extra.SERIES_ID, seriesId)
+            .putExtra(Extra.SEASON_NUMBER, seasonNumber)
+            .putExtra(Extra.EPISODE_NUMBER, episodeNumber);
+    }
+
+    /* Menu */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -38,8 +52,14 @@ public class MyScheduleActivity extends TabActivity {
         return true;
     }
 
+    /* BaseActivity */
+
     @Override
-    protected void init(Bundle savedInstanceState) { /* There's nothing to initialize */ }
+    protected void init(Bundle savedInstanceState) {
+        this.extractExtras(savedInstanceState);
+        this.setUpDescendantNavigation();
+        this.setUpFragments(savedInstanceState);
+    }
 
     @Override
     protected CharSequence title() {
@@ -56,6 +76,8 @@ public class MyScheduleActivity extends TabActivity {
         return this.getText(R.string.nav_schedule);
     }
 
+    /* TabActivity */
+
     @Override
     protected TabDefinition[] tabDefinitions() {
         return new TabDefinition[] {
@@ -68,5 +90,23 @@ public class MyScheduleActivity extends TabActivity {
     @Override
     protected int defaultSelectedTab() {
         return this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
+    }
+
+    /* TODO */
+
+    private void extractExtras(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+    }
+
+    private void setUpDescendantNavigation() {
+        // TODO Auto-generated method stub
+    }
+
+    private void setUpFragments(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+    }
+
+    private boolean isDualPane() {
+        return this.getResources().getBoolean(R.bool.isTablet);
     }
 }
