@@ -5,8 +5,8 @@ import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.activity.base.BaseActivity;
-import mobi.myseries.gui.episodes.EpisodeListFragment.EpisodeListFragmentListener;
-import mobi.myseries.gui.episodes.EpisodePagerFragment.EpisodePagerFragmentListener;
+import mobi.myseries.gui.episodes.EpisodeListFragment.OnSelectItemListener;
+import mobi.myseries.gui.episodes.EpisodePagerFragment.OnSelectPageListener;
 import mobi.myseries.gui.series.SeriesActivity;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SortMode;
@@ -24,7 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class EpisodesActivity extends BaseActivity
-        implements OnNavigationListener, EpisodeListFragmentListener, EpisodePagerFragmentListener, OnSharedPreferenceChangeListener {
+        implements OnNavigationListener, OnSelectItemListener, OnSelectPageListener, OnSharedPreferenceChangeListener {
 
     private static final String EPISODE_LIST_FRAGMENT = "episodeListFragment";
     private static final String EPISODE_PAGER_FRAGMENT = "episodePagerFragment";
@@ -35,6 +35,20 @@ public class EpisodesActivity extends BaseActivity
 
     private static final int INVALID_EPISODE_NUMBER = -1;
     private static final int NATURAL_FIRST_POSITION = 0;
+
+    private Series series;
+    private int seasonNumber;
+    private int episodeNumber;
+    private int sortMode;
+    private boolean isShowingListFragment;
+    private boolean isShowingPagerFragment;
+
+    private SeasonSpinnerAdapter spinnerAdapter;
+
+    private EpisodeListFragment listFragment;
+    private EpisodePagerFragment pagerFragment;
+
+    /* Intents */
 
     public static Intent newIntent(Context context, int seriesId, int seasonNumber) {
         return newIntent(context, seriesId, seasonNumber, INVALID_EPISODE_NUMBER);
@@ -50,46 +64,7 @@ public class EpisodesActivity extends BaseActivity
         return intent;
     }
 
-    private Series series;
-    private int seasonNumber;
-    private int episodeNumber;
-    private int sortMode;
-    private boolean isShowingListFragment;
-    private boolean isShowingPagerFragment;
-
-    private SeasonSpinnerAdapter spinnerAdapter;
-
-    private EpisodeListFragment listFragment;
-    private EpisodePagerFragment pagerFragment;
-
-    @Override
-    protected void init(Bundle savedInstanceState) {
-        this.extractExtras(savedInstanceState);
-        this.setUpActionBarToFilterEpisodesBySeason();
-        this.setUpFragments(savedInstanceState);
-    }
-
-    @Override
-    protected CharSequence title() {
-        return "";
-    }
-
-    @Override
-    protected int layoutResource() {
-        return R.layout.episodes_activity;
-    }
-
-    @Override
-    protected boolean isTopLevel() {
-        return false;
-    }
-
-    @Override
-    protected Intent upIntent() {
-        return SeriesActivity
-                .newIntent(this, series.id())
-                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    }
+    /* Menu */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,15 +97,38 @@ public class EpisodesActivity extends BaseActivity
         }
     }
 
-    private void showSortingDialog() {
-        Season season = this.series.season(this.seasonNumber);
+    /* BaseActivity */
 
-        if (season.episodes().isEmpty()) {
-            new ToastBuilder(this).setMessage(R.string.no_episodes_to_sort).build().show();
-        } else {
-            new EpisodeSortingDialogFragment().show(this.getFragmentManager(), EPISODE_SORTING_DIALOG_FRAGMENT);
-        }
+    @Override
+    protected void init(Bundle savedInstanceState) {
+        this.extractExtras(savedInstanceState);
+        this.setUpActionBarToFilterEpisodesBySeason();
+        this.setUpFragments(savedInstanceState);
     }
+
+    @Override
+    protected CharSequence title() {
+        return "";
+    }
+
+    @Override
+    protected int layoutResource() {
+        return R.layout.episodes_activity;
+    }
+
+    @Override
+    protected boolean isTopLevel() {
+        return false;
+    }
+
+    @Override
+    protected Intent upIntent() {
+        return SeriesActivity
+                .newIntent(this, series.id())
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    }
+
+    /* Activity */
 
     @Override
     protected void onStart() {
@@ -157,6 +155,115 @@ public class EpisodesActivity extends BaseActivity
         outState.putBoolean(EXTRA_SHOW_PAGER_FRAGMENT, this.isShowingPagerFragment);
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.shouldGoBackToListFragment()) {
+            this.isShowingListFragment = true;
+            this.isShowingPagerFragment = false;
+
+            this.listFragment = EpisodeListFragment.newInstance(this.series.id(), this.seasonNumber, this.validEpisodeNumber());
+
+            FragmentTransaction ft = this.getFragmentManager().beginTransaction();
+            ft.replace(this.listFragmentContainerId(), this.listFragment, EPISODE_LIST_FRAGMENT);
+            ft.commit();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    /* SharedPreferences.OnSharedPreferenceChangeListener */
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        int newSortMode = App.preferences().forEpisodes().sortMode();
+
+        if (this.sortMode == newSortMode) { return; }
+
+        this.sortMode = newSortMode;
+
+        if (this.isShowingListFragment) {
+            this.listFragment.update(this.series.season(this.seasonNumber));
+        }
+
+        if (this.isShowingPagerFragment) {
+            this.pagerFragment.update(this.series.season(this.seasonNumber));
+        }
+    }
+
+    /* ActionBar.OnNavigationListener */
+
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        int newSeasonNumber = (int) itemId;
+
+        if (this.seasonNumber == newSeasonNumber) { return true; }
+
+        this.seasonNumber = newSeasonNumber;
+        this.episodeNumber = this.firstEpisodeNumber();
+
+        if (this.isShowingListFragment) {
+            this.listFragment.update(this.series.season(this.seasonNumber), this.episodeNumber);
+        } else {
+            Log.d("EpisodesActivity", "List fragment is not shown");
+        }
+
+        if (this.isShowingPagerFragment) {
+            this.pagerFragment.update(this.series.season(this.seasonNumber), this.episodeNumber);
+        } else {
+            Log.d("EpisodesActivity", "Pager fragment is not shown");
+        }
+
+        return true;
+    }
+
+    /* EpisodeListFragment.OnSelectItemListener */
+
+    @Override
+    public void onSelectItem(int position) {
+        if (this.isShowingPagerFragment) {
+            if (this.shouldSelect(position)) {
+                this.episodeNumber = this.episodeNumber(position);
+                this.pagerFragment.selectPage(position);
+            }
+        } else {
+            this.isShowingListFragment = false;
+            this.isShowingPagerFragment = true;
+
+            this.pagerFragment = EpisodePagerFragment.newInstance(this.series.id(), this.seasonNumber, this.episodeNumber(position));
+
+            FragmentTransaction ft = this.getFragmentManager().beginTransaction();
+            ft.replace(this.pagerFragmentContainerId(), this.pagerFragment, EPISODE_PAGER_FRAGMENT);
+            ft.commit();
+        }
+    }
+
+    @Override
+    public boolean shouldHighlightSelectedItem() {
+        return this.isDualPane();
+    }
+
+    /* EpisodePagerFragment.OnSelectPageListener */
+
+    @Override
+    public void onSelectPage(int position) {
+        if (this.isShowingListFragment && this.shouldSelect(position)) {
+            this.episodeNumber = this.episodeNumber(position);
+            this.listFragment.selectItem(position);
+        }
+    }
+
+    /* Auxiliary */
+
+    private void showSortingDialog() {
+        Season season = this.series.season(this.seasonNumber);
+
+        if (season.episodes().isEmpty()) {
+            new ToastBuilder(this).setMessage(R.string.no_episodes_to_sort).build().show();
+        } else {
+            new EpisodeSortingDialogFragment().show(this.getFragmentManager(), EPISODE_SORTING_DIALOG_FRAGMENT);
+        }
     }
 
     private void extractExtras(Bundle savedInstanceState) {
@@ -189,30 +296,6 @@ public class EpisodesActivity extends BaseActivity
         this.getActionBar().setSelectedNavigationItem(this.series.seasons().positionOf(this.seasonNumber));
     }
 
-    @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        int newSeasonNumber = (int) itemId;
-
-        if (this.seasonNumber == newSeasonNumber) { return true; }
-
-        this.seasonNumber = newSeasonNumber;
-        this.episodeNumber = this.firstEpisodeNumber();
-
-        if (this.isShowingListFragment) {
-            this.listFragment.update(this.series.season(this.seasonNumber), this.episodeNumber);
-        } else {
-            Log.d("EpisodesActivity", "List fragment is not shown");
-        }
-
-        if (this.isShowingPagerFragment) {
-            this.pagerFragment.update(this.series.season(this.seasonNumber), this.episodeNumber);
-        } else {
-            Log.d("EpisodesActivity", "Pager fragment is not shown");
-        }
-
-        return true;
-    }
-
     private void setUpFragments(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             FragmentTransaction ft = this.getFragmentManager().beginTransaction();
@@ -234,73 +317,8 @@ public class EpisodesActivity extends BaseActivity
         }
     }
 
-    @Override
-    public void onSelectListItem(int position) {
-        if (this.isShowingPagerFragment) {
-            if (this.shouldSelect(position)) {
-                this.episodeNumber = this.episodeNumber(position);
-                this.pagerFragment.selectPage(position);
-            }
-        } else {
-            this.isShowingListFragment = false;
-            this.isShowingPagerFragment = true;
-
-            this.pagerFragment = EpisodePagerFragment.newInstance(this.series.id(), this.seasonNumber, this.episodeNumber(position));
-
-            FragmentTransaction ft = this.getFragmentManager().beginTransaction();
-            ft.replace(this.pagerFragmentContainerId(), this.pagerFragment, EPISODE_PAGER_FRAGMENT);
-            ft.commit();
-        }
-    }
-
-    @Override
-    public boolean shouldHighlightSelectedItem() {
-        return this.isDualPane();
-    }
-
-    @Override
-    public void onSelectPage(int position) {
-        if (this.isShowingListFragment && this.shouldSelect(position)) {
-            this.episodeNumber = this.episodeNumber(position);
-            this.listFragment.selectItem(position);
-        }
-    }
-
     private boolean shouldSelect(int position) {
         return !this.hasValidEpisodeNumber() || position != this.positionOfCurrentEpisode();
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        int newSortMode = App.preferences().forEpisodes().sortMode();
-
-        if (this.sortMode == newSortMode) { return; }
-
-        this.sortMode = newSortMode;
-
-        if (this.isShowingListFragment) {
-            this.listFragment.update(this.series.season(this.seasonNumber));
-        }
-
-        if (this.isShowingPagerFragment) {
-            this.pagerFragment.update(this.series.season(this.seasonNumber));
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (this.shouldGoBackToListFragment()) {
-            this.isShowingListFragment = true;
-            this.isShowingPagerFragment = false;
-
-            this.listFragment = EpisodeListFragment.newInstance(this.series.id(), this.seasonNumber, this.validEpisodeNumber());
-
-            FragmentTransaction ft = this.getFragmentManager().beginTransaction();
-            ft.replace(this.listFragmentContainerId(), this.listFragment, EPISODE_LIST_FRAGMENT);
-            ft.commit();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     private boolean shouldGoBackToListFragment() {
@@ -313,7 +331,7 @@ public class EpisodesActivity extends BaseActivity
         return this.getIntent().getExtras().getInt(Extra.EPISODE_NUMBER) == INVALID_EPISODE_NUMBER;
     }
 
-    public boolean isDualPane() {
+    private boolean isDualPane() {
         return this.getResources().getBoolean(R.bool.isTablet);
     }
 

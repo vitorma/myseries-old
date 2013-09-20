@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 public class EpisodePagerFragment extends Fragment implements OnPageChangeListener {
 
-    public static interface EpisodePagerFragmentListener {
+    public static interface OnSelectPageListener {
         public void onSelectPage(int position);
     }
 
@@ -35,7 +35,7 @@ public class EpisodePagerFragment extends Fragment implements OnPageChangeListen
 
     private Season season;
     private int episodeNumber;
-    private EpisodePagerFragmentListener listener;
+    private OnSelectPageListener listener;
 
     private EpisodePagerAdapter adapter;
     private ViewPager pager;
@@ -45,7 +45,7 @@ public class EpisodePagerFragment extends Fragment implements OnPageChangeListen
         super.onAttach(activity);
 
         try {
-            this.listener = (EpisodePagerFragmentListener) activity;
+            this.listener = (OnSelectPageListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EpisodePagerFragmentListener");
         }

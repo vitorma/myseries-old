@@ -12,8 +12,8 @@ import android.widget.ListView;
 
 public class EpisodeListFragment extends ListFragment {
 
-    public static interface EpisodeListFragmentListener {
-        public void onSelectListItem(int position);
+    public static interface OnSelectItemListener {
+        public void onSelectItem(int position);
         public boolean shouldHighlightSelectedItem();
     }
 
@@ -32,14 +32,14 @@ public class EpisodeListFragment extends ListFragment {
     private Season season;
     private int episodeNumber;
     private EpisodeListAdapter adapter;
-    private EpisodeListFragmentListener listener;
+    private OnSelectItemListener listener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
-            this.listener = (EpisodeListFragmentListener) activity;
+            this.listener = (OnSelectItemListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EpisodeListFragmentListener");
         }
@@ -101,7 +101,7 @@ public class EpisodeListFragment extends ListFragment {
         this.episodeNumber = this.adapter.episodeAt(position).number();
 
         this.checkItem(position);
-        this.listener.onSelectListItem(position);
+        this.listener.onSelectItem(position);
     }
 
     private void checkItem(int position) {

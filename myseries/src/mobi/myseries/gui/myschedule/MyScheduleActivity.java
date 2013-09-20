@@ -12,12 +12,22 @@ import android.view.Menu;
 
 //TODO Remove this inheritance
 public class MyScheduleActivity extends TabActivity {
+    private static final String SCHEDULE_MASTER_FRAGMENT = "scheduleMasterFragment";
+    private static final String SCHEDULE_DETAIL_FRAGMENT = "scheduleDetailFragment";
+    private static final String EPISODE_SORTING_DIALOG_FRAGMENT = "episodeSortingDialogFragment";
+
+    private static final String EXTRA_SHOW_LIST_FRAGMENT = "showEpisodeListFragment";
+    private static final String EXTRA_SHOW_PAGER_FRAGMENT = "showEpisodePagerFragment";
+
+    private static final int INVALID_SERIES_ID = -1;
+    private static final int INVALID_SEASON_NUMBER = -1;
+    private static final int INVALID_EPISODE_NUMBER = -1;
+    private static final int NATURAL_FIRST_POSITION = 0;
 
     /* Intents */
 
     public static Intent newIntent(Context context, int scheduleMode) {
-        return new Intent(context, MyScheduleActivity.class)
-            .putExtra(Extra.SCHEDULE_MODE, scheduleMode);
+        return newIntent(context, scheduleMode, INVALID_SERIES_ID, INVALID_SEASON_NUMBER, INVALID_EPISODE_NUMBER);
     }
 
     public static Intent newIntent(Context context, int scheduleMode, int seriesId, int seasonNumber, int episodeNumber) {
@@ -105,6 +115,8 @@ public class MyScheduleActivity extends TabActivity {
     private void setUpFragments(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
     }
+
+    /* Dual Pane */
 
     private boolean isDualPane() {
         return this.getResources().getBoolean(R.bool.isTablet);
