@@ -7,9 +7,11 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
+import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Strings;
@@ -26,7 +28,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class OverviewFragment extends Fragment {
-    private static final ImageService IMAGE_SERVICE = App.imageService();
+    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
 
     private int seriesId;
 
@@ -114,13 +116,12 @@ public class OverviewFragment extends Fragment {
                     seriesActors.setText(series.actors());
                 }
 
-                Bitmap poster = IMAGE_SERVICE.getPosterOf(series);
-                Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
-                Bitmap ensuredPoster = Objects.nullSafe(poster, genericPoster);
-
                 ImageView seriesPoster = (ImageView) getActivity().findViewById(R.id.seriesPosterImageView);
-                seriesPoster.setImageBitmap(ensuredPoster);
-
+                AsyncImageLoader.loadBitmapOn(
+                        new PosterFetchingMethod(series, App.imageService()),
+                        GENERIC_POSTER,
+                        seriesPoster);
+                
                 boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
 
                 if (isTablet) {

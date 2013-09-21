@@ -32,8 +32,10 @@ import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
+import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.ListenerSet;
@@ -133,8 +135,10 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     }
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
-        Bitmap seriesPoster = App.imageService().getSmallPosterOf(series);
-        viewHolder.poster.setImageBitmap(Objects.nullSafe(seriesPoster, GENERIC_POSTER));
+        AsyncImageLoader.loadBitmapOn(
+                new PosterFetchingMethod(series, App.imageService()),
+                GENERIC_POSTER,
+                viewHolder.poster);
 
         viewHolder.seriesName.setText(series.name());
 
