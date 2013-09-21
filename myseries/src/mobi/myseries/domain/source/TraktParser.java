@@ -7,14 +7,17 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.WeekDay;
+import mobi.myseries.shared.WeekTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,14 +44,11 @@ public class TraktParser {
     private static final String PEOPLE = "people";
     private static final String ACTORS = "actors";
     private static final String NAME = "name";
-    private static final String CHARACTER = "character";
     private static final String IMAGES = "images";
-    private static final String HEADSHOT = "headshot";
     private static final String POSTER = "poster";
     private static final String SEASONS = "seasons";
     private static final String SEASON = "season";
     private static final String EPISODES = "episodes";
-    private static final String EPISODE = "episode";
     private static final String NUMBER = "number";
     private static final String SCREEN = "screen";
     private static final String SHOWS = "shows";
@@ -61,14 +61,18 @@ public class TraktParser {
             JsonObject seriesObject = element.getAsJsonObject();
 
             int seriesId = readTvdbId(seriesObject);
+
             Time airTime = readAirTime(seriesObject);
+            WeekDay airDay = readAirDay(seriesObject);
+
+            WeekTime airWTime = DatesAndTimes.toUtcTime(new WeekTime(airDay, airTime), TimeZone.getTimeZone("GMT-8"));
 
             Series.Builder seriesBuilder = Series.builder()
                     .withTvdbId(readTvdbId(seriesObject))
                     .withTitle(readTitle(seriesObject))
                     .withStatus(readStatus(seriesObject))
-                    .withAirDay(readAirDay(seriesObject))
-                    .withAirTime(readAirTime(seriesObject))
+                    .withAirDay(airWTime.weekday())
+                    .withAirTime(airWTime.time())
                     .withAirDate(readAirDate(seriesObject))
                     .withRuntime(readRuntime(seriesObject))
                     .withNetwork(readNetwork(seriesObject))
@@ -116,11 +120,11 @@ public class TraktParser {
             JsonObject resultElement = element.getAsJsonObject();
 
             return new SearchResult()
-                    .setTvdbId(readTvdbIdAsString(resultElement))
-                    .setTitle(readTitle(resultElement))
-                    .setOverview(readOverview(resultElement))
-                    .setGenres(readGenres(resultElement))
-                    .setPoster(readPoster(resultElement));
+            .setTvdbId(readTvdbIdAsString(resultElement))
+            .setTitle(readTitle(resultElement))
+            .setOverview(readOverview(resultElement))
+            .setGenres(readGenres(resultElement))
+            .setPoster(readPoster(resultElement));
         }
     };
 
@@ -208,11 +212,11 @@ public class TraktParser {
     private static Gson gson() {
         if (gson == null) {
             gson = new GsonBuilder()
-                .registerTypeAdapter(Series.class, SERIES_ADAPTER)
-                .registerTypeAdapter(Episode.Builder.class, EPISODE_ADAPTER)
-                .registerTypeAdapter(SearchResult.class, SEARCH_RESULT_ADAPTER)
-                .registerTypeAdapter(List.class, UPDATE_METADATA_ADAPTER) //XXX (Cleber) Create a class to encapsulate UpdateMetadata
-                .create();
+            .registerTypeAdapter(Series.class, SERIES_ADAPTER)
+            .registerTypeAdapter(Episode.Builder.class, EPISODE_ADAPTER)
+            .registerTypeAdapter(SearchResult.class, SEARCH_RESULT_ADAPTER)
+            .registerTypeAdapter(List.class, UPDATE_METADATA_ADAPTER) //XXX (Cleber) Create a class to encapsulate UpdateMetadata
+            .create();
         }
 
         return gson;
@@ -256,7 +260,7 @@ public class TraktParser {
 
     private static Date readAirDate(JsonObject object) {
         try {
-            return new Date(object.get(AIR_DATE).getAsLong());
+            return DatesAndTimes.toUtcTime(new Date(object.get(AIR_DATE).getAsLong()), TimeZone.getTimeZone("GMT-8"));
         } catch (Exception e) {
             return null;
         }

@@ -20,7 +20,7 @@ import android.widget.RemoteViews;
 
 public class Item {
     private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterThumbnailFrom(App.resources());
-    private Context context;
+    private final Context context;
 
     private Item(Context context) {
         this.context = context;
@@ -31,20 +31,20 @@ public class Item {
     }
 
     public RemoteViews loading() {
-        return new RemoteViews(this.context.getPackageName(), R.layout.schedulewidget_loading_view);
+        return new RemoteViews(context.getPackageName(), R.layout.schedulewidget_loading_view);
     }
 
     public RemoteViews createFor(Episode episode) {
         Series series = App.seriesFollowingService().getFollowedSeries(episode.seriesId());
 
-        RemoteViews item = new RemoteViews(this.context.getPackageName(), R.layout.schedulewidget_item);
+        RemoteViews item = new RemoteViews(context.getPackageName(), R.layout.schedulewidget_item);
 
-        this.setUpSeriesPoster(item, series);
-        this.setUpEpisodeAirdate(item, episode);
-        this.setUpAirtimeAndNetwork(item, series);
-        this.setUpSeriesName(item, series);
-        this.setUpEpisodeName(item, episode);
-        this.setUpOnClickIntent(item, episode);
+        setUpSeriesPoster(item, series);
+        setUpEpisodeAirdate(item, episode);
+        setUpAirtimeAndNetwork(item, series);
+        setUpSeriesName(item, series);
+        setUpEpisodeName(item, episode);
+        setUpOnClickIntent(item, episode);
 
         return item;
     }
@@ -57,13 +57,13 @@ public class Item {
 
     private void setUpEpisodeAirdate(RemoteViews item, Episode episode) {
         RelativeDay relativeAirDay = DatesAndTimes.parse(episode.airDate(), null);
-        String airDate = DatesAndTimes.toString(episode.airDate(), DateFormat.getDateFormat(this.context), "");
+        String airDate = DatesAndTimes.toString(episode.airDate(), DateFormat.getDateFormat(context), "");
 
         item.setTextViewText(R.id.episodeAirDate, LocalText.of(relativeAirDay, airDate));
     }
 
     private void setUpAirtimeAndNetwork(RemoteViews item, Series series) {
-        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(this.context), "");
+        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(context), "");
         String network = series.network();
 
         item.setTextViewText(R.id.airtimeAndNetwork, Strings.concat(airtime, network, " - "));
@@ -74,14 +74,14 @@ public class Item {
     }
 
     private void setUpEpisodeName(RemoteViews item, Episode episode) {
-        String format = this.context.getString(R.string.episode_number_format);
+        String format = context.getString(R.string.episode_number_format);
         String episodeNumber = String.format(format, episode.seasonNumber(), episode.number());
 
         item.setTextViewText(R.id.episodeNumber, episodeNumber + " " + episode.title());
     }
 
     private void setUpOnClickIntent(RemoteViews item, Episode episode) {
-        this.setupOnClickFillInIntent(item, episode);
+        setupOnClickFillInIntent(item, episode);
     }
 
     private void setupOnClickFillInIntent(RemoteViews item, Episode episode) {

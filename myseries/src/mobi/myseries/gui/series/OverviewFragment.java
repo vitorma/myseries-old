@@ -1,6 +1,7 @@
 package mobi.myseries.gui.series;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -12,6 +13,7 @@ import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Strings;
+import mobi.myseries.shared.WeekTime;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -41,9 +43,9 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setRetainInstance(true);
+        setRetainInstance(true);
 
-        this.seriesId = this.getArguments().getInt(Extra.SERIES_ID);
+        seriesId = getArguments().getInt(Extra.SERIES_ID);
     }
 
     @Override
@@ -55,23 +57,28 @@ public class OverviewFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        TextView seriesName = (TextView) this.getActivity().findViewById(R.id.seriesName);
-        TextView seriesStatus = (TextView) this.getActivity().findViewById(R.id.statusTextView);
-        TextView seriesAirDays = (TextView) this.getActivity().findViewById(R.id.airDaysTextView);
-        TextView seriesRuntime = (TextView) this.getActivity().findViewById(R.id.runtimeTextView);
+        TextView seriesName = (TextView) getActivity().findViewById(R.id.seriesName);
+        TextView seriesStatus = (TextView) getActivity().findViewById(R.id.statusTextView);
+        TextView seriesAirDays = (TextView) getActivity().findViewById(R.id.airDaysTextView);
+        TextView seriesRuntime = (TextView) getActivity().findViewById(R.id.runtimeTextView);
 
-        TextView seriesGenre = (TextView) this.getActivity().findViewById(R.id.genreTextView);
-        TextView seriesActors = (TextView) this.getActivity().findViewById(R.id.actorsTextView);
+        TextView seriesGenre = (TextView) getActivity().findViewById(R.id.genreTextView);
+        TextView seriesActors = (TextView) getActivity().findViewById(R.id.actorsTextView);
 
-        TextView seriesOverview = (TextView) this.getActivity().findViewById(R.id.seriesOverviewTextView);
+        TextView seriesOverview = (TextView) getActivity().findViewById(R.id.seriesOverviewTextView);
 
-        Series series = App.seriesFollowingService().getFollowedSeries(this.seriesId);
+        Series series = App.seriesFollowingService().getFollowedSeries(seriesId);
 
         seriesName.setText(series.name());
         seriesStatus.setText(LocalText.of(series.status(), this.getString(R.string.unavailable_status)));
 
-        String airDay = DatesAndTimes.toString(series.airDay(), Locale.getDefault(), "");
-        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(App.context()), "");
+        //TODO (Reul): Remove conversion, pass same DateFormat to weektime and airtime toString.
+        WeekTime weekTime = DatesAndTimes.toLocalTime(new WeekTime(series.airDay(), series.airtime()));
+        java.text.DateFormat df = DateFormat.getTimeFormat(App.context());
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        String airDay = DatesAndTimes.toString(weekTime.weekday(), Locale.getDefault(), "");
+        String airtime = DatesAndTimes.toString(weekTime.time(), df, "");
         String network = series.network();
         String airInfo = Strings.concat(airDay, airtime, ", ");
         airInfo = Strings.concat(airInfo, network, " - ");
@@ -81,44 +88,44 @@ public class OverviewFragment extends Fragment {
 
         String runtime = series.runtime().isEmpty() ?
                 this.getString(R.string.unavailable_runtime) :
-                String.format(this.getString(R.string.runtime_minutes_format), series.runtime());
+                    String.format(this.getString(R.string.runtime_minutes_format), series.runtime());
 
-        seriesRuntime.setText(runtime);
+                seriesRuntime.setText(runtime);
 
-        seriesGenre.setText(series.genres());
+                seriesGenre.setText(series.genres());
 
-        TextView overviewLabel = (TextView) this.getActivity().findViewById(R.id.overviewLabel);
-        if (series.overview().isEmpty()) {
-            overviewLabel.setVisibility(View.GONE);
-            seriesOverview.setVisibility(View.GONE);
-        } else {
-            overviewLabel.setVisibility(View.VISIBLE);
-            seriesOverview.setVisibility(View.VISIBLE);
-            seriesOverview.setText(series.overview());
-        }
+                TextView overviewLabel = (TextView) getActivity().findViewById(R.id.overviewLabel);
+                if (series.overview().isEmpty()) {
+                    overviewLabel.setVisibility(View.GONE);
+                    seriesOverview.setVisibility(View.GONE);
+                } else {
+                    overviewLabel.setVisibility(View.VISIBLE);
+                    seriesOverview.setVisibility(View.VISIBLE);
+                    seriesOverview.setText(series.overview());
+                }
 
-        TextView actorsLabel = (TextView) this.getActivity().findViewById(R.id.actorsLabel);
-        if (series.actors().isEmpty()) {
-            actorsLabel.setVisibility(View.GONE);
-            seriesActors.setVisibility(View.GONE);
-        } else {
-            actorsLabel.setVisibility(View.VISIBLE);
-            seriesActors.setVisibility(View.VISIBLE);
-            seriesActors.setText(series.actors());
-        }
+                TextView actorsLabel = (TextView) getActivity().findViewById(R.id.actorsLabel);
+                if (series.actors().isEmpty()) {
+                    actorsLabel.setVisibility(View.GONE);
+                    seriesActors.setVisibility(View.GONE);
+                } else {
+                    actorsLabel.setVisibility(View.VISIBLE);
+                    seriesActors.setVisibility(View.VISIBLE);
+                    seriesActors.setText(series.actors());
+                }
 
-        Bitmap poster = IMAGE_SERVICE.getPosterOf(series);
-        Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
-        Bitmap ensuredPoster = Objects.nullSafe(poster, genericPoster);
+                Bitmap poster = IMAGE_SERVICE.getPosterOf(series);
+                Bitmap genericPoster = Images.genericSeriesPosterFrom(App.resources());
+                Bitmap ensuredPoster = Objects.nullSafe(poster, genericPoster);
 
-        ImageView seriesPoster = (ImageView) this.getActivity().findViewById(R.id.seriesPosterImageView);
-        seriesPoster.setImageBitmap(ensuredPoster);
+                ImageView seriesPoster = (ImageView) getActivity().findViewById(R.id.seriesPosterImageView);
+                seriesPoster.setImageBitmap(ensuredPoster);
 
-        boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
+                boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
 
-        if (isTablet) {
-            ScrollView scrollView = (ScrollView) this.getActivity().findViewById(R.id.scrollView);
-            scrollView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
-        }
+                if (isTablet) {
+                    ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.scrollView);
+                    scrollView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+                }
     }
 }

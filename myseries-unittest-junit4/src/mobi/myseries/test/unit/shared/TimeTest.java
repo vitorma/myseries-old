@@ -2,6 +2,7 @@ package mobi.myseries.test.unit.shared;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import mobi.myseries.shared.Time;
 
@@ -10,6 +11,10 @@ import org.junit.Test;
 
 public class TimeTest {
     private static final DateFormat FORMAT = new SimpleDateFormat("hh:mm aa");
+
+    static {
+        FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
     @Test(expected=IllegalArgumentException.class)
     public void valueOfNullStringCausesIllegalArgumentException() {

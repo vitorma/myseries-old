@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class WeekDay implements Comparable<WeekDay> {
     private static final String PATTERN_SHORT = "EEE";
@@ -14,9 +15,10 @@ public class WeekDay implements Comparable<WeekDay> {
 
     static {
         ACCEPTED_FORMAT_FOR_PARSING.setLenient(false);
+        ACCEPTED_FORMAT_FOR_PARSING.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
-    private Date day;
+    private final Date day;
 
     private WeekDay(Date day) {
         this.day = day;
@@ -44,45 +46,51 @@ public class WeekDay implements Comparable<WeekDay> {
 
     @Override
     public int compareTo(WeekDay other) {
-        return this.day.compareTo(other.day);
+        return day.compareTo(other.day);
     }
 
     public Date toDate() {
-        return new Date(this.toLong());
+        return new Date(toLong());
     }
 
     public long toLong() {
-        return this.day.getTime();
+        return day.getTime();
     }
 
     @Override
     public String toString() {
-        return ACCEPTED_FORMAT_FOR_PARSING.format(this.day);
+        return ACCEPTED_FORMAT_FOR_PARSING.format(day);
     }
 
     public String toString(Locale locale) {
         Validate.isNonNull(locale, "locale");
 
-        return this.toString(new SimpleDateFormat(PATTERN_FULL, locale));
+        SimpleDateFormat df = new SimpleDateFormat(PATTERN_FULL, locale);
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        return this.toString(df);
     }
 
     public String toShortString(Locale locale) {
         Validate.isNonNull(locale, "locale");
 
-        return this.toString(new SimpleDateFormat(PATTERN_SHORT, locale));
+        SimpleDateFormat df = new SimpleDateFormat(PATTERN_SHORT, locale);
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        return this.toString(df);
     }
 
     private String toString(DateFormat format) {
-        return format.format(this.day);
+        return format.format(day);
     }
 
     @Override
     public int hashCode() {
-        return this.day.hashCode();
+        return day.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof WeekDay && this.day.equals(((WeekDay) obj).day);
+        return obj instanceof WeekDay && day.equals(((WeekDay) obj).day);
     }
 }
