@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAdapter.Listener> {
@@ -94,7 +95,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         AsyncImageLoader.loadBitmapOn(
                 new PosterFetchingMethod(series, App.imageService()),
                 GENERIC_POSTER,
-                viewHolder.mPoster);
+                viewHolder.mPoster, viewHolder.progressBar);
 
         String name = series.name();
         viewHolder.mName.setText(name);
@@ -167,6 +168,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         private final TextView mAllEpisodes;
         private final SeenEpisodesBar watchedEpisodesBar;
         private final ImageButton moreButton;
+        private ProgressBar progressBar;
 
         private ViewHolder(View view) {
             mPoster = (ImageView) view.findViewById(R.id.poster);
@@ -175,7 +177,8 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
             mAllEpisodes = (TextView) view.findViewById(R.id.allEpisodes);
             watchedEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
             moreButton = (ImageButton) view.findViewById(R.id.moreButton);
-
+            progressBar = (ProgressBar) view.findViewById(R.id.loadProgress);
+            progressBar.setVisibility(View.GONE);
             view.setTag(this);
         }
     }

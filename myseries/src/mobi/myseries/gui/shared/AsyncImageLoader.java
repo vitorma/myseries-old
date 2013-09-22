@@ -10,7 +10,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 public class AsyncImageLoader {
 
@@ -20,7 +22,7 @@ public class AsyncImageLoader {
         private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
 
         public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-            super(res, bitmap);
+            super(res);
 
             this.bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
         }
@@ -33,11 +35,24 @@ public class AsyncImageLoader {
     private static class BitmapWorkerTask extends AsyncTask<Void, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
         private final BitmapFetchingMethod bitmapFetchingMethod;
+        private final WeakReference<ProgressBar> progressBarReference;
+        private final Bitmap defaultBitmap;
 
-        public BitmapWorkerTask(BitmapFetchingMethod bitmapFetchingMethod, ImageView imageView) {
+        public BitmapWorkerTask(BitmapFetchingMethod bitmapFetchingMethod, Bitmap defaultBitmap, ImageView imageView, ProgressBar progressBar) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             this.imageViewReference = new WeakReference<ImageView>(imageView);
             this.bitmapFetchingMethod = bitmapFetchingMethod;
+            this.progressBarReference = new WeakReference<ProgressBar>(progressBar);
+            this.defaultBitmap = defaultBitmap;
+        }
+        
+        @Override
+        protected void onPreExecute() {
+            if(progressBarReference!= null) {
+                if(progressBarReference.get() != null)
+                    progressBarReference.get().setVisibility(View.VISIBLE);
+            }
+            
         }
 
         // Decode image in background.
@@ -62,12 +77,18 @@ public class AsyncImageLoader {
                 bitmap = null;
             }
 
-            if (imageViewReference != null && bitmap != null) {
+            if (imageViewReference != null && progressBarReference != null) {
                 final ImageView imageView = imageViewReference.get();
+                final ProgressBar progressBar = progressBarReference.get();
                 final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 
                 if (this == bitmapWorkerTask && imageView != null) {
+                    if(bitmap == null) {
+                        bitmap = defaultBitmap;
+                    }
                     imageView.setImageBitmap(bitmap);
+                    if(progressBar != null)
+                        progressBar.setVisibility(View.GONE);
                 }
             }
         }
@@ -108,18 +129,7 @@ public class AsyncImageLoader {
     }
 
     public static void loadBitmapOn(BitmapFetchingMethod bitmapFetchingMethod, Bitmap defaultBitmap, ImageView destinationView) {
-        Validate.isNonNull(bitmapFetchingMethod, "bitmapFetchingMethod");
-        Validate.isNonNull(defaultBitmap, "defaultBitmap");
-        Validate.isNonNull(destinationView, "destinationView");
-
-        if (cancelPotentialWork(bitmapFetchingMethod, destinationView)) {
-            BitmapWorkerTask workerTask = new BitmapWorkerTask(bitmapFetchingMethod, destinationView);
-            AsyncDrawable asyncDrawable = new AsyncDrawable(resources(), defaultBitmap, workerTask);
-
-            destinationView.setImageDrawable(asyncDrawable);
-
-            workerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        loadBitmapOn(bitmapFetchingMethod, defaultBitmap, destinationView, null);
     }
 
     // TODO(Gabriel): Dependency injection in static attribute for testing purposes
@@ -142,6 +152,23 @@ public class AsyncImageLoader {
         synchronized (pause) {
             pause.set(false);
             pause.notifyAll();
+        }
+        
+    }
+
+    public static void loadBitmapOn(BitmapFetchingMethod bitmapFetchingMethod,
+            Bitmap defaultBitmap, ImageView destinationView, ProgressBar progressBar) {
+        Validate.isNonNull(bitmapFetchingMethod, "bitmapFetchingMethod");
+        Validate.isNonNull(defaultBitmap, "defaultBitmap");
+        Validate.isNonNull(destinationView, "destinationView");
+
+        if (cancelPotentialWork(bitmapFetchingMethod, destinationView)) {
+            BitmapWorkerTask workerTask = new BitmapWorkerTask(bitmapFetchingMethod, defaultBitmap, destinationView, progressBar);
+            AsyncDrawable asyncDrawable = new AsyncDrawable(resources(), defaultBitmap, workerTask);
+
+            destinationView.setImageDrawable(asyncDrawable);
+
+            workerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         
     }

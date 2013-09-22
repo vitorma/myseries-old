@@ -51,6 +51,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Publisher<ScheduleAdapter.Listener> {
@@ -138,7 +139,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         AsyncImageLoader.loadBitmapOn(
                 new PosterFetchingMethod(series, App.imageService()),
                 GENERIC_POSTER,
-                viewHolder.poster);
+                viewHolder.poster, viewHolder.progressBar);
 
         viewHolder.seriesName.setText(series.name());
 
@@ -232,6 +233,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         private TextView seriesName;
         private TextView episodeName;
         private TextView airInfo;
+        private ProgressBar progressBar;
 
         private ViewHolder(View view) {
             this.section = view.findViewById(R.id.section);
@@ -243,6 +245,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             this.seriesName = (TextView) view.findViewById(R.id.seriesName);
             this.episodeName = (TextView) view.findViewById(R.id.episodeName);
             this.airInfo = (TextView) view.findViewById(R.id.airInfo);
+            this.progressBar = (ProgressBar) view.findViewById(R.id.loadProgress);
 
             view.setTag(this);
         }

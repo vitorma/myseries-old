@@ -66,6 +66,15 @@
             android:layout_toRightOf="@id/poster"
             android:layout_toLeftOf="@id/seenMark"/>
 
+        <ProgressBar
+            android:id="@+id/loadProgress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/seriesName"
+            android:visibility="visible" />
+
     </RelativeLayout>
 
 </RelativeLayout>

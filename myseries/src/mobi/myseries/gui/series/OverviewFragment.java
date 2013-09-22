@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -117,10 +118,11 @@ public class OverviewFragment extends Fragment {
                 }
 
                 ImageView seriesPoster = (ImageView) getActivity().findViewById(R.id.seriesPosterImageView);
+                ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.loadProgress);
                 AsyncImageLoader.loadBitmapOn(
                         new PosterFetchingMethod(series, App.imageService()),
                         GENERIC_POSTER,
-                        seriesPoster);
+                        seriesPoster, progressBar);
                 
                 boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
 
