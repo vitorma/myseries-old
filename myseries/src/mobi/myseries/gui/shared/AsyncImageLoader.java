@@ -1,6 +1,7 @@
 package mobi.myseries.gui.shared;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import mobi.myseries.application.App;
 import mobi.myseries.shared.Validate;
@@ -12,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 public class AsyncImageLoader {
+
+    private static AtomicBoolean pause = new AtomicBoolean(false);
 
     private static class AsyncDrawable extends BitmapDrawable {
         private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
@@ -40,6 +43,15 @@ public class AsyncImageLoader {
         // Decode image in background.
         @Override
         protected Bitmap doInBackground(Void... params) {
+            if(pause.get()) {
+                synchronized (pause) {
+                    try {
+                        pause.wait();
+                    } catch (InterruptedException e) {
+                        //LOG someting
+                    }
+                }
+            }
             return this.bitmapFetchingMethod.loadBitmap();
         }
 
@@ -120,5 +132,17 @@ public class AsyncImageLoader {
         } else {
             return resources;
         }
+    }
+
+    public static void pause() {
+        pause.set(true);
+    }
+
+    public static void resume() {
+        synchronized (pause) {
+            pause.set(false);
+            pause.notifyAll();
+        }
+        
     }
 }

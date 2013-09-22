@@ -5,6 +5,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.episodes.EpisodesActivity;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.PauseOnScrollListener;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.ListFragment;
 import android.content.Intent;
@@ -54,6 +55,7 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
         this.getListView().setSelector(R.color.transparent);
         this.setUpEmptyText();
         this.setUpItemClickListener();
+        this.setUpScrollListener();
     }
 
     @Override
@@ -145,6 +147,10 @@ public class ScheduleFragment extends ListFragment implements ScheduleAdapter.Li
                 ScheduleFragment.this.startActivity(intent);
             }
         });
+    }
+    
+    private void setUpScrollListener() {
+        this.getListView().setOnScrollListener(new PauseOnScrollListener(false, true));
     }
 
     /* SharedPreferences.OnSharedPreferenceChangeListener */

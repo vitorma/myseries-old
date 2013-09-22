@@ -5,6 +5,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.series.SeriesActivity;
+import mobi.myseries.gui.shared.PauseOnScrollListener;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -102,6 +103,8 @@ public class MySeriesFragment extends Fragment {
             }
         });
 
+        setUpScrollListener();
+
         if (this.adapter == null) {
             this.adapter = new MySeriesAdapter();
         }
@@ -180,6 +183,10 @@ public class MySeriesFragment extends Fragment {
             }
         }
     };
+    
+    private void setUpScrollListener() {
+        showsGrid.setOnScrollListener(new PauseOnScrollListener(false, true));
+    }
 
     /* SharedPreferences.OnSharedPreferenceChangeListener */
 
