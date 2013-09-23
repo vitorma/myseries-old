@@ -73,6 +73,8 @@ public class AsyncImageLoader {
                     }
                 }
             }
+            if(isCancelled())
+                return null;
             return this.bitmapFetchingMethod.loadBitmap();
         }
 
@@ -80,7 +82,7 @@ public class AsyncImageLoader {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (isCancelled()) {
-                bitmap = null;
+                return;
             }
 
             if (imageViewReference != null && progressBarReference != null) {
