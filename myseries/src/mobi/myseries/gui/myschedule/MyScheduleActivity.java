@@ -2,27 +2,27 @@ package mobi.myseries.gui.myschedule;
 
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.gui.activity.base.TabActivity;
-import mobi.myseries.gui.activity.base.TabDefinition;
+import mobi.myseries.gui.activity.base.BaseActivity;
+import mobi.myseries.gui.myschedule.ScheduleMasterFragment.OnSelectTabListener;
 import mobi.myseries.gui.shared.Extra;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
-//TODO Remove this inheritance
-public class MyScheduleActivity extends TabActivity {
+public class MyScheduleActivity extends BaseActivity implements OnSelectTabListener {
     private static final String SCHEDULE_MASTER_FRAGMENT = "scheduleMasterFragment";
     private static final String SCHEDULE_DETAIL_FRAGMENT = "scheduleDetailFragment";
     private static final String EPISODE_SORTING_DIALOG_FRAGMENT = "episodeSortingDialogFragment";
-
     private static final String EXTRA_SHOW_LIST_FRAGMENT = "showEpisodeListFragment";
     private static final String EXTRA_SHOW_PAGER_FRAGMENT = "showEpisodePagerFragment";
-
     private static final int INVALID_SERIES_ID = -1;
     private static final int INVALID_SEASON_NUMBER = -1;
     private static final int INVALID_EPISODE_NUMBER = -1;
     private static final int NATURAL_FIRST_POSITION = 0;
+
+    private ScheduleMasterFragment mMasterFragment;
 
     /* Intents */
 
@@ -67,7 +67,7 @@ public class MyScheduleActivity extends TabActivity {
     @Override
     protected void init(Bundle savedInstanceState) {
         this.extractExtras(savedInstanceState);
-        this.setUpDescendantNavigation();
+        this.setUpDescendantNavigation(savedInstanceState);
         this.setUpFragments(savedInstanceState);
     }
 
@@ -86,20 +86,17 @@ public class MyScheduleActivity extends TabActivity {
         return this.getText(R.string.nav_schedule);
     }
 
-    /* TabActivity */
-
     @Override
-    protected TabDefinition[] tabDefinitions() {
-        return new TabDefinition[] {
-            new TabDefinition(R.string.schedule_to_watch, ScheduleFragment.newInstance(ScheduleMode.TO_WATCH)),
-            new TabDefinition(R.string.schedule_aired, ScheduleFragment.newInstance(ScheduleMode.AIRED)),
-            new TabDefinition(R.string.schedule_unaired, ScheduleFragment.newInstance(ScheduleMode.UNAIRED))
-        };
+    protected int layoutResource() {
+        return R.layout.myschedule;
     }
 
+    /* Activity */
+
     @Override
-    protected int defaultSelectedTab() {
-        return this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
+    public void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
     }
 
     /* TODO */
@@ -108,12 +105,40 @@ public class MyScheduleActivity extends TabActivity {
         // TODO Auto-generated method stub
     }
 
-    private void setUpDescendantNavigation() {
-        // TODO Auto-generated method stub
+    private void setUpDescendantNavigation(Bundle savedInstanceState) {
+//        if (this.tabDefinitions() == null) {
+//            return;
+//        }
+
+//        if (savedInstanceState == null) {
+//            this.mSelectedTab = this.getIntent().getExtras().getInt(Extra.SCHEDULE_MODE);
+//        } else {
+//            this.mSelectedTab = savedInstanceState.getInt(SELECTED_TAB);
+//        }
+
+//        this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+//        this.mTabAdapter = new TabAdapter(this, this.tabDefinitions(), this.mSelectedTab);
+//        this.mTabAdapter.register(this.mTabAdapterListener);
     }
 
+//    private TabDefinition[] tabDefinitions() {
+//        return new TabDefinition[] {
+//                new TabDefinition(R.string.schedule_to_watch, ScheduleListFragment.newInstance(ScheduleMode.TO_WATCH)),
+//                new TabDefinition(R.string.schedule_aired, ScheduleListFragment.newInstance(ScheduleMode.AIRED)),
+//                new TabDefinition(R.string.schedule_unaired, ScheduleListFragment.newInstance(ScheduleMode.UNAIRED))
+//        };
+//    }
+
     private void setUpFragments(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
+        if (savedInstanceState == null) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            mMasterFragment = ScheduleMasterFragment.newInstance(getIntent().getIntExtra(Extra.SCHEDULE_MODE, ScheduleMode.TO_WATCH));
+            ft.add(R.id.container, mMasterFragment, SCHEDULE_MASTER_FRAGMENT);
+            ft.commit();
+        } else {
+            mMasterFragment = (ScheduleMasterFragment) getFragmentManager().findFragmentByTag(SCHEDULE_MASTER_FRAGMENT);
+        }
     }
 
     /* Dual Pane */
@@ -121,4 +146,18 @@ public class MyScheduleActivity extends TabActivity {
     private boolean isDualPane() {
         return this.getResources().getBoolean(R.bool.isTablet);
     }
+
+    @Override
+    public void onSelectTab(int position) {
+        // TODO Auto-generated method stub
+    }
+
+    /* TabAdapter.Listener */
+
+//    private final TabAdapter.Listener mTabAdapterListener = new TabAdapter.Listener() {
+//        @Override
+//        public void onSelected(int position) {
+//            mSelectedTab = position;
+//        }
+//    };
 }
