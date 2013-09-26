@@ -1,16 +1,34 @@
 package mobi.myseries.test.unit.shared;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import mobi.myseries.shared.WeekDay;
 
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 
 public class WeekDayTest {
+    private SimpleDateFormat shortFormatUs;
+    private SimpleDateFormat longFormatUs;
+    private SimpleDateFormat shortFormatBr;
+    private SimpleDateFormat longFormatBr;
 
-    @Test(expected=IllegalArgumentException.class)
+    @Before
+    public void setUp() {
+        shortFormatUs = new SimpleDateFormat("EEE", Locale.US);
+        shortFormatUs.setTimeZone(TimeZone.getTimeZone("GMT"));
+        longFormatUs = new SimpleDateFormat("EEEE", Locale.US);
+        longFormatUs.setTimeZone(TimeZone.getTimeZone("GMT"));
+        shortFormatBr = new SimpleDateFormat("EEE", new Locale("pt", "BR"));
+        shortFormatBr.setTimeZone(TimeZone.getTimeZone("GMT"));
+        longFormatBr = new SimpleDateFormat("EEEE", new Locale("pt", "BR"));
+        longFormatBr.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void valueOfNullStringCausesIllegalArgumentException() {
         String nullString = null;
         WeekDay.valueOf(nullString);
@@ -35,46 +53,46 @@ public class WeekDayTest {
         Assert.assertNull(WeekDay.valueOf("Dom"));
     }
 
+    // TODO (Reul): Fix them.
     @Test
-    @Ignore  //TODO: Figure out why not working and fix this.
     public void valueOfStringStartingWithValidWeekDayIsTheRightWeekDay() {
-        Assert.assertEquals(WeekDay.valueOf("Sun").toString(Locale.US), "Sunday");
-        Assert.assertEquals(WeekDay.valueOf("Sun").toShortString(Locale.US), "Sun");
-        Assert.assertEquals(WeekDay.valueOf("Sun").toString(new Locale("pt", "BR")), "Domingo");
-        Assert.assertEquals(WeekDay.valueOf("Sun").toShortString(new Locale("pt", "BR")), "Dom");
+        Assert.assertEquals(WeekDay.valueOf("Sun").toString(longFormatUs), "Sunday");
+        Assert.assertEquals(WeekDay.valueOf("Sun").toString(shortFormatUs), "Sun");
+        Assert.assertEquals(WeekDay.valueOf("Sun").toString(longFormatBr), "Domingo");
+        Assert.assertEquals(WeekDay.valueOf("Sun").toString(shortFormatBr), "Dom");
 
-        Assert.assertEquals(WeekDay.valueOf("Sund").toString(Locale.US), "Sunday");
-        Assert.assertEquals(WeekDay.valueOf("Sund").toShortString(Locale.US), "Sun");
-        Assert.assertEquals(WeekDay.valueOf("Sund").toString(new Locale("pt", "BR")), "Domingo");
-        Assert.assertEquals(WeekDay.valueOf("Sund").toShortString(new Locale("pt", "BR")), "Dom");
+        Assert.assertEquals(WeekDay.valueOf("Sund").toString(longFormatUs), "Sunday");
+        Assert.assertEquals(WeekDay.valueOf("Sund").toString(shortFormatUs), "Sun");
+        Assert.assertEquals(WeekDay.valueOf("Sund").toString(longFormatBr), "Domingo");
+        Assert.assertEquals(WeekDay.valueOf("Sund").toString(shortFormatBr), "Dom");
 
-        Assert.assertEquals(WeekDay.valueOf("Sunda").toString(Locale.US), "Sunday");
-        Assert.assertEquals(WeekDay.valueOf("Sunda").toShortString(Locale.US), "Sun");
-        Assert.assertEquals(WeekDay.valueOf("Sunda").toString(new Locale("pt", "BR")), "Domingo");
-        Assert.assertEquals(WeekDay.valueOf("Sunda").toShortString(new Locale("pt", "BR")), "Dom");
+        Assert.assertEquals(WeekDay.valueOf("Sunda").toString(longFormatUs), "Sunday");
+        Assert.assertEquals(WeekDay.valueOf("Sunda").toString(shortFormatUs), "Sun");
+        Assert.assertEquals(WeekDay.valueOf("Sunda").toString(longFormatBr), "Domingo");
+        Assert.assertEquals(WeekDay.valueOf("Sunda").toString(shortFormatBr), "Dom");
 
-        Assert.assertEquals(WeekDay.valueOf("Sunday").toString(Locale.US), "Sunday");
-        Assert.assertEquals(WeekDay.valueOf("Sunday").toShortString(Locale.US), "Sun");
-        Assert.assertEquals(WeekDay.valueOf("Sunday").toString(new Locale("pt", "BR")), "Domingo");
-        Assert.assertEquals(WeekDay.valueOf("Sunday").toShortString(new Locale("pt", "BR")), "Dom");
+        Assert.assertEquals(WeekDay.valueOf("Sunday").toString(longFormatUs), "Sunday");
+        Assert.assertEquals(WeekDay.valueOf("Sunday").toString(shortFormatUs), "Sun");
+        Assert.assertEquals(WeekDay.valueOf("Sunday").toString(longFormatBr), "Domingo");
+        Assert.assertEquals(WeekDay.valueOf("Sunday").toString(shortFormatBr), "Dom");
 
-        Assert.assertEquals(WeekDay.valueOf("Sunday         ").toString(Locale.US), "Sunday");
-        Assert.assertEquals(WeekDay.valueOf("Sunday         ").toShortString(Locale.US), "Sun");
-        Assert.assertEquals(WeekDay.valueOf("Sunday         ").toString(new Locale("pt", "BR")), "Domingo");
-        Assert.assertEquals(WeekDay.valueOf("Sunday         ").toShortString(new Locale("pt", "BR")), "Dom");
+        Assert.assertEquals(WeekDay.valueOf("Sunday         ").toString(longFormatUs), "Sunday");
+        Assert.assertEquals(WeekDay.valueOf("Sunday         ").toString(shortFormatUs), "Sun");
+        Assert.assertEquals(WeekDay.valueOf("Sunday         ").toString(longFormatBr), "Domingo");
+        Assert.assertEquals(WeekDay.valueOf("Sunday         ").toString(shortFormatBr), "Dom");
 
-        Assert.assertEquals(WeekDay.valueOf("SundayXyz0123").toString(Locale.US), "Sunday");
-        Assert.assertEquals(WeekDay.valueOf("SundayXyz0123").toShortString(Locale.US), "Sun");
-        Assert.assertEquals(WeekDay.valueOf("SundayXyz0123").toString(new Locale("pt", "BR")), "Domingo");
-        Assert.assertEquals(WeekDay.valueOf("SundayXyz0123").toShortString(new Locale("pt", "BR")), "Dom");
+        Assert.assertEquals(WeekDay.valueOf("SundayXyz0123").toString(longFormatUs), "Sunday");
+        Assert.assertEquals(WeekDay.valueOf("SundayXyz0123").toString(shortFormatUs), "Sun");
+        Assert.assertEquals(WeekDay.valueOf("SundayXyz0123").toString(longFormatBr), "Domingo");
+        Assert.assertEquals(WeekDay.valueOf("SundayXyz0123").toString(shortFormatBr), "Dom");
 
-        Assert.assertEquals(WeekDay.valueOf("Sunday         Xyz0123").toString(Locale.US), "Sunday");
-        Assert.assertEquals(WeekDay.valueOf("Sunday         Xyz0123").toShortString(Locale.US), "Sun");
-        Assert.assertEquals(WeekDay.valueOf("Sunday         Xyz0123").toString(new Locale("pt", "BR")), "Domingo");
-        Assert.assertEquals(WeekDay.valueOf("Sunday         Xyz0123").toShortString(new Locale("pt", "BR")), "Dom");
+        Assert.assertEquals(WeekDay.valueOf("Sunday         Xyz0123").toString(longFormatUs), "Sunday");
+        Assert.assertEquals(WeekDay.valueOf("Sunday         Xyz0123").toString(shortFormatUs), "Sun");
+        Assert.assertEquals(WeekDay.valueOf("Sunday         Xyz0123").toString(longFormatBr), "Domingo");
+        Assert.assertEquals(WeekDay.valueOf("Sunday         Xyz0123").toString(shortFormatBr), "Dom");
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void toStringWithNullLocaleCausesIllegalArgumentException() {
         WeekDay day = WeekDay.valueOf("Sunday");
 
@@ -83,12 +101,12 @@ public class WeekDayTest {
         day.toString(null);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void toShortStringWithNullLocaleCausesIllegalArgumentException() {
         WeekDay day = WeekDay.valueOf("Sunday");
 
         Assert.assertNotNull(day);
 
-        day.toShortString(null);
+        day.toString(null);
     }
 }

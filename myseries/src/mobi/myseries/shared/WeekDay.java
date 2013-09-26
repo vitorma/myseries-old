@@ -62,25 +62,9 @@ public class WeekDay implements Comparable<WeekDay> {
         return ACCEPTED_FORMAT_FOR_PARSING.format(day);
     }
 
-    public String toString(Locale locale) {
-        Validate.isNonNull(locale, "locale");
+    public String toString(DateFormat format) {
+        Validate.isNonNull(format, "format");
 
-        SimpleDateFormat df = new SimpleDateFormat(PATTERN_FULL, locale);
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        return this.toString(df);
-    }
-
-    public String toShortString(Locale locale) {
-        Validate.isNonNull(locale, "locale");
-
-        SimpleDateFormat df = new SimpleDateFormat(PATTERN_SHORT, locale);
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        return this.toString(df);
-    }
-
-    private String toString(DateFormat format) {
         return format.format(day);
     }
 
