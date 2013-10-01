@@ -33,6 +33,7 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.AsyncImageLoader;
+import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.PosterFetchingMethod;
@@ -61,8 +62,8 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterThumbnailFrom(App.resources());
 
-    private int scheduleMode;
-    private MySchedulePreferences preferences;
+    private final int scheduleMode;
+    private final MySchedulePreferences preferences;
     private ScheduleMode items;
     private int[] viewStates;
 
@@ -70,21 +71,21 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
         this.scheduleMode = scheduleMode;
         this.preferences = preferences;
 
-        this.reload();
+        reload();
     }
 
     /* BaseAdapter */
 
     @Override
     public int getCount() {
-        if (this.items == null) {return 0;}
+        if (items == null) {return 0;}
 
-        return this.items.numberOfEpisodes();
+        return items.numberOfEpisodes();
     }
 
     @Override
     public Object getItem(int position) {
-        return this.items.episodeAt(position);
+        return items.episodeAt(position);
     }
 
     @Override
@@ -104,26 +105,27 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        Episode episode = this.items.episodeAt(position);
+        Episode episode = items.episodeAt(position);
         Series series = App.seriesFollowingService().getFollowedSeries(episode.seriesId());
 
-        this.setUpViewSection(position, viewHolder, episode);
-        this.setUpViewBody(viewHolder, series, episode);
+        setUpViewSection(position, viewHolder, episode);
+        setUpViewBody(viewHolder, series, episode);
 
         return view;
     }
 
     private void setUpViewSection(int position, ViewHolder viewHolder, Episode episode) {
-        this.updateViewStates(position);
+        updateViewStates(position);
 
-        if (this.isViewSectioned(position)) {
+        if (isViewSectioned(position)) {
             DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(App.context());
             String unavailable = LocalText.get(R.string.unavailable_date);
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateFormat, unavailable);
             viewHolder.date.setText(formattedDate);
 
             WeekDay weekDay = App.seriesFollowingService().getFollowedSeries(episode.seriesId()).airDay();
-            String formattedWeekDay = DatesAndTimes.toShortString(weekDay, Locale.getDefault(), "").toUpperCase();
+            String formattedWeekDay = DatesAndTimes.toString(weekDay, DateFormats.forShortWeekDay(Locale.getDefault()), "")
+                    .toUpperCase();
             viewHolder.weekDay.setText(formattedWeekDay);
 
             RelativeDay relativeDay = DatesAndTimes.parse(episode.airDate(), null);
@@ -157,13 +159,13 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     }
 
     private void updateViewStates(int position) {
-        if (this.viewStates[position] == STATE_UNKNOWN) {
-            this.viewStates[position] = this.calculateViewState(position);
+        if (viewStates[position] == STATE_UNKNOWN) {
+            viewStates[position] = calculateViewState(position);
         }
     }
 
     private int calculateViewState(int position) {
-        return this.shouldViewBeSectioned(position) ? STATE_SECTIONED : STATE_REGULAR;
+        return shouldViewBeSectioned(position) ? STATE_SECTIONED : STATE_REGULAR;
     }
 
     private boolean shouldViewBeSectioned(int position) {
@@ -171,21 +173,21 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             return true;
         }
 
-        Date current = this.items.episodeAt(position).airDate();
-        Date previous = this.items.episodeAt(position - 1).airDate();
+        Date current = items.episodeAt(position).airDate();
+        Date previous = items.episodeAt(position - 1).airDate();
 
         return Objects.areDifferent(current, previous);
     }
 
     private boolean isViewSectioned(int position) {
-        return this.viewStates[position] == STATE_SECTIONED;
+        return viewStates[position] == STATE_SECTIONED;
     }
 
     public void reload() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
-                ScheduleAdapter.this.isLoading = true;
+                isLoading = true;
                 ScheduleAdapter.this.notifyStartLoading();
             }
 
@@ -197,7 +199,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
             @Override
             protected void onPostExecute(Void result) {
-                ScheduleAdapter.this.isLoading = false;
+                isLoading = false;
                 ScheduleAdapter.this.notifyFinishLoading();
                 ScheduleAdapter.this.notifyDataSetChanged();
             }
@@ -205,47 +207,47 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     }
 
     private void setUpData() {
-        switch(this.scheduleMode) {
-            case ScheduleMode.AIRED:
-                this.items = App.schedule().aired(this.preferences.fullSpecification());
-                break;
-            case ScheduleMode.TO_WATCH:
-                this.items = App.schedule().toWatch(this.preferences.fullSpecification());
-                break;
-            case ScheduleMode.UNAIRED:
-                this.items = App.schedule().unaired(this.preferences.fullSpecification());
-                break;
+        switch(scheduleMode) {
+        case ScheduleMode.AIRED:
+            items = App.schedule().aired(preferences.fullSpecification());
+            break;
+        case ScheduleMode.TO_WATCH:
+            items = App.schedule().toWatch(preferences.fullSpecification());
+            break;
+        case ScheduleMode.UNAIRED:
+            items = App.schedule().unaired(preferences.fullSpecification());
+            break;
         }
 
-        this.viewStates = new int[this.items.numberOfEpisodes()];
-        this.items.register(this);
+        viewStates = new int[items.numberOfEpisodes()];
+        items.register(this);
     }
 
     /* ViewHolder */
 
     private static class ViewHolder {
-        private View section;
-        private TextView date;
-        private TextView weekDay;
-        private TextView relativeDay;
-        private ImageView poster;
-        private SeenMark seenMark;
-        private TextView seriesName;
-        private TextView episodeName;
-        private TextView airInfo;
-        private ProgressBar progressBar;
+        private final View section;
+        private final TextView date;
+        private final TextView weekDay;
+        private final TextView relativeDay;
+        private final ImageView poster;
+        private final SeenMark seenMark;
+        private final TextView seriesName;
+        private final TextView episodeName;
+        private final TextView airInfo;
+        private final ProgressBar progressBar;
 
         private ViewHolder(View view) {
-            this.section = view.findViewById(R.id.section);
-            this.date = (TextView) view.findViewById(R.id.date);
-            this.weekDay = (TextView) view.findViewById(R.id.weekDay);
-            this.relativeDay = (TextView) view.findViewById(R.id.relativeDay);
-            this.poster = (ImageView) view.findViewById(R.id.poster);
-            this.seenMark = (SeenMark) view.findViewById(R.id.seenMark);
-            this.seriesName = (TextView) view.findViewById(R.id.seriesName);
-            this.episodeName = (TextView) view.findViewById(R.id.episodeName);
-            this.airInfo = (TextView) view.findViewById(R.id.airInfo);
-            this.progressBar = (ProgressBar) view.findViewById(R.id.loadProgress);
+            section = view.findViewById(R.id.section);
+            date = (TextView) view.findViewById(R.id.date);
+            weekDay = (TextView) view.findViewById(R.id.weekDay);
+            relativeDay = (TextView) view.findViewById(R.id.relativeDay);
+            poster = (ImageView) view.findViewById(R.id.poster);
+            seenMark = (SeenMark) view.findViewById(R.id.seenMark);
+            seriesName = (TextView) view.findViewById(R.id.seriesName);
+            episodeName = (TextView) view.findViewById(R.id.episodeName);
+            airInfo = (TextView) view.findViewById(R.id.airInfo);
+            progressBar = (ProgressBar) view.findViewById(R.id.loadProgress);
 
             view.setTag(this);
         }
@@ -254,7 +256,7 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
             return new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (ViewHolder.this.seenMark.isChecked()) {
+                    if (seenMark.isChecked()) {
                         App.markingService().markAsWatched(episode);
                     } else {
                         App.markingService().markAsUnwatched(episode);
@@ -268,13 +270,13 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
 
     @Override
     public void onScheduleStateChanged() {
-        this.viewStates = new int[this.items.numberOfEpisodes()];
-        this.notifyDataSetChanged();
+        viewStates = new int[items.numberOfEpisodes()];
+        notifyDataSetChanged();
     }
 
     @Override
     public void onScheduleStructureChanged() {
-        this.reload();
+        reload();
     }
 
     /* ScheduleAdapter.Listener */
@@ -285,30 +287,30 @@ public class ScheduleAdapter extends BaseAdapter implements ScheduleListener, Pu
     }
 
     private boolean isLoading;
-    private ListenerSet<ScheduleAdapter.Listener> listeners = new ListenerSet<ScheduleAdapter.Listener>();
+    private final ListenerSet<ScheduleAdapter.Listener> listeners = new ListenerSet<ScheduleAdapter.Listener>();
 
     public boolean isLoading() {
-        return this.isLoading;
+        return isLoading;
     }
 
     @Override
     public boolean register(ScheduleAdapter.Listener listener) {
-        return this.listeners.register(listener);
+        return listeners.register(listener);
     }
 
     @Override
     public boolean deregister(ScheduleAdapter.Listener listener) {
-        return this.listeners.deregister(listener);
+        return listeners.deregister(listener);
     }
 
     private void notifyStartLoading() {
-        for (ScheduleAdapter.Listener listener : this.listeners) {
+        for (ScheduleAdapter.Listener listener : listeners) {
             listener.onStartLoading();
         }
     }
 
     private void notifyFinishLoading() {
-        for (ScheduleAdapter.Listener listener : this.listeners) {
+        for (ScheduleAdapter.Listener listener : listeners) {
             listener.onFinishLoading();
         }
     }

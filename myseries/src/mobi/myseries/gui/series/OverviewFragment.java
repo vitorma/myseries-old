@@ -1,21 +1,18 @@
 package mobi.myseries.gui.series;
 
 import java.util.Locale;
-import java.util.TimeZone;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.AsyncImageLoader;
+import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.shared.DatesAndTimes;
-import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Strings;
-import mobi.myseries.shared.WeekTime;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -75,13 +72,8 @@ public class OverviewFragment extends Fragment {
         seriesName.setText(series.name());
         seriesStatus.setText(LocalText.of(series.status(), this.getString(R.string.unavailable_status)));
 
-        //TODO (Reul): Remove conversion, pass same DateFormat to weektime and airtime toString.
-        WeekTime weekTime = DatesAndTimes.toLocalTime(new WeekTime(series.airDay(), series.airtime()));
-        java.text.DateFormat df = DateFormat.getTimeFormat(App.context());
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        String airDay = DatesAndTimes.toString(weekTime.weekday(), Locale.getDefault(), "");
-        String airtime = DatesAndTimes.toString(weekTime.time(), df, "");
+        String airDay = DatesAndTimes.toString(series.airDay(), DateFormats.forWeekDay(Locale.getDefault()), "");
+        String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(App.context()), "");
         String network = series.network();
         String airInfo = Strings.concat(airDay, airtime, ", ");
         airInfo = Strings.concat(airInfo, network, " - ");
@@ -89,46 +81,42 @@ public class OverviewFragment extends Fragment {
 
         seriesAirDays.setText(airInfo.isEmpty() ? unavailableInfo : airInfo);
 
-        String runtime = series.runtime().isEmpty() ?
-                this.getString(R.string.unavailable_runtime) :
-                    String.format(this.getString(R.string.runtime_minutes_format), series.runtime());
+        String runtime = series.runtime().isEmpty() ? this.getString(R.string.unavailable_runtime) : String.format(
+                this.getString(R.string.runtime_minutes_format), series.runtime());
 
-                seriesRuntime.setText(runtime);
+        seriesRuntime.setText(runtime);
 
-                seriesGenre.setText(series.genres());
+        seriesGenre.setText(series.genres());
 
-                TextView overviewLabel = (TextView) getActivity().findViewById(R.id.overviewLabel);
-                if (series.overview().isEmpty()) {
-                    overviewLabel.setVisibility(View.GONE);
-                    seriesOverview.setVisibility(View.GONE);
-                } else {
-                    overviewLabel.setVisibility(View.VISIBLE);
-                    seriesOverview.setVisibility(View.VISIBLE);
-                    seriesOverview.setText(series.overview());
-                }
+        TextView overviewLabel = (TextView) getActivity().findViewById(R.id.overviewLabel);
+        if (series.overview().isEmpty()) {
+            overviewLabel.setVisibility(View.GONE);
+            seriesOverview.setVisibility(View.GONE);
+        } else {
+            overviewLabel.setVisibility(View.VISIBLE);
+            seriesOverview.setVisibility(View.VISIBLE);
+            seriesOverview.setText(series.overview());
+        }
 
-                TextView actorsLabel = (TextView) getActivity().findViewById(R.id.actorsLabel);
-                if (series.actors().isEmpty()) {
-                    actorsLabel.setVisibility(View.GONE);
-                    seriesActors.setVisibility(View.GONE);
-                } else {
-                    actorsLabel.setVisibility(View.VISIBLE);
-                    seriesActors.setVisibility(View.VISIBLE);
-                    seriesActors.setText(series.actors());
-                }
+        TextView actorsLabel = (TextView) getActivity().findViewById(R.id.actorsLabel);
+        if (series.actors().isEmpty()) {
+            actorsLabel.setVisibility(View.GONE);
+            seriesActors.setVisibility(View.GONE);
+        } else {
+            actorsLabel.setVisibility(View.VISIBLE);
+            seriesActors.setVisibility(View.VISIBLE);
+            seriesActors.setText(series.actors());
+        }
 
-                ImageView seriesPoster = (ImageView) getActivity().findViewById(R.id.seriesPosterImageView);
-                ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.loadProgress);
-                AsyncImageLoader.loadBitmapOn(
-                        new PosterFetchingMethod(series, App.imageService()),
-                        GENERIC_POSTER,
-                        seriesPoster, progressBar);
-                
-                boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
+        ImageView seriesPoster = (ImageView) getActivity().findViewById(R.id.seriesPosterImageView);
+        ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.loadProgress);
+        AsyncImageLoader.loadBitmapOn(new PosterFetchingMethod(series, App.imageService()), GENERIC_POSTER, seriesPoster, progressBar);
 
-                if (isTablet) {
-                    ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.scrollView);
-                    scrollView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
-                }
+        boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
+
+        if (isTablet) {
+            ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.scrollView);
+            scrollView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+        }
     }
 }

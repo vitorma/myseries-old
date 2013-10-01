@@ -20,7 +20,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class DatesAndTimes {
@@ -104,24 +103,14 @@ public class DatesAndTimes {
         return time.toString(format);
     }
 
-    public static String toString(WeekDay weekDay, Locale locale, String defaultWeekDay) {
-        Validate.isNonNull(locale, "locale");
+    public static String toString(WeekDay weekDay, DateFormat format, String defaultWeekDay) {
+        Validate.isNonNull(format, "format");
 
         if (weekDay == null) {
             return defaultWeekDay;
         }
 
-        return weekDay.toString(locale);
-    }
-
-    public static String toShortString(WeekDay weekDay, Locale locale, String defaultWeekDay) {
-        Validate.isNonNull(locale, "locale");
-
-        if (weekDay == null) {
-            return defaultWeekDay;
-        }
-
-        return weekDay.toShortString(locale);
+        return weekDay.toString(format);
     }
 
     /* Comparison */
