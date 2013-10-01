@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 
 public class CheckableFrameLayout extends FrameLayout implements Checkable {
     private boolean checked;
+    private boolean changeBackground;
     private OnCheckedListener listener;
 
     public CheckableFrameLayout(Context context) {
@@ -18,14 +19,17 @@ public class CheckableFrameLayout extends FrameLayout implements Checkable {
         super(context, attrs);
     }
 
+    public void changeBackgroundWhenChecked(boolean change) {
+        this.changeBackground = change;
+    }
+
     @Override
     public void setChecked(boolean checked) {
         this.checked = checked;
 
-        this.setBackgroundResource(
-            checked ?
-            R.drawable.list_activated_holo :
-            0);
+        if (this.changeBackground) {
+            this.setBackgroundResource(checked ? R.drawable.list_activated_holo : 0);
+        }
 
         if (this.listener != null) {
             this.listener.onChecked(checked);

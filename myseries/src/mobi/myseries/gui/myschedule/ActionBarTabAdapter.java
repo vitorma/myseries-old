@@ -1,5 +1,6 @@
 package mobi.myseries.gui.myschedule;
 
+import mobi.myseries.gui.myschedule.ActionBarTabAdapter.OnTabSelectedListener;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import android.app.ActionBar;
@@ -10,7 +11,7 @@ import android.app.FragmentTransaction;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-public class ActionBarTabAdapter extends FragmentPagerAdapter implements Publisher<ActionBarTabAdapter.Listener> {
+public class ActionBarTabAdapter extends FragmentPagerAdapter implements Publisher<OnTabSelectedListener> {
     private ActionBar mActionBar;
     private ViewPager mViewPager;
     private TabDefinition[] mTabDefinitions;
@@ -57,26 +58,26 @@ public class ActionBarTabAdapter extends FragmentPagerAdapter implements Publish
         return mTabDefinitions[position].fragment();
     }
 
-    /* Publisher<TabAdapter.Listener> */
+    /* Publisher<OnTabSelectedListener> */
 
-    public static interface Listener {
+    public static interface OnTabSelectedListener {
         public void onTabSelected(int position);
     }
 
-    private ListenerSet<ActionBarTabAdapter.Listener> mListeners = new ListenerSet<ActionBarTabAdapter.Listener>();
+    private ListenerSet<OnTabSelectedListener> mListeners = new ListenerSet<OnTabSelectedListener>();
 
     @Override
-    public boolean register(ActionBarTabAdapter.Listener listener) {
+    public boolean register(OnTabSelectedListener listener) {
         return mListeners.register(listener);
     }
 
     @Override
-    public boolean deregister(ActionBarTabAdapter.Listener listener) {
+    public boolean deregister(OnTabSelectedListener listener) {
         return mListeners.deregister(listener);
     }
 
     private void notifyListeners(int position) {
-        for (ActionBarTabAdapter.Listener listener : mListeners) {
+        for (OnTabSelectedListener listener : mListeners) {
             listener.onTabSelected(position);
         }
     }

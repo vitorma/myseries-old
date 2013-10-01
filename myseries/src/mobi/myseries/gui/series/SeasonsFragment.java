@@ -134,6 +134,7 @@ public class SeasonsFragment extends Fragment {
             }
         });
 
+        /* XXX (Cleber) Deregister too */
         App.markingService().register(mMarkingListener);
     }
 

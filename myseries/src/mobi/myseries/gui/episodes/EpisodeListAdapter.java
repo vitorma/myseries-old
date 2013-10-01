@@ -106,6 +106,7 @@ public class EpisodeListAdapter extends BaseAdapter {
             boolean isDualPane = App.resources().getBoolean(R.bool.isTablet);
 
             if (isDualPane) {
+                ((CheckableFrameLayout) view).changeBackgroundWhenChecked(true);
                 ((CheckableFrameLayout) view).setOnCheckedListener(this.checkableFrameLayoutListener());
             }
 

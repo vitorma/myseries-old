@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ScheduleMasterFragment extends Fragment implements ActionBarTabAdapter.Listener {
+public class ScheduleMasterFragment extends Fragment implements ActionBarTabAdapter.OnTabSelectedListener {
     private static final String SELECTED_TAB = "selectedTab";
     private static final int TAB_NONE = -1;
 

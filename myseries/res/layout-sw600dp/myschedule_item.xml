@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mobi.myseries.gui.shared.CheckableFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/myschedule_section"
+            android:id="@+id/section"
+            android:background="#ffeeeeee"
+            android:layout_alignParentTop="true"/>
+
+        <mobi.myseries.gui.shared.CheckableFrameLayout
+            android:id="@+id/checkableBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/section">
+
+            <RelativeLayout
+                android:id="@+id/body"
+                android:descendantFocusability="blocksDescendants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/poster"
+                    android:contentDescription="@string/description_poster"
+                    android:scaleType="fitXY"
+                    android:layout_width="@dimen/myschedule_poster_width"
+                    android:layout_height="@dimen/myschedule_poster_height"
+                    android:layout_alignParentLeft="true"/>
+
+                <mobi.myseries.gui.shared.SeenMark
+                    android:id="@+id/seenMark"
+                    android:gravity="center"
+                    android:layout_width="@dimen/toucharea_minimum_side"
+                    android:layout_height="@dimen/myschedule_poster_height"
+                    android:layout_alignParentRight="true"/>
+
+                <CheckedTextView
+                    android:id="@+id/seriesName"
+                    style="@style/TextView.Large.DarkGray.Ellipsized"
+                    android:textColor="@color/darkgray_x_white"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingTop="@dimen/gap_medium"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/poster"
+                    android:layout_toLeftOf="@id/seenMark"/>
+
+                <CheckedTextView
+                    android:id="@+id/episodeName"
+                    style="@style/TextView.Medium.MediumGray.Ellipsized"
+                    android:textColor="@color/darkgray_x_white"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/seriesName"
+                    android:layout_toRightOf="@id/poster"
+                    android:layout_toLeftOf="@id/seenMark"/>
+
+                <CheckedTextView
+                    android:id="@+id/airInfo"
+                    style="@style/TextView.Medium.LightGray.Ellipsized"
+                    android:textColor="@color/darkgray_x_white"
+                    android:paddingBottom="@dimen/gap_medium"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/episodeName"
+                    android:layout_toRightOf="@id/poster"
+                    android:layout_toLeftOf="@id/seenMark"/>
+
+                <ProgressBar
+                    android:id="@+id/loadProgress"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/seriesName"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
+        </mobi.myseries.gui.shared.CheckableFrameLayout>
+
+    </RelativeLayout>
+
+</mobi.myseries.gui.shared.CheckableFrameLayout>

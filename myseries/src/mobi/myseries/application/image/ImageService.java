@@ -95,7 +95,7 @@ public class ImageService {
             return;
         }
 
-        new EpisodeImageDownload(episode).execute();
+        new EpisodeImageDownload(episode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public boolean register(EpisodeImageDownloadListener listener) {

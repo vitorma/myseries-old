@@ -37,4 +37,17 @@ public class Schedule {
 
         return new Unaired(specification, mFollowing, mUpdate, mMarking);
     }
+
+    public ScheduleMode mode(int scheduleMode, ScheduleSpecification specification) {
+        switch (scheduleMode) {
+            case ScheduleMode.TO_WATCH:
+                return toWatch(specification);
+            case ScheduleMode.AIRED:
+                return aired(specification);
+            case ScheduleMode.UNAIRED:
+                return unaired(specification);
+            default:
+                throw new IllegalArgumentException("Invalid scheduleMode");
+        }
+    }
 }

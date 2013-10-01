@@ -38,6 +38,8 @@
 
         <activity android:name=".gui.myschedule.MyScheduleActivity" />
 
+        <activity android:name=".gui.myschedule.dualpane.MyScheduleDualPaneActivity" />
+
         <activity android:name="mobi.myseries.gui.mystatistics.MyStatisticsActivity" />
 
         <activity android:name=".gui.addseries.AddSeriesActivity" >
