@@ -32,7 +32,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     private ScheduleMode mItems;
 
     private ScheduleListAdapter mListAdapter;
-    private CustomPagerAdapter mPagerAdapter;
+    private SchedulePagerAdapter mPagerAdapter;
     private ListView mListView;
     private ViewPager mViewPager;
 
@@ -110,7 +110,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
         mListAdapter.resetViewStates();
         mListAdapter.notifyDataSetChanged();
 
-        mPagerAdapter = new CustomPagerAdapter(mItems);
+        mPagerAdapter = new SchedulePagerAdapter(mItems);
         mViewPager.setAdapter(mPagerAdapter);
         mPagerAdapter.notifyDataSetChanged();
 
@@ -179,7 +179,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
         mItems = App.schedule().mode(mScheduleMode, App.preferences().forMySchedule(mScheduleMode).fullSpecification());
         mListAdapter = new ScheduleListAdapter(mItems);
-        mPagerAdapter = new CustomPagerAdapter(mItems);
+        mPagerAdapter = new SchedulePagerAdapter(mItems);
 
         mItems.register(this);
     }

@@ -20,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class CustomPagerAdapter extends PagerAdapter {
+public class SchedulePagerAdapter extends PagerAdapter {
     private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
 
     private ScheduleMode mItems;
     private LayoutInflater mInflater;
 
-    public CustomPagerAdapter(ScheduleMode items) {
+    public SchedulePagerAdapter(ScheduleMode items) {
         mItems = items;
         mInflater = LayoutInflater.from(App.context());
     }
