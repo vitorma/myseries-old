@@ -1,8 +1,8 @@
 package mobi.myseries.gui.myschedule.dualpane;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -103,8 +103,10 @@ public class ScheduleListAdapter extends BaseAdapter {
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateFormat, unavailable);
             viewHolder.mDate.setText(formattedDate);
 
+            //XXX (Cleber) Use timezone
             WeekDay weekDay = App.seriesFollowingService().getFollowedSeries(episode.seriesId()).airDay();
-            String formattedWeekDay = DatesAndTimes.toShortString(weekDay, Locale.getDefault(), "").toUpperCase();
+            DateFormat weekDayFormat = new SimpleDateFormat("EEE");
+            String formattedWeekDay = DatesAndTimes.toString(weekDay, weekDayFormat, "");
             viewHolder.mWeekDay.setText(formattedWeekDay);
 
             RelativeDay relativeDay = DatesAndTimes.parse(episode.airDate(), null);
