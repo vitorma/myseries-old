@@ -3,10 +3,9 @@ package mobi.myseries.gui.myschedule.dualpane;
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.activity.base.BaseActivity;
-import mobi.myseries.gui.myschedule.ActionBarTabAdapter;
-import mobi.myseries.gui.myschedule.ActionBarTabAdapter.OnTabSelectedListener;
-import mobi.myseries.gui.myschedule.TabDefinition;
+import mobi.myseries.gui.myschedule.dualpane.ActionBarTabAdapter.OnTabSelectedListener;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.TabDefinition;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,7 +79,7 @@ public class MyScheduleDualPaneActivity extends BaseActivity implements OnTabSel
 
     @Override
     protected int layoutResource() {
-        return R.layout.myschedule_dualpane_activity;
+        return R.layout.myschedule_activity_dualpane;
     }
 
     /* Activity */

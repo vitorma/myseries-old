@@ -1,6 +1,7 @@
-package mobi.myseries.gui.myschedule;
+package mobi.myseries.gui.myschedule.dualpane;
 
-import mobi.myseries.gui.myschedule.ActionBarTabAdapter.OnTabSelectedListener;
+import mobi.myseries.gui.myschedule.dualpane.ActionBarTabAdapter.OnTabSelectedListener;
+import mobi.myseries.gui.shared.TabDefinition;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import android.app.ActionBar;

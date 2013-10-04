@@ -23,7 +23,7 @@ package mobi.myseries.gui.addseries;
 
 import mobi.myseries.R;
 import mobi.myseries.gui.activity.base.TabActivity;
-import mobi.myseries.gui.activity.base.TabDefinition;
+import mobi.myseries.gui.shared.TabDefinition;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;

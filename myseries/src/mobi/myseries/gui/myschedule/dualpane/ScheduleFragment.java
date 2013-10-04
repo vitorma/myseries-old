@@ -6,6 +6,8 @@ import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.EpisodeFilterDialogFragment;
 import mobi.myseries.gui.myschedule.EpisodeSortingDialogFragment;
+import mobi.myseries.gui.myschedule.ScheduleListAdapter;
+import mobi.myseries.gui.myschedule.SchedulePagerAdapter;
 import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.PauseOnScrollListener;
@@ -60,7 +62,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.myschedule_dualpane_fragment, container, false);
+        return inflater.inflate(R.layout.myschedule_fragment_dualpane, container, false);
     }
 
     @Override

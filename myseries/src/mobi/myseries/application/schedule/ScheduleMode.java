@@ -57,6 +57,8 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener> {
 
     /* Interface */
 
+//    public abstract int code();
+
     public int numberOfEpisodes() {
         return mEpisodes.size();
     }

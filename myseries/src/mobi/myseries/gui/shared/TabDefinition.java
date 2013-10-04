@@ -1,4 +1,4 @@
-package mobi.myseries.gui.activity.base;
+package mobi.myseries.gui.shared;
 
 import android.app.Fragment;
 

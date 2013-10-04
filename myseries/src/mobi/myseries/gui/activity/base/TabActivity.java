@@ -1,6 +1,7 @@
 package mobi.myseries.gui.activity.base;
 
 import mobi.myseries.R;
+import mobi.myseries.gui.shared.TabDefinition;
 import android.app.ActionBar;
 import android.os.Bundle;
 

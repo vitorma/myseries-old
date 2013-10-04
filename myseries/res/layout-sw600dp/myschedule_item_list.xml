@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
 
         <include
-            layout="@layout/myschedule_section"
+            layout="@layout/myschedule_item_list_section"
             android:id="@+id/section"
             android:background="#ffeeeeee"
             android:layout_alignParentTop="true"/>

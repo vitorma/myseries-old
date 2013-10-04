@@ -1,8 +1,8 @@
-package mobi.myseries.gui.myschedule.dualpane;
+package mobi.myseries.gui.myschedule;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -12,6 +12,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.CheckableFrameLayout;
 import mobi.myseries.gui.shared.CheckableFrameLayout.OnCheckedListener;
+import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.PosterFetchingMethod;
@@ -77,7 +78,7 @@ public class ScheduleListAdapter extends BaseAdapter {
         ViewHolder viewHolder;
 
         if (view == null) {
-            view = View.inflate(App.context(), R.layout.myschedule_item, null);
+            view = View.inflate(App.context(), R.layout.myschedule_item_list, null);
             viewHolder = new ViewHolder(view);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -103,10 +104,8 @@ public class ScheduleListAdapter extends BaseAdapter {
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateFormat, unavailable);
             viewHolder.mDate.setText(formattedDate);
 
-            //XXX (Cleber) Use timezone
             WeekDay weekDay = App.seriesFollowingService().getFollowedSeries(episode.seriesId()).airDay();
-            DateFormat weekDayFormat = new SimpleDateFormat("EEE");
-            String formattedWeekDay = DatesAndTimes.toString(weekDay, weekDayFormat, "");
+            String formattedWeekDay = DatesAndTimes.toString(weekDay, DateFormats.forShortWeekDay(Locale.getDefault()), "").toUpperCase();
             viewHolder.mWeekDay.setText(formattedWeekDay);
 
             RelativeDay relativeDay = DatesAndTimes.parse(episode.airDate(), null);
@@ -190,10 +189,12 @@ public class ScheduleListAdapter extends BaseAdapter {
             mAirInfo = (CheckedTextView) view.findViewById(R.id.airInfo);
             mPosterLoadingProgress = (ProgressBar) view.findViewById(R.id.loadProgress);
 
-            mCheckableBody = (CheckableFrameLayout) view.findViewById(R.id.checkableBody);
-            mCheckableBody.changeBackgroundWhenChecked(true);
+            if (App.resources().getBoolean(R.bool.isTablet)) {
+                mCheckableBody = (CheckableFrameLayout) view.findViewById(R.id.checkableBody);
+                mCheckableBody.changeBackgroundWhenChecked(true);
 
-            ((CheckableFrameLayout) view).setOnCheckedListener(checkableFrameLayoutListener());
+                ((CheckableFrameLayout) view).setOnCheckedListener(checkableFrameLayoutListener());
+            }
 
             view.setTag(this);
         }

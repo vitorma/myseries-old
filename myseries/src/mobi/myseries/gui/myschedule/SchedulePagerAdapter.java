@@ -1,4 +1,4 @@
-package mobi.myseries.gui.myschedule.dualpane;
+package mobi.myseries.gui.myschedule;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -53,7 +53,7 @@ public class SchedulePagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View view = mInflater.inflate(R.layout.myschedule_detail_item, null);
+        View view = mInflater.inflate(R.layout.myschedule_item_detail, null);
 
         TextView number = (TextView) view.findViewById(R.id.episodeFirstAiredTextView);
         TextView title = (TextView) view.findViewById(R.id.episodeName);
