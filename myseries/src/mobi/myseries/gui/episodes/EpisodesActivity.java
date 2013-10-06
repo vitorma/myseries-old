@@ -68,7 +68,7 @@ public class EpisodesActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.getMenuInflater().inflate(R.menu.season, menu);
+        this.getMenuInflater().inflate(R.menu.episodes, menu);
 
         return super.onCreateOptionsMenu(menu);
     }

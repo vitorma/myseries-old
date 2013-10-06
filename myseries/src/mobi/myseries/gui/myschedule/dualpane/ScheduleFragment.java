@@ -54,7 +54,6 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-        setHasOptionsMenu(true);
 
         mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
         mSelectedItem = getArguments().getInt(Extra.POSITION);

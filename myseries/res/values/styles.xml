@@ -293,12 +293,61 @@
     </style>
 
     <!-- ActionBar -->
-    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+
+    <style name="ActionBar.Solid.Actionbar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:background">@drawable/ab_solid_actionbar</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_actionbar</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_actionbar</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Actionbar</item>
         <item name="android:titleTextStyle">@style/ActionBar.Text</item>
     </style>
 
-    <style name="ActionBar.Text" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
+    <style name="ActionBar.Transparent.Actionbar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@drawable/ab_transparent_actionbar</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Actionbar</item>
+    </style>
+
+    <style name="PopupMenu.Actionbar" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_actionbar</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_actionbar</item>
+    </style>
+
+    <style name="DropDownListView.Actionbar" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_actionbar</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Actionbar" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_actionbar</item>
+    </style>
+
+    <style name="DropDownNav.Actionbar" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:background">@drawable/spinner_background_ab_actionbar</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_actionbar</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_actionbar</item>
+    </style>
+    
+    <style name="ProgressBar.Actionbar" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_actionbar</item>
+    </style>
+    
+    <style name="ActionButton.CloseMode.Actionbar" parent="@android:style/Widget.Holo.Light.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_actionbar</item>
+    </style>
+
+    <style name="ActionBar.Text" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="ActionBar.TabText" parent="@android:style/Widget.Holo.ActionBar.TabText">
+        <item name="android:textColor">@color/gray65_to_gray42</item>
+    </style>
+
+    <style name="ActionBar.PopupMenuText.Small" parent="@android:style/TextAppearance.Holo.Widget.PopupMenu.Small">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ActionBar.PopupMenuText.Large" parent="@android:style/TextAppearance.Holo.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <!-- ActionBarSpinner -->
@@ -307,7 +356,7 @@
 
     <style name="ActionBarSpinner.Title">
         <item name="android:textSize">@dimen/text_size_ab_spinner_title</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">#ff272727</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
         <item name="android:fontFamily">sans-serif-light</item>
@@ -315,7 +364,7 @@
 
     <style name="ActionBarSpinner.Subtitle">
         <item name="android:textSize">@dimen/text_size_ab_spinner_subtitle</item>
-        <item name="android:textColor">#ffeeeeee</item>
+        <item name="android:textColor">#ff656565</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
     </style>

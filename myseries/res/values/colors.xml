@@ -40,5 +40,9 @@
     <!-- Background -->
     <color name="bg_series_overview">@color/white</color>
     <color name="bg_series_seasons">@color/white</color>
+    <color name="bg_activity_base">#ffe5e5e5</color>
+
+    <!-- ActionBar -->
+    <color name="pressed_actionbar">#cccccccc</color>
 
 </resources>

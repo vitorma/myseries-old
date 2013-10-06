@@ -5,7 +5,7 @@
     <item
         android:id="@+id/filter"
         android:title="@string/action_filter"
-        android:icon="@drawable/ic_action_filter"
+        android:icon="@drawable/ic_action_filter_inverse"
         android:showAsAction="always">
 
         <menu>
@@ -25,7 +25,7 @@
     <item
         android:id="@+id/sort"
         android:title="@string/action_sort"
-        android:icon="@drawable/ic_action_sort"
+        android:icon="@drawable/ic_action_sort_inverse"
         android:showAsAction="always"/>
 
 </menu>

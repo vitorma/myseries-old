@@ -2,12 +2,24 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="MySeriesTheme" parent="@android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:windowContentOverlay">@null</item>
+    <style name="MySeriesTheme" parent="@android:Theme.Holo.Light">
         <item name="android:listViewStyle">@style/ListView</item>
         <item name="android:scrollViewStyle">@style/ScrollView</item>
+
+        <!-- ActionBar -->
         <item name="android:actionBarSize">@dimen/ab_height</item>
-        <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_actionbar</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Actionbar</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/ActionBar.PopupMenuText.Small</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/ActionBar.PopupMenuText.Large</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Actionbar</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Actionbar</item>
+        <item name="android:actionBarTabTextStyle">@style/ActionBar.TabText</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Actionbar</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Actionbar</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_actionbar</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_actionbar</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Actionbar</item>
     </style>
 
     <style name="MySeriesTheme.Dialog">

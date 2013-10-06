@@ -5,7 +5,7 @@
     <item
         android:id="@+id/filter"
         android:title="@string/action_filter"
-        android:icon="@drawable/ic_action_filter"
+        android:icon="@drawable/ic_action_filter_inverse"
         android:showAsAction="always">
 
         <menu>
