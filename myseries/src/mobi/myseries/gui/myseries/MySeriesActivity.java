@@ -49,7 +49,7 @@ public class MySeriesActivity extends BaseActivity {
 
     @Override
     protected CharSequence title() {
-        return this.getText(R.string.my_series);
+        return this.getText(R.string.ab_title_library);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MySeriesActivity extends BaseActivity {
 
     @Override
     protected CharSequence titleForSideMenu() {
-        return this.getText(R.string.nav_shows);
+        return this.getText(R.string.nav_library);
     }
 
     @Override

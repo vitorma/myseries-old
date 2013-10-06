@@ -17,14 +17,14 @@
 
         <Button
             android:id="@+id/toWatchTab"
-            android:text="@string/schedule_to_watch"
+            android:text="@string/tab_next_to_watch"
             style="@style/TabButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <ImageView
             android:id="@+id/toWatchTabIndicator"
-            android:contentDescription="@string/schedule_to_watch"
+            android:contentDescription="@string/tab_next_to_watch"
             android:background="@color/dark_red"
             android:visibility="invisible"
             android:layout_width="match_parent"
@@ -41,14 +41,14 @@
 
         <Button
             android:id="@+id/airedTab"
-            android:text="@string/schedule_aired"
+            android:text="@string/tab_aired"
             style="@style/TabButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <ImageView
             android:id="@+id/airedTabIndicator"
-            android:contentDescription="@string/schedule_aired"
+            android:contentDescription="@string/tab_aired"
             android:background="@color/dark_red"
             android:visibility="invisible"
             android:layout_width="match_parent"
@@ -65,14 +65,14 @@
 
         <Button
             android:id="@+id/unairedTab"
-            android:text="@string/schedule_unaired"
+            android:text="@string/tab_unaired"
             style="@style/TabButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <ImageView
             android:id="@+id/unairedTabIndicator"
-            android:contentDescription="@string/schedule_unaired"
+            android:contentDescription="@string/tab_unaired"
             android:background="@color/dark_red"
             android:visibility="invisible"
             android:layout_width="match_parent"

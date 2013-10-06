@@ -55,12 +55,12 @@
     <string name="action_hide_single_series">Hide series</string>
     <string name="action_remove_single_series">Remove series</string>
     <string name="series">series</string>
-    <string name="schedule_to_watch">TO WATCH</string>
-    <string name="schedule_aired">AIRED</string>
-    <string name="schedule_unaired">UNAIRED</string>
     <string name="all_seasons">All seasons</string>
     <string name="tab_overview">OVERVIEW</string>
     <string name="tab_seasons">SEASONS</string>
+    <string name="tab_next_to_watch">NEXT TO WATCH</string>
+    <string name="tab_aired">AIRED</string>
+    <string name="tab_unaired">UNAIRED</string>
     <string name="confirmation_removal_single_series">Do you really want to remove %s?</string>
 
     <plurals name="plural_remaining">
@@ -98,12 +98,12 @@
 
     <!-- SideMenu -->
 
-    <string name="nav_shows">My Series</string>
-    <string name="nav_schedule">My Schedule</string>
-    <string name="nav_statistics">My Statistics</string>
+    <string name="nav_library">Library</string>
+    <string name="nav_schedule">Schedule</string>
+    <string name="nav_statistics">Statistics</string>
 
     <string-array name="sidemenu_items_array">
-        <item>@string/nav_shows</item>
+        <item>@string/nav_library</item>
         <item>@string/nav_schedule</item>
         <item>@string/nav_statistics</item>
     </string-array>
@@ -117,8 +117,9 @@
     <string name="details">Details</string>
     <string name="directors">DIRECTORS</string>
     <string name="guest_stars">GUEST STARS</string>
-    <string name="my_schedule">My Schedule</string>
-    <string name="my_series">My Series</string>
+    <string name="ab_title_schedule">Schedule</string>
+    <string name="ab_title_library">Library</string>
+    <string name="ab_title_statistics">Statistics</string>
     <string name="no">No</string>
     <string name="no_episodes_to_see">No episodes to see.</string>
     <string name="ok">OK</string>
@@ -130,7 +131,6 @@
     <string name="seasons">Seasons</string>
     <string name="series_name">Series name</string>
     <string name="special_episodes">Special Episodes</string>
-    <string name="my_statistics">My Statistics</string>
     <string name="to_be_announced">To be announced</string>
     <string name="writers">WRITERS</string>
     <string name="yes">Yes</string>

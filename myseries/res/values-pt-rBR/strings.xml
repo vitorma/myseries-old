@@ -55,9 +55,9 @@
     <string name="action_hide_single_series">Ocultar série</string>
     <string name="action_remove_single_series">Remover série</string>
     <string name="series">séries</string>
-    <string name="schedule_to_watch">ASSISTIR</string>
-    <string name="schedule_aired">EXIBIDOS</string>
-    <string name="schedule_unaired">INÉDITOS</string>
+    <string name="tab_next_to_watch">PRÓXIMO A VER</string>
+    <string name="tab_aired">EXIBIDOS</string>
+    <string name="tab_unaired">INÉDITOS</string>
     <string name="all_seasons">Todas as temporadas</string>
     <string name="tab_overview">VISÃO GERAL</string>
     <string name="tab_seasons">TEMPORADAS</string>
@@ -97,12 +97,12 @@
 
     <!-- SideMenu -->
 
-    <string name="nav_shows">Minhas Séries</string>
-    <string name="nav_schedule">Minha Agenda</string>
-    <string name="nav_statistics">Minhas Estatísticas</string>
+    <string name="nav_library">Biblioteca</string>
+    <string name="nav_schedule">Agenda</string>
+    <string name="nav_statistics">Estatísticas</string>
 
     <string-array name="sidemenu_items_array">
-        <item>@string/nav_shows</item>
+        <item>@string/nav_library</item>
         <item>@string/nav_schedule</item>
         <item>@string/nav_statistics</item>
     </string-array>
@@ -116,8 +116,9 @@
     <string name="details">Detalhes</string>
     <string name="directors">DIRETORES</string>
     <string name="guest_stars">ARTISTAS CONVIDADOS</string>
-    <string name="my_schedule">Minha Agenda</string>
-    <string name="my_series">Minhas Séries</string>
+    <string name="ab_title_schedule">Agenda</string>
+    <string name="ab_title_library">Biblioteca</string>
+    <string name="ab_title_statistics">Estatísticas</string>
     <string name="no">Não</string>
     <string name="no_episodes_to_see">Nenhum episódio por assistir.</string>
     <string name="ok">OK</string>
@@ -129,7 +130,6 @@
     <string name="seasons">Temporadas</string>
     <string name="series_name">Nome da série</string>
     <string name="special_episodes">Episódios especiais</string>
-    <string name="my_statistics">Minhas estatísticas</string>
     <string name="to_be_announced">Não anunciado</string>
     <string name="writers">AUTORES</string>
     <string name="yes">Sim</string>

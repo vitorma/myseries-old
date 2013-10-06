@@ -31,7 +31,7 @@ public class MyStatisticsActivity extends BaseActivity {
 
     @Override
     protected CharSequence title() {
-        return this.getString(R.string.my_statistics);
+        return this.getString(R.string.ab_title_statistics);
     }
 
     @Override

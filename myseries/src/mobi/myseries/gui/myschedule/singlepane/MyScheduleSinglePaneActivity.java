@@ -93,7 +93,7 @@ public class MyScheduleSinglePaneActivity extends BaseActivity implements OnTabS
 
     @Override
     protected CharSequence title() {
-        return getText(R.string.my_schedule);
+        return getText(R.string.ab_title_schedule);
     }
 
     @Override
@@ -200,13 +200,13 @@ public class MyScheduleSinglePaneActivity extends BaseActivity implements OnTabS
     private TabDefinition[] newTabDefinitionsForList() {
         return new TabDefinition[] {
             new TabDefinition(
-                R.string.schedule_to_watch,
+                R.string.tab_next_to_watch,
                 ScheduleListFragment.newInstance(ScheduleMode.TO_WATCH)),
             new TabDefinition(
-                R.string.schedule_aired,
+                R.string.tab_aired,
                 ScheduleListFragment.newInstance(ScheduleMode.AIRED)),
             new TabDefinition(
-                R.string.schedule_unaired,
+                R.string.tab_unaired,
                 ScheduleListFragment.newInstance(ScheduleMode.UNAIRED))
         };
     }
@@ -214,13 +214,13 @@ public class MyScheduleSinglePaneActivity extends BaseActivity implements OnTabS
     private TabDefinition[] newTabDefinitionsForDetail() {
         return new TabDefinition[] {
             new TabDefinition(
-                R.string.schedule_to_watch,
+                R.string.tab_next_to_watch,
                 ScheduleDetailFragment.newInstance(ScheduleMode.TO_WATCH, selectedItem(ScheduleMode.TO_WATCH))),
             new TabDefinition(
-                R.string.schedule_aired,
+                R.string.tab_aired,
                 ScheduleDetailFragment.newInstance(ScheduleMode.AIRED, selectedItem(ScheduleMode.AIRED))),
             new TabDefinition(
-                R.string.schedule_unaired,
+                R.string.tab_unaired,
                 ScheduleDetailFragment.newInstance(ScheduleMode.UNAIRED, selectedItem(ScheduleMode.UNAIRED)))
         };
     }

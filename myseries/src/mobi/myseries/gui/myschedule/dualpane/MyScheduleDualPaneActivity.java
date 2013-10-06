@@ -64,7 +64,7 @@ public class MyScheduleDualPaneActivity extends BaseActivity implements OnTabSel
 
     @Override
     protected CharSequence title() {
-        return this.getText(R.string.my_schedule);
+        return this.getText(R.string.ab_title_schedule);
     }
 
     @Override
@@ -117,13 +117,13 @@ public class MyScheduleDualPaneActivity extends BaseActivity implements OnTabSel
     private TabDefinition[] tabDefinitions() {
         return new TabDefinition[] {
                 new TabDefinition(
-                        R.string.schedule_to_watch,
+                        R.string.tab_next_to_watch,
                         ScheduleFragment.newInstance(ScheduleMode.TO_WATCH, selectedItemFor(ScheduleMode.TO_WATCH))),
                 new TabDefinition(
-                        R.string.schedule_aired,
+                        R.string.tab_aired,
                         ScheduleFragment.newInstance(ScheduleMode.AIRED, selectedItemFor(ScheduleMode.AIRED))),
                 new TabDefinition(
-                        R.string.schedule_unaired,
+                        R.string.tab_unaired,
                         ScheduleFragment.newInstance(ScheduleMode.UNAIRED, selectedItemFor(ScheduleMode.UNAIRED)))
         };
     }
