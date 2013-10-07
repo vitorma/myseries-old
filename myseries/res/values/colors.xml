@@ -38,9 +38,14 @@
     <color name="text_blue">@color/dark_blue</color>
 
     <!-- Background -->
-    <color name="bg_series_overview">@color/white</color>
-    <color name="bg_series_seasons">@color/white</color>
+    <color name="bg_light">#fff7f7f7</color>
     <color name="bg_activity_base">#ffe5e5e5</color>
+    <color name="bg_series_overview">#fff7f7f7</color>
+    <color name="bg_series_seasons">#fff7f7f7</color>
+    <color name="bg_navigation_drawer">#ff323232</color>
+    <color name="bg_navigation_drawer_list_selector">#cccccccc</color>
+    <color name="bg_navigation_drawer_item_selected">@color/black</color>
+    <color name="bg_navigation_drawer_item_unselected">@color/transparent</color>
 
     <!-- ActionBar -->
     <color name="pressed_actionbar">#cccccccc</color>

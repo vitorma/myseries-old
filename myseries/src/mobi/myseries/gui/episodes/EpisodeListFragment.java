@@ -82,7 +82,7 @@ public class EpisodeListFragment extends ListFragment {
             this.getListView().setDivider(null);
             this.getView().setBackgroundResource(R.drawable.list_background_holo);
         } else {
-            int backgroundColor = App.resources().getColor(R.color.white);
+            int backgroundColor = App.resources().getColor(R.color.bg_light);
 
             this.getView().setBackgroundColor(backgroundColor);
         }

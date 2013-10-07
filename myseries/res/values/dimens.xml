@@ -28,6 +28,11 @@
     <dimen name="text_size_ab_spinner_title">16sp</dimen>
     <dimen name="text_size_ab_spinner_subtitle">12sp</dimen>
 
+    <!-- NavigationDrawer -->
+
+    <dimen name="navigation_drawer_width">240dp</dimen>
+    <dimen name="navigation_drawer_padding">0dp</dimen>
+
     <!-- My Series -->
 
     <dimen name="myseries_poster_width">148dp</dimen>

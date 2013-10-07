@@ -16,10 +16,10 @@
     <ListView
         android:id="@+id/drawer"
         android:choiceMode="singleChoice"
-        android:background="@color/white"
-        android:listSelector="@drawable/list_selector_holo_light"
-        android:padding="0dp"
-        android:layout_width="240dp"
+        android:background="@color/bg_navigation_drawer"
+        android:listSelector="@color/bg_navigation_drawer_list_selector"
+        android:padding="@dimen/navigation_drawer_padding"
+        android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"/>
 

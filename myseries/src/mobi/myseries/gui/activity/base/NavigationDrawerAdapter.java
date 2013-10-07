@@ -10,29 +10,28 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class NavigationDrawerAdapter extends BaseAdapter {
-    private LayoutInflater layoutInflater;
-    private BaseActivity activity;
+    private LayoutInflater mLayoutInflater;
+    private BaseActivity mActivity;
 
-    private CharSequence[] titles;
-    private Drawable[] drawables;
-    private Drawable[] drawablesSelected;
+    private CharSequence[] mTitles;
+    private Drawable[] mDrawables;
 
     public NavigationDrawerAdapter(BaseActivity baseActivity) {
-        this.layoutInflater = LayoutInflater.from(baseActivity);
-        this.activity = baseActivity;
+        mLayoutInflater = LayoutInflater.from(baseActivity);
+        mActivity = baseActivity;
 
-        this.loadTitles();
-        this.loadDrawables();
+        loadTitles();
+        loadDrawables();
     }
 
     @Override
     public int getCount() {
-        return this.titles.length;
+        return mTitles.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return this.titles[position];
+        return mTitles[position];
     }
 
     @Override
@@ -45,58 +44,49 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         ViewHolder viewHolder;
 
         if (convertView == null) {
-            convertView = this.layoutInflater.inflate(R.layout.activity_base_sidemenu_item, null);
+            convertView = mLayoutInflater.inflate(R.layout.activity_base_sidemenu_item, null);
             viewHolder = new ViewHolder(convertView);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        this.setUpItemView(position, viewHolder.view);
+        setUpItemView(position, viewHolder.mView);
 
         return convertView;
     }
 
     private void loadTitles() {
-        this.titles = App.resources().getStringArray(R.array.sidemenu_items_array);
+        mTitles = App.resources().getStringArray(R.array.sidemenu_items_array);
     }
 
     private void loadDrawables() {
-        this.drawables = new Drawable[] {
-                App.resources().getDrawable(R.drawable.ic_nav_grid),
-                App.resources().getDrawable(R.drawable.ic_nav_calendar),
-                App.resources().getDrawable(R.drawable.ic_nav_stats)
-        };
-
-        this.drawablesSelected = new Drawable[] {
-                App.resources().getDrawable(R.drawable.ic_nav_grid_selected),
-                App.resources().getDrawable(R.drawable.ic_nav_calendar_selected),
-                App.resources().getDrawable(R.drawable.ic_nav_stats_selected)
+        mDrawables = new Drawable[] {
+                App.resources().getDrawable(R.drawable.ic_nav_library),
+                App.resources().getDrawable(R.drawable.ic_nav_schedule),
+                App.resources().getDrawable(R.drawable.ic_nav_statistics)
         };
     }
 
     private void setUpItemView(int position, TextView view) {
-        view.setText(this.titles[position]);
+        view.setText(mTitles[position]);
+        view.setCompoundDrawablesWithIntrinsicBounds(mDrawables[position], null, null, null);
 
-        if (this.shouldHighLight(position)) {
-            view.setTextColor(App.resources().getColor(R.color.white));
-            view.setCompoundDrawablesWithIntrinsicBounds(this.drawablesSelected[position], null, null, null);
-            view.setBackgroundColor(App.resources().getColor(R.color.blue));
+        if (shouldHighLight(position)) {
+            view.setBackgroundColor(App.resources().getColor(R.color.bg_navigation_drawer_item_selected));
         } else {
-            view.setTextColor(App.resources().getColor(R.color.gray));
-            view.setCompoundDrawablesWithIntrinsicBounds(this.drawables[position], null, null, null);
-            view.setBackgroundColor(App.resources().getColor(R.color.transparent));
+            view.setBackgroundColor(App.resources().getColor(R.color.bg_navigation_drawer_item_unselected));
         }
     }
 
     private boolean shouldHighLight(int position) {
-        return this.activity.isTopLevel() && this.activity.titleForSideMenu().equals(this.titles[position]);
+        return mActivity.isTopLevel() && mActivity.titleForSideMenu().equals(mTitles[position]);
     }
 
     private static class ViewHolder {
-        private TextView view;
+        private TextView mView;
 
         private ViewHolder(View convertView) {
-            this.view = (TextView) convertView.findViewById(R.id.item);
+            mView = (TextView) convertView.findViewById(R.id.item);
 
             convertView.setTag(this);
         }

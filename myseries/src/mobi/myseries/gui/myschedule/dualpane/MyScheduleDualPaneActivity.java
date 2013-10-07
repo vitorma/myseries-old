@@ -1,16 +1,22 @@
 package mobi.myseries.gui.myschedule.dualpane;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.activity.base.BaseActivity;
+import mobi.myseries.gui.myschedule.EpisodeFilterDialogFragment;
+import mobi.myseries.gui.myschedule.EpisodeSortingDialogFragment;
+import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.myschedule.dualpane.ActionBarTabAdapter.OnTabSelectedListener;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.TabDefinition;
+import mobi.myseries.gui.shared.ToastBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class MyScheduleDualPaneActivity extends BaseActivity implements OnTabSelectedListener {
     private static final int NATURAL_FIRST_POSITION = 0;
@@ -52,6 +58,23 @@ public class MyScheduleDualPaneActivity extends BaseActivity implements OnTabSel
         }
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.filter_series:
+                showSeriesFilterDialog();
+                return true;
+            case R.id.filter_episodes:
+                showEpisodeFilterDialog();
+                return true;
+            case R.id.sort:
+                showSortDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /* BaseActivity */
@@ -132,5 +155,21 @@ public class MyScheduleDualPaneActivity extends BaseActivity implements OnTabSel
         return scheduleMode == mSelectedMode ?
                 getIntent().getExtras().getInt(Extra.POSITION) :
                 NATURAL_FIRST_POSITION;
+    }
+
+    private void showSeriesFilterDialog() {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
+            new ToastBuilder(this).setMessage(R.string.no_series_to_show).build().show();
+        } else {
+            SeriesFilterDialogFragment.newInstance(mSelectedMode).show(getFragmentManager(), "seriesFilterDialog");
+        }
+    }
+
+    private void showEpisodeFilterDialog() {
+        EpisodeFilterDialogFragment.newInstance(mSelectedMode).show(getFragmentManager(), "episodeFilterDialog");
+    }
+
+    private void showSortDialog() {
+        EpisodeSortingDialogFragment.newInstance(mSelectedMode).show(getFragmentManager(), "seriesSortingDialog");
     }
 }

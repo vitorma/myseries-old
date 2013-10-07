@@ -2,6 +2,7 @@
     android:id="@+id/item"
     style="@style/TextView.XLarge"
     android:fontFamily="sans-serif-light"
+    android:textColor="@color/white"
     android:gravity="center_vertical"
     android:paddingLeft="0dp"
     android:paddingRight="56dp"

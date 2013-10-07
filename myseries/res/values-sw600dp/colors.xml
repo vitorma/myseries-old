@@ -5,6 +5,5 @@
     <!-- Background -->
 
     <color name="bg_series_overview">@color/transparent</color>
-    <color name="bg_series_seasons">@color/transparent</color>
 
 </resources>

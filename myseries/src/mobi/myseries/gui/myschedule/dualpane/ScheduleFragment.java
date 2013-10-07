@@ -4,14 +4,10 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.gui.myschedule.EpisodeFilterDialogFragment;
-import mobi.myseries.gui.myschedule.EpisodeSortingDialogFragment;
 import mobi.myseries.gui.myschedule.ScheduleListAdapter;
 import mobi.myseries.gui.myschedule.SchedulePagerAdapter;
-import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.PauseOnScrollListener;
-import mobi.myseries.gui.shared.ToastBuilder;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -20,7 +16,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -85,23 +80,6 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
         App.preferences().forActivities().register(mPreferencesListener);
         mItems.deregister(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.filter_series:
-                showSeriesFilterDialog();
-                return true;
-            case R.id.filter_episodes:
-                showEpisodeFilterDialog();
-                return true;
-            case R.id.sort:
-                showSortDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     /* ScheduleListener */
@@ -222,29 +200,5 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     private boolean isNotVisible(int position) {
         return position <= mListView.getFirstVisiblePosition() ||
                 position >= mListView.getLastVisiblePosition();
-    }
-
-    private void showSeriesFilterDialog() {
-        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
-            new ToastBuilder(getActivity()).setMessage(R.string.no_series_to_show).build().show();
-        } else {
-            SeriesFilterDialogFragment.newInstance(mScheduleMode).show(getFragmentManager(), "seriesFilterDialog");
-        }
-    }
-
-    private void showEpisodeFilterDialog() {
-        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
-            new ToastBuilder(getActivity()).setMessage(R.string.no_episodes_to_show).build().show();
-        } else {
-            EpisodeFilterDialogFragment.newInstance(mScheduleMode).show(getFragmentManager(), "episodeFilterDialog");
-        }
-    }
-
-    private void showSortDialog() {
-        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
-            new ToastBuilder(getActivity()).setMessage(R.string.no_episodes_to_sort).build().show();
-        } else {
-            EpisodeSortingDialogFragment.newInstance(mScheduleMode).show(getFragmentManager(), "seriesSortingDialog");
-        }
     }
 }
