@@ -71,12 +71,6 @@ public class MySeriesFragment extends Fragment {
         App.preferences().forActivities().register(this.preferencesListener);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        MySeriesFragment.this.adapter.reloadData();
-    }
-
     private void prepareViews() {
         this.showsGrid = (GridView) this.getActivity().findViewById(R.id.showsGrid);
         this.empty = this.getActivity().findViewById(R.id.empty);

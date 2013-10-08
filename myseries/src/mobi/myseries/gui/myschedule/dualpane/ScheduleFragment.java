@@ -32,6 +32,9 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     private SchedulePagerAdapter mPagerAdapter;
     private ListView mListView;
     private ViewPager mViewPager;
+    
+    private AsyncTask<Void, Void, Void> loadTask;
+    private boolean isLoading = false;
 
     public static ScheduleFragment newInstance(int scheduleMode, int selectedItem) {
         Bundle arguments = new Bundle();
@@ -132,7 +135,15 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     }
 
     private void reload() {
-        new AsyncTask<Void, Void, Void>() {
+        if(isLoading)
+            loadTask.cancel(true);
+
+        loadTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                isLoading = true;
+            }
+
             @Override
             protected Void doInBackground(Void... params) {
                 setUpData();
@@ -142,8 +153,11 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
             @Override
             protected void onPostExecute(Void result) {
-                setUpViews();
-                checkItem(mSelectedItem);
+                if(!isCancelled()) {
+                    setUpViews();
+                    checkItem(mSelectedItem);
+                }
+                isLoading = false;
             }
         }.execute();
     }

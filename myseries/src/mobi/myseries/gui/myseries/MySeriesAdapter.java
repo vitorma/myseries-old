@@ -65,6 +65,9 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
     @Override
     public Object getItem(int position) {
+        if(position > mItems.size())
+            return null;
+        
         return mItems.get(position);
     }
 

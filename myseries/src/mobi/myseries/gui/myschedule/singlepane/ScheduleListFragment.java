@@ -25,6 +25,8 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     private ScheduleListAdapter mAdapter;
     private ListView mListView;
     private OnItemClickListener mOnItemClickListener;
+    private AsyncTask<Void, Void, Void> loadTask;
+    private boolean isLoading = false;
 
     /* OnItemClickListener */
 
@@ -148,17 +150,27 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     }
 
     private void reload() {
-        new AsyncTask<Void, Void, Void>() {
+        if(isLoading)
+            loadTask.cancel(true);
+
+        loadTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                isLoading = true;
+            }
+
             @Override
             protected Void doInBackground(Void... params) {
+                
                 setUpData();
-
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void result) {
-                setUpViews();
+                if(!isCancelled())
+                    setUpViews();
+                isLoading = false;
             }
         }.execute();
     }
