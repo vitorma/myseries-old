@@ -91,4 +91,9 @@ public class ImageRepositoryCache implements ImageRepository {
     public Collection<Integer> savedImages() throws ImageRepositoryException {
         return Collections.unmodifiableCollection(this.cachedImagesIds);
     }
+
+    @Override
+    public Bitmap fetchFromCache(int id) throws ImageRepositoryException {
+        return this.fetch(id);
+    }
 }

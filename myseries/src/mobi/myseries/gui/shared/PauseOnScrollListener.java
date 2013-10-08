@@ -9,34 +9,10 @@ public class PauseOnScrollListener implements OnScrollListener {
     private final boolean pauseOnFling;
     private final OnScrollListener externalListener;
 
-    /**
-     * Constructor
-     * 
-     * @param pauseOnScroll
-     *            Whether {@linkplain ImageLoader#pause() pause ImageLoader}
-     *            during touch scrolling
-     * @param pauseOnFling
-     *            Whether {@linkplain ImageLoader#pause() pause ImageLoader}
-     *            during fling
-     */
     public PauseOnScrollListener(boolean pauseOnScroll, boolean pauseOnFling) {
         this(pauseOnScroll, pauseOnFling, null);
     }
 
-    /**
-     * Constructor
-     * 
-     * @param pauseOnScroll
-     *            Whether {@linkplain ImageLoader#pause() pause ImageLoader}
-     *            during touch scrolling
-     * @param pauseOnFling
-     *            Whether {@linkplain ImageLoader#pause() pause ImageLoader}
-     *            during fling
-     * @param customListener
-     *            Your custom {@link OnScrollListener} for
-     *            {@linkplain AbsListView list view} which also will be get
-     *            scroll events
-     */
     public PauseOnScrollListener(boolean pauseOnScroll, boolean pauseOnFling,
             OnScrollListener customListener) {
         this.pauseOnScroll = pauseOnScroll;

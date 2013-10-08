@@ -17,6 +17,7 @@ import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.gui.shared.SeenMark;
+import mobi.myseries.gui.shared.SmallPosterFetchingMethod;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.RelativeDay;
@@ -119,7 +120,7 @@ public class ScheduleListAdapter extends BaseAdapter {
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
         AsyncImageLoader.loadBitmapOn(
-                new PosterFetchingMethod(series, App.imageService()),
+                new SmallPosterFetchingMethod(series, App.imageService()),
                 GENERIC_POSTER,
                 viewHolder.mPoster,
                 viewHolder.mPosterLoadingProgress);

@@ -240,4 +240,30 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
             Log.w(LOG_TAG, "Failed deleting image of episode " + episode.title(), e);
         }
     }
+
+    @Override
+    public Bitmap getCachedSmallPosterOf(Series series) {
+        Validate.isNonNull(series, "series");
+        Log.d(LOG_TAG, "Fetching small poster of " + series.name() + " from cache");
+
+        try {
+            return this.smallPosterDirectory.fetchFromCache(series.id());
+        } catch (ImageRepositoryException e) {
+            Log.w(LOG_TAG, "Failed fetching small poster of " + series.name() + " from cache", e);
+            return null;
+        }
+    }
+
+    @Override
+    public Bitmap getCachedPosterOf(Series series) {
+        Validate.isNonNull(series, "series");
+        Log.d(LOG_TAG, "Fetching poster of " + series.name() + " from cache");
+
+        try {
+            return this.posterDirectory.fetchFromCache(series.id());
+        } catch (ImageRepositoryException e) {
+            Log.w(LOG_TAG, "Failed fetching poster of " + series.name() + " from cache", e);
+            return null;
+        }
+    }
 }

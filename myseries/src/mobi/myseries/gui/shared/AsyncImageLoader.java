@@ -64,6 +64,10 @@ public class AsyncImageLoader {
         // Decode image in background.
         @Override
         protected Bitmap doInBackground(Void... params) {
+            Bitmap bitmap = this.bitmapFetchingMethod.loadCachedBitmap();
+            if(bitmap != null) {
+                return bitmap;
+            }
             if (pause.get()) {
                 synchronized (pause) {
                     try {
@@ -136,6 +140,8 @@ public class AsyncImageLoader {
 
     public interface BitmapFetchingMethod {
         public Bitmap loadBitmap();
+
+        public Bitmap loadCachedBitmap();
     }
 
     public static void loadBitmapOn(BitmapFetchingMethod bitmapFetchingMethod,
@@ -183,7 +189,15 @@ public class AsyncImageLoader {
 
             destinationView.setImageDrawable(asyncDrawable);
 
-            workerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            workerTask.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR);
         }
+    }
+
+    public static boolean isPaused() {
+        return pause.get();
+    }
+
+    public static AtomicBoolean getPause() {
+        return pause;
     }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.shared.Validate;
 
 import android.content.Context;
@@ -157,5 +158,10 @@ public class ExternalStorageImageDirectory implements ImageRepository {
         public ExternalStorageUnavailableException() {
             super("Can't open external storage directory for MySeries");
         }
+    }
+
+    @Override
+    public Bitmap fetchFromCache(int id) throws ImageRepositoryException {
+         return null; //there is no cache
     }
 }

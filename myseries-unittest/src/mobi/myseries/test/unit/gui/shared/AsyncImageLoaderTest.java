@@ -42,6 +42,12 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
                     public Bitmap loadBitmap() {
                         return bitmapToBeLoaded;
                     }
+
+                    @Override
+                    public Bitmap loadCachedBitmap() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
                 };
 
         this.nullBitmapFetchingMethod =
@@ -49,6 +55,12 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
                     @Override
                     public Bitmap loadBitmap() {
                         return bitmapToBeLoaded;
+                    }
+
+                    @Override
+                    public Bitmap loadCachedBitmap() {
+                        // TODO Auto-generated method stub
+                        return null;
                     }
                 };
 
