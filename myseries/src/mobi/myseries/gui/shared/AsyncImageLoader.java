@@ -39,6 +39,7 @@ public class AsyncImageLoader {
         private final BitmapFetchingMethod bitmapFetchingMethod;
         private final WeakReference<ProgressBar> progressBarReference;
         private final Bitmap defaultBitmap;
+        private Bitmap bitmap;
 
         public BitmapWorkerTask(BitmapFetchingMethod bitmapFetchingMethod,
                 Bitmap defaultBitmap, ImageView imageView,
@@ -54,19 +55,21 @@ public class AsyncImageLoader {
 
         @Override
         protected void onPreExecute() {
+            this.bitmap = this.bitmapFetchingMethod.loadCachedBitmap();
+            if(bitmap != null) {
+                return;
+            }
             if (progressBarReference != null) {
                 if (progressBarReference.get() != null)
                     progressBarReference.get().setVisibility(View.VISIBLE);
             }
-
         }
 
         // Decode image in background.
         @Override
         protected Bitmap doInBackground(Void... params) {
-            Bitmap bitmap = this.bitmapFetchingMethod.loadCachedBitmap();
-            if(bitmap != null) {
-                return bitmap;
+            if(this.bitmap != null) {
+                return this.bitmap;
             }
             if (pause.get()) {
                 synchronized (pause) {
@@ -189,7 +192,7 @@ public class AsyncImageLoader {
 
             destinationView.setImageDrawable(asyncDrawable);
 
-            workerTask.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR);
+            workerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

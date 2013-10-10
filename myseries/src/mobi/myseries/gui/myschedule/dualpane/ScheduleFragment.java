@@ -81,7 +81,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     public void onStop() {
         super.onStop();
 
-        App.preferences().forActivities().register(mPreferencesListener);
+        App.preferences().forActivities().deregister(mPreferencesListener);
         mItems.deregister(this);
     }
 
