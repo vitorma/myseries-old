@@ -13,4 +13,6 @@ public interface ImageRepository {
     public void delete(int id) throws ImageRepositoryException;
 
     public Collection<Integer> savedImages() throws ImageRepositoryException;
+
+    public Bitmap fetchFromCache(int id) throws ImageRepositoryException;
 }

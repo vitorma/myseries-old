@@ -173,4 +173,12 @@ public class ImageService {
             return null;
         }
     }
+
+    public Bitmap getCachedSmallPosterOf(Series series) {
+        return this.imageRepository.getCachedSmallPosterOf(series);
+    }
+
+    public Bitmap getCachedPosterOf(Series series) {
+        return this.imageRepository.getCachedPosterOf(series);
+    }
 }

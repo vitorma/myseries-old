@@ -9,6 +9,7 @@ import android.test.InstrumentationTestCase;
 
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.NormalPosterFetchingMethod;
 import mobi.myseries.gui.shared.PosterFetchingMethod;
 
 public class PosterFetchingMethodTest extends InstrumentationTestCase {
@@ -19,7 +20,7 @@ public class PosterFetchingMethodTest extends InstrumentationTestCase {
 
         try {
             ImageService imageService = mock(ImageService.class);
-            new PosterFetchingMethod(null, imageService);
+            new NormalPosterFetchingMethod(null, imageService);
 
             fail("Exception not thrown.");
         } catch (IllegalArgumentException e) {}
@@ -28,7 +29,7 @@ public class PosterFetchingMethodTest extends InstrumentationTestCase {
     public void testItShouldNotAcceptNullImageService() {
         try {
             Series series = mock(Series.class);
-            new PosterFetchingMethod(series, null);
+            new NormalPosterFetchingMethod(series, null);
 
             fail("Exception not thrown.");
         } catch (IllegalArgumentException e) {}
@@ -40,7 +41,7 @@ public class PosterFetchingMethodTest extends InstrumentationTestCase {
         Series series = mock(Series.class);
         ImageService imageService = mock(ImageService.class);
 
-        new PosterFetchingMethod(series, imageService).loadBitmap();
+        new NormalPosterFetchingMethod(series, imageService).loadBitmap();
 
         verify(imageService).getPosterOf(series);
     }
@@ -51,8 +52,8 @@ public class PosterFetchingMethodTest extends InstrumentationTestCase {
         Series series = mock(Series.class);
         ImageService imageService = mock(ImageService.class);
 
-        PosterFetchingMethod first = new PosterFetchingMethod(series, imageService);
-        PosterFetchingMethod second = new PosterFetchingMethod(series, imageService);
+        PosterFetchingMethod first = new NormalPosterFetchingMethod(series, imageService);
+        PosterFetchingMethod second = new NormalPosterFetchingMethod(series, imageService);
 
         assertThat(first, equalTo(second));
     }
@@ -61,8 +62,8 @@ public class PosterFetchingMethodTest extends InstrumentationTestCase {
         Series series = mock(Series.class);
         ImageService imageService = mock(ImageService.class);
 
-        PosterFetchingMethod first = new PosterFetchingMethod(series, imageService);
-        PosterFetchingMethod second = new PosterFetchingMethod(series, imageService);
+        PosterFetchingMethod first = new NormalPosterFetchingMethod(series, imageService);
+        PosterFetchingMethod second = new NormalPosterFetchingMethod(series, imageService);
 
         assertThat(first.hashCode(), equalTo(second.hashCode()));
     }
@@ -71,7 +72,7 @@ public class PosterFetchingMethodTest extends InstrumentationTestCase {
         Series series = mock(Series.class);
         ImageService imageService = mock(ImageService.class);
 
-        PosterFetchingMethod first = new PosterFetchingMethod(series, imageService);
+        PosterFetchingMethod first = new NormalPosterFetchingMethod(series, imageService);
 
         assertThat(first, not(equalTo(null)));
     }
@@ -81,8 +82,8 @@ public class PosterFetchingMethodTest extends InstrumentationTestCase {
         Series secondSeries = mock(Series.class);
         ImageService imageService = mock(ImageService.class);
 
-        PosterFetchingMethod first = new PosterFetchingMethod(firstSeries, imageService);
-        PosterFetchingMethod second = new PosterFetchingMethod(secondSeries, imageService);
+        PosterFetchingMethod first = new NormalPosterFetchingMethod(firstSeries, imageService);
+        PosterFetchingMethod second = new NormalPosterFetchingMethod(secondSeries, imageService);
 
         assertThat(first, not(equalTo(second)));
     }

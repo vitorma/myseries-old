@@ -40,7 +40,7 @@ public class LruImageCache implements ImageRepository {
 
     @Override
     public Bitmap fetch(int id) throws ImageRepositoryException {
-        Bitmap cachedImage = this.cache.get(id);
+        Bitmap cachedImage = fetchFromCache(id);
 
         if (cachedImage == null) {
             Log.d(getClass().getName(), "Image cache miss: " + id);
@@ -56,6 +56,12 @@ public class LruImageCache implements ImageRepository {
             Log.d(getClass().getName(), "Image cache hit: " + id);
             return cachedImage;
         }
+    }
+
+    @Override
+    public Bitmap fetchFromCache(int id) {
+        Bitmap cachedImage = this.cache.get(id);
+        return cachedImage;
     }
 
     @Override

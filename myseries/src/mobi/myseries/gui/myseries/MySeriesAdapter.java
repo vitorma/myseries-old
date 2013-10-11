@@ -21,6 +21,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.EpisodesToCountSpecification;
 import mobi.myseries.gui.shared.Images;
+import mobi.myseries.gui.shared.NormalPosterFetchingMethod;
 import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.gui.shared.SeenEpisodeSpecification;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
@@ -64,6 +65,9 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
     @Override
     public Object getItem(int position) {
+        if(position > mItems.size())
+            return null;
+        
         return mItems.get(position);
     }
 
@@ -93,7 +97,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
     private void setUpView(ViewHolder viewHolder, final Series series) {
         AsyncImageLoader.loadBitmapOn(
-                new PosterFetchingMethod(series, App.imageService()),
+                new NormalPosterFetchingMethod(series, App.imageService()),
                 GENERIC_POSTER,
                 viewHolder.mPoster, viewHolder.progressBar);
 

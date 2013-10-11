@@ -5,10 +5,10 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.graphics.Bitmap;
 
-public class PosterFetchingMethod implements AsyncImageLoader.BitmapFetchingMethod {
+public abstract class PosterFetchingMethod implements AsyncImageLoader.BitmapFetchingMethod {
 
-    private final Series series;
-    private final ImageService imageService;
+    protected final Series series;
+    protected final ImageService imageService;
 
     public PosterFetchingMethod(Series series, ImageService imageService) {
         Validate.isNonNull(series, "series");
@@ -19,9 +19,7 @@ public class PosterFetchingMethod implements AsyncImageLoader.BitmapFetchingMeth
     }
 
     @Override
-    public Bitmap loadBitmap() {
-        return this.imageService.getPosterOf(this.series);
-    }
+    public abstract Bitmap loadBitmap();
 
     // equals and hashCode were generated based upon series
 

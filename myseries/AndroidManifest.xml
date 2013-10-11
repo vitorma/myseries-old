@@ -36,9 +36,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".gui.myschedule.singlepane.MyScheduleSinglePaneActivity" />
+        <activity android:name="mobi.myseries.gui.myschedule.singlepane.MyScheduleSinglePaneActivity" />
 
-        <activity android:name=".gui.myschedule.dualpane.MyScheduleDualPaneActivity" />
+        <activity android:name="mobi.myseries.gui.myschedule.dualpane.MyScheduleDualPaneActivity" />
 
         <activity android:name="mobi.myseries.gui.mystatistics.MyStatisticsActivity" />
 
