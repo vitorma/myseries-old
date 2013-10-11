@@ -34,9 +34,9 @@ public class TraktParser {
     private static final String TVDB_ID = "tvdb_id";
     private static final String TITLE = "title";
     private static final String STATUS = "status";
-    private static final String AIR_DAY = "air_day_utc";
-    private static final String AIR_TIME = "air_time_utc";
-    private static final String AIR_DATE = "first_aired_utc";
+    private static final String AIR_DAY = "air_day";
+    private static final String AIR_TIME = "air_time";
+    private static final String AIR_DATE = "first_aired";
     private static final String RUNTIME = "runtime";
     private static final String NETWORK = "network";
     private static final String OVERVIEW = "overview";
@@ -52,6 +52,7 @@ public class TraktParser {
     private static final String NUMBER = "number";
     private static final String SCREEN = "screen";
     private static final String SHOWS = "shows";
+    private static final String TRAKT_TV_TIMEZONE = "America/Los_Angeles";
 
     private static final int COMPRESSED_POSTER_300 = 300;
 
@@ -65,7 +66,7 @@ public class TraktParser {
             Time airTime = readAirTime(seriesObject);
             WeekDay airDay = readAirDay(seriesObject);
 
-            WeekTime airWTime = DatesAndTimes.toUtcTime(new WeekTime(airDay, airTime), TimeZone.getTimeZone("GMT-8"));
+            WeekTime airWTime = DatesAndTimes.toUtcTime(new WeekTime(airDay, airTime), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
 
             Series.Builder seriesBuilder = Series.builder()
                     .withTvdbId(readTvdbId(seriesObject))
@@ -260,7 +261,7 @@ public class TraktParser {
 
     private static Date readAirDate(JsonObject object) {
         try {
-            return DatesAndTimes.toUtcTime(new Date(object.get(AIR_DATE).getAsLong()), TimeZone.getTimeZone("GMT-8"));
+            return DatesAndTimes.toUtcTime(new Date(toMiliseconds(object.get(AIR_DATE).getAsLong())), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
         } catch (Exception e) {
             return null;
         }
@@ -336,6 +337,10 @@ public class TraktParser {
 
     private static String readStringSafely(JsonElement object) {
         return Objects.nullSafe(object, new JsonPrimitive("")).getAsString();
+    }
+
+    private static Long toMiliseconds(long seconds) {
+        return 1000L * seconds;
     }
 
     private static String compressedPosterUrl(String poster, int size) {
