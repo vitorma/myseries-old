@@ -161,4 +161,10 @@ public class DatesAndTimes {
 
         return new Date(date.getTime() + offset);
     }
+
+    public static Date midnightDateFrom(Date date) {
+        long milis = (date.getTime() / DAY_IN_MILLIS) * DAY_IN_MILLIS ;
+
+        return new Date(milis);
+    }
 }

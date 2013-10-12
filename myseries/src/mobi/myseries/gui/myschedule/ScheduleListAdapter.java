@@ -152,8 +152,8 @@ public class ScheduleListAdapter extends BaseAdapter {
     private boolean shouldViewBeSectioned(int position) {
         if (position == 0) { return true; }
 
-        Date current = mItems.episodeAt(position).airDate();
-        Date previous = mItems.episodeAt(position - 1).airDate();
+        Date current = DatesAndTimes.midnightDateFrom(mItems.episodeAt(position).airDate());
+        Date previous = DatesAndTimes.midnightDateFrom(mItems.episodeAt(position - 1).airDate());
 
         return Objects.areDifferent(current, previous);
     }
