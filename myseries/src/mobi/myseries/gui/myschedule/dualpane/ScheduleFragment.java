@@ -2,6 +2,7 @@ package mobi.myseries.gui.myschedule.dualpane;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.preferences.MySchedulePreferencesListener;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.myschedule.ScheduleListAdapter;
@@ -9,8 +10,6 @@ import mobi.myseries.gui.myschedule.SchedulePagerAdapter;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.PauseOnScrollListener;
 import android.app.Fragment;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -22,7 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-public class ScheduleFragment extends Fragment implements ScheduleListener, OnPageChangeListener {
+public class ScheduleFragment extends Fragment implements ScheduleListener, OnPageChangeListener, MySchedulePreferencesListener {
     private int mScheduleMode;
     private int mSelectedItem;
 
@@ -74,14 +73,14 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     public void onStart() {
         super.onStart();
 
-        App.preferences().forActivities().register(mPreferencesListener);
+        App.preferences().forMySchedule(mScheduleMode).register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        App.preferences().forActivities().deregister(mPreferencesListener);
+        App.preferences().forMySchedule(mScheduleMode).deregister(this);
         mItems.deregister(this);
     }
 
@@ -117,14 +116,20 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
         selectItem(position);
     }
 
-    /* SharedPreferences.OnSharedPreferenceChangeListener */
+   @Override
+    public void onSeriesToShowChange() {
+        reload();
+    }
 
-    private OnSharedPreferenceChangeListener mPreferencesListener = new OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            reload();
-        }
-    };
+    @Override
+    public void onEpisodesToShowChange() {
+        reload();
+    }
+
+    @Override
+    public void onSortingChange() {
+        reload();
+    }
 
     /* Auxiliary */
 
@@ -137,7 +142,6 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     private void reload() {
         if(isLoading)
             loadTask.cancel(true);
-
         loadTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
