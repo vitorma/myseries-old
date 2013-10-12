@@ -31,7 +31,6 @@ public class DatesAndTimes {
     private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
 
     private static final TimeZone PST_TIME_ZONE = TimeZone.getTimeZone("GMT-8");
-    private static final TimeZone LOCAL_TIME_ZONE = TimeZone.getDefault();
 
     /* Parsing */
 

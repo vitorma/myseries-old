@@ -15,14 +15,12 @@ import mobi.myseries.gui.shared.CheckableFrameLayout.OnCheckedListener;
 import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
-import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.gui.shared.SmallPosterFetchingMethod;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.RelativeDay;
 import mobi.myseries.shared.Strings;
-import mobi.myseries.shared.WeekDay;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -105,8 +103,7 @@ public class ScheduleListAdapter extends BaseAdapter {
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateFormat, unavailable);
             viewHolder.mDate.setText(formattedDate);
 
-            WeekDay weekDay = App.seriesFollowingService().getFollowedSeries(episode.seriesId()).airDay();
-            String formattedWeekDay = DatesAndTimes.toString(weekDay, DateFormats.forShortWeekDay(Locale.getDefault()), "").toUpperCase();
+            String formattedWeekDay = DateFormats.forShortWeekDay(Locale.getDefault()).format(episode.airDate()).toUpperCase();
             viewHolder.mWeekDay.setText(formattedWeekDay);
 
             RelativeDay relativeDay = DatesAndTimes.parse(episode.airDate(), null);
@@ -132,6 +129,8 @@ public class ScheduleListAdapter extends BaseAdapter {
         viewHolder.mEpisodeName.setText(episodeNumber + " " + episode.title());
 
         DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(App.context());
+
+        //TODO(Reul): could be episode.airDay, but it looks incorrect and there are time inconsistencies between episodes of the same show
         String airtime = DatesAndTimes.toString(episode.airTime(), airtimeFormat, "");
         String network = series.network();
         viewHolder.mAirInfo.setText(Strings.concat(airtime, network, " - "));
@@ -166,16 +165,16 @@ public class ScheduleListAdapter extends BaseAdapter {
     /* ViewHolder */
 
     private static class ViewHolder {
-        private View mSection;
-        private TextView mDate;
-        private TextView mWeekDay;
-        private TextView mRelativeDay;
-        private ImageView mPoster;
-        private SeenMark mWatchMark;
-        private CheckedTextView mSeriesName;
-        private CheckedTextView mEpisodeName;
-        private CheckedTextView mAirInfo;
-        private ProgressBar mPosterLoadingProgress;
+        private final View mSection;
+        private final TextView mDate;
+        private final TextView mWeekDay;
+        private final TextView mRelativeDay;
+        private final ImageView mPoster;
+        private final SeenMark mWatchMark;
+        private final CheckedTextView mSeriesName;
+        private final CheckedTextView mEpisodeName;
+        private final CheckedTextView mAirInfo;
+        private final ProgressBar mPosterLoadingProgress;
         private CheckableFrameLayout mCheckableBody;
 
         private ViewHolder(View view) {
@@ -225,8 +224,8 @@ public class ScheduleListAdapter extends BaseAdapter {
 
                     mWatchMark.setImageDrawable(
                             checked ?
-                            App.resources().getDrawable(R.drawable.watchmark_dark) :
-                            App.resources().getDrawable(R.drawable.watchmark_light));
+                                    App.resources().getDrawable(R.drawable.watchmark_dark) :
+                                        App.resources().getDrawable(R.drawable.watchmark_light));
                 }
             };
         }

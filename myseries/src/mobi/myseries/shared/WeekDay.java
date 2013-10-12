@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import android.util.Log;
-
 public class WeekDay implements Comparable<WeekDay> {
     private static final DateFormat ACCEPTED_FORMAT_FOR_PARSING = new SimpleDateFormat("E", Locale.US);
 
@@ -21,7 +19,6 @@ public class WeekDay implements Comparable<WeekDay> {
 
     private WeekDay(Date day) {
         this.day = day;
-        Log.d(getClass().getName(), new SimpleDateFormat("E yyyy.MM.dd G 'at' HH:mm:ss z").format(day));
     }
 
     public static WeekDay valueOf(Date day) {

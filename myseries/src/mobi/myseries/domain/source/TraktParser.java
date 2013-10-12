@@ -18,6 +18,7 @@ import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.WeekDay;
 import mobi.myseries.shared.WeekTime;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,17 +64,24 @@ public class TraktParser {
 
             int seriesId = readTvdbId(seriesObject);
 
+            WeekTime airWTime;
+
+            //TODO(Reul): use a single date to store airday and airtime
             Time airTime = readAirTime(seriesObject);
             WeekDay airDay = readAirDay(seriesObject);
 
-            WeekTime airWTime = DatesAndTimes.toUtcTime(new WeekTime(airDay, airTime), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
+            if (airTime != null && airDay != null) {
+                airWTime = DatesAndTimes.toUtcTime(new WeekTime(airDay, airTime), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
+                airTime = airWTime.time();
+                airDay = airWTime.weekday();
+            }
 
             Series.Builder seriesBuilder = Series.builder()
                     .withTvdbId(readTvdbId(seriesObject))
                     .withTitle(readTitle(seriesObject))
                     .withStatus(readStatus(seriesObject))
-                    .withAirDay(airWTime.weekday())
-                    .withAirTime(airWTime.time())
+                    .withAirDay(airDay)
+                    .withAirTime(airTime)
                     .withAirDate(readAirDate(seriesObject))
                     .withRuntime(readRuntime(seriesObject))
                     .withNetwork(readNetwork(seriesObject))
@@ -261,7 +269,14 @@ public class TraktParser {
 
     private static Date readAirDate(JsonObject object) {
         try {
-            return DatesAndTimes.toUtcTime(new Date(toMiliseconds(object.get(AIR_DATE).getAsLong())), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
+            long unixtime = object.get(AIR_DATE).getAsLong();
+
+            if (unixtime == 0) {
+                Log.d(TraktParser.class.getName(), "AIRDATE == (Unix time) 0. Returning null instead.");
+                return null;
+            }
+
+            return DatesAndTimes.toUtcTime(new Date(toMiliseconds(unixtime)), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
         } catch (Exception e) {
             return null;
         }
