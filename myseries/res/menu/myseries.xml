@@ -45,9 +45,10 @@
         android:title="@string/menu_update"
         android:showAsAction="never"/>
 
-    <item
+    <!-- Show this item to users who has bought backup feature 
+    item
         android:id="@+id/backup_restore"
         android:title="@string/menu_backup_restore"
-        android:showAsAction="never"/>
+        android:showAsAction="never"/-->
 
 </menu>
