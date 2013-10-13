@@ -32,11 +32,10 @@ public class ActionBarTabAdapter extends FragmentPagerAdapter implements Publish
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
         mActionBar = actionBar;
-        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
         for (TabDefinition td : mTabDefinitions) {
             mActionBar.addTab(newTab(td.title()), false);
         }
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         notifyDataSetChanged();
 
