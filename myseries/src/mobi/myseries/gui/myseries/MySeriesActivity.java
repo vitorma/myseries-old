@@ -108,9 +108,12 @@ public class MySeriesActivity extends BaseActivity {
             case R.id.update:
                 this.startActivity(UpdateActivity.newIntent(this));
                 return true;
+            /*
+            TODO: Show this item to users who has bought backup feature
             case R.id.backup_restore:
                 this.startActivity(BackupActivity.newIntent(this));
                 return true;
+            */
             default:
                 return super.onOptionsItemSelected(item);
         }

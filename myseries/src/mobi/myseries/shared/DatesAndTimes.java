@@ -31,7 +31,6 @@ public class DatesAndTimes {
     private static final Date MAX_DATE = new Date(Long.MAX_VALUE);
 
     private static final TimeZone PST_TIME_ZONE = TimeZone.getTimeZone("GMT-8");
-    private static final TimeZone LOCAL_TIME_ZONE = TimeZone.getDefault();
 
     /* Parsing */
 
@@ -151,19 +150,8 @@ public class DatesAndTimes {
         return utcTimeStamp + PST_TIME_ZONE.getOffset(utcTimeStamp);
     }
 
-    public static Date toLocalTime(final Date utcDate) {
-        Date date = new Date(utcDate.getTime() + LOCAL_TIME_ZONE.getOffset(utcDate.getTime()));
-        return date;
-    }
-
     public static WeekTime toUtcTime(WeekTime utcWeekTime, TimeZone originTimeZone) {
         long offset = - originTimeZone.getOffset(System.currentTimeMillis());
-
-        return utcWeekTime.plusMinutes(offset / (60 * 1000));
-    }
-
-    public static WeekTime toLocalTime(WeekTime utcWeekTime) {
-        long offset = LOCAL_TIME_ZONE.getOffset(System.currentTimeMillis());
 
         return utcWeekTime.plusMinutes(offset / (60 * 1000));
     }
@@ -172,5 +160,11 @@ public class DatesAndTimes {
         long offset = - originTimeZone.getOffset(date.getTime());
 
         return new Date(date.getTime() + offset);
+    }
+
+    public static Date midnightDateFrom(Date date) {
+        long milis = (date.getTime() / DAY_IN_MILLIS) * DAY_IN_MILLIS ;
+
+        return new Date(milis);
     }
 }

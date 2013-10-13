@@ -18,6 +18,7 @@ import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.WeekDay;
 import mobi.myseries.shared.WeekTime;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,9 +35,9 @@ public class TraktParser {
     private static final String TVDB_ID = "tvdb_id";
     private static final String TITLE = "title";
     private static final String STATUS = "status";
-    private static final String AIR_DAY = "air_day_utc";
-    private static final String AIR_TIME = "air_time_utc";
-    private static final String AIR_DATE = "first_aired_utc";
+    private static final String AIR_DAY = "air_day";
+    private static final String AIR_TIME = "air_time";
+    private static final String AIR_DATE = "first_aired";
     private static final String RUNTIME = "runtime";
     private static final String NETWORK = "network";
     private static final String OVERVIEW = "overview";
@@ -52,6 +53,7 @@ public class TraktParser {
     private static final String NUMBER = "number";
     private static final String SCREEN = "screen";
     private static final String SHOWS = "shows";
+    private static final String TRAKT_TV_TIMEZONE = "America/Los_Angeles";
 
     private static final int COMPRESSED_POSTER_300 = 300;
 
@@ -62,17 +64,24 @@ public class TraktParser {
 
             int seriesId = readTvdbId(seriesObject);
 
+            WeekTime airWTime;
+
+            //TODO(Reul): use a single date to store airday and airtime
             Time airTime = readAirTime(seriesObject);
             WeekDay airDay = readAirDay(seriesObject);
 
-            WeekTime airWTime = DatesAndTimes.toUtcTime(new WeekTime(airDay, airTime), TimeZone.getTimeZone("GMT-8"));
+            if (airTime != null && airDay != null) {
+                airWTime = DatesAndTimes.toUtcTime(new WeekTime(airDay, airTime), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
+                airTime = airWTime.time();
+                airDay = airWTime.weekday();
+            }
 
             Series.Builder seriesBuilder = Series.builder()
                     .withTvdbId(readTvdbId(seriesObject))
                     .withTitle(readTitle(seriesObject))
                     .withStatus(readStatus(seriesObject))
-                    .withAirDay(airWTime.weekday())
-                    .withAirTime(airWTime.time())
+                    .withAirDay(airDay)
+                    .withAirTime(airTime)
                     .withAirDate(readAirDate(seriesObject))
                     .withRuntime(readRuntime(seriesObject))
                     .withNetwork(readNetwork(seriesObject))
@@ -260,7 +269,14 @@ public class TraktParser {
 
     private static Date readAirDate(JsonObject object) {
         try {
-            return DatesAndTimes.toUtcTime(new Date(object.get(AIR_DATE).getAsLong()), TimeZone.getTimeZone("GMT-8"));
+            long unixtime = object.get(AIR_DATE).getAsLong();
+
+            if (unixtime == 0) {
+                Log.d(TraktParser.class.getName(), "AIRDATE == (Unix time) 0. Returning null instead.");
+                return null;
+            }
+
+            return DatesAndTimes.toUtcTime(new Date(toMiliseconds(unixtime)), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
         } catch (Exception e) {
             return null;
         }
@@ -336,6 +352,10 @@ public class TraktParser {
 
     private static String readStringSafely(JsonElement object) {
         return Objects.nullSafe(object, new JsonPrimitive("")).getAsString();
+    }
+
+    private static Long toMiliseconds(long seconds) {
+        return 1000L * seconds;
     }
 
     private static String compressedPosterUrl(String poster, int size) {
