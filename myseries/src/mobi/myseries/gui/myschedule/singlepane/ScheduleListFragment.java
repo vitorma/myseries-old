@@ -5,7 +5,10 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.preferences.MySchedulePreferencesListener;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.application.schedule.ScheduleSpecification;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.ScheduleListAdapter;
+import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.PauseOnScrollListener;
 import android.app.Activity;
@@ -14,8 +17,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 public class ScheduleListFragment extends Fragment implements ScheduleListener, MySchedulePreferencesListener {
@@ -23,6 +28,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     private ScheduleMode mItems;
     private ScheduleListAdapter mAdapter;
     private ListView mListView;
+    private View mEmptyStateView;
     private OnItemClickListener mOnItemClickListener;
     private AsyncTask<Void, Void, Void> loadTask;
     private boolean isLoading = false;
@@ -100,6 +106,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     public void onScheduleStateChanged() {
         mAdapter.resetViewStates();
         mAdapter.notifyDataSetChanged();
+        setUpViews();
     }
 
     @Override
@@ -117,6 +124,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
 
     private void findViews() {
         mListView = (ListView) getView().findViewById(R.id.list);
+        mEmptyStateView = getView().findViewById(R.id.empty_state);
     }
 
     private void setUpData() {
@@ -129,6 +137,20 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     }
 
     private void setUpViews() {
+        if (mItems.numberOfEpisodes() > 0) {
+            mEmptyStateView.setVisibility(View.GONE);
+            mListView.setVisibility(View.VISIBLE);
+
+            setUpListView();
+        } else {
+            mEmptyStateView.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
+
+            setUpEmptyStateView();
+        }
+    }
+
+    private void setUpListView() {
         mListView.setAdapter(mAdapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -139,6 +161,67 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
         });
 
         mListView.setOnScrollListener(new PauseOnScrollListener(false, true));
+    }
+
+    private void setUpEmptyStateView() {
+        ScheduleSpecification specification = App.preferences().forMySchedule(mScheduleMode).fullSpecification();
+        boolean showHiddenEpisodesWarning = false;
+
+        Button unhideSpecialEpisodes = (Button) mEmptyStateView.findViewById(R.id.unhideSpecialEpisodes);
+        if (!specification.isSatisfiedBySpecialEpisodes()) {
+            showHiddenEpisodesWarning = true;
+            unhideSpecialEpisodes.setVisibility(View.VISIBLE);
+            unhideSpecialEpisodes.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    App.preferences().forMySchedule(mScheduleMode).putIfShowSpecialEpisodes(true);
+                }
+            });
+        } else {
+            unhideSpecialEpisodes.setVisibility(View.GONE);
+        }
+
+        Button unhideWatchedEpisodes = (Button) mEmptyStateView.findViewById(R.id.unhideWatchedEpisodes);
+        if (mScheduleMode != ScheduleMode.TO_WATCH && !specification.isSatisfiedByWatchedEpisodes()) {
+            showHiddenEpisodesWarning = true;
+            unhideWatchedEpisodes.setVisibility(View.VISIBLE);
+            unhideWatchedEpisodes.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    App.preferences().forMySchedule(mScheduleMode).putIfShowWatchedEpisodes(true);
+                }
+            });
+        } else {
+            unhideWatchedEpisodes.setVisibility(View.GONE);
+        }
+
+        Button unhideEpisodesOfSomeSeries = (Button) mEmptyStateView.findViewById(R.id.unhideEpisodesOfSomeSeries);
+        boolean isSatisfiedByEpisodesOfAllSeries = true;
+        for (Series s : App.seriesFollowingService().getAllFollowedSeries()) {
+            if (!specification.isSatisfiedByEpisodesOfSeries(s.id())) {
+                isSatisfiedByEpisodesOfAllSeries = false;
+                break;
+            }
+        }
+        if (!isSatisfiedByEpisodesOfAllSeries) {
+            showHiddenEpisodesWarning = true;
+            unhideEpisodesOfSomeSeries.setVisibility(View.VISIBLE);
+            unhideEpisodesOfSomeSeries.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SeriesFilterDialogFragment.newInstance(mScheduleMode).show(getFragmentManager(), "seriesFilterDialog");
+                }
+            });
+        } else {
+            unhideEpisodesOfSomeSeries.setVisibility(View.GONE);
+        }
+
+        View hiddenEpisodesWarning = mEmptyStateView.findViewById(R.id.hiddenEpisodes);
+        if (showHiddenEpisodesWarning) {
+            hiddenEpisodesWarning.setVisibility(View.VISIBLE);
+        } else {
+            hiddenEpisodesWarning.setVisibility(View.GONE);
+        }
     }
 
     private void reload() {
@@ -159,8 +242,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
 
             @Override
             protected void onPostExecute(Void result) {
-                if(!isCancelled())
-                    setUpViews();
+                if(!isCancelled()) { setUpViews(); }
                 isLoading = false;
             }
         }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);

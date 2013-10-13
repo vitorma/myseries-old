@@ -91,7 +91,7 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
                 prefs.putIfShowSpecialEpisodes(episodesToShow[SPECIAL_EPISODES_ITEM]);
 
                 if (EpisodeFilterDialogFragment.this.scheduleMode != ScheduleMode.TO_WATCH) {
-                    prefs.putIfShowSeenEpisodes(episodesToShow[WATCHED_EPISODES_ITEM]);
+                    prefs.putIfShowWatchedEpisodes(episodesToShow[WATCHED_EPISODES_ITEM]);
                 }
 
                 dialog.dismiss();

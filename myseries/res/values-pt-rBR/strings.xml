@@ -63,6 +63,13 @@
     <string name="tab_seasons">TEMPORADAS</string>
     <string name="confirmation_removal_single_series">Você quer mesmo remover %s?</string>
 
+    <!-- Schedule - Empty state -->
+    <string name="title_no_scheduled_episodes">Nenhum episódio agendado</string>
+    <string name="warning_hidden_episodes">MAS ALGUNS ESTÃO OCULTOS</string>
+    <string name="button_unhide_special_episodes">Mostrar episódios especiais</string>
+    <string name="button_unhide_watched_episodes">Mostrar episódios assistidos</string>
+    <string name="button_unhide_episodes_of_some_series">Reexibir episódios de algumas séries</string>
+
     <plurals name="plural_remaining">
         <item quantity="one">%d restante</item>
         <item quantity="other">%d restantes</item>
@@ -80,11 +87,11 @@
     <string name="none_special">Nenhum especial</string>
 
     <plurals name="plural_there_are_hidden_series">
-        <item quantity="one">Mas há %d série oculta</item>
-        <item quantity="other">Mas há %d séries ocultas</item>
+        <item quantity="one">MAS HÁ %d SÉRIE OCULTA</item>
+        <item quantity="other">MAS HÁ %d SÉRIES OCULTAS</item>
     </plurals>
-    <string name="btn_add_series">Adicionar séries</string>
-    <string name="btn_unhide_series">Desocultar séries</string>
+    <string name="btn_add_series">Adicionar algumas séries</string>
+    <string name="btn_unhide_series">Reexibir algumas séries</string>
 
     <!-- Accessibility -->
 

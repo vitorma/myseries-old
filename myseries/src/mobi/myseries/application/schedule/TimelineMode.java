@@ -49,17 +49,16 @@ public abstract class TimelineMode extends ScheduleMode {
                 if (!mSpecification.isSatisfiedByEpisodesOfSeries(e.seriesId())) { return; }
 
                 boolean added = false;
-                boolean removed = false;
 
                 if (timelineSpecification().isSatisfiedBy(e)) {
                     added = !mEpisodes.contains(e) && mEpisodes.add(e);
                 } else {
-                    removed = mEpisodes.remove(e);
+                    mEpisodes.remove(e);
                 }
 
                 if (added) { sortEpisodes(); }
 
-                if (added || removed) { notifyOnScheduleStateChanged(); }
+                notifyOnScheduleStateChanged();
             }
 
             @Override
@@ -67,19 +66,18 @@ public abstract class TimelineMode extends ScheduleMode {
                 if (!mSpecification.isSatisfiedByEpisodesOfSeries(s.seriesId())) { return; }
 
                 boolean added = false;
-                boolean removed = false;
 
                 for (Episode e : s.episodes()) {
                     if (timelineSpecification().isSatisfiedBy(e)) {
-                        added = added | (!mEpisodes.contains(e) && mEpisodes.add(e));
+                        added = !mEpisodes.contains(e) && mEpisodes.add(e);
                     } else {
-                        removed = removed | mEpisodes.remove(e);
+                        mEpisodes.remove(e);
                     }
                 }
 
                 if (added) { sortEpisodes(); }
 
-                if (added || removed) { notifyOnScheduleStateChanged(); }
+                notifyOnScheduleStateChanged();
             }
 
             @Override
@@ -87,19 +85,18 @@ public abstract class TimelineMode extends ScheduleMode {
                 if (!mSpecification.isSatisfiedByEpisodesOfSeries(s.id())) { return; }
 
                 boolean added = false;
-                boolean removed = false;
 
                 for (Episode e : s.episodes()) {
                     if (timelineSpecification().isSatisfiedBy(e)) {
-                        added = added | (!mEpisodes.contains(e) && mEpisodes.add(e));
+                        added = !mEpisodes.contains(e) && mEpisodes.add(e);
                     } else {
-                        removed = removed | mEpisodes.remove(e);
+                        mEpisodes.remove(e);
                     }
                 }
 
                 if (added) { sortEpisodes(); }
 
-                if (added || removed) { notifyOnScheduleStateChanged(); }
+                notifyOnScheduleStateChanged();
             }
         };
     }

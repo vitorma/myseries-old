@@ -4,8 +4,11 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.application.schedule.ScheduleSpecification;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.ScheduleListAdapter;
 import mobi.myseries.gui.myschedule.SchedulePagerAdapter;
+import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.PauseOnScrollListener;
 import android.app.Fragment;
@@ -17,9 +20,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 
 public class ScheduleFragment extends Fragment implements ScheduleListener, OnPageChangeListener {
@@ -32,7 +37,9 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     private SchedulePagerAdapter mPagerAdapter;
     private ListView mListView;
     private ViewPager mViewPager;
-    
+    private View mFullStateView;
+    private View mEmptyStateView;
+
     private AsyncTask<Void, Void, Void> loadTask;
     private boolean isLoading = false;
 
@@ -89,14 +96,11 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
     @Override
     public void onScheduleStateChanged() {
-        mListAdapter.resetViewStates();
-        mListAdapter.notifyDataSetChanged();
+        setUpViews();
 
-        mPagerAdapter = new SchedulePagerAdapter(mItems);
-        mViewPager.setAdapter(mPagerAdapter);
-        mPagerAdapter.notifyDataSetChanged();
-
-        checkItem(mSelectedItem);
+        if (mListAdapter != null && mPagerAdapter != null) {
+            checkItem(mSelectedItem);
+        }
     }
 
     @Override
@@ -164,7 +168,9 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
     private void findViews() {
         mListView = (ListView) getView().findViewById(R.id.masterList);
-        mViewPager = (ViewPager) this.getView().findViewById(R.id.detailsPager);
+        mViewPager = (ViewPager) getView().findViewById(R.id.detailsPager);
+        mFullStateView = getView().findViewById(R.id.fullStateView);
+        mEmptyStateView = getView().findViewById(R.id.empty_state);
     }
 
     private void setUpData() {
@@ -178,6 +184,20 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     }
 
     private void setUpViews() {
+        if (mItems.numberOfEpisodes() > 0) {
+            mFullStateView.setVisibility(View.VISIBLE);
+            mEmptyStateView.setVisibility(View.GONE);
+
+            setUpFullStateView();
+        } else {
+            mEmptyStateView.setVisibility(View.VISIBLE);
+            mFullStateView.setVisibility(View.GONE);
+
+            setUpEmptyStateView();
+        }
+    }
+
+    private void setUpFullStateView() {
         mListView.setAdapter(mListAdapter);
         mListView.setOnScrollListener(new PauseOnScrollListener(false, true));
         mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -190,6 +210,67 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOnPageChangeListener(this);
         mPagerAdapter.notifyDataSetChanged();
+    }
+
+    private void setUpEmptyStateView() {
+        ScheduleSpecification specification = App.preferences().forMySchedule(mScheduleMode).fullSpecification();
+        boolean showHiddenEpisodesWarning = false;
+
+        Button unhideSpecialEpisodes = (Button) mEmptyStateView.findViewById(R.id.unhideSpecialEpisodes);
+        if (!specification.isSatisfiedBySpecialEpisodes()) {
+            showHiddenEpisodesWarning = true;
+            unhideSpecialEpisodes.setVisibility(View.VISIBLE);
+            unhideSpecialEpisodes.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    App.preferences().forMySchedule(mScheduleMode).putIfShowSpecialEpisodes(true);
+                }
+            });
+        } else {
+            unhideSpecialEpisodes.setVisibility(View.GONE);
+        }
+
+        Button unhideWatchedEpisodes = (Button) mEmptyStateView.findViewById(R.id.unhideWatchedEpisodes);
+        if (mScheduleMode != ScheduleMode.TO_WATCH && !specification.isSatisfiedByWatchedEpisodes()) {
+            showHiddenEpisodesWarning = true;
+            unhideWatchedEpisodes.setVisibility(View.VISIBLE);
+            unhideWatchedEpisodes.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    App.preferences().forMySchedule(mScheduleMode).putIfShowWatchedEpisodes(true);
+                }
+            });
+        } else {
+            unhideWatchedEpisodes.setVisibility(View.GONE);
+        }
+
+        Button unhideEpisodesOfSomeSeries = (Button) mEmptyStateView.findViewById(R.id.unhideEpisodesOfSomeSeries);
+        boolean isSatisfiedByEpisodesOfAllSeries = true;
+        for (Series s : App.seriesFollowingService().getAllFollowedSeries()) {
+            if (!specification.isSatisfiedByEpisodesOfSeries(s.id())) {
+                isSatisfiedByEpisodesOfAllSeries = false;
+                break;
+            }
+        }
+        if (!isSatisfiedByEpisodesOfAllSeries) {
+            showHiddenEpisodesWarning = true;
+            unhideEpisodesOfSomeSeries.setVisibility(View.VISIBLE);
+            unhideEpisodesOfSomeSeries.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SeriesFilterDialogFragment.newInstance(mScheduleMode).show(getFragmentManager(), "seriesFilterDialog");
+                }
+            });
+        } else {
+            unhideEpisodesOfSomeSeries.setVisibility(View.GONE);
+        }
+
+        View hiddenEpisodesWarning = mEmptyStateView.findViewById(R.id.hiddenEpisodes);
+        if (showHiddenEpisodesWarning) {
+            hiddenEpisodesWarning.setVisibility(View.VISIBLE);
+        } else {
+            hiddenEpisodesWarning.setVisibility(View.GONE);
+        }
     }
 
     private void selectItem(int position) {

@@ -14,6 +14,10 @@
     <dimen name="myseries_poster_height">276dp</dimen>
     <dimen name="myseries_grid_gap">9dp</dimen>
 
+    <!-- Empty state views -->
+
+    <dimen name="empty_state_view_width">380dp</dimen>
+
     <!-- My Statistics -->
 
     <dimen name="mystatistics_side_padding">60dp</dimen>

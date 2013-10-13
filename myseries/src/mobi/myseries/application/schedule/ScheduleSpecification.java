@@ -22,13 +22,13 @@ public class ScheduleSpecification extends AbstractSpecification<Episode> {
         mSortMode = SortMode.OLDEST_FIRST;
     }
 
-    public ScheduleSpecification specifyInclusionOfSpecialEpisodes(boolean including) {
+    public ScheduleSpecification includingSpecialEpisodes(boolean including) {
         mIsSatisfiedBySpecialEpisodes = including;
 
         return this;
     }
 
-    public ScheduleSpecification specifyInclusionOfWatchedEpisodes(boolean including) {
+    public ScheduleSpecification includingWatchedEpisodes(boolean including) {
         mIsSatisfiedByWatchedEpisodes = including;
 
         return this;
@@ -42,7 +42,7 @@ public class ScheduleSpecification extends AbstractSpecification<Episode> {
         return this;
     }
 
-    public ScheduleSpecification specifyInclusionOfAllSeries(Map<Series, Boolean> inclusions) {
+    public ScheduleSpecification includingAllSeries(Map<Series, Boolean> inclusions) {
         Validate.isNonNull(inclusions, "inclusions");
 
         for (Series series : inclusions.keySet()) {

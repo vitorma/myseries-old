@@ -177,7 +177,7 @@ public class MySeriesFragment extends Fragment {
             }
         }
     };
-    
+
     private void setUpScrollListener() {
         showsGrid.setOnScrollListener(new PauseOnScrollListener(false, true));
     }

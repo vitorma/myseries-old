@@ -58,9 +58,9 @@ public class MySchedulePreferences {
     public ScheduleSpecification fullSpecification() {
         return new ScheduleSpecification()
             .specifySortMode(this.sortMode())
-            .specifyInclusionOfSpecialEpisodes(this.showSpecialEpisodes())
-            .specifyInclusionOfWatchedEpisodes(this.showSeenEpisodes())
-            .specifyInclusionOfAllSeries(this.seriesToShow());
+            .includingSpecialEpisodes(this.showSpecialEpisodes())
+            .includingWatchedEpisodes(this.showSeenEpisodes())
+            .includingAllSeries(this.seriesToShow());
     }
 
     public void putSortMode(int sortMode) {
@@ -73,7 +73,7 @@ public class MySchedulePreferences {
         this.notifyEpisodesToShowChanged();
     }
 
-    public void putIfShowSeenEpisodes(boolean show) {
+    public void putIfShowWatchedEpisodes(boolean show) {
         this.primitive.putBoolean(SHOW_SEEN_EPISODES_KEY, show);
         this.notifyEpisodesToShowChanged();
     }

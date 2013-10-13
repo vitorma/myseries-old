@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Empty state views -->
+
+    <dimen name="empty_state_internal_gap_top">4dp</dimen>
+    <dimen name="empty_state_internal_gap_bottom">8dp</dimen>
+
+</resources>

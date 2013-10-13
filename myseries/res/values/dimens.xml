@@ -48,6 +48,12 @@
 
     <dimen name="mystatistics_side_padding">8dp</dimen>
 
+    <!-- Empty state views -->
+
+    <dimen name="empty_state_view_width">320dp</dimen>
+    <dimen name="empty_state_internal_gap_top">12dp</dimen>
+    <dimen name="empty_state_internal_gap_bottom">16dp</dimen>
+
     <!-- Series -->
 
     <dimen name="series_details_gap">16dp</dimen>

@@ -5,7 +5,9 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
+import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.SchedulePagerAdapter;
+import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
 import android.app.Fragment;
 import android.content.SharedPreferences;
@@ -17,7 +19,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class ScheduleDetailFragment extends Fragment
         implements ScheduleListener, OnPageChangeListener, OnSharedPreferenceChangeListener {
@@ -28,6 +32,7 @@ public class ScheduleDetailFragment extends Fragment
     private ScheduleMode mItems;
 
     private ViewPager mViewPager;
+    private View mEmptyStateView;
     private SchedulePagerAdapter mPagerAdapter;
 
     /* New instance */
@@ -88,11 +93,12 @@ public class ScheduleDetailFragment extends Fragment
 
     @Override
     public void onScheduleStateChanged() {
-        mPagerAdapter = new SchedulePagerAdapter(mItems);
-        mViewPager.setAdapter(mPagerAdapter);
-        mPagerAdapter.notifyDataSetChanged();
+        setUpViews();
 
-        mViewPager.setCurrentItem(mSelectedPage, true);
+        if (mPagerAdapter != null) {
+            mPagerAdapter.notifyDataSetChanged();
+            mViewPager.setCurrentItem(mSelectedPage, true);
+        }
     }
 
     @Override
@@ -153,6 +159,7 @@ public class ScheduleDetailFragment extends Fragment
 
     private void findViews() {
         mViewPager = (ViewPager) getView().findViewById(R.id.pager);
+        mEmptyStateView = getView().findViewById(R.id.empty_state);
 
         PagerTabStrip titles = (PagerTabStrip) getView().findViewById(R.id.titles);
         titles.setTextColor(App.resources().getColor(R.color.dark_blue));
@@ -160,8 +167,83 @@ public class ScheduleDetailFragment extends Fragment
     }
 
     private void setUpViews() {
+        if (mItems.numberOfEpisodes() > 0) {
+            mEmptyStateView.setVisibility(View.GONE);
+            mViewPager.setVisibility(View.VISIBLE);
+
+            setUpViewPager();
+        } else {
+            mEmptyStateView.setVisibility(View.VISIBLE);
+            mViewPager.setVisibility(View.GONE);
+
+            setUpEmptyStateView();
+        }
+    }
+
+    private void setUpViewPager() {
         mPagerAdapter = new SchedulePagerAdapter(mItems);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOnPageChangeListener(this);
+    }
+
+    private void setUpEmptyStateView() {
+        ScheduleSpecification specification = App.preferences().forMySchedule(mScheduleMode).fullSpecification();
+        boolean showHiddenEpisodesWarning = false;
+
+        Button unhideSpecialEpisodes = (Button) mEmptyStateView.findViewById(R.id.unhideSpecialEpisodes);
+        if (!specification.isSatisfiedBySpecialEpisodes()) {
+            showHiddenEpisodesWarning = true;
+            unhideSpecialEpisodes.setVisibility(View.VISIBLE);
+            unhideSpecialEpisodes.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    App.preferences().forMySchedule(mScheduleMode).putIfShowSpecialEpisodes(true);
+                }
+            });
+        } else {
+            unhideSpecialEpisodes.setVisibility(View.GONE);
+        }
+
+        Button unhideWatchedEpisodes = (Button) mEmptyStateView.findViewById(R.id.unhideWatchedEpisodes);
+        if (mScheduleMode != ScheduleMode.TO_WATCH && !specification.isSatisfiedByWatchedEpisodes()) {
+            showHiddenEpisodesWarning = true;
+            unhideWatchedEpisodes.setVisibility(View.VISIBLE);
+            unhideWatchedEpisodes.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    App.preferences().forMySchedule(mScheduleMode).putIfShowWatchedEpisodes(true);
+                }
+            });
+        } else {
+            unhideWatchedEpisodes.setVisibility(View.GONE);
+        }
+
+        Button unhideEpisodesOfSomeSeries = (Button) mEmptyStateView.findViewById(R.id.unhideEpisodesOfSomeSeries);
+        boolean isSatisfiedByEpisodesOfAllSeries = true;
+        for (Series s : App.seriesFollowingService().getAllFollowedSeries()) {
+            if (!specification.isSatisfiedByEpisodesOfSeries(s.id())) {
+                isSatisfiedByEpisodesOfAllSeries = false;
+                break;
+            }
+        }
+        if (!isSatisfiedByEpisodesOfAllSeries) {
+            showHiddenEpisodesWarning = true;
+            unhideEpisodesOfSomeSeries.setVisibility(View.VISIBLE);
+            unhideEpisodesOfSomeSeries.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SeriesFilterDialogFragment.newInstance(mScheduleMode).show(getFragmentManager(), "seriesFilterDialog");
+                }
+            });
+        } else {
+            unhideEpisodesOfSomeSeries.setVisibility(View.GONE);
+        }
+
+        View hiddenEpisodesWarning = mEmptyStateView.findViewById(R.id.hiddenEpisodes);
+        if (showHiddenEpisodesWarning) {
+            hiddenEpisodesWarning.setVisibility(View.VISIBLE);
+        } else {
+            hiddenEpisodesWarning.setVisibility(View.GONE);
+        }
     }
 }

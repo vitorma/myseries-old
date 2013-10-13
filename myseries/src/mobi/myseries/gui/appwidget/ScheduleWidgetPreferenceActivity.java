@@ -200,7 +200,7 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
     }
 
     private void saveSeenEpisodesPreference() {
-        this.preferences.putIfShowSeenEpisodes(this.showSeenEpisodes.isChecked());
+        this.preferences.putIfShowWatchedEpisodes(this.showSeenEpisodes.isChecked());
     }
 
     private void saveSeriesToShowPreference() {
