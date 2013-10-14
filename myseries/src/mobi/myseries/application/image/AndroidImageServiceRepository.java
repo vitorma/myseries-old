@@ -42,13 +42,13 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
         final int bigPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_BIG_POSTER_CACHE);
         final int smallPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_SMALL_POSTER_CACHE);
 
-		this.posterDirectory = new LruImageCache(
-				new ExternalStorageImageDirectory(context, SERIES_POSTERS),
-				bigPosterCacheSizeKiB);
+        this.posterDirectory = new LruImageCache(
+                new ExternalStorageImageDirectory(context, SERIES_POSTERS),
+                bigPosterCacheSizeKiB);
 
-		this.smallPosterDirectory = new LruImageCache(
-				new ExternalStorageImageDirectory(context, SMALL_SERIES_POSTERS),
-				smallPosterCacheSizeKiB);
+        this.smallPosterDirectory = new LruImageCache(
+                new ExternalStorageImageDirectory(context, SMALL_SERIES_POSTERS),
+                smallPosterCacheSizeKiB);
 
         this.episodeDirectory = new LruRepositoryManager(new ExternalStorageImageDirectory(context, EPISODE_IMAGES),
                                                          NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES);

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.shared.Validate;
 
 import android.content.Context;
