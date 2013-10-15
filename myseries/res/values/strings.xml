@@ -148,6 +148,8 @@
     <!-- Label formats -->
 
     <string name="date_format">yyyy-MM-dd</string>
+    <string name="number_format_episode_full" formatted="false">SEASON %d EPISODE %d</string>
+    <string name="number_format_episode_full_special" formatted="false">SPECIAL EPISODE %d</string>
     <string name="episode_number_format_ext" formatted="false">EPISODE %d</string>
     <string name="episode_number_format" formatted="false">S%02dE%02d</string>
     <string name="runtime_minutes_format" formatted="false">%s minutes</string>

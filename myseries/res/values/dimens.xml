@@ -41,8 +41,8 @@
 
     <!-- My Schedule -->
 
-    <dimen name="myschedule_poster_width">54dp</dimen>
-    <dimen name="myschedule_poster_height">79dp</dimen>
+    <dimen name="myschedule_poster_width">59dp</dimen>
+    <dimen name="myschedule_poster_height">87dp</dimen>
 
     <!-- My Statistics -->
 
@@ -69,6 +69,7 @@
     <dimen name="fragment_episodes_side_gap">0dp</dimen>
     <dimen name="episode_image_width">300dp</dimen>
     <dimen name="episode_image_height">168dp</dimen>
+    <dimen name="episode_screen_height">179dp</dimen>
 
     <!-- AppWidget -->
 

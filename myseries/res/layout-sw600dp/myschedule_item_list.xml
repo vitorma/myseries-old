@@ -56,7 +56,7 @@
                     android:layout_toLeftOf="@id/seenMark"/>
 
                 <CheckedTextView
-                    android:id="@+id/episodeName"
+                    android:id="@+id/episodeTitle"
                     style="@style/TextView.Medium.MediumGray.Ellipsized"
                     android:textColor="@color/darkgray_x_white"
                     android:paddingLeft="@dimen/gap_medium"
@@ -74,7 +74,7 @@
                     android:paddingLeft="@dimen/gap_medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/episodeName"
+                    android:layout_below="@id/episodeTitle"
                     android:layout_toRightOf="@id/poster"
                     android:layout_toLeftOf="@id/seenMark"/>
 

@@ -12,11 +12,11 @@
         <include
             layout="@layout/myschedule_item_list_section"
             android:id="@+id/section"
-            android:background="#ffeeeeee"
             android:layout_alignParentTop="true"/>
 
         <mobi.myseries.gui.shared.CheckableFrameLayout
             android:id="@+id/checkableBody"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/section">
@@ -45,9 +45,10 @@
 
                 <CheckedTextView
                     android:id="@+id/seriesName"
-                    style="@style/TextView.Large.DarkGray.Ellipsized"
-                    android:fontFamily="sans-serif-light"
+                    style="@style/TextView.Medium.DarkGray.Ellipsized"
+                    android:textStyle="bold"
                     android:paddingTop="@dimen/gap_medium"
+                    android:paddingBottom="@dimen/gap_large"
                     android:paddingLeft="@dimen/gap_medium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -56,23 +57,43 @@
                     android:layout_toLeftOf="@id/seenMark"/>
 
                 <CheckedTextView
-                    android:id="@+id/episodeName"
-                    style="@style/TextView.Medium.MediumGray.Ellipsized"
+                    android:id="@+id/episodeNumber"
+                    style="@style/TextView.Small"
+                    android:textColor="@color/dark_blue"
                     android:paddingLeft="@dimen/gap_medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/seriesName"
-                    android:layout_toRightOf="@id/poster"
+                    android:layout_toRightOf="@id/poster"/>
+
+                <CheckedTextView
+                    android:id="@+id/airTime"
+                    style="@style/TextView.Small.LightGray"
+                    android:textStyle="bold"
+                    android:paddingLeft="@dimen/gap_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/seriesName"
+                    android:layout_toRightOf="@id/episodeNumber"/>
+
+                <CheckedTextView
+                    android:id="@+id/network"
+                    style="@style/TextView.Small.LightGray.Ellipsized"
+                    android:paddingLeft="@dimen/gap_small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/seriesName"
+                    android:layout_toRightOf="@id/airTime"
                     android:layout_toLeftOf="@id/seenMark"/>
 
                 <CheckedTextView
-                    android:id="@+id/airInfo"
-                    style="@style/TextView.Medium.LightGray.Ellipsized"
+                    android:id="@+id/episodeTitle"
+                    style="@style/TextView.Medium.MediumGray.Ellipsized"
                     android:paddingBottom="@dimen/gap_medium"
                     android:paddingLeft="@dimen/gap_medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/episodeName"
+                    android:layout_below="@id/episodeNumber"
                     android:layout_toRightOf="@id/poster"
                     android:layout_toLeftOf="@id/seenMark"/>
 

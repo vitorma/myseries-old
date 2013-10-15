@@ -14,7 +14,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
@@ -161,9 +161,8 @@ public class ScheduleDetailFragment extends Fragment
         mViewPager = (ViewPager) getView().findViewById(R.id.pager);
         mEmptyStateView = getView().findViewById(R.id.empty_state);
 
-        PagerTabStrip titles = (PagerTabStrip) getView().findViewById(R.id.titles);
-        titles.setTextColor(App.resources().getColor(R.color.dark_blue));
-        titles.setTabIndicatorColorResource(R.color.dark_blue);
+        PagerTitleStrip titles = (PagerTitleStrip) getView().findViewById(R.id.titles);
+        titles.setTextColor(App.resources().getColor(R.color.dark_red));
     }
 
     private void setUpViews() {

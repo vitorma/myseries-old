@@ -82,12 +82,12 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         }
 
         this.episodeAirDate = (TextView) itemView.findViewById(R.id.episodeFirstAiredTextView);
-        this.episodeName = (TextView) itemView.findViewById(R.id.episodeName);
-        this.episodeOverview = (TextView) itemView.findViewById(R.id.episodeOverviewTextView);
+        this.episodeName = (TextView) itemView.findViewById(R.id.episodeTitle);
+        this.episodeOverview = (TextView) itemView.findViewById(R.id.episodeOverview);
         this.episodeDirectors = (TextView) itemView.findViewById(R.id.episodeDirectorsTextView);
         this.episodeWriters = (TextView) itemView.findViewById(R.id.episodeWritersTextView);
         this.episodeGuestStars = (TextView) itemView.findViewById(R.id.episodeGuestStarsTextView);
-        this.isViewed = (SeenMark) itemView.findViewById(R.id.isEpisodeViewedCheckBox);
+        this.isViewed = (SeenMark) itemView.findViewById(R.id.watchMark);
         this.imageView = (ImageView) itemView.findViewById(R.id.imageView);
         this.progressSpinner = (ProgressBar) itemView.findViewById(R.id.imageProgressSpinner);
 

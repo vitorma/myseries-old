@@ -1,10 +1,14 @@
 package mobi.myseries.gui.myschedule;
 
+import java.util.Locale;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.image.EpisodeImageDownloadListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
@@ -47,7 +51,7 @@ public class SchedulePagerAdapter extends PagerAdapter {
 
         return DatesAndTimes.toString(
                 e.airDate(),
-                android.text.format.DateFormat.getMediumDateFormat(App.context()),
+                android.text.format.DateFormat.getDateFormat(App.context()),
                 LocalText.get(R.string.unavailable_date));
     }
 
@@ -55,58 +59,36 @@ public class SchedulePagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View view = mInflater.inflate(R.layout.myschedule_item_detail, null);
 
-        TextView number = (TextView) view.findViewById(R.id.episodeFirstAiredTextView);
-        TextView title = (TextView) view.findViewById(R.id.episodeName);
-        TextView overview = (TextView) view.findViewById(R.id.episodeOverviewTextView);
-        TextView directors = (TextView) view.findViewById(R.id.episodeDirectorsTextView);
-        TextView writers = (TextView) view.findViewById(R.id.episodeWritersTextView);
-        TextView guestStars = (TextView) view.findViewById(R.id.episodeGuestStarsTextView);
-        final SeenMark watchMark = (SeenMark) view.findViewById(R.id.isEpisodeViewedCheckBox);
+        TextView airDay = (TextView) view.findViewById(R.id.airDay);
+        TextView airTime = (TextView) view.findViewById(R.id.airTime);
+        TextView seriesTitle = (TextView) view.findViewById(R.id.seriesTitle);
+        TextView episodeNumber = (TextView) view.findViewById(R.id.episodeNumber);
+        TextView episodeTitle = (TextView) view.findViewById(R.id.episodeTitle);
+        TextView episodeOverview = (TextView) view.findViewById(R.id.episodeOverview);
+        final SeenMark watchMark = (SeenMark) view.findViewById(R.id.watchMark);
         final ImageView screen = (ImageView) view.findViewById(R.id.imageView);
         final ProgressBar screenLoadingProgress = (ProgressBar) view.findViewById(R.id.imageProgressSpinner);
 
         final Episode episode = mItems.episodeAt(position);
+        final Series series = App.seriesFollowingService().getFollowedSeries(episode.seriesId());
 
-        String numberFormat = App.resources().getString(R.string.episode_number_format_ext);
-        number.setText(String.format(numberFormat, episode.number()));
+        String formattedAirDay = DatesAndTimes.toString(
+                series.airDay(), DateFormats.forWeekDay(Locale.getDefault()), "");
+        airDay.setText(formattedAirDay.toUpperCase());
 
-        title.setText(Objects.nullSafe(episode.title(), App.resources().getString(R.string.to_be_announced)));
+        String formattedAirTime = DatesAndTimes.toString(
+                episode.airTime(), android.text.format.DateFormat.getTimeFormat(App.context()), "");
+        airTime.setText(formattedAirTime);
 
-        if (episode.directors().trim().isEmpty()) {
-            directors.setVisibility(View.GONE);
-            view.findViewById(R.id.episodeDirectorsLabel).setVisibility(View.GONE);
-        } else {
-            directors.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.episodeDirectorsLabel).setVisibility(View.VISIBLE);
-            directors.setText(episode.directors());
-        }
+        seriesTitle.setText(series.name());
 
-        if (episode.writers().trim().isEmpty()) {
-            writers.setVisibility(View.GONE);
-            view.findViewById(R.id.episodeWritersLabel).setVisibility(View.GONE);
-        } else {
-            writers.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.episodeWritersLabel).setVisibility(View.VISIBLE);
-            writers.setText(episode.writers());
-        }
+        String formattedNumber = episode.isSpecial() ?
+                App.resources().getString(R.string.number_format_episode_full_special, episode.number()):
+                App.resources().getString(R.string.number_format_episode_full, episode.seasonNumber(), episode.number());
+        episodeNumber.setText(formattedNumber);
 
-        if (episode.guestStars().trim().isEmpty()) {
-            guestStars.setVisibility(View.GONE);
-            view.findViewById(R.id.episodeGuestStarsLabel).setVisibility(View.GONE);
-        } else {
-            guestStars.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.episodeGuestStarsLabel).setVisibility(View.VISIBLE);
-            guestStars.setText(episode.guestStars());
-        }
-
-        if (episode.overview().trim().isEmpty()) {
-            overview.setVisibility(View.GONE);
-            view.findViewById(R.id.episodeOverviewLabel).setVisibility(View.GONE);
-        } else {
-            overview.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.episodeOverviewLabel).setVisibility(View.VISIBLE);
-            overview.setText(episode.overview());
-        }
+        episodeTitle.setText(Objects.nullSafe(episode.title(), App.resources().getString(R.string.to_be_announced)));
+        episodeOverview.setText(episode.overview());
 
         watchMark.setChecked(episode.watched());
         watchMark.setOnClickListener(new OnClickListener() {

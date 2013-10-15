@@ -20,7 +20,6 @@ import mobi.myseries.gui.shared.SmallPosterFetchingMethod;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.RelativeDay;
-import mobi.myseries.shared.Strings;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -124,16 +123,18 @@ public class ScheduleListAdapter extends BaseAdapter {
 
         viewHolder.mSeriesName.setText(series.name());
 
-        String numberFormat = App.context().getString(R.string.episode_number_format);
+        String numberFormat = App.resources().getString(R.string.episode_number_format);
         String episodeNumber = String.format(numberFormat, episode.seasonNumber(), episode.number());
-        viewHolder.mEpisodeName.setText(episodeNumber + " " + episode.title());
+        viewHolder.mEpisodeNumber.setText(episodeNumber);
+        viewHolder.mEpisodeName.setText(episode.title());
 
         DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(App.context());
 
         //TODO(Reul): could be episode.airDay, but it looks incorrect and there are time inconsistencies between episodes of the same show
         String airtime = DatesAndTimes.toString(episode.airTime(), airtimeFormat, "");
-        String network = series.network();
-        viewHolder.mAirInfo.setText(Strings.concat(airtime, network, " - "));
+        viewHolder.mAirTime.setText(airtime);
+
+        viewHolder.mNetwork.setText(series.network());
 
         viewHolder.mWatchMark.setChecked(episode.watched());
         viewHolder.mWatchMark.setOnClickListener(viewHolder.seenMarkCheckBoxListener(episode));
@@ -172,21 +173,25 @@ public class ScheduleListAdapter extends BaseAdapter {
         private final ImageView mPoster;
         private final SeenMark mWatchMark;
         private final CheckedTextView mSeriesName;
+        private final CheckedTextView mEpisodeNumber;
         private final CheckedTextView mEpisodeName;
-        private final CheckedTextView mAirInfo;
+        private final CheckedTextView mAirTime;
+        private final CheckedTextView mNetwork;
         private final ProgressBar mPosterLoadingProgress;
         private CheckableFrameLayout mCheckableBody;
 
         private ViewHolder(View view) {
             mSection = view.findViewById(R.id.section);
             mDate = (TextView) view.findViewById(R.id.date);
-            mWeekDay = (TextView) view.findViewById(R.id.weekDay);
+            mWeekDay = (TextView) view.findViewById(R.id.airDay);
             mRelativeDay = (TextView) view.findViewById(R.id.relativeDay);
             mPoster = (ImageView) view.findViewById(R.id.poster);
             mWatchMark = (SeenMark) view.findViewById(R.id.seenMark);
             mSeriesName = (CheckedTextView) view.findViewById(R.id.seriesName);
-            mEpisodeName = (CheckedTextView) view.findViewById(R.id.episodeName);
-            mAirInfo = (CheckedTextView) view.findViewById(R.id.airInfo);
+            mEpisodeNumber = (CheckedTextView) view.findViewById(R.id.episodeNumber);
+            mEpisodeName = (CheckedTextView) view.findViewById(R.id.episodeTitle);
+            mAirTime = (CheckedTextView) view.findViewById(R.id.airTime);
+            mNetwork = (CheckedTextView) view.findViewById(R.id.network);
             mPosterLoadingProgress = (ProgressBar) view.findViewById(R.id.loadProgress);
 
             if (App.resources().getBoolean(R.bool.isTablet)) {
@@ -219,8 +224,9 @@ public class ScheduleListAdapter extends BaseAdapter {
                     mCheckableBody.setChecked(checked);
 
                     mSeriesName.setChecked(checked);
+                    mEpisodeNumber.setChecked(checked);
                     mEpisodeName.setChecked(checked);
-                    mAirInfo.setChecked(checked);
+                    mAirTime.setChecked(checked);
 
                     mWatchMark.setImageDrawable(
                             checked ?

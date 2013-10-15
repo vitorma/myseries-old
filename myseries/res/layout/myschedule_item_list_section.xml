@@ -8,16 +8,19 @@
 
     <TextView
         android:id="@+id/date"
-        style="@style/TextView.Medium.Blue.Bold"
+        style="@style/TextView.Medium"
+        android:textSize="16sp"
+        android:textColor="@color/dark_red"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"/>
 
     <TextView
-        android:id="@+id/weekDay"
-        style="@style/TextView.Medium.MediumGray"
+        android:id="@+id/airDay"
+        style="@style/TextView.Small.MediumGray.Bold"
         android:paddingLeft="@dimen/gap_small"
+        android:paddingBottom="1dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/date"
@@ -25,18 +28,19 @@
 
     <TextView
         android:id="@+id/relativeDay"
-        style="@style/TextView.Medium.LightGray.Ellipsized"
+        style="@style/TextView.Small.LightGray.Ellipsized"
         android:gravity="right"
+        android:paddingBottom="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/weekDay"/>
+        android:layout_alignBottom="@id/date"
+        android:layout_toRightOf="@id/airDay"/>
 
     <View
-        android:background="@color/dark_blue"
+        android:background="@drawable/list_divider_holo_light"
         android:layout_width="match_parent"
         android:layout_marginTop="2dp"
-        android:layout_height="1.5dp"
+        android:layout_height="0.5dp"
         android:layout_below="@id/date"/>
 
 </RelativeLayout>

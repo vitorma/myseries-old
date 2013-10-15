@@ -100,7 +100,7 @@ public class EpisodeListAdapter extends BaseAdapter {
 
         private ViewHolder(View view) {
             this.episodeNumber = (CheckedTextView) view.findViewById(R.id.episodeNumber);
-            this.episodeName = (CheckedTextView) view.findViewById(R.id.episodeName);
+            this.episodeName = (CheckedTextView) view.findViewById(R.id.episodeTitle);
             this.episodeSeenMark = (SeenMark) view.findViewById(R.id.seenMark);
 
             boolean isDualPane = App.resources().getBoolean(R.bool.isTablet);

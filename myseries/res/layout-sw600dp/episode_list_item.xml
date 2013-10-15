@@ -30,7 +30,7 @@
             android:layout_toRightOf="@id/seenMark"/>
 
         <CheckedTextView
-            android:id="@+id/episodeName"
+            android:id="@+id/episodeTitle"
             style="@style/TextView.Large"
             android:textColor="@color/darkgray_x_white"
             android:fontFamily="sans-serif-light"

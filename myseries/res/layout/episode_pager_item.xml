@@ -41,7 +41,7 @@
             android:layout_below="@id/imageFrame">
 
             <mobi.myseries.gui.shared.SeenMark
-                android:id="@+id/isEpisodeViewedCheckBox"
+                android:id="@+id/watchMark"
                 android:gravity="center"
                 android:layout_width="@dimen/toucharea_minimum_side"
                 android:layout_height="@dimen/toucharea_minimum_side"
@@ -58,10 +58,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@id/isEpisodeViewedCheckBox"/>
+                android:layout_toLeftOf="@id/watchMark"/>
 
             <TextView
-                android:id="@+id/episodeName"
+                android:id="@+id/episodeTitle"
                 style="@style/TextView.XLarge.DarkGray"
                 android:textSize="24sp"
                 android:fontFamily="sans-serif-light"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/episodeFirstAiredTextView"
-                android:layout_toLeftOf="@id/isEpisodeViewedCheckBox"/>
+                android:layout_toLeftOf="@id/watchMark"/>
 
         </RelativeLayout>
 
@@ -87,7 +87,7 @@
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView
-            android:id="@+id/episodeOverviewTextView"
+            android:id="@+id/episodeOverview"
             style="@style/TextView.Medium.MediumGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_large"
-            android:layout_below="@id/episodeOverviewTextView"
+            android:layout_below="@id/episodeOverview"
             android:layout_alignWithParentIfMissing="true"/>
 
         <TextView

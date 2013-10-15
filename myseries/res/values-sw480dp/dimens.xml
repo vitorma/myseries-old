@@ -8,4 +8,8 @@
     <dimen name="myseries_poster_height">218dp</dimen>
     <dimen name="myseries_grid_gap">9dp</dimen>
 
+    <!-- Episodes -->
+
+    <dimen name="episode_screen_height">269dp</dimen>
+
 </resources>

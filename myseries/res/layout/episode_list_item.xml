@@ -25,7 +25,7 @@
         android:layout_toLeftOf="@id/seenMark"/>
 
     <CheckedTextView
-        android:id="@+id/episodeName"
+        android:id="@+id/episodeTitle"
         style="@style/TextView.Large.DarkGray"
         android:fontFamily="sans-serif-light"
         android:paddingBottom="@dimen/gap_medium"
