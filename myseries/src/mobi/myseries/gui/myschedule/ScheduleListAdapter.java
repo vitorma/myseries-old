@@ -41,7 +41,10 @@ public class ScheduleListAdapter extends BaseAdapter {
     private ScheduleMode mItems;
     private int[] mViewStates;
 
-    public ScheduleListAdapter(ScheduleMode items) {
+    private final AsyncImageLoader mImageLoader;
+
+    public ScheduleListAdapter(ScheduleMode items, AsyncImageLoader imageLoader) {
+        mImageLoader = imageLoader;
         updateData(items);
     }
 
@@ -116,7 +119,7 @@ public class ScheduleListAdapter extends BaseAdapter {
     }
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
-        AsyncImageLoader.loadBitmapOn(
+        mImageLoader.loadBitmapOn(
                 new SmallPosterFetchingMethod(series, App.imageService()),
                 GENERIC_POSTER,
                 viewHolder.mPoster,

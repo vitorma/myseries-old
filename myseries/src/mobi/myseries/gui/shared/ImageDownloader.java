@@ -46,6 +46,7 @@ import android.widget.ImageView;
  * ImageView. A local cache of downloaded images is maintained internally to
  * improve performance.
  */
+@Deprecated // (Gabriel, 2013-10-15): We are using AsyncImageLoader instead. 
 public class ImageDownloader {
     private static final String LOG_TAG = "ImageDownloader";
 

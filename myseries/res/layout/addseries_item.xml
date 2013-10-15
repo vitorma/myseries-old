@@ -15,6 +15,14 @@
         android:layout_height="@dimen/myseries_poster_height"
         android:layout_alignParentTop="true"/>
 
+    <ProgressBar
+            android:id="@+id/loadProgress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible"/>
+
     <FrameLayout
         android:id="@+id/addButtonPanel"
         android:layout_height="@dimen/toucharea_minimum_side"

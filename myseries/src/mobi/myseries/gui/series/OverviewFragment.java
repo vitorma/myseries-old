@@ -111,7 +111,8 @@ public class OverviewFragment extends Fragment {
 
         ImageView seriesPoster = (ImageView) getActivity().findViewById(R.id.seriesPosterImageView);
         ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.loadProgress);
-        AsyncImageLoader.loadBitmapOn(new NormalPosterFetchingMethod(series, App.imageService()), GENERIC_POSTER, seriesPoster, progressBar);
+        AsyncImageLoader.globalInstance.
+                loadBitmapOn(new NormalPosterFetchingMethod(series, App.imageService()), GENERIC_POSTER, seriesPoster, progressBar);
 
         boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
 

@@ -9,8 +9,9 @@ import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.ScheduleListAdapter;
 import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
+import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.Extra;
-import mobi.myseries.gui.shared.PauseOnScrollListener;
+import mobi.myseries.gui.shared.PauseImageLoaderOnScrollListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -26,7 +27,10 @@ import android.widget.ListView;
 public class ScheduleListFragment extends Fragment implements ScheduleListener, MySchedulePreferencesListener {
     private int mScheduleMode;
     private ScheduleMode mItems;
+
     private ScheduleListAdapter mAdapter;
+    private AsyncImageLoader mPosterLoader;
+
     private ListView mListView;
     private View mEmptyStateView;
     private OnItemClickListener mOnItemClickListener;
@@ -71,6 +75,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
         setRetainInstance(true);
 
         mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
+        mPosterLoader = new AsyncImageLoader();
     }
 
     @Override
@@ -131,7 +136,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
         if (mItems != null) { mItems.deregister(this); }
 
         mItems = App.schedule().mode(mScheduleMode, App.preferences().forMySchedule(mScheduleMode).fullSpecification());
-        mAdapter = new ScheduleListAdapter(mItems);
+        mAdapter = new ScheduleListAdapter(mItems, mPosterLoader);
 
         mItems.register(this);
     }
@@ -160,7 +165,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
             }
         });
 
-        mListView.setOnScrollListener(new PauseOnScrollListener(false, true));
+        mListView.setOnScrollListener(new PauseImageLoaderOnScrollListener(mPosterLoader, false, true));
     }
 
     private void setUpEmptyStateView() {

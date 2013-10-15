@@ -25,6 +25,8 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
     private BitmapFetchingMethod bitmapFetchingMethod;
     private BitmapFetchingMethod nullBitmapFetchingMethod;
 
+    private AsyncImageLoader imageLoader;
+
     public void setUp() {
         this.bitmapToBeLoaded = BitmapFactory.decodeResource(
                 this.getInstrumentation().getContext().getResources(),
@@ -64,7 +66,7 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
                     }
                 };
 
-        AsyncImageLoader.resources = this.getInstrumentation().getContext().getResources();
+        this.imageLoader = new AsyncImageLoader(this.getInstrumentation().getContext().getResources());
     }
 
     public void tearDown() {
@@ -77,12 +79,20 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
         this.nullBitmapFetchingMethod = null;
     }
 
+    // Constructor
+
+    public void testItShouldNotAcceptNullResources() {
+        try {
+            new AsyncImageLoader(null);
+            fail("Exception not thrown.");
+        } catch (IllegalArgumentException e) {}
+    }
     // Arguments validation
 
     public void testItShouldNotAcceptNullBitmapFetchingMethod() {
 
         try {
-            AsyncImageLoader.loadBitmapOn(
+            imageLoader.loadBitmapOn(
                     null,
                     defaultBitmap,
                     destinationView);
@@ -95,7 +105,7 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
         ImageView destinationView = new ImageView(this.getInstrumentation().getContext());
 
         try {
-            AsyncImageLoader.loadBitmapOn(
+            imageLoader.loadBitmapOn(
                     bitmapFetchingMethod,
                     null,
                     destinationView);
@@ -106,7 +116,7 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
 
     public void testItShouldNotAcceptNullDestinationImageView() {
         try {
-            AsyncImageLoader.loadBitmapOn(
+            imageLoader.loadBitmapOn(
                     bitmapFetchingMethod,
                     defaultBitmap,
                     null);
@@ -120,7 +130,7 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
     public void testItShouldTakeTheImageAfterSomeTime() {
         ImageView destinationView = new ImageView(this.getInstrumentation().getContext());
 
-        AsyncImageLoader.loadBitmapOn(
+        imageLoader.loadBitmapOn(
                 bitmapFetchingMethod,
                 defaultBitmap,
                 destinationView);
@@ -133,7 +143,7 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
     public void testItShouldShowTheDefaultImageIfBitmapFetchingMethodReturnsNull() {
         ImageView destinationView = new ImageView(getInstrumentation().getContext());
 
-        AsyncImageLoader.loadBitmapOn(
+        imageLoader.loadBitmapOn(
                 nullBitmapFetchingMethod,
                 defaultBitmap,
                 destinationView);
@@ -148,7 +158,7 @@ public class AsyncImageLoaderTest extends InstrumentationTestCase {
         doCallRealMethod().when(destinationView).setImageDrawable(any(Drawable.class));
         doCallRealMethod().when(destinationView).getDrawable();
 
-        AsyncImageLoader.loadBitmapOn(
+        imageLoader.loadBitmapOn(
                 nullBitmapFetchingMethod,
                 defaultBitmap,
                 destinationView);

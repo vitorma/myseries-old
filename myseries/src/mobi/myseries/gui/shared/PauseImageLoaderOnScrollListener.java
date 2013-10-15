@@ -3,37 +3,40 @@ package mobi.myseries.gui.shared;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
-public class PauseOnScrollListener implements OnScrollListener {
+public class PauseImageLoaderOnScrollListener implements OnScrollListener {
 
     private final boolean pauseOnScroll;
     private final boolean pauseOnFling;
     private final OnScrollListener externalListener;
+    private final AsyncImageLoader imageLoader;
 
-    public PauseOnScrollListener(boolean pauseOnScroll, boolean pauseOnFling) {
-        this(pauseOnScroll, pauseOnFling, null);
+    public PauseImageLoaderOnScrollListener(AsyncImageLoader imageLoader, boolean pauseOnScroll, boolean pauseOnFling) {
+        this(imageLoader, pauseOnScroll, pauseOnFling, null);
     }
 
-    public PauseOnScrollListener(boolean pauseOnScroll, boolean pauseOnFling,
+    public PauseImageLoaderOnScrollListener(AsyncImageLoader imageLoader, boolean pauseOnScroll, boolean pauseOnFling,
             OnScrollListener customListener) {
         this.pauseOnScroll = pauseOnScroll;
         this.pauseOnFling = pauseOnFling;
         externalListener = customListener;
+
+        this.imageLoader = imageLoader;
     }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         switch (scrollState) {
         case OnScrollListener.SCROLL_STATE_IDLE:
-            AsyncImageLoader.resume();
+            imageLoader.resume();
             break;
         case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
             if (pauseOnScroll) {
-                AsyncImageLoader.pause();
+                imageLoader.pause();
             }
             break;
         case OnScrollListener.SCROLL_STATE_FLING:
             if (pauseOnFling) {
-                AsyncImageLoader.pause();
+                imageLoader.pause();
             }
             break;
         }

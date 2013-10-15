@@ -6,6 +6,8 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
+import mobi.myseries.gui.shared.AsyncImageLoader;
+import mobi.myseries.gui.shared.PauseImageLoaderOnScrollListener;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -34,6 +36,7 @@ public abstract class AddSeriesFragment extends Fragment {
     private ProgressBar progressIndicator;
 
     private AddSeriesAdapter adapter;
+    private AsyncImageLoader imageLoader;
 
     private List<SearchResult> results;
     protected boolean isServiceRunning;
@@ -45,6 +48,8 @@ public abstract class AddSeriesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         this.setRetainInstance(true);
+
+        this.imageLoader = new AsyncImageLoader();
     }
 
     @Override
@@ -212,6 +217,8 @@ public abstract class AddSeriesFragment extends Fragment {
 
         if (this.adapter != null) {
             this.resultsGrid.setAdapter(this.adapter);
+
+            this.resultsGrid.setOnScrollListener(new PauseImageLoaderOnScrollListener(this.imageLoader, false, true));
         }
     }
 
@@ -296,7 +303,7 @@ public abstract class AddSeriesFragment extends Fragment {
 
     private void setUpAdapter() {
         if (this.adapter == null) {
-            this.adapter = new AddSeriesAdapter(this.activity(), this.results);
+            this.adapter = new AddSeriesAdapter(this.activity(), this.results, this.imageLoader);
             this.adapter.register(this.adapterListener);
         } else {
             this.adapter.clear();
