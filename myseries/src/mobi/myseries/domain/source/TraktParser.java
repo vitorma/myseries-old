@@ -17,7 +17,6 @@ import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Time;
 import mobi.myseries.shared.WeekDay;
-import mobi.myseries.shared.WeekTime;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -64,24 +63,21 @@ public class TraktParser {
 
             int seriesId = readTvdbId(seriesObject);
 
-            WeekTime airWTime;
-
             //TODO(Reul): use a single date to store airday and airtime
-            Time airTime = readAirTime(seriesObject);
+            Time time = readAirTime(seriesObject);
             WeekDay airDay = readAirDay(seriesObject);
 
-            if (airTime != null && airDay != null) {
-                airWTime = DatesAndTimes.toUtcTime(new WeekTime(airDay, airTime), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
-                airTime = airWTime.time();
-                airDay = airWTime.weekday();
+            Date airtime = null;
+            if (time != null && airDay != null) {
+                airtime = new Date(time.toDate().getTime() + airDay.toDate().getTime());
+                airtime = DatesAndTimes.toUtcTime(airtime, TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
             }
 
             Series.Builder seriesBuilder = Series.builder()
                     .withTvdbId(readTvdbId(seriesObject))
                     .withTitle(readTitle(seriesObject))
                     .withStatus(readStatus(seriesObject))
-                    .withAirDay(airDay)
-                    .withAirTime(airTime)
+                    .withAirTime(airtime)
                     .withAirDate(readAirDate(seriesObject))
                     .withRuntime(readRuntime(seriesObject))
                     .withNetwork(readNetwork(seriesObject))
@@ -97,7 +93,7 @@ public class TraktParser {
 
                 for (JsonElement episodeElement : episodesArray) {
                     Episode.Builder episodeBuilder = context.deserialize(episodeElement, Episode.Builder.class);
-                    Episode episode = episodeBuilder.withSeriesId(seriesId).withAirtime(airTime).build();
+                    Episode episode = episodeBuilder.withSeriesId(seriesId).withAirtime(airtime).build();
 
                     seriesBuilder.withEpisode(episode);
                 }

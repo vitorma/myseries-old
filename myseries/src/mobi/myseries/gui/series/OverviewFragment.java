@@ -11,7 +11,6 @@ import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.NormalPosterFetchingMethod;
-import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
 import android.app.Fragment;
@@ -73,7 +72,7 @@ public class OverviewFragment extends Fragment {
         seriesName.setText(series.name());
         seriesStatus.setText(LocalText.of(series.status(), this.getString(R.string.unavailable_status)));
 
-        String airDay = DatesAndTimes.toString(series.airDay(), DateFormats.forWeekDay(Locale.getDefault()), "");
+        String airDay = DatesAndTimes.toString(series.airtime(), DateFormats.forWeekDay(Locale.getDefault()), "");
         String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(App.context()), "");
         String network = series.network();
         String airInfo = Strings.concat(airDay, airtime, ", ");
@@ -111,7 +110,8 @@ public class OverviewFragment extends Fragment {
 
         ImageView seriesPoster = (ImageView) getActivity().findViewById(R.id.seriesPosterImageView);
         ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.loadProgress);
-        AsyncImageLoader.loadBitmapOn(new NormalPosterFetchingMethod(series, App.imageService()), GENERIC_POSTER, seriesPoster, progressBar);
+        AsyncImageLoader.globalInstance.
+        loadBitmapOn(new NormalPosterFetchingMethod(series, App.imageService()), GENERIC_POSTER, seriesPoster, progressBar);
 
         boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
 

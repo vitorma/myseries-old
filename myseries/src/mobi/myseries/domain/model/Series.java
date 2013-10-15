@@ -9,9 +9,7 @@ import java.util.Set;
 import mobi.myseries.domain.constant.Invalid;
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Status;
-import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
-import mobi.myseries.shared.WeekDay;
 
 public class Series {
     public static final int INVALID_SERIES_ID = -1;
@@ -21,8 +19,7 @@ public class Series {
         private String title;
         private Status status;
         private Date airDate;
-        private WeekDay airDay;
-        private Time airTime;
+        private Date airTime;
         private String runtime = "";
         private String network = "";
         private String overview = "";
@@ -35,32 +32,31 @@ public class Series {
         private Long lastUpdate;
 
         private Builder() {
-            this.id = Invalid.SERIES_ID;
-            this.episodes = new HashSet<Episode>();
+            id = Invalid.SERIES_ID;
+            episodes = new HashSet<Episode>();
         }
 
         public Series build() {
-            final Series series = new Series(this.id, this.title);
+            final Series series = new Series(id, title);
 
-            series.status = this.status;
-            series.airDay = this.airDay;
-            series.airTime = this.airTime;
-            series.airDate = this.airDate;
-            series.runtime = this.runtime;
-            series.network = this.network;
-            series.overview = this.overview;
-            series.genres = this.genres;
-            series.actors = this.actors;
-            series.posterFileName = this.posterUrl;
-            series.bannerFileName = this.bannerFileName;
+            series.status = status;
+            series.airTime = airTime;
+            series.airDate = airDate;
+            series.runtime = runtime;
+            series.network = network;
+            series.overview = overview;
+            series.genres = genres;
+            series.actors = actors;
+            series.posterFileName = posterUrl;
+            series.bannerFileName = bannerFileName;
 
-            if (this.lastUpdate == null) {
+            if (lastUpdate == null) {
                 series.lastUpdate = System.currentTimeMillis();
             } else {
-                series.lastUpdate = this.lastUpdate;
+                series.lastUpdate = lastUpdate;
             }
 
-            return series.includingAll(this.episodes);
+            return series.includingAll(episodes);
         }
 
         public Builder withActors(String actors) {
@@ -73,18 +69,13 @@ public class Series {
             return this;
         }
 
-        public Builder withAirDay(WeekDay airDay) {
-            this.airDay = airDay;
-            return this;
-        }
-
-        public Builder withAirTime(Time airTime) {
-            this.airTime = airTime;
+        public Builder withAirTime(Date date) {
+            airTime = date;
             return this;
         }
 
         public Builder withEpisode(Episode episode) {
-            this.episodes.add(episode);
+            episodes.add(episode);
             return this;
         }
 
@@ -147,8 +138,7 @@ public class Series {
     private String title;
     private Status status;
     private Date airDate;
-    private WeekDay airDay;
-    private Time airTime;
+    private Date airTime;
     private String runtime;
     private String network;
     private String overview;
@@ -165,59 +155,55 @@ public class Series {
         Validate.isNonBlank(name, "name");
 
         this.id = id;
-        this.title = name;
+        title = name;
 
-        this.seasons = new SeasonSet(this.id);
+        seasons = new SeasonSet(this.id);
     }
 
     public String actors() {
-        return this.actors;
+        return actors;
     }
 
     public Date airDate() {
-        return this.airDate;
+        return airDate;
     }
 
-    public WeekDay airDay() {
-        return this.airDay;
-    }
-
-    public Time airtime() {
-        return this.airTime;
+    public Date airtime() {
+        return airTime;
     }
 
     public List<Episode> episodes() {
-        return this.seasons.episodes();
+        return seasons.episodes();
     }
 
     public List<Episode> episodesBy(Specification<Episode> specification) {
-        return this.seasons.episodesBy(specification);
+        return seasons.episodesBy(specification);
     }
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Series) && (((Series) obj).id == this.id);
+        return (obj instanceof Series) && (((Series) obj).id == id);
     }
 
     public String genres() {
-        return this.genres;
+        return genres;
     }
 
     @Override
     public int hashCode() {
-        return this.id;
+        return id;
     }
 
     public boolean hasPoster() {
-        return this.posterFileName != null;
+        return posterFileName != null;
     }
 
     public boolean hasSpecialEpisodes() {
-        return this.seasons.hasSpecialEpisodes();
+        return seasons.hasSpecialEpisodes();
     }
 
     public int id() {
-        return this.id;
+        return id;
     }
 
     @Deprecated
@@ -225,89 +211,88 @@ public class Series {
         Validate.isNonNull(episodes, "items");
 
         for (Episode e : episodes) {
-            this.seasons.include(e.withAirtime(this.airTime));
+            seasons.include(e.withAirtime(airTime));
         }
 
         return this;
     }
 
     public Long lastUpdate() {
-        return this.lastUpdate;
+        return lastUpdate;
     }
 
     public void markAsUnwatched() {
-        this.seasons.markAsUnwatched();
+        seasons.markAsUnwatched();
     }
 
     public void markAsWatched() {
-        this.seasons.markAsWatched();
+        seasons.markAsWatched();
     }
 
     public synchronized void mergeWith(Series other) {
         Validate.isNonNull(other, "other");
-        Validate.isTrue(other.id == this.id, "other should have the same id as this");
+        Validate.isTrue(other.id == id, "other should have the same id as this");
 
-        this.title = other.title;
-        this.status = other.status;
-        this.airDate = other.airDate;
-        this.airDay = other.airDay;
-        this.airTime = other.airTime;
-        this.runtime = other.runtime;
-        this.network = other.network;
-        this.overview = other.overview;
-        this.genres = other.genres;
-        this.actors = other.actors;
-        this.posterFileName = other.posterFileName;
+        title = other.title;
+        status = other.status;
+        airDate = other.airDate;
+        airTime = other.airTime;
+        runtime = other.runtime;
+        network = other.network;
+        overview = other.overview;
+        genres = other.genres;
+        actors = other.actors;
+        posterFileName = other.posterFileName;
 
-        this.seasons.mergeWith(other.seasons);
+        seasons.mergeWith(other.seasons);
     }
 
     public String name() {
-        return this.title;
+        return title;
     }
 
     public String network() {
-        return this.network;
+        return network;
     }
 
     public Episode nextEpisodeToWatch(boolean includingSpecialEpisodes) {
-        return this.seasons.nextEpisodeToWatch(includingSpecialEpisodes);
+        return seasons.nextEpisodeToWatch(includingSpecialEpisodes);
     }
 
     public int numberOfEpisodes() {
-        return this.seasons.numberOfEpisodes();
+        return seasons.numberOfEpisodes();
     }
 
     public int numberOfEpisodes(Specification<Episode> specification) {
-        return this.episodesBy(specification).size();
+        return episodesBy(specification).size();
     }
 
     public String overview() {
-        return this.overview;
+        return overview;
     }
 
     public String posterUrl() {
-        return this.posterFileName;
+        return posterFileName;
     }
 
     public String bannerFileName() {
-        return this.bannerFileName;
+        return bannerFileName;
     }
 
     public String runtime() {
-        return this.runtime;
+        return runtime;
     }
 
     public Season season(int number) {
-        return this.seasons.season(number);
+        return seasons.season(number);
     }
 
     public Season seasonAt(int position) {
-        return this.seasons.seasonAt(position);
+        return seasons.seasonAt(position);
     }
 
     public SeasonSet seasons() {
-        return this.seasons;
+        return seasons;
     }
 
     public Series setLastUpdate(Long lastUpdate) {
@@ -328,6 +313,6 @@ public class Series {
     }
 
     public Status status() {
-        return this.status;
+        return status;
     }
 }

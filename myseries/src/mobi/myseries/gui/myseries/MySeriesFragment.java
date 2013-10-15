@@ -5,7 +5,8 @@ import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.series.SeriesActivity;
-import mobi.myseries.gui.shared.PauseOnScrollListener;
+import mobi.myseries.gui.shared.AsyncImageLoader;
+import mobi.myseries.gui.shared.PauseImageLoaderOnScrollListener;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,12 +28,15 @@ public class MySeriesFragment extends Fragment {
     private ProgressBar progressIndicator;
 
     private MySeriesAdapter adapter;
+    private AsyncImageLoader posterLoader;
 
     /* Life cycle */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        posterLoader = new AsyncImageLoader();
 
         this.setRetainInstance(true);
         this.setHasOptionsMenu(true);
@@ -100,7 +104,7 @@ public class MySeriesFragment extends Fragment {
         setUpScrollListener();
 
         if (this.adapter == null) {
-            this.adapter = new MySeriesAdapter();
+            this.adapter = new MySeriesAdapter(posterLoader);
         }
 
         this.showsGrid.setAdapter(this.adapter);
@@ -179,7 +183,7 @@ public class MySeriesFragment extends Fragment {
     };
 
     private void setUpScrollListener() {
-        showsGrid.setOnScrollListener(new PauseOnScrollListener(false, true));
+        showsGrid.setOnScrollListener(new PauseImageLoaderOnScrollListener(posterLoader, false, true));
     }
 
     /* SharedPreferences.OnSharedPreferenceChangeListener */

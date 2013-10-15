@@ -11,8 +11,6 @@ import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Numbers;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.Status;
-import mobi.myseries.shared.Time;
-import mobi.myseries.shared.WeekDay;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -29,7 +27,6 @@ public class SeriesAdapter implements JsonSerializer<Series>, JsonDeserializer<S
     private static final String SERIES_ID = "id";
     private static final String SERIES_NAME = "name";
     private static final String SERIES_STATUS = "status";
-    private static final String SERIES_AIRDAY = "airday";
     private static final String SERIES_AIRTIME = "airtime";
     private static final String SERIES_AIRDATE = "airdate";
     private static final String SERIES_RUNTIME = "runtime";
@@ -40,8 +37,7 @@ public class SeriesAdapter implements JsonSerializer<Series>, JsonDeserializer<S
     private static final String SERIES_POSTER = "poster";
     private static final String SERIES_LASTUPDATE = "lastUpdate";
     private static final Date DEFAULT_AIRDATE = null;
-    private static final Time DEFAULT_AIRTIME = null;
-    private static final WeekDay DEFAULT_AIRDAY = null;
+    private static final Date DEFAULT_AIRTIME = null;
 
     @Override
     public JsonElement serialize(Series series, Type type,
@@ -50,7 +46,6 @@ public class SeriesAdapter implements JsonSerializer<Series>, JsonDeserializer<S
         seriesJson.addProperty(SERIES_ID, series.id());
         seriesJson.addProperty(SERIES_NAME, series.name());
         seriesJson.addProperty(SERIES_STATUS, series.status().name());
-        seriesJson.addProperty(SERIES_AIRDAY, Numbers.parseLong(series.airDay(), null));
         seriesJson.addProperty(SERIES_AIRTIME, Numbers.parseLong(series.airtime(), null));
         seriesJson.addProperty(SERIES_AIRDATE, Numbers.parseLong(series.airDate(), null));
         //seriesJson.addProperty(SERIES_RUNTIME, series.runtime());
@@ -81,7 +76,6 @@ public class SeriesAdapter implements JsonSerializer<Series>, JsonDeserializer<S
                 .withTvdbId(seriesJson.get(SERIES_ID).getAsInt())
                 .withTitle(seriesJson.get(SERIES_NAME).getAsString())
                 .withStatus(Status.from(seriesJson.get(SERIES_STATUS).getAsString()))
-                .withAirDay(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRDAY), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRDAY).getAsLong(), DEFAULT_AIRDAY))
                 .withAirTime(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRTIME), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRTIME).getAsLong(), DEFAULT_AIRTIME))
                 .withAirDate(DatesAndTimes.parse(Objects.nullSafe(seriesJson.get(SERIES_AIRDATE), JsonNull.INSTANCE).isJsonNull()? null : seriesJson.get(SERIES_AIRDATE).getAsLong(), DEFAULT_AIRDATE))
                 .withRuntime(Objects.nullSafe(seriesJson.get(SERIES_RUNTIME), new JsonPrimitive("")).getAsString())

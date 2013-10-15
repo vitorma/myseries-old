@@ -44,9 +44,11 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
 
     private ArrayList<Series> mItems;
+    private final AsyncImageLoader mImageLoader;
 
-    public MySeriesAdapter() {
+    public MySeriesAdapter(AsyncImageLoader imageLoader) {
         mItems = new ArrayList<Series>();
+        mImageLoader = imageLoader;
 
         reloadData();
 
@@ -96,7 +98,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpView(ViewHolder viewHolder, final Series series) {
-        AsyncImageLoader.loadBitmapOn(
+        this.mImageLoader.loadBitmapOn(
                 new NormalPosterFetchingMethod(series, App.imageService()),
                 GENERIC_POSTER,
                 viewHolder.mPoster, viewHolder.progressBar);

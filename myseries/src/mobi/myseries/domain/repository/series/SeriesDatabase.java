@@ -35,9 +35,7 @@ import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.FilesUtil;
 import mobi.myseries.shared.Numbers;
 import mobi.myseries.shared.Status;
-import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
-import mobi.myseries.shared.WeekDay;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -84,57 +82,56 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     private static final String EPISODE_SEENMARK = "seenmark";
 
     private static final String CREATE_TABLE_SERIES =
-        "CREATE TABLE " + SERIES + " (" +
-            SERIES_ID +       " INTEGER PRIMARY KEY, " +
-            SERIES_NAME +     " TEXT NOT NULL, " +
-            SERIES_STATUS +   " TEXT, " +
-            SERIES_AIRDAY +   " BIGINT, " +
-            SERIES_AIRTIME +  " BIGINT, " +
-            SERIES_AIRDATE +  " BIGINT, " +
-            SERIES_RUNTIME +  " TEXT, " +
-            SERIES_NETWORK +  " TEXT, " +
-            SERIES_OVERVIEW + " TEXT, " +
-            SERIES_GENRES +   " TEXT, " +
-            SERIES_ACTORS +   " TEXT, " +
-            SERIES_LASTUPDATE + " BIGINT, " +
-            SERIES_POSTER +   " TEXT," +
-            SERIES_BANNER +   " TEXT);";
+            "CREATE TABLE " + SERIES + " (" +
+                    SERIES_ID +       " INTEGER PRIMARY KEY, " +
+                    SERIES_NAME +     " TEXT NOT NULL, " +
+                    SERIES_STATUS +   " TEXT, " +
+                    SERIES_AIRDAY +   " BIGINT, " +
+                    SERIES_AIRTIME +  " BIGINT, " +
+                    SERIES_AIRDATE +  " BIGINT, " +
+                    SERIES_RUNTIME +  " TEXT, " +
+                    SERIES_NETWORK +  " TEXT, " +
+                    SERIES_OVERVIEW + " TEXT, " +
+                    SERIES_GENRES +   " TEXT, " +
+                    SERIES_ACTORS +   " TEXT, " +
+                    SERIES_LASTUPDATE + " BIGINT, " +
+                    SERIES_POSTER +   " TEXT," +
+                    SERIES_BANNER +   " TEXT);";
 
     private static final String CREATE_TABLE_EPISODES =
-        "CREATE TABLE " + EPISODE + " (" +
-            EPISODE_ID +         " INTEGER PRIMARY KEY, " +
-            EPISODE_SERIES +     " INTEGER NOT NULL, " +
-            EPISODE_NUMBER +     " INTEGER NOT NULL, " +
-            EPISODE_SEASON +     " INTEGER NOT NULL, " +
-            EPISODE_NAME +       " TEXT, " +
-            EPISODE_AIRDATE +    " BIGINT, " +
-            EPISODE_AIRTIME +    " BIGINT, " +
-            EPISODE_OVERVIEW +   " TEXT, " +
-            EPISODE_DIRECTORS +  " TEXT, " +
-            EPISODE_WRITERS +    " TEXT, " +
-            EPISODE_GUESTSTARS + " TEXT, " +
-            EPISODE_IMAGE +      " TEXT, " +
-            EPISODE_SEENMARK +   " TEXT, " +
-            "FOREIGN KEY(" + EPISODE_SERIES + ") REFERENCES " + SERIES + "(" + SERIES_ID + ") ON DELETE CASCADE);";
+            "CREATE TABLE " + EPISODE + " (" +
+                    EPISODE_ID +         " INTEGER PRIMARY KEY, " +
+                    EPISODE_SERIES +     " INTEGER NOT NULL, " +
+                    EPISODE_NUMBER +     " INTEGER NOT NULL, " +
+                    EPISODE_SEASON +     " INTEGER NOT NULL, " +
+                    EPISODE_NAME +       " TEXT, " +
+                    EPISODE_AIRDATE +    " BIGINT, " +
+                    EPISODE_AIRTIME +    " BIGINT, " +
+                    EPISODE_OVERVIEW +   " TEXT, " +
+                    EPISODE_DIRECTORS +  " TEXT, " +
+                    EPISODE_WRITERS +    " TEXT, " +
+                    EPISODE_GUESTSTARS + " TEXT, " +
+                    EPISODE_IMAGE +      " TEXT, " +
+                    EPISODE_SEENMARK +   " TEXT, " +
+                    "FOREIGN KEY(" + EPISODE_SERIES + ") REFERENCES " + SERIES + "(" + SERIES_ID + ") ON DELETE CASCADE);";
 
     private static final String DROP_TABLE_SERIES =
-        "DROP TABLE IF EXISTS " + SERIES;
+            "DROP TABLE IF EXISTS " + SERIES;
 
     private static final String DROP_TABLE_EPISODE =
-        "DROP TABLE IF EXISTS " + EPISODE;
+            "DROP TABLE IF EXISTS " + EPISODE;
 
     private static final String SELECT_ALL_EPISODES_OF_A_SERIES =
-        "SELECT * FROM " + EPISODE + " WHERE " + EPISODE_SERIES + "=?";
+            "SELECT * FROM " + EPISODE + " WHERE " + EPISODE_SERIES + "=?";
 
     private static final String SELECT_A_SERIES_BY_ID =
-        "SELECT * FROM " + SERIES + " WHERE " + SERIES_ID + "=?";
+            "SELECT * FROM " + SERIES + " WHERE " + SERIES_ID + "=?";
 
     private static final String SELECT_ALL_SERIES =
-        "SELECT * FROM " + SERIES;
+            "SELECT * FROM " + SERIES;
 
     private static final Date DEFAULT_AIRDATE = null;
-    private static final Time DEFAULT_AIRTIME = null;
-    private static final WeekDay DEFAULT_AIRDAY = null;
+    private static final Date DEFAULT_AIRTIME = null;
 
     public SeriesDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -150,7 +147,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DROP_TABLE_EPISODE);
         db.execSQL(DROP_TABLE_SERIES);
-        this.onCreate(db);
+        onCreate(db);
     }
 
     @Override
@@ -165,7 +162,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public void insert(Series series) {
         Validate.isNonNull(series, "series");
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         this.insert(series, db);
         db.close();
     }
@@ -182,7 +179,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public void update(Series series) {
         Validate.isNonNull(series, "series");
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         this.update(series, db);
         db.close();
     }
@@ -200,7 +197,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public void update(Episode episode) {
         Validate.isNonNull(episode, "episode");
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         this.update(episode, db);
         db.close();
     }
@@ -213,7 +210,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public void updateAll(Collection<Series> seriesCollection) {
         Validate.allNonNull(seriesCollection, "seriesCollection");
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         this.updateAll(seriesCollection, db);
         db.close();
     }
@@ -228,7 +225,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public void updateAllEpisodes(Collection<Episode> episodeCollection) {
         Validate.allNonNull(episodeCollection, "episodeCollection");
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         this.updateAllEpisodes(episodeCollection, db);
         db.close();
     }
@@ -243,7 +240,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public void delete(Series series) {
         Validate.isNonNull(series, "series");
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         this.delete(series, db);
         db.close();
     }
@@ -256,7 +253,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public void deleteAll(Collection<Series> seriesCollection) {
         Validate.allNonNull(seriesCollection, "seriesCollection");
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         this.deleteAll(seriesCollection, db);
         db.close();
     }
@@ -269,7 +266,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     @Override
     public void clear() {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         db.delete(SERIES, null, null);
         db.close();
     }
@@ -278,7 +275,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     public boolean contains(Series series) {
         Validate.isNonNull(series, "series");
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {String.valueOf(series.id())});
 
         boolean contains = c.getCount() > 0;
@@ -291,7 +288,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     @Override
     public Series get(int seriesId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(SELECT_A_SERIES_BY_ID, new String[] {String.valueOf(seriesId)});
 
         if (!c.moveToFirst()) {
@@ -299,7 +296,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
             return null;
         }
 
-        Series series = this.seriesByCurrentPositionOf(c).includingAll(this.episodesWithSeriesId(seriesId, db));
+        Series series = seriesByCurrentPositionOf(c).includingAll(episodesWithSeriesId(seriesId, db));
 
         c.close();
         db.close();
@@ -309,14 +306,14 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     @Override
     public List<Series> getAll() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(SELECT_ALL_SERIES, null);
 
         List<Series> result = new LinkedList<Series>();
 
         while (c.moveToNext()) {
-            Series series = this.seriesByCurrentPositionOf(c);
-            result.add(series.includingAll(this.episodesWithSeriesId(series.id(), db)));
+            Series series = seriesByCurrentPositionOf(c);
+            result.add(series.includingAll(episodesWithSeriesId(series.id(), db)));
         }
 
         c.close();
@@ -326,8 +323,8 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     public void restoreDBFrom(String sourceFilePath) throws IOException, InvalidDBSourceFileException {
-        this.testDatabase(sourceFilePath);
-        FilesUtil.copy(new File(sourceFilePath), this.dbFile());
+        testDatabase(sourceFilePath);
+        FilesUtil.copy(new File(sourceFilePath), dbFile());
         Log.d(TAG, "database sucessfully restored");
     }
 
@@ -369,7 +366,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         List<Episode> result = new LinkedList<Episode>();
 
         while(c.moveToNext()) {
-            result.add(this.episodeByCurrentPositionOf(c));
+            result.add(episodeByCurrentPositionOf(c));
         }
 
         c.close();
@@ -383,7 +380,6 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         cv.put(SERIES_ID, s.id());
         cv.put(SERIES_NAME, s.name());
         cv.put(SERIES_STATUS, s.status().name());
-        cv.put(SERIES_AIRDAY, Numbers.parseLong(s.airDay(), null));
         cv.put(SERIES_AIRTIME, Numbers.parseLong(s.airtime(), null));
         cv.put(SERIES_AIRDATE, Numbers.parseLong(s.airDate(), null));
         cv.put(SERIES_RUNTIME, s.runtime());
@@ -420,21 +416,20 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private Series seriesByCurrentPositionOf(Cursor c) {
         return Series.builder()
-            .withTvdbId(c.getInt(c.getColumnIndex(SERIES_ID)))
-            .withTitle(c.getString(c.getColumnIndex(SERIES_NAME)))
-            .withStatus(Status.from(c.getString(c.getColumnIndex(SERIES_STATUS))))
-            .withAirDay(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDAY)), DEFAULT_AIRDAY))
-            .withAirTime(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), DEFAULT_AIRTIME))
-            .withAirDate(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), DEFAULT_AIRDATE))
-            .withRuntime(c.getString(c.getColumnIndex(SERIES_RUNTIME)))
-            .withNetwork(c.getString(c.getColumnIndex(SERIES_NETWORK)))
-            .withOverview(c.getString(c.getColumnIndex(SERIES_OVERVIEW)))
-            .withGenres(c.getString(c.getColumnIndex(SERIES_GENRES)))
-            .withActors(c.getString(c.getColumnIndex(SERIES_ACTORS)))
-            .withPoster(c.getString(c.getColumnIndex(SERIES_POSTER)))
-            .withBannerFileName(c.getString(c.getColumnIndex(SERIES_BANNER)))
-            .withLastUpdate(c.getLong(c.getColumnIndex(SERIES_LASTUPDATE)))
-            .build();
+                .withTvdbId(c.getInt(c.getColumnIndex(SERIES_ID)))
+                .withTitle(c.getString(c.getColumnIndex(SERIES_NAME)))
+                .withStatus(Status.from(c.getString(c.getColumnIndex(SERIES_STATUS))))
+                .withAirTime(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), DEFAULT_AIRTIME))
+                .withAirDate(DatesAndTimes.parse(c.getLong(c.getColumnIndex(SERIES_AIRDATE)), DEFAULT_AIRDATE))
+                .withRuntime(c.getString(c.getColumnIndex(SERIES_RUNTIME)))
+                .withNetwork(c.getString(c.getColumnIndex(SERIES_NETWORK)))
+                .withOverview(c.getString(c.getColumnIndex(SERIES_OVERVIEW)))
+                .withGenres(c.getString(c.getColumnIndex(SERIES_GENRES)))
+                .withActors(c.getString(c.getColumnIndex(SERIES_ACTORS)))
+                .withPoster(c.getString(c.getColumnIndex(SERIES_POSTER)))
+                .withBannerFileName(c.getString(c.getColumnIndex(SERIES_BANNER)))
+                .withLastUpdate(c.getLong(c.getColumnIndex(SERIES_LASTUPDATE)))
+                .build();
     }
 
     private Episode episodeByCurrentPositionOf(Cursor c) {
@@ -444,29 +439,29 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         Long airtime = c.isNull(airtimeCollumnIndex) ? null : c.getLong(airtimeCollumnIndex);
 
         return Episode.builder()
-            .withId(c.getInt(c.getColumnIndex(EPISODE_ID)))
-            .withSeriesId(c.getInt(c.getColumnIndex(EPISODE_SERIES)))
-            .withNumber(c.getInt(c.getColumnIndex(EPISODE_NUMBER)))
-            .withSeasonNumber(c.getInt(c.getColumnIndex(EPISODE_SEASON)))
-            .withTitle(c.getString(c.getColumnIndex(EPISODE_NAME)))
-            .withAirDate(DatesAndTimes.parse(airDate, DEFAULT_AIRDATE))
-            .withAirtime(DatesAndTimes.parse(airtime, DEFAULT_AIRTIME))
-            .withOverview(c.getString(c.getColumnIndex(EPISODE_OVERVIEW)))
-            .withDirectors(c.getString(c.getColumnIndex(EPISODE_DIRECTORS)))
-            .withWriters(c.getString(c.getColumnIndex(EPISODE_WRITERS)))
-            .withGuestStars(c.getString(c.getColumnIndex(EPISODE_GUESTSTARS)))
-            .withScreenUrl(c.getString(c.getColumnIndex(EPISODE_IMAGE)))
-            .withWatchMark(Boolean.valueOf(c.getString(c.getColumnIndex(EPISODE_SEENMARK))))
-            .build();
+                .withId(c.getInt(c.getColumnIndex(EPISODE_ID)))
+                .withSeriesId(c.getInt(c.getColumnIndex(EPISODE_SERIES)))
+                .withNumber(c.getInt(c.getColumnIndex(EPISODE_NUMBER)))
+                .withSeasonNumber(c.getInt(c.getColumnIndex(EPISODE_SEASON)))
+                .withTitle(c.getString(c.getColumnIndex(EPISODE_NAME)))
+                .withAirDate(DatesAndTimes.parse(airDate, DEFAULT_AIRDATE))
+                .withAirtime(DatesAndTimes.parse(airtime, DEFAULT_AIRTIME))
+                .withOverview(c.getString(c.getColumnIndex(EPISODE_OVERVIEW)))
+                .withDirectors(c.getString(c.getColumnIndex(EPISODE_DIRECTORS)))
+                .withWriters(c.getString(c.getColumnIndex(EPISODE_WRITERS)))
+                .withGuestStars(c.getString(c.getColumnIndex(EPISODE_GUESTSTARS)))
+                .withScreenUrl(c.getString(c.getColumnIndex(EPISODE_IMAGE)))
+                .withWatchMark(Boolean.valueOf(c.getString(c.getColumnIndex(EPISODE_SEENMARK))))
+                .build();
     }
 
     @Override
     public File db() throws IOException {
-        return this.dbFile();
+        return dbFile();
     }
 
     @Override
     public void restoreFrom(String backupFilePath) throws IOException, InvalidDBSourceFileException {
-        this.restoreDBFrom(backupFilePath);
+        restoreDBFrom(backupFilePath);
     }
 }

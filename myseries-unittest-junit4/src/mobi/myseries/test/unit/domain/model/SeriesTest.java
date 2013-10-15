@@ -11,8 +11,6 @@ import java.util.List;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Status;
-import mobi.myseries.shared.Time;
-import mobi.myseries.shared.WeekDay;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -21,8 +19,7 @@ public class SeriesTest {
     private static final int ID = 1;
     private static final String ACTORS = "actors";
     private static final Date AIR_DATE = new Date(1);
-    private static final WeekDay AIR_DAY = WeekDay.valueOf(1);
-    private static final Time AIR_TIME = Time.valueOf(1);
+    private static final Date AIR_TIME = new Date(1L);
     private static final String GENRES = "genres";
     private static final String NETWORK = "network";
     private static final String NAME = "Series";
@@ -43,7 +40,6 @@ public class SeriesTest {
         assertEquals(seriesUpdate.name(), series.name());
         assertEquals(seriesUpdate.actors(), series.actors());
         assertEquals(seriesUpdate.airDate(), series.airDate());
-        assertEquals(seriesUpdate.airDay(), series.airDay());
         assertEquals(seriesUpdate.airtime(), series.airtime());
         assertEquals(seriesUpdate.genres(), series.genres());
         assertEquals(seriesUpdate.id(), series.id());
@@ -142,26 +138,25 @@ public class SeriesTest {
 
     private static Series incompleteSeries() {
         return Series.builder()
-                     .withTitle("Seri")
-                     .withTvdbId(ID)
-                     .build();
+                .withTitle("Seri")
+                .withTvdbId(ID)
+                .build();
     }
 
     private static Series completeSeries() {
         return Series.builder()
-                     .withTitle(NAME)
-                     .withTvdbId(ID)
-                     .withActors(ACTORS)
-                     .withAirDate(AIR_DATE)
-                     .withAirDay(AIR_DAY)
-                     .withAirTime(AIR_TIME)
-                     .withGenres(GENRES)
-                     .withNetwork(NETWORK)
-                     .withOverview(OVERVIEW)
-                     .withPoster(POSTER_FILENAME)
-                     .withRuntime(RUNTIME)
-                     .withStatus(STATUS)
-                     .build();
+                .withTitle(NAME)
+                .withTvdbId(ID)
+                .withActors(ACTORS)
+                .withAirDate(AIR_DATE)
+                .withAirTime(AIR_TIME)
+                .withGenres(GENRES)
+                .withNetwork(NETWORK)
+                .withOverview(OVERVIEW)
+                .withPoster(POSTER_FILENAME)
+                .withRuntime(RUNTIME)
+                .withStatus(STATUS)
+                .build();
     }
 
     private static boolean includes(Series series, Episode episode) {
