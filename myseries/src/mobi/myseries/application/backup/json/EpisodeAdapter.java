@@ -35,7 +35,7 @@ public class EpisodeAdapter implements JsonSerializer<Episode>,
     private static final String EPISODE_IMAGE = "image";
     private static final String EPISODE_SEENMARK = "seenmark";
     private static final Date DEFAULT_AIRDATE = null;
-    private static final Time DEFAULT_AIRTIME = null;
+    private static final Date DEFAULT_AIRTIME = null;
 
     @Override
     public JsonElement serialize(Episode episode, Type type,

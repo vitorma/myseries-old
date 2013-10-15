@@ -56,14 +56,6 @@ public class DatesAndTimes {
         return new Date(date);
     }
 
-    public static Time parse(Long time, Time defaultTime) {
-        if (time == null) {
-            return defaultTime;
-        }
-
-        return Time.valueOf(time);
-    }
-
     public static WeekDay parse(Long weekDay, WeekDay defaultWeekDay) {
         if (weekDay == null) {
             return defaultWeekDay;
@@ -148,12 +140,6 @@ public class DatesAndTimes {
 
     public static long toPstTime(long utcTimeStamp) {
         return utcTimeStamp + PST_TIME_ZONE.getOffset(utcTimeStamp);
-    }
-
-    public static WeekTime toUtcTime(WeekTime utcWeekTime, TimeZone originTimeZone) {
-        long offset = - originTimeZone.getOffset(System.currentTimeMillis());
-
-        return utcWeekTime.plusMinutes(offset / (60 * 1000));
     }
 
     public static Date toUtcTime(Date date, TimeZone originTimeZone) {

@@ -3,7 +3,6 @@ package mobi.myseries.domain.model;
 import java.util.Date;
 
 import mobi.myseries.domain.constant.Invalid;
-import mobi.myseries.shared.Time;
 import mobi.myseries.shared.Validate;
 
 /*
@@ -15,12 +14,12 @@ import mobi.myseries.shared.Validate;
 
 public class Episode {
     private int id;
-    private int seriesId;
-    private int number;
-    private int seasonNumber;
+    private final int seriesId;
+    private final int number;
+    private final int seasonNumber;
     private String title;
     private Date airDate;
-    private Time airTime;
+    private Date airTime;
     private String overview;
     private String directors;
     private String writers;
@@ -46,111 +45,111 @@ public class Episode {
     }
 
     public int id() {
-        return this.id;
+        return id;
     }
 
     public int seriesId() {
-        return this.seriesId;
+        return seriesId;
     }
 
     public int number() {
-        return this.number;
+        return number;
     }
 
     public int seasonNumber() {
-        return this.seasonNumber;
+        return seasonNumber;
     }
 
     public boolean isSpecial() {
-        return this.seasonNumber == Season.SPECIAL_SEASON_NUMBER;
+        return seasonNumber == Season.SPECIAL_SEASON_NUMBER;
     }
 
     public boolean isNotSpecial() {
-        return !this.isSpecial();
+        return !isSpecial();
     }
 
     public String title() {
-        return this.title;
+        return title;
     }
 
     public Date airDate() {
-        return this.airDate;
+        return airDate;
     }
 
-    public Time airTime() {
-        return this.airTime;
+    public Date airTime() {
+        return airTime;
     }
 
     @Deprecated
-    public Episode withAirtime(Time airtime) {
-        this.airTime = airtime;
+    public Episode withAirtime(Date airTime2) {
+        airTime = airTime2;
         return this;
     }
 
     public String overview() {
-        return this.overview;
+        return overview;
     }
 
     public String directors() {
-        return this.directors;
+        return directors;
     }
 
     public String writers() {
-        return this.writers;
+        return writers;
     }
 
     public String guestStars() {
-        return this.guestStars;
+        return guestStars;
     }
 
     public String screenUrl() {
-        return this.screenUrl;
+        return screenUrl;
     }
 
     public boolean watched() {
-        return this.watchMark;
+        return watchMark;
     }
 
     public boolean unwatched() {
-        return !this.watchMark;
+        return !watchMark;
     }
 
     public void markAsWatched() {
-        this.watchMark = true;
+        watchMark = true;
     }
 
     public void markAsUnwatched() {
-        this.watchMark = false;
+        watchMark = false;
     }
 
     public synchronized void mergeWith(Episode other) {
         // TODO(Gabriel): Replace all these verifications with a single this.isTheSameAs(other)?
         Validate.isNonNull(other, "other");
-        Validate.isTrue(other.seriesId == this.seriesId, "other should have the same seriesId as this");
-        Validate.isTrue(other.seasonNumber == this.seasonNumber, "other should have the same seasonNumber as this");
-        Validate.isTrue(other.number == this.number, "other should have the same number as this");
+        Validate.isTrue(other.seriesId == seriesId, "other should have the same seriesId as this");
+        Validate.isTrue(other.seasonNumber == seasonNumber, "other should have the same seasonNumber as this");
+        Validate.isTrue(other.number == number, "other should have the same number as this");
 
-        this.id = other.id;
-        this.title = other.title;
-        this.airDate = other.airDate;
-        this.airTime = other.airTime;
-        this.overview = other.overview;
-        this.directors = other.directors;
-        this.writers = other.writers;
-        this.guestStars = other.guestStars;
-        this.screenUrl = other.screenUrl;
+        id = other.id;
+        title = other.title;
+        airDate = other.airDate;
+        airTime = other.airTime;
+        overview = other.overview;
+        directors = other.directors;
+        writers = other.writers;
+        guestStars = other.guestStars;
+        screenUrl = other.screenUrl;
     }
 
     public boolean isTheSameAs(Episode that) {
         return that != null
-                && this.number == that.number
-                && this.seasonNumber == that.seasonNumber
-                && this.seriesId == that.seriesId;
+                && number == that.number
+                && seasonNumber == that.seasonNumber
+                && seriesId == that.seriesId;
     }
 
     @Override
     public int hashCode() {
-        return this.id;
+        return id;
     }
 
     @Override
@@ -161,7 +160,7 @@ public class Episode {
 
         Episode that = (Episode) obj;
 
-        return this.id == that.id;
+        return id == that.id;
     }
 
     public static class Builder {
@@ -171,7 +170,7 @@ public class Episode {
         private int seasonNumber;
         private String title = "";
         private Date airDate;
-        private Time airTime;
+        private Date airTime;
         private String overview = "";
         private String directors = "";
         private String writers = "";
@@ -180,10 +179,10 @@ public class Episode {
         private boolean watchMark;
 
         private Builder() {
-            this.id = Invalid.EPISODE_ID;
-            this.seriesId = Invalid.SERIES_ID;
-            this.number = Invalid.EPISODE_NUMBER;
-            this.seasonNumber = Invalid.SEASON_NUMBER;
+            id = Invalid.EPISODE_ID;
+            seriesId = Invalid.SERIES_ID;
+            number = Invalid.EPISODE_NUMBER;
+            seasonNumber = Invalid.SEASON_NUMBER;
         }
 
         public Builder withId(int id) {
@@ -216,7 +215,7 @@ public class Episode {
             return this;
         }
 
-        public Builder withAirtime(Time airTime) {
+        public Builder withAirtime(Date airTime) {
             this.airTime = airTime;
             return this;
         }
@@ -252,17 +251,17 @@ public class Episode {
         }
 
         public Episode build() {
-            Episode episode = new Episode(this.id, this.seriesId, this.number, this.seasonNumber);
+            Episode episode = new Episode(id, seriesId, number, seasonNumber);
 
-            episode.title = this.title;
-            episode.airDate = this.airDate;
-            episode.airTime = this.airTime;
-            episode.overview = this.overview;
-            episode.directors = this.directors;
-            episode.writers = this.writers;
-            episode.guestStars = this.guestStars;
-            episode.screenUrl = this.screenUrl;
-            episode.watchMark = this.watchMark;
+            episode.title = title;
+            episode.airDate = airDate;
+            episode.airTime = airTime;
+            episode.overview = overview;
+            episode.directors = directors;
+            episode.writers = writers;
+            episode.guestStars = guestStars;
+            episode.screenUrl = screenUrl;
+            episode.watchMark = watchMark;
 
             return episode;
         }
