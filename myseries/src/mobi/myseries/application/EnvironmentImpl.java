@@ -18,23 +18,25 @@ public class EnvironmentImpl implements Environment {
     // Obfuscation is good.
     private static final String TRAKTTV_API_KEY = "2665c5546c888a02c4ceff0afccfa927";
     // Replace this with your app key and secret assigned by Dropbox.
-    private static String DROPBOX_APP_KEY = "16plq57cyv3mxdb";
-    private static String DROPBOX_APP_SECRET = "5z6c5a0ku03kyjy";
+    private static final String DROPBOX_APP_KEY = "16plq57cyv3mxdb";
+    private static final String DROPBOX_APP_SECRET = "5z6c5a0ku03kyjy";
 
-    private TraktApi traktApi;
-    private DropboxHelper dropboxHelper;
-    private LocalizationProvider localizationProvider;
-    private SeriesRepository seriesRepository;
-    private ImageServiceRepository imageRepository;
+    private final TraktApi traktApi;
+    private final DropboxHelper dropboxHelper;
+    private final LocalizationProvider localizationProvider;
+    private final SeriesRepository seriesRepository;
+    private final ImageServiceRepository imageRepository;
 
-    private Context context;
+    private final Context context;
+    private final Communications communications;
 
     public EnvironmentImpl(Context context) {
         Validate.isNonNull(context, "context");
 
         this.context = context;
+        this.communications = new CommunicationsImpl();
 
-        this.traktApi = new Trakt(TRAKTTV_API_KEY);
+        this.traktApi = new Trakt(TRAKTTV_API_KEY, this.communications);
         this.dropboxHelper = new DropboxHelper(this.context, DROPBOX_APP_KEY, DROPBOX_APP_SECRET);
         this.localizationProvider =  new AndroidLocalizationProvider();
         this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
@@ -44,6 +46,11 @@ public class EnvironmentImpl implements Environment {
     @Override
     public Context context() {
         return this.context;
+    }
+
+    @Override
+    public Communications communications() {
+        return this.communications;
     }
 
     @Override

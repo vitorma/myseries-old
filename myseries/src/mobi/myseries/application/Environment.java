@@ -8,6 +8,7 @@ import android.content.Context;
 
 public interface Environment {
     public Context context();
+    public Communications communications();
     public TraktApi traktApi();
     public DropboxHelper dropboxHelper();
     public LocalizationProvider localizationProvider();

@@ -3,17 +3,14 @@ package mobi.myseries.application.image;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 
+import mobi.myseries.application.Communications;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
 import mobi.myseries.shared.imageprocessing.BitmapResizer;
-
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,13 +18,11 @@ import android.os.AsyncTask;
 
 // TODO(Gabriel) Log the operations of this service.
 public class ImageService {
-    private static final int CONNECTION_TIMEOUT = 60000;
-    private static final int SOCKET_TIMEOUT = 60000;
-
     private final int mySchedulePosterWidth;
     private final int mySchedulePosterHeight;
 
     private final ImageServiceRepository imageRepository;
+    private final Communications communications;
 
     private final ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
     private final int mySeriesPosterWidth;
@@ -35,13 +30,16 @@ public class ImageService {
 
     public ImageService(
             ImageServiceRepository imageRepository,
+            Communications communications,
             int mySeriesPosterWidth,
             int mySeriesPosterHeight,
             int mySchedulePosterWidth,
             int mySchedulePosterHeight) {
         Validate.isNonNull(imageRepository, "imageRepository");
+        Validate.isNonNull(communications, "communications");
 
         this.imageRepository = imageRepository;
+        this.communications = communications;
 
         this.mySeriesPosterWidth = mySeriesPosterWidth;
         this.mySeriesPosterHeight = mySeriesPosterHeight;
@@ -156,22 +154,8 @@ public class ImageService {
 
     /* Auxiliary */
 
-    //TODO (Cleber) Extract this method to allow reuse it
-    private InputStream getStream(String url) {
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpParams params = client.getParams();
-
-        HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
-
-        try {
-            return client
-                    .execute(new HttpGet(url))
-                    .getEntity()
-                    .getContent();
-        } catch (Exception e) {
-            return null;
-        }
+    private InputStream getStream(String url) throws ConnectionFailedException {
+        return this.communications.streamFor(url);
     }
 
     public Bitmap getCachedSmallPosterOf(Series series) {
