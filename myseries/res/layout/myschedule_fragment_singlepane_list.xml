@@ -2,14 +2,11 @@
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/bg_activity_base"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ListView
         android:id="@+id/list"
-        android:paddingLeft="@dimen/gap_medium"
-        android:paddingRight="@dimen/gap_medium"
         android:listSelector="@color/transparent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

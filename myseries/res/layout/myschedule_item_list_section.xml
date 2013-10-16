@@ -9,8 +9,8 @@
     <TextView
         android:id="@+id/date"
         style="@style/TextView.Medium"
-        android:textSize="16sp"
         android:textColor="@color/dark_red"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -18,9 +18,9 @@
 
     <TextView
         android:id="@+id/airDay"
-        style="@style/TextView.Small.MediumGray.Bold"
+        style="@style/TextView.Small.LightGray"
+        android:textStyle="bold"
         android:paddingLeft="@dimen/gap_small"
-        android:paddingBottom="1dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/date"
@@ -30,17 +30,16 @@
         android:id="@+id/relativeDay"
         style="@style/TextView.Small.LightGray.Ellipsized"
         android:gravity="right"
-        android:paddingBottom="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/date"
         android:layout_toRightOf="@id/airDay"/>
 
     <View
-        android:background="@drawable/list_divider_holo_light"
+        android:background="@color/dark_red"
         android:layout_width="match_parent"
         android:layout_marginTop="2dp"
-        android:layout_height="0.5dp"
+        android:layout_height="1.5dp"
         android:layout_below="@id/date"/>
 
 </RelativeLayout>

@@ -126,9 +126,13 @@ public class ScheduleListAdapter extends BaseAdapter {
 
         viewHolder.mSeriesName.setText(series.name());
 
-        String numberFormat = App.resources().getString(R.string.episode_number_format);
-        String episodeNumber = String.format(numberFormat, episode.seasonNumber(), episode.number());
-        viewHolder.mEpisodeNumber.setText(episodeNumber);
+//        viewHolder.mEpisodeNumber.setText(
+//                episode.isSpecial() ?
+//                App.resources().getString(R.string.number_format_episode_full_special, episode.number()) :
+//                App.resources().getString(R.string.number_format_episode_full, episode.number(), episode.seasonNumber()));
+
+        viewHolder.mEpisodeNumber.setText(App.resources().getString(
+                R.string.episode_number_format, episode.number(), episode.seasonNumber()));
         viewHolder.mEpisodeName.setText(episode.title());
 
         DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(App.context());
