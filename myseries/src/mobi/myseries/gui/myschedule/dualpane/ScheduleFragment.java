@@ -100,11 +100,10 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
     @Override
     public void onScheduleStateChanged() {
-        setUpViews();
-
         if (mListAdapter != null && mPagerAdapter != null) {
             checkItem(mSelectedItem);
         }
+        hideOrShowViews();
     }
 
     @Override
@@ -193,16 +192,18 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     }
 
     private void setUpViews() {
+        setUpFullStateView();
+        setUpEmptyStateView();
+        hideOrShowViews();
+    }
+
+    private void hideOrShowViews() {
         if (mItems.numberOfEpisodes() > 0) {
             mFullStateView.setVisibility(View.VISIBLE);
             mEmptyStateView.setVisibility(View.GONE);
-
-            setUpFullStateView();
         } else {
             mEmptyStateView.setVisibility(View.VISIBLE);
             mFullStateView.setVisibility(View.GONE);
-
-            setUpEmptyStateView();
         }
     }
 
