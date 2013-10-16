@@ -226,15 +226,17 @@ public class DriveBackup implements BackupMode {
         }
     }
 
+    // FIXME(Gabriel): It should use Environment.communications() instead of duplicating the code.
     private boolean isOnline() {
         ConnectivityManager cm =
             (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+        if (netInfo != null && netInfo.isConnected()) {
             return true;
         }
         return false;
     }
+
     @Override
     public String name() {
         return "Google Drive";

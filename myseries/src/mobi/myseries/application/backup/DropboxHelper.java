@@ -5,12 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import mobi.myseries.application.Communications;
 import mobi.myseries.application.ConnectionFailedException;
+import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.DropboxAPI.DropboxFileInfo;
@@ -28,17 +28,30 @@ public class DropboxHelper {
     final static private String ACCOUNT_PREFS_NAME = "dropbox";
     final static private String ACCESS_KEY_NAME = "ACCESS_KEY";
     final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
-    private String APP_KEY;
-    private String APP_SECRET;
-    private DropboxAPI<AndroidAuthSession> api;
-    private Context context;
 
-    public DropboxHelper(Context context, String appKey, String appSecret) {
+    private final String APP_KEY;
+    private final String APP_SECRET;
+
+    private final DropboxAPI<AndroidAuthSession> api;
+
+    private Context context;
+    private final Communications communications;
+
+    public DropboxHelper(Context context, Communications communications, String appKey, String appSecret) {
+        Validate.isNonNull(context, "context");
+        Validate.isNonNull(communications, "communications");
+        Validate.isNonBlank(appKey, "appKey");
+        Validate.isNonBlank(appSecret, "appSecret");
+
         this.APP_KEY = appKey;
         this.APP_SECRET = appSecret;
+
         this.context = context;
+        this.communications = communications;
+
         AndroidAuthSession session = buildSession();
-        api = new DropboxAPI<AndroidAuthSession>(session);
+
+        this.api = new DropboxAPI<AndroidAuthSession>(session);
     }
     
     private AndroidAuthSession buildSession() {
@@ -126,15 +139,8 @@ public class DropboxHelper {
         }
         return false;
     }
-    
-    private boolean isOnline() {
-        ConnectivityManager cm =
-            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
-    }
 
+    private boolean isOnline() {
+        return this.communications.isConnected();
+    }
 }

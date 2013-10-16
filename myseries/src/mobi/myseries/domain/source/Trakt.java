@@ -26,7 +26,7 @@ public class Trakt implements TraktApi {
 
     /* Interface */
 
-    public Trakt(String apiKey, Communications communications) {
+    public Trakt(Communications communications, String apiKey) {
         Validate.isNonNull(apiKey, "apiKey");
         Validate.isNonNull(communications, "communications");
 

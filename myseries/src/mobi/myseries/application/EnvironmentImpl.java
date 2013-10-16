@@ -37,8 +37,8 @@ public class EnvironmentImpl implements Environment {
         this.communications = new CommunicationsImpl(this.context);
         //this.communications = new OfflineCommunicationsImpl();
 
-        this.traktApi = new Trakt(TRAKTTV_API_KEY, this.communications);
-        this.dropboxHelper = new DropboxHelper(this.context, DROPBOX_APP_KEY, DROPBOX_APP_SECRET);
+        this.traktApi = new Trakt(this.communications, TRAKTTV_API_KEY);
+        this.dropboxHelper = new DropboxHelper(this.context, this.communications, DROPBOX_APP_KEY, DROPBOX_APP_SECRET);
         this.localizationProvider =  new AndroidLocalizationProvider();
         this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
         this.imageRepository = new AndroidImageServiceRepository(this.context);
