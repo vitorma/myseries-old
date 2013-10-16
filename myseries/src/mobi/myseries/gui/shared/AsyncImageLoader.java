@@ -118,6 +118,7 @@ public class AsyncImageLoader {
 
             if (bitmap != null) {
                 setBitmap();
+                hideProgressBar();
                 this.cancel(true);
                 return;
             }
@@ -159,7 +160,10 @@ public class AsyncImageLoader {
             }
 
             setBitmap();
+            hideProgressBar();
+        }
 
+        private void hideProgressBar() {
             ProgressBar progressBar = progressBarReference.get();
             if (progressBar != null) {
                 progressBar.setVisibility(View.GONE);

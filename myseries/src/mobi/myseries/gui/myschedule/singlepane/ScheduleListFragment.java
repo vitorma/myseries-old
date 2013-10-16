@@ -252,7 +252,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
                 if(!isCancelled()) { setUpViews(); }
                 isLoading = false;
             }
-        }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        }.execute();
     }
 
     @Override
