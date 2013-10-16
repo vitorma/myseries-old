@@ -2,6 +2,7 @@ package mobi.myseries.gui.myschedule.singlepane;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.preferences.MySchedulePreferencesListener;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
@@ -24,7 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class ScheduleDetailFragment extends Fragment
-        implements ScheduleListener, OnPageChangeListener, OnSharedPreferenceChangeListener {
+        implements ScheduleListener, OnPageChangeListener, MySchedulePreferencesListener {
 
     private int mScheduleMode;
     private int mSelectedPage;
@@ -78,14 +79,14 @@ public class ScheduleDetailFragment extends Fragment
     public void onStart() {
         super.onStart();
 
-        App.preferences().forActivities().register(this);
+        App.preferences().forMySchedule(mScheduleMode).register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        App.preferences().forActivities().register(this);
+        App.preferences().forMySchedule(mScheduleMode).deregister(this);
         mItems.deregister(this);
     }
 
@@ -94,7 +95,6 @@ public class ScheduleDetailFragment extends Fragment
     @Override
     public void onScheduleStateChanged() {
         setUpViews();
-
         if (mPagerAdapter != null) {
             mPagerAdapter.notifyDataSetChanged();
             mViewPager.setCurrentItem(mSelectedPage, true);
@@ -117,13 +117,6 @@ public class ScheduleDetailFragment extends Fragment
     @Override
     public void onPageSelected(int position) {
         mSelectedPage = position;
-    }
-
-    /* SharedPreferences.OnSharedPreferenceChangeListener */
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        reload();
     }
 
     /* Auxiliary */
@@ -166,16 +159,18 @@ public class ScheduleDetailFragment extends Fragment
     }
 
     private void setUpViews() {
+         setUpViewPager();
+         setUpEmptyStateView();
+         hideOrshowViews();
+    }
+    
+    private void hideOrshowViews() {
         if (mItems.numberOfEpisodes() > 0) {
             mEmptyStateView.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
-
-            setUpViewPager();
         } else {
             mEmptyStateView.setVisibility(View.VISIBLE);
             mViewPager.setVisibility(View.GONE);
-
-            setUpEmptyStateView();
         }
     }
 
@@ -244,5 +239,20 @@ public class ScheduleDetailFragment extends Fragment
         } else {
             hiddenEpisodesWarning.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onSeriesToShowChange() {
+        reload();
+    }
+
+    @Override
+    public void onEpisodesToShowChange() {
+        reload();
+    }
+
+    @Override
+    public void onSortingChange() {
+        reload();
     }
 }

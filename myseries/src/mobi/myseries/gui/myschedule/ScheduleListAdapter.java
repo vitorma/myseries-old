@@ -126,11 +126,6 @@ public class ScheduleListAdapter extends BaseAdapter {
 
         viewHolder.mSeriesName.setText(series.name());
 
-//        viewHolder.mEpisodeNumber.setText(
-//                episode.isSpecial() ?
-//                App.resources().getString(R.string.number_format_episode_full_special, episode.number()) :
-//                App.resources().getString(R.string.number_format_episode_full, episode.number(), episode.seasonNumber()));
-
         viewHolder.mEpisodeNumber.setText(App.resources().getString(
                 R.string.episode_number_format, episode.number(), episode.seasonNumber()));
         viewHolder.mEpisodeName.setText(episode.title());
@@ -229,16 +224,6 @@ public class ScheduleListAdapter extends BaseAdapter {
                 @Override
                 public void onChecked(boolean checked) {
                     mCheckableBody.setChecked(checked);
-
-                    mSeriesName.setChecked(checked);
-                    mEpisodeNumber.setChecked(checked);
-                    mEpisodeName.setChecked(checked);
-                    mAirTime.setChecked(checked);
-
-                    mWatchMark.setImageDrawable(
-                            checked ?
-                                    App.resources().getDrawable(R.drawable.watchmark_dark) :
-                                        App.resources().getDrawable(R.drawable.watchmark_light));
                 }
             };
         }

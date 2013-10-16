@@ -16,6 +16,7 @@ import mobi.myseries.gui.shared.PauseImageLoaderOnScrollListener;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
@@ -100,11 +101,10 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
     @Override
     public void onScheduleStateChanged() {
-        setUpViews();
-
         if (mListAdapter != null && mPagerAdapter != null) {
             checkItem(mSelectedItem);
         }
+        hideOrShowViews();
     }
 
     @Override
@@ -180,6 +180,9 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
         mViewPager = (ViewPager) getView().findViewById(R.id.detailsPager);
         mFullStateView = getView().findViewById(R.id.fullStateView);
         mEmptyStateView = getView().findViewById(R.id.empty_state);
+
+        PagerTitleStrip titles = (PagerTitleStrip) getView().findViewById(R.id.detailsTitles);
+        titles.setTextColor(App.resources().getColor(R.color.dark_red));
     }
 
     private void setUpData() {
@@ -193,16 +196,18 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     }
 
     private void setUpViews() {
+        setUpFullStateView();
+        setUpEmptyStateView();
+        hideOrShowViews();
+    }
+
+    private void hideOrShowViews() {
         if (mItems.numberOfEpisodes() > 0) {
             mFullStateView.setVisibility(View.VISIBLE);
             mEmptyStateView.setVisibility(View.GONE);
-
-            setUpFullStateView();
         } else {
             mEmptyStateView.setVisibility(View.VISIBLE);
             mFullStateView.setVisibility(View.GONE);
-
-            setUpEmptyStateView();
         }
     }
 

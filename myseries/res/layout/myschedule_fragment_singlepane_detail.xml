@@ -15,6 +15,8 @@
             android:id="@+id/titles"
             android:paddingTop="@dimen/gap_small"
             android:paddingBottom="@dimen/gap_small"
+            android:paddingLeft="@dimen/gap_medium"
+            android:paddingRight="@dimen/gap_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"/>
