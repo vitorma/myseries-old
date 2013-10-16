@@ -13,6 +13,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import mobi.myseries.application.ApplicationService;
+import mobi.myseries.application.Communications;
 import mobi.myseries.application.Environment;
 import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.application.image.ImageService;
@@ -29,12 +30,14 @@ import android.util.Log;
 
 public class UpdateService extends ApplicationService<UpdateListener> {
     private final ImageService imageService;
+    private final Communications communications;
     private final AtomicBoolean isUpdating;
 
     public UpdateService(Environment environment, ImageService imageService) {
         super(environment);
 
         this.imageService = imageService;
+        this.communications = environment.communications();
         this.isUpdating = new AtomicBoolean(false);
     }
 
@@ -87,7 +90,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
             return;
         }
 
-        if (!UpdatePolicy.shouldUpdateNow()) {
+        if (!UpdatePolicy.shouldUpdateNow(this.communications)) {
             Log.d(getClass().getName(), "Update will not run");
             this.isUpdating.set(false);
             return;
@@ -306,7 +309,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
         }
 
         private boolean networkConnectionIsAvailable() {
-            return UpdatePolicy.networkAvailable();
+            return communications.isConnected();
         }
 
         private WhatHasToBeUpdated checkForUpdates() throws Exception {

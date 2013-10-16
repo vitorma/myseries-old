@@ -2,12 +2,12 @@ package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.message.MessageServiceListener;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.repository.series.InvalidBackupVersionException;
 import mobi.myseries.domain.repository.series.InvalidDBSourceFileException;
 import mobi.myseries.domain.repository.series.NoSeriesToRestoreException;
-import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.shared.Validate;
 import android.app.Activity;

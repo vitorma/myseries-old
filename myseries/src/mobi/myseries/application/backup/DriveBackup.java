@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import mobi.myseries.application.App;
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.backup.exception.GoogleDriveCannotCreateFileException;
 import mobi.myseries.application.backup.exception.GoogleDriveDownloadException;
 import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.application.backup.exception.GoogleDriveFileNotFoundException;
 import mobi.myseries.application.backup.exception.GoogleDriveUploadException;
-import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.shared.FilesUtil;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -226,15 +226,17 @@ public class DriveBackup implements BackupMode {
         }
     }
 
+    // FIXME(Gabriel): It should use Environment.communications() instead of duplicating the code.
     private boolean isOnline() {
         ConnectivityManager cm =
             (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+        if (netInfo != null && netInfo.isConnected()) {
             return true;
         }
         return false;
     }
+
     @Override
     public String name() {
         return "Google Drive";

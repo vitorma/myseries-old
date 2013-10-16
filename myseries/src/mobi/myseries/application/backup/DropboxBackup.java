@@ -6,8 +6,8 @@ import java.io.FileNotFoundException;
 import com.dropbox.client2.exception.DropboxException;
 
 import mobi.myseries.application.App;
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.backup.BackupMode;
-import mobi.myseries.domain.source.ConnectionFailedException;
 
 public class DropboxBackup implements BackupMode {
     final static private String DEFAULT_PATH = "";

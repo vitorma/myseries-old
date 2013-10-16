@@ -179,12 +179,9 @@
     <string name="updates">Updates</string>
 
     <string name="no_series_to_update">No series to update.</string>
-    <string name="update_network_unavailable">No Internet connection available.</string>
-    <string name="update_connection_failed">Could not connect to TheTVDB.</string>
-    <string name="update_connection_timeout">Could not connect to TheTVDB.</string>
-    <string name="update_metadata_unavailable">Could not connect to TheTVDB.</string>
-    <string name="update_series_not_found">TheTVDB is joking with us =/.</string>
-    <string name="update_parsing_failed">Received malformed data from TheTVDB.</string>
+    <string name="update_network_unavailable">Internet connection not available.</string>
+    <string name="update_connection_failed">Could not connect to Trakt.tv.</string>
+    <string name="update_parsing_failed">Received malformed data from Trakt.tv.</string>
     <string name="update_timeout">Update time limit exceeded.</string>
     
     <string name="checking_for_updates_message">Checking for updates…</string>

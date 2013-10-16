@@ -4,9 +4,9 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.search.SearchListener;
 import mobi.myseries.domain.model.SearchResult;
-import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.gui.shared.FailureDialogBuilder;

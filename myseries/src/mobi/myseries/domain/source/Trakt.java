@@ -5,21 +5,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import mobi.myseries.application.Communications;
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Validate;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
 import android.util.Log;
 
 public class Trakt implements TraktApi {
-    private static final int SOCKET_TIMEOUT = 60000;
-    private static final int CONNECTION_TIMEOUT = 60000;
     private static final String TRAKT_URL = "http://api.trakt.tv/";
     private static final String TRENDING_URL = TRAKT_URL + "shows/trending.json/";
     private static final String SEARCH_URL = TRAKT_URL + "search/shows.json/";
@@ -27,13 +22,16 @@ public class Trakt implements TraktApi {
     private static final String UPDATE_URL = TRAKT_URL + "shows/updated.json/";
 
     private final String apiKey;
+    private final Communications communications;
 
     /* Interface */
 
-    public Trakt(String apiKey) {
+    public Trakt(Communications communications, String apiKey) {
         Validate.isNonNull(apiKey, "apiKey");
+        Validate.isNonNull(communications, "communications");
 
         this.apiKey = apiKey;
+        this.communications = communications;
     }
 
     @Override
@@ -74,20 +72,7 @@ public class Trakt implements TraktApi {
     /* Auxiliary */
 
     private InputStream get(String url) throws ConnectionFailedException {
-            DefaultHttpClient client = new DefaultHttpClient();
-            HttpParams params = client.getParams();
-
-            HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
-            HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
-
-        try {
-            return client
-                .execute(new HttpGet(url))
-                .getEntity()
-                .getContent();
-        } catch (Exception e) {
-            throw new ConnectionFailedException(e);
-        }
+        return this.communications.streamFor(url);
     }
 
     private String encode(String string) {
