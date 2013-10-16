@@ -15,4 +15,6 @@
     <dimen name="episode_image_width">460dp</dimen>
     <dimen name="episode_image_height">258dp</dimen>
 
+    <dimen name="episode_screen_height">270dp</dimen>
+
 </resources>

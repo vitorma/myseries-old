@@ -10,6 +10,6 @@
 
     <!-- Episodes -->
 
-    <dimen name="episode_screen_height">269dp</dimen>
+    <dimen name="episode_screen_height">270dp</dimen>
 
 </resources>

@@ -12,4 +12,6 @@
     <dimen name="fragment_episodes_details_width">992dp</dimen>
     <dimen name="fragment_episodes_details_internal_width">940dp</dimen>
 
+    <dimen name="episode_screen_height">450dp</dimen>
+
 </resources>

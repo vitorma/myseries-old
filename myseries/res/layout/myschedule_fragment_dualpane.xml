@@ -13,11 +13,13 @@
         <ListView
             android:id="@+id/masterList"
             android:listSelector="@color/transparent"
+            android:divider="@null"
             android:choiceMode="singleChoice"
             android:verticalScrollbarPosition="left"
             android:background="@drawable/list_background_holo"
+            android:paddingLeft="@dimen/episode_list_side_gap"
             android:paddingRight="0dp"
-            android:layout_width="@dimen/fragment_episodes_master_width"
+            android:layout_width="@dimen/episode_list_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"/>
 

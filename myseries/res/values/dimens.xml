@@ -69,7 +69,8 @@
     <dimen name="fragment_episodes_side_gap">0dp</dimen>
     <dimen name="episode_image_width">300dp</dimen>
     <dimen name="episode_image_height">168dp</dimen>
-    <dimen name="episode_screen_height">179dp</dimen>
+
+    <dimen name="episode_screen_height">180dp</dimen>
 
     <!-- AppWidget -->
 

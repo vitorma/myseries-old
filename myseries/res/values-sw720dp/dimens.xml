@@ -18,4 +18,8 @@
     <dimen name="series_seasons_margin">@dimen/gap_large</dimen>
     <dimen name="series_seasons_width">320dp</dimen>
 
+    <dimen name="episode_screen_height">225dp</dimen>
+    <dimen name="episode_list_width">320dp</dimen>
+    <dimen name="episode_list_side_gap">16dp</dimen>
+
 </resources>

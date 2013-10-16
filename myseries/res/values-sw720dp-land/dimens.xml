@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Episodes - -->
+
+    <dimen name="episode_screen_height">405dp</dimen>
+    <dimen name="episode_list_width">360dp</dimen>
+
+</resources>
