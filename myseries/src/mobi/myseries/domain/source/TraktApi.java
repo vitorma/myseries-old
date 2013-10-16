@@ -2,6 +2,7 @@ package mobi.myseries.domain.source;
 
 import java.util.List;
 
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 

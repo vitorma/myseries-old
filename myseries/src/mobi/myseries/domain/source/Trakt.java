@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import mobi.myseries.application.Communications;
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;

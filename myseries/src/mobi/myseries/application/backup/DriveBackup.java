@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import mobi.myseries.application.App;
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.backup.exception.GoogleDriveCannotCreateFileException;
 import mobi.myseries.application.backup.exception.GoogleDriveDownloadException;
 import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.application.backup.exception.GoogleDriveFileNotFoundException;
 import mobi.myseries.application.backup.exception.GoogleDriveUploadException;
-import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.shared.FilesUtil;
 import android.content.Context;
 import android.net.ConnectivityManager;

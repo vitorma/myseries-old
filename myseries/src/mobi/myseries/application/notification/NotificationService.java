@@ -3,6 +3,7 @@ package mobi.myseries.application.notification;
 import java.util.Map;
 
 import mobi.myseries.R;
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BackupService;
@@ -21,7 +22,6 @@ import mobi.myseries.application.update.UpdateService;
 import mobi.myseries.application.update.exception.NetworkUnavailableException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import android.content.Context;
 

@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.domain.source;
+package mobi.myseries.application;
 
 public class ConnectionFailedException extends Exception {
     private static final long serialVersionUID = 1L;

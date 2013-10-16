@@ -4,9 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 
 import mobi.myseries.application.Communications;
+import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.domain.source.ConnectionFailedException;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;

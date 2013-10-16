@@ -2,7 +2,7 @@ package mobi.myseries.test.unit.application;
 
 import mobi.myseries.application.Communications;
 import mobi.myseries.application.CommunicationsImpl;
-import mobi.myseries.domain.source.ConnectionFailedException;
+import mobi.myseries.application.ConnectionFailedException;
 import android.test.InstrumentationTestCase;
 
 public class CommunicationsImplTest extends InstrumentationTestCase {
@@ -11,7 +11,7 @@ public class CommunicationsImplTest extends InstrumentationTestCase {
 
     @Override
     public void setUp() {  
-        this.communications = new CommunicationsImpl();
+        this.communications = new CommunicationsImpl(this.getInstrumentation().getContext());
     }
 
     public void testItDoesNotAllowNullUrls() throws ConnectionFailedException {

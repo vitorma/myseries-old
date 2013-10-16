@@ -2,8 +2,9 @@ package mobi.myseries.application;
 
 import java.io.InputStream;
 
-import mobi.myseries.domain.source.ConnectionFailedException;
-
 public interface Communications {
+    public boolean isConnected();
+    public boolean isConnectedToWiFi();
+
     public InputStream streamFor(String url) throws ConnectionFailedException;
 }

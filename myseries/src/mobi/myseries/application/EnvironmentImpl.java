@@ -34,7 +34,8 @@ public class EnvironmentImpl implements Environment {
         Validate.isNonNull(context, "context");
 
         this.context = context;
-        this.communications = new CommunicationsImpl();
+        this.communications = new CommunicationsImpl(this.context);
+        //this.communications = new OfflineCommunicationsImpl();
 
         this.traktApi = new Trakt(TRAKTTV_API_KEY, this.communications);
         this.dropboxHelper = new DropboxHelper(this.context, DROPBOX_APP_KEY, DROPBOX_APP_SECRET);
