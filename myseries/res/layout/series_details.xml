@@ -139,8 +139,7 @@
             android:layout_alignBottom="@+id/seriesPosterImageView"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="54dp"
-            android:layout_marginRight="30dp"
-            android:visibility="visible" />
+            android:layout_marginRight="30dp" />
 
     </RelativeLayout>
 
