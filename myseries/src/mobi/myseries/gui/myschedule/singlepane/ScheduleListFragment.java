@@ -111,7 +111,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     public void onScheduleStateChanged() {
         mAdapter.resetViewStates();
         mAdapter.notifyDataSetChanged();
-        setUpViews();
+        hideOrshowViews();
     }
 
     @Override
@@ -142,16 +142,18 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     }
 
     private void setUpViews() {
+        setUpEmptyStateView();
+        setUpListView();
+        hideOrshowViews();
+    }
+
+    private void hideOrshowViews() {
         if (mItems.numberOfEpisodes() > 0) {
             mEmptyStateView.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
-
-            setUpListView();
         } else {
             mEmptyStateView.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
-
-            setUpEmptyStateView();
         }
     }
 

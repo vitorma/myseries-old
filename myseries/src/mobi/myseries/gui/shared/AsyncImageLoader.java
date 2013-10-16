@@ -117,6 +117,8 @@ public class AsyncImageLoader {
             this.bitmap = this.bitmapFetchingMethod.loadCachedBitmap();
 
             if (bitmap != null) {
+                setBitmap();
+                this.cancel(true);
                 return;
             }
 
@@ -142,11 +144,10 @@ public class AsyncImageLoader {
                 }
             }
 
-            if (isCancelled()) {
-                this.bitmap = null;
+            if (!isCancelled()) {
+                this.bitmap = this.bitmapFetchingMethod.loadBitmap();
             }
 
-            this.bitmap = this.bitmapFetchingMethod.loadBitmap();
             return null;
         }
 
@@ -157,19 +158,23 @@ public class AsyncImageLoader {
                 return;
             }
 
+            setBitmap();
+
+            ProgressBar progressBar = progressBarReference.get();
+            if (progressBar != null) {
+                progressBar.setVisibility(View.GONE);
+            }
+        }
+
+        private void setBitmap() {
             ImageView imageView = imageViewReference.get();
             BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 
             if (this == bitmapWorkerTask && imageView != null) {
-                if (bitmap == null) {
-                    bitmap = defaultBitmap;
+                if (this.bitmap == null) {
+                    this.bitmap = defaultBitmap;
                 }
                 imageView.setImageBitmap(bitmap);
-
-                ProgressBar progressBar = progressBarReference.get();
-                if (progressBar != null) {
-                    progressBar.setVisibility(View.GONE);
-                }
             }
         }
     }
