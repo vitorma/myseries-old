@@ -1,6 +1,7 @@
 package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Checkable;
@@ -28,7 +29,10 @@ public class CheckableFrameLayout extends FrameLayout implements Checkable {
         this.checked = checked;
 
         if (this.changeBackground) {
-            this.setBackgroundResource(checked ? R.drawable.list_activated_holo : 0);
+            this.setBackgroundColor(
+                    checked ?
+                    App.resources().getColor(R.color.bg_navigation_drawer_list_selector) :
+                    App.resources().getColor(R.color.transparent));
         }
 
         if (this.listener != null) {
