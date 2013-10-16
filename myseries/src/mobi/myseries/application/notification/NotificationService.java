@@ -192,16 +192,15 @@ public class NotificationService {
             return context.getString(R.string.update_connection_failed);
 
         } else if (e instanceof ParsingFailedException) {
-            return context.getString(R.string.update_parsing_failed);
+            //return context.getString(R.string.update_parsing_failed);
+            return context.getString(R.string.update_connection_failed);
 
         } else if (e instanceof NetworkUnavailableException) {
             return context.getString(R.string.update_network_unavailable);
 
         } else if (e instanceof UpdateTimeoutException) {
-            return context.getString(R.string.update_timeout);
-
-        } else if (e instanceof UpdateTimeoutException) {
-            return context.getString(R.string.update_timeout);
+            //return context.getString(R.string.update_timeout);
+            return context.getString(R.string.update_connection_failed);
 
         } else {
             // return e.getMessage();
