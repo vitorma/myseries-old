@@ -41,6 +41,11 @@ public class SchedulePagerAdapter extends PagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == object;
     }
@@ -130,6 +135,7 @@ public class SchedulePagerAdapter extends PagerAdapter {
 
         container.addView(view, 0);
 
+        view.setTag(episode);
         return view;
     }
 

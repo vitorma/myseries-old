@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -38,6 +39,7 @@ public abstract class AddSeriesFragment extends Fragment {
     private LinearLayout errorView;
     private TextView errorTitle;
     private TextView errorMessage;
+    private Button tryAgainButton;
 
     private AddSeriesAdapter adapter;
     private AsyncImageLoader imageLoader;
@@ -236,8 +238,14 @@ public abstract class AddSeriesFragment extends Fragment {
         this.errorTitle = (TextView) this.findView(R.id.errorTitle);
         this.errorMessage = (TextView) this.findView(R.id.errorMessage);
 
-        // XXX(Gabriel): Try Again Button
-        //this.tryAgainButton = (Button) this.findView(R.id.tryAgain);
+        this.tryAgainButton = (Button) this.findView(R.id.tryAgain);
+
+        this.tryAgainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddSeriesFragment.this.runService();                
+            }
+        });
     }
 
     private View findView(int resourceId) {

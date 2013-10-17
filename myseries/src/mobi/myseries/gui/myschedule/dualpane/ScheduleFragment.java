@@ -103,6 +103,8 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     public void onScheduleStateChanged() {
         if (mListAdapter != null && mPagerAdapter != null) {
             checkItem(mSelectedItem);
+            mListAdapter.notifyDataSetChanged();
+            mPagerAdapter.notifyDataSetChanged();
         }
         hideOrShowViews();
     }
