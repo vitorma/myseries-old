@@ -117,10 +117,10 @@
 
         <Button
             android:id="@+id/tryAgain"
-            android:text="@string/btn_unhide_series"
+            android:text="@string/btn_try_again"
             android:textSize="@dimen/text_size_medium"
             android:textColor="@color/text_dark_gray"
-            android:drawableLeft="@drawable/ic_action_filter_inverse"
+            android:drawableLeft="@drawable/ic_search_api_holo_light"
             android:drawablePadding="@dimen/gap_medium"
             android:gravity="left|center_vertical"
             android:paddingRight="@dimen/gap_large"
