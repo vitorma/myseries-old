@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class SchedulePagerAdapter extends PagerAdapter {
@@ -38,6 +39,11 @@ public class SchedulePagerAdapter extends PagerAdapter {
     @Override
     public int getCount() {
         return mItems.numberOfEpisodes();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+            return POSITION_NONE;
     }
 
     @Override
@@ -130,6 +136,7 @@ public class SchedulePagerAdapter extends PagerAdapter {
 
         container.addView(view, 0);
 
+        view.setTag(episode);
         return view;
     }
 

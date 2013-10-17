@@ -94,11 +94,11 @@ public class ScheduleDetailFragment extends Fragment
 
     @Override
     public void onScheduleStateChanged() {
-        setUpViews();
         if (mPagerAdapter != null) {
             mPagerAdapter.notifyDataSetChanged();
             mViewPager.setCurrentItem(mSelectedPage, true);
         }
+        hideOrshowViews();
     }
 
     @Override
