@@ -1,11 +1,15 @@
 package mobi.myseries.application.image;
 
 import java.io.BufferedInputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import mobi.myseries.application.Communications;
 import mobi.myseries.application.ConnectionFailedException;
+import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Strings;
@@ -152,17 +156,68 @@ public class ImageService {
         return this.imageRepository.getBannerOf(series);
     }
 
-    /* Auxiliary */
-
-    private InputStream getStream(String url) throws ConnectionFailedException {
-        return this.communications.streamFor(url);
-    }
-
     public Bitmap getCachedSmallPosterOf(Series series) {
         return this.imageRepository.getCachedSmallPosterOf(series);
     }
 
     public Bitmap getCachedPosterOf(Series series) {
         return this.imageRepository.getCachedPosterOf(series);
+    }
+
+    /* For search */
+
+    public Bitmap getCachedPosterOf(SearchResult series) {
+        return this.imageRepository.getCachedPosterOf(series.toSeries());
+    }
+
+    public Bitmap getPosterOf(SearchResult series) throws ConnectionFailedException, NetworkUnavailableException {
+        Bitmap localPoster = this.getPosterOf(series.toSeries());
+        if (localPoster == null) {
+            String posterUrl = series.poster();
+
+            if (Strings.isNullOrBlank(posterUrl)) {
+                return null;
+            }
+
+            // FIXME(Gabriel): use a cache for posters of not followed series.
+
+            return BitmapFactory.decodeStream(this.getStream(posterUrl));
+        } else {
+            return localPoster;   
+        }
+    }
+
+    /* Auxiliary */
+
+    private InputStream getStream(String url) throws ConnectionFailedException, NetworkUnavailableException {
+        return new FlushedInputStream(this.communications.streamFor(url));
+    }
+
+    /*
+     * An InputStream that skips the exact number of bytes provided, unless it
+     * reaches EOF.
+     */
+    static class FlushedInputStream extends FilterInputStream {
+        public FlushedInputStream(InputStream inputStream) {
+            super(inputStream);
+        }
+
+        @Override
+        public long skip(long n) throws IOException {
+            long totalBytesSkipped = 0L;
+            while (totalBytesSkipped < n) {
+                long bytesSkipped = this.in.skip(n - totalBytesSkipped);
+                if (bytesSkipped == 0L) {
+                    int b = this.read();
+                    if (b < 0) {
+                        break; // we reached EOF
+                    } else {
+                        bytesSkipped = 1; // we read one byte
+                    }
+                }
+                totalBytesSkipped += bytesSkipped;
+            }
+            return totalBytesSkipped;
+        }
     }
 }

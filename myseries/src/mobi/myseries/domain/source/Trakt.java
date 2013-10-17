@@ -7,6 +7,7 @@ import java.util.List;
 
 import mobi.myseries.application.Communications;
 import mobi.myseries.application.ConnectionFailedException;
+import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;
@@ -36,7 +37,7 @@ public class Trakt implements TraktApi {
 
     @Override
     public List<SearchResult> search(String query)
-            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException {
+            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
         Validate.isNonBlank(query, new InvalidSearchCriteriaException());
 
         String url = SEARCH_URL + this.apiKey + "/" + this.encode(query);
@@ -45,14 +46,14 @@ public class Trakt implements TraktApi {
     }
 
     @Override
-    public List<SearchResult> listTrending() throws ConnectionFailedException, ParsingFailedException {
+    public List<SearchResult> listTrending() throws ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
         String url = TRENDING_URL + this.apiKey;
 
         return TraktParser.parseSearchResults(this.get(url));
     }
 
     @Override
-    public Series fetchSeries(int seriesId) throws ParsingFailedException, ConnectionFailedException {
+    public Series fetchSeries(int seriesId) throws ParsingFailedException, ConnectionFailedException, NetworkUnavailableException {
         String url = SHOW_SUMMARY_URL + this.apiKey + "/" + seriesId + "/extended";
 
         return TraktParser.parseSeries(this.get(url));
@@ -60,7 +61,7 @@ public class Trakt implements TraktApi {
 
     @Override
     public List<Integer> updatedSeriesSince(long utcTimestamp)
-            throws ConnectionFailedException, ParsingFailedException {
+            throws ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
         long pstTimestamp = DatesAndTimes.toPstTime(utcTimestamp);
 
         String url = UPDATE_URL + this.apiKey + "/" + pstTimestamp;
@@ -71,7 +72,7 @@ public class Trakt implements TraktApi {
 
     /* Auxiliary */
 
-    private InputStream get(String url) throws ConnectionFailedException {
+    private InputStream get(String url) throws ConnectionFailedException, NetworkUnavailableException {
         return this.communications.streamFor(url);
     }
 

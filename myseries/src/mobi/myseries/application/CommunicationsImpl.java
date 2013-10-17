@@ -40,9 +40,13 @@ public class CommunicationsImpl implements Communications {
     }
 
     @Override
-    public InputStream streamFor(String url) throws ConnectionFailedException {
+    public InputStream streamFor(String url) throws ConnectionFailedException, NetworkUnavailableException {
         Validate.isNonNull(url, "url");
         Validate.isNonBlank(url, "url");
+
+        if (!this.isConnected()) {
+            throw new NetworkUnavailableException();
+        }
 
         try {
             HttpURLConnection connection = buildHttpUrlConnection(url);

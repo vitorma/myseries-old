@@ -38,6 +38,7 @@ public interface ImageServiceRepository {
     public void saveSeriesBanner(Series series, Bitmap banner);
 
     public void deleteAllImagesOf(Series series);
+
     public Bitmap getCachedSmallPosterOf(Series series);
     public Bitmap getCachedPosterOf(Series series);
 }

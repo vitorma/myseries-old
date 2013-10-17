@@ -6,5 +6,5 @@ public interface Communications {
     public boolean isConnected();
     public boolean isConnectedToWiFi();
 
-    public InputStream streamFor(String url) throws ConnectionFailedException;
+    public InputStream streamFor(String url) throws ConnectionFailedException, NetworkUnavailableException;
 }

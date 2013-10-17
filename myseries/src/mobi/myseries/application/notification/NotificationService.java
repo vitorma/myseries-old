@@ -4,6 +4,7 @@ import java.util.Map;
 
 import mobi.myseries.R;
 import mobi.myseries.application.ConnectionFailedException;
+import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BackupService;
@@ -19,7 +20,6 @@ import mobi.myseries.application.backup.exception.SDcardException;
 import mobi.myseries.application.update.BaseUpdateListener;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.application.update.UpdateService;
-import mobi.myseries.application.update.exception.NetworkUnavailableException;
 import mobi.myseries.application.update.exception.UpdateTimeoutException;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.domain.source.ParsingFailedException;
@@ -189,18 +189,17 @@ public class NotificationService {
 
     private String updateFailedMessageFor(Exception e) {
         if (e instanceof ConnectionFailedException) {
-            return context.getString(R.string.update_connection_failed);
+            return context.getString(R.string.connection_failed_title);
 
         } else if (e instanceof ParsingFailedException) {
-            //return context.getString(R.string.update_parsing_failed);
-            return context.getString(R.string.update_connection_failed);
+            return context.getString(R.string.parsing_failed_title);
 
         } else if (e instanceof NetworkUnavailableException) {
-            return context.getString(R.string.update_network_unavailable);
+            return context.getString(R.string.network_unavailable_title);
 
         } else if (e instanceof UpdateTimeoutException) {
             //return context.getString(R.string.update_timeout);
-            return context.getString(R.string.update_connection_failed);
+            return context.getString(R.string.connection_failed_title);
 
         } else {
             // return e.getMessage();

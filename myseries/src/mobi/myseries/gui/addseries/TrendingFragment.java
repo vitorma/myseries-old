@@ -81,8 +81,8 @@ public class TrendingFragment extends AddSeriesFragment {
             @Override
             public void onFailure(Exception exception) {
                 TrendingFragment.this.setResults(new ArrayList<SearchResult>());
-                // TODO(Gabriel): Show empty view telling about the error.
-                TrendingFragment.this.setError(exception.getClass().getSimpleName(), "A good message here.");
+
+                TrendingFragment.this.setError(exception);
                 TrendingFragment.this.showError();
             }
         };
