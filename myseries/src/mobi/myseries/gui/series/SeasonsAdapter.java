@@ -67,9 +67,12 @@ public class SeasonsAdapter extends BaseAdapter implements OnSharedPreferenceCha
         final Season season = this.seasons.get(position);
 
         if (season.isSpecial()) {
-            seasonNumber.setText(R.string.special_episodes);
+            seasonNumber.setText(App.resources().getString(R.string.special_episodes).toUpperCase());
         } else {
-            seasonNumber.setText(String.format(App.resources().getString(R.string.season_number_format_ext), season.number()));
+            seasonNumber.setText(App.resources().getString(
+                    R.string.season_number_format_ext,
+                    season.number())
+                    .toUpperCase());
         }
 
         seenEpisodesBar.updateWithEpisodesOf(season);

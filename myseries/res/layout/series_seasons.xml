@@ -32,6 +32,7 @@
         <CheckedTextView
             android:id="@+id/statistics"
             style="@style/TextView.Large.LightGray.Ellipsized"
+            android:textColor="@color/yellow"
             android:fontFamily="sans-serif-light"
             android:drawableLeft="@drawable/btn_statistics"
             android:background="@drawable/list_selector_holo_light"
@@ -74,7 +75,7 @@
         <TextView
             android:id="@+id/allEpisodes"
             style="@style/TextView.Large"
-            android:textColor="@color/text_medium_gray"
+            android:textColor="@color/chunk_bar_background_plain"
             android:fontFamily="sans-serif-light"
             android:paddingTop="@dimen/gap_medium"
             android:paddingBottom="@dimen/gap_medium"

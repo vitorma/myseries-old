@@ -17,14 +17,15 @@
     <color name="red">#ffff4444</color>
     <color name="dark_red">#ffcc0000</color>
     <color name="yellow">#ffffbb33</color>
-    <color name="green">#ff669900</color>
+    <color name="green">#ff99cc00</color>
+    <color name="dark_green">#ff669900</color>
     <color name="lilac">#ff9933cc</color>
 
     <color name="chunk_bar_background_gradient_from">@color/chunk_bar_background_plain</color>
     <color name="chunk_bar_background_gradient_to">@color/chunk_bar_background_plain</color>
     <color name="chunk_bar_foreground_gradient_from">@color/chunk_bar_foreground_plain</color>
     <color name="chunk_bar_foreground_gradient_to">@color/chunk_bar_foreground_plain</color>
-    <color name="chunk_bar_background_plain">#ff999999</color>
+    <color name="chunk_bar_background_plain">#ff808080</color>
     <color name="chunk_bar_foreground_plain">@color/dark_blue</color>
 
     <color name="chunk_bar_background_gradient_from_future">#ff222222</color>

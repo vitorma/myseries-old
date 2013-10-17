@@ -169,11 +169,15 @@ public class SeasonsFragment extends Fragment {
         Series series = App.seriesFollowingService().getFollowedSeries(this.mSeriesId);
 
         int numberOfUnwatchedEpisodes = series.numberOfEpisodes(new EpisodeWatchMarkSpecification(false));
-        String pluralOfRemaining = this.getResources().getQuantityString(
-                R.plurals.plural_remaining,
-                numberOfUnwatchedEpisodes,
-                numberOfUnwatchedEpisodes);
-        this.statisticsButton.setText(pluralOfRemaining);
+        if (numberOfUnwatchedEpisodes == 0) {
+            this.statisticsButton.setText("");
+        } else {
+            String pluralOfRemaining = this.getResources().getQuantityString(
+                    R.plurals.plural_remaining,
+                    numberOfUnwatchedEpisodes,
+                    numberOfUnwatchedEpisodes);
+            this.statisticsButton.setText(pluralOfRemaining);
+        }
 
         TextView allEpisodes = (TextView) this.statisticsPanel.findViewById(R.id.allEpisodes);
         allEpisodes.setText("/" + series.numberOfEpisodes());
