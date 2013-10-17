@@ -52,7 +52,7 @@ public class TraktParser {
     private static final String NUMBER = "number";
     private static final String SCREEN = "screen";
     private static final String SHOWS = "shows";
-    private static final String TRAKT_TV_TIMEZONE = "America/Los_Angeles";
+    private static final String TRAKT_TV_TIMEZONE = "GMT-8";
 
     private static final int COMPRESSED_POSTER_300 = 300;
 
