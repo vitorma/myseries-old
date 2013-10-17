@@ -162,7 +162,7 @@
     <string name="network_unavailable_title">Not connected to the Internet</string>
     <string name="network_unavailable_message">Check your connection and try again.</string>
 
-    <string name="parsing_failed_title">Couldn't connect to Trakt.tv</string>
+    <string name="parsing_failed_title">Couldn\'t connect to Trakt.tv</string>
     <string name="parsing_failed_message">Check your Internet connection and try again.</string>
 
     <string name="invalid_criteria_title">Invalid series name</string>
