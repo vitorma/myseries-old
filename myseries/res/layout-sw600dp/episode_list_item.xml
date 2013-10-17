@@ -9,37 +9,38 @@
         android:descendantFocusability="blocksDescendants"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingRight="@dimen/gap_large">
+        android:paddingRight="@dimen/episode_list_side_gap">
 
         <mobi.myseries.gui.shared.SeenMark
             android:id="@+id/seenMark"
             android:layout_width="@dimen/toucharea_minimum_side"
             android:layout_height="@dimen/toucharea_minimum_side"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
 
         <CheckedTextView
             android:id="@+id/episodeNumber"
-            style="@style/TextView.Medium"
-            android:textColor="@color/mediumgray_x_lightgray"
+            style="@style/TextView.Medium.Blue"
+            android:textStyle="bold"
             android:paddingTop="@dimen/gap_medium"
+            android:paddingLeft="@dimen/gap_medium"
             android:paddingRight="@dimen/gap_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/seenMark"/>
+            android:layout_toLeftOf="@id/seenMark"/>
 
         <CheckedTextView
             android:id="@+id/episodeTitle"
-            style="@style/TextView.Large"
-            android:textColor="@color/darkgray_x_white"
+            style="@style/TextView.Large.DarkGray"
             android:fontFamily="sans-serif-light"
             android:paddingBottom="@dimen/gap_medium"
+            android:paddingLeft="@dimen/gap_medium"
             android:paddingRight="@dimen/gap_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/episodeNumber"
-            android:layout_toRightOf="@id/seenMark"/>
+            android:layout_toLeftOf="@id/seenMark"/>
 
     </RelativeLayout>
 
@@ -48,6 +49,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="bottom"
-        android:layout_marginRight="@dimen/gap_large"/>
+        android:layout_marginRight="@dimen/episode_list_side_gap"/>
 
 </mobi.myseries.gui.shared.CheckableFrameLayout>

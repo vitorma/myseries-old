@@ -9,8 +9,6 @@ import mobi.myseries.application.search.SearchListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
-import mobi.myseries.gui.shared.FailureDialogBuilder;
-import android.app.Dialog;
 import android.os.Bundle;
 
 public class SearchFragment extends AddSeriesFragment {
@@ -80,12 +78,6 @@ public class SearchFragment extends AddSeriesFragment {
                 SearchFragment.this.enableSearch(this.showButtons);
 
                 SearchFragment.this.isServiceRunning = false;
-
-                if (SearchFragment.this.hasResultsToShow()) {
-                    SearchFragment.this.showResults();
-                } else {
-                    SearchFragment.this.hideProgress();
-                }
             }
 
             @Override
@@ -93,6 +85,12 @@ public class SearchFragment extends AddSeriesFragment {
                 this.showButtons = true;
 
                 SearchFragment.this.setResults(results);
+
+                if (SearchFragment.this.hasResultsToShow()) {
+                    SearchFragment.this.showResults();
+                } else {
+                    SearchFragment.this.hideProgress();
+                }
             }
 
             @Override
@@ -124,12 +122,11 @@ public class SearchFragment extends AddSeriesFragment {
         };
     }
 
-    private void onSearchFailure(int searchFailureTitleResourceId, int searchFailureMessageResourceId) {
-        Dialog dialog = new FailureDialogBuilder(this.getActivity())
-            .setTitle(searchFailureTitleResourceId)
-            .setMessage(searchFailureMessageResourceId)
-            .build();
+    private void onSearchFailure(int titleResourceId, int messageResourceId) {
+        this.setError(
+                this.activity().getResources().getText(titleResourceId),
+                this.activity().getResources().getText(messageResourceId));
 
-        this.activity().showDialog(dialog);
+        this.showError();
     }
 }

@@ -88,6 +88,49 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/numberOfResultsLabel"/>
 
+    <LinearLayout
+        android:id="@+id/errorView"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:layout_width="@dimen/empty_state_view_width"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/errorTitle"
+            style="@style/TextView.XLarge.DarkGray"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_state_internal_gap_top"/>
+
+        <TextView
+            android:id="@+id/errorMessage"
+            android:textSize="@dimen/text_size_xmedium"
+            android:textColor="@color/yellow"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_state_internal_gap_bottom"/>
+
+        <Button
+            android:id="@+id/tryAgain"
+            android:text="@string/btn_try_again"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/text_dark_gray"
+            android:drawableLeft="@drawable/ic_search_api_holo_light"
+            android:drawablePadding="@dimen/gap_medium"
+            android:gravity="left|center_vertical"
+            android:paddingRight="@dimen/gap_large"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="@dimen/gap_micro"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/progressIndicator"
         style="?android:attr/progressBarStyleLarge"

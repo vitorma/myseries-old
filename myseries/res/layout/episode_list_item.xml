@@ -10,12 +10,13 @@
         android:id="@+id/seenMark"
         android:layout_width="@dimen/toucharea_minimum_side"
         android:layout_height="@dimen/toucharea_minimum_side"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
 
     <CheckedTextView
         android:id="@+id/episodeNumber"
         style="@style/TextView.Medium.Blue"
+        android:textStyle="bold"
         android:paddingTop="@dimen/gap_medium"
         android:paddingLeft="@dimen/gap_medium"
         android:paddingRight="@dimen/gap_medium"

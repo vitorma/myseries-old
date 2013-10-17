@@ -75,7 +75,7 @@ public class EpisodeListFragment extends ListFragment {
         boolean isDualPane = App.resources().getBoolean(R.bool.isTablet);
 
         if (isDualPane) {
-            int paddingLeft = App.resources().getDimensionPixelSize(R.dimen.gap_large);
+            int paddingLeft = App.resources().getDimensionPixelSize(R.dimen.episode_list_side_gap);
 
             this.getListView().setPadding(paddingLeft, 0, 0, 0);
             this.getListView().setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
