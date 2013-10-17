@@ -1,16 +1,15 @@
 package mobi.myseries.gui.episodes;
 
-import java.text.DateFormat;
+import java.util.Locale;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.image.EpisodeImageDownloadListener;
-import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.marking.MarkingListener;
-import mobi.myseries.application.marking.MarkingService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
@@ -27,175 +26,140 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+//TODO (Cleber) extend BaseAdapter instead of ArrayAdapter
 public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
-    private static final MarkingService SERIES_PROVIDER = App.markingService();
-    private static final ImageService IMAGE_SERVICE = App.imageService();
-    private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
-    private static final int ITEM_LAYOUT = R.layout.episode_pager_item;
+    private final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
 
-    private final EpisodeImageDownloadListener downloadListener = new EpisodeImageDownloadListener() {
+    private Episode mEpisode;
+    private LayoutInflater mLayoutInflater;
 
-        @Override
-        public void onStartDownloadingImageOf(Episode episode) {
-            if (episode.equals(EpisodeDetailsAdapter.this.episode)) {
-                EpisodeDetailsAdapter.this.startedLoadingImage();
-            }
-        }
+    private TextView mAirDate;
+    private TextView mAirDay;
+    private TextView mAirTime;
+    private TextView mTitle;
+    private TextView mOverview;
+    private SeenMark mWatchMark;
 
-        @Override
-        public void onFinishDownloadingImageOf(Episode episode) {
-            if (episode.equals(EpisodeDetailsAdapter.this.episode)) {
-                EpisodeDetailsAdapter.this.loadEpisodeImage();
-            }
-        }
-    };
+    private ProgressBar mProgress;
+    private ImageView mScreen;
+    private Bitmap mScreenBitmap;
 
-    private Episode episode;
-    private TextView episodeName;
-    private TextView episodeAirDate;
-    private TextView episodeOverview;
-    private TextView episodeGuestStars;
-    private TextView episodeWriters;
-    private TextView episodeDirectors;
-    private Bitmap image;
-    private ImageView imageView;
-    private SeenMark isViewed;
-    private ProgressBar progressSpinner;
+    public EpisodeDetailsAdapter(Context context, Episode episode) {
+        super(context, R.layout.episode_pager_item, new Episode[] {episode});
 
-    private LayoutInflater layoutInflater;
+        mEpisode = episode;
+        mLayoutInflater = LayoutInflater.from(context);
 
-    public EpisodeDetailsAdapter(Context context, Episode e) {
-        super(context, ITEM_LAYOUT, new Episode[] {e});
-
-        this.layoutInflater = LayoutInflater.from(context);
-
-        IMAGE_SERVICE.register(this.downloadListener);
+        App.imageService().register(mScreenDownloadListener);
         App.markingService().register(mMarkingListener);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View itemView = convertView;
+        if (itemView == null) { itemView = mLayoutInflater.inflate(R.layout.episode_pager_item, null); }
 
-        if (itemView == null) {
-            itemView = this.layoutInflater.inflate(ITEM_LAYOUT, null);
-        }
+        mAirDate = (TextView) itemView.findViewById(R.id.airDate);
+        mAirDate.setText(DatesAndTimes.toString(
+                mEpisode.airDate(),
+                android.text.format.DateFormat.getDateFormat(App.context()),
+                LocalText.get(R.string.unavailable_date)));
 
-        this.episodeAirDate = (TextView) itemView.findViewById(R.id.episodeFirstAiredTextView);
-        this.episodeName = (TextView) itemView.findViewById(R.id.episodeTitle);
-        this.episodeOverview = (TextView) itemView.findViewById(R.id.episodeOverview);
-        this.episodeDirectors = (TextView) itemView.findViewById(R.id.episodeDirectorsTextView);
-        this.episodeWriters = (TextView) itemView.findViewById(R.id.episodeWritersTextView);
-        this.episodeGuestStars = (TextView) itemView.findViewById(R.id.episodeGuestStarsTextView);
-        this.isViewed = (SeenMark) itemView.findViewById(R.id.watchMark);
-        this.imageView = (ImageView) itemView.findViewById(R.id.imageView);
-        this.progressSpinner = (ProgressBar) itemView.findViewById(R.id.imageProgressSpinner);
+        mAirDay = (TextView) itemView.findViewById(R.id.airDay);
+        mAirDay.setText(DatesAndTimes.toString(
+                mEpisode.airTime(),
+                DateFormats.forWeekDay(Locale.getDefault()),
+                "").toUpperCase());
 
-        this.episode = this.getItem(position);
+        mAirTime = (TextView) itemView.findViewById(R.id.airTime);
+        mAirTime.setText(DatesAndTimes.toString(
+                mEpisode.airTime(),
+                android.text.format.DateFormat.getTimeFormat(App.context()),
+                ""));
 
-        DateFormat dateformat = android.text.format.DateFormat.getMediumDateFormat(App.context());
-        String unavailable = LocalText.get(R.string.unavailable_date);
-        String formattedDate = DatesAndTimes.toString(this.episode.airDate(), dateformat, unavailable);
-        this.episodeAirDate.setText(formattedDate.toUpperCase());
+        mTitle = (TextView) itemView.findViewById(R.id.episodeTitle);
+        mTitle.setText(Objects.nullSafe(
+                mEpisode.title(),
+                LocalText.get(R.string.to_be_announced)));
 
-        this.episodeName.setText(Objects.nullSafe(this.episode.title(), this.getContext().getString(R.string.to_be_announced)));
+        mOverview = (TextView) itemView.findViewById(R.id.episodeOverview);
+        mOverview.setText(mEpisode.overview());
 
-        if (this.episode.directors().trim().isEmpty()) {
-            this.episodeDirectors.setVisibility(View.GONE);
-            itemView.findViewById(R.id.episodeDirectorsLabel).setVisibility(View.GONE);
-        } else {
-            this.episodeDirectors.setVisibility(View.VISIBLE);
-            itemView.findViewById(R.id.episodeDirectorsLabel).setVisibility(View.VISIBLE);
-            this.episodeDirectors.setText(this.episode.directors());
-        }
-
-        if (this.episode.writers().trim().isEmpty()) {
-            this.episodeWriters.setVisibility(View.GONE);
-            itemView.findViewById(R.id.episodeWritersLabel).setVisibility(View.GONE);
-        } else {
-            this.episodeWriters.setVisibility(View.VISIBLE);
-            itemView.findViewById(R.id.episodeWritersLabel).setVisibility(View.VISIBLE);
-            this.episodeWriters.setText(this.episode.writers());
-        }
-
-        if (this.episode.guestStars().trim().isEmpty()) {
-            this.episodeGuestStars.setVisibility(View.GONE);
-            itemView.findViewById(R.id.episodeGuestStarsLabel).setVisibility(View.GONE);
-        } else {
-            this.episodeGuestStars.setVisibility(View.VISIBLE);
-            itemView.findViewById(R.id.episodeGuestStarsLabel).setVisibility(View.VISIBLE);
-            this.episodeGuestStars.setText(this.episode.guestStars());
-        }
-
-        if (this.episode.overview().trim().isEmpty()) {
-            this.episodeOverview.setVisibility(View.GONE);
-            itemView.findViewById(R.id.episodeOverviewLabel).setVisibility(View.GONE);
-        } else {
-            this.episodeOverview.setVisibility(View.VISIBLE);
-            itemView.findViewById(R.id.episodeOverviewLabel).setVisibility(View.VISIBLE);
-            this.episodeOverview.setText(this.episode.overview());
-        }
-
-        this.updateWatchMark();
-
-        this.loadEpisodeImage();
-
-        if (this.image == null) {
-            IMAGE_SERVICE.downloadImageOf(this.episode);
-        }
-
-        this.isViewed.setOnClickListener(new OnClickListener() {
+        mWatchMark = (SeenMark) itemView.findViewById(R.id.watchMark);
+        updateWatchMark();
+        mWatchMark.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (EpisodeDetailsAdapter.this.isViewed.isChecked()) {
-                    SERIES_PROVIDER.markAsWatched(EpisodeDetailsAdapter.this.episode);
+                if (mWatchMark.isChecked()) {
+                    App.markingService().markAsWatched(mEpisode);
                 } else {
-                    SERIES_PROVIDER.markAsUnwatched(EpisodeDetailsAdapter.this.episode);
+                    App.markingService().markAsUnwatched(mEpisode);
                 }
             }
         });
+
+        mScreen = (ImageView) itemView.findViewById(R.id.imageView);
+        mProgress = (ProgressBar) itemView.findViewById(R.id.imageProgressSpinner);
+        loadEpisodeImage();
+        if (mScreenBitmap == null) { App.imageService().downloadImageOf(this.mEpisode); }
 
         return itemView;
     }
 
     private void startedLoadingImage() {
-        this.progressSpinner.setVisibility(View.VISIBLE);
-        this.imageView.setImageBitmap(null);
+        this.mProgress.setVisibility(View.VISIBLE);
+        this.mScreen.setImageBitmap(null);
     }
 
     private void finishedLoadingImage() {
-        this.progressSpinner.setVisibility(View.GONE);
+        this.mProgress.setVisibility(View.GONE);
     }
 
     private void loadEpisodeImage() {
-        this.image = IMAGE_SERVICE.getImageOf(this.episode);
+        this.mScreenBitmap = App.imageService().getImageOf(this.mEpisode);
 
-        this.imageView.setImageBitmap(Objects.nullSafe(this.image, GENERIC_IMAGE));
+        this.mScreen.setImageBitmap(Objects.nullSafe(this.mScreenBitmap, GENERIC_IMAGE));
         this.finishedLoadingImage();
     }
 
     private void updateWatchMark() {
-        this.isViewed.setChecked(this.episode.watched());
+        this.mWatchMark.setChecked(this.mEpisode.watched());
     }
+
+    /* ScreenDownloadListener */
+
+    private final EpisodeImageDownloadListener mScreenDownloadListener = new EpisodeImageDownloadListener() {
+        @Override
+        public void onStartDownloadingImageOf(Episode episode) {
+            if (episode.equals(mEpisode)) { startedLoadingImage(); }
+        }
+
+        @Override
+        public void onFinishDownloadingImageOf(Episode episode) {
+            if (episode.equals(mEpisode)) { loadEpisodeImage(); }
+        }
+    };
+
+    /* MarkingListener */
 
     private final MarkingListener mMarkingListener = new MarkingListener() {
         @Override
         public void onMarked(Episode e) {
-            if (e.id() != episode.id()) { return; }
+            if (e.id() != mEpisode.id()) { return; }
 
             updateWatchMark();
         }
 
         @Override
         public void onMarked(Season s) {
-            if (s.number() != episode.seasonNumber()) { return; }
+            if (s.number() != mEpisode.seasonNumber()) { return; }
 
             updateWatchMark();
         }
 
         @Override
         public void onMarked(Series s) {
-            if (s.id() != episode.seriesId()) { return; }
+            if (s.id() != mEpisode.seriesId()) { return; }
 
             updateWatchMark();
         }

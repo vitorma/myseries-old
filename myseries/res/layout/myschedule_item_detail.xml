@@ -27,7 +27,7 @@
                 <TextView
                     android:id="@+id/airDay"
                     android:textStyle="bold"
-                    android:textColor="#ff808080"
+                    android:textColor="@color/text_medium_gray"
                     android:textSize="@dimen/text_size_small"
                     android:gravity="right"
                     android:padding="@dimen/gap_small"
@@ -36,11 +36,12 @@
 
                 <TextView
                     android:id="@+id/airTime"
-                    android:textColor="@color/text_medium_gray"
+                    android:textColor="@color/text_light_gray"
                     android:textSize="@dimen/text_size_small"
                     android:textStyle="bold"
                     android:gravity="left"
-                    android:padding="@dimen/gap_small"
+                    android:paddingTop="@dimen/gap_small"
+                    android:paddingBottom="@dimen/gap_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

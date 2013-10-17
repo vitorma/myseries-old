@@ -10,7 +10,6 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.CheckableFrameLayout;
-import mobi.myseries.gui.shared.CheckableFrameLayout.OnCheckedListener;
 import mobi.myseries.gui.shared.EpisodeComparator;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.gui.shared.SortMode;
@@ -103,11 +102,8 @@ public class EpisodeListAdapter extends BaseAdapter {
             this.episodeName = (CheckedTextView) view.findViewById(R.id.episodeTitle);
             this.episodeSeenMark = (SeenMark) view.findViewById(R.id.seenMark);
 
-            boolean isDualPane = App.resources().getBoolean(R.bool.isTablet);
-
-            if (isDualPane) {
+            if (App.resources().getBoolean(R.bool.isTablet)) {
                 ((CheckableFrameLayout) view).changeBackgroundWhenChecked(true);
-                ((CheckableFrameLayout) view).setOnCheckedListener(this.checkableFrameLayoutListener());
             }
 
             view.setTag(this);
@@ -122,21 +118,6 @@ public class EpisodeListAdapter extends BaseAdapter {
                     } else {
                         App.markingService().markAsUnwatched(episode);
                     }
-                }
-            };
-        }
-
-        private OnCheckedListener checkableFrameLayoutListener() {
-            return new OnCheckedListener() {
-                @Override
-                public void onChecked(boolean checked) {
-                    ViewHolder.this.episodeNumber.setChecked(checked);
-                    ViewHolder.this.episodeName.setChecked(checked);
-
-                    ViewHolder.this.episodeSeenMark.setImageDrawable(
-                        checked ?
-                        App.resources().getDrawable(R.drawable.watchmark_dark) :
-                        App.resources().getDrawable(R.drawable.watchmark_light));
                 }
             };
         }
