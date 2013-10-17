@@ -30,6 +30,8 @@
         android:id="@+id/empty"
         android:orientation="vertical"
         android:visibility="invisible"
+        android:paddingLeft="@dimen/gap_large"
+        android:paddingRight="@dimen/gap_large"
         android:layout_width="@dimen/empty_state_view_width"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
