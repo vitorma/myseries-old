@@ -1,250 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingLeft="@dimen/mystatistics_side_padding"
-    android:paddingRight="@dimen/mystatistics_side_padding"
-    android:layout_width="match_parent"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:padding="@dimen/gap_large"
         android:layout_height="wrap_content">
 
         <!-- SERIES -->
 
-        <RelativeLayout
-            android:background="@drawable/card_background"
-            android:paddingTop="0dp"
-            android:paddingBottom="12dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+        <TextView
+            android:id="@+id/numberOfSeries"
+            style="@style/TextView.XLarge"
+            android:textColor="@color/chunk_bar_background_plain"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"/>
+
+        <TextView
+            android:id="@+id/series"
+            android:text="@string/series_uppercase"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBottom ="@id/numberOfSeries"/>
+
+        <ProgressBar
+            android:id="@+id/seriesWatchedProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_below="@id/series"/>
 
-            <TextView
-                android:id="@+id/numberOfSeries"
-                style="@style/TextView.Large.LightGray"
-                android:textSize="@dimen/text_size_extreme"
-                android:fontFamily="sans-serif-light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:id="@+id/series"
-                android:text="@string/series_uppercase"
-                android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/numberOfSeries"/>
-
-            <ProgressBar
-                android:id="@+id/seriesWatchedProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/series"/>
-
-            <TextView
-                android:id="@+id/seriesWatched"
-                style="@style/TextView.Medium.Blue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/seriesWatchedProgressBar"/>
-
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/seriesWatched"
+            style="@style/TextView.Medium"
+            android:textColor="@color/dark_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/seriesWatchedProgressBar"/>
 
         <!-- SEASONS -->
 
-        <RelativeLayout
-            android:background="@drawable/card_background"
-            android:paddingTop="0dp"
-            android:paddingBottom="12dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+        <TextView
+            android:id="@+id/numberOfSeasons"
+            style="@style/TextView.XLarge"
+            android:textColor="@color/chunk_bar_background_plain"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seriesWatched"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/gap_large"/>
+
+        <TextView
+            android:id="@+id/seasons"
+            android:text="@string/seasons_uppercase"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBottom="@id/numberOfSeasons"/>
+
+        <ProgressBar
+            android:id="@+id/seasonsWatchedProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_below="@id/seasons"/>
 
-            <TextView
-                android:id="@+id/numberOfSeasons"
-                style="@style/TextView.Large.LightGray"
-                android:textSize="@dimen/text_size_extreme"
-                android:fontFamily="sans-serif-light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/seasonsWatched"
+            style="@style/TextView.Medium"
+            android:textColor="@color/dark_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/seasonsWatchedProgressBar"/>
 
-            <TextView
-                android:id="@+id/seasons"
-                android:text="@string/seasons_uppercase"
-                android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/numberOfSeasons"/>
+        <TextView
+            android:id="@+id/numberOfEpisodes"
+            style="@style/TextView.XLarge"
+            android:textColor="@color/chunk_bar_background_plain"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/seasonsWatched"
+            android:layout_marginTop="@dimen/gap_large"/>
 
-            <ProgressBar
-                android:id="@+id/seasonsWatchedProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/seasons"/>
+        <TextView
+            android:id="@+id/episodes"
+            android:text="@string/episodes_uppercase"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/numberOfEpisodes"
+            android:layout_alignParentLeft="true"/>
 
-            <TextView
-                android:id="@+id/seasonsWatched"
-                style="@style/TextView.Medium.Blue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/seasonsWatchedProgressBar"/>
-
-        </RelativeLayout>
-
-        <!-- EPISODES -->
-
-        <RelativeLayout
-            android:background="@drawable/card_background"
-            android:paddingTop="0dp"
-            android:paddingBottom="12dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+        <ProgressBar
+            android:id="@+id/episodesWatchedProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_below="@id/episodes"/>
 
-            <TextView
-                android:id="@+id/numberOfEpisodes"
-                style="@style/TextView.Large.LightGray"
-                android:textSize="@dimen/text_size_extreme"
-                android:fontFamily="sans-serif-light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:id="@+id/episodes"
-                android:text="@string/episodes_uppercase"
-                android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/numberOfEpisodes"/>
-
-            <ProgressBar
-                android:id="@+id/episodesWatchedProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/episodes"/>
-
-            <TextView
-                android:id="@+id/episodesWatched"
-                style="@style/TextView.Medium.Blue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/episodesWatchedProgressBar"/>
-
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/episodesWatched"
+            style="@style/TextView.Medium"
+            android:textColor="@color/dark_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/episodesWatchedProgressBar"/>
 
         <!-- RUNTIME -->
 
-        <RelativeLayout
-            android:background="@drawable/card_background"
-            android:paddingTop="0dp"
-            android:paddingBottom="12dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+        <LinearLayout
+            android:id="@+id/totalRuntime"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/episodesWatched"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/gap_large">
+
+            <TextView
+                android:id="@+id/hours"
+                style="@style/TextView.XLarge"
+                android:textColor="@color/chunk_bar_background_plain"
+                android:fontFamily="sans-serif-light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                style="@style/TextView.Medium"
+                android:text="@string/hours_symbol"
+                android:textColor="@color/chunk_bar_background_plain"
+                android:fontFamily="sans-serif-light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/minutes"
+                style="@style/TextView.XLarge"
+                android:textColor="@color/chunk_bar_background_plain"
+                android:fontFamily="sans-serif-light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                style="@style/TextView.Medium"
+                android:text="@string/minutes_symbol"
+                android:textColor="@color/chunk_bar_background_plain"
+                android:fontFamily="sans-serif-light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/runtime"
+            android:text="@string/total_runtime_uppercase"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBottom="@id/totalRuntime"/>
+
+        <ProgressBar
+            android:id="@+id/timeOfEpisodesWatchedProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_below="@id/runtime"/>
 
-            <LinearLayout
-                android:id="@+id/totalRuntime"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true">
+        <TextView
+            android:id="@+id/watchedRuntime"
+            style="@style/TextView.Medium"
+            android:textColor="@color/dark_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/timeOfEpisodesWatchedProgressBar"/>
 
-                <TextView
-                    android:id="@+id/hours"
-                    style="@style/TextView.Large.LightGray"
-                    android:textSize="@dimen/text_size_extreme"
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    style="@style/TextView.XLarge"
-                    android:text="@string/hours_symbol"
-                    android:textColor="@color/text_light_gray"
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:id="@+id/minutes"
-                    style="@style/TextView.Large.LightGray"
-                    android:textSize="@dimen/text_size_extreme"
-                    android:fontFamily="sans-serif-light"
-                    android:paddingLeft="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    style="@style/TextView.XLarge"
-                    android:text="@string/minutes_symbol"
-                    android:textColor="@color/text_light_gray"
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/runtime"
-                android:text="@string/total_runtime_uppercase"
-                android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/totalRuntime"/>
-
-            <ProgressBar
-                android:id="@+id/timeOfEpisodesWatchedProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/runtime"/>
-
-            <TextView
-                android:id="@+id/watchedRuntime"
-                style="@style/TextView.Medium.Blue"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/timeOfEpisodesWatchedProgressBar"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>

@@ -320,15 +320,23 @@
         <string name="seasons_uppercase">SEASONS</string>
         <string name="episodes_uppercase">EPISODES</string>
         <string name="total_runtime_uppercase">TOTAL RUNTIME</string>
-        
-        <!-- watched as in 'watched episodes of a tv series' -->
-        <string name="series_watched" formatted="false">%d WATCHED</string>
-        <string name="seasons_watched" formatted="false">%d WATCHED</string>
-        <string name="episodes_watched" formatted="false">%d WATCHED</string>
 
+        <!-- watched as in 'watched episodes of a tv series' -->
+        <plurals name="series_watched">
+            <item quantity="one">%d WATCHED</item>
+            <item quantity="other">%d WATCHED</item>
+        </plurals>
+        <plurals name="seasons_watched">
+            <item quantity="one">%d WATCHED</item>
+            <item quantity="other">%d WATCHED</item>
+        </plurals>
+        <plurals name="episodes_watched">
+            <item quantity="one">%d WATCHED</item>
+            <item quantity="other">%d WATCHED</item>
+        </plurals>
+        <string name="watched_runtime_format" formatted="false" >%dh%dmin WATCHED</string>
         <string name="hours_symbol">h</string>
         <string name="minutes_symbol">min</string>
-        <string name="watched_runtime_format" formatted="false" >%dh %dmin WATCHED</string>
 
     <!-- Do not translate -->
     <string name="app">MySeries</string>

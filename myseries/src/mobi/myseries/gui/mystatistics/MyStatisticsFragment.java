@@ -254,33 +254,26 @@ public class MyStatisticsFragment extends Fragment {
         this.numberOfEpisodes.setText(String
             .format("%d", nEpisodes));
 
-        this.seriesWatched.setText(String.format(
-            this.getString(R.string.series_watched),
-            watchedSeries));
-        this.seasonsWatched.setText(String.format(
-            this.getString(R.string.seasons_watched),
-            watchedSeasons));
-        this.episodesWatched.setText(String.format(
-            this.getString(R.string.episodes_watched),
-            watchedEpisodes));
+        this.seriesWatched.setText(
+                App.resources().getQuantityString(R.plurals.series_watched, watchedSeries, watchedSeries));
+        this.seasonsWatched.setText(
+                App.resources().getQuantityString(R.plurals.seasons_watched, watchedSeasons, watchedSeasons));
+        this.episodesWatched.setText(
+                App.resources().getQuantityString(R.plurals.episodes_watched, watchedEpisodes, watchedEpisodes));
 
         this.seriesWatchedProgressBar.setMax(nSeries);
         this.seriesWatchedProgressBar.setProgress(watchedSeries);
 
         this.seasonsWatchedProgressBar.setMax(nSeasons);
-        this.seasonsWatchedProgressBar
-            .setProgress(watchedSeasons);
+        this.seasonsWatchedProgressBar.setProgress(watchedSeasons);
 
         this.episodesWatchedProgressBar.setMax(nEpisodes);
-        this.episodesWatchedProgressBar
-            .setProgress(watchedEpisodes);
+        this.episodesWatchedProgressBar.setProgress(watchedEpisodes);
 
         int minutes = (watchedRuntime % 60);
         int hours = ((watchedRuntime / 60));
 
-        this.watchedRuntime.setText(String.format(
-            this.getString(R.string.watched_runtime_format), hours,
-            minutes));
+        this.watchedRuntime.setText(this.getString(R.string.watched_runtime_format, hours, minutes));
 
         minutes = (totalRuntime % 60);
         hours = ((totalRuntime / 60));

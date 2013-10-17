@@ -321,15 +321,23 @@
         <string name="seasons_uppercase">TEMPORADAS</string>
         <string name="episodes_uppercase">EPISÓDIOS</string>
         <string name="total_runtime_uppercase">TEMPO TOTAL</string>
-        
-        <!-- watched as in 'watched episodes of a tv series' -->
-        <string name="series_watched" formatted="false">%d ASSISTIDAS</string>
-        <string name="seasons_watched" formatted="false">%d ASSISTIDAS</string>
-        <string name="episodes_watched" formatted="false">%d ASSISTIDOS</string>
 
+        <!-- watched as in 'watched episodes of a tv series' -->
+        <plurals name="series_watched">
+            <item quantity="one">%d ASSISTIDA</item>
+            <item quantity="other">%d ASSISTIDAS</item>
+        </plurals>
+        <plurals name="seasons_watched">
+            <item quantity="one">%d ASSISTIDA</item>
+            <item quantity="other">%d ASSISTIDAS</item>
+        </plurals>
+        <plurals name="episodes_watched">
+            <item quantity="one">%d ASSISTID0</item>
+            <item quantity="other">%d ASSISTIDOS</item>
+        </plurals>
+        <string name="watched_runtime_format" formatted="false" >%dh%dmin ASSISTIDOS</string>
         <string name="hours_symbol">h</string>
-        <string name="minutes_symbol">m</string>
-        <string name="watched_runtime_format" formatted="false" >%dh %dm ASSISTIDOS</string>
+        <string name="minutes_symbol">min</string>
 
     <!-- Do not translate -->
     <string name="app">MySeries</string>
