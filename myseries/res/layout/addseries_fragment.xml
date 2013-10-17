@@ -124,7 +124,7 @@
             android:drawablePadding="@dimen/gap_medium"
             android:gravity="left|center_vertical"
             android:paddingRight="@dimen/gap_large"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="56dp"
             android:layout_marginBottom="@dimen/gap_micro"
             android:layout_gravity="center_horizontal"/>

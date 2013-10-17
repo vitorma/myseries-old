@@ -1,14 +1,13 @@
 package mobi.myseries.gui.addseries;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.search.SearchListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
-import mobi.myseries.domain.source.ParsingFailedException;
 import android.os.Bundle;
 
 public class SearchFragment extends AddSeriesFragment {
@@ -95,38 +94,13 @@ public class SearchFragment extends AddSeriesFragment {
 
             @Override
             public void onFailure(Exception exception) {
-                if (exception instanceof InvalidSearchCriteriaException) {
-                    this.showButtons = false;
+                this.showButtons = !(exception instanceof InvalidSearchCriteriaException);
 
-                    SearchFragment.this.onSearchFailure(
-                            R.string.invalid_criteria_title,
-                            R.string.invalid_criteria_message);
-                }
+                SearchFragment.this.setResults(new ArrayList<SearchResult>());
 
-                if (exception instanceof ConnectionFailedException) {
-                    this.showButtons = true;
-
-                    SearchFragment.this.onSearchFailure(
-                            R.string.connection_failed_title,
-                            R.string.connection_failed_message);
-                }
-
-                if (exception instanceof ParsingFailedException) {
-                    this.showButtons = true;
-
-                    SearchFragment.this.onSearchFailure(
-                            R.string.parsing_failed_title,
-                            R.string.parsing_failed_message);
-                }
+                SearchFragment.this.setError(exception);
+                SearchFragment.this.showError();
             }
         };
-    }
-
-    private void onSearchFailure(int titleResourceId, int messageResourceId) {
-        this.setError(
-                this.activity().getResources().getText(titleResourceId),
-                this.activity().getResources().getText(messageResourceId));
-
-        this.showError();
     }
 }

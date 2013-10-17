@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import mobi.myseries.application.Communications;
 import mobi.myseries.application.ConnectionFailedException;
+import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
@@ -154,7 +155,7 @@ public class ImageService {
 
     /* Auxiliary */
 
-    private InputStream getStream(String url) throws ConnectionFailedException {
+    private InputStream getStream(String url) throws ConnectionFailedException, NetworkUnavailableException {
         return this.communications.streamFor(url);
     }
 

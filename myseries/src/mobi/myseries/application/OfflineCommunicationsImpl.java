@@ -15,7 +15,11 @@ public class OfflineCommunicationsImpl implements Communications {
     }
 
     @Override
-    public InputStream streamFor(String url) throws ConnectionFailedException {
-        throw new ConnectionFailedException();
+    public InputStream streamFor(String url) throws ConnectionFailedException, NetworkUnavailableException {
+        if (isConnected()) {
+            throw new ConnectionFailedException();
+        } else {
+            throw new NetworkUnavailableException();
+        }
     }
 }

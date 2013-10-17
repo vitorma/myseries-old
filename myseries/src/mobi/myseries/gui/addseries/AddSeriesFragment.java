@@ -4,7 +4,11 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.ConnectionFailedException;
+import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.source.InvalidSearchCriteriaException;
+import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
 import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.PauseImageLoaderOnScrollListener;
@@ -305,6 +309,35 @@ public abstract class AddSeriesFragment extends Fragment {
     protected void setError(CharSequence title, CharSequence message) {
         this.errorTitle.setText(title);
         this.errorMessage.setText(message);
+    }
+
+    protected void setError(int titleResourceId, int messageResourceId) {
+        this.setError(
+                this.activity().getResources().getText(titleResourceId),
+                this.activity().getResources().getText(messageResourceId));
+    }
+
+    protected void setError(Exception exception) {
+        if (exception instanceof InvalidSearchCriteriaException) {
+            this.setError(
+                    R.string.invalid_criteria_title,
+                    R.string.invalid_criteria_message);
+        } else if (exception instanceof ConnectionFailedException) {
+            this.setError(
+                    R.string.connection_failed_title,
+                    R.string.connection_failed_message);
+        } else if (exception instanceof NetworkUnavailableException) {
+            this.setError(
+                    R.string.network_unavailable_title,
+                    R.string.network_unavailable_message);
+        } else if (exception instanceof ParsingFailedException) {
+            this.setError(
+                    R.string.parsing_failed_title,
+                    R.string.parsing_failed_message);
+        } else {
+            // Just in case... but it should not reach here.
+            this.setError(exception.getClass().getSimpleName(), "");
+        }
     }
 
     protected void showResults() {

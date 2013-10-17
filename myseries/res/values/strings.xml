@@ -157,14 +157,17 @@
 
     <!-- Messages -->
 
-    <string name="connection_failed_title">Connection failed</string>
-    <string name="connection_failed_message">Check your connection and try again.</string>
-    <string name="connection_timeout_title">Connection timeout</string>
-    <string name="connection_timeout_message">Connection time limit exceeded. Check your connection and try again.</string>
+    <string name="connection_failed_title">Couldn\'t connect to Trakt.tv</string>
+    <string name="connection_failed_message">Check your Internet connection and try again.</string>
+    <string name="network_unavailable_title">Not connected to the Internet</string>
+    <string name="network_unavailable_message">Check your connection and try again.</string>
+
+    <string name="parsing_failed_title">Couldn't connect to Trakt.tv</string>
+    <string name="parsing_failed_message">Check your Internet connection and try again.</string>
+
     <string name="invalid_criteria_title">Invalid series name</string>
     <string name="invalid_criteria_message">Type at least one word.</string>
-    <string name="parsing_failed_title">Error reading file from the web</string>
-    <string name="parsing_failed_message">Your connection may be too slow.</string>
+
     <string name="follow_toast_message_format" formatted="false">The series %s will be added to your list soon.</string>
 
     <!-- Adding Error Messages -->
@@ -180,11 +183,8 @@
 
     <string name="updates">Updates</string>
 
-    <string name="no_series_to_update">No series to update.</string>
-    <string name="update_network_unavailable">Internet connection not available.</string>
-    <string name="update_connection_failed">Could not connect to Trakt.tv.</string>
-    <string name="update_parsing_failed">Received malformed data from Trakt.tv.</string>
-    <string name="update_timeout">Update time limit exceeded.</string>
+    <string name="no_series_to_update">No series to update</string>
+    <string name="update_timeout">Update time limit exceeded</string>
     
     <string name="checking_for_updates_message">Checking for updates…</string>
     <string name="update_progress_message">Updating \"%s\"…</string>
@@ -231,7 +231,6 @@
 
         <!-- Backup  Messages -->
 
-    <string name="backup_network_unavailable">No Internet connection available.</string>
     <string name="backup_connection_failed">Could not connect to internet.</string>
     <string name="backup_connection_timeout">Could not connect to internet.</string>
     <string name="backup_timeout">Backup time limit exceeded.</string>
@@ -251,7 +250,6 @@
     
             <!-- Restore  Messages -->
 
-    <string name="restore_network_unavailable">No Internet connection available.</string>
     <string name="restore_connection_failed">Could not connect to internet.</string>
     <string name="restore_connection_timeout">Could not connect to internet.</string>
     <string name="restore_timeout">Restore time limit exceeded.</string>
