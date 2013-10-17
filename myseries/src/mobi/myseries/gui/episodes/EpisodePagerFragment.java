@@ -79,7 +79,7 @@ public class EpisodePagerFragment extends Fragment implements OnPageChangeListen
 
         PagerTabStrip titles = (PagerTabStrip) this.getView().findViewById(R.id.titles);
         titles.setTextColor(App.resources().getColor(R.color.dark_blue));
-        titles.setTabIndicatorColorResource(R.color.dark_blue);
+        titles.setTabIndicatorColor(App.resources().getColor(R.color.dark_blue));
 
         this.pager.setAdapter(this.adapter);
         this.pager.setOnPageChangeListener(this);

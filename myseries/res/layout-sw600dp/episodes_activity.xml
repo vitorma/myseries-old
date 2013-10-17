@@ -1,32 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:orientation="horizontal">
+    android:layout_height="match_parent">
 
-    <View
-        android:background="#ff656565"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"/>
-
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/container_for_list"
-        android:layout_width="@dimen/fragment_episodes_master_width"
-        android:layout_height="match_parent"/>
-
-    <FrameLayout
-        android:id="@+id/container_for_pager"
-        android:layout_width="@dimen/fragment_episodes_details_width"
-        android:layout_height="match_parent"/>
-
-    <View
-        android:background="#ff656565"
-        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:layout_width="@dimen/episode_list_width"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_alignParentLeft="true"/>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/container_for_pager"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/container_for_list"/>
+
+</RelativeLayout>
