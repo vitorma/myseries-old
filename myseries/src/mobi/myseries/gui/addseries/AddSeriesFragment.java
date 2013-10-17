@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -34,6 +35,9 @@ public abstract class AddSeriesFragment extends Fragment {
     private TextView numberOfResultsLabel;
     private GridView resultsGrid;
     private ProgressBar progressIndicator;
+    private LinearLayout errorView;
+    private TextView errorTitle;
+    private TextView errorMessage;
 
     private AddSeriesAdapter adapter;
     private AsyncImageLoader imageLoader;
@@ -197,6 +201,7 @@ public abstract class AddSeriesFragment extends Fragment {
         this.prepareNumberOfResultsLabel();
         this.prepareProgressIndicator();
         this.prepareResultsGrid();
+        this.prepareErrorView();
     }
 
     private void prepareNumberOfResultsLabel() {
@@ -224,6 +229,15 @@ public abstract class AddSeriesFragment extends Fragment {
 
     private void prepareProgressIndicator() {
         this.progressIndicator = (ProgressBar) this.findView(R.id.progressIndicator);
+    }
+
+    private void prepareErrorView() {
+        this.errorView = (LinearLayout) this.findView(R.id.errorView);
+        this.errorTitle = (TextView) this.findView(R.id.errorTitle);
+        this.errorMessage = (TextView) this.findView(R.id.errorMessage);
+
+        // XXX(Gabriel): Try Again Button
+        //this.tryAgainButton = (Button) this.findView(R.id.tryAgain);
     }
 
     private View findView(int resourceId) {
@@ -262,10 +276,27 @@ public abstract class AddSeriesFragment extends Fragment {
         this.progressIndicator.setVisibility(View.VISIBLE);
 
         this.hideResults();
+        this.hideError();
     }
 
     protected void hideProgress() {
         this.progressIndicator.setVisibility(View.INVISIBLE);
+    }
+
+    protected void showError() {
+        this.errorView.setVisibility(View.VISIBLE);
+
+        this.hideProgress();
+        this.hideResults();
+    }
+
+    protected void hideError() {
+        this.errorView.setVisibility(View.INVISIBLE);
+    }
+
+    protected void setError(CharSequence title, CharSequence message) {
+        this.errorTitle.setText(title);
+        this.errorMessage.setText(message);
     }
 
     protected void showResults() {
@@ -275,6 +306,7 @@ public abstract class AddSeriesFragment extends Fragment {
         this.resultsGrid.setVisibility(View.VISIBLE);
 
         this.hideProgress();
+        this.hideError();
     }
 
     protected void hideResults() {
