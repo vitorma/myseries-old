@@ -17,10 +17,10 @@ public class CommunicationsImpl implements Communications {
     private static final int READ_TIMEOUT = 10000 /* milliseconds */;
     private static final int CONNECT_TIMEOUT = 15000 /* milliseconds */;
 
-    private Context context;
+    private final ConnectivityManager androidConnectivityManager;
 
     public CommunicationsImpl(Context context) {
-        this.context = context;
+        this.androidConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     @Override
@@ -36,10 +36,7 @@ public class CommunicationsImpl implements Communications {
     }
 
     private NetworkInfo activeNetworkInfo() {
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        return cm.getActiveNetworkInfo();
+        return androidConnectivityManager.getActiveNetworkInfo();
     }
 
     @Override
