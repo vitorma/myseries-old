@@ -5,6 +5,11 @@
     <style name="MySeriesTheme" parent="@android:Theme.Holo.Light">
         <item name="android:listViewStyle">@style/ListView</item>
         <item name="android:scrollViewStyle">@style/ScrollView</item>
+        <item name="android:buttonStyle">@style/Button</item>
+        <item name="android:imageButtonStyle">@style/ImageButton</item>
+        <item name="android:borderlessButtonStyle">@style/BorderlessButton</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/btn_check_holo_light</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/btn_radio_holo_light</item>
 
         <!-- ActionBar -->
         <item name="android:actionBarSize">@dimen/ab_height</item>
@@ -20,6 +25,7 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_actionbar</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_actionbar</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Actionbar</item>
+
     </style>
 
     <style name="MySeriesTheme.Dialog">
