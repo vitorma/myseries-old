@@ -100,7 +100,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private static final String CREATE_TABLE_EPISODES =
             "CREATE TABLE " + EPISODE + " (" +
-                    EPISODE_ID +         " INTEGER PRIMARY KEY, " +
+                    EPISODE_ID +         " BIGINT PRIMARY KEY, " +
                     EPISODE_SERIES +     " INTEGER NOT NULL, " +
                     EPISODE_NUMBER +     " INTEGER NOT NULL, " +
                     EPISODE_SEASON +     " INTEGER NOT NULL, " +
@@ -439,7 +439,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
         Long airtime = c.isNull(airtimeCollumnIndex) ? null : c.getLong(airtimeCollumnIndex);
 
         return Episode.builder()
-                .withId(c.getInt(c.getColumnIndex(EPISODE_ID)))
+                .withId(c.getLong(c.getColumnIndex(EPISODE_ID)))
                 .withSeriesId(c.getInt(c.getColumnIndex(EPISODE_SERIES)))
                 .withNumber(c.getInt(c.getColumnIndex(EPISODE_NUMBER)))
                 .withSeasonNumber(c.getInt(c.getColumnIndex(EPISODE_SEASON)))
