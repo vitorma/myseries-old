@@ -142,8 +142,7 @@ public class Season {
     private boolean canInclude(Episode e) {
         return e != null &&
                 e.seriesId() == seriesId &&
-                e.seasonNumber() == number &&
-                !includes(e);
+                e.seasonNumber() == number;
     }
 
     public Season mergeWith(Season other) {
