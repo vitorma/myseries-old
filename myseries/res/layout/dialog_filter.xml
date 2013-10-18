@@ -11,7 +11,7 @@
     <CheckedTextView
         android:id="@+id/title"
         style="@style/TextView.XLarge.DarkGray.Ellipsized"
-        android:textColor="@color/blue"
+        android:textColor="@color/green"
         android:background="@drawable/list_selector_holo_light"
         android:checkMark="@drawable/checkbox"
         android:clickable="true"
@@ -27,7 +27,7 @@
 
     <View
         android:id="@+id/topDivider"
-        android:background="@color/blue"
+        android:background="@color/green"
         android:layout_width="match_parent"
         android:layout_height="2dp"/>
 
