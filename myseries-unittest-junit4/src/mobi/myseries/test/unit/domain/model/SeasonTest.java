@@ -36,7 +36,7 @@ public class SeasonTest {
 
     /* Mock */
 
-    private static Episode mockEpisode(int id, int seriesId, int number, int seasonNumber) {
+    private static Episode mockEpisode(Long id, int seriesId, int number, int seasonNumber) {
         Episode episode = Mockito.mock(Episode.class);
 
         Mockito.when(episode.id()).thenReturn(id);
@@ -113,11 +113,11 @@ public class SeasonTest {
 
     @Test
     public void anEpisodeIsAlreadyIncludedIfItHasTheSameNumberAsOneOfTheEpisodesOfTheSeason() {
-        Season season = new Season(1, 1).include(mockEpisode(1, 1, 1, 1));
+        Season season = new Season(1, 1).include(mockEpisode(1L, 1, 1, 1));
 
-        Assert.assertTrue(season.includes(mockEpisode(1, 1, 1, 1)));
-        Assert.assertTrue(season.includes(mockEpisode(2, 1, 1, 1)));  // even if their ids are different
-        Assert.assertFalse(season.includes(mockEpisode(1, 1, 2, 1)));
+        Assert.assertTrue(season.includes(mockEpisode(1L, 1, 1, 1)));
+        Assert.assertTrue(season.includes(mockEpisode(2L, 1, 1, 1)));  // even if their ids are different
+        Assert.assertFalse(season.includes(mockEpisode(1L, 1, 2, 1)));
     }
 
     @Test
@@ -127,8 +127,8 @@ public class SeasonTest {
 
     @Test
     public void searchingForAnEpisodeByItsNumberReturnsTheEpisodeThatHasSuchNumber() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2 = mockEpisode(2L, 1, 2, 1);
 
         Season season = new Season(1, 1).include(episode1).include(episode2);
 
@@ -150,19 +150,19 @@ public class SeasonTest {
             }
         };
 
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-        Episode episode3 = mockEpisode(3, 1, 3, 1);
-        Episode episode4 = mockEpisode(4, 1, 4, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2 = mockEpisode(2L, 1, 2, 1);
+        Episode episode3 = mockEpisode(3L, 1, 3, 1);
+        Episode episode4 = mockEpisode(4L, 1, 4, 1);
 
         markAsWatched(episode1, episode2);
         markAsUnwatched(episode3, episode4);
 
         Season season = new Season(1, 1)
-            .include(episode1)
-            .include(episode2)
-            .include(episode3)
-            .include(episode4);
+        .include(episode1)
+        .include(episode2)
+        .include(episode3)
+        .include(episode4);
 
         Assert.assertEquals(2, season.episodesBy(specification).size());
         Assert.assertTrue(season.episodesBy(specification).contains(episode1));
@@ -187,17 +187,17 @@ public class SeasonTest {
             Assert.assertFalse(s1.includes(null));
 
             //for episodes with another seriesId
-            Episode e0 = mockEpisode(1, 2, 1, 1);
+            Episode e0 = mockEpisode(1L, 2, 1, 1);
             s1.include(e0);
             Assert.assertFalse(s1.includes(e0));
 
             //for episodes with another seasonNumber
-            Episode e1 = mockEpisode(1, 1, 1, 2);
+            Episode e1 = mockEpisode(1L, 1, 1, 2);
             s1.include(e1);
             Assert.assertFalse(s1.includes(e1));
 
             //for already included episodes
-            Episode e2 = mockEpisode(1, 1, 1, 1);
+            Episode e2 = mockEpisode(1L, 1, 1, 1);
             s1.include(e2);
             Assert.assertTrue(s1.includes(e2));
             Assert.assertEquals(1, s1.numberOfEpisodes());
@@ -211,8 +211,8 @@ public class SeasonTest {
 
     @Test
     public void aValidAndNotAlreadyIncludedEpisodeCanBeIncluded() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2 = mockEpisode(2L, 1, 2, 1);
 
         Season season = new Season(1, 1).include(episode1).include(episode2);
 
@@ -225,8 +225,8 @@ public class SeasonTest {
 
     @Test
     public void markingASeasonAsSeenMarksAllItsEpisodesAsSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2  = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2  = mockEpisode(2L, 1, 2, 1);
 
         markAsUnwatched(episode1, episode2);
 
@@ -250,8 +250,8 @@ public class SeasonTest {
 
     @Test
     public void markingASeasonAsNotSeenMarksAllItsEpisodesAsNotSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2  = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2  = mockEpisode(2L, 1, 2, 1);
 
         markAsWatched(episode1, episode2);
 
@@ -275,8 +275,8 @@ public class SeasonTest {
 
     @Test
     public void onMarkAnEpisodeAsSeenTheNumberOfSeenEpisodesIsIncreased() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2  = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2  = mockEpisode(2L, 1, 2, 1);
 
         markAsUnwatched(episode1, episode2);
 
@@ -295,8 +295,8 @@ public class SeasonTest {
 
     @Test
     public void onMarkTheLastNotSeenEpisodeAsSeenTheSeasonIsMarkedAsSeen() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2  = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2  = mockEpisode(2L, 1, 2, 1);
 
         markAsUnwatched(episode1, episode2);
 
@@ -315,8 +315,8 @@ public class SeasonTest {
 
     @Test
     public void onMarkTheNextEpisodeToSeeAsSeenThisFieldIsUpdated() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2  = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2  = mockEpisode(2L, 1, 2, 1);
 
         markAsUnwatched(episode1, episode2);
 
@@ -335,8 +335,8 @@ public class SeasonTest {
 
     @Test
     public void onMarkAnEpisodeAsNotSeenTheNumberOfSeenEpisodesIsDecreased() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2  = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2  = mockEpisode(2L, 1, 2, 1);
 
         markAsWatched(episode1, episode2);
 
@@ -355,8 +355,8 @@ public class SeasonTest {
 
     @Test
     public void onMarkAnEpisodeAsNotSeenIfItShouldBeTheNextEpisodeToSeeThenItWillBe() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2  = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2  = mockEpisode(2L, 1, 2, 1);
 
         markAsWatched(episode1, episode2);
 
@@ -392,10 +392,10 @@ public class SeasonTest {
 
     @Test
     public void mergingASeasonWithAnotherMergesAllItsEpisodesThatAreIncludedInTheOtherOne() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
-        Episode episode3 = mockEpisode(1, 1, 1, 1);
-        Episode episode4 = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2 = mockEpisode(2L, 1, 2, 1);
+        Episode episode3 = mockEpisode(1L, 1, 1, 1);
+        Episode episode4 = mockEpisode(2L, 1, 2, 1);
 
         Season season1 = new Season(1, 1).include(episode1).include(episode2);
         Season season2 = new Season(1, 1).include(episode3).include(episode4);
@@ -413,8 +413,8 @@ public class SeasonTest {
 
     @Test
     public void mergingASeasonWithAnotherIncludesInItAllEpisodesIncludedInTheOtherOne() {
-        Episode episode1 = mockEpisode(1, 1, 1, 1);
-        Episode episode2 = mockEpisode(2, 1, 2, 1);
+        Episode episode1 = mockEpisode(1L, 1, 1, 1);
+        Episode episode2 = mockEpisode(2L, 1, 2, 1);
 
         Season season1 = new Season(1, 1).include(episode1);
         Season season2 = new Season(1, 1).include(episode2);

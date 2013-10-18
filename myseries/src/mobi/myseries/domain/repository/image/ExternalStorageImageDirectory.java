@@ -11,11 +11,10 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import mobi.myseries.shared.Validate;
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 
 public class ExternalStorageImageDirectory implements ImageRepository {
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -23,8 +22,8 @@ public class ExternalStorageImageDirectory implements ImageRepository {
     private static final String IMAGE_EXTENSION = "." + IMAGE_FORMAT.toString().toLowerCase(Locale.US);
     private static final int COMPRESS_QUALITY = 85;
     private static final Pattern IMAGE_FILE_REGEX_PATTERN = Pattern.compile("^-?\\d+\\" + IMAGE_EXTENSION + "$");
-      // The "\\" just before IMAGE_EXTENSION is there because the first character of IMAGE_EXTENSION is a "."
-      // which is a meta character in regular expressions.
+    // The "\\" just before IMAGE_EXTENSION is there because the first character of IMAGE_EXTENSION is a "."
+    // which is a meta character in regular expressions.
 
     private final String directoryName;
     private final Context context;
@@ -35,25 +34,25 @@ public class ExternalStorageImageDirectory implements ImageRepository {
     }
 
     @Override
-    public void save(int id, Bitmap image) throws ImageRepositoryException {
+    public void save(long id, Bitmap image) throws ImageRepositoryException {
         Validate.isNonNull(image, "image");
 
-        this.saveImageFile(image, this.fileFor(id));
+        saveImageFile(image, fileFor(id));
     }
 
     @Override
-    public Bitmap fetch(int id) throws ImageRepositoryException {
-        return BitmapFactory.decodeFile(this.filePathFor(id));
+    public Bitmap fetch(long id) throws ImageRepositoryException {
+        return BitmapFactory.decodeFile(filePathFor(id));
     }
 
     @Override
-    public void delete(int id) throws ImageRepositoryException {
-        this.fileFor(id).delete();
+    public void delete(long id) throws ImageRepositoryException {
+        fileFor(id).delete();
     }
 
     @Override
-    public Collection<Integer> savedImages() throws ImageRepositoryException {
-        String[] files = this.imageFolder().list(new FilenameFilter() {
+    public Collection<Long> savedImages() throws ImageRepositoryException {
+        String[] files = imageFolder().list(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
                 File file = new File(dir, filename);
@@ -62,33 +61,33 @@ public class ExternalStorageImageDirectory implements ImageRepository {
             }
         });
 
-        List<Integer> fileNumbers = new ArrayList<Integer>();
+        List<Long> fileNumbers = new ArrayList<Long>();
         for (String s : files) {
             String numericalPart = s.replace(IMAGE_EXTENSION, "");
-            fileNumbers.add(Integer.valueOf(numericalPart));
+            fileNumbers.add(Long.valueOf(numericalPart));
         }
 
         return fileNumbers;
     }
 
-    private File fileFor(int id) throws ImageRepositoryException {
-        return new File(this.imageFolder(), this.fileNameFor(id));
+    private File fileFor(long id) throws ImageRepositoryException {
+        return new File(imageFolder(), fileNameFor(id));
     }
 
-    private String filePathFor(int id) throws ImageRepositoryException {
-        return this.imageFolder() + FILE_SEPARATOR + this.fileNameFor(id);
+    private String filePathFor(long id) throws ImageRepositoryException {
+        return imageFolder() + FILE_SEPARATOR + fileNameFor(id);
     }
 
-    private String fileNameFor(int id) {
+    private String fileNameFor(long id) {
         return id + IMAGE_EXTENSION;
     }
 
     private File imageFolder() throws ImageRepositoryException {
-        return ensuredDirectory(this.rootDirectory().getPath() + FILE_SEPARATOR + this.directoryName);
+        return ensuredDirectory(rootDirectory().getPath() + FILE_SEPARATOR + directoryName);
     }
 
     private File rootDirectory() throws ImageRepositoryException {
-        File externalFilesDirectory = this.context.getExternalFilesDir(null);
+        File externalFilesDirectory = context.getExternalFilesDir(null);
 
         if (externalFilesDirectory == null) {
             throw new ExternalStorageUnavailableException();
@@ -160,7 +159,7 @@ public class ExternalStorageImageDirectory implements ImageRepository {
     }
 
     @Override
-    public Bitmap fetchFromCache(int id) throws ImageRepositoryException {
-         return null; //there is no cache
+    public Bitmap fetchFromCache(long id) throws ImageRepositoryException {
+        return null; //there is no cache
     }
 }

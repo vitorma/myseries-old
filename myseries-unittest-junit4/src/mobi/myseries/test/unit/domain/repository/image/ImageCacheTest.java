@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import mobi.myseries.domain.repository.image.ImageRepository;
@@ -79,7 +80,7 @@ public abstract class ImageCacheTest {
     @Test
     public void fetchingAnAlreadySavedImageImmediatelyAfterConstructionReturnsTheSavedImage()
             throws ImageRepositoryException {
-        List<Integer> returnedImages = Arrays.asList(1, 2, 3, 4, 5);
+        Collection<Long> returnedImages = Arrays.asList(1L, 2L, 3L, 4L, 5L);
         int fetchedImageId = 1;
 
         ImageRepository cachedRepository = mock(ImageRepository.class);
@@ -173,9 +174,9 @@ public abstract class ImageCacheTest {
 
     @Test
     public void retrievingTheSavedImagesReturnsTheRightIds() throws ImageRepositoryException {
-        int imageId1 = ID_OF_THE_FIRST_SAVED_IMAGE;
-        int imageId2 = imageId1 + 1;
-        int imageId3 = imageId2 + 1;
+        long imageId1 = ID_OF_THE_FIRST_SAVED_IMAGE;
+        long imageId2 = imageId1 + 1;
+        long imageId3 = imageId2 + 1;
         Bitmap savedImage = DEFAULT_IMAGE;
 
         ImageRepository cachedRepository = mock(ImageRepository.class);

@@ -184,7 +184,7 @@ public class SeriesTest {
     private static Episode episodeMock(int number, int seasonNumber, Series series) {
         Episode episode = mock(Episode.class);
 
-        Mockito.when(episode.id()).thenReturn(100 * seasonNumber + number);
+        Mockito.when(episode.id()).thenReturn(100L * seasonNumber + number);
         Mockito.when(episode.seriesId()).thenReturn(series.id());
         Mockito.when(episode.number()).thenReturn(number);
         Mockito.when(episode.seasonNumber()).thenReturn(seasonNumber);
