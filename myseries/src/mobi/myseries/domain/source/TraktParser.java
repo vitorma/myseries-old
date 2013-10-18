@@ -93,6 +93,10 @@ public class TraktParser {
 
                 for (JsonElement episodeElement : episodesArray) {
                     Episode.Builder episodeBuilder = context.deserialize(episodeElement, Episode.Builder.class);
+
+                    episodeBuilder.withId(Long.parseLong(String.format("%d%03d%03d", seriesId, readSeason(episodeElement.getAsJsonObject()),
+                            readNumber(episodeElement.getAsJsonObject()))));
+
                     Episode episode = episodeBuilder.withSeriesId(seriesId).withAirtime(airtime).build();
 
                     seriesBuilder.withEpisode(episode);
@@ -109,7 +113,6 @@ public class TraktParser {
             JsonObject episodeElement = element.getAsJsonObject();
 
             return Episode.builder()
-                    .withId(readTvdbId(episodeElement))
                     .withNumber(readNumber(episodeElement))
                     .withSeasonNumber(readSeason(episodeElement))
                     .withTitle(readTitle(episodeElement))

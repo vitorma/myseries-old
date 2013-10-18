@@ -29,14 +29,14 @@ import android.support.v4.util.LruCache;
 
 public class LruRepositoryManager implements ImageRepository {
 
-    private class ImagesQueue extends LruCache<Integer, Integer> {
+    private class ImagesQueue extends LruCache<Long, Long> {
 
         public ImagesQueue(int numberOfKeptImages) {
             super(numberOfKeptImages);
         }
 
         @Override
-        protected void entryRemoved(boolean evicted, Integer key, Integer oldValue, Integer newValue) {
+        protected void entryRemoved(boolean evicted, Long key, Long oldValue, Long newValue) {
             if (evicted) {
                 try {
                     LruRepositoryManager.this.delete(key);
@@ -44,7 +44,7 @@ public class LruRepositoryManager implements ImageRepository {
             }
         }
 
-        public void put(int id) {
+        public void put(long id) {
             this.put(id, id);
         }
     }
@@ -67,19 +67,19 @@ public class LruRepositoryManager implements ImageRepository {
     }
 
     private void loadPreviouslySavedImages() throws ImageRepositoryException {
-        for (int id : this.managedRepository.savedImages()) {
+        for (long id : this.managedRepository.savedImages()) {
             this.imagesQueue.put(id);
         }
     }
 
     @Override
-    public void save(int id, Bitmap image) throws ImageRepositoryException {
+    public void save(long id, Bitmap image) throws ImageRepositoryException {
         this.managedRepository.save(id, image);
         this.imagesQueue.put(id);
     }
 
     @Override
-    public Bitmap fetch(int id) throws ImageRepositoryException {
+    public Bitmap fetch(long id) throws ImageRepositoryException {
         Bitmap fetchedImage = this.managedRepository.fetch(id);
 
         if (fetchedImage != null) {
@@ -90,18 +90,18 @@ public class LruRepositoryManager implements ImageRepository {
     }
 
     @Override
-    public void delete(int id) throws ImageRepositoryException {
+    public void delete(long id) throws ImageRepositoryException {
         this.managedRepository.delete(id);
         this.imagesQueue.remove(id);
     }
 
     @Override
-    public Collection<Integer> savedImages() throws ImageRepositoryException {
+    public Collection<Long> savedImages() throws ImageRepositoryException {
         return this.managedRepository.savedImages();
     }
 
     @Override
-    public Bitmap fetchFromCache(int id) throws ImageRepositoryException {
+    public Bitmap fetchFromCache(long id) throws ImageRepositoryException {
         return fetch(id);
     }
 }

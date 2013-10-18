@@ -13,7 +13,7 @@ import mobi.myseries.shared.Validate;
  */
 
 public class Episode {
-    private int mId;
+    private long mId;
     private final int mSeriesId;
     private final int mNumber;
     private final int mSeasonNumber;
@@ -28,7 +28,7 @@ public class Episode {
 
     private boolean mWatchMark;
 
-    private Episode(int id, int seriesId, int number, int seasonNumber) {
+    private Episode(long id, int seriesId, int number, int seasonNumber) {
         Validate.isTrue(id >= 0, "id should be non-negative");
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
         Validate.isTrue(number >= 0, "number should be non-negative");
@@ -44,7 +44,7 @@ public class Episode {
         return new Episode.Builder();
     }
 
-    public int id() {
+    public long id() {
         return mId;
     }
 
@@ -164,10 +164,10 @@ public class Episode {
     }
 
     public static class Builder {
-        private int id;
-        private int seriesId;
-        private int number;
-        private int seasonNumber;
+        private long mId;
+        private int mSeriesId;
+        private int mNumber;
+        private int mSeasonNumber;
         private String title = "";
         private Date airDate;
         private Date airTime;
@@ -179,29 +179,29 @@ public class Episode {
         private boolean watchMark;
 
         private Builder() {
-            id = Invalid.EPISODE_ID;
-            seriesId = Invalid.SERIES_ID;
-            number = Invalid.EPISODE_NUMBER;
-            seasonNumber = Invalid.SEASON_NUMBER;
+            mId = Invalid.EPISODE_ID;
+            mSeriesId = Invalid.SERIES_ID;
+            mNumber = Invalid.EPISODE_NUMBER;
+            mSeasonNumber = Invalid.SEASON_NUMBER;
         }
 
-        public Builder withId(int id) {
-            this.id = id;
+        public Builder withId(long id) {
+            mId = id;
             return this;
         }
 
         public Builder withSeriesId(int seriesId) {
-            this.seriesId = seriesId;
+            mSeriesId = seriesId;
             return this;
         }
 
         public Builder withNumber(int number) {
-            this.number = number;
+            mNumber = number;
             return this;
         }
 
         public Builder withSeasonNumber(int seasonNumber) {
-            this.seasonNumber = seasonNumber;
+            mSeasonNumber = seasonNumber;
             return this;
         }
 
@@ -251,7 +251,7 @@ public class Episode {
         }
 
         public Episode build() {
-            Episode episode = new Episode(id, seriesId, number, seasonNumber);
+            Episode episode = new Episode(mId, mSeriesId, mNumber, mSeasonNumber);
 
             episode.mTitle = title;
             episode.mAirDate = airDate;

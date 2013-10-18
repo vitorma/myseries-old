@@ -67,7 +67,6 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     private static final String SERIES_LASTUPDATE = "lastUpdate";
 
     private static final String EPISODE = "Episode";
-    private static final String EPISODE_KEY = "key";
     private static final String EPISODE_ID = "id";
     private static final String EPISODE_SERIES = "series";
     private static final String EPISODE_NUMBER = "number";
@@ -101,8 +100,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private static final String CREATE_TABLE_EPISODES =
             "CREATE TABLE " + EPISODE + " (" +
-                    EPISODE_KEY +        " TEXT PRIMARY KEY, " +
-                    EPISODE_ID +         " INTEGER NOT NULL, " +
+                    EPISODE_ID +         " INTEGER PRIMARY KEY, " +
                     EPISODE_SERIES +     " INTEGER NOT NULL, " +
                     EPISODE_NUMBER +     " INTEGER NOT NULL, " +
                     EPISODE_SEASON +     " INTEGER NOT NULL, " +
@@ -205,8 +203,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     }
 
     public void update(Episode episode, SQLiteDatabase db) {
-        db.update(EPISODE, this.contentValuesBy(episode), EPISODE_KEY + "=?",
-                new String[] { String.format("%d%d%d", episode.seriesId(), episode.seasonNumber(), episode.number()) });
+        db.update(EPISODE, this.contentValuesBy(episode), EPISODE_ID + "=?", new String[] {String.valueOf(episode.id())});
     }
 
     @Override
@@ -400,7 +397,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
     private ContentValues contentValuesBy(Episode e) {
         ContentValues cv = new ContentValues();
 
-        cv.put(EPISODE_ID, String.format("%d%d%d", e.seriesId(), e.seasonNumber(), e.number()));
+        cv.put(EPISODE_ID, e.id());
         cv.put(EPISODE_SERIES, e.seriesId());
         cv.put(EPISODE_NUMBER, e.number());
         cv.put(EPISODE_SEASON, e.seasonNumber());

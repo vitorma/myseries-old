@@ -22,7 +22,7 @@ import android.test.InstrumentationTestCase;
  */
 public abstract class ImageRepositoryTest extends InstrumentationTestCase {
 
-    private static final int NOT_SAVED_IMAGE_ID = -5;  // repositories must also work with negative ids
+    private static final long NOT_SAVED_IMAGE_ID = -5;  // repositories must also work with negative ids
 
     private Bitmap testImage;
 
@@ -39,7 +39,7 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
     }
 
     public void tearDown() throws ImageRepositoryException {
-        for (int imageId : this.imageRepository.savedImages()) {
+        for (Long imageId : this.imageRepository.savedImages()) {
             this.imageRepository.delete(imageId);
         }
         this.imageRepository = null;
@@ -62,7 +62,7 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
     }
 
     public void testFetchingASavedImageReturnsThatImage() throws ImageRepositoryException {
-        int imageId = NOT_SAVED_IMAGE_ID + 1;
+        long imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
 
         // TODO(gabriel) find a better way to compare the bitmaps
@@ -70,7 +70,7 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
     }
 
     public void testFetchingADeletedImageReturnsNull() throws ImageRepositoryException {
-        int imageId = NOT_SAVED_IMAGE_ID + 1;
+        long imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
         this.imageRepository.delete(imageId);
 
@@ -78,14 +78,14 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
     }
 
     public void testAJustSavedImageIsInTheCollectionOfSavedImages() throws ImageRepositoryException {
-        int imageId = NOT_SAVED_IMAGE_ID + 1;
+        long imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
 
         assertThat(this.imageRepository.savedImages(), containsInAnyOrder(imageId));
     }
 
     public void testADeletedImageIsNotInTheCollectionOfSavedImagesAnymore() throws ImageRepositoryException {
-        int imageId = NOT_SAVED_IMAGE_ID + 1;
+        long imageId = NOT_SAVED_IMAGE_ID + 1;
         this.imageRepository.save(imageId, this.testImage);
         this.imageRepository.delete(imageId);
 

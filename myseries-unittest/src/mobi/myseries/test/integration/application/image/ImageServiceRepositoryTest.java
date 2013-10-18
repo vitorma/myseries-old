@@ -20,7 +20,7 @@ public abstract class ImageServiceRepositoryTest extends InstrumentationTestCase
 
     private static final int TEST_SERIES_ID = -1;
     private static final String TEST_SERIES_NAME = "Test Series";
-    private static final int TEST_EPISODE_ID = -1;
+    private static final long TEST_EPISODE_ID = -1;
     private static final String TEST_EPISODE_NAME = "Test Episode";
 
     private Bitmap testImage;

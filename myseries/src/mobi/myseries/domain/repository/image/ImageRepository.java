@@ -6,13 +6,13 @@ import android.graphics.Bitmap;
 
 public interface ImageRepository {
 
-    public void save(int id, Bitmap image) throws ImageRepositoryException;
+    public void save(long l, Bitmap image) throws ImageRepositoryException;
 
-    public Bitmap fetch(int id) throws ImageRepositoryException;
+    public Bitmap fetch(long l) throws ImageRepositoryException;
 
-    public void delete(int id) throws ImageRepositoryException;
+    public void delete(long l) throws ImageRepositoryException;
 
-    public Collection<Integer> savedImages() throws ImageRepositoryException;
+    public Collection<Long> savedImages() throws ImageRepositoryException;
 
-    public Bitmap fetchFromCache(int id) throws ImageRepositoryException;
+    public Bitmap fetchFromCache(long id) throws ImageRepositoryException;
 }
