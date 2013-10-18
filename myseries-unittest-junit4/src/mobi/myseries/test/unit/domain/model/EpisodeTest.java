@@ -55,87 +55,87 @@ public class EpisodeTest {
     @Test(expected = IllegalArgumentException.class)
     public void buildingAnEpisodeWithoutIdCausesIllegalArgumentException() {
         Episode.builder()
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+        .withSeriesId(SERIES_ID1)
+        .withNumber(NUMBER1)
+        .withSeasonNumber(SEASON_NUMBER1)
+        .build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void buildingAnEpisodeWithInvalidIdCausesIllegalArgumentException() {
         Episode.builder()
-            .withId(Invalid.EPISODE_ID)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+        .withId(Invalid.EPISODE_ID)
+        .withSeriesId(SERIES_ID1)
+        .withNumber(NUMBER1)
+        .withSeasonNumber(SEASON_NUMBER1)
+        .build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void buildingAnEpisodeWithoutSeriesIdCausesIllegalArgumentException() {
         Episode.builder()
-            .withId(ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+        .withId(ID1)
+        .withNumber(NUMBER1)
+        .withSeasonNumber(SEASON_NUMBER1)
+        .build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void buildingAnEpisodeWithInvalidSeriesIdCausesIllegalArgumentException() {
         Episode.builder()
-            .withId(ID1)
-            .withSeriesId(Invalid.SERIES_ID)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+        .withId(ID1)
+        .withSeriesId(Invalid.SERIES_ID)
+        .withNumber(NUMBER1)
+        .withSeasonNumber(SEASON_NUMBER1)
+        .build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void buildingAnEpisodeWithoutNumberCausesIllegalArgumentException() {
         Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+        .withId(ID1)
+        .withSeriesId(SERIES_ID1)
+        .withSeasonNumber(SEASON_NUMBER1)
+        .build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void buildingAnEpisodeWithInvalidNumberCausesIllegalArgumentException() {
         Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(Invalid.EPISODE_NUMBER)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+        .withId(ID1)
+        .withSeriesId(SERIES_ID1)
+        .withNumber(Invalid.EPISODE_NUMBER)
+        .withSeasonNumber(SEASON_NUMBER1)
+        .build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void buildingAnEpisodeWithoutSeasonNumberCausesIllegalArgumentException() {
         Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .build();
+        .withId(ID1)
+        .withSeriesId(SERIES_ID1)
+        .withNumber(NUMBER1)
+        .build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void buildingAnEpisodeWithInvalidSeasonNumberCausesIllegalArgumentException() {
         Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(Invalid.SEASON_NUMBER)
-            .build();
+        .withId(ID1)
+        .withSeriesId(SERIES_ID1)
+        .withNumber(NUMBER1)
+        .withSeasonNumber(Invalid.SEASON_NUMBER)
+        .build();
     }
 
     @Test
     public void itCanBuildAnEpisodeWithOnlyRequiredFields() {
         Episode episode = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         assertEquals(ID1, episode.id());
         assertEquals(SERIES_ID1, episode.seriesId());
@@ -157,19 +157,19 @@ public class EpisodeTest {
     @Test
     public void itCanBuildAnEpisodeWithAllFields() {
         Episode e1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .withTitle(NAME)
-            .withAirDate(AIR_DATE)
-            .withOverview(OVERVIEW)
-            .withDirectors(DIRECTORS)
-            .withWriters(WRITERS)
-            .withGuestStars(GUEST_STARS)
-            .withScreenUrl(IMAGE_FILE_NAME)
-            .withWatchMark(true)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .withTitle(NAME)
+                .withAirDate(AIR_DATE)
+                .withOverview(OVERVIEW)
+                .withDirectors(DIRECTORS)
+                .withWriters(WRITERS)
+                .withGuestStars(GUEST_STARS)
+                .withScreenUrl(IMAGE_FILE_NAME)
+                .withWatchMark(true)
+                .build();
 
         assertEquals(ID1, e1.id());
         assertEquals(SERIES_ID1, e1.seriesId());
@@ -192,12 +192,12 @@ public class EpisodeTest {
     @Test
     public void markingAnEpisodeAsSeenAssignsTrueToItsSeenMarkField() {
         Episode episode = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .withWatchMark(false)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .withWatchMark(false)
+                .build();
 
         assertFalse(episode.watched());
 
@@ -209,12 +209,12 @@ public class EpisodeTest {
     @Test
     public void markingAnEpisodeAsNotSeenAssignsFalseToItsSeenMarkField() {
         Episode episode = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .withWatchMark(true)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .withWatchMark(true)
+                .build();
 
         assertTrue(episode.watched());
 
@@ -228,47 +228,47 @@ public class EpisodeTest {
     @Test(expected = IllegalArgumentException.class)
     public void mergingAnEpisodeWithANullOtherCausesIllegalArgumentException() {
         Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build()
-            .mergeWith(null);
+        .withId(ID1)
+        .withSeriesId(SERIES_ID1)
+        .withNumber(NUMBER1)
+        .withSeasonNumber(SEASON_NUMBER1)
+        .build()
+        .mergeWith(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void mergingAnEpisodeWithAnotherHavingADifferentNumberCausesIllegalArgumentException() {
         Episode episode1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode episode2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER2)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         episode1.mergeWith(episode2);
     }
 
     public void mergingAnEpisodeWithAnotherHavingADifferentId() {
         Episode episode1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode episode2 = Episode.builder()
-            .withId(ID2)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID2)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         episode1.mergeWith(episode2);
     }
@@ -276,18 +276,18 @@ public class EpisodeTest {
     @Test(expected = IllegalArgumentException.class)
     public void mergingAnEpisodeWithAnotherHavingADifferentSeriesIdCausesIllegalArgumentException() {
         Episode episode1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode episode2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID2)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID2)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         episode1.mergeWith(episode2);
     }
@@ -295,18 +295,18 @@ public class EpisodeTest {
     @Test(expected = IllegalArgumentException.class)
     public void mergingAnEpisodeWithAnotherHavingADifferentSeasonNumberCausesIllegalArgumentException() {
         Episode episode1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode episode2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER2)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER2)
+                .build();
 
         episode1.mergeWith(episode2);
 
@@ -323,25 +323,25 @@ public class EpisodeTest {
     @Test
     public void mergingAnEpisodeWithAnotherMakesItsOptionalFieldsEqualsToThoseOfTheOtherOne() {
         Episode episode1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode episode2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .withTitle(NAME)
-            .withAirDate(AIR_DATE)
-            .withOverview(OVERVIEW)
-            .withDirectors(DIRECTORS)
-            .withWriters(WRITERS)
-            .withGuestStars(GUEST_STARS)
-            .withScreenUrl(IMAGE_FILE_NAME)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .withTitle(NAME)
+                .withAirDate(AIR_DATE)
+                .withOverview(OVERVIEW)
+                .withDirectors(DIRECTORS)
+                .withWriters(WRITERS)
+                .withGuestStars(GUEST_STARS)
+                .withScreenUrl(IMAGE_FILE_NAME)
+                .build();
 
         episode1.mergeWith(episode2);
 
@@ -357,20 +357,20 @@ public class EpisodeTest {
     @Test
     public void mergingAnEpisodeWithAnotherDoesNotChangesTheValueOfItsSeenMarkField() {
         Episode episode1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .withWatchMark(true)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .withWatchMark(true)
+                .build();
 
         Episode episode2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .withWatchMark(false)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .withWatchMark(false)
+                .build();
 
         episode1.mergeWith(episode2);
 
@@ -382,32 +382,32 @@ public class EpisodeTest {
     @Test
     public void testIsTheSameAs() {
         Episode e1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode e2 = Episode.builder()
-            .withId(ID2)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID2)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode e3 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode e4 = Episode.builder()
-            .withId(ID2)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID2)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER2)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode e5 = Episode.builder()
                 .withId(ID1)
@@ -456,32 +456,39 @@ public class EpisodeTest {
     @Test
     public void testEquals() {
         Episode e1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode e2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID2)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER2)
-            .build();
+                .withId(ID2)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode e3 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID2)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER2)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode e4 = Episode.builder()
-            .withId(ID2)
-            .withSeriesId(SERIES_ID2)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER2)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID2)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER2)
+                .build();
+
+        Episode e5 = Episode.builder()
+                .withId(ID1)
+                .withSeriesId(SERIES_ID2)
+                .withNumber(NUMBER2)
+                .withSeasonNumber(SEASON_NUMBER2)
+                .build();
 
 
         //equals is consistent
@@ -502,29 +509,29 @@ public class EpisodeTest {
             assertTrue(e2.equals(e3));
             assertTrue(e1.equals(e3));
 
-            //items are equal if and only if they have the same id
-            assertFalse(e2.equals(e4));
-            assertFalse(e3.equals(e4));
+            //items are equal if and only if they have the same series id, season number and episode number
+            assertFalse(e2.equals(e5));
+            assertFalse(e5.equals(e2));
             assertFalse(e4.equals(e2));
-            assertFalse(e4.equals(e3));
+            assertFalse(e4.equals(e5));
         }
     }
 
     @Test
     public void testHashCode() {
         Episode e1 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID1)
-            .withNumber(NUMBER1)
-            .withSeasonNumber(SEASON_NUMBER1)
-            .build();
+                .withId(ID1)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         Episode e2 = Episode.builder()
-            .withId(ID1)
-            .withSeriesId(SERIES_ID2)
-            .withNumber(NUMBER2)
-            .withSeasonNumber(SEASON_NUMBER2)
-            .build();
+                .withId(ID2)
+                .withSeriesId(SERIES_ID1)
+                .withNumber(NUMBER1)
+                .withSeasonNumber(SEASON_NUMBER1)
+                .build();
 
         //hashCode is consistent
         for (int i = 1; i <= 1000; i++) {
