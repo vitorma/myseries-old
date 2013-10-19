@@ -85,7 +85,7 @@ public abstract class AddSeriesFragment extends Fragment {
 
         registerListenerForService();
 
-        if (hasResultsToShow()) {
+        if (mError == null && hasResultsToShow()) {
             showResults();
         } else if (mIsServiceRunning) {
             onServiceStartRunning();
@@ -128,7 +128,6 @@ public abstract class AddSeriesFragment extends Fragment {
         }
 
         Log.d(getClass().getName(), "mError is not null. Restoring error message.");
-        mResults = null;
         setError(mError);
         showError();
     }

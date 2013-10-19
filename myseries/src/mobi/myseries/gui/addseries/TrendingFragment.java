@@ -10,13 +10,13 @@ import mobi.myseries.domain.model.SearchResult;
 import android.os.Bundle;
 
 public class TrendingFragment extends AddSeriesFragment {
-    private TrendingListener trendingListener;
+    private TrendingListener mTrendingListener;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        trendingListener = newTrendingListener();
+        mTrendingListener = newTrendingListener();
     }
 
     @Override
@@ -46,17 +46,17 @@ public class TrendingFragment extends AddSeriesFragment {
 
     @Override
     protected void registerListenerForService() {
-        App.trendingService().register(trendingListener);
+        App.trendingService().register(mTrendingListener);
     }
 
     @Override
     protected void deregisterListenerForService() {
-        App.trendingService().deregister(trendingListener);
+        App.trendingService().deregister(mTrendingListener);
     }
 
     @Override
     protected void onServiceStartRunning() {
-        trendingListener.onStart();
+        mTrendingListener.onStart();
     }
 
     private TrendingListener newTrendingListener() {
@@ -74,13 +74,16 @@ public class TrendingFragment extends AddSeriesFragment {
 
             @Override
             public void onSucess(List<SearchResult> results) {
+                mError = null;
                 TrendingFragment.this.setResults(results);
                 TrendingFragment.this.showResults();
             }
 
             @Override
             public void onFailure(Exception exception) {
+                mError = exception;
                 TrendingFragment.this.setResults(new ArrayList<SearchResult>());
+                hideResults();
 
                 TrendingFragment.this.setError(exception);
                 TrendingFragment.this.showError();
