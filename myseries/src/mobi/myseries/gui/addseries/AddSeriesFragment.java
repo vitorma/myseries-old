@@ -32,24 +32,24 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 public abstract class AddSeriesFragment extends Fragment {
-    protected EditText searchField;
-    private View buttonPanel;
+    protected EditText mSearchField;
+    private View mButtonPanel;
     private ImageButton clearButton;
     private ImageButton searchButton;
     private TextView sourceLabel;
-    private TextView numberOfResultsLabel;
-    private GridView resultsGrid;
-    private ProgressBar progressIndicator;
-    private LinearLayout errorView;
-    private TextView errorTitle;
-    private TextView errorMessage;
-    private Button tryAgainButton;
+    private TextView mNumberOfResultsLabel;
+    private GridView mResultsGrid;
+    private ProgressBar mProgressIndicator;
+    private LinearLayout mErrorView;
+    private TextView mErrorTitle;
+    private TextView mErrorMessage;
+    private Button mTryAgainButton;
 
-    private AddSeriesAdapter adapter;
-    private AsyncImageLoader imageLoader;
+    private AddSeriesAdapter mAdapter;
+    private AsyncImageLoader mImageLoader;
 
-    private List<SearchResult> results;
-    protected boolean isServiceRunning;
+    private List<SearchResult> mResults;
+    protected boolean mIsServiceRunning;
 
     /* Fragment life cycle */
 
@@ -57,9 +57,9 @@ public abstract class AddSeriesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.setRetainInstance(true);
+        setRetainInstance(true);
 
-        this.imageLoader = new AsyncImageLoader();
+        mImageLoader = new AsyncImageLoader();
     }
 
     @Override
@@ -71,21 +71,21 @@ public abstract class AddSeriesFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.prepareViews();
+        prepareViews();
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        this.registerListenerForService();
+        registerListenerForService();
 
-        if (this.hasResultsToShow()) {
-            this.showResults();
-        } else if (this.isServiceRunning) {
-            this.onServiceStartRunning();
-        } else if (this.shouldServiceRunOnStartLifeCycle()) {
-            this.runService();
+        if (hasResultsToShow()) {
+            showResults();
+        } else if (mIsServiceRunning) {
+            onServiceStartRunning();
+        } else if (shouldServiceRunOnStartLifeCycle()) {
+            runService();
         }
     }
 
@@ -93,7 +93,7 @@ public abstract class AddSeriesFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        this.deregisterListenerForService();
+        deregisterListenerForService();
     }
 
     /* Abstract methods */
@@ -110,23 +110,23 @@ public abstract class AddSeriesFragment extends Fragment {
     /* Prepare views */
 
     private void prepareViews() {
-        this.prepareSearchPanel();
-        this.prepareSourceLabel();
-        this.prepareContentViews();
+        prepareSearchPanel();
+        prepareSourceLabel();
+        prepareContentViews();
     }
 
     private void prepareSearchPanel() {
-        if (this.hasSearchPanel()) {
-            this.showSearchPanel();
-            this.prepareSearchField();
-            this.prepareButtonPanel();
+        if (hasSearchPanel()) {
+            showSearchPanel();
+            prepareSearchField();
+            prepareButtonPanel();
         }
     }
 
     private void prepareSearchField() {
-        this.searchField = (EditText) this.findView(R.id.searchField);
+        mSearchField = (EditText) findView(R.id.searchField);
 
-        this.searchField.addTextChangedListener(new TextWatcher() {
+        mSearchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
@@ -143,7 +143,7 @@ public abstract class AddSeriesFragment extends Fragment {
             public void afterTextChanged(Editable s) { }
         });
 
-        this.searchField.setOnEditorActionListener(new OnEditorActionListener() {
+        mSearchField.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -155,7 +155,7 @@ public abstract class AddSeriesFragment extends Fragment {
             }
         });
 
-        this.searchField.setOnKeyListener(new View.OnKeyListener() {
+        mSearchField.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -169,27 +169,27 @@ public abstract class AddSeriesFragment extends Fragment {
     }
 
     private void prepareButtonPanel() {
-        this.buttonPanel = this.findView(R.id.buttonPanel);
+        mButtonPanel = findView(R.id.buttonPanel);
 
-        this.prepareClearButton();
-        this.prepareSearchButton();
+        prepareClearButton();
+        prepareSearchButton();
     }
 
     private void prepareClearButton() {
-        this.clearButton = (ImageButton) this.findView(R.id.clearButton);
+        clearButton = (ImageButton) findView(R.id.clearButton);
 
-        this.clearButton.setOnClickListener(new View.OnClickListener() {
+        clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                AddSeriesFragment.this.searchField.setText("");
+                mSearchField.setText("");
             }
         });
     }
 
     private void prepareSearchButton() {
-        this.searchButton = (ImageButton) this.findView(R.id.searchButton);
+        searchButton = (ImageButton) findView(R.id.searchButton);
 
-        this.searchButton.setOnClickListener(new View.OnClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 AddSeriesFragment.this.runService();
@@ -198,26 +198,26 @@ public abstract class AddSeriesFragment extends Fragment {
     }
 
     private void prepareSourceLabel() {
-        this.sourceLabel = (TextView) this.findView(R.id.sourceLabel);
+        sourceLabel = (TextView) findView(R.id.sourceLabel);
 
-        this.sourceLabel.setText(this.sourceTextResource());
+        sourceLabel.setText(sourceTextResource());
     }
 
     private void prepareContentViews() {
-        this.prepareNumberOfResultsLabel();
-        this.prepareProgressIndicator();
-        this.prepareResultsGrid();
-        this.prepareErrorView();
+        prepareNumberOfResultsLabel();
+        prepareProgressIndicator();
+        prepareResultsGrid();
+        prepareErrorView();
     }
 
     private void prepareNumberOfResultsLabel() {
-        this.numberOfResultsLabel = (TextView) this.findView(R.id.numberOfResultsLabel);
+        mNumberOfResultsLabel = (TextView) findView(R.id.numberOfResultsLabel);
     }
 
     private void prepareResultsGrid() {
-        this.resultsGrid = (GridView) this.findView(R.id.resultsGrid);
+        mResultsGrid = (GridView) findView(R.id.resultsGrid);
 
-        this.resultsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mResultsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SearchResult selectedItem = ((SearchResult) parent.getItemAtPosition(position));
@@ -226,95 +226,96 @@ public abstract class AddSeriesFragment extends Fragment {
             }
         });
 
-        if (this.adapter != null) {
-            this.resultsGrid.setAdapter(this.adapter);
+        if (mAdapter != null) {
+            mResultsGrid.setAdapter(mAdapter);
 
-            this.resultsGrid.setOnScrollListener(new PauseImageLoaderOnScrollListener(this.imageLoader, false, true));
+            mResultsGrid.setOnScrollListener(new PauseImageLoaderOnScrollListener(mImageLoader, false, true));
         }
     }
 
     private void prepareProgressIndicator() {
-        this.progressIndicator = (ProgressBar) this.findView(R.id.progressIndicator);
+        mProgressIndicator = (ProgressBar) findView(R.id.progressIndicator);
     }
 
     private void prepareErrorView() {
-        this.errorView = (LinearLayout) this.findView(R.id.errorView);
-        this.errorTitle = (TextView) this.findView(R.id.errorTitle);
-        this.errorMessage = (TextView) this.findView(R.id.errorMessage);
+        mErrorView = (LinearLayout) findView(R.id.errorView);
+        mErrorTitle = (TextView) findView(R.id.errorTitle);
+        mErrorMessage = (TextView) findView(R.id.errorMessage);
 
-        this.tryAgainButton = (Button) this.findView(R.id.tryAgain);
+        mTryAgainButton = (Button) findView(R.id.tryAgain);
 
-        this.tryAgainButton.setOnClickListener(new View.OnClickListener() {
+        mTryAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddSeriesFragment.this.runService();                
+                AddSeriesFragment.this.runService();
             }
         });
     }
 
     private View findView(int resourceId) {
-        return this.getView().findViewById(resourceId);
+        return getView().findViewById(resourceId);
     }
 
     /* Update views */
 
     private void showSearchPanel() {
-        this.findView(R.id.searchPanel).setVisibility(View.VISIBLE);
+        findView(R.id.searchPanel).setVisibility(View.VISIBLE);
     }
 
     protected void hideButtons() {
-        this.buttonPanel.setVisibility(View.INVISIBLE);
+        mButtonPanel.setVisibility(View.INVISIBLE);
     }
 
     protected void showButtons() {
-        this.buttonPanel.setVisibility(View.VISIBLE);
+        mButtonPanel.setVisibility(View.VISIBLE);
     }
 
     protected void disableSearch() {
-        this.searchField.setEnabled(false);
+        mSearchField.setEnabled(false);
 
-        this.hideButtons();
+        hideButtons();
     }
 
     protected void enableSearch(boolean showButtons) {
-        this.searchField.setEnabled(true);
+        mSearchField.setEnabled(true);
 
         if (showButtons) {
-            this.showButtons();
+            showButtons();
         }
     }
 
     protected void showProgress() {
-        this.progressIndicator.setVisibility(View.VISIBLE);
+        mProgressIndicator.setVisibility(View.VISIBLE);
 
-        this.hideResults();
-        this.hideError();
+        hideResults();
+        hideError();
     }
 
     protected void hideProgress() {
-        this.progressIndicator.setVisibility(View.INVISIBLE);
+        mProgressIndicator.setVisibility(View.INVISIBLE);
     }
 
-    protected void showError() {
-        this.errorView.setVisibility(View.VISIBLE);
+    protected void showError(boolean showTryAgainButton) {
+        mErrorView.setVisibility(View.VISIBLE);
+        mTryAgainButton.setVisibility(showTryAgainButton? View.VISIBLE : View.INVISIBLE);
 
-        this.hideProgress();
-        this.hideResults();
+        hideProgress();
+        hideResults();
     }
 
     protected void hideError() {
-        this.errorView.setVisibility(View.INVISIBLE);
+        mErrorView.setVisibility(View.INVISIBLE);
     }
 
     protected void setError(CharSequence title, CharSequence message) {
-        this.errorTitle.setText(title);
-        this.errorMessage.setText(message);
+        mErrorTitle.setText(title);
+        mErrorMessage.setText(message);
     }
 
     protected void setError(int titleResourceId, int messageResourceId) {
         this.setError(
-                this.activity().getResources().getText(titleResourceId),
-                this.activity().getResources().getText(messageResourceId));
+                activity().getResources().getText(titleResourceId),
+                activity().getResources().getText(messageResourceId));
     }
 
     protected void setError(Exception exception) {
@@ -341,47 +342,47 @@ public abstract class AddSeriesFragment extends Fragment {
     }
 
     protected void showResults() {
-        this.setUpNumberOfResults();
+        setUpNumberOfResults();
 
-        this.numberOfResultsLabel.setVisibility(View.VISIBLE);
-        this.resultsGrid.setVisibility(View.VISIBLE);
+        mNumberOfResultsLabel.setVisibility(View.VISIBLE);
+        mResultsGrid.setVisibility(View.VISIBLE);
 
-        this.hideProgress();
-        this.hideError();
+        hideProgress();
+        hideError();
     }
 
     protected void hideResults() {
-        this.numberOfResultsLabel.setVisibility(View.INVISIBLE);
-        this.resultsGrid.setVisibility(View.INVISIBLE);
+        mNumberOfResultsLabel.setVisibility(View.INVISIBLE);
+        mResultsGrid.setVisibility(View.INVISIBLE);
     }
 
     protected boolean hasResultsToShow() {
-        return this.results != null;
+        return mResults != null;
     }
 
     protected void setResults(List<SearchResult> results) {
-        this.results = results;
+        mResults = results;
 
-        this.setUpNumberOfResults();
-        this.setUpAdapter();
+        setUpNumberOfResults();
+        setUpAdapter();
 
-        this.resultsGrid.setAdapter(this.adapter);
+        mResultsGrid.setAdapter(mAdapter);
     }
 
     private void setUpNumberOfResults() {
-        String format = this.getString(this.numberOfResultsFormatResource());
+        String format = this.getString(numberOfResultsFormatResource());
 
-        this.numberOfResultsLabel.setText(String.format(format, this.results.size()));
+        mNumberOfResultsLabel.setText(String.format(format, mResults.size()));
     }
 
     private void setUpAdapter() {
-        if (this.adapter == null) {
-            this.adapter = new AddSeriesAdapter(this.activity(), this.results, this.imageLoader);
-            this.adapter.register(this.adapterListener);
+        if (mAdapter == null) {
+            mAdapter = new AddSeriesAdapter(activity(), mResults, mImageLoader);
+            mAdapter.register(mAdapterListener);
         } else {
-            this.adapter.clear();
-            for (SearchResult result : this.results) {
-                this.adapter.add(result);
+            mAdapter.clear();
+            for (SearchResult result : mResults) {
+                mAdapter.add(result);
             }
         }
     }
@@ -389,12 +390,12 @@ public abstract class AddSeriesFragment extends Fragment {
     /* Activity */
 
     protected AddSeriesActivity activity() {
-        return (AddSeriesActivity) this.getActivity();
+        return (AddSeriesActivity) getActivity();
     }
 
     /* AddSeriesAdapterListener */
 
-    private AddSeriesAdapterListener adapterListener = new AddSeriesAdapterListener() {
+    private final AddSeriesAdapterListener mAdapterListener = new AddSeriesAdapterListener() {
         @Override
         public void onRequestAdd(SearchResult series) {
             App.seriesFollowingService().follow(series);
@@ -403,7 +404,7 @@ public abstract class AddSeriesFragment extends Fragment {
         @Override
         public void onRequestRemove(SearchResult series) {
             SeriesRemovalConfirmationDialogFragment.newInstance(series)
-                .show(AddSeriesFragment.this.getFragmentManager(), "SeriesRemovalConfirmationDialog");
+            .show(AddSeriesFragment.this.getFragmentManager(), "SeriesRemovalConfirmationDialog");
         }
     };
 }

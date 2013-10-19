@@ -9,15 +9,21 @@ import mobi.myseries.application.search.SearchListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import android.os.Bundle;
+import android.util.Log;
 
 public class SearchFragment extends AddSeriesFragment {
-    private SearchListener searchListener;
+    private boolean mShowButtons = false;
+    private boolean mShowTryAgainButton;
+
+    private SearchListener mSearchListener;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(this.getClass().getName(), "onActivityCreated");
+
         super.onActivityCreated(savedInstanceState);
 
-        this.searchListener = this.newSearchListener();
+        mSearchListener = newSearchListener();
     }
 
     @Override
@@ -42,47 +48,45 @@ public class SearchFragment extends AddSeriesFragment {
 
     @Override
     protected void runService() {
-        App.searchService().search(this.searchField.getText().toString());
+        App.searchService().search(mSearchField.getText().toString());
     }
 
     @Override
     protected void registerListenerForService() {
-        App.searchService().register(this.searchListener);
+        App.searchService().register(mSearchListener);
     }
 
     @Override
     protected void deregisterListenerForService() {
-        App.searchService().deregister(this.searchListener);
+        App.searchService().deregister(mSearchListener);
     }
 
     @Override
     protected void onServiceStartRunning() {
-        this.searchListener.onStart();
+        mSearchListener.onStart();
     }
 
     private SearchListener newSearchListener() {
         return new SearchListener() {
-            private boolean showButtons;
 
             @Override
             public void onStart() {
                 SearchFragment.this.disableSearch();
 
-                SearchFragment.this.isServiceRunning = true;
+                SearchFragment.this.mIsServiceRunning = true;
                 SearchFragment.this.showProgress();
             }
 
             @Override
             public void onFinish() {
-                SearchFragment.this.enableSearch(this.showButtons);
+                SearchFragment.this.enableSearch(mShowButtons);
 
-                SearchFragment.this.isServiceRunning = false;
+                SearchFragment.this.mIsServiceRunning = false;
             }
 
             @Override
             public void onSucess(List<SearchResult> results) {
-                this.showButtons = true;
-
+                mShowButtons = true;
                 SearchFragment.this.setResults(results);
 
                 if (SearchFragment.this.hasResultsToShow()) {
@@ -94,12 +98,11 @@ public class SearchFragment extends AddSeriesFragment {
 
             @Override
             public void onFailure(Exception exception) {
-                this.showButtons = !(exception instanceof InvalidSearchCriteriaException);
-
+                mShowTryAgainButton = mShowButtons = !(exception instanceof InvalidSearchCriteriaException);
                 SearchFragment.this.setResults(new ArrayList<SearchResult>());
 
                 SearchFragment.this.setError(exception);
-                SearchFragment.this.showError();
+                SearchFragment.this.showError(mShowTryAgainButton);
             }
         };
     }

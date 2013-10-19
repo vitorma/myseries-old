@@ -63,13 +63,13 @@ public class TrendingFragment extends AddSeriesFragment {
         return new TrendingListener() {
             @Override
             public void onStart() {
-                TrendingFragment.this.isServiceRunning = true;
+                TrendingFragment.this.mIsServiceRunning = true;
                 TrendingFragment.this.showProgress();
             }
 
             @Override
             public void onFinish() {
-                TrendingFragment.this.isServiceRunning = false;
+                TrendingFragment.this.mIsServiceRunning = false;
             }
 
             @Override
@@ -83,7 +83,7 @@ public class TrendingFragment extends AddSeriesFragment {
                 TrendingFragment.this.setResults(new ArrayList<SearchResult>());
 
                 TrendingFragment.this.setError(exception);
-                TrendingFragment.this.showError();
+                TrendingFragment.this.showError(true);
             }
         };
     }
