@@ -9,18 +9,12 @@ import mobi.myseries.application.search.SearchListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import android.os.Bundle;
-import android.util.Log;
 
 public class SearchFragment extends AddSeriesFragment {
-    private boolean mShowButtons = false;
-    private boolean mShowTryAgainButton;
-
     private SearchListener mSearchListener;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(this.getClass().getName(), "onActivityCreated");
-
         super.onActivityCreated(savedInstanceState);
 
         mSearchListener = newSearchListener();
@@ -69,6 +63,8 @@ public class SearchFragment extends AddSeriesFragment {
     private SearchListener newSearchListener() {
         return new SearchListener() {
 
+            private boolean mShowButtons;
+
             @Override
             public void onStart() {
                 SearchFragment.this.disableSearch();
@@ -86,6 +82,7 @@ public class SearchFragment extends AddSeriesFragment {
 
             @Override
             public void onSucess(List<SearchResult> results) {
+                mError = null;
                 mShowButtons = true;
                 SearchFragment.this.setResults(results);
 
@@ -98,11 +95,12 @@ public class SearchFragment extends AddSeriesFragment {
 
             @Override
             public void onFailure(Exception exception) {
-                mShowTryAgainButton = mShowButtons = !(exception instanceof InvalidSearchCriteriaException);
-                SearchFragment.this.setResults(new ArrayList<SearchResult>());
+                mError = exception;
+                mShowButtons = !(exception instanceof InvalidSearchCriteriaException);
 
+                SearchFragment.this.setResults(new ArrayList<SearchResult>());
                 SearchFragment.this.setError(exception);
-                SearchFragment.this.showError(mShowTryAgainButton);
+                SearchFragment.this.showError();
             }
         };
     }

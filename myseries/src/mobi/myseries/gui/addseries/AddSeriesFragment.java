@@ -16,6 +16,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,10 @@ public abstract class AddSeriesFragment extends Fragment {
 
     private List<SearchResult> mResults;
     protected boolean mIsServiceRunning;
+
+    protected Exception mError;
+    private boolean mShowTryAgainButton;
+
 
     /* Fragment life cycle */
 
@@ -113,6 +118,19 @@ public abstract class AddSeriesFragment extends Fragment {
         prepareSearchPanel();
         prepareSourceLabel();
         prepareContentViews();
+        restoreErrorMessageIfAny();
+    }
+
+    private void restoreErrorMessageIfAny() {
+        if (null == mError) {
+            Log.d(getClass().getName(), "mError is null.");
+            return;
+        }
+
+        Log.d(getClass().getName(), "mError is not null. Restoring error message.");
+        mResults = null;
+        setError(mError);
+        showError();
     }
 
     private void prepareSearchPanel() {
@@ -295,9 +313,9 @@ public abstract class AddSeriesFragment extends Fragment {
         mProgressIndicator.setVisibility(View.INVISIBLE);
     }
 
-    protected void showError(boolean showTryAgainButton) {
+    protected void showError() {
         mErrorView.setVisibility(View.VISIBLE);
-        mTryAgainButton.setVisibility(showTryAgainButton? View.VISIBLE : View.INVISIBLE);
+        mTryAgainButton.setVisibility(mShowTryAgainButton? View.VISIBLE : View.INVISIBLE);
 
         hideProgress();
         hideResults();
@@ -319,10 +337,12 @@ public abstract class AddSeriesFragment extends Fragment {
     }
 
     protected void setError(Exception exception) {
+        mShowTryAgainButton = true;
         if (exception instanceof InvalidSearchCriteriaException) {
             this.setError(
                     R.string.invalid_criteria_title,
                     R.string.invalid_criteria_message);
+            mShowTryAgainButton = false;
         } else if (exception instanceof ConnectionFailedException) {
             this.setError(
                     R.string.connection_failed_title,

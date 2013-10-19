@@ -16,7 +16,7 @@ public class TrendingFragment extends AddSeriesFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.trendingListener = this.newTrendingListener();
+        trendingListener = newTrendingListener();
     }
 
     @Override
@@ -46,17 +46,17 @@ public class TrendingFragment extends AddSeriesFragment {
 
     @Override
     protected void registerListenerForService() {
-        App.trendingService().register(this.trendingListener);
+        App.trendingService().register(trendingListener);
     }
 
     @Override
     protected void deregisterListenerForService() {
-        App.trendingService().deregister(this.trendingListener);
+        App.trendingService().deregister(trendingListener);
     }
 
     @Override
     protected void onServiceStartRunning() {
-        this.trendingListener.onStart();
+        trendingListener.onStart();
     }
 
     private TrendingListener newTrendingListener() {
@@ -83,7 +83,7 @@ public class TrendingFragment extends AddSeriesFragment {
                 TrendingFragment.this.setResults(new ArrayList<SearchResult>());
 
                 TrendingFragment.this.setError(exception);
-                TrendingFragment.this.showError(true);
+                TrendingFragment.this.showError();
             }
         };
     }
