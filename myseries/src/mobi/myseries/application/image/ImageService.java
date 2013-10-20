@@ -22,15 +22,16 @@ import android.os.AsyncTask;
 
 // TODO(Gabriel) Log the operations of this service.
 public class ImageService {
-    private final int mySchedulePosterWidth;
-    private final int mySchedulePosterHeight;
 
     private final ImageServiceRepository imageRepository;
     private final Communications communications;
 
-    private final ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
     private final int mySeriesPosterWidth;
     private final int mySeriesPosterHeight;
+    private final int mySchedulePosterWidth;
+    private final int mySchedulePosterHeight;
+
+    private final ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
 
     public ImageService(
             ImageServiceRepository imageRepository,
@@ -77,10 +78,14 @@ public class ImageService {
         }
 
         try {
-            InputStream posterStream = new BufferedInputStream(this.getStream(series.posterUrl()));
+            InputStream posterStream = this.getStream(series.posterUrl());
 
-            Bitmap poster = BitmapFactory.decodeStream(posterStream);
-            Bitmap smallPoster = new BitmapResizer(poster).toSize(this.mySchedulePosterWidth, this.mySchedulePosterHeight);
+            Bitmap originalPoster = BitmapFactory.decodeStream(posterStream);
+            BitmapResizer posterResizer = new BitmapResizer(originalPoster);
+
+            // TODO(Gabriel) for some reason, resizing made these posters terrible.
+            Bitmap poster = originalPoster; //posterResizer.toSize(this.mySeriesPosterWidth, this.mySeriesPosterHeight);
+            Bitmap smallPoster = posterResizer.toSize(this.mySchedulePosterWidth, this.mySchedulePosterHeight);
 
             this.imageRepository.saveSeriesPoster(series, poster);
             this.imageRepository.saveSmallSeriesPoster(series, smallPoster);
@@ -135,7 +140,7 @@ public class ImageService {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                InputStream screenStream = new BufferedInputStream(getStream(episode.screenUrl()));
+                InputStream screenStream = getStream(episode.screenUrl());
                 Bitmap screen = BitmapFactory.decodeStream(screenStream);
 
                 ImageService.this.imageRepository.saveEpisodeImage(this.episode, screen);
@@ -170,18 +175,25 @@ public class ImageService {
         return this.imageRepository.getCachedPosterOf(series.toSeries());
     }
 
-    public Bitmap getPosterOf(SearchResult series) throws ConnectionFailedException, NetworkUnavailableException {
-        Bitmap localPoster = this.getPosterOf(series.toSeries());
+    public Bitmap getPosterOf(SearchResult result) throws ConnectionFailedException, NetworkUnavailableException {
+        Series resultAsSeries = result.toSeries();
+        Bitmap localPoster = this.getPosterOf(resultAsSeries);
         if (localPoster == null) {
-            String posterUrl = series.poster();
+            String posterUrl = result.poster();
 
             if (Strings.isNullOrBlank(posterUrl)) {
                 return null;
             }
 
-            // FIXME(Gabriel): use a cache for posters of not followed series.
+            Bitmap ephemeralPoster = this.imageRepository.getEphemeralSeriesPosterOf(resultAsSeries);
+            if (ephemeralPoster == null) {
+                Bitmap downloadedPoster = BitmapFactory.decodeStream(this.getStream(posterUrl));
 
-            return BitmapFactory.decodeStream(this.getStream(posterUrl));
+                this.imageRepository.saveEphemeralSeriesPoster(resultAsSeries, downloadedPoster);
+                ephemeralPoster = this.imageRepository.getEphemeralSeriesPosterOf(resultAsSeries);
+            }
+
+            return ephemeralPoster;
         } else {
             return localPoster;   
         }
@@ -190,7 +202,7 @@ public class ImageService {
     /* Auxiliary */
 
     private InputStream getStream(String url) throws ConnectionFailedException, NetworkUnavailableException {
-        return new FlushedInputStream(this.communications.streamFor(url));
+        return new BufferedInputStream(new FlushedInputStream(this.communications.streamFor(url)));
     }
 
     /*

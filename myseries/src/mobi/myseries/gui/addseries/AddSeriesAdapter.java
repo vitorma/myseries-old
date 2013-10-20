@@ -57,8 +57,8 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
         if (Strings.isNullOrBlank(result.poster())) {
             viewHolder.image.setImageBitmap(GENERIC_POSTER);
         } else {
-            SearchResultPosterFetchingMethod posterDownloader = new SearchResultPosterFetchingMethod(result);
-            imageLoader.loadBitmapOn(posterDownloader, GENERIC_POSTER, viewHolder.image, viewHolder.imageProgress);
+            SearchResultPosterFetchingMethod posterLoader = new SearchResultPosterFetchingMethod(result);
+            imageLoader.loadBitmapOn(posterLoader, GENERIC_POSTER, viewHolder.image, viewHolder.imageProgress);
         }
 
         viewHolder.addButton.setOnClickListener(new View.OnClickListener() {

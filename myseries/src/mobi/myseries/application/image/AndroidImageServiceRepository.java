@@ -3,6 +3,7 @@ package mobi.myseries.application.image;
 import mobi.myseries.application.Log;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.repository.image.DummyImageRepository;
 import mobi.myseries.domain.repository.image.ExternalStorageImageDirectory;
 import mobi.myseries.domain.repository.image.ImageRepository;
 import mobi.myseries.domain.repository.image.ImageRepositoryException;
@@ -28,18 +29,21 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     private static final int NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES = EPISODE_IMAGE_CACHE_SIZE /
                                                                              EPISODE_IMAGE_AVERAGE_SIZE;
     private static final float PERCENTAGE_OF_MEMORY_USED_IN_BIG_POSTER_CACHE = 0.125f;
+    private static final float PERCENTAGE_OF_MEMORY_USED_IN_EPHEMERAL_POSTER_CACHE = 0.125f;
     private static final float PERCENTAGE_OF_MEMORY_USED_IN_SMALL_POSTER_CACHE = 0.0625f;
 
     private final ImageRepository posterDirectory;
     private final ImageRepository smallPosterDirectory;
     private final ImageRepository episodeDirectory;
     private final ImageRepository bannerDirectory;
+    private final ImageRepository ephemeralPosterStorage;
 
     public AndroidImageServiceRepository(Context context) {
         Validate.isNonNull(context, "context");
 
         final int deviceMemoryKiB = (int) (Runtime.getRuntime().maxMemory() / KiB);
         final int bigPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_BIG_POSTER_CACHE);
+        final int ephemeralPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_EPHEMERAL_POSTER_CACHE);
         final int smallPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_SMALL_POSTER_CACHE);
 
         this.posterDirectory = new LruImageCache(
@@ -49,6 +53,10 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
         this.smallPosterDirectory = new LruImageCache(
                 new ExternalStorageImageDirectory(context, SMALL_SERIES_POSTERS),
                 smallPosterCacheSizeKiB);
+
+        this.ephemeralPosterStorage = new LruImageCache(
+                new DummyImageRepository(),
+                ephemeralPosterCacheSizeKiB);
 
         this.episodeDirectory = new LruRepositoryManager(new ExternalStorageImageDirectory(context, EPISODE_IMAGES),
                                                          NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES);
@@ -264,6 +272,35 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
         } catch (ImageRepositoryException e) {
             Log.w(LOG_TAG, "Failed fetching poster of " + series.name() + " from cache", e);
             return null;
+        }
+    }
+
+    @Override
+    public Bitmap getEphemeralSeriesPosterOf(Series series) {
+        Validate.isNonNull(series, "series");
+
+        try {
+            return this.ephemeralPosterStorage.fetch(series.id());
+        } catch (ImageRepositoryException e) {
+            Log.w(LOG_TAG, "Failed fetching ephemeral poster of " + series.name(), e);
+            return null;
+        }
+    }
+
+    @Override
+    public void saveEphemeralSeriesPoster(Series series, Bitmap ephemeralPoster) {
+        Validate.isNonNull(series, "series");
+
+        if (ephemeralPoster == null) {
+            Log.d(LOG_TAG, "Skipped saving null poster for " + series.name());
+            return;
+        }
+
+        Log.d(LOG_TAG, "Keeping ephemeral poster of " + series.name());
+        try {
+            this.ephemeralPosterStorage.save(series.id(), ephemeralPoster);
+        } catch (ImageRepositoryException e) {
+            Log.w(LOG_TAG, "Failed keeping poster of " + series.name(), e);
         }
     }
 }
