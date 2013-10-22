@@ -41,4 +41,8 @@ public interface ImageServiceRepository {
 
     public Bitmap getCachedSmallPosterOf(Series series);
     public Bitmap getCachedPosterOf(Series series);
+
+    // TODO(Gabriel): Use SeriesId instead of Series.
+    public Bitmap getEphemeralSeriesPosterOf(Series series);
+    public void saveEphemeralSeriesPoster(Series series, Bitmap ephemeralPoster);
 }

@@ -102,6 +102,6 @@ public class LruRepositoryManager implements ImageRepository {
 
     @Override
     public Bitmap fetchFromCache(long id) throws ImageRepositoryException {
-        return fetch(id);
+        return this.managedRepository.fetchFromCache(id);
     }
 }
