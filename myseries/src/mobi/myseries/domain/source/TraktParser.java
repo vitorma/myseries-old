@@ -185,7 +185,13 @@ public class TraktParser {
 
             while (reader.hasNext()) {
                 SearchResult result = gson().fromJson(reader, SearchResult.class);
-                results.add(result);
+                try {
+                    result.toSeries();
+                    results.add(result);
+                } catch (Exception e) {
+                    //Ignore the result if it cannot be converted to a Series object.
+                    //TODO(Tiago) Is there a better way to do this?
+                }
             }
 
             reader.endArray();
