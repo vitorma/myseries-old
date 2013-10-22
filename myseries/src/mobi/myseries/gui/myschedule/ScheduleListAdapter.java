@@ -105,8 +105,9 @@ public class ScheduleListAdapter extends BaseAdapter {
             String formattedDate = DatesAndTimes.toString(episode.airDate(), dateFormat, unavailable);
             viewHolder.mDate.setText(formattedDate);
 
-            String formattedWeekDay = DateFormats.forShortWeekDay(Locale.getDefault()).format(episode.airDate()).toUpperCase();
-            viewHolder.mWeekDay.setText(formattedWeekDay);
+            String formattedWeekDay = DatesAndTimes.toString(
+                    episode.airDate(), DateFormats.forShortWeekDay(Locale.getDefault()), "");
+            viewHolder.mWeekDay.setText(formattedWeekDay.toUpperCase(Locale.getDefault()));
 
             RelativeDay relativeDay = DatesAndTimes.parse(episode.airDate(), null);
             viewHolder.mRelativeDay.setText(LocalText.of(relativeDay, ""));

@@ -78,8 +78,8 @@ public class SchedulePagerAdapter extends PagerAdapter {
         final Series series = App.seriesFollowingService().getFollowedSeries(episode.seriesId());
 
         String formattedAirDay = DatesAndTimes.toString(
-                series.airtime(), DateFormats.forWeekDay(Locale.getDefault()), "");
-        airDay.setText(formattedAirDay.toUpperCase());
+                episode.airDate(), DateFormats.forWeekDay(Locale.getDefault()), "");
+        airDay.setText(formattedAirDay.toUpperCase(Locale.getDefault()));
 
         String formattedAirTime = DatesAndTimes.toString(
                 episode.airTime(), android.text.format.DateFormat.getTimeFormat(App.context()), "");
