@@ -37,42 +37,33 @@ public class SeasonsFragment extends Fragment {
         return seasonsFragment;
     }
 
-    private ListView list;
-    private CheckedTextView statisticsButton;
-    private View statisticsPanel;
-    private SeenMark mSeenMark;
-    private ImageButton sortButton;
     private int mSeriesId;
     private SeasonsAdapter adapter;
+
+    private ListView list;
+
+    private SeenMark mSeenMark;
+    private ImageButton sortButton;
+    private CheckedTextView statisticsButton;
+    private View statisticsPanel;
     private View divider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setRetainInstance(true);
 
-        this.mSeriesId = this.getArguments().getInt(Extra.SERIES_ID);
+        mSeriesId = this.getArguments().getInt(Extra.SERIES_ID);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        App.preferences().forActivities().register(this.adapter);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        App.preferences().forActivities().deregister(this.adapter);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.series_seasons, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.mSeriesId = this.getArguments().getInt(Extra.SERIES_ID);
 
         this.mSeenMark = (SeenMark) this.getActivity().findViewById(R.id.seenMark);
         this.sortButton = (ImageButton) this.getActivity().findViewById(R.id.sort);
@@ -133,9 +124,28 @@ public class SeasonsFragment extends Fragment {
                 SeasonsFragment.this.startActivity(intent);
             }
         });
+    }
 
-        /* XXX (Cleber) Deregister too */
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        App.preferences().forActivities().register(this.adapter);
         App.markingService().register(mMarkingListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        App.preferences().forActivities().deregister(this.adapter);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        App.markingService().deregister(mMarkingListener);
     }
 
     private void updateVisibilityOfStatisticsPanel() {
@@ -150,19 +160,8 @@ public class SeasonsFragment extends Fragment {
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.series_seasons, container, false);
-    }
-
     private void showSortingDialog() {
         new SeasonSortingDialogFragment().show(this.getFragmentManager(), "sortingDialog");
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(Extra.SERIES_ID, this.mSeriesId);
-        super.onSaveInstanceState(outState);
     }
 
     private void updateStatistics() {

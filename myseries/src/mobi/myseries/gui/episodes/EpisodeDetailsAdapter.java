@@ -67,9 +67,9 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
 
         mAirDay = (TextView) itemView.findViewById(R.id.airDay);
         mAirDay.setText(DatesAndTimes.toString(
-                mEpisode.airTime(),
+                mEpisode.airDate(),
                 DateFormats.forWeekDay(Locale.getDefault()),
-                "").toUpperCase());
+                "").toUpperCase(Locale.getDefault()));
 
         mAirTime = (TextView) itemView.findViewById(R.id.airTime);
         mAirTime.setText(DatesAndTimes.toString(
