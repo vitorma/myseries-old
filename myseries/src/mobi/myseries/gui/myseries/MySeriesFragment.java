@@ -66,6 +66,13 @@ public class MySeriesFragment extends Fragment {
 
         App.preferences().forActivities().register(this.preferencesListener);
     }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        
+        this.adapter.reloadData();
+    }
 
     @Override
     public void onStop() {
