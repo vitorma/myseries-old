@@ -1,8 +1,6 @@
 package mobi.myseries.domain.source;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import mobi.myseries.application.Communications;
@@ -13,14 +11,20 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Validate;
 
+import android.net.Uri;
+import android.net.Uri.Builder;
 import android.util.Log;
 
 public class Trakt implements TraktApi {
-    private static final String TRAKT_URL = "http://api.trakt.tv/";
-    private static final String TRENDING_URL = TRAKT_URL + "shows/trending.json/";
-    private static final String SEARCH_URL = TRAKT_URL + "search/shows.json/";
-    private static final String SHOW_SUMMARY_URL = TRAKT_URL + "show/summary.json/";
-    private static final String UPDATE_URL = TRAKT_URL + "shows/updated.json/";
+    private static final String TRAKT_PROTOCOL = "http";
+    private static final String TRAKT = "api.trakt.tv";
+    private static final String TRENDING_JSON = "trending.json";
+    private static final String SEARCH = "search";
+    private static final String SHOW_JSON = "shows.json";
+    private static final String SHOWS = "shows";
+    private static final String SHOW = "show";
+    private static final String SUMMARY_JSON = "summary.json";
+    private static final String UPDATE_JSON = "updated.json";
 
     private final String apiKey;
     private final Communications communications;
@@ -40,23 +44,50 @@ public class Trakt implements TraktApi {
             throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
         Validate.isNonBlank(query, new InvalidSearchCriteriaException());
 
-        String url = SEARCH_URL + this.apiKey + "/" + this.encode(query);
-
+        String url = searchUri(query).toString();
+        Log.d("DELETE THIS LOG", url);
         return TraktParser.parseSearchResults(this.get(url));
+    }
+
+    private Uri searchUri(String query) {
+        return traktUriBuilder()
+        .appendPath(SEARCH)
+        .appendPath(SHOW_JSON)
+        .appendPath(this.apiKey)
+        .appendPath(query)
+        .build();
     }
 
     @Override
     public List<SearchResult> listTrending() throws ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
-        String url = TRENDING_URL + this.apiKey;
+        String url = trendingUri().toString() ;
 
         return TraktParser.parseSearchResults(this.get(url));
     }
 
+    private Uri trendingUri() {
+        return traktUriBuilder()
+                     .appendPath(SHOWS)
+                     .appendPath(TRENDING_JSON)
+                     .appendPath(this.apiKey)
+                     .build();
+    }
+
     @Override
     public Series fetchSeries(int seriesId) throws ParsingFailedException, ConnectionFailedException, NetworkUnavailableException {
-        String url = SHOW_SUMMARY_URL + this.apiKey + "/" + seriesId + "/extended";
+        String url = showSummaryUri(seriesId).toString();
 
         return TraktParser.parseSeries(this.get(url));
+    }
+
+    private Uri showSummaryUri(int seriesId) {
+        return traktUriBuilder()
+                     .appendPath(SHOW)
+                     .appendPath(SUMMARY_JSON)
+                     .appendPath(apiKey)
+                     .appendPath(String.valueOf(seriesId))
+                     .appendPath("extended")
+                     .build();
     }
 
     @Override
@@ -64,10 +95,19 @@ public class Trakt implements TraktApi {
             throws ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
         long pstTimestamp = DatesAndTimes.toPstTime(utcTimestamp);
 
-        String url = UPDATE_URL + this.apiKey + "/" + pstTimestamp;
+        String url = updateUri(pstTimestamp).toString();
         Log.d("DELETE THIS LOG", url);
 
         return TraktParser.parseUpdateMetadata(this.get(url));
+    }
+
+    private Uri updateUri(long pstTimestamp) {
+        return traktUriBuilder()
+                     .appendPath(SHOWS)
+                     .appendPath(UPDATE_JSON)
+                     .appendPath(this.apiKey)
+                     .appendPath(String.valueOf(pstTimestamp))
+                     .build();
     }
 
     /* Auxiliary */
@@ -76,11 +116,9 @@ public class Trakt implements TraktApi {
         return this.communications.streamFor(url);
     }
 
-    private String encode(String string) {
-        try {
-            return URLEncoder.encode(string, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("UnsupportedEncodingException should never be thrown by " + this.getClass().getName(), e);
-        }
+    private Builder traktUriBuilder() {
+        return new Uri.Builder()
+        .scheme(TRAKT_PROTOCOL)
+        .authority(TRAKT);
     }
 }
