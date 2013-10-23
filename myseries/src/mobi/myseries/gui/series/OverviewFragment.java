@@ -14,7 +14,6 @@ import mobi.myseries.gui.shared.NormalPosterFetchingMethod;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
 import android.app.Fragment;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -26,26 +25,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class OverviewFragment extends Fragment {
-    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
-
-    private int seriesId;
 
     public static OverviewFragment newInstance(int seriesId) {
-        OverviewFragment seriesDetailsFragment = new OverviewFragment();
-
         Bundle arguments = new Bundle();
         arguments.putInt(Extra.SERIES_ID, seriesId);
+
+        OverviewFragment seriesDetailsFragment = new OverviewFragment();
         seriesDetailsFragment.setArguments(arguments);
 
         return seriesDetailsFragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-
-        seriesId = getArguments().getInt(Extra.SERIES_ID);
     }
 
     @Override
@@ -61,38 +49,34 @@ public class OverviewFragment extends Fragment {
     }
 
     private void setUp() {
-        TextView seriesName = (TextView) getActivity().findViewById(R.id.seriesName);
-        TextView seriesStatus = (TextView) getActivity().findViewById(R.id.statusTextView);
-        TextView seriesAirDays = (TextView) getActivity().findViewById(R.id.airDaysTextView);
-        TextView seriesRuntime = (TextView) getActivity().findViewById(R.id.runtimeTextView);
+        TextView seriesTitle = (TextView) getView().findViewById(R.id.seriesName);
+        TextView seriesGenres = (TextView) getView().findViewById(R.id.genreTextView);
+        TextView seriesStatus = (TextView) getView().findViewById(R.id.statusTextView);
+        TextView seriesAirDay = (TextView) getView().findViewById(R.id.airDaysTextView);
+        TextView seriesRuntime = (TextView) getView().findViewById(R.id.runtimeTextView);
+        TextView seriesOverview = (TextView) getView().findViewById(R.id.seriesOverviewTextView);
+        TextView seriesActors = (TextView) getView().findViewById(R.id.actorsTextView);
 
-        TextView seriesGenre = (TextView) getActivity().findViewById(R.id.genreTextView);
-        TextView seriesActors = (TextView) getActivity().findViewById(R.id.actorsTextView);
+        Series series = App.seriesFollowingService().getFollowedSeries(getArguments().getInt(Extra.SERIES_ID));
 
-        TextView seriesOverview = (TextView) getActivity().findViewById(R.id.seriesOverviewTextView);
-
-        Series series = App.seriesFollowingService().getFollowedSeries(seriesId);
-
-        seriesName.setText(series.name());
-        seriesStatus.setText(LocalText.of(series.status(), this.getString(R.string.unavailable_status)));
+        seriesTitle.setText(series.name());
+        seriesGenres.setText(series.genres());
+        seriesStatus.setText(LocalText.of(series.status(), LocalText.get(R.string.unavailable_status)));
 
         String airDay = DatesAndTimes.toString(series.airtime(), DateFormats.forWeekDay(Locale.getDefault()), "");
         String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(App.context()), "");
         String network = series.network();
         String airInfo = Strings.concat(airDay, airtime, ", ");
         airInfo = Strings.concat(airInfo, network, " - ");
-        String unavailableInfo = this.getString(R.string.unavailable_air_info);
+        String unavailableInfo = LocalText.get(R.string.unavailable_air_info);
+        seriesAirDay.setText(airInfo.isEmpty() ? unavailableInfo : airInfo);
 
-        seriesAirDays.setText(airInfo.isEmpty() ? unavailableInfo : airInfo);
+        seriesRuntime.setText(
+                series.runtime().isEmpty() ?
+                LocalText.get(R.string.unavailable_runtime) :
+                LocalText.get(R.string.runtime_minutes_format, series.runtime()));
 
-        String runtime = series.runtime().isEmpty() ? this.getString(R.string.unavailable_runtime) : String.format(
-                this.getString(R.string.runtime_minutes_format), series.runtime());
-
-        seriesRuntime.setText(runtime);
-
-        seriesGenre.setText(series.genres());
-
-        TextView overviewLabel = (TextView) getActivity().findViewById(R.id.overviewLabel);
+        TextView overviewLabel = (TextView) getView().findViewById(R.id.overviewLabel);
         if (series.overview().isEmpty()) {
             overviewLabel.setVisibility(View.GONE);
             seriesOverview.setVisibility(View.GONE);
@@ -102,7 +86,7 @@ public class OverviewFragment extends Fragment {
             seriesOverview.setText(series.overview());
         }
 
-        TextView actorsLabel = (TextView) getActivity().findViewById(R.id.actorsLabel);
+        TextView actorsLabel = (TextView) getView().findViewById(R.id.actorsLabel);
         if (series.actors().isEmpty()) {
             actorsLabel.setVisibility(View.GONE);
             seriesActors.setVisibility(View.GONE);
@@ -112,15 +96,16 @@ public class OverviewFragment extends Fragment {
             seriesActors.setText(series.actors());
         }
 
-        ImageView seriesPoster = (ImageView) getActivity().findViewById(R.id.seriesPosterImageView);
-        ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.loadProgress);
-        AsyncImageLoader.globalInstance.
-        loadBitmapOn(new NormalPosterFetchingMethod(series, App.imageService()), GENERIC_POSTER, seriesPoster, progressBar);
+        ImageView seriesPoster = (ImageView) getView().findViewById(R.id.seriesPosterImageView);
+        ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.loadProgress);
+        AsyncImageLoader.globalInstance.loadBitmapOn(
+                new NormalPosterFetchingMethod(series, App.imageService()),
+                Images.genericSeriesPosterFrom(App.resources()),
+                seriesPoster,
+                progressBar);
 
-        boolean isTablet = App.resources().getBoolean(R.bool.isTablet);
-
-        if (isTablet) {
-            ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.scrollView);
+        if (App.resources().getBoolean(R.bool.isTablet)) {
+            ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scrollView);
             scrollView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
         }
     }
