@@ -7,44 +7,44 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.gui.shared.EpisodeWatchMarkSpecification;
+import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeasonComparator;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.gui.shared.UnairedEpisodeSpecification;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class SeasonsAdapter extends BaseAdapter implements OnSharedPreferenceChangeListener {
-    private int mSeriesId;
-    private List<Season> seasons;
+public class SeasonsAdapter extends BaseAdapter {
+    private List<Season> mItems;
 
-    public SeasonsAdapter(int seriesId) {
-        this.mSeriesId = seriesId;
+    public SeasonsAdapter(List<Season> items) {
+        mItems = items;
 
-        this.loadSeasons();
+        sortItems();
     }
 
-    private void loadSeasons() {
-        this.seasons = App.seriesFollowingService().getFollowedSeries(this.mSeriesId).seasons().seasons();
+    public void sortItems() {
+        Collections.sort(
+                mItems,
+                SeasonComparator.fromSortMode(App.preferences().forSeriesDetails().sortMode()));
+    }
 
-        int sortMode = App.preferences().forSeriesDetails().sortMode();
-
-        Collections.sort(this.seasons, SeasonComparator.fromSortMode(sortMode));
+    public Season getSeason(int position) {
+        return mItems.get(position);
     }
 
     @Override
     public int getCount() {
-        return this.seasons.size();
+        return mItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return this.seasons.get(position);
+        return mItems.get(position);
     }
 
     @Override
@@ -54,65 +54,68 @@ public class SeasonsAdapter extends BaseAdapter implements OnSharedPreferenceCha
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View itemView = convertView;
+        View view = convertView;
+        ViewHolder viewHolder;
 
-        if (itemView == null) {
-            itemView = View.inflate(App.context(), R.layout.series_seasons_item, null);
-        }
-
-        TextView seasonNumber = (TextView) itemView.findViewById(R.id.seasonNumber);
-        SeenEpisodesBar seenEpisodesBar = (SeenEpisodesBar) itemView.findViewById(R.id.seenEpisodesBar);
-        final SeenMark seasonSeenMark = (SeenMark) itemView.findViewById(R.id.seenMark);
-
-        final Season season = this.seasons.get(position);
-
-        if (season.isSpecial()) {
-            seasonNumber.setText(App.resources().getString(R.string.special_episodes).toUpperCase());
+        if (view == null) {
+            view = View.inflate(App.context(), R.layout.series_seasons_item, null);
+            viewHolder = new ViewHolder(view);
         } else {
-            seasonNumber.setText(App.resources().getString(
-                    R.string.season_number_format_ext,
-                    season.number())
-                    .toUpperCase());
+            viewHolder = (ViewHolder) view.getTag();
         }
 
-        seenEpisodesBar.updateWithEpisodesOf(season);
+        Season season = mItems.get(position);
 
+        int numberOfEpisodes = season.numberOfEpisodes();
         int numberOfWatchedEpisodes = season.numberOfEpisodes(new EpisodeWatchMarkSpecification(true));
-
-        seasonSeenMark.setChecked(numberOfWatchedEpisodes == season.numberOfEpisodes());
-        seasonSeenMark.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                if (seasonSeenMark.isChecked()) {
-                    App.markingService().markAsWatched(season);
-                } else {
-                    App.markingService().markAsUnwatched(season);
-                }
-            }
-        });
-
-        TextView watchedEpisodes = (TextView) itemView.findViewById(R.id.watchedEpisodes);
-        TextView allEpisodes = (TextView) itemView.findViewById(R.id.allEpisodes);
-        TextView unairedEpisodes = (TextView) itemView.findViewById(R.id.unairedEpisodes);
-
-        watchedEpisodes.setText(String.valueOf(numberOfWatchedEpisodes));
-        allEpisodes.setText("/" + season.numberOfEpisodes());
-
         int numberOfUnairedEpisodes = season.numberOfEpisodes(new UnairedEpisodeSpecification());
         String pluralOfUnaired = App.resources().getQuantityString(R.plurals.plural_unaired, numberOfUnairedEpisodes);
         String allAired = App.resources().getString(R.string.all_aired);
 
-        unairedEpisodes.setText(
+        viewHolder.mSeasonNumber.setText(LocalText.of(season));
+        viewHolder.mNumberOfEpisodes.setText("/" + String.valueOf(numberOfEpisodes));
+        viewHolder.mNumberOfWatchedEpisodes.setText(String.valueOf(numberOfWatchedEpisodes));
+        viewHolder.mNumberOfUnairedEpisodes.setText(
             numberOfUnairedEpisodes > 0 ?
             numberOfUnairedEpisodes + " " + pluralOfUnaired :
             allAired);
+        viewHolder.mWatchProgress.updateWithEpisodesOf(season);
+        viewHolder.mWatchMark.setChecked(numberOfWatchedEpisodes == season.numberOfEpisodes());
+        viewHolder.mWatchMark.setOnClickListener(viewHolder.watchMarkOnClickListener(season));
 
-        return itemView;
+        return view;
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        this.loadSeasons();
-        this.notifyDataSetChanged();
+    private static class ViewHolder {
+        private TextView mSeasonNumber;
+        private TextView mNumberOfEpisodes;
+        private TextView mNumberOfWatchedEpisodes;
+        private TextView mNumberOfUnairedEpisodes;
+        private SeenEpisodesBar mWatchProgress;
+        private SeenMark mWatchMark;
+
+        private ViewHolder(View view) {
+            mSeasonNumber = (TextView) view.findViewById(R.id.seasonNumber);
+            mNumberOfEpisodes = (TextView) view.findViewById(R.id.allEpisodes);
+            mNumberOfWatchedEpisodes = (TextView) view.findViewById(R.id.watchedEpisodes);
+            mNumberOfUnairedEpisodes = (TextView) view.findViewById(R.id.unairedEpisodes);
+            mWatchProgress = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
+            mWatchMark = (SeenMark) view.findViewById(R.id.seenMark);
+
+            view.setTag(this);
+        }
+
+        private OnClickListener watchMarkOnClickListener(final Season season) {
+            return new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mWatchMark.isChecked()) {
+                        App.markingService().markAsWatched(season);
+                    } else {
+                        App.markingService().markAsUnwatched(season);
+                    }
+                }
+            };
+        }
     }
 }

@@ -137,7 +137,6 @@
     <string name="search">SEARCH</string>
     <string name="seasons">Seasons</string>
     <string name="series_name">Series name</string>
-    <string name="special_episodes">Special Episodes</string>
     <string name="to_be_announced">To be announced</string>
     <string name="writers">WRITERS</string>
     <string name="yes">Yes</string>
@@ -153,7 +152,11 @@
     <string name="episode_number_format_ext" formatted="false">EPISODE %d</string>
     <string name="episode_number_format" formatted="false">S%02dE%02d</string>
     <string name="runtime_minutes_format" formatted="false">%s minutes</string>
-    <string name="season_number_format_ext" formatted="false">Season %d</string>
+
+    <!-- Series - Seasons -->
+
+    <string name="special_episodes">SPECIAL EPISODES</string>
+    <string name="season_number_format_ext" formatted="false">SEASON %d</string>
 
     <!-- Messages -->
 

@@ -57,6 +57,10 @@ public class OverviewFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        setUp();
+    }
+
+    private void setUp() {
         TextView seriesName = (TextView) getActivity().findViewById(R.id.seriesName);
         TextView seriesStatus = (TextView) getActivity().findViewById(R.id.statusTextView);
         TextView seriesAirDays = (TextView) getActivity().findViewById(R.id.airDaysTextView);

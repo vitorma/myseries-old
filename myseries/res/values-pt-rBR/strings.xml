@@ -136,7 +136,6 @@
     <string name="search">PROCURAR</string>
     <string name="seasons">Temporadas</string>
     <string name="series_name">Nome da série</string>
-    <string name="special_episodes">Episódios especiais</string>
     <string name="to_be_announced">Não anunciado</string>
     <string name="writers">AUTORES</string>
     <string name="yes">Sim</string>
@@ -152,7 +151,11 @@
     <string name="episode_number_format_ext" formatted="false">EPISÓDIO %d</string>
     <string name="episode_number_format" formatted="false">T%02dE%02d</string>
     <string name="runtime_minutes_format" formatted="false">%s minutos</string>
-    <string name="season_number_format_ext" formatted="false">Temporada %d</string>
+
+    <!-- Series - Seasons -->
+
+    <string name="season_number_format_ext" formatted="false">TEMPORADA %d</string>
+    <string name="special_episodes">EPISÓDIOS ESPECIAIS</string>
 
     <!-- Messages -->
 

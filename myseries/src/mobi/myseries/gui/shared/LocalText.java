@@ -23,6 +23,7 @@ package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.domain.model.Season;
 import mobi.myseries.shared.RelativeDay;
 import mobi.myseries.shared.Status;
 import mobi.myseries.shared.Validate;
@@ -74,7 +75,29 @@ public class LocalText {
         return defaultText;
     }
 
+    public static String of(Season season) {
+        Validate.isNonNull(season, "season");
+
+        if (season.isSpecial()) {
+             return get(R.string.special_episodes);
+        } else {
+            return get(R.string.season_number_format_ext, season.number());
+        }
+    }
+
     public static String get(int stringResourceId) {
         return App.resources().getString(stringResourceId);
+    }
+
+    public static String get(int formatResourceId, Object... formatArgs) {
+        return App.resources().getString(formatResourceId, formatArgs);
+    }
+
+    public static String getPlural(int id, int quantity) {
+        return App.resources().getQuantityString(id, quantity);
+    }
+
+    public static String getPlural(int id, int quantity, Object... formatArgs) {
+        return App.resources().getQuantityString(id, quantity, formatArgs);
     }
 }
