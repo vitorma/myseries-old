@@ -8,6 +8,7 @@ import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
+import mobi.myseries.domain.source.NotSupportedSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
 import mobi.myseries.gui.shared.AsyncImageLoader;
@@ -342,6 +343,11 @@ public abstract class AddSeriesFragment extends Fragment {
                     R.string.invalid_criteria_title,
                     R.string.invalid_criteria_message);
             mShowTryAgainButton = false;
+        } else if (exception instanceof NotSupportedSearchCriteriaException) {
+            this.setError(
+                    R.string.not_supported_criteria_title,
+                    R.string.not_supported_criteria_message);
+            mShowTryAgainButton = false; 
         } else if (exception instanceof ConnectionFailedException) {
             this.setError(
                     R.string.connection_failed_title,

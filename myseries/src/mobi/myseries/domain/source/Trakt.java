@@ -1,7 +1,10 @@
 package mobi.myseries.domain.source;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import mobi.myseries.application.Communications;
 import mobi.myseries.application.ConnectionFailedException;
@@ -41,10 +44,12 @@ public class Trakt implements TraktApi {
 
     @Override
     public List<SearchResult> search(String query)
-            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
+            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException, NotSupportedSearchCriteriaException {
         Validate.isNonBlank(query, new InvalidSearchCriteriaException());
+        String normalizedQuery = normalizeQuery(query);
+        Validate.isNonBlank(normalizedQuery, new NotSupportedSearchCriteriaException());
 
-        String url = searchUri(query).toString();
+        String url = searchUri(normalizedQuery).toString();
         Log.d("DELETE THIS LOG", url);
         return TraktParser.parseSearchResults(this.get(url));
     }
@@ -120,5 +125,11 @@ public class Trakt implements TraktApi {
         return new Uri.Builder()
         .scheme(TRAKT_PROTOCOL)
         .authority(TRAKT);
+    }
+
+    @Deprecated
+    private String normalizeQuery(String query) {
+        return query.replaceAll("&", "and")
+                .replaceAll("[^a-zA-Z0-9' ]+", " ");
     }
 }

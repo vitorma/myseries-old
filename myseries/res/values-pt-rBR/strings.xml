@@ -165,6 +165,8 @@
     <string name="connection_timeout_message">Tempo limite na conexão excedido. Verifique sua conexão e tente novamente.</string>
     <string name="invalid_criteria_title">Nome inválido para uma série</string>
     <string name="invalid_criteria_message">Informe ao menos uma palavra.</string>
+    <string name="not_supported_criteria_title">Nome de série não suportado</string>
+    <string name="not_supported_criteria_message">Tente pesquisar sem os caracteres especiais.</string>
     <string name="parsing_failed_title">Ocorreu um erro ao ler o arquivo da web</string>
     <string name="parsing_failed_message">Talvez sua conexão esteja muito lenta.</string>
     <string name="follow_toast_message_format" formatted="false">A série %s aparecerá em breve na sua coleção.</string>
