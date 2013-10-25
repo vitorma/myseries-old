@@ -46,7 +46,7 @@ public class Trakt implements TraktApi {
     @Override
     public List<SearchResult> search(String query)
             throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
-          Validate.isNonBlank(normalizedQuery, new InvalidSearchCriteriaException());
+        Validate.isNonBlank(query, new InvalidSearchCriteriaException());
         
         String normalizedQuery = normalizeQuery(query);
         String url = searchUri(normalizedQuery).toString();
