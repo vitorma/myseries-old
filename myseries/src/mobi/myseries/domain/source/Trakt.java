@@ -1,6 +1,7 @@
 package mobi.myseries.domain.source;
 
 import java.io.InputStream;
+import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,10 +45,9 @@ public class Trakt implements TraktApi {
 
     @Override
     public List<SearchResult> search(String query)
-            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException, NotSupportedSearchCriteriaException {
-        Validate.isNonBlank(query, new InvalidSearchCriteriaException());
-        String normalizedQuery = normalizeQuery(query);
-        Validate.isNonBlank(normalizedQuery, new NotSupportedSearchCriteriaException());
+            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
+         String normalizedQuery = normalizeQuery(query);
+         Validate.isNonBlank(normalizedQuery, new InvalidSearchCriteriaException());
 
         String url = searchUri(normalizedQuery).toString();
         Log.d("DELETE THIS LOG", url);
@@ -127,9 +127,14 @@ public class Trakt implements TraktApi {
         .authority(TRAKT);
     }
 
-    @Deprecated
-    private String normalizeQuery(String query) {
-        return query.replaceAll("&", "and")
-                .replaceAll("[^a-zA-Z0-9' ]+", " ");
+    private String normalizeQuery(String string) {
+        Validate.isNonNull(string, "Query string should not be null");
+
+        string = string.replaceAll("&", "and");
+        string = Normalizer.normalize(string, Normalizer.Form.NFD);
+        string = string.replaceAll("[^\\p{ASCII}]", "");
+        string = string.replaceAll("[^a-zA-Z0-9' ]+", "");
+        return string;
     }
+
 }

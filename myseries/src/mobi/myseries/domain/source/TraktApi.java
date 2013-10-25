@@ -9,7 +9,7 @@ import mobi.myseries.domain.model.Series;
 
 public interface TraktApi {
     public List<SearchResult> search(String query)
-            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException, NotSupportedSearchCriteriaException;
+            throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException;
     public List<SearchResult> listTrending()
             throws ConnectionFailedException, ParsingFailedException, NetworkUnavailableException;
     public Series fetchSeries(int seriesId)
