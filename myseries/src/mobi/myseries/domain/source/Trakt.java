@@ -2,11 +2,8 @@ package mobi.myseries.domain.source;
 
 import java.io.InputStream;
 import java.text.Normalizer;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import mobi.myseries.application.Communications;
 import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.NetworkUnavailableException;
@@ -49,6 +46,12 @@ public class Trakt implements TraktApi {
         Validate.isNonBlank(query, new InvalidSearchCriteriaException());
         
         String normalizedQuery = normalizeQuery(query);
+        try {
+            Validate.isNonBlank(normalizedQuery, "this query is not supported by trakt");
+        } catch (IllegalArgumentException e) {
+            return new ArrayList<SearchResult>();
+        }
+
         String url = searchUri(normalizedQuery).toString();
         Log.d("DELETE THIS LOG", url);
         return TraktParser.parseSearchResults(this.get(url));
