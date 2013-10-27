@@ -149,6 +149,8 @@ public class DatesAndTimes {
     }
 
     public static Date midnightDateFrom(Date date) {
+        if(date == null)
+            return null;
         long milis = (date.getTime() / DAY_IN_MILLIS) * DAY_IN_MILLIS ;
 
         return new Date(milis);
