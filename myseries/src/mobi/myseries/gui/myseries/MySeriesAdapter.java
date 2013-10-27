@@ -42,6 +42,7 @@ import android.widget.TextView;
 public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAdapter.Listener> {
     private ArrayList<Series> mItems;
     private DisplayImageOptions mDisplayImageOptions;
+    private AsyncTask<Void, Void, Void> mLoadingTask;
 
     public MySeriesAdapter() {
         mItems = new ArrayList<Series>();
@@ -122,7 +123,8 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     public void reloadData() {
-        new AsyncTask<Void, Void, Void>() {
+        if(mIsLoading) mLoadingTask.cancel(true);
+        this.mLoadingTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 mIsLoading = true;
@@ -131,12 +133,15 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
             @Override
             protected Void doInBackground(Void... params) {
-                setUpData();
+                if(!isCancelled())
+                     setUpData();
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void result) {
+                if(isCancelled())
+                    return;
                 mIsLoading = false;
                 notifyFinishLoading();
                 notifyDataSetChanged();
