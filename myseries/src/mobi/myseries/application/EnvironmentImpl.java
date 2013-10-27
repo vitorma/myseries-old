@@ -1,8 +1,10 @@
 package mobi.myseries.application;
 
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import mobi.myseries.application.backup.DropboxHelper;
@@ -15,6 +17,7 @@ import mobi.myseries.domain.source.Trakt;
 import mobi.myseries.domain.source.TraktApi;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
+import android.graphics.Bitmap;
 
 //TODO (Cleber) Find a better name to this class
 public class EnvironmentImpl implements Environment {
@@ -89,11 +92,15 @@ public class EnvironmentImpl implements Environment {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
         .cacheInMemory(true)
         .cacheOnDisc(true)
+        .bitmapConfig(Bitmap.Config.RGB_565)
+        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
         .resetViewBeforeLoading(true)
         .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
         .defaultDisplayImageOptions(defaultOptions)
+        .threadPoolSize(4)
+        .memoryCache(new WeakMemoryCache())
         .build();
         return config;
     }

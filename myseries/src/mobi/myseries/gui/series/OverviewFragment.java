@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -14,6 +15,7 @@ import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -109,6 +111,8 @@ public class OverviewFragment extends Fragment {
         return new DisplayImageOptions.Builder()
         .cacheInMemory(true)
         .cacheOnDisc(true)
+        .bitmapConfig(Bitmap.Config.RGB_565)
+        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
         .resetViewBeforeLoading(true)
         .showImageOnFail(R.drawable.generic_poster)
         .build();

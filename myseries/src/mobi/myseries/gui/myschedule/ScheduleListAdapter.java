@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
@@ -19,6 +21,7 @@ import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.RelativeDay;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -223,6 +226,8 @@ public class ScheduleListAdapter extends BaseAdapter {
         return new DisplayImageOptions.Builder()
         .cacheInMemory(true)
         .cacheOnDisc(true)
+        .bitmapConfig(Bitmap.Config.RGB_565)
+        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
         .resetViewBeforeLoading(true)
         .showImageOnFail(R.drawable.generic_poster)
         .build();

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -28,6 +29,7 @@ import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -307,6 +309,8 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         return new DisplayImageOptions.Builder()
         .cacheInMemory(true)
         .cacheOnDisc(true)
+        .bitmapConfig(Bitmap.Config.RGB_565)
+        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
         .resetViewBeforeLoading(true)
         .showImageOnFail(R.drawable.generic_poster)
         .build();
