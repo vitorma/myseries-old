@@ -14,9 +14,9 @@ import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 
 public class ExternalStorageImageDirectory implements ImageRepository {
+    private static final String FILE_TYPE = "file://";
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final CompressFormat IMAGE_FORMAT = CompressFormat.JPEG;
     private static final String IMAGE_EXTENSION = "." + IMAGE_FORMAT.toString().toLowerCase(Locale.US);
@@ -41,8 +41,8 @@ public class ExternalStorageImageDirectory implements ImageRepository {
     }
 
     @Override
-    public Bitmap fetch(long id) throws ImageRepositoryException {
-        return BitmapFactory.decodeFile(filePathFor(id));
+    public String fetch(long id) throws ImageRepositoryException {
+        return filePathFor(id);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class ExternalStorageImageDirectory implements ImageRepository {
     }
 
     private String filePathFor(long id) throws ImageRepositoryException {
-        return imageFolder() + FILE_SEPARATOR + fileNameFor(id);
+        return FILE_TYPE + imageFolder() + FILE_SEPARATOR + fileNameFor(id);
     }
 
     private String fileNameFor(long id) {
@@ -156,10 +156,5 @@ public class ExternalStorageImageDirectory implements ImageRepository {
         public ExternalStorageUnavailableException() {
             super("Can't open external storage directory for MySeries");
         }
-    }
-
-    @Override
-    public Bitmap fetchFromCache(long id) throws ImageRepositoryException {
-        return null; //there is no cache
     }
 }

@@ -131,16 +131,6 @@
             android:layout_below="@id/actorsLabel"
             android:layout_alignWithParentIfMissing="true"/>
 
-        <ProgressBar
-            android:id="@+id/loadProgress"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/seriesPosterImageView"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="54dp"
-            android:layout_marginRight="30dp" />
-
     </RelativeLayout>
 
 </ScrollView>

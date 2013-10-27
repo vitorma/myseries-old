@@ -88,68 +88,6 @@ public abstract class ImageServiceRepositoryTest extends InstrumentationTestCase
         assertThat(this.imageRepository.getPosterOf(this.testSeries), not(nullValue()));
     }
 
-    /* Small series poster */
-
-    public void testSavingASmallPosterOfANullSeriesThrowsException() {
-        try {
-            this.imageRepository.saveSmallSeriesPoster(null, this.testImage);
-            fail("Should have thrown an IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
-    }
-
-    public void testItIsPossibleToSaveANullSmallPoster() {
-        this.imageRepository.saveSmallSeriesPoster(this.testSeries, null);
-    }
-
-    public void testGettingASmallPosterOfANullSeriesThrowsException() {
-        try {
-            this.imageRepository.getSmallPosterOf(null);
-            fail("Should have thrown an IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
-    }
-
-    public void testGettingANotSavedSmallPosterReturnsNull() {
-        assertThat(this.imageRepository.getSmallPosterOf(this.testSeries), nullValue());
-    }
-
-    public void testGettingASavedSmallPosterMustReturnAValidSmallPoster() {
-        this.imageRepository.saveSmallSeriesPoster(this.testSeries, this.testImage);
-
-        // TODO(Gabriel) Find a better way to compare the bitmaps
-        assertThat(this.imageRepository.getSmallPosterOf(this.testSeries), not(nullValue()));
-    }
-
-    /* Episode image */
-
-    public void testSavingAnImageOfANullEpisodeThrowsException() {
-        try {
-            this.imageRepository.saveEpisodeImage(null, this.testImage);
-            fail("Should have thrown an IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
-    }
-
-    public void testItIsPossibleToSaveANullEpisodeImage() {
-        this.imageRepository.saveEpisodeImage(this.testEpisode, null);
-    }
-
-    public void testGettingAnImageOfANullEpisodeThrowsException() {
-        try {
-            this.imageRepository.getImageOf(null);
-            fail("Should have thrown an IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
-    }
-
-    public void testGettingANotSavedEpisodeImageReturnsNull() {
-        assertThat(this.imageRepository.getImageOf(this.testEpisode), nullValue());
-    }
-
-    public void testGettingASavedEpisodeImageMustReturnAValidEpisodeImage() {
-        this.imageRepository.saveEpisodeImage(this.testEpisode, this.testImage);
-
-        // TODO(Gabriel) Find a better way to compare the bitmaps
-        assertThat(this.imageRepository.getImageOf(this.testEpisode), not(nullValue()));
-    }
-
     /* Delete images of series */
 
     public void testDeletingImagesOfNullSeriesThrowsException() {
@@ -169,22 +107,6 @@ public abstract class ImageServiceRepositoryTest extends InstrumentationTestCase
         this.imageRepository.deleteAllImagesOf(this.testSeries);
         waitForAsyncOperations();
         assertThat(this.imageRepository.getPosterOf(this.testSeries), nullValue());
-    }
-
-    public void testTheSavedSmallPosterOfASeriesShouldBeDeletedAfterDeletingAllImagesOfTheSeries() {
-        this.imageRepository.saveSmallSeriesPoster(this.testSeries, this.testImage);
-
-        this.imageRepository.deleteAllImagesOf(this.testSeries);
-        waitForAsyncOperations();
-        assertThat(this.imageRepository.getSmallPosterOf(this.testSeries), nullValue());
-    }
-
-    public void testTheSavedEpisodeImageOfASeriesShouldBeDeletedAfterDeletingAllImagesOfTheSeries() {
-        this.imageRepository.saveEpisodeImage(this.testEpisode, this.testImage);
-
-        this.imageRepository.deleteAllImagesOf(this.testSeries);
-        waitForAsyncOperations();
-        assertThat(this.imageRepository.getImageOf(this.testEpisode), nullValue());
     }
 
     /* Test tools */

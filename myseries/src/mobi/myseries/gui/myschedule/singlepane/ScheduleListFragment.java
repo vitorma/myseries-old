@@ -1,5 +1,8 @@
 package mobi.myseries.gui.myschedule.singlepane;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.preferences.MySchedulePreferencesListener;
@@ -9,9 +12,7 @@ import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.ScheduleListAdapter;
 import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
-import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.Extra;
-import mobi.myseries.gui.shared.PauseImageLoaderOnScrollListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -29,7 +30,6 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     private ScheduleMode mItems;
 
     private ScheduleListAdapter mAdapter;
-    private AsyncImageLoader mPosterLoader;
 
     private ListView mListView;
     private View mEmptyStateView;
@@ -75,7 +75,6 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
         setRetainInstance(true);
 
         mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
-        mPosterLoader = new AsyncImageLoader();
     }
 
     @Override
@@ -136,7 +135,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
         if (mItems != null) { mItems.deregister(this); }
 
         mItems = App.schedule().mode(mScheduleMode, App.preferences().forMySchedule(mScheduleMode).fullSpecification());
-        mAdapter = new ScheduleListAdapter(mItems, mPosterLoader);
+        mAdapter = new ScheduleListAdapter(mItems);
 
         mItems.register(this);
     }
@@ -159,15 +158,13 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
 
     private void setUpListView() {
         mListView.setAdapter(mAdapter);
-
+        setUpOnScrollListener();
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mOnItemClickListener.onItemClick(mScheduleMode, position);
             }
         });
-
-        mListView.setOnScrollListener(new PauseImageLoaderOnScrollListener(mPosterLoader, false, true));
     }
 
     private void setUpEmptyStateView() {
@@ -268,5 +265,12 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     @Override
     public void onSortingChange() {
         reload();
+    }
+
+    private void setUpOnScrollListener() {
+        boolean pauseOnScroll = false;
+        boolean pauseOnFling = true;
+        PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling);
+        this.mListView.setOnScrollListener(listener);
     }
 }

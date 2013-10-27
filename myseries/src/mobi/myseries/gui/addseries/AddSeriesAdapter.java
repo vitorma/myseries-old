@@ -3,20 +3,21 @@ package mobi.myseries.gui.addseries;
 import java.util.Collection;
 import java.util.List;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.DisplayImageOptions.Builder;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
-import mobi.myseries.gui.shared.AsyncImageLoader;
-import mobi.myseries.gui.shared.Images;
-import mobi.myseries.gui.shared.SearchResultPosterFetchingMethod;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
-import mobi.myseries.shared.Strings;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,15 +29,13 @@ import android.widget.TextView;
 
 public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publisher<AddSeriesAdapterListener> {
     private final LayoutInflater layoutInflater;
-    private final AsyncImageLoader imageLoader;
+    private final DisplayImageOptions mDisplayImageOptions;
 
-    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
-
-    public AddSeriesAdapter(Context context, List<SearchResult> results, AsyncImageLoader imageLoader) {
+    public AddSeriesAdapter(Context context, List<SearchResult> results) {
         super(context, R.layout.addseries_item, results);
 
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.imageLoader = imageLoader;
+        mDisplayImageOptions = imageLoaderOptions();
     }
 
     @Override
@@ -53,13 +52,19 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
         }
 
         viewHolder.name.setText(result.title());
+        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(result.toSeries()), viewHolder.image, mDisplayImageOptions, new SimpleImageLoadingListener() {
 
-        if (Strings.isNullOrBlank(result.poster())) {
-            viewHolder.image.setImageBitmap(GENERIC_POSTER);
-        } else {
-            SearchResultPosterFetchingMethod posterLoader = new SearchResultPosterFetchingMethod(result);
-            imageLoader.loadBitmapOn(posterLoader, GENERIC_POSTER, viewHolder.image, viewHolder.imageProgress);
-        }
+            @Override
+            public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+                ImageLoader.getInstance().displayImage(result.poster(), viewHolder.image, mDisplayImageOptions);
+            }
+
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                ImageView imageView = (ImageView) view;
+                imageView.setImageBitmap(null);
+             }
+        });
 
         viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +109,6 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
     private static class ViewHolder implements SeriesFollowingListener {
         private TextView name;
         private ImageView image;
-        private ProgressBar imageProgress;
         private ImageButton addButton;
         private ImageButton removeButton;
         private ProgressBar progressAdd;
@@ -115,7 +119,6 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
         private ViewHolder(View convertView) {
             this.name = (TextView) convertView.findViewById(R.id.itemName);
             this.image = (ImageView) convertView.findViewById(R.id.seriesPoster);
-            this.imageProgress = (ProgressBar) convertView.findViewById(R.id.loadProgress);
             this.addButton = (ImageButton) convertView.findViewById(R.id.addButton);
             this.removeButton = (ImageButton) convertView.findViewById(R.id.removeButton);
             this.progressAdd = (ProgressBar) convertView.findViewById(R.id.progressAdd);
@@ -242,5 +245,14 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
     @Override
     public boolean deregister(AddSeriesAdapterListener listener) {
         return this.listeners.deregister(listener);
+    }
+
+    private DisplayImageOptions imageLoaderOptions() {
+        return new DisplayImageOptions.Builder()
+        .cacheInMemory(true)
+        .cacheOnDisc(true)
+        .resetViewBeforeLoading(true)
+        .showImageOnFail(R.drawable.generic_poster)
+        .build();
     }
 }

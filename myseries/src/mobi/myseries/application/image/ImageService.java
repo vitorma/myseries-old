@@ -31,8 +31,6 @@ public class ImageService {
     private final int mySchedulePosterWidth;
     private final int mySchedulePosterHeight;
 
-    private final ListenerSet<EpisodeImageDownloadListener> episodeImageDownloadListeners;
-
     public ImageService(
             ImageServiceRepository imageRepository,
             Communications communications,
@@ -51,19 +49,10 @@ public class ImageService {
         this.mySchedulePosterWidth = mySchedulePosterWidth;
         this.mySchedulePosterHeight = mySchedulePosterHeight;
 
-        this.episodeImageDownloadListeners = new ListenerSet<EpisodeImageDownloadListener>();
     }
 
-    public Bitmap getPosterOf(Series series) {
+    public String getPosterOf(Series series) {
         return this.imageRepository.getPosterOf(series);
-    }
-
-    public Bitmap getSmallPosterOf(Series series) {
-        return this.imageRepository.getSmallPosterOf(series);
-    }
-
-    public Bitmap getImageOf(Episode episode) {
-        return this.imageRepository.getImageOf(episode);
     }
 
     public void removeAllImagesOf(Series series) {
@@ -85,99 +74,16 @@ public class ImageService {
 
             // TODO(Gabriel) for some reason, resizing made these posters terrible.
             Bitmap poster = originalPoster; //posterResizer.toSize(this.mySeriesPosterWidth, this.mySeriesPosterHeight);
-            Bitmap smallPoster = posterResizer.toSize(this.mySchedulePosterWidth, this.mySchedulePosterHeight);
 
             this.imageRepository.saveSeriesPoster(series, poster);
-            this.imageRepository.saveSmallSeriesPoster(series, smallPoster);
         } catch (Exception e) {
             //TODO Log
         }
     }
 
-    // TODO(Gabriel) Should we pass the seriesSearchListener as a parameter, to avoid the users not registering their listeners?
-    public void downloadImageOf(Episode episode) {
-        Validate.isNonNull(episode, "episode");
-
-        if (Strings.isNullOrBlank(episode.screenUrl())) {
-            return;
-        }
-
-        new EpisodeImageDownload(episode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public boolean register(EpisodeImageDownloadListener listener) {
-        return this.episodeImageDownloadListeners.register(listener);
-    }
-
-    public boolean deregister(EpisodeImageDownloadListener listener) {
-        return this.episodeImageDownloadListeners.deregister(listener);
-    }
-
-    private void notifyListenersOfFinishDownloadingImageOf(Episode episode) {
-        for (EpisodeImageDownloadListener listener : this.episodeImageDownloadListeners) {
-            listener.onFinishDownloadingImageOf(episode);
-        }
-    }
-
-    private void notifyListenersOfStartDownloadingImageOf(Episode episode) {
-        for (EpisodeImageDownloadListener l : this.episodeImageDownloadListeners) {
-            l.onStartDownloadingImageOf(episode);
-        }
-    }
-
-    private class EpisodeImageDownload extends AsyncTask<Void, Void, Void> {
-        private final Episode episode;
-
-        private EpisodeImageDownload(Episode episode) {
-            this.episode = episode;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            ImageService.this.notifyListenersOfStartDownloadingImageOf(this.episode);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                InputStream screenStream = getStream(episode.screenUrl());
-                Bitmap screen = BitmapFactory.decodeStream(screenStream);
-
-                ImageService.this.imageRepository.saveEpisodeImage(this.episode, screen);
-            } catch (Exception e) {
-                //TODO Log
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            ImageService.this.notifyListenersOfFinishDownloadingImageOf(this.episode);
-        }
-    }
-
-    public Bitmap getBannerOf(Series series) {
-        return this.imageRepository.getBannerOf(series);
-    }
-
-    public Bitmap getCachedSmallPosterOf(Series series) {
-        return this.imageRepository.getCachedSmallPosterOf(series);
-    }
-
-    public Bitmap getCachedPosterOf(Series series) {
-        return this.imageRepository.getCachedPosterOf(series);
-    }
-
-    /* For search */
-
-    public Bitmap getCachedPosterOf(SearchResult series) {
-        return this.imageRepository.getCachedPosterOf(series.toSeries());
-    }
-
-    public Bitmap getPosterOf(SearchResult result) throws ConnectionFailedException, NetworkUnavailableException {
+    public String getPosterOf(SearchResult result) {
         Series resultAsSeries = result.toSeries();
-        Bitmap localPoster = this.getPosterOf(resultAsSeries);
+        String localPoster = this.getPosterOf(resultAsSeries);
         if (localPoster == null) {
             String posterUrl = result.poster();
 
@@ -185,17 +91,9 @@ public class ImageService {
                 return null;
             }
 
-            Bitmap ephemeralPoster = this.imageRepository.getEphemeralSeriesPosterOf(resultAsSeries);
-            if (ephemeralPoster == null) {
-                Bitmap downloadedPoster = BitmapFactory.decodeStream(this.getStream(posterUrl));
-
-                this.imageRepository.saveEphemeralSeriesPoster(resultAsSeries, downloadedPoster);
-                ephemeralPoster = this.imageRepository.getEphemeralSeriesPosterOf(resultAsSeries);
-            }
-
-            return ephemeralPoster;
+            return posterUrl;
         } else {
-            return localPoster;   
+            return localPoster;
         }
     }
 

@@ -2,37 +2,37 @@ package mobi.myseries.gui.myschedule;
 
 import java.util.Locale;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.image.EpisodeImageDownloadListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.DateFormats;
-import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
-import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SchedulePagerAdapter extends PagerAdapter {
-    private static final Bitmap GENERIC_IMAGE = Images.genericEpisodeImageFrom(App.resources());
 
     private ScheduleMode mItems;
     private LayoutInflater mInflater;
+    private DisplayImageOptions mDisplayImageOptions;
 
     public SchedulePagerAdapter(ScheduleMode items) {
         mItems = items;
         mInflater = LayoutInflater.from(App.context());
+        mDisplayImageOptions = imageLoaderOptions();
     }
 
     @Override
@@ -72,7 +72,6 @@ public class SchedulePagerAdapter extends PagerAdapter {
         TextView episodeOverview = (TextView) view.findViewById(R.id.episodeOverview);
         final SeenMark watchMark = (SeenMark) view.findViewById(R.id.watchMark);
         final ImageView screen = (ImageView) view.findViewById(R.id.imageView);
-        final ProgressBar screenLoadingProgress = (ProgressBar) view.findViewById(R.id.imageProgressSpinner);
 
         final Episode episode = mItems.episodeAt(position);
         final Series series = App.seriesFollowingService().getFollowedSeries(episode.seriesId());
@@ -107,40 +106,23 @@ public class SchedulePagerAdapter extends PagerAdapter {
             }
         });
 
-        Bitmap image = App.imageService().getImageOf(episode);
-        if (image == null) {
-            App.imageService().register(new EpisodeImageDownloadListener() {
-                @Override
-                public void onStartDownloadingImageOf(Episode e) {
-                    if (e.equals(episode)) {
-                        screenLoadingProgress.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onFinishDownloadingImageOf(Episode e) {
-                    if (e.equals(episode)) {
-                        Bitmap image = App.imageService().getImageOf(episode);
-                        screen.setImageBitmap(Objects.nullSafe(image, GENERIC_IMAGE));
-                        screenLoadingProgress.setVisibility(View.GONE);
-                    }
-                }
-            });
-
-            App.imageService().downloadImageOf(episode);
-        } else {
-            screen.setImageBitmap(image);
-            screenLoadingProgress.setVisibility(View.GONE);
-        }
-
+        ImageLoader.getInstance().displayImage(episode.screenUrl(), screen, mDisplayImageOptions);
         container.addView(view, 0);
 
-        view.setTag(episode);
         return view;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
+    }
+
+    private DisplayImageOptions imageLoaderOptions() {
+        return new DisplayImageOptions.Builder()
+        .cacheInMemory(true)
+        .cacheOnDisc(true)
+        .resetViewBeforeLoading(true)
+        .showImageOnFail(R.drawable.generic_poster)
+        .build();
     }
 }

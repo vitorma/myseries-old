@@ -11,8 +11,6 @@ import mobi.myseries.gui.myschedule.SchedulePagerAdapter;
 import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
 import android.app.Fragment;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerTitleStrip;

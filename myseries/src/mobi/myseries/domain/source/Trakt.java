@@ -44,7 +44,7 @@ public class Trakt implements TraktApi {
     public List<SearchResult> search(String query)
             throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
         Validate.isNonBlank(query, new InvalidSearchCriteriaException());
-        
+
         String normalizedQuery = normalizeQuery(query);
         try {
             Validate.isNonBlank(normalizedQuery, "this query is not supported by trakt");

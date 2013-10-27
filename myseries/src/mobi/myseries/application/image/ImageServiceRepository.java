@@ -21,28 +21,14 @@
 
 package mobi.myseries.application.image;
 
-import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import android.graphics.Bitmap;
 
 public interface ImageServiceRepository {
 
-    public Bitmap getPosterOf(Series series);
-    public Bitmap getSmallPosterOf(Series series);
-    public Bitmap getImageOf(Episode episode);
-    public Bitmap getBannerOf(Series series);
+    public String getPosterOf(Series series);
 
     public void saveSeriesPoster(Series series, Bitmap poster);
-    public void saveSmallSeriesPoster(Series series, Bitmap smallPoster);
-    public void saveEpisodeImage(Episode episode, Bitmap image);
-    public void saveSeriesBanner(Series series, Bitmap banner);
 
     public void deleteAllImagesOf(Series series);
-
-    public Bitmap getCachedSmallPosterOf(Series series);
-    public Bitmap getCachedPosterOf(Series series);
-
-    // TODO(Gabriel): Use SeriesId instead of Series.
-    public Bitmap getEphemeralSeriesPosterOf(Series series);
-    public void saveEphemeralSeriesPoster(Series series, Bitmap ephemeralPoster);
 }

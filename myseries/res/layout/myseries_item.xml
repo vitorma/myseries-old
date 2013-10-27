@@ -15,14 +15,6 @@
         android:layout_height="@dimen/myseries_poster_height"
         android:layout_alignParentTop="true"/>
 
-    <ProgressBar
-            android:id="@+id/loadProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"/>
-
-
     <TextView
         android:id="@+id/name"
         style="@style/TextView.Medium.DarkGray.Ellipsized"

@@ -8,11 +8,9 @@ public interface ImageRepository {
 
     public void save(long l, Bitmap image) throws ImageRepositoryException;
 
-    public Bitmap fetch(long l) throws ImageRepositoryException;
+    public String fetch(long l) throws ImageRepositoryException;
 
     public void delete(long l) throws ImageRepositoryException;
 
     public Collection<Long> savedImages() throws ImageRepositoryException;
-
-    public Bitmap fetchFromCache(long id) throws ImageRepositoryException;
 }

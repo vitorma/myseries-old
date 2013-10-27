@@ -57,10 +57,6 @@ public abstract class MalfunctioningImageServiceRepositoryTest extends Instrumen
         this.imageRepository.getPosterOf(this.testSeries);
     }
 
-    public void testItMustNotThrowAnyExceptionOnGettingEpisodeImages() {
-        this.imageRepository.getImageOf(this.testEpisode);
-    }
-
     /* Series posters */
 
     public void testItMustNotThrowAnyExceptionOnSavingSeriesPosters() {
@@ -69,26 +65,6 @@ public abstract class MalfunctioningImageServiceRepositoryTest extends Instrumen
 
     public void testItMustNotThrowAnyExceptionOnSavingNullSeriesPosters() {
         this.imageRepository.saveSeriesPoster(this.testSeries, null);
-    }
-
-    /* Small series posters */
-
-    public void testItMustNotThrowAnyExceptionOnSavingSmallSeriesPosters() {
-        this.imageRepository.saveSmallSeriesPoster(this.testSeries, this.testImage);
-    }
-
-    public void testItMustNotThrowAnyExceptionOnSavingSmallNullSeriesPosters() {
-        this.imageRepository.saveSmallSeriesPoster(this.testSeries, null);
-    }
-
-    /* Episode images */
-
-    public void testItMustNotThrowAnyExceptionOnSavingEpisodeImages() {
-        this.imageRepository.saveEpisodeImage(this.testEpisode, this.testImage);
-    }
-
-    public void testItMustNotThrowAnyExceptionOnSavingNullEpisodeImages() {
-        this.imageRepository.saveEpisodeImage(this.testEpisode, null);
     }
 
     /* Delete images */

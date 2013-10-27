@@ -1,14 +1,15 @@
 package mobi.myseries.gui.appwidget;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
-import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.shared.DatesAndTimes;
-import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.RelativeDay;
 import mobi.myseries.shared.Strings;
 import android.content.Context;
@@ -16,10 +17,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.View;
 import android.widget.RemoteViews;
 
 public class Item {
-    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterThumbnailFrom(App.resources());
     private final Context context;
 
     private Item(Context context) {
@@ -49,10 +50,15 @@ public class Item {
         return item;
     }
 
-    private void setUpSeriesPoster(RemoteViews item, Series series) {
-        Bitmap seriesPoster = App.imageService().getSmallPosterOf(series);
-
-        item.setImageViewBitmap(R.id.seriesPoster, Objects.nullSafe(seriesPoster, GENERIC_POSTER));
+    private void setUpSeriesPoster(final RemoteViews item, Series series) {
+        String seriesPoster = App.imageService().getPosterOf(series);
+        ImageLoader.getInstance().loadImage(seriesPoster, new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    item.setImageViewBitmap(R.id.seriesPoster, loadedImage);
+                }
+        });
+        
     }
 
     private void setUpEpisodeAirdate(RemoteViews item, Episode episode) {

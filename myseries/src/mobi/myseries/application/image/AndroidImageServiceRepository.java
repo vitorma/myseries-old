@@ -7,8 +7,6 @@ import mobi.myseries.domain.repository.image.DummyImageRepository;
 import mobi.myseries.domain.repository.image.ExternalStorageImageDirectory;
 import mobi.myseries.domain.repository.image.ImageRepository;
 import mobi.myseries.domain.repository.image.ImageRepositoryException;
-import mobi.myseries.domain.repository.image.LruImageCache;
-import mobi.myseries.domain.repository.image.LruRepositoryManager;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,56 +14,25 @@ import android.os.AsyncTask;
 
 public class AndroidImageServiceRepository implements ImageServiceRepository {
     private static final String SERIES_POSTERS = "series_posters";
-    private static final String SMALL_SERIES_POSTERS = "small_series_posters";
     private static final String EPISODE_IMAGES = "episode_images";
-    private static final String SERIES_BANNERS = "series_banners";
 
     private static final String LOG_TAG = "Image Service Repository";
 
-    private static final int KiB = 1024;
-    private static final int MiB = 1024 * KiB;
-    private static final int EPISODE_IMAGE_AVERAGE_SIZE = 14 * KiB;
-    private static final int EPISODE_IMAGE_CACHE_SIZE = 1 * MiB;
-    private static final int NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES = EPISODE_IMAGE_CACHE_SIZE /
-                                                                             EPISODE_IMAGE_AVERAGE_SIZE;
-    private static final float PERCENTAGE_OF_MEMORY_USED_IN_BIG_POSTER_CACHE = 0.125f;
-    private static final float PERCENTAGE_OF_MEMORY_USED_IN_EPHEMERAL_POSTER_CACHE = 0.125f;
-    private static final float PERCENTAGE_OF_MEMORY_USED_IN_SMALL_POSTER_CACHE = 0.0625f;
-
     private final ImageRepository posterDirectory;
-    private final ImageRepository smallPosterDirectory;
     private final ImageRepository episodeDirectory;
-    private final ImageRepository bannerDirectory;
-    private final ImageRepository ephemeralPosterStorage;
 
     public AndroidImageServiceRepository(Context context) {
         Validate.isNonNull(context, "context");
 
-        final int deviceMemoryKiB = (int) (Runtime.getRuntime().maxMemory() / KiB);
-        final int bigPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_BIG_POSTER_CACHE);
-        final int ephemeralPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_EPHEMERAL_POSTER_CACHE);
-        final int smallPosterCacheSizeKiB = (int) (deviceMemoryKiB * PERCENTAGE_OF_MEMORY_USED_IN_SMALL_POSTER_CACHE);
+        this.posterDirectory =  new ExternalStorageImageDirectory(context, SERIES_POSTERS);
 
-        this.posterDirectory = new LruImageCache(
-                new ExternalStorageImageDirectory(context, SERIES_POSTERS),
-                bigPosterCacheSizeKiB);
+       
 
-        this.smallPosterDirectory = new LruImageCache(
-                new ExternalStorageImageDirectory(context, SMALL_SERIES_POSTERS),
-                smallPosterCacheSizeKiB);
-
-        this.ephemeralPosterStorage = new LruImageCache(
-                new DummyImageRepository(),
-                ephemeralPosterCacheSizeKiB);
-
-        this.episodeDirectory = new LruRepositoryManager(new ExternalStorageImageDirectory(context, EPISODE_IMAGES),
-                                                         NUMBER_OF_EPISODE_IMAGE_CACHE_ENTRIES);
-
-        this.bannerDirectory = new ExternalStorageImageDirectory(context, SERIES_BANNERS);
+        this.episodeDirectory = new ExternalStorageImageDirectory(context, EPISODE_IMAGES);
     }
 
     @Override
-    public Bitmap getPosterOf(Series series) {
+    public String getPosterOf(Series series) {
         Validate.isNonNull(series, "series");
         Log.d(LOG_TAG, "Fetching poster of " + series.name());
 
@@ -73,45 +40,6 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
             return this.posterDirectory.fetch(series.id());
         } catch (ImageRepositoryException e) {
             Log.w(LOG_TAG, "Failed fetching poster of " + series.name(), e);
-            return null;
-        }
-    }
-
-    @Override
-    public Bitmap getBannerOf(Series series) {
-        Validate.isNonNull(series, "series");
-        Log.d(LOG_TAG, "Fetching banner of " + series.name());
-
-        try {
-            return this.bannerDirectory.fetch(series.id());
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed fetching banner of " + series.name(), e);
-            return null;
-        }
-    }
-
-    @Override
-    public Bitmap getSmallPosterOf(Series series) {
-        Validate.isNonNull(series, "series");
-        Log.d(LOG_TAG, "Fetching small poster of " + series.name());
-
-        try {
-            return this.smallPosterDirectory.fetch(series.id());
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed fetching small poster of " + series.name(), e);
-            return null;
-        }
-    }
-
-    @Override
-    public Bitmap getImageOf(Episode episode) {
-        Validate.isNonNull(episode, "episode");
-        Log.d(LOG_TAG, "Fetching image of " + episode.title());
-
-        try {
-            return this.episodeDirectory.fetch(episode.id());
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed fetching image of episode " + episode.title(), e);
             return null;
         }
     }
@@ -134,57 +62,6 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
     }
 
     @Override
-    public void saveSeriesBanner(Series series, Bitmap banner) {
-        Validate.isNonNull(series, "series");
-
-        if (banner == null) {
-            Log.d(LOG_TAG, "Skipped saving null banner for " + series.name());
-            return;
-        }
-
-        Log.d(LOG_TAG, "Saving banner of " + series.name());
-        try {
-            this.bannerDirectory.save(series.id(), banner);
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed saving banner of " + series.name(), e);
-        }
-    }
-
-    @Override
-    public void saveSmallSeriesPoster(Series series, Bitmap smallPoster) {
-        Validate.isNonNull(series, "series");
-
-        if (smallPoster == null) {
-            Log.d(LOG_TAG, "Skipped saving null small poster for " + series.name());
-            return;
-        }
-
-        Log.d(LOG_TAG, "Saving small poster of " + series.name());
-        try {
-            this.smallPosterDirectory.save(series.id(), smallPoster);
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed saving small poster of " + series.name(), e);
-        }
-    }
-
-    @Override
-    public void saveEpisodeImage(Episode episode, Bitmap image) {
-        Validate.isNonNull(episode, "episode");
-
-        if (image == null) {
-            Log.d(LOG_TAG, "Skipped saving null image for episode " + episode.title());
-            return;
-        }
-
-        Log.d(LOG_TAG, "Saving image of episode " + episode.title());
-        try {
-            this.episodeDirectory.save(episode.id(), image);
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed saving image of episode " + episode.title(), e);
-        }
-    }
-
-    @Override
     public void deleteAllImagesOf(Series series) {
         Validate.isNonNull(series, "series");
         Log.d(LOG_TAG, "Deleting all images of " + series.name());
@@ -196,9 +73,6 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
                 Series series = params[0];
 
                 AndroidImageServiceRepository.this.deleteSeriesPoster(series);
-                AndroidImageServiceRepository.this.deleteSeriesBanner(series);
-
-                AndroidImageServiceRepository.this.deleteSmallSeriesPoster(series);
 
                 for (Episode e : series.episodes()) {
                     AndroidImageServiceRepository.this.deleteEpisodeImage(e);
@@ -219,26 +93,6 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
         }
     }
 
-    private void deleteSeriesBanner(Series series) {
-        Log.d(LOG_TAG, "Deleting banner of " + series.name());
-
-        try {
-            this.bannerDirectory.delete(series.id());
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed deleting banner of " + series.name(), e);
-        }
-    }
-
-    private void deleteSmallSeriesPoster(Series series) {
-        Log.d(LOG_TAG, "Deleting small poster of " + series.name());
-
-        try {
-            this.smallPosterDirectory.delete(series.id());
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed deleting small poster of " + series.name(), e);
-        }
-    }
-
     private void deleteEpisodeImage(Episode episode) {
         Log.d(LOG_TAG, "Deleting image of episode " + episode.title());
 
@@ -246,61 +100,6 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
             this.episodeDirectory.delete(episode.id());
         } catch (ImageRepositoryException e) {
             Log.w(LOG_TAG, "Failed deleting image of episode " + episode.title(), e);
-        }
-    }
-
-    @Override
-    public Bitmap getCachedSmallPosterOf(Series series) {
-        Validate.isNonNull(series, "series");
-        Log.d(LOG_TAG, "Fetching small poster of " + series.name() + " from cache");
-
-        try {
-            return this.smallPosterDirectory.fetchFromCache(series.id());
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed fetching small poster of " + series.name() + " from cache", e);
-            return null;
-        }
-    }
-
-    @Override
-    public Bitmap getCachedPosterOf(Series series) {
-        Validate.isNonNull(series, "series");
-        Log.d(LOG_TAG, "Fetching poster of " + series.name() + " from cache");
-
-        try {
-            return this.posterDirectory.fetchFromCache(series.id());
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed fetching poster of " + series.name() + " from cache", e);
-            return null;
-        }
-    }
-
-    @Override
-    public Bitmap getEphemeralSeriesPosterOf(Series series) {
-        Validate.isNonNull(series, "series");
-
-        try {
-            return this.ephemeralPosterStorage.fetch(series.id());
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed fetching ephemeral poster of " + series.name(), e);
-            return null;
-        }
-    }
-
-    @Override
-    public void saveEphemeralSeriesPoster(Series series, Bitmap ephemeralPoster) {
-        Validate.isNonNull(series, "series");
-
-        if (ephemeralPoster == null) {
-            Log.d(LOG_TAG, "Skipped saving null poster for " + series.name());
-            return;
-        }
-
-        Log.d(LOG_TAG, "Keeping ephemeral poster of " + series.name());
-        try {
-            this.ephemeralPosterStorage.save(series.id(), ephemeralPoster);
-        } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed keeping poster of " + series.name(), e);
         }
     }
 }

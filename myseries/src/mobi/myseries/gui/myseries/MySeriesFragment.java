@@ -1,12 +1,13 @@
 package mobi.myseries.gui.myseries;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.series.SeriesActivity;
-import mobi.myseries.gui.shared.AsyncImageLoader;
-import mobi.myseries.gui.shared.PauseImageLoaderOnScrollListener;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,15 +29,12 @@ public class MySeriesFragment extends Fragment {
     private ProgressBar progressIndicator;
 
     private MySeriesAdapter adapter;
-    private AsyncImageLoader posterLoader;
 
     /* Life cycle */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        posterLoader = new AsyncImageLoader();
 
         this.setRetainInstance(true);
         this.setHasOptionsMenu(true);
@@ -107,14 +105,21 @@ public class MySeriesFragment extends Fragment {
                 return true;
             }
         });
-
-        setUpScrollListener();
+        
+        setupOnScrollListener();
 
         if (this.adapter == null) {
-            this.adapter = new MySeriesAdapter(posterLoader);
+            this.adapter = new MySeriesAdapter();
         }
 
         this.showsGrid.setAdapter(this.adapter);
+    }
+
+    private void setupOnScrollListener() {
+        boolean pauseOnScroll = false;
+        boolean pauseOnFling = true;
+        PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling);
+        this.showsGrid.setOnScrollListener(listener);
     }
 
     /* MySeriesAdapter.Listener */
@@ -188,10 +193,6 @@ public class MySeriesFragment extends Fragment {
             }
         }
     };
-
-    private void setUpScrollListener() {
-        showsGrid.setOnScrollListener(new PauseImageLoaderOnScrollListener(posterLoader, false, true));
-    }
 
     /* SharedPreferences.OnSharedPreferenceChangeListener */
 

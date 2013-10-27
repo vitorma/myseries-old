@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
@@ -18,18 +21,13 @@ import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.EpisodesToCountSpecification;
-import mobi.myseries.gui.shared.Images;
-import mobi.myseries.gui.shared.NormalPosterFetchingMethod;
-import mobi.myseries.gui.shared.PosterFetchingMethod;
 import mobi.myseries.gui.shared.SeenEpisodeSpecification;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,18 +35,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAdapter.Listener> {
-    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
-
     private ArrayList<Series> mItems;
-    private final AsyncImageLoader mImageLoader;
+    private DisplayImageOptions mDisplayImageOptions;
 
-    public MySeriesAdapter(AsyncImageLoader imageLoader) {
+    public MySeriesAdapter() {
         mItems = new ArrayList<Series>();
-        mImageLoader = imageLoader;
+        mDisplayImageOptions = imageLoaderOptions();
 
         reloadData();
 
@@ -67,10 +62,10 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
     @Override
     public Object getItem(int position) {
-        if(position > mItems.size())
-            return null;
-        
-        return mItems.get(position);
+        if(position < mItems.size())
+            return mItems.get(position);
+
+        return null;
     }
 
     @Override
@@ -98,10 +93,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpView(ViewHolder viewHolder, final Series series) {
-        this.mImageLoader.loadBitmapOn(
-                new NormalPosterFetchingMethod(series, App.imageService()),
-                GENERIC_POSTER,
-                viewHolder.mPoster, viewHolder.progressBar);
+        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, mDisplayImageOptions);
 
         String name = series.name();
         viewHolder.mName.setText(name);
@@ -174,7 +166,6 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         private final TextView mAllEpisodes;
         private final SeenEpisodesBar watchedEpisodesBar;
         private final ImageButton moreButton;
-        private ProgressBar progressBar;
 
         private ViewHolder(View view) {
             mPoster = (ImageView) view.findViewById(R.id.poster);
@@ -183,8 +174,6 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
             mAllEpisodes = (TextView) view.findViewById(R.id.allEpisodes);
             watchedEpisodesBar = (SeenEpisodesBar) view.findViewById(R.id.seenEpisodesBar);
             moreButton = (ImageButton) view.findViewById(R.id.moreButton);
-            progressBar = (ProgressBar) view.findViewById(R.id.loadProgress);
-            progressBar.setVisibility(View.GONE);
             view.setTag(this);
         }
     }
@@ -312,5 +301,14 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         for (MySeriesAdapter.Listener listener : mListeners) {
             listener.onItemContextRequest(seriesId);
         }
+    }
+
+    private DisplayImageOptions imageLoaderOptions() {
+        return new DisplayImageOptions.Builder()
+        .cacheInMemory(true)
+        .cacheOnDisc(true)
+        .resetViewBeforeLoading(true)
+        .showImageOnFail(R.drawable.generic_poster)
+        .build();
     }
 }

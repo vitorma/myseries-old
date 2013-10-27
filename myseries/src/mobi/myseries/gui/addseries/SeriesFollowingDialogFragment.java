@@ -2,20 +2,18 @@ package mobi.myseries.gui.addseries;
 
 import java.util.Collection;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.AsyncImageLoader;
-import mobi.myseries.gui.shared.Images;
-import mobi.myseries.gui.shared.SearchResultPosterFetchingMethod;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SeriesFollowingDialogFragment extends DialogFragment {
-
-    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterFrom(App.resources());
 
     private static final String TAG_REMOVAL_CONFIRMATION_DIALOG = "SeriesRemovalConfirmationDialog";
     private static final String TAG = "SeriesFollowingDialogFragment";
@@ -133,8 +129,7 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
         if (mSeries.poster() != null) {
             ImageView poster = (ImageView) layout.findViewById(R.id.poster);
 
-            SearchResultPosterFetchingMethod posterLoader = new SearchResultPosterFetchingMethod(mSeries);
-            AsyncImageLoader.globalInstance.loadBitmapOn(posterLoader, GENERIC_POSTER, poster);
+            ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(mSeries), poster);
         }
 
         return layout;

@@ -1,5 +1,10 @@
 package mobi.myseries.application;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+
 import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.image.AndroidImageServiceRepository;
 import mobi.myseries.application.image.ImageServiceRepository;
@@ -42,6 +47,7 @@ public class EnvironmentImpl implements Environment {
         this.localizationProvider =  new AndroidLocalizationProvider();
         this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
         this.imageRepository = new AndroidImageServiceRepository(this.context);
+        ImageLoader.getInstance().init(imageLoaderConfiguration(this.context));
     }
 
     @Override
@@ -77,5 +83,18 @@ public class EnvironmentImpl implements Environment {
     @Override
     public ImageServiceRepository imageRepository() {
         return this.imageRepository;
+    }
+    
+    private ImageLoaderConfiguration imageLoaderConfiguration(Context context) {
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+        .cacheInMemory(true)
+        .cacheOnDisc(true)
+        .resetViewBeforeLoading(true)
+        .build();
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+        .defaultDisplayImageOptions(defaultOptions)
+        .build();
+        return config;
     }
 }

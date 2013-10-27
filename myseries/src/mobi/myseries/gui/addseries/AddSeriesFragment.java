@@ -2,6 +2,9 @@ package mobi.myseries.gui.addseries;
 
 import java.util.List;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.ConnectionFailedException;
@@ -10,8 +13,6 @@ import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
-import mobi.myseries.gui.shared.AsyncImageLoader;
-import mobi.myseries.gui.shared.PauseImageLoaderOnScrollListener;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -47,7 +48,6 @@ public abstract class AddSeriesFragment extends Fragment {
     private Button mTryAgainButton;
 
     private AddSeriesAdapter mAdapter;
-    private AsyncImageLoader mImageLoader;
 
     private List<SearchResult> mResults;
     protected boolean mIsServiceRunning;
@@ -63,8 +63,6 @@ public abstract class AddSeriesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-
-        mImageLoader = new AsyncImageLoader();
     }
 
     @Override
@@ -243,10 +241,11 @@ public abstract class AddSeriesFragment extends Fragment {
             }
         });
 
+        setUpOnScrollListener();
+
         if (mAdapter != null) {
             mResultsGrid.setAdapter(mAdapter);
 
-            mResultsGrid.setOnScrollListener(new PauseImageLoaderOnScrollListener(mImageLoader, false, true));
         }
     }
 
@@ -396,7 +395,7 @@ public abstract class AddSeriesFragment extends Fragment {
 
     private void setUpAdapter() {
         if (mAdapter == null) {
-            mAdapter = new AddSeriesAdapter(activity(), mResults, mImageLoader);
+            mAdapter = new AddSeriesAdapter(activity(), mResults);
             mAdapter.register(mAdapterListener);
         } else {
             mAdapter.clear();
@@ -426,4 +425,11 @@ public abstract class AddSeriesFragment extends Fragment {
             .show(AddSeriesFragment.this.getFragmentManager(), "SeriesRemovalConfirmationDialog");
         }
     };
+
+    private void setUpOnScrollListener() {
+        boolean pauseOnScroll = false;
+        boolean pauseOnFling = true;
+        PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling);
+        this.mResultsGrid.setOnScrollListener(listener);
+    }
 }

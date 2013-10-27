@@ -2,15 +2,15 @@ package mobi.myseries.gui.series;
 
 import java.util.Locale;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Extra;
-import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
-import mobi.myseries.gui.shared.NormalPosterFetchingMethod;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
 import android.app.Fragment;
@@ -20,11 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class OverviewFragment extends Fragment {
+    private DisplayImageOptions mDisplayImageOptions;
 
     public static OverviewFragment newInstance(int seriesId) {
         Bundle arguments = new Bundle();
@@ -32,7 +32,7 @@ public class OverviewFragment extends Fragment {
 
         OverviewFragment seriesDetailsFragment = new OverviewFragment();
         seriesDetailsFragment.setArguments(arguments);
-
+        
         return seriesDetailsFragment;
     }
 
@@ -44,7 +44,7 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        mDisplayImageOptions = imageLoaderOptions();
         setUp();
     }
 
@@ -97,16 +97,20 @@ public class OverviewFragment extends Fragment {
         }
 
         ImageView seriesPoster = (ImageView) getView().findViewById(R.id.seriesPosterImageView);
-        ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.loadProgress);
-        AsyncImageLoader.globalInstance.loadBitmapOn(
-                new NormalPosterFetchingMethod(series, App.imageService()),
-                Images.genericSeriesPosterFrom(App.resources()),
-                seriesPoster,
-                progressBar);
+        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(series), seriesPoster, mDisplayImageOptions);
 
         if (App.resources().getBoolean(R.bool.isTablet)) {
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scrollView);
             scrollView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
         }
+    }
+
+    private static DisplayImageOptions imageLoaderOptions() {
+        return new DisplayImageOptions.Builder()
+        .cacheInMemory(true)
+        .cacheOnDisc(true)
+        .resetViewBeforeLoading(true)
+        .showImageOnFail(R.drawable.generic_poster)
+        .build();
     }
 }

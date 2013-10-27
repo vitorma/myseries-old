@@ -4,30 +4,27 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.CheckableFrameLayout;
 import mobi.myseries.gui.shared.CheckableFrameLayout.OnCheckedListener;
 import mobi.myseries.gui.shared.DateFormats;
-import mobi.myseries.gui.shared.Images;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
-import mobi.myseries.gui.shared.SmallPosterFetchingMethod;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.RelativeDay;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ScheduleListAdapter extends BaseAdapter {
@@ -35,16 +32,14 @@ public class ScheduleListAdapter extends BaseAdapter {
     private static final int STATE_SECTIONED = 1;
     private static final int STATE_REGULAR = 2;
 
-    private static final Bitmap GENERIC_POSTER = Images.genericSeriesPosterThumbnailFrom(App.resources());
-
     private ScheduleMode mItems;
     private int[] mViewStates;
 
-    private final AsyncImageLoader mImageLoader;
+    private DisplayImageOptions mDisplayImageOptions;
 
-    public ScheduleListAdapter(ScheduleMode items, AsyncImageLoader imageLoader) {
-        mImageLoader = imageLoader;
+    public ScheduleListAdapter(ScheduleMode items) {
         updateData(items);
+        mDisplayImageOptions = imageLoaderOptions(); 
     }
 
     public void updateData(ScheduleMode items) {
@@ -119,11 +114,7 @@ public class ScheduleListAdapter extends BaseAdapter {
     }
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
-        mImageLoader.loadBitmapOn(
-                new SmallPosterFetchingMethod(series, App.imageService()),
-                GENERIC_POSTER,
-                viewHolder.mPoster,
-                viewHolder.mPosterLoadingProgress);
+        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, mDisplayImageOptions);
 
         viewHolder.mSeriesName.setText(series.name());
 
@@ -180,7 +171,6 @@ public class ScheduleListAdapter extends BaseAdapter {
         private final CheckedTextView mEpisodeName;
         private final CheckedTextView mAirTime;
         private final CheckedTextView mNetwork;
-        private final ProgressBar mPosterLoadingProgress;
         private CheckableFrameLayout mCheckableBody;
 
         private ViewHolder(View view) {
@@ -195,7 +185,6 @@ public class ScheduleListAdapter extends BaseAdapter {
             mEpisodeName = (CheckedTextView) view.findViewById(R.id.episodeTitle);
             mAirTime = (CheckedTextView) view.findViewById(R.id.airTime);
             mNetwork = (CheckedTextView) view.findViewById(R.id.network);
-            mPosterLoadingProgress = (ProgressBar) view.findViewById(R.id.loadProgress);
 
             if (App.resources().getBoolean(R.bool.isTablet)) {
                 mCheckableBody = (CheckableFrameLayout) view.findViewById(R.id.checkableBody);
@@ -228,5 +217,14 @@ public class ScheduleListAdapter extends BaseAdapter {
                 }
             };
         }
+    }
+
+    private DisplayImageOptions imageLoaderOptions() {
+        return new DisplayImageOptions.Builder()
+        .cacheInMemory(true)
+        .cacheOnDisc(true)
+        .resetViewBeforeLoading(true)
+        .showImageOnFail(R.drawable.generic_poster)
+        .build();
     }
 }

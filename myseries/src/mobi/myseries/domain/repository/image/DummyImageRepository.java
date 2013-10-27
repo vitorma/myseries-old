@@ -15,13 +15,9 @@ public class DummyImageRepository implements ImageRepository {
     @Override
     public void save(long l, Bitmap image) throws ImageRepositoryException {}
 
-    @Override
-    public Bitmap fetchFromCache(long id) throws ImageRepositoryException {
-        return null;
-    }
 
     @Override
-    public Bitmap fetch(long l) throws ImageRepositoryException {
+    public String fetch(long l) throws ImageRepositoryException {
         return null;
     }
 

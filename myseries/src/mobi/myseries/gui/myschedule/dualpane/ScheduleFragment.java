@@ -1,5 +1,8 @@
 package mobi.myseries.gui.myschedule.dualpane;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.preferences.MySchedulePreferencesListener;
@@ -10,9 +13,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.ScheduleListAdapter;
 import mobi.myseries.gui.myschedule.SchedulePagerAdapter;
 import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
-import mobi.myseries.gui.shared.AsyncImageLoader;
 import mobi.myseries.gui.shared.Extra;
-import mobi.myseries.gui.shared.PauseImageLoaderOnScrollListener;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,7 +36,6 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     private ScheduleMode mItems;
 
     private ScheduleListAdapter mListAdapter;
-    private AsyncImageLoader mPosterLoader;
 
     private SchedulePagerAdapter mPagerAdapter;
     private ListView mListView;
@@ -65,8 +65,6 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
         mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
         mSelectedItem = getArguments().getInt(Extra.POSITION);
-
-        mPosterLoader = new AsyncImageLoader();
     }
 
     @Override
@@ -191,7 +189,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
         if (mItems != null) { mItems.deregister(ScheduleFragment.this); }
 
         mItems = App.schedule().mode(mScheduleMode, App.preferences().forMySchedule(mScheduleMode).fullSpecification());
-        mListAdapter = new ScheduleListAdapter(mItems, mPosterLoader);
+        mListAdapter = new ScheduleListAdapter(mItems);
         mPagerAdapter = new SchedulePagerAdapter(mItems);
 
         mItems.register(this);
@@ -215,7 +213,6 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
 
     private void setUpFullStateView() {
         mListView.setAdapter(mListAdapter);
-        mListView.setOnScrollListener(new PauseImageLoaderOnScrollListener(mPosterLoader, false, true));
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
