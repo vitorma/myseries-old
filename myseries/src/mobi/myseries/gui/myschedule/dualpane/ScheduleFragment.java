@@ -1,8 +1,5 @@
 package mobi.myseries.gui.myschedule.dualpane;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.preferences.MySchedulePreferencesListener;

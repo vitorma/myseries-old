@@ -1,12 +1,5 @@
 package mobi.myseries.application;
 
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-
 import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.image.AndroidImageServiceRepository;
 import mobi.myseries.application.image.ImageServiceRepository;
@@ -17,7 +10,6 @@ import mobi.myseries.domain.source.Trakt;
 import mobi.myseries.domain.source.TraktApi;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
-import android.graphics.Bitmap;
 
 //TODO (Cleber) Find a better name to this class
 public class EnvironmentImpl implements Environment {

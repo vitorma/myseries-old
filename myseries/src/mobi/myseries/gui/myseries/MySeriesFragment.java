@@ -1,8 +1,5 @@
 package mobi.myseries.gui.myseries;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
@@ -23,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 public class MySeriesFragment extends Fragment {
     private GridView showsGrid;

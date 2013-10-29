@@ -1,8 +1,5 @@
 package mobi.myseries.gui.myschedule.singlepane;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.preferences.MySchedulePreferencesListener;
@@ -25,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 public class ScheduleListFragment extends Fragment implements ScheduleListener, MySchedulePreferencesListener {
     private int mScheduleMode;

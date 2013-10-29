@@ -2,9 +2,6 @@ package mobi.myseries.gui.addseries;
 
 import java.util.List;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.ConnectionFailedException;
@@ -33,6 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 public abstract class AddSeriesFragment extends Fragment {
     protected EditText mSearchField;

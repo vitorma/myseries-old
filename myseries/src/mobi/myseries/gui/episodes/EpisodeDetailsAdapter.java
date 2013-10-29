@@ -2,10 +2,6 @@ package mobi.myseries.gui.episodes;
 
 import java.util.Locale;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.marking.MarkingListener;
@@ -27,6 +23,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 //TODO (Cleber) extend BaseAdapter instead of ArrayAdapter
 public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {

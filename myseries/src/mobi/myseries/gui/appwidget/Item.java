@@ -1,8 +1,5 @@
 package mobi.myseries.gui.appwidget;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
@@ -20,6 +17,8 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.RemoteViews;
+
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class Item {
     private final Context context;

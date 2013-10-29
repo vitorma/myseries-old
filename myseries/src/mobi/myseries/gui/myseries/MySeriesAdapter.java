@@ -6,10 +6,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
@@ -39,6 +35,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAdapter.Listener> {
     private ArrayList<Series> mItems;
