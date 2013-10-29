@@ -10,7 +10,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class UniversalImageLoader {
-    
+
+    private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; //10 MB
+
     public static ImageLoader loader() {
         if(!ImageLoader.getInstance().isInited())
             init();
@@ -32,6 +34,7 @@ public class UniversalImageLoader {
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
         .defaultDisplayImageOptions(defaultOptions)
+        .discCacheSize(DISK_CACHE_SIZE)
         .build();
         return config;
     }
