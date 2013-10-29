@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:padding="@dimen/gap_large"
+        android:layout_height="wrap_content">
+
+        <!-- SERIES -->
+
+        <TextView
+            android:id="@+id/numberOfSeries"
+            style="@style/TextView.XLarge"
+            android:textColor="@color/chunk_bar_background_plain"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"/>
+
+        <TextView
+            android:id="@+id/series"
+            android:text="@string/series_uppercase"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBottom ="@id/numberOfSeries"/>
+
+        <ProgressBar
+            android:id="@+id/seriesWatchedProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/series"/>
+
+        <TextView
+            android:id="@+id/seriesWatched"
+            style="@style/TextView.Medium"
+            android:textColor="@color/dark_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/seriesWatchedProgressBar"/>
+
+    </RelativeLayout>
+
+</ScrollView>

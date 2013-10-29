@@ -5,6 +5,7 @@ public class Features {
     public boolean isVisible(Feature feature) {
         // XXX
         //return feature == Feature.BACKUP;
+        //return feature == Feature.FEATURE_SHOP;
         return false;
     }
 

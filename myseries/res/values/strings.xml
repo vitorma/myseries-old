@@ -108,12 +108,7 @@
     <string name="nav_library">Library</string>
     <string name="nav_schedule">Schedule</string>
     <string name="nav_statistics">Statistics</string>
-
-    <string-array name="sidemenu_items_array">
-        <item>@string/nav_library</item>
-        <item>@string/nav_schedule</item>
-        <item>@string/nav_statistics</item>
-    </string-array>
+    <string name="nav_features">Features</string>
 
     <string name="sidemenu_accessibility_open">Open navigation drawer</string>
     <string name="sidemenu_accessibility_close">Close navigation drawer</string>
@@ -127,6 +122,7 @@
     <string name="ab_title_schedule">Schedule</string>
     <string name="ab_title_library">Library</string>
     <string name="ab_title_statistics">Statistics</string>
+    <string name="ab_title_features">Features</string>
     <string name="no">No</string>
     <string name="no_episodes_to_see">No episodes to see.</string>
     <string name="ok">OK</string>

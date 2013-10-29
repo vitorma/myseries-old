@@ -42,6 +42,8 @@
 
         <activity android:name="mobi.myseries.gui.mystatistics.MyStatisticsActivity" />
 
+        <activity android:name="mobi.myseries.gui.features.FeaturesActivity" />
+
         <activity android:name=".gui.addseries.AddSeriesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
