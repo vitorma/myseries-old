@@ -99,8 +99,6 @@ public class EnvironmentImpl implements Environment {
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
         .defaultDisplayImageOptions(defaultOptions)
-        .threadPoolSize(1)
-        .memoryCache(new WeakMemoryCache())
         .build();
         return config;
     }
