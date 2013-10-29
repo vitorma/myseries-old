@@ -20,10 +20,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class SchedulePagerAdapter extends PagerAdapter {
 
@@ -74,6 +77,7 @@ public class SchedulePagerAdapter extends PagerAdapter {
         TextView episodeOverview = (TextView) view.findViewById(R.id.episodeOverview);
         final SeenMark watchMark = (SeenMark) view.findViewById(R.id.watchMark);
         final ImageView screen = (ImageView) view.findViewById(R.id.imageView);
+        final ProgressBar screenLoadingProgress = (ProgressBar) view.findViewById(R.id.imageProgressSpinner);
 
         final Episode episode = mItems.episodeAt(position);
         final Series series = App.seriesFollowingService().getFollowedSeries(episode.seriesId());
@@ -108,7 +112,24 @@ public class SchedulePagerAdapter extends PagerAdapter {
             }
         });
 
-        UniversalImageLoader.loader().displayImage(episode.screenUrl(), screen, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(episode.screenUrl(), screen, mDisplayImageOptions, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                screenLoadingProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view,
+                    Bitmap loadedImage) {
+                screenLoadingProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view,
+                    FailReason failReason) {
+                screenLoadingProgress.setVisibility(View.GONE);
+            }
+        });
         container.addView(view, 0);
 
         return view;

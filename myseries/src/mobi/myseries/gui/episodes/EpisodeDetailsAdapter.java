@@ -22,10 +22,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 //TODO (Cleber) extend BaseAdapter instead of ArrayAdapter
 public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
@@ -39,6 +42,7 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
     private TextView mOverview;
     private SeenMark mWatchMark;
 
+    private ProgressBar mProgress;
     private ImageView mScreen;
     private DisplayImageOptions mDisplayImageOptions;
  
@@ -99,7 +103,25 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         });
 
         mScreen = (ImageView) itemView.findViewById(R.id.imageView);
-        UniversalImageLoader.loader().displayImage(mEpisode.screenUrl(), mScreen, mDisplayImageOptions);
+        mProgress = (ProgressBar) itemView.findViewById(R.id.imageProgressSpinner);
+        UniversalImageLoader.loader().displayImage(mEpisode.screenUrl(), mScreen, mDisplayImageOptions, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                mProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view,
+                    Bitmap loadedImage) {
+                mProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view,
+                    FailReason failReason) {
+                mProgress.setVisibility(View.GONE);
+            }
+        });
 
         return itemView;
     }
