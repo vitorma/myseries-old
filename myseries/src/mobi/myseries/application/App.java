@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import mobi.myseries.R;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
+import mobi.myseries.application.features.Features;
 import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.marking.MarkingService;
@@ -42,6 +43,7 @@ public class App extends Application {
 
     /* (Cleber) This guy is ok */
     private static Preferences preferences;
+    private static Features features;
 
     /* XXX (Cleber) This guy should fly away */
     private static BroadcastService broadcastService;
@@ -77,6 +79,7 @@ public class App extends Application {
         notificationService = new NotificationService(this, updateService, backupService);
 
         preferences = new Preferences(this);
+        features = new Features();
     }
 
     public static Context context() {
@@ -140,5 +143,9 @@ public class App extends Application {
 
     public static Preferences preferences() {
         return preferences;
+    }
+
+    public static Features features() {
+        return features;
     }
 }

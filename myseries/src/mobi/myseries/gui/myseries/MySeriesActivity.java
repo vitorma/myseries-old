@@ -2,6 +2,7 @@ package mobi.myseries.gui.myseries;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.features.Feature;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.backup.BackupActivity;
@@ -78,6 +79,8 @@ public class MySeriesActivity extends BaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
+        menu.findItem(R.id.backup_restore).setVisible(App.features().isVisible(Feature.BACKUP));
+
         if (this.isDrawerOpen()) {
             for (int i = 0; i < menu.size(); i++) {
                 menu.getItem(i).setVisible(false);
@@ -108,12 +111,11 @@ public class MySeriesActivity extends BaseActivity {
             case R.id.update:
                 this.startActivity(UpdateActivity.newIntent(this));
                 return true;
-            /*
-            TODO: Show this item to users who has bought backup feature
             case R.id.backup_restore:
-                this.startActivity(BackupActivity.newIntent(this));
-                return true;
-            */
+                if (App.features().isVisible(Feature.BACKUP)) {
+                    this.startActivity(BackupActivity.newIntent(this));
+                    return true;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
