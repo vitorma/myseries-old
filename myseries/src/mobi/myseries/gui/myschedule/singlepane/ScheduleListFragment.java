@@ -13,6 +13,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.ScheduleListAdapter;
 import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -270,7 +271,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     private void setUpOnScrollListener() {
         boolean pauseOnScroll = false;
         boolean pauseOnFling = true;
-        PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling);
+        PauseOnScrollListener listener = new PauseOnScrollListener(UniversalImageLoader.loader(), pauseOnScroll, pauseOnFling);
         this.mListView.setOnScrollListener(listener);
     }
 }

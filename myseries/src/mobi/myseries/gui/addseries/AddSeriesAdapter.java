@@ -16,6 +16,7 @@ import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import android.content.Context;
@@ -54,11 +55,11 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
         }
 
         viewHolder.name.setText(result.title());
-        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(result.toSeries()), viewHolder.image, mDisplayImageOptions, new SimpleImageLoadingListener() {
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(result.toSeries()), viewHolder.image, mDisplayImageOptions, new SimpleImageLoadingListener() {
 
             @Override
             public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-                ImageLoader.getInstance().displayImage(result.poster(), viewHolder.image, mDisplayImageOptions);
+                UniversalImageLoader.loader().displayImage(result.poster(), viewHolder.image, mDisplayImageOptions);
             }
 
             @Override

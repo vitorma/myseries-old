@@ -15,6 +15,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import android.content.Context;
@@ -99,7 +100,7 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         });
 
         mScreen = (ImageView) itemView.findViewById(R.id.imageView);
-        ImageLoader.getInstance().displayImage(mEpisode.screenUrl(), mScreen, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(mEpisode.screenUrl(), mScreen, mDisplayImageOptions);
 
         return itemView;
     }

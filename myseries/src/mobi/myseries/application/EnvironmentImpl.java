@@ -50,7 +50,6 @@ public class EnvironmentImpl implements Environment {
         this.localizationProvider =  new AndroidLocalizationProvider();
         this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
         this.imageRepository = new AndroidImageServiceRepository(this.context);
-        ImageLoader.getInstance().init(imageLoaderConfiguration(this.context));
     }
 
     @Override
@@ -86,20 +85,5 @@ public class EnvironmentImpl implements Environment {
     @Override
     public ImageServiceRepository imageRepository() {
         return this.imageRepository;
-    }
-    
-    private ImageLoaderConfiguration imageLoaderConfiguration(Context context) {
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-        .cacheInMemory(true)
-        .cacheOnDisc(true)
-        .bitmapConfig(Bitmap.Config.RGB_565)
-        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-        .resetViewBeforeLoading(true)
-        .build();
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-        .defaultDisplayImageOptions(defaultOptions)
-        .build();
-        return config;
     }
 }

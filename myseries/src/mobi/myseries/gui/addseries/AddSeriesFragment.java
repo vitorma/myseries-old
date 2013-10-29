@@ -13,6 +13,7 @@ import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -429,7 +430,7 @@ public abstract class AddSeriesFragment extends Fragment {
     private void setUpOnScrollListener() {
         boolean pauseOnScroll = false;
         boolean pauseOnFling = true;
-        PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling);
+        PauseOnScrollListener listener = new PauseOnScrollListener(UniversalImageLoader.loader(), pauseOnScroll, pauseOnFling);
         this.mResultsGrid.setOnScrollListener(listener);
     }
 }

@@ -9,6 +9,7 @@ import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.LocalText;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.RelativeDay;
 import mobi.myseries.shared.Strings;
@@ -52,7 +53,7 @@ public class Item {
 
     private void setUpSeriesPoster(final RemoteViews item, Series series) {
         String seriesPoster = App.imageService().getPosterOf(series);
-        ImageLoader.getInstance().loadImage(seriesPoster, new SimpleImageLoadingListener() {
+       UniversalImageLoader.loader().loadImage(seriesPoster, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     item.setImageViewBitmap(R.id.seriesPoster, loadedImage);

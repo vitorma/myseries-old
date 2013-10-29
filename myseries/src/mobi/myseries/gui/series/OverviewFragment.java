@@ -12,6 +12,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.LocalText;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
 import android.app.Fragment;
@@ -99,7 +100,7 @@ public class OverviewFragment extends Fragment {
         }
 
         ImageView seriesPoster = (ImageView) getView().findViewById(R.id.seriesPosterImageView);
-        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(series), seriesPoster, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), seriesPoster, mDisplayImageOptions);
 
         if (App.resources().getBoolean(R.bool.isTablet)) {
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scrollView);

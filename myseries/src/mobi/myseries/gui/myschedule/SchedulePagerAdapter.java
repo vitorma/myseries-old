@@ -14,6 +14,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import android.graphics.Bitmap;
@@ -108,7 +109,7 @@ public class SchedulePagerAdapter extends PagerAdapter {
             }
         });
 
-        ImageLoader.getInstance().displayImage(episode.screenUrl(), screen, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(episode.screenUrl(), screen, mDisplayImageOptions);
         container.addView(view, 0);
 
         return view;

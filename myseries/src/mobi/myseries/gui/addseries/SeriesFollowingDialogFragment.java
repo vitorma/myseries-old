@@ -10,6 +10,7 @@ import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -129,7 +130,7 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
         if (mSeries.poster() != null) {
             ImageView poster = (ImageView) layout.findViewById(R.id.poster);
 
-            ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(mSeries), poster);
+            UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(mSeries), poster);
         }
 
         return layout;
