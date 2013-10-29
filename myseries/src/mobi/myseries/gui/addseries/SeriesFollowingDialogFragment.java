@@ -2,7 +2,11 @@ package mobi.myseries.gui.addseries;
 
 import java.util.Collection;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -15,6 +19,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +62,7 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
     private SearchResult mSeries;
     private Button mAddButton;
     private Button mRemoveButton;
+    private DisplayImageOptions mDisplayImageOptions;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +88,7 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.addseries_series_information, null);
+        mDisplayImageOptions = imageLoaderOptions();
 
         mSeries = getArguments().getParcelable(ARGUMENT_SERIES);
 
@@ -128,9 +135,21 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
         }
 
         if (mSeries.poster() != null) {
-            ImageView poster = (ImageView) layout.findViewById(R.id.poster);
+            final ImageView poster = (ImageView) layout.findViewById(R.id.poster);
 
-            UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(mSeries), poster);
+            UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(mSeries.toSeries()), poster, mDisplayImageOptions, new SimpleImageLoadingListener() {
+
+                @Override
+                public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+                    UniversalImageLoader.loader().displayImage(mSeries.poster(), poster, mDisplayImageOptions);
+                }
+
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    ImageView imageView = (ImageView) view;
+                    imageView.setImageBitmap(null);
+                 }
+            });
         }
 
         return layout;
@@ -214,4 +233,15 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
             mRemoveButton.setTextColor(App.resources().getColor(R.color.dark_red));
         }
     };
+    
+    private DisplayImageOptions imageLoaderOptions() {
+        return new DisplayImageOptions.Builder()
+        .cacheInMemory(true)
+        .cacheOnDisc(true)
+        .bitmapConfig(Bitmap.Config.RGB_565)
+        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+        .resetViewBeforeLoading(true)
+        .showImageOnFail(R.drawable.generic_poster)
+        .build();
+    }
 }
