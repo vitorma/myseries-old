@@ -46,7 +46,7 @@ public class EpisodeDetailsFragment extends ListFragment {
         Episode episode =
                 App.seriesFollowingService().getFollowedSeries(this.seriesId).season(this.seasonNumber).episode(this.episodeNumber);
 
-        this.setListAdapter(new EpisodeDetailsAdapter(this.getActivity(), episode));
+        this.setListAdapter(new EpisodeDetailsAdapter(episode));
         this.getListView().setDivider(null);
         this.getListView().setPadding(0, 0, 0, 0);
     }

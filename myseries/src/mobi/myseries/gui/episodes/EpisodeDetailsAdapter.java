@@ -14,23 +14,20 @@ import mobi.myseries.gui.shared.SeenMark;
 import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
-//TODO (Cleber) extend BaseAdapter instead of ArrayAdapter
-public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
+public class EpisodeDetailsAdapter extends BaseAdapter {
     private Episode mEpisode;
-    private LayoutInflater mLayoutInflater;
+    private DisplayImageOptions mDisplayImageOptions;
 
     private TextView mAirDate;
     private TextView mAirDay;
@@ -38,26 +35,42 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
     private TextView mTitle;
     private TextView mOverview;
     private SeenMark mWatchMark;
-
     private ImageView mScreen;
-    private DisplayImageOptions mDisplayImageOptions;
- 
-    public EpisodeDetailsAdapter(Context context, Episode episode) {
-        super(context, R.layout.episode_pager_item, new Episode[] {episode});
 
+    public EpisodeDetailsAdapter(Episode episode) {
         mEpisode = episode;
-        mLayoutInflater = LayoutInflater.from(context);
+        mDisplayImageOptions = new DisplayImageOptions.Builder()
+            .cacheOnDisc(true)
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+            .resetViewBeforeLoading(true)
+            .showImageOnFail(R.drawable.generic_episode_image)
+            .build();
 
         App.markingService().register(mMarkingListener);
- 
-        mDisplayImageOptions = imageLoaderOptions();
+    }
 
+    /* BaseAdapter */
+
+    @Override
+    public int getCount() {
+        return 1;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mEpisode;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View itemView = convertView;
-        if (itemView == null) { itemView = mLayoutInflater.inflate(R.layout.episode_pager_item, null); }
+        if (itemView == null) { itemView = View.inflate(App.context(), R.layout.episode_pager_item, null); }
 
         mAirDate = (TextView) itemView.findViewById(R.id.airDate);
         mAirDate.setText(DatesAndTimes.toString(
@@ -86,7 +99,6 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         mOverview.setText(mEpisode.overview());
 
         mWatchMark = (SeenMark) itemView.findViewById(R.id.watchMark);
-        updateWatchMark();
         mWatchMark.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +109,7 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
                 }
             }
         });
+        updateWatchMark();
 
         mScreen = (ImageView) itemView.findViewById(R.id.imageView);
         UniversalImageLoader.loader().displayImage(mEpisode.screenUrl(), mScreen, mDisplayImageOptions);
@@ -105,7 +118,7 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
     }
 
     private void updateWatchMark() {
-        this.mWatchMark.setChecked(this.mEpisode.watched());
+        mWatchMark.setChecked(mEpisode.watched());
     }
 
     /* MarkingListener */
@@ -132,14 +145,4 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
             updateWatchMark();
         }
     };
-    
-    private DisplayImageOptions imageLoaderOptions() {
-        return new DisplayImageOptions.Builder()
-        .cacheOnDisc(true)
-        .bitmapConfig(Bitmap.Config.RGB_565)
-        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-        .resetViewBeforeLoading(true)
-        .showImageOnFail(R.drawable.generic_episode_image)
-        .build();
-    }
 }
