@@ -330,7 +330,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
                                 environment().traktApi().updatedSeriesSince(lastSuccessfulUpdate)));
 
                 result.seriesWithDataToUpdate = withOutdatedData.in(followedSeries);
-                result.seriesWithPosterToUpdate = new ArrayList<Series>();
+                result.seriesWithPosterToUpdate = new ArrayList<Series>(result.seriesWithDataToUpdate);
 
                 // Series whose posters are not downloaded.
                 CollectionFilter<Series> whosePosterIsNotDownloaded =

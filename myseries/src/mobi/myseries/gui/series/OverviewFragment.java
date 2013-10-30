@@ -12,7 +12,6 @@ import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
 import android.app.Fragment;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -22,11 +21,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-
 public class OverviewFragment extends Fragment {
-    private DisplayImageOptions mDisplayImageOptions;
 
     public static OverviewFragment newInstance(int seriesId) {
         Bundle arguments = new Bundle();
@@ -46,7 +41,6 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDisplayImageOptions = imageLoaderOptions();
         setUp();
     }
 
@@ -99,22 +93,14 @@ public class OverviewFragment extends Fragment {
         }
 
         ImageView seriesPoster = (ImageView) getView().findViewById(R.id.seriesPosterImageView);
-        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), seriesPoster, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), seriesPoster, 
+                UniversalImageLoader.defaultDisplayBuilder()
+                .showImageOnFail(R.drawable.generic_poster)
+                .build());
 
         if (App.resources().getBoolean(R.bool.isTablet)) {
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scrollView);
             scrollView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
         }
-    }
-
-    private static DisplayImageOptions imageLoaderOptions() {
-        return new DisplayImageOptions.Builder()
-        .cacheInMemory(true)
-        .cacheOnDisc(true)
-        .bitmapConfig(Bitmap.Config.RGB_565)
-        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-        .resetViewBeforeLoading(true)
-        .showImageOnFail(R.drawable.generic_poster)
-        .build();
     }
 }

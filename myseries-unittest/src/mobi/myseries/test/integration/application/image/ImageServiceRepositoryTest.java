@@ -46,6 +46,8 @@ public abstract class ImageServiceRepositoryTest extends InstrumentationTestCase
                 R.drawable.icon);
 
         this.imageRepository = this.newImageServiceRepository();
+
+        this.imageRepository.deleteAllImagesOf(testSeries);
     }
 
     public void tearDown() {

@@ -9,7 +9,6 @@ import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Validate;
 
 import android.net.Uri;
@@ -101,9 +100,7 @@ public class Trakt implements TraktApi {
     @Override
     public List<Integer> updatedSeriesSince(long utcTimestamp)
             throws ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
-        long pstTimestamp = DatesAndTimes.toPstTime(utcTimestamp);
-
-        String url = updateUri(pstTimestamp).toString();
+        String url = updateUri(utcTimestamp).toString();
         Log.d("DELETE THIS LOG", url);
 
         return TraktParser.parseUpdateMetadata(this.get(url));
@@ -114,7 +111,7 @@ public class Trakt implements TraktApi {
                      .appendPath(SHOWS)
                      .appendPath(UPDATE_JSON)
                      .appendPath(this.apiKey)
-                     .appendPath(String.valueOf(pstTimestamp))
+                     .appendPath(dropMillisecondsFromTimeStamp(pstTimestamp))
                      .build();
     }
 
@@ -128,6 +125,11 @@ public class Trakt implements TraktApi {
         return new Uri.Builder()
         .scheme(TRAKT_PROTOCOL)
         .authority(TRAKT);
+    }
+
+    //XXX Trakt.tv does not work with milliseconds
+    private String dropMillisecondsFromTimeStamp(long timestamp) {
+        return String.valueOf(timestamp).substring(0, 10); 
     }
 
     private String normalizeQuery(String string) {

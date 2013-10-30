@@ -20,14 +20,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class EpisodeDetailsAdapter extends BaseAdapter {
     private Episode mEpisode;
-    private DisplayImageOptions mDisplayImageOptions;
 
     private TextView mAirDate;
     private TextView mAirDay;
@@ -36,16 +36,10 @@ public class EpisodeDetailsAdapter extends BaseAdapter {
     private TextView mOverview;
     private SeenMark mWatchMark;
     private ImageView mScreen;
+    private ProgressBar mProgress;
 
     public EpisodeDetailsAdapter(Episode episode) {
         mEpisode = episode;
-        mDisplayImageOptions = new DisplayImageOptions.Builder()
-            .cacheOnDisc(true)
-            .bitmapConfig(Bitmap.Config.RGB_565)
-            .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-            .resetViewBeforeLoading(true)
-            .showImageOnFail(R.drawable.generic_episode_image)
-            .build();
 
         App.markingService().register(mMarkingListener);
     }
@@ -112,7 +106,29 @@ public class EpisodeDetailsAdapter extends BaseAdapter {
         updateWatchMark();
 
         mScreen = (ImageView) itemView.findViewById(R.id.imageView);
-        UniversalImageLoader.loader().displayImage(mEpisode.screenUrl(), mScreen, mDisplayImageOptions);
+        mProgress = (ProgressBar) itemView.findViewById(R.id.imageProgressSpinner);
+        UniversalImageLoader.loader().displayImage(mEpisode.screenUrl(), mScreen,
+                UniversalImageLoader.defaultDisplayBuilder()
+                .showImageOnFail(R.drawable.generic_episode_image)
+                .build(),
+                new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                mProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view,
+                    Bitmap loadedImage) {
+                mProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view,
+                    FailReason failReason) {
+                mProgress.setVisibility(View.GONE);
+            }
+        });
 
         return itemView;
     }
