@@ -30,20 +30,25 @@ public abstract class ImageRepositoryTest extends InstrumentationTestCase {
 
     protected abstract ImageRepository newRepository();
 
-    public void setUp() {
+    public void setUp() throws ImageRepositoryException {
         this.testImage = BitmapFactory.decodeResource(
                 this.getInstrumentation().getContext().getResources(),
                 R.drawable.icon);
 
         this.imageRepository = this.newRepository();
+        this.cleanRepository();
     }
 
     public void tearDown() throws ImageRepositoryException {
+        this.cleanRepository();
+        this.imageRepository = null;
+        this.testImage = null;
+    }
+
+    private void cleanRepository() throws ImageRepositoryException {
         for (Long imageId : this.imageRepository.savedImages()) {
             this.imageRepository.delete(imageId);
         }
-        this.imageRepository = null;
-        this.testImage = null;
     }
 
     public void testDeletingANotSavedImageDoesNotCauseAnyError() throws ImageRepositoryException {
