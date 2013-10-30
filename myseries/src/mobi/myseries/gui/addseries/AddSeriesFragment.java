@@ -2,9 +2,6 @@ package mobi.myseries.gui.addseries;
 
 import java.util.List;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.ConnectionFailedException;
@@ -13,6 +10,7 @@ import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.source.InvalidSearchCriteriaException;
 import mobi.myseries.domain.source.ParsingFailedException;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -32,6 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 public abstract class AddSeriesFragment extends Fragment {
     protected EditText mSearchField;
@@ -429,7 +429,7 @@ public abstract class AddSeriesFragment extends Fragment {
     private void setUpOnScrollListener() {
         boolean pauseOnScroll = false;
         boolean pauseOnFling = true;
-        PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling);
+        PauseOnScrollListener listener = new PauseOnScrollListener(UniversalImageLoader.loader(), pauseOnScroll, pauseOnFling);
         this.mResultsGrid.setOnScrollListener(listener);
     }
 }

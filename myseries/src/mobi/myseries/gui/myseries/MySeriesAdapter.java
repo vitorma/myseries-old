@@ -6,10 +6,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
@@ -26,6 +22,7 @@ import mobi.myseries.gui.shared.EpisodesToCountSpecification;
 import mobi.myseries.gui.shared.SeenEpisodeSpecification;
 import mobi.myseries.gui.shared.SeenEpisodesBar;
 import mobi.myseries.gui.shared.SeriesComparator;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
@@ -38,6 +35,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAdapter.Listener> {
     private ArrayList<Series> mItems;
@@ -96,7 +96,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpView(ViewHolder viewHolder, final Series series) {
-        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, mDisplayImageOptions);
 
         String name = series.name();
         viewHolder.mName.setText(name);

@@ -2,16 +2,13 @@ package mobi.myseries.gui.series;
 
 import java.util.Locale;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.LocalText;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Strings;
 import android.app.Fragment;
@@ -24,6 +21,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class OverviewFragment extends Fragment {
     private DisplayImageOptions mDisplayImageOptions;
@@ -99,7 +99,7 @@ public class OverviewFragment extends Fragment {
         }
 
         ImageView seriesPoster = (ImageView) getView().findViewById(R.id.seriesPosterImageView);
-        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(series), seriesPoster, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), seriesPoster, mDisplayImageOptions);
 
         if (App.resources().getBoolean(R.bool.isTablet)) {
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scrollView);

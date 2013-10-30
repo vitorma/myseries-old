@@ -1,8 +1,5 @@
 package mobi.myseries.gui.myschedule.singlepane;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.preferences.MySchedulePreferencesListener;
@@ -13,6 +10,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.myschedule.ScheduleListAdapter;
 import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -24,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 public class ScheduleListFragment extends Fragment implements ScheduleListener, MySchedulePreferencesListener {
     private int mScheduleMode;
@@ -270,7 +270,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     private void setUpOnScrollListener() {
         boolean pauseOnScroll = false;
         boolean pauseOnFling = true;
-        PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling);
+        PauseOnScrollListener listener = new PauseOnScrollListener(UniversalImageLoader.loader(), pauseOnScroll, pauseOnFling);
         this.mListView.setOnScrollListener(listener);
     }
 }

@@ -1,13 +1,11 @@
 package mobi.myseries.gui.myseries;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.series.SeriesActivity;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 public class MySeriesFragment extends Fragment {
     private GridView showsGrid;
@@ -118,7 +118,7 @@ public class MySeriesFragment extends Fragment {
     private void setupOnScrollListener() {
         boolean pauseOnScroll = false;
         boolean pauseOnFling = true;
-        PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling);
+        PauseOnScrollListener listener = new PauseOnScrollListener(UniversalImageLoader.loader(), pauseOnScroll, pauseOnFling);
         this.showsGrid.setOnScrollListener(listener);
     }
 

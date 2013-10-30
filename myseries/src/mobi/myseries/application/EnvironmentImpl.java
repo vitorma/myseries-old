@@ -1,12 +1,5 @@
 package mobi.myseries.application;
 
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-
 import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.image.AndroidImageServiceRepository;
 import mobi.myseries.application.image.ImageServiceRepository;
@@ -17,7 +10,6 @@ import mobi.myseries.domain.source.Trakt;
 import mobi.myseries.domain.source.TraktApi;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
-import android.graphics.Bitmap;
 
 //TODO (Cleber) Find a better name to this class
 public class EnvironmentImpl implements Environment {
@@ -50,7 +42,6 @@ public class EnvironmentImpl implements Environment {
         this.localizationProvider =  new AndroidLocalizationProvider();
         this.seriesRepository = new SeriesCache(new SeriesDatabase(this.context));
         this.imageRepository = new AndroidImageServiceRepository(this.context);
-        ImageLoader.getInstance().init(imageLoaderConfiguration(this.context));
     }
 
     @Override
@@ -86,22 +77,5 @@ public class EnvironmentImpl implements Environment {
     @Override
     public ImageServiceRepository imageRepository() {
         return this.imageRepository;
-    }
-    
-    private ImageLoaderConfiguration imageLoaderConfiguration(Context context) {
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-        .cacheInMemory(true)
-        .cacheOnDisc(true)
-        .bitmapConfig(Bitmap.Config.RGB_565)
-        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-        .resetViewBeforeLoading(true)
-        .build();
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-        .defaultDisplayImageOptions(defaultOptions)
-        .threadPoolSize(1)
-        .memoryCache(new WeakMemoryCache())
-        .build();
-        return config;
     }
 }

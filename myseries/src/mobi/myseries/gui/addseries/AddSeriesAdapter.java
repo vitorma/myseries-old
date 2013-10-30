@@ -3,19 +3,13 @@ package mobi.myseries.gui.addseries;
 import java.util.Collection;
 import java.util.List;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.DisplayImageOptions.Builder;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.addseries.AddSeriesAdapter.AddSeriesAdapterListener;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import android.content.Context;
@@ -28,6 +22,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publisher<AddSeriesAdapterListener> {
     private final LayoutInflater layoutInflater;
@@ -54,11 +53,11 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
         }
 
         viewHolder.name.setText(result.title());
-        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(result.toSeries()), viewHolder.image, mDisplayImageOptions, new SimpleImageLoadingListener() {
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(result.toSeries()), viewHolder.image, mDisplayImageOptions, new SimpleImageLoadingListener() {
 
             @Override
             public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-                ImageLoader.getInstance().displayImage(result.poster(), viewHolder.image, mDisplayImageOptions);
+                UniversalImageLoader.loader().displayImage(result.poster(), viewHolder.image, mDisplayImageOptions);
             }
 
             @Override

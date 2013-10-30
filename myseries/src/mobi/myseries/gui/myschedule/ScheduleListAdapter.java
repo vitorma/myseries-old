@@ -4,10 +4,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
@@ -18,6 +14,7 @@ import mobi.myseries.gui.shared.CheckableFrameLayout.OnCheckedListener;
 import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.SeenMark;
+import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.RelativeDay;
@@ -29,6 +26,9 @@ import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class ScheduleListAdapter extends BaseAdapter {
     private static final int STATE_UNKNOWN = 0;
@@ -117,7 +117,7 @@ public class ScheduleListAdapter extends BaseAdapter {
     }
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
-        ImageLoader.getInstance().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, mDisplayImageOptions);
 
         viewHolder.mSeriesName.setText(series.name());
 
