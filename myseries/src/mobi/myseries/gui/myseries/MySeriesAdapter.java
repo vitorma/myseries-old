@@ -26,7 +26,6 @@ import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,17 +35,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-
 public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAdapter.Listener> {
     private ArrayList<Series> mItems;
-    private DisplayImageOptions mDisplayImageOptions;
     private AsyncTask<Void, Void, Void> mLoadingTask;
 
     public MySeriesAdapter() {
         mItems = new ArrayList<Series>();
-        mDisplayImageOptions = imageLoaderOptions();
 
         reloadData();
 
@@ -96,7 +90,10 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpView(ViewHolder viewHolder, final Series series) {
-        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, 
+                UniversalImageLoader.defaultDisplayBuilder()
+                .showImageOnFail(R.drawable.generic_poster)
+                .build());
 
         String name = series.name();
         viewHolder.mName.setText(name);
@@ -308,16 +305,5 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         for (MySeriesAdapter.Listener listener : mListeners) {
             listener.onItemContextRequest(seriesId);
         }
-    }
-
-    private DisplayImageOptions imageLoaderOptions() {
-        return new DisplayImageOptions.Builder()
-        .cacheInMemory(true)
-        .cacheOnDisc(true)
-        .bitmapConfig(Bitmap.Config.RGB_565)
-        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-        .resetViewBeforeLoading(true)
-        .showImageOnFail(R.drawable.generic_poster)
-        .build();
     }
 }

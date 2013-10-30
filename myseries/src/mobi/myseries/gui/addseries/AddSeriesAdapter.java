@@ -13,7 +13,6 @@ import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,20 +22,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publisher<AddSeriesAdapterListener> {
     private final LayoutInflater layoutInflater;
-    private final DisplayImageOptions mDisplayImageOptions;
 
     public AddSeriesAdapter(Context context, List<SearchResult> results) {
         super(context, R.layout.addseries_item, results);
 
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mDisplayImageOptions = imageLoaderOptions();
     }
 
     @Override
@@ -53,18 +48,19 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
         }
 
         viewHolder.name.setText(result.title());
-        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(result.toSeries()), viewHolder.image, mDisplayImageOptions, new SimpleImageLoadingListener() {
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(result.toSeries()), 
+                viewHolder.image, 
+                UniversalImageLoader.defaultDisplayBuilder()
+                .showImageOnFail(R.drawable.generic_poster).build(), 
+                new SimpleImageLoadingListener() {
 
             @Override
             public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-                UniversalImageLoader.loader().displayImage(result.poster(), viewHolder.image, mDisplayImageOptions);
+                UniversalImageLoader.loader().displayImage(result.poster(), viewHolder.image, 
+                        UniversalImageLoader.defaultDisplayBuilder()
+                        .showImageOnFail(R.drawable.generic_poster)
+                        .build());
             }
-
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                ImageView imageView = (ImageView) view;
-                imageView.setImageBitmap(null);
-             }
         });
 
         viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
@@ -246,16 +242,5 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
     @Override
     public boolean deregister(AddSeriesAdapterListener listener) {
         return this.listeners.deregister(listener);
-    }
-
-    private DisplayImageOptions imageLoaderOptions() {
-        return new DisplayImageOptions.Builder()
-        .cacheInMemory(true)
-        .cacheOnDisc(true)
-        .bitmapConfig(Bitmap.Config.RGB_565)
-        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-        .resetViewBeforeLoading(true)
-        .showImageOnFail(R.drawable.generic_poster)
-        .build();
     }
 }
