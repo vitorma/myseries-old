@@ -25,9 +25,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 //TODO (Cleber) extend BaseAdapter instead of ArrayAdapter
@@ -44,7 +42,6 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
 
     private ProgressBar mProgress;
     private ImageView mScreen;
-    private DisplayImageOptions mDisplayImageOptions;
  
     public EpisodeDetailsAdapter(Context context, Episode episode) {
         super(context, R.layout.episode_pager_item, new Episode[] {episode});
@@ -53,8 +50,6 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
         mLayoutInflater = LayoutInflater.from(context);
 
         App.markingService().register(mMarkingListener);
- 
-        mDisplayImageOptions = imageLoaderOptions();
 
     }
 
@@ -104,7 +99,11 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
 
         mScreen = (ImageView) itemView.findViewById(R.id.imageView);
         mProgress = (ProgressBar) itemView.findViewById(R.id.imageProgressSpinner);
-        UniversalImageLoader.loader().displayImage(mEpisode.screenUrl(), mScreen, mDisplayImageOptions, new SimpleImageLoadingListener() {
+        UniversalImageLoader.loader().displayImage(mEpisode.screenUrl(), mScreen,
+                UniversalImageLoader.defaultDisplayBuilder()
+                .showImageOnFail(R.drawable.generic_episode_image)
+                .build(),
+                new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 mProgress.setVisibility(View.VISIBLE);
@@ -154,14 +153,4 @@ public class EpisodeDetailsAdapter extends ArrayAdapter<Episode> {
             updateWatchMark();
         }
     };
-    
-    private DisplayImageOptions imageLoaderOptions() {
-        return new DisplayImageOptions.Builder()
-        .cacheOnDisc(true)
-        .bitmapConfig(Bitmap.Config.RGB_565)
-        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-        .resetViewBeforeLoading(true)
-        .showImageOnFail(R.drawable.generic_episode_image)
-        .build();
-    }
 }

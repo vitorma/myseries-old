@@ -18,6 +18,7 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class Item {
@@ -56,6 +57,12 @@ public class Item {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     item.setImageViewBitmap(R.id.seriesPoster, loadedImage);
+                }
+
+                @Override
+                public void onLoadingFailed(String imageUri, View view,
+                FailReason failReason) {
+                    item.setImageViewResource(R.id.seriesPoster, R.drawable.generic_poster);
                 }
         });
         

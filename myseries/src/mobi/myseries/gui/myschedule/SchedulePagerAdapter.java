@@ -23,21 +23,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class SchedulePagerAdapter extends PagerAdapter {
 
     private ScheduleMode mItems;
     private LayoutInflater mInflater;
-    private DisplayImageOptions mDisplayImageOptions;
 
     public SchedulePagerAdapter(ScheduleMode items) {
         mItems = items;
         mInflater = LayoutInflater.from(App.context());
-        mDisplayImageOptions = imageLoaderOptions();
     }
 
     @Override
@@ -112,7 +108,11 @@ public class SchedulePagerAdapter extends PagerAdapter {
             }
         });
 
-        UniversalImageLoader.loader().displayImage(episode.screenUrl(), screen, mDisplayImageOptions, new SimpleImageLoadingListener() {
+        UniversalImageLoader.loader().displayImage(episode.screenUrl(), screen, 
+                UniversalImageLoader.defaultDisplayBuilder()
+                .showImageOnFail(R.drawable.generic_episode_image)
+                .build(), 
+                new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 screenLoadingProgress.setVisibility(View.VISIBLE);
@@ -138,15 +138,5 @@ public class SchedulePagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
-    }
-
-    private DisplayImageOptions imageLoaderOptions() {
-        return new DisplayImageOptions.Builder()
-        .cacheOnDisc(true)
-        .bitmapConfig(Bitmap.Config.RGB_565)
-        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-        .resetViewBeforeLoading(true)
-        .showImageOnFail(R.drawable.generic_episode_image)
-        .build();
     }
 }

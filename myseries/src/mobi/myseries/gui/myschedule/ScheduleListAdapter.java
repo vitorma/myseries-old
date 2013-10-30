@@ -18,7 +18,6 @@ import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Objects;
 import mobi.myseries.shared.RelativeDay;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -26,9 +25,6 @@ import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class ScheduleListAdapter extends BaseAdapter {
     private static final int STATE_UNKNOWN = 0;
@@ -38,11 +34,8 @@ public class ScheduleListAdapter extends BaseAdapter {
     private ScheduleMode mItems;
     private int[] mViewStates;
 
-    private DisplayImageOptions mDisplayImageOptions;
-
     public ScheduleListAdapter(ScheduleMode items) {
         updateData(items);
-        mDisplayImageOptions = imageLoaderOptions(); 
     }
 
     public void updateData(ScheduleMode items) {
@@ -117,7 +110,10 @@ public class ScheduleListAdapter extends BaseAdapter {
     }
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
-        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, mDisplayImageOptions);
+        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster,
+                UniversalImageLoader.defaultDisplayBuilder()
+                .showImageOnFail(R.drawable.generic_poster)
+                .build());
 
         viewHolder.mSeriesName.setText(series.name());
 
@@ -220,16 +216,5 @@ public class ScheduleListAdapter extends BaseAdapter {
                 }
             };
         }
-    }
-
-    private DisplayImageOptions imageLoaderOptions() {
-        return new DisplayImageOptions.Builder()
-        .cacheInMemory(true)
-        .cacheOnDisc(true)
-        .bitmapConfig(Bitmap.Config.RGB_565)
-        .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-        .resetViewBeforeLoading(true)
-        .showImageOnFail(R.drawable.generic_poster)
-        .build();
     }
 }
