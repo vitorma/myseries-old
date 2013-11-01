@@ -1,53 +1,51 @@
 package mobi.myseries.gui.episodes;
 
 import mobi.myseries.application.App;
-import mobi.myseries.domain.model.Episode;
+import mobi.myseries.gui.shared.Extra;
 import android.app.ListFragment;
 import android.os.Bundle;
 
+//TODO (Cleber) Let this class be a simple Fragment instead of ListFragment
 public class EpisodeDetailsFragment extends ListFragment {
-    private static final String EPISODE_NUMBER = "episodeNumber";
-    private static final String SEASON_NUMBER = "seasonNumber";
-    private static final String SERIES_ID = "seriesId";
-
-    private int seriesId;
-    private int seasonNumber;
-    private int episodeNumber;
+    private EpisodeDetailsAdapter mAdapter;
 
     public static EpisodeDetailsFragment newInstance(int seriesId, int seasonNumber, int episodeNumber) {
-        EpisodeDetailsFragment episodeFragment = new EpisodeDetailsFragment();
-
         Bundle arguments = new Bundle();
+        arguments.putInt(Extra.SERIES_ID, seriesId);
+        arguments.putInt(Extra.SEASON_NUMBER, seasonNumber);
+        arguments.putInt(Extra.EPISODE_NUMBER, episodeNumber);
 
-        arguments.putInt(SERIES_ID, seriesId);
-        arguments.putInt(SEASON_NUMBER, seasonNumber);
-        arguments.putInt(EPISODE_NUMBER, episodeNumber);
+        EpisodeDetailsFragment instance = new EpisodeDetailsFragment();
+        instance.setArguments(arguments);
 
-        episodeFragment.setArguments(arguments);
-
-        return episodeFragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Bundle arguments = this.getArguments();
-
-        this.seriesId = arguments.getInt(SERIES_ID);
-        this.seasonNumber = arguments.getInt(SEASON_NUMBER);
-        this.episodeNumber = arguments.getInt(EPISODE_NUMBER);
+        return instance;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Episode episode =
-                App.seriesFollowingService().getFollowedSeries(this.seriesId).season(this.seasonNumber).episode(this.episodeNumber);
+        mAdapter = new EpisodeDetailsAdapter(App.seriesFollowingService()
+                .getFollowedSeries(getArguments().getInt(Extra.SERIES_ID))
+                .season(getArguments().getInt(Extra.SEASON_NUMBER))
+                .episode(getArguments().getInt(Extra.EPISODE_NUMBER)));
 
-        this.setListAdapter(new EpisodeDetailsAdapter(episode));
-        this.getListView().setDivider(null);
-        this.getListView().setPadding(0, 0, 0, 0);
+        setListAdapter(mAdapter);
+        getListView().setDivider(null);
+        getListView().setPadding(0, 0, 0, 0);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mAdapter.registerServiceListeners();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mAdapter.deregisterServiceListeners();
     }
 }

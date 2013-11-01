@@ -40,8 +40,6 @@ public class EpisodeDetailsAdapter extends BaseAdapter {
 
     public EpisodeDetailsAdapter(Episode episode) {
         mEpisode = episode;
-
-        App.markingService().register(mMarkingListener);
     }
 
     /* BaseAdapter */
@@ -133,11 +131,15 @@ public class EpisodeDetailsAdapter extends BaseAdapter {
         return itemView;
     }
 
-    private void updateWatchMark() {
-        mWatchMark.setChecked(mEpisode.watched());
+    /* MarkingListener */
+
+    public void registerServiceListeners() {
+        App.markingService().register(mMarkingListener);
     }
 
-    /* MarkingListener */
+    public void deregisterServiceListeners() {
+        App.markingService().deregister(mMarkingListener);
+    }
 
     private final MarkingListener mMarkingListener = new MarkingListener() {
         @Override
@@ -161,4 +163,10 @@ public class EpisodeDetailsAdapter extends BaseAdapter {
             updateWatchMark();
         }
     };
+
+    /* Auxiliary */
+
+    private void updateWatchMark() {
+        mWatchMark.setChecked(mEpisode.watched());
+    }
 }
