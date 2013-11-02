@@ -108,7 +108,8 @@ public class SchedulePagerAdapter extends PagerAdapter {
             }
         });
 
-        UniversalImageLoader.loader().displayImage(episode.screenUrl(), screen, 
+        UniversalImageLoader.loader().displayImage(UniversalImageLoader.httpURI(episode.screenUrl()), 
+                screen, 
                 UniversalImageLoader.defaultDisplayBuilder()
                 .showImageOnFail(R.drawable.generic_episode_image)
                 .build(), 

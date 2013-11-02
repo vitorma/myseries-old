@@ -120,7 +120,7 @@ public class ScheduleListAdapter extends BaseAdapter {
                     UniversalImageLoader.defaultDisplayBuilder()
                     .build());
         } else {
-            UniversalImageLoader.loader().displayImage(posterFilePath, 
+            UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath), 
                     viewHolder.mPoster, 
                     UniversalImageLoader.defaultDisplayBuilder()
                     .showImageOnFail(R.drawable.generic_poster).build());
