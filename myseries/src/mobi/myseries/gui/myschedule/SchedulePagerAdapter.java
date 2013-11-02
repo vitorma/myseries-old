@@ -107,8 +107,16 @@ public class SchedulePagerAdapter extends PagerAdapter {
                 }
             }
         });
+        String screenUrl = episode.screenUrl();
+        String screenPath = null;
 
-        UniversalImageLoader.loader().displayImage(UniversalImageLoader.httpURI(episode.screenUrl()), 
+        if(screenUrl.isEmpty()) {
+            screenPath = UniversalImageLoader.drawableURI(R.drawable.generic_episode_image);
+        } else {
+            screenPath = UniversalImageLoader.httpURI(episode.screenUrl());
+        }
+
+        UniversalImageLoader.loader().displayImage(screenPath, 
                 screen, 
                 UniversalImageLoader.defaultDisplayBuilder()
                 .showImageOnFail(R.drawable.generic_episode_image)

@@ -54,7 +54,8 @@ public class TraktParser {
     private static final String SCREEN = "screen";
     private static final String SHOWS = "shows";
     private static final String TRAKT_TV_TIMEZONE = "GMT-8";
-    private static final String DEFAULT_POSTER_FILENAME = "poster-dark.jpg";
+    private static final String TRAKT_DEFAULT_POSTER_FILENAME = "poster-dark.jpg";
+    private static final String TRAKT_DEFAULT_SCREEN_FILENAME = "episode-dark.jpg";
 
     private static final int COMPRESSED_POSTER_300 = 300;
 
@@ -341,14 +342,14 @@ public class TraktParser {
         JsonObject imagesObject = object.getAsJsonObject(IMAGES);
 
         String posterUrl = readStringSafely(imagesObject.get(POSTER));
-        if(!hasValidPoster(posterUrl))
+        if(isDefaultPoster(posterUrl))
             posterUrl = "";
 
         return posterUrl.isEmpty() ? posterUrl : compressedPosterUrl(posterUrl, COMPRESSED_POSTER_300);
     }
 
-    private static boolean hasValidPoster(String posterUrl) {
-        return !posterUrl.contains(DEFAULT_POSTER_FILENAME);
+    private static boolean isDefaultPoster(String posterUrl) {
+        return posterUrl.contains(TRAKT_DEFAULT_POSTER_FILENAME);
     }
 
     private static int readNumber(JsonObject object) {
@@ -360,8 +361,17 @@ public class TraktParser {
     }
 
     private static String readScreen(JsonObject object) {
-        return readStringSafely(object.get(SCREEN));
+        String screenUrl = readStringSafely(object.get(SCREEN));
+        if(isDefaultScreen(screenUrl))
+            screenUrl = "";
+
+        return screenUrl; 
     }
+
+    private static boolean isDefaultScreen(String screenUrl) {
+        return screenUrl.contains(TRAKT_DEFAULT_SCREEN_FILENAME);
+    }
+
 
     private static String readStringSafely(JsonElement object) {
         return Objects.nullSafe(object, new JsonPrimitive("")).getAsString();

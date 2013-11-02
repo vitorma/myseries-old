@@ -105,7 +105,16 @@ public class EpisodeDetailsAdapter extends BaseAdapter {
 
         mScreen = (ImageView) itemView.findViewById(R.id.imageView);
         mProgress = (ProgressBar) itemView.findViewById(R.id.imageProgressSpinner);
-        UniversalImageLoader.loader().displayImage(mEpisode.screenUrl(), mScreen,
+        String screenUrl = mEpisode.screenUrl();
+        String screenPath = null;
+        if(!screenUrl.isEmpty()) {
+            screenUrl = UniversalImageLoader.drawableURI(R.drawable.generic_episode_image);
+        } else {
+            screenPath = UniversalImageLoader.httpURI(screenUrl);
+        }
+
+        UniversalImageLoader.loader().displayImage(screenPath,
+                mScreen,
                 UniversalImageLoader.defaultDisplayBuilder()
                 .showImageOnFail(R.drawable.generic_episode_image)
                 .build(),
