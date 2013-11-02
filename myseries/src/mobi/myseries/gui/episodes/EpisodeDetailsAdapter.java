@@ -107,7 +107,7 @@ public class EpisodeDetailsAdapter extends BaseAdapter {
         mProgress = (ProgressBar) itemView.findViewById(R.id.imageProgressSpinner);
         String screenUrl = mEpisode.screenUrl();
         String screenPath = null;
-        if(!screenUrl.isEmpty()) {
+        if(screenUrl.isEmpty()) {
             screenUrl = UniversalImageLoader.drawableURI(R.drawable.generic_episode_image);
         } else {
             screenPath = UniversalImageLoader.httpURI(screenUrl);
