@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
@@ -26,6 +29,7 @@ import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -90,10 +94,18 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpView(ViewHolder viewHolder, final Series series) {
-        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster, 
-                UniversalImageLoader.defaultDisplayBuilder()
-                .showImageOnFail(R.drawable.generic_poster)
-                .build());
+        String posterFilePath = App.imageService().getPosterOf(series);
+        if(posterFilePath == null) {
+            UniversalImageLoader.loader().displayImage(UniversalImageLoader.drawableURI(R.drawable.generic_poster), 
+                    viewHolder.mPoster, 
+                    UniversalImageLoader.defaultDisplayBuilder()
+                    .build());
+        } else {
+            UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath), 
+                    viewHolder.mPoster, 
+                    UniversalImageLoader.defaultDisplayBuilder()
+                    .showImageOnFail(R.drawable.generic_poster).build());
+        }
 
         String name = series.name();
         viewHolder.mName.setText(name);

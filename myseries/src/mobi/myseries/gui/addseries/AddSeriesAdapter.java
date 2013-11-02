@@ -48,20 +48,18 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
         }
 
         viewHolder.name.setText(result.title());
-        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(result.toSeries()), 
-                viewHolder.image, 
-                UniversalImageLoader.defaultDisplayBuilder()
-                .showImageOnFail(R.drawable.generic_poster).build(), 
-                new SimpleImageLoadingListener() {
-
-            @Override
-            public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-                UniversalImageLoader.loader().displayImage(result.poster(), viewHolder.image, 
-                        UniversalImageLoader.defaultDisplayBuilder()
-                        .showImageOnFail(R.drawable.generic_poster)
-                        .build());
-            }
-        });
+        String posterFilePath = App.imageService().getPosterOf(result.toSeries());
+        if(posterFilePath != null) {
+            UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath), viewHolder.image, 
+                    UniversalImageLoader.defaultDisplayBuilder()
+                    .showImageOnFail(R.drawable.generic_poster)
+                    .build());
+        } else {
+            UniversalImageLoader.loader().displayImage(UniversalImageLoader.httpURI(result.poster()), 
+                    viewHolder.image, 
+                    UniversalImageLoader.defaultDisplayBuilder()
+                    .showImageOnFail(R.drawable.generic_poster).build());
+        }
 
         viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
             @Override

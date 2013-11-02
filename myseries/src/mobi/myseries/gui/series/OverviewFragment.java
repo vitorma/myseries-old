@@ -93,10 +93,16 @@ public class OverviewFragment extends Fragment {
         }
 
         ImageView seriesPoster = (ImageView) getView().findViewById(R.id.seriesPosterImageView);
-        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), seriesPoster, 
-                UniversalImageLoader.defaultDisplayBuilder()
-                .showImageOnFail(R.drawable.generic_poster)
-                .build());
+        String posterFilePath = App.imageService().getPosterOf(series);
+        if(posterFilePath != null) {
+            UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath), 
+                    seriesPoster, 
+                    UniversalImageLoader.defaultDisplayBuilder()
+                    .showImageOnFail(R.drawable.generic_poster)
+                    .build());
+        } else {
+            seriesPoster.setImageResource(R.drawable.generic_poster);
+        }
 
         if (App.resources().getBoolean(R.bool.isTablet)) {
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scrollView);

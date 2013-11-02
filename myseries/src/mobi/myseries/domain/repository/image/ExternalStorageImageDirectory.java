@@ -16,7 +16,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 
 public class ExternalStorageImageDirectory implements ImageRepository {
-    private static final String FILE_TYPE = "file://";
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final CompressFormat IMAGE_FORMAT = CompressFormat.JPEG;
     private static final String IMAGE_EXTENSION = "." + IMAGE_FORMAT.toString().toLowerCase(Locale.US);
@@ -42,7 +41,10 @@ public class ExternalStorageImageDirectory implements ImageRepository {
 
     @Override
     public String fetch(long id) throws ImageRepositoryException {
-        return filePathFor(id);
+        String filePath = filePathFor(id);
+        if(new File(filePath).exists())
+            return filePath;
+        throw new ImageRepositoryException();
     }
 
     @Override
@@ -75,7 +77,7 @@ public class ExternalStorageImageDirectory implements ImageRepository {
     }
 
     private String filePathFor(long id) throws ImageRepositoryException {
-        return FILE_TYPE + imageFolder() + FILE_SEPARATOR + fileNameFor(id);
+        return imageFolder() + FILE_SEPARATOR + fileNameFor(id);
     }
 
     private String fileNameFor(long id) {

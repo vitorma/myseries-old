@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
@@ -129,22 +130,21 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
         }
 
         if (mSeries.poster() != null) {
-            final ImageView poster = (ImageView) layout.findViewById(R.id.poster);
+            final ImageView posterImageView = (ImageView) layout.findViewById(R.id.poster);
 
-            UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(mSeries.toSeries()), poster, 
-                    UniversalImageLoader.defaultDisplayBuilder()
-                    .showImageOnFail(R.drawable.generic_poster)
-                    .build(), 
-                    new SimpleImageLoadingListener() {
-
-                @Override
-                public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-                    UniversalImageLoader.loader().displayImage(mSeries.poster(), poster, 
-                            UniversalImageLoader.defaultDisplayBuilder()
-                            .showImageOnFail(R.drawable.generic_poster)
-                            .build());
-                }
-            });
+            String posterFilePath = App.imageService().getPosterOf(mSeries.toSeries());
+            if(posterFilePath != null) {
+                UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath), 
+                        posterImageView, 
+                        UniversalImageLoader.defaultDisplayBuilder()
+                        .showImageOnFail(R.drawable.generic_poster)
+                        .build());
+            } else {
+                UniversalImageLoader.loader().displayImage(UniversalImageLoader.httpURI(mSeries.poster()), 
+                        posterImageView, 
+                        UniversalImageLoader.defaultDisplayBuilder()
+                        .showImageOnFail(R.drawable.generic_poster).build());
+            }
         }
 
         return layout;

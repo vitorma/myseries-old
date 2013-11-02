@@ -4,6 +4,9 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
@@ -110,10 +113,18 @@ public class ScheduleListAdapter extends BaseAdapter {
     }
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
-        UniversalImageLoader.loader().displayImage(App.imageService().getPosterOf(series), viewHolder.mPoster,
-                UniversalImageLoader.defaultDisplayBuilder()
-                .showImageOnFail(R.drawable.generic_poster)
-                .build());
+        String posterFilePath = App.imageService().getPosterOf(series);
+        if(posterFilePath == null) {
+            UniversalImageLoader.loader().displayImage(UniversalImageLoader.drawableURI(R.drawable.generic_poster), 
+                    viewHolder.mPoster, 
+                    UniversalImageLoader.defaultDisplayBuilder()
+                    .build());
+        } else {
+            UniversalImageLoader.loader().displayImage(posterFilePath, 
+                    viewHolder.mPoster, 
+                    UniversalImageLoader.defaultDisplayBuilder()
+                    .showImageOnFail(R.drawable.generic_poster).build());
+        }
 
         viewHolder.mSeriesName.setText(series.name());
 

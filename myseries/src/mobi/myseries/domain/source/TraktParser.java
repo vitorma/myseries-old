@@ -19,6 +19,7 @@ import mobi.myseries.shared.Time;
 import mobi.myseries.shared.WeekDay;
 import android.util.Log;
 
+import com.google.android.gms.internal.p;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -53,6 +54,7 @@ public class TraktParser {
     private static final String SCREEN = "screen";
     private static final String SHOWS = "shows";
     private static final String TRAKT_TV_TIMEZONE = "GMT-8";
+    private static final String DEFAULT_POSTER_FILENAME = "poster-dark.jpg";
 
     private static final int COMPRESSED_POSTER_300 = 300;
 
@@ -339,8 +341,14 @@ public class TraktParser {
         JsonObject imagesObject = object.getAsJsonObject(IMAGES);
 
         String posterUrl = readStringSafely(imagesObject.get(POSTER));
+        if(!hasValidPoster(posterUrl))
+            posterUrl = "";
 
         return posterUrl.isEmpty() ? posterUrl : compressedPosterUrl(posterUrl, COMPRESSED_POSTER_300);
+    }
+
+    private static boolean hasValidPoster(String posterUrl) {
+        return !posterUrl.contains(DEFAULT_POSTER_FILENAME);
     }
 
     private static int readNumber(JsonObject object) {
