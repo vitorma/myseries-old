@@ -108,7 +108,7 @@ public class EpisodeDetailsAdapter extends BaseAdapter {
         String screenUrl = mEpisode.screenUrl();
         String screenPath = null;
         if(screenUrl.isEmpty()) {
-            screenUrl = UniversalImageLoader.drawableURI(R.drawable.generic_episode_image);
+            screenPath = UniversalImageLoader.drawableURI(R.drawable.generic_episode_image);
         } else {
             screenPath = UniversalImageLoader.httpURI(screenUrl);
         }
