@@ -44,7 +44,7 @@ public class ExternalStorageImageDirectory implements ImageRepository {
         String filePath = filePathFor(id);
         if(new File(filePath).exists())
             return filePath;
-        throw new ImageRepositoryException();
+        return null;
     }
 
     @Override
