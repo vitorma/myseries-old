@@ -43,6 +43,7 @@ public class UniversalImageLoader {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
         .defaultDisplayImageOptions(defaultOptions)
         .discCacheSize(DISK_CACHE_SIZE)
+        .denyCacheImageMultipleSizesInMemory()
         .writeDebugLogs()
         .build();
         return config;
