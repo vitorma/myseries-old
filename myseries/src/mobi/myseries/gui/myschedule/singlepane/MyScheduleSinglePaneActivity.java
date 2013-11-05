@@ -256,4 +256,16 @@ public class MyScheduleSinglePaneActivity extends BaseActivity implements OnTabS
     private void showSortDialog() {
         EpisodeSortingDialogFragment.newInstance(mSelectedMode).show(getFragmentManager(), "seriesSortingDialog");
     }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mTabAdapter.reset();
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpAdapter();
+    }
 }
