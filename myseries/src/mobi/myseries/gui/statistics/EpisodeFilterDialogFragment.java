@@ -1,4 +1,4 @@
-package mobi.myseries.gui.mystatistics;
+package mobi.myseries.gui.statistics;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;

@@ -1,14 +1,14 @@
-package mobi.myseries.gui.myschedule.singlepane;
+package mobi.myseries.gui.schedule.singlepane;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.activity.base.BaseActivity;
-import mobi.myseries.gui.myschedule.EpisodeFilterDialogFragment;
-import mobi.myseries.gui.myschedule.EpisodeSortingDialogFragment;
-import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
-import mobi.myseries.gui.myschedule.singlepane.ActionBarTabAdapter.OnTabSelectedListener;
-import mobi.myseries.gui.myschedule.singlepane.ScheduleListFragment.OnItemClickListener;
+import mobi.myseries.gui.schedule.EpisodeFilterDialogFragment;
+import mobi.myseries.gui.schedule.EpisodeSortingDialogFragment;
+import mobi.myseries.gui.schedule.SeriesFilterDialogFragment;
+import mobi.myseries.gui.schedule.singlepane.ActionBarTabAdapter.OnTabSelectedListener;
+import mobi.myseries.gui.schedule.singlepane.ScheduleListFragment.OnItemClickListener;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.TabDefinition;
 import mobi.myseries.gui.shared.ToastBuilder;
@@ -19,7 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MyScheduleSinglePaneActivity extends BaseActivity implements OnTabSelectedListener, OnItemClickListener {
+public class ScheduleSinglePaneActivity extends BaseActivity implements OnTabSelectedListener, OnItemClickListener {
     private static final String EXTRA_SHOW_LIST = "showEpisodeListFragment";
     private static final int INVALID_POSITION = -1;
 
@@ -37,7 +37,7 @@ public class MyScheduleSinglePaneActivity extends BaseActivity implements OnTabS
     }
 
     public static Intent newIntent(Context context, int scheduleMode, int selectedItem) {
-        return new Intent(context, MyScheduleSinglePaneActivity.class)
+        return new Intent(context, ScheduleSinglePaneActivity.class)
             .putExtra(Extra.SCHEDULE_MODE, scheduleMode)
             .putExtra(Extra.POSITION, selectedItem);
     }

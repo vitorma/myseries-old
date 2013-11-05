@@ -1,4 +1,4 @@
-package mobi.myseries.gui.mystatistics;
+package mobi.myseries.gui.statistics;
 
 import java.util.Map;
 import java.util.TreeMap;

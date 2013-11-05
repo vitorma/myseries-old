@@ -24,7 +24,7 @@
         <!-- Activities -->
 
         <activity
-            android:name=".gui.myseries.MySeriesActivity"
+            android:name="mobi.myseries.gui.library.LibraryActivity"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,36 +32,36 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="mobi.myseries.gui.myschedule.singlepane.MyScheduleSinglePaneActivity" />
+        <activity android:name="mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity" />
 
-        <activity android:name="mobi.myseries.gui.myschedule.dualpane.MyScheduleDualPaneActivity" />
+        <activity android:name="mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity" />
 
-        <activity android:name="mobi.myseries.gui.mystatistics.MyStatisticsActivity" />
+        <activity android:name="mobi.myseries.gui.statistics.StatisticsActivity" />
 
         <activity android:name="mobi.myseries.gui.features.FeaturesActivity" />
 
         <activity android:name=".gui.addseries.AddSeriesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity" />
+                android:value="mobi.myseries.gui.library.LibraryActivity" />
         </activity>
 
         <activity android:name=".gui.update.UpdateActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity" />
+                android:value="mobi.myseries.gui.library.LibraryActivity" />
         </activity>
 
         <activity android:name=".gui.backup.BackupActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity" />
+                android:value="mobi.myseries.gui.library.LibraryActivity" />
         </activity>
 
         <activity android:name=".gui.series.SeriesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.myseries.MySeriesActivity" />
+                android:value="mobi.myseries.gui.library.LibraryActivity" />
         </activity>
 
         <activity android:name="mobi.myseries.gui.episodes.EpisodesActivity" />

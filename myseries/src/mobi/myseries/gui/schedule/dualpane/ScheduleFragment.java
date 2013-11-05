@@ -1,4 +1,4 @@
-package mobi.myseries.gui.myschedule.dualpane;
+package mobi.myseries.gui.schedule.dualpane;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -7,9 +7,9 @@ import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.myschedule.ScheduleListAdapter;
-import mobi.myseries.gui.myschedule.SchedulePagerAdapter;
-import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
+import mobi.myseries.gui.schedule.ScheduleListAdapter;
+import mobi.myseries.gui.schedule.SchedulePagerAdapter;
+import mobi.myseries.gui.schedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
 import android.app.Fragment;
 import android.os.AsyncTask;

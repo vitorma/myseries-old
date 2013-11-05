@@ -2,8 +2,8 @@ package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.gui.myschedule.singlepane.MyScheduleSinglePaneActivity;
-import mobi.myseries.gui.myseries.MySeriesActivity;
+import mobi.myseries.gui.library.LibraryActivity;
+import mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +32,7 @@ public class ActionBar {
     }
 
     private PendingIntent homeIntentFrom(int appWidgetId) {
-        Intent intent = MySeriesActivity.newIntent(this.context);
+        Intent intent = LibraryActivity.newIntent(this.context);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         return PendingIntent.getActivity(this.context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -41,7 +41,7 @@ public class ActionBar {
     private PendingIntent scheduleIntentFrom(int appWidgetId) {
         int scheduleMode = App.preferences().forScheduleWidget(appWidgetId).scheduleMode();
 
-        Intent intent = MyScheduleSinglePaneActivity.newIntent(this.context, scheduleMode);
+        Intent intent = ScheduleSinglePaneActivity.newIntent(this.context, scheduleMode);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 

@@ -1,13 +1,13 @@
-package mobi.myseries.gui.myschedule.dualpane;
+package mobi.myseries.gui.schedule.dualpane;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.activity.base.BaseActivity;
-import mobi.myseries.gui.myschedule.EpisodeFilterDialogFragment;
-import mobi.myseries.gui.myschedule.EpisodeSortingDialogFragment;
-import mobi.myseries.gui.myschedule.SeriesFilterDialogFragment;
-import mobi.myseries.gui.myschedule.dualpane.ActionBarTabAdapter.OnTabSelectedListener;
+import mobi.myseries.gui.schedule.EpisodeFilterDialogFragment;
+import mobi.myseries.gui.schedule.EpisodeSortingDialogFragment;
+import mobi.myseries.gui.schedule.SeriesFilterDialogFragment;
+import mobi.myseries.gui.schedule.dualpane.ActionBarTabAdapter.OnTabSelectedListener;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.TabDefinition;
 import mobi.myseries.gui.shared.ToastBuilder;
@@ -18,7 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MyScheduleDualPaneActivity extends BaseActivity implements OnTabSelectedListener {
+public class ScheduleDualPaneActivity extends BaseActivity implements OnTabSelectedListener {
     private static final int NATURAL_FIRST_POSITION = 0;
 
     private int mSelectedMode;
@@ -31,7 +31,7 @@ public class MyScheduleDualPaneActivity extends BaseActivity implements OnTabSel
     }
 
     public static Intent newIntent(Context context, int scheduleMode, int selectedItem) {
-        return new Intent(context, MyScheduleDualPaneActivity.class)
+        return new Intent(context, ScheduleDualPaneActivity.class)
             .putExtra(Extra.SCHEDULE_MODE, scheduleMode)
             .putExtra(Extra.POSITION, selectedItem);
     }
