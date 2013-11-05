@@ -78,7 +78,7 @@ public class EpisodeDetailsAdapter extends BaseAdapter {
 
         mAirTime = (TextView) itemView.findViewById(R.id.airTime);
         mAirTime.setText(DatesAndTimes.toString(
-                mEpisode.airTime(),
+                mEpisode.airDate(),
                 android.text.format.DateFormat.getTimeFormat(App.context()),
                 ""));
 

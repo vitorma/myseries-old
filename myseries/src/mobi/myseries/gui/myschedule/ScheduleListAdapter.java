@@ -135,7 +135,7 @@ public class ScheduleListAdapter extends BaseAdapter {
         DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(App.context());
 
         //TODO(Reul): could be episode.airDay, but it looks incorrect and there are time inconsistencies between episodes of the same show
-        String airtime = DatesAndTimes.toString(episode.airTime(), airtimeFormat, "");
+        String airtime = DatesAndTimes.toString(episode.airDate(), airtimeFormat, "");
         viewHolder.mAirTime.setText(airtime);
 
         viewHolder.mNetwork.setText(series.network());

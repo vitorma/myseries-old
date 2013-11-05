@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,8 +38,8 @@ public class TraktParser {
     private static final String TITLE = "title";
     private static final String STATUS = "status";
     private static final String AIR_DAY = "air_day";
-    private static final String AIR_TIME = "air_time";
-    private static final String AIR_DATE = "first_aired";
+    private static final String AIR_TIME = "air_time_utc";
+    private static final String AIR_DATE = "first_aired_iso";
     private static final String RUNTIME = "runtime";
     private static final String NETWORK = "network";
     private static final String OVERVIEW = "overview";
@@ -56,7 +58,8 @@ public class TraktParser {
     private static final String TRAKT_TV_TIMEZONE = "GMT-8";
     private static final String TRAKT_DEFAULT_POSTER_FILENAME = "poster-dark.jpg";
     private static final String TRAKT_DEFAULT_SCREEN_FILENAME = "episode-dark.jpg";
-
+    private static final DateFormat ISO = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
+    
     private static final int COMPRESSED_POSTER_300 = 300;
 
     private static final JsonDeserializer<Series> SERIES_ADAPTER = new JsonDeserializer<Series>() {
@@ -277,14 +280,9 @@ public class TraktParser {
 
     private static Date readAirDate(JsonObject object) {
         try {
-            long unixtime = object.get(AIR_DATE).getAsLong();
+            String airDate = object.get(AIR_DATE).getAsString();
 
-            if (unixtime == 0) {
-                Log.d(TraktParser.class.getName(), "AIRDATE == (Unix time) 0. Returning null instead.");
-                return null;
-            }
-
-            return DatesAndTimes.toUtcTime(new Date(toMiliseconds(unixtime)), TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
+            return DatesAndTimes.parse(airDate, ISO, null);
         } catch (Exception e) {
             return null;
         }
