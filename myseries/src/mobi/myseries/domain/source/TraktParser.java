@@ -279,6 +279,10 @@ public class TraktParser {
     private static Date readAirDate(JsonObject object) {
         try {
             long airDate = object.get(AIR_DATE).getAsLong();
+            if (airDate == 0) {
+                Log.d(TraktParser.class.getName(), "AIRDATE == (Unix time) 0. Returning null instead.");
+                return null;
+            }
 
             return DatesAndTimes.parseDate(toMiliseconds(airDate), null);
         } catch (Exception e) {
