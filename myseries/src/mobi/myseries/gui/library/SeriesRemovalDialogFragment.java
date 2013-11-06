@@ -1,4 +1,4 @@
-package mobi.myseries.gui.myseries;
+package mobi.myseries.gui.library;
 
 import java.util.ArrayList;
 import java.util.List;

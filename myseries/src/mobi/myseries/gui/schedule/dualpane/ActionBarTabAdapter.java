@@ -1,6 +1,6 @@
-package mobi.myseries.gui.myschedule.dualpane;
+package mobi.myseries.gui.schedule.dualpane;
 
-import mobi.myseries.gui.myschedule.dualpane.ActionBarTabAdapter.OnTabSelectedListener;
+import mobi.myseries.gui.schedule.dualpane.ActionBarTabAdapter.OnTabSelectedListener;
 import mobi.myseries.gui.shared.TabDefinition;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;

@@ -1,4 +1,4 @@
-package mobi.myseries.gui.myschedule;
+package mobi.myseries.gui.schedule;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;

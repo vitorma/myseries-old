@@ -1,4 +1,4 @@
-package mobi.myseries.gui.myseries;
+package mobi.myseries.gui.library;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -14,10 +14,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MySeriesActivity extends BaseActivity {
+public class LibraryActivity extends BaseActivity {
 
     public static Intent newIntent(Context context) {
-        return new Intent(context, MySeriesActivity.class);
+        return new Intent(context, LibraryActivity.class);
     }
 
     private static final String ALREADY_CHECKED_FOR_UPDATE = "ALREADY_CHECKED_FOR_UPDATE";

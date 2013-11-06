@@ -2,11 +2,11 @@ package mobi.myseries.gui.activity.base;
 
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
-import mobi.myseries.gui.myschedule.dualpane.MyScheduleDualPaneActivity;
-import mobi.myseries.gui.myschedule.singlepane.MyScheduleSinglePaneActivity;
-import mobi.myseries.gui.myseries.MySeriesActivity;
-import mobi.myseries.gui.mystatistics.MyStatisticsActivity;
+import mobi.myseries.gui.library.LibraryActivity;
+import mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity;
+import mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
+import mobi.myseries.gui.statistics.StatisticsActivity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -130,27 +130,27 @@ public abstract class BaseActivity extends Activity {
     private void selectItem(int position) {
         switch (position) {
             case MENU_ITEM_MYSERIES:
-                if (this.getClass() != MySeriesActivity.class) {
-                    this.startActivity(topActivityIntentFrom(MySeriesActivity.newIntent(this)));
+                if (this.getClass() != LibraryActivity.class) {
+                    this.startActivity(topActivityIntentFrom(LibraryActivity.newIntent(this)));
                 }
 
                 break;
             case MENU_ITEM_MYSCHEDULE:
                 boolean isTablet = this.getResources().getBoolean(R.bool.isTablet);
 
-                if (!isTablet && this.getClass() != MyScheduleSinglePaneActivity.class) {
-                    this.startActivity(topActivityIntentFrom(MyScheduleSinglePaneActivity.newIntent(this, ScheduleMode.TO_WATCH)));
+                if (!isTablet && this.getClass() != ScheduleSinglePaneActivity.class) {
+                    this.startActivity(topActivityIntentFrom(ScheduleSinglePaneActivity.newIntent(this, ScheduleMode.TO_WATCH)));
                 }
 
-                if (isTablet && this.getClass() != MyScheduleDualPaneActivity.class) {
-                    this.startActivity(topActivityIntentFrom(MyScheduleDualPaneActivity.newIntent(this, ScheduleMode.TO_WATCH)));
+                if (isTablet && this.getClass() != ScheduleDualPaneActivity.class) {
+                    this.startActivity(topActivityIntentFrom(ScheduleDualPaneActivity.newIntent(this, ScheduleMode.TO_WATCH)));
                 }
 
                 break;
             case MENU_ITEM_MYSTATISTICS:
             default:
-                if (this.getClass() != MyStatisticsActivity.class) {
-                    this.startActivity(topActivityIntentFrom(MyStatisticsActivity.newIntent(this)));
+                if (this.getClass() != StatisticsActivity.class) {
+                    this.startActivity(topActivityIntentFrom(StatisticsActivity.newIntent(this)));
                 }
 
                 break;

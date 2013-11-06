@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        class="mobi.myseries.gui.mystatistics.MyStatisticsFragment"
+        class="mobi.myseries.gui.statistics.MyStatisticsFragment"
         android:id="@+id/statisticsFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package mobi.myseries.gui.mystatistics;
+package mobi.myseries.gui.statistics;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -10,10 +10,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MyStatisticsActivity extends BaseActivity {
+public class StatisticsActivity extends BaseActivity {
 
     public static Intent newIntent(Context context) {
-        return new Intent(context, MyStatisticsActivity.class);
+        return new Intent(context, StatisticsActivity.class);
     }
 
     @Override
