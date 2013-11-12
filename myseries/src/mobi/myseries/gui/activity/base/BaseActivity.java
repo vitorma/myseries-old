@@ -156,6 +156,8 @@ public abstract class BaseActivity extends Activity {
                 break;
         }
 
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
         this.mDrawerList.setItemChecked(position, true);
         this.mDrawerLayout.closeDrawer(this.mDrawerList);
     }
