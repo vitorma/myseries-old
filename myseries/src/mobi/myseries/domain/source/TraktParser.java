@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import mobi.myseries.domain.model.Episode;
@@ -37,9 +38,9 @@ public class TraktParser {
     private static final String TVDB_ID = "tvdb_id";
     private static final String TITLE = "title";
     private static final String STATUS = "status";
-    private static final String AIR_DAY = "air_day";
+    private static final String AIR_DAY = "air_day_utc";
     private static final String AIR_TIME = "air_time_utc";
-    private static final String AIR_DATE = "first_aired_iso";
+    private static final String AIR_DATE = "first_aired_utc";
     private static final String RUNTIME = "runtime";
     private static final String NETWORK = "network";
     private static final String OVERVIEW = "overview";
@@ -55,11 +56,9 @@ public class TraktParser {
     private static final String NUMBER = "number";
     private static final String SCREEN = "screen";
     private static final String SHOWS = "shows";
-    private static final String TRAKT_TV_TIMEZONE = "GMT-8";
     private static final String TRAKT_DEFAULT_POSTER_FILENAME = "poster-dark.jpg";
     private static final String TRAKT_DEFAULT_SCREEN_FILENAME = "episode-dark.jpg";
-    private static final DateFormat ISO = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-    
+
     private static final int COMPRESSED_POSTER_300 = 300;
 
     private static final JsonDeserializer<Series> SERIES_ADAPTER = new JsonDeserializer<Series>() {
@@ -75,8 +74,7 @@ public class TraktParser {
 
             Date airtime = null;
             if (time != null && airDay != null) {
-                airtime = new Date(time.toDate().getTime() + airDay.toDate().getTime());
-                airtime = DatesAndTimes.toUtcTime(airtime, TimeZone.getTimeZone(TRAKT_TV_TIMEZONE));
+                airtime = new Date(airDay.toDate().getTime() + time.toLong());
             }
 
             Series.Builder seriesBuilder = Series.builder()
@@ -280,9 +278,13 @@ public class TraktParser {
 
     private static Date readAirDate(JsonObject object) {
         try {
-            String airDate = object.get(AIR_DATE).getAsString();
+            long airDate = object.get(AIR_DATE).getAsLong();
+            if (airDate == 0) {
+                Log.d(TraktParser.class.getName(), "AIRDATE == (Unix time) 0. Returning null instead.");
+                return null;
+            }
 
-            return DatesAndTimes.parse(airDate, ISO, null);
+            return DatesAndTimes.parseDate(toMiliseconds(airDate), null);
         } catch (Exception e) {
             return null;
         }

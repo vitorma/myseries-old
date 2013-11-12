@@ -48,7 +48,7 @@ public class DatesAndTimes {
         }
     }
 
-    public static Date parse(Long date, Date defaultDate) {
+    public static Date parseDate(Long date, Date defaultDate) {
         if (date == null) {
             return defaultDate;
         }
