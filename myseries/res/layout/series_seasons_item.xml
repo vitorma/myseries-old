@@ -16,7 +16,7 @@
     <TextView
         android:id="@+id/allEpisodes"
         style="@style/TextView.Large"
-        android:textColor="@color/chunk_bar_background_plain"
+        android:textColor="@color/text_chunckbar_total"
         android:fontFamily="sans-serif-light"
         android:paddingTop="@dimen/gap_medium"
         android:paddingBottom="@dimen/gap_medium"
@@ -27,7 +27,8 @@
 
     <TextView
         android:id="@+id/watchedEpisodes"
-        style="@style/TextView.Large.Blue"
+        style="@style/TextView.Large"
+        android:textColor="@color/text_chunckbar_watched"
         android:fontFamily="sans-serif-light"
         android:paddingTop="@dimen/gap_medium"
         android:paddingBottom="@dimen/gap_medium"

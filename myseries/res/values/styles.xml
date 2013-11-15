@@ -223,6 +223,11 @@
         <item name="android:indeterminateDrawable">@drawable/progress_remove</item>
     </style>
 
+    <style name="ProgressBarHorizontal" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo_light</item>
+    </style>
+
     <!-- Button -->
 
     <style name="Button" parent="android:Widget.Holo.Light.Button">

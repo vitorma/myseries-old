@@ -15,7 +15,7 @@
         <TextView
             android:id="@+id/numberOfSeries"
             style="@style/TextView.XLarge"
-            android:textColor="@color/chunk_bar_background_plain"
+            android:textColor="@color/text_chunckbar_total"
             android:fontFamily="sans-serif-light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
         <TextView
             android:id="@+id/seriesWatched"
             style="@style/TextView.Medium"
-            android:textColor="@color/dark_blue"
+            android:textColor="@color/text_chunckbar_watched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -53,7 +53,7 @@
         <TextView
             android:id="@+id/numberOfSeasons"
             style="@style/TextView.XLarge"
-            android:textColor="@color/chunk_bar_background_plain"
+            android:textColor="@color/text_chunckbar_total"
             android:fontFamily="sans-serif-light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
         <TextView
             android:id="@+id/seasonsWatched"
             style="@style/TextView.Medium"
-            android:textColor="@color/dark_blue"
+            android:textColor="@color/text_chunckbar_watched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -90,7 +90,7 @@
         <TextView
             android:id="@+id/numberOfEpisodes"
             style="@style/TextView.XLarge"
-            android:textColor="@color/chunk_bar_background_plain"
+            android:textColor="@color/text_chunckbar_total"
             android:fontFamily="sans-serif-light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
         <TextView
             android:id="@+id/episodesWatched"
             style="@style/TextView.Medium"
-            android:textColor="@color/dark_blue"
+            android:textColor="@color/text_chunckbar_watched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -138,7 +138,7 @@
             <TextView
                 android:id="@+id/hours"
                 style="@style/TextView.XLarge"
-                android:textColor="@color/chunk_bar_background_plain"
+                android:textColor="@color/text_chunckbar_total"
                 android:fontFamily="sans-serif-light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -146,7 +146,7 @@
             <TextView
                 style="@style/TextView.Medium"
                 android:text="@string/hours_symbol"
-                android:textColor="@color/chunk_bar_background_plain"
+                android:textColor="@color/text_chunckbar_total"
                 android:fontFamily="sans-serif-light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -154,7 +154,7 @@
             <TextView
                 android:id="@+id/minutes"
                 style="@style/TextView.XLarge"
-                android:textColor="@color/chunk_bar_background_plain"
+                android:textColor="@color/text_chunckbar_total"
                 android:fontFamily="sans-serif-light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -162,7 +162,7 @@
             <TextView
                 style="@style/TextView.Medium"
                 android:text="@string/minutes_symbol"
-                android:textColor="@color/chunk_bar_background_plain"
+                android:textColor="@color/text_chunckbar_total"
                 android:fontFamily="sans-serif-light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -189,7 +189,7 @@
         <TextView
             android:id="@+id/watchedRuntime"
             style="@style/TextView.Medium"
-            android:textColor="@color/dark_blue"
+            android:textColor="@color/text_chunckbar_watched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

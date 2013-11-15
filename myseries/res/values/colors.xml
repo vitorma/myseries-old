@@ -25,7 +25,7 @@
     <color name="chunk_bar_background_gradient_to">@color/chunk_bar_background_plain</color>
     <color name="chunk_bar_foreground_gradient_from">@color/chunk_bar_foreground_plain</color>
     <color name="chunk_bar_foreground_gradient_to">@color/chunk_bar_foreground_plain</color>
-    <color name="chunk_bar_background_plain">#ff808080</color>
+    <color name="chunk_bar_background_plain">#ffb3b3b3</color>
     <color name="chunk_bar_foreground_plain">@color/dark_blue</color>
 
     <color name="chunk_bar_background_gradient_from_future">#ff222222</color>
@@ -37,6 +37,8 @@
     <color name="text_medium_gray">@color/gray</color>
     <color name="text_dark_gray">#ff272727</color>
     <color name="text_blue">@color/dark_blue</color>
+    <color name="text_chunckbar_watched">@color/chunk_bar_foreground_plain</color>
+    <color name="text_chunckbar_total">#ff656565</color>
 
     <!-- Background -->
     <color name="bg_light">#fff7f7f7</color>
