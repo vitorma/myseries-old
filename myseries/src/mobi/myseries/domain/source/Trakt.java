@@ -4,13 +4,13 @@ import java.io.InputStream;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+
 import mobi.myseries.application.Communications;
 import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
-
 import android.net.Uri;
 import android.net.Uri.Builder;
 import android.util.Log;
@@ -129,11 +129,13 @@ public class Trakt implements TraktApi {
 
     //XXX Trakt.tv does not work with milliseconds
     private String dropMillisecondsFromTimeStamp(long timestamp) {
-        return String.valueOf(timestamp).substring(0, 10); 
+        return String.valueOf(timestamp).substring(0, 10);
     }
 
     private String normalizeQuery(String string) {
+        string = string.trim();
         string = string.replaceAll("&", "and");
+        string = string.replaceAll("\\-", " ");
         string = Normalizer.normalize(string, Normalizer.Form.NFD);
         string = string.replaceAll("[^\\p{ASCII}]", "");
         string = string.replaceAll("[^a-zA-Z0-9' ]+", "");
