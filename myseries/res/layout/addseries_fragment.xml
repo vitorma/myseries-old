@@ -17,7 +17,7 @@
         <EditText
             android:id="@+id/searchField"
             android:hint="@string/series_name"
-            style="@style/EditText.PlainText.ActionDone"
+            style="@style/EditText.PlainText.ActionSearch"
             android:paddingLeft="8dp"
             android:paddingRight="109dp"
             android:layout_width="match_parent"
