@@ -196,6 +196,23 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="TextView.Dialog"/>
+
+    <style name="TextView.Dialog.Title">
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+        <item name="android:textColor">@color/dialog_title</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/gap_large</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="TextView.Dialog.Message">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/dialog_message</item>
+    </style>
+
     <!-- EditText -->
 
     <style name="EditText" parent="android:Widget.EditText">
@@ -263,8 +280,8 @@
     <!-- RadioGroup -->
 
     <style name="RadioGroup">
-        <item name="android:showDividers">none</item>
         <item name="android:orientation">vertical</item>
+        <item name="android:showDividers">none</item>
     </style>
 
     <!-- RadioButton -->

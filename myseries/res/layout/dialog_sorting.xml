@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_full_holo_light"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/dialog_full_holo_light">
+    android:layout_marginLeft="@dimen/gap_medium"
+    android:layout_marginRight="@dimen/gap_medium">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/TextView.Large.Blue"
-        android:padding="@dimen/gap_medium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <include
+        layout="@layout/dialog_title"/>
 
-    <View
-        android:id="@+id/titleDivider"
-        android:background="@color/blue"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"/>
+    <include
+        layout="@layout/dialog_title_divider"/>
 
     <ScrollView
         android:id="@+id/messagePanel"
@@ -29,29 +25,7 @@
             android:id="@+id/sortModes"
             style="@style/RadioGroup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/oldestFirst"
-                android:text="@string/oldest_first"
-                android:textSize="@dimen/text_size_medium"
-                style="@style/RadioButton"
-                android:paddingLeft="@dimen/gap_medium"
-                android:paddingRight="@dimen/gap_medium"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toucharea_minimum_side"/>
-
-            <RadioButton
-                android:id="@+id/newestFirst"
-                android:text="@string/newest_first"
-                android:textSize="@dimen/text_size_medium"
-                style="@style/RadioButton"
-                android:paddingLeft="@dimen/gap_medium"
-                android:paddingRight="@dimen/gap_medium"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toucharea_minimum_side"/>
-
-        </RadioGroup>
+            android:layout_height="wrap_content"/>
 
     </ScrollView>
 

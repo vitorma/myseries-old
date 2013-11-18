@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_full_holo_light"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_marginLeft="@dimen/gap_medium"
-    android:layout_marginRight="@dimen/gap_medium"
-    android:background="@drawable/dialog_full_holo_light">
+    android:layout_marginRight="@dimen/gap_medium">
 
-    <CheckedTextView
-        android:id="@+id/title"
-        style="@style/TextView.XLarge.DarkGray.Ellipsized"
-        android:textColor="@color/green"
-        android:background="@drawable/list_selector_holo_light"
-        android:checkMark="@drawable/checkbox"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:paddingTop="@dimen/gap_large"
-        android:paddingBottom="@dimen/gap_large"
-        android:paddingLeft="@dimen/gap_large"
-        android:paddingRight="@dimen/gap_large"
-        android:minHeight="48dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <include
+        layout="@layout/dialog_title"/>
 
-    <View
-        android:id="@+id/topDivider"
-        android:background="@color/green"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"/>
+    <include
+        layout="@layout/dialog_title_checked"/>
+
+    <include
+        layout="@layout/dialog_title_divider"/>
 
     <ScrollView
         android:id="@+id/scrollPanel"

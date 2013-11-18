@@ -131,7 +131,7 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
 
         for (Series s : followedSeries) {
             View v = inflater.inflate(R.layout.schedulewidget_preferences_filter_option, null);
-            final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.seriesCheck);
+            final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.checkBox);
 
             seriesCheck.setText(s.name());
             seriesCheck.setChecked(this.preferences.showSeries(s.id()));

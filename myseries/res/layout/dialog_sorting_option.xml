@@ -6,13 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <CheckedTextView
-        android:id="@+id/checkBox"
-        style = "@style/TextView.Dialog.Message"
-        android:background="@drawable/list_selector_holo_light"
-        android:checkMark="@drawable/checkbox"
-        android:clickable="true"
-        android:focusable="true"
+    <RadioButton
+        android:id="@+id/radioButton"
+        style="@style/RadioButton"
+        android:textSize="@dimen/text_size_large"
         android:gravity="center_vertical"
         android:paddingTop="@dimen/gap_medium"
         android:paddingBottom="@dimen/gap_medium"

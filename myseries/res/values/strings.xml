@@ -306,6 +306,11 @@
         <item>@string/newest_first</item>
     </string-array>
 
+    <string-array name="action_sort_seasons_array">
+        <item>@string/oldest_first</item>
+        <item>@string/newest_first</item>
+    </string-array>
+
     <!-- AppWidget -->
 
     <string name="schedulewidget">MySeries - Schedule</string>

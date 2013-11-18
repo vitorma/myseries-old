@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <CheckedTextView
-        android:id="@+id/seriesCheck"
+        android:id="@+id/checkBox"
         style = "@style/TextView.Medium.DarkGray"
         android:background="@drawable/list_selector_holo_light"
         android:checkMark="@drawable/checkbox"

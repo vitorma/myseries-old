@@ -313,6 +313,11 @@
         <item>@string/newest_first</item>
     </string-array>
 
+    <string-array name="action_sort_seasons_array">
+        <item>Mais antigas primeiro</item>
+        <item>Mais novas primeiro</item>
+    </string-array>
+
     <!-- AppWidget -->
 
     <string name="schedulewidget">MySeries - Agenda</string>

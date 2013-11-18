@@ -3,16 +3,14 @@ package mobi.myseries.gui.schedule;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.gui.shared.Extra;
-import android.app.AlertDialog;
+import mobi.myseries.gui.shared.SortingDialogBuilder;
+import mobi.myseries.gui.shared.SortingDialogBuilder.OnSelectOptionListener;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 
 public class EpisodeSortingDialogFragment extends DialogFragment {
-    private int scheduleMode;
-    private int sortMode;
+    private int mScheduleMode;
 
     public static EpisodeSortingDialogFragment newInstance(int scheduleMode) {
         Bundle args = new Bundle();
@@ -28,52 +26,22 @@ public class EpisodeSortingDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.scheduleMode = this.getArguments().getInt(Extra.SCHEDULE_MODE);
+        mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String format = this.getActivity().getString(R.string.sort_by_format);
-        String args = this.getActivity().getString(R.string.episodes);
-        String title = String.format(format, args);
-
-        this.sortMode = App.preferences().forMySchedule(this.scheduleMode).sortMode();
-
-        return new AlertDialog.Builder(this.getActivity())
-            .setTitle(title)
-            .setSingleChoiceItems(R.array.action_sort_episodes_array, this.sortMode, this.onItemClickListener())
-            .setNegativeButton(R.string.cancel, this.onCancelListener())
-            .setPositiveButton(R.string.ok, this.onConfirmListener())
-            .create();
+        return new SortingDialogBuilder(getActivity())
+            .setTitleArgument(R.string.episodes)
+            .setSortingOptions(R.array.action_sort_episodes_array, App.preferences().forMySchedule(mScheduleMode).sortMode(), onItemClickListener())
+            .build();
     }
 
-    private OnClickListener onItemClickListener() {
-        return new OnClickListener() {
+    private OnSelectOptionListener onItemClickListener() {
+        return new OnSelectOptionListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EpisodeSortingDialogFragment.this.sortMode = which;
-            }
-        };
-    }
-
-    private OnClickListener onCancelListener() {
-        return new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        };
-    }
-
-    private OnClickListener onConfirmListener() {
-        return new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                App.preferences()
-                    .forMySchedule(EpisodeSortingDialogFragment.this.scheduleMode)
-                    .putSortMode(EpisodeSortingDialogFragment.this.sortMode);
-
-                dialog.dismiss();
+            public void onSelect(int index) {
+                App.preferences().forMySchedule(mScheduleMode).putSortMode(index);
             }
         };
     }

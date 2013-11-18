@@ -5,12 +5,12 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.preferences.MySchedulePreferences;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.shared.Extra;
-import android.app.AlertDialog;
+import mobi.myseries.gui.shared.FilterDialogBuilder;
+import mobi.myseries.gui.shared.FilterDialogBuilder.OnFilterListener;
+import mobi.myseries.gui.shared.FilterDialogBuilder.OnToggleOptionListener;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 
 public class EpisodeFilterDialogFragment extends DialogFragment {
@@ -56,45 +56,40 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
             };
         }
 
-        return new AlertDialog.Builder(this.getActivity())
-            .setTitle(R.string.episodesToShow)
-            .setMultiChoiceItems(episodesToShowArrayResource, episodesToShow, this.onItemClickListener(episodesToShow))
-            .setNegativeButton(R.string.cancel, this.onCancelListener())
-            .setPositiveButton(R.string.ok, this.onConfirmListener(episodesToShow))
-            .create();
+        return new FilterDialogBuilder(this.getActivity())
+        .setCheckableTitle(R.string.episodesToShow)
+        .setDefaultFilterOptions(episodesToShowArrayResource, episodesToShow, this.onItemClickListener(episodesToShow))
+        .setOnFilterListener(onConfirmListener(episodesToShow))
+        .build();
     }
 
-    private OnMultiChoiceClickListener onItemClickListener(final boolean[] episodesToShow) {
-        return new OnMultiChoiceClickListener() {
+    private OnToggleOptionListener onItemClickListener(final boolean[] episodesToShow) {
+        return new OnToggleOptionListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+            public void onToggleOption(DialogInterface dialog, int which, boolean isChecked) {
                 episodesToShow[which] = isChecked;
             }
-        };
-    }
 
-    private OnClickListener onCancelListener() {
-        return new OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onToggleAllOptions(DialogInterface dialog, boolean isChecked) {
+                for (int i=0; i<episodesToShow.length; i++) {
+                    episodesToShow[i] = isChecked;
+                }
             }
         };
     }
 
-    private OnClickListener onConfirmListener(final boolean[] episodesToShow) {
-        return new OnClickListener() {
+    private OnFilterListener onConfirmListener(final boolean[] episodesToShow) {
+        return new OnFilterListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                MySchedulePreferences prefs = App.preferences().forMySchedule(EpisodeFilterDialogFragment.this.scheduleMode);
+            public void onFilter() {
+                MySchedulePreferences prefs = App.preferences().forMySchedule(scheduleMode);
 
                 prefs.putIfShowSpecialEpisodes(episodesToShow[SPECIAL_EPISODES_ITEM]);
 
-                if (EpisodeFilterDialogFragment.this.scheduleMode != ScheduleMode.TO_WATCH) {
+                if (scheduleMode != ScheduleMode.TO_WATCH) {
                     prefs.putIfShowWatchedEpisodes(episodesToShow[WATCHED_EPISODES_ITEM]);
                 }
-
-                dialog.dismiss();
             }
         };
     }

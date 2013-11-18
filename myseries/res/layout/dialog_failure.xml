@@ -8,15 +8,18 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/TextView.Large.Blue"
+        style="@style/TextView.XLarge.DarkGray.Ellipsized"
+        android:textColor="#ff808080"
         android:visibility="gone"
-        android:padding="@dimen/gap_medium"
+        android:gravity="center_vertical"
+        android:padding="@dimen/gap_large"
+        android:minHeight="48dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <View
         android:id="@+id/titleDivider"
-        android:background="@color/blue"
+        android:background="#ff808080"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="2dp"/>
@@ -31,11 +34,12 @@
 
         <TextView
             android:id="@+id/message"
-            style="@style/TextView.Medium.DarkGray"
+            style = "@style/TextView.Large.DarkGray"
+            android:paddingLeft="@dimen/gap_large"
+            android:paddingRight="@dimen/gap_large"
+            android:minHeight="48dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/gap_medium"
-            android:paddingRight="@dimen/gap_medium"/>
+            android:layout_height="wrap_content"/>
 
     </ScrollView>
 

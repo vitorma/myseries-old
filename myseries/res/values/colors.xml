@@ -53,4 +53,9 @@
     <!-- ActionBar -->
     <color name="pressed_actionbar">#cccccccc</color>
 
+    <!-- Dialog -->
+    <color name="dialog_title">#ff808080</color>
+    <color name="dialog_title_divider">#ff808080</color>
+    <color name="dialog_message">@color/dark_gray</color>
+
 </resources>

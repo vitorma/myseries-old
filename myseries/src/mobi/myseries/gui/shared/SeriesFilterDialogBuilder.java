@@ -50,7 +50,7 @@ public class SeriesFilterDialogBuilder {
     public Dialog build() {
         Dialog dialog = new Dialog(this.context, R.style.MySeriesTheme_Dialog);
 
-        dialog.setContentView(R.layout.dialog_filter);
+        dialog.setContentView(R.layout.dialog_filter_old);
 
         this.setUpTitleFor(dialog);
         this.setUpOptionViewsFor(dialog);
@@ -90,7 +90,7 @@ public class SeriesFilterDialogBuilder {
 
         for (Series s : this.options.keySet()) {
             View v = inflater.inflate(R.layout.dialog_filter_option, null);
-            final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.seriesCheck);
+            final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.checkBox);
 
             seriesCheck.setText(s.name());
             seriesCheck.setChecked(this.options.get(s));

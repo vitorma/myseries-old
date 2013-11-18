@@ -4,10 +4,10 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;
-import android.app.AlertDialog;
+import mobi.myseries.gui.shared.ConfirmationDialogBuilder;
+import mobi.myseries.gui.shared.DialogButtonOnClickListener;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 public class SeriesRemovalConfirmationDialogFragment extends DialogFragment {
@@ -29,17 +29,17 @@ public class SeriesRemovalConfirmationDialogFragment extends DialogFragment {
 
         String message = App.resources().getString(R.string.confirmation_removal_single_series, series.name());
 
-        return new AlertDialog.Builder(this.getActivity())
+        return new ConfirmationDialogBuilder(this.getActivity())
             .setMessage(message)
             .setNegativeButton(R.string.no, null)
-            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            .setPositiveButton(R.string.yes, new DialogButtonOnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(Dialog dialog) {
                     App.seriesFollowingService().unfollow(series);
                     App.preferences().removeEntriesRelatedToSeries(series);
 
                     dialog.dismiss();
                 }
-            }).create();
+            }).build();
     }
 }
