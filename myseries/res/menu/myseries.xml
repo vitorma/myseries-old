@@ -56,4 +56,9 @@
         android:title="@string/menu_backup_restore"
         android:showAsAction="never"/>
 
+    <item
+        android:id="@+id/settings"
+        android:title="@string/menu_settings"
+        android:showAsAction="never"/>
+
 </menu>

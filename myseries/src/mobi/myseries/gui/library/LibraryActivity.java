@@ -119,6 +119,8 @@ public class LibraryActivity extends BaseActivity {
                     this.startActivity(BackupActivity.newIntent(this));
                     return true;
                 }
+            case R.id.settings:
+                //XXX Implement me
             default:
                 return super.onOptionsItemSelected(item);
         }

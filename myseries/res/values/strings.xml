@@ -274,6 +274,7 @@
     <string name="action_sort">SORT</string>
     <string name="menu_update">UPDATE</string>
     <string name="menu_backup_restore">BACKUP/RESTORE</string>
+    <string name="menu_settings">SETTINGS</string>
 
     <string name="include_special_episodes">Include special episodes</string>
     <string name="include_unaired_episodes">Include unaired episodes</string>

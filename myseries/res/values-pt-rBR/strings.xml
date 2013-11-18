@@ -281,6 +281,7 @@
 
     <string name="menu_update">ATUALIZAR</string>
     <string name="menu_backup_restore">BACKUP/RESTAURAÇÃO</string>
+    <string name="menu_settings">CONFIGURAÇÕES</string>
 
     <string name="include_special_episodes">Incluir episódios especiais</string>
     <string name="include_unaired_episodes">Incluir episódios não lançados</string>
