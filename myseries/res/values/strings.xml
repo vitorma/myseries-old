@@ -272,7 +272,7 @@
     <string name="menu_remove">REMOVE</string>
     <string name="action_filter">FILTER</string>
     <string name="action_sort">SORT</string>
-    <string name="menu_update">UPDATES</string>
+    <string name="menu_update">UPDATE</string>
     <string name="menu_backup_restore">BACKUP/RESTORE</string>
 
     <string name="include_special_episodes">Include special episodes</string>

@@ -279,7 +279,7 @@
     <string name="action_filter">FILTRAR</string>
     <string name="action_sort">ORDENAR</string>
 
-    <string name="menu_update">ATUALIZAÇÕES</string>
+    <string name="menu_update">ATUALIZAR</string>
     <string name="menu_backup_restore">BACKUP/RESTAURAÇÃO</string>
 
     <string name="include_special_episodes">Incluir episódios especiais</string>

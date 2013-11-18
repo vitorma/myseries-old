@@ -109,6 +109,9 @@ public class LibraryActivity extends BaseActivity {
                 this.showSortDialog();
                 return true;
             case R.id.update:
+                this.runManualUpdate();
+                return true;
+            case R.id.updates:
                 this.startActivity(UpdateActivity.newIntent(this));
                 return true;
             case R.id.backup_restore:
@@ -143,5 +146,13 @@ public class LibraryActivity extends BaseActivity {
 
     private void showSortDialog() {
         new SeriesSortingDialogFragment().show(this.getFragmentManager(), "seriesSortingDialog");
+    }
+
+    private void runManualUpdate() {
+        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
+            new ToastBuilder(this).setMessage(R.string.no_series_to_update).build().show();
+        } else {
+            App.updateSeriesService().updateData();
+        }
     }
 }

@@ -10,7 +10,6 @@ import mobi.myseries.application.update.BaseUpdateListener;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.shared.NotificationDispatcherForOrdinaryViews;
-import mobi.myseries.gui.shared.ToastBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -79,14 +78,6 @@ public class UpdateActivity extends BaseActivity {
 
         this.latestSuccessfulUpdateTextView = (TextView) this.findViewById(R.id.latestSuccessfulUpdateMessage);
         this.refreshLatestSuccessfulUpdateTextView();
-
-        this.updateButton = (Button) this.findViewById(R.id.updateButton);
-        this.updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpdateActivity.this.runManualUpdate();
-            }
-        });
     }
 
     private void saveSettings(int checkedButtonId) {
@@ -149,14 +140,6 @@ public class UpdateActivity extends BaseActivity {
 
     private UpdatePreferences updatePreferences() {
         return App.preferences().forUpdate();
-    }
-
-    private void runManualUpdate() {
-        if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
-            new ToastBuilder(this).setMessage(R.string.no_series_to_update).build().show();
-        } else {
-            App.updateSeriesService().updateData();
-        }
     }
 
     private final UpdateListener updateListener = new BaseUpdateListener() {

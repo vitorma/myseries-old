@@ -144,15 +144,6 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/updateButton"
-                android:text="@string/update_now"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toucharea_minimum_side"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
-
         </LinearLayout>
 
     </ScrollView>
