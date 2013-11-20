@@ -2,6 +2,7 @@ package mobi.myseries.gui.activity.base;
 
 import mobi.myseries.R;
 import mobi.myseries.application.schedule.ScheduleMode;
+import mobi.myseries.gui.features.FeaturesActivity;
 import mobi.myseries.gui.library.LibraryActivity;
 import mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity;
 import mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity;
@@ -27,6 +28,7 @@ public abstract class BaseActivity extends Activity {
     private static final int MENU_ITEM_MYSERIES = 0;
     private static final int MENU_ITEM_MYSCHEDULE = 1;
     private static final int MENU_ITEM_MYSTATISTICS = 2;
+    private static final int MENU_ITEM_FEATURES = 3;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -148,11 +150,18 @@ public abstract class BaseActivity extends Activity {
 
                 break;
             case MENU_ITEM_MYSTATISTICS:
-            default:
                 if (this.getClass() != StatisticsActivity.class) {
                     this.startActivity(topActivityIntentFrom(StatisticsActivity.newIntent(this)));
                 }
 
+                break;
+            case MENU_ITEM_FEATURES:
+                if (this.getClass() != FeaturesActivity.class) {
+                    this.startActivity(topActivityIntentFrom(FeaturesActivity.newIntent(this)));
+                }
+
+                break;
+            default:
                 break;
         }
 

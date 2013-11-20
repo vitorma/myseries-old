@@ -1,53 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="320dp"
-        android:padding="@dimen/gap_large"
-        android:layout_height="wrap_content">
+    <ListView
+        android:id="@+id/products_list"
+        android:listSelector="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-        <!-- SERIES -->
+    <!-- Empty State -->
+
+    <LinearLayout
+        android:id="@+id/empty_state"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/gap_medium"
+        android:paddingBottom="@dimen/gap_medium"
+        android:paddingLeft="@dimen/gap_large"
+        android:paddingRight="@dimen/gap_large"
+        android:layout_width="@dimen/empty_state_view_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
         <TextView
-            android:id="@+id/numberOfSeries"
-            style="@style/TextView.XLarge"
-            android:textColor="@color/chunk_bar_background_plain"
+            android:id="@+id/title"
+            android:text="@string/features_no_products_available"
+            style="@style/TextView.XLarge.DarkGray"
             android:fontFamily="sans-serif-light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"/>
-
-        <TextView
-            android:id="@+id/series"
-            android:text="@string/series_uppercase"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignBottom ="@id/numberOfSeries"/>
-
-        <ProgressBar
-            android:id="@+id/seriesWatchedProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
+            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/series"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/seriesWatched"
-            style="@style/TextView.Medium"
-            android:textColor="@color/dark_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/seriesWatchedProgressBar"/>
+            android:id="@+id/hiddenEpisodes"
+            android:text="@string/features_watch_out_for_new_products"
+            android:textSize="@dimen/text_size_xmedium"
+            android:textColor="@color/yellow"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/empty_state_internal_gap_top"
+            android:layout_marginBottom="@dimen/empty_state_internal_gap_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</ScrollView>
+</FrameLayout>

@@ -206,6 +206,10 @@
     <string name="update_on_wifi_or_data_plan">When any connection is available</string>
     <string name="do_not_update">Never (not recommended)</string>
 
+    <!-- Features -->
+    <string name="features_no_products_available">No products available</string>
+    <string name="features_watch_out_for_new_products">Watch out for new products</string>
+
     <!-- Backup -->
     
     <string name="backup_restore">Backup/Restore</string>

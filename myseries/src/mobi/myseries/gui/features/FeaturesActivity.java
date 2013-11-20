@@ -1,10 +1,16 @@
 package mobi.myseries.gui.features;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import mobi.myseries.R;
 import mobi.myseries.gui.activity.base.BaseActivity;
 
 public class FeaturesActivity extends BaseActivity {
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, FeaturesActivity.class);
+    }
 
     @Override
     protected void init(Bundle savedInstanceState) {
