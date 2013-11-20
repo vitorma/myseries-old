@@ -4,7 +4,7 @@
 
     <PreferenceCategory android:title="@string/settings_category_updates">
 
-        <ListPreference
+        <mobi.myseries.gui.settings.ThemedListPreference
             android:key="Update.whenUpdateAutomatically"
             android:title="@string/settings_update_automatically"
             android:dialogTitle="@string/settings_update_automatically"
