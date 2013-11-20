@@ -274,14 +274,14 @@
     <string name="restore_google_drive_error">Há algo errado com o Google Drive.</string>
 
     <!-- Menu -->
-    <string name="menu_add">ADICIONAR</string>
-    <string name="menu_remove">REMOVER</string>
-    <string name="action_filter">FILTRAR</string>
-    <string name="action_sort">ORDENAR</string>
+    <string name="menu_add">Adicionar</string>
+    <string name="menu_remove">Remover</string>
+    <string name="action_filter">Filtrar</string>
+    <string name="action_sort">Ordenar</string>
 
-    <string name="menu_update">ATUALIZAR</string>
-    <string name="menu_backup_restore">BACKUP/RESTAURAÇÃO</string>
-    <string name="menu_settings">CONFIGURAÇÕES</string>
+    <string name="menu_update">Atualizar</string>
+    <string name="menu_backup_restore">Backup/Restauração</string>
+    <string name="menu_settings">Configurações</string>
 
     <string name="include_special_episodes">Incluir episódios especiais</string>
     <string name="include_unaired_episodes">Incluir episódios não lançados</string>
@@ -317,6 +317,20 @@
     <string-array name="action_sort_seasons_array">
         <item>Mais antigas primeiro</item>
         <item>Mais novas primeiro</item>
+    </string-array>
+
+    <!-- Settings -->
+
+    <string name="settings_activity_title">Configurações</string>
+    <string name="settings_category_updates">ATUALIZAÇÕES</string>
+    <string name="settings_update_automatically">Atualizar automaticamente</string>
+    <string name="settings_update_automatically_always">Através de qualquer conexão disponível</string>
+    <string name="settings_update_automatically_only_on_wifi">Somente via Wi-Fi</string>
+    <string name="settings_update_automatically_never">Nunca (não recomendado)</string>
+    <string-array name="settings_update_automatically_entries">
+        <item>@string/settings_update_automatically_always</item>
+        <item>@string/settings_update_automatically_only_on_wifi</item>
+        <item>@string/settings_update_automatically_never</item>
     </string-array>
 
     <!-- AppWidget -->

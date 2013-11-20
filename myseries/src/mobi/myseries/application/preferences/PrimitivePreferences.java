@@ -5,6 +5,7 @@ import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.preference.PreferenceManager;
 
 public class PrimitivePreferences implements Publisher<SharedPreferences.OnSharedPreferenceChangeListener>{
     public static final String SEPARATOR = ".";
@@ -12,16 +13,13 @@ public class PrimitivePreferences implements Publisher<SharedPreferences.OnShare
     private static final String DEFAULT_KEY_SUFFIX = "";
 
     private Context context;
-    private String name;
     private String keyPrefix;
     private String keySuffix;
 
-    public PrimitivePreferences(Context context, String name) {
+    public PrimitivePreferences(Context context) {
         Validate.isNonNull(context, "context");
-        Validate.isNonBlank(name, "name");
 
         this.context = context;
-        this.name = name;
         this.keyPrefix = DEFAULT_KEY_PREFIX;
         this.keySuffix = DEFAULT_KEY_SUFFIX;
     }
@@ -79,7 +77,7 @@ public class PrimitivePreferences implements Publisher<SharedPreferences.OnShare
     }
 
     private SharedPreferences getSharedPreferences() {
-        return this.context.getSharedPreferences(this.name, Context.MODE_PRIVATE);
+        return PreferenceManager.getDefaultSharedPreferences(this.context);
     }
 
     private SharedPreferences.Editor getEditor() {

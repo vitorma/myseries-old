@@ -268,13 +268,13 @@
     <string name="restore_google_drive_error">Something is wrong with Google Drive.</string>
 
     <!-- Menu -->
-    <string name="menu_add">ADD</string>
-    <string name="menu_remove">REMOVE</string>
-    <string name="action_filter">FILTER</string>
-    <string name="action_sort">SORT</string>
-    <string name="menu_update">UPDATE</string>
-    <string name="menu_backup_restore">BACKUP/RESTORE</string>
-    <string name="menu_settings">SETTINGS</string>
+    <string name="menu_add">Add</string>
+    <string name="menu_remove">Remove</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_sort">Sort</string>
+    <string name="menu_update">Update</string>
+    <string name="menu_backup_restore">Backup/Restore</string>
+    <string name="menu_settings">Settings</string>
 
     <string name="include_special_episodes">Include special episodes</string>
     <string name="include_unaired_episodes">Include unaired episodes</string>
@@ -311,6 +311,26 @@
         <item>@string/oldest_first</item>
         <item>@string/newest_first</item>
     </string-array>
+
+    <!-- Settings -->
+
+    <string name="settings_activity_title">Settings</string>
+    <string name="settings_category_updates">UPDATES</string>
+    <string name="settings_update_automatically">Update automatically</string>
+    <string name="settings_update_automatically_always">When any connection is available</string>
+    <string name="settings_update_automatically_only_on_wifi">Only when connected to Wi-Fi</string>
+    <string name="settings_update_automatically_never">Never (not recommended)</string>
+    <string-array name="settings_update_automatically_entries">
+        <item>@string/settings_update_automatically_always</item>
+        <item>@string/settings_update_automatically_only_on_wifi</item>
+        <item>@string/settings_update_automatically_never</item>
+    </string-array>
+    <string-array name="settings_update_automatically_entryValues">
+        <item>UPDATE_AUTOMATICALLY_ALWAYS</item>
+        <item>UPDATE_AUTOMATICALLY_ONLY_ON_WIFI</item>
+        <item>UPDATE_AUTOMATICALLY_NEVER</item>
+    </string-array>
+    <string name="settings_update_automatically_defaultValue">UPDATE_AUTOMATICALLY_ALWAYS</string>
 
     <!-- AppWidget -->
 

@@ -27,8 +27,8 @@ public class UpdatePolicy {
         } else if (!communications.isConnectedToWiFi() /* hence is connected on data plan? */) {
             // TODO(Gabriel): Rename setting as onlyUpdateOnWiFi
             Log.d(UpdatePolicy.class.getName(),
-                    "Update on data plan? " + settings.updateOnDataPlan());
-            return settings.updateOnDataPlan();
+                    "Update on data plan? " + settings.updateAlways());
+            return settings.updateAlways();
         }
 
         return true;

@@ -1,13 +1,15 @@
 package mobi.myseries.application.preferences;
 
 import java.util.Collection;
-import mobi.myseries.application.App;
+
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
 import android.util.SparseArray;
 
 public class Preferences {
+    //XXX Define all keys (with its prefixes) in an xml file (donottranslate.xml)
+    //    once some of them are referred in other places (like the preferences.xml file)
     private static final String KEY_PREFIX_BACKUP_RESTORE = "BackupRestore";
     private static final String KEY_PREFIX_MYSCHEDULE = "MySchedule";
     private static final String KEY_PREFIX_MYSERIES = "MySeries";
@@ -16,9 +18,6 @@ public class Preferences {
     private static final String KEY_PREFIX_UPDATE = "Update";
     private static final String KEY_PREFIX_SERIES_DETAILS = "Series";
     private static final String KEY_PREFIX_EPISODES = "Episodes";
-
-    private static final String PREFERENCES_NAME = "mobi.myseries.preferences";
-    private static final String PREFERENCES_NAME_APPWIDGET = "mobi.myseries.preferences.appwidget";
 
     private final Context context;
     private PrimitivePreferences forActivities;
@@ -42,7 +41,7 @@ public class Preferences {
     /* For activities */
 
     public PrimitivePreferences forActivities() {
-        this.forActivities = new PrimitivePreferences(this.context, Preferences.PREFERENCES_NAME);
+        this.forActivities = new PrimitivePreferences(this.context);
         return this.forActivities;
     }
 
@@ -64,7 +63,7 @@ public class Preferences {
         if(this.forMySchedules == null)
             this.forMySchedules = new SparseArray<MySchedulePreferences>();
         if(this.forMySchedules.get(scheduleMode) == null)
-            this.forMySchedules.put(scheduleMode, 
+            this.forMySchedules.put(scheduleMode,
                                     new MySchedulePreferences(this.forActivities()
                                             .addKeyPrefix(Preferences.KEY_PREFIX_MYSCHEDULE)
                                             .addKeyPrefix(String.valueOf(scheduleMode))));
@@ -107,7 +106,7 @@ public class Preferences {
     /* For app widgets */
 
     public PrimitivePreferences forAppWidgets() {
-        this.forAppWidgets = new PrimitivePreferences(App.context(), Preferences.PREFERENCES_NAME_APPWIDGET);
+        this.forAppWidgets = new PrimitivePreferences(this.context);
         return this.forAppWidgets;
     }
 

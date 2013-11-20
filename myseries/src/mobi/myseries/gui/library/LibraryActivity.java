@@ -6,8 +6,8 @@ import mobi.myseries.application.features.Feature;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.backup.BackupActivity;
+import mobi.myseries.gui.settings.SettingsActivity;
 import mobi.myseries.gui.shared.ToastBuilder;
-import mobi.myseries.gui.update.UpdateActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -111,16 +111,14 @@ public class LibraryActivity extends BaseActivity {
             case R.id.update:
                 this.runManualUpdate();
                 return true;
-            case R.id.updates:
-                this.startActivity(UpdateActivity.newIntent(this));
-                return true;
             case R.id.backup_restore:
                 if (App.features().isVisible(Feature.BACKUP)) {
                     this.startActivity(BackupActivity.newIntent(this));
                     return true;
                 }
             case R.id.settings:
-                //XXX Implement me
+                this.startActivity(SettingsActivity.newIntent(this));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

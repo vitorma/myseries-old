@@ -45,11 +45,6 @@
         android:title="@string/menu_update"
         android:showAsAction="never"/>
 
-    <item
-        android:id="@+id/updates"
-        android:title="@string/menu_update"
-        android:showAsAction="never"/>
-
     <!-- This item may be hidden by the activity -->
     <item
         android:id="@+id/backup_restore"
