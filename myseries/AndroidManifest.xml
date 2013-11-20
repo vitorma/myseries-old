@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -87,8 +89,15 @@
         </activity>
 
         <!-- Broadcast Receivers -->
-
-        <!-- TODO: Show widget to users who has bought widget feature
+        
+        <receiver android:name="mobi.myseries.application.notification.service.BootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+        
+<!-- TODO: Show widget to users who has bought widget feature
             receiver
             android:name="mobi.myseries.gui.appwidget.ScheduleWidget"
             android:enabled="true"
@@ -120,9 +129,12 @@
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS" /-->
 
-        <service
-            android:name="mobi.myseries.gui.appwidget.TabService" />
-
+        <service android:name="mobi.myseries.gui.appwidget.TabService" />
+        
+        <service android:name="mobi.myseries.application.notification.service.NotificationScheduler" />
+        
+        <service android:name="mobi.myseries.application.notification.service.ScheduledNotificationAgent" />
+        
     </application>
 
 </manifest>

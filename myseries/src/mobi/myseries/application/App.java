@@ -11,6 +11,7 @@ import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.marking.MarkingService;
 import mobi.myseries.application.message.MessageService;
 import mobi.myseries.application.notification.NotificationService;
+import mobi.myseries.application.notification.service.NotificationScheduler;
 import mobi.myseries.application.preferences.Preferences;
 import mobi.myseries.application.schedule.Schedule;
 import mobi.myseries.application.search.SearchService;
@@ -80,6 +81,8 @@ public class App extends Application {
 
         preferences = new Preferences(this);
         features = new Features();
+
+        NotificationScheduler.setupAlarm(context());
     }
 
     public static Context context() {

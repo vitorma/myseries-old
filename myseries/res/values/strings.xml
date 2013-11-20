@@ -260,7 +260,7 @@
     <string name="restore_failed_without_cause">Restore failed.</string>
 
     <string name="restore_sdcard_not_available">Your SD card is unavailable.</string>
-    <string name="restore_sdcard_file_not_found">Backup files not found in SD card.</string>
+    <string name="restore_sdcard_file_not_found">Backup files nonumbert found in SD card.</string>
     <string name="restore_dropbox_error">Something is wrong with Dropbox.</string>
     <string name="restore_dropbox_file_not_found">Backup files not found in Dropbox.</string>
     <string name="restore_google_drive_file_not_found">Backup files not found in Google Drive.</string>
@@ -361,6 +361,10 @@
         <string name="hours_symbol">h</string>
         <string name="minutes_symbol">min</string>
 
+    <!-- Notifications -->
+    
+    <string name="episode_starting_notification" formatted="false">%s %s starts at %s.</string>
+        
     <!-- Do not translate -->
     <string name="app">MySeries</string>
 
