@@ -9,7 +9,7 @@ import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
-import mobi.myseries.application.preferences.MyStatisticsPreferences;
+import mobi.myseries.application.preferences.StatisticsPreferences;
 import mobi.myseries.application.update.BaseUpdateListener;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Episode;
@@ -53,7 +53,7 @@ public class MyStatisticsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        App.preferences().forActivities().register(mOnSharedPreferenceChangeListener);
+        App.preferences().forStatistics().register(mOnSharedPreferenceChangeListener);
         App.seriesFollowingService().register(this.mSeriesFollowingListener);
         App.updateSeriesService().register(this.mUpdateListener);
         App.backupService().register(this.mBackupListener);
@@ -63,7 +63,7 @@ public class MyStatisticsFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        App.preferences().forActivities().deregister(mOnSharedPreferenceChangeListener);
+        App.preferences().forStatistics().deregister(mOnSharedPreferenceChangeListener);
         App.seriesFollowingService().deregister(this.mSeriesFollowingListener);
         App.updateSeriesService().deregister(this.mUpdateListener);
         App.backupService().deregister(this.mBackupListener);
@@ -175,7 +175,7 @@ public class MyStatisticsFragment extends Fragment {
     //XXX (Cleber) Execute this method asynchronously
     //TODO (Cleber) Break this method, please
     private void update() {
-        MyStatisticsPreferences preferences = App.preferences().forMyStatistics();
+        StatisticsPreferences preferences = App.preferences().forStatistics();
 
         int nSeries = 0;
         int watchedSeries = 0;
@@ -194,7 +194,8 @@ public class MyStatisticsFragment extends Fragment {
             int currentSeriesEpisodes = 0;
             int currentSeriesWatchedEpisodes = 0;
 
-            if (!preferences.countSeries(s.id())) {
+            //XXX (Cleber) Get series collection above specifying seriesIds with prefs.seriesToCount
+            if (preferences.dontCountSeries(s.id())) {
                 continue;
             }
 

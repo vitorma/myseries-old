@@ -2,7 +2,6 @@ package mobi.myseries.gui.schedule.dualpane;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.preferences.MySchedulePreferencesListener;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
@@ -12,6 +11,8 @@ import mobi.myseries.gui.schedule.SchedulePagerAdapter;
 import mobi.myseries.gui.schedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
 import android.app.Fragment;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerTitleStrip;
@@ -26,7 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class ScheduleFragment extends Fragment implements ScheduleListener, OnPageChangeListener, MySchedulePreferencesListener {
+public class ScheduleFragment extends Fragment implements ScheduleListener, OnPageChangeListener, OnSharedPreferenceChangeListener {
     private int mScheduleMode;
     private int mSelectedItem;
 
@@ -81,14 +82,14 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     public void onStart() {
         super.onStart();
 
-        App.preferences().forMySchedule(mScheduleMode).register(this);
+        App.preferences().forSchedule().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        App.preferences().forMySchedule(mScheduleMode).deregister(this);
+        App.preferences().forSchedule().deregister(this);
         mItems.deregister(this);
     }
 
@@ -120,21 +121,6 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     @Override
     public void onPageSelected(int position) {
         selectItem(position);
-    }
-
-   @Override
-    public void onSeriesToShowChange() {
-        reload();
-    }
-
-    @Override
-    public void onEpisodesToShowChange() {
-        reload();
-    }
-
-    @Override
-    public void onSortingChange() {
-        reload();
     }
 
     /* Auxiliary */
@@ -185,7 +171,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     private void setUpData() {
         if (mItems != null) { mItems.deregister(ScheduleFragment.this); }
 
-        mItems = App.schedule().mode(mScheduleMode, App.preferences().forMySchedule(mScheduleMode).fullSpecification());
+        mItems = App.schedule().mode(mScheduleMode, App.preferences().forSchedule().fullSpecification());
         mListAdapter = new ScheduleListAdapter(mItems);
         mPagerAdapter = new SchedulePagerAdapter(mItems);
 
@@ -223,7 +209,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     }
 
     private void setUpEmptyStateView() {
-        ScheduleSpecification specification = App.preferences().forMySchedule(mScheduleMode).fullSpecification();
+        ScheduleSpecification specification = App.preferences().forSchedule().fullSpecification();
         boolean showHiddenEpisodesWarning = false;
 
         Button unhideSpecialEpisodes = (Button) mEmptyStateView.findViewById(R.id.unhideSpecialEpisodes);
@@ -233,7 +219,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
             unhideSpecialEpisodes.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    App.preferences().forMySchedule(mScheduleMode).putIfShowSpecialEpisodes(true);
+                    App.preferences().forSchedule().putIfShowSpecialEpisodes(true);
                 }
             });
         } else {
@@ -247,7 +233,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
             unhideWatchedEpisodes.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    App.preferences().forMySchedule(mScheduleMode).putIfShowWatchedEpisodes(true);
+                    App.preferences().forSchedule().putIfShowWatchedEpisodes(true);
                 }
             });
         } else {
@@ -268,7 +254,7 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
             unhideEpisodesOfSomeSeries.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SeriesFilterDialogFragment.newInstance(mScheduleMode).show(getFragmentManager(), "seriesFilterDialog");
+                    new SeriesFilterDialogFragment().show(getFragmentManager(), "seriesFilterDialog");
                 }
             });
         } else {
@@ -305,5 +291,11 @@ public class ScheduleFragment extends Fragment implements ScheduleListener, OnPa
     private boolean isNotVisible(int position) {
         return position <= mListView.getFirstVisiblePosition() ||
                 position >= mListView.getLastVisiblePosition();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // TODO Auto-generated method stub
+
     }
 }

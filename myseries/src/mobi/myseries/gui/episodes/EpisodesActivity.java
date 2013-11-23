@@ -134,14 +134,14 @@ public class EpisodesActivity extends BaseActivity
     protected void onStart() {
         super.onStart();
 
-        App.preferences().forActivities().register(this);
+        App.preferences().forEpisodes().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        App.preferences().forActivities().deregister(this);
+        App.preferences().forEpisodes().deregister(this);
     }
 
     @Override

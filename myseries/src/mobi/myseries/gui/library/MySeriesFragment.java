@@ -62,13 +62,13 @@ public class MySeriesFragment extends Fragment {
             this.adapterListener.onStartLoading();
         }
 
-        App.preferences().forActivities().register(this.preferencesListener);
+        App.preferences().forLibrary().register(this.preferencesListener);
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-        
+
         this.adapter.reloadData();
     }
 
@@ -77,7 +77,7 @@ public class MySeriesFragment extends Fragment {
         super.onStop();
 
         this.adapter.deregister(this.adapterListener);
-        App.preferences().forActivities().register(this.preferencesListener);
+        App.preferences().forLibrary().register(this.preferencesListener);
     }
 
     private void prepareViews() {
@@ -105,7 +105,7 @@ public class MySeriesFragment extends Fragment {
                 return true;
             }
         });
-        
+
         setupOnScrollListener();
 
         if (this.adapter == null) {

@@ -1,150 +1,58 @@
 package mobi.myseries.application.preferences;
 
-import java.util.Collection;
-
-import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.content.Context;
-import android.util.SparseArray;
 
 public class Preferences {
-    //XXX Define all keys (with its prefixes) in an xml file (donottranslate.xml)
-    //    once some of them are referred in other places (like the preferences.xml file)
-    private static final String KEY_PREFIX_BACKUP_RESTORE = "BackupRestore";
-    private static final String KEY_PREFIX_MYSCHEDULE = "MySchedule";
-    private static final String KEY_PREFIX_MYSERIES = "MySeries";
-    private static final String KEY_PREFIX_MYSTATISTICS = "MyStatistics";
-    private static final String KEY_PREFIX_SCHEDULEWIDGET = "ScheduleWidget";
-    private static final String KEY_PREFIX_UPDATE = "Update";
-    private static final String KEY_PREFIX_SERIES_DETAILS = "Series";
-    private static final String KEY_PREFIX_EPISODES = "Episodes";
-
-    private final Context context;
-    private PrimitivePreferences forActivities;
-    private BackupPreferences forBackupRestore;
-    private MySchedulePreferences forMySchedule;
-    private SparseArray<MySchedulePreferences> forMySchedules;
-    private MySeriesPreferences forMySeries;
-    private MyStatisticsPreferences forMyStatistics;
-    private UpdatePreferences forUpdate;
-    private SeriesDetailsPreferences forSeriesDetails;
-    private EpisodesPreferences forEpisodes;
-    private PrimitivePreferences forAppWidgets;
-    private ScheduleWidgetPreferences forScheduleWidget;
-    private SparseArray<ScheduleWidgetPreferences> forScheduleWidgets;
+    private Context mContext;
 
     public Preferences(Context context) {
         Validate.isNonNull(context, "context");
-        this.context = context;
+
+        mContext = context;
     }
 
-    /* For activities */
-
-    public PrimitivePreferences forActivities() {
-        this.forActivities = new PrimitivePreferences(this.context);
-        return this.forActivities;
+    public LibraryPreferences forLibrary() {
+        return new LibraryPreferences(mContext);
     }
 
-    public BackupPreferences forBackupRestore() {
-        if(this.forBackupRestore == null)
-            this.forBackupRestore = new BackupPreferences(this.forActivities().addKeyPrefix(
-                    Preferences.KEY_PREFIX_BACKUP_RESTORE));
-        return forBackupRestore;
+    public SchedulePreferences forSchedule() {
+        return new SchedulePreferences(mContext);
     }
 
-    public MySchedulePreferences forMySchedule() {
-        if(this.forMySchedule == null)
-            this.forMySchedule = new MySchedulePreferences(this.forActivities().addKeyPrefix(
-                    Preferences.KEY_PREFIX_MYSCHEDULE));
-        return forMySchedule;
-    }
-
-    public MySchedulePreferences forMySchedule(int scheduleMode) {
-        if(this.forMySchedules == null)
-            this.forMySchedules = new SparseArray<MySchedulePreferences>();
-        if(this.forMySchedules.get(scheduleMode) == null)
-            this.forMySchedules.put(scheduleMode,
-                                    new MySchedulePreferences(this.forActivities()
-                                            .addKeyPrefix(Preferences.KEY_PREFIX_MYSCHEDULE)
-                                            .addKeyPrefix(String.valueOf(scheduleMode))));
-        return this.forMySchedules.get(scheduleMode);
-    }
-
-    public MySeriesPreferences forMySeries() {
-        if(this.forMySeries == null)
-            this.forMySeries = new MySeriesPreferences(this.forActivities().addKeyPrefix(
-                    Preferences.KEY_PREFIX_MYSERIES));
-        return this.forMySeries;
-    }
-
-    public MyStatisticsPreferences forMyStatistics() {
-        if(this.forMyStatistics == null)
-            this.forMyStatistics = new MyStatisticsPreferences(this.forActivities().addKeyPrefix(
-                    Preferences.KEY_PREFIX_MYSTATISTICS));
-        return this.forMyStatistics;
+    public StatisticsPreferences forStatistics() {
+        return new StatisticsPreferences(mContext);
     }
 
     public UpdatePreferences forUpdate() {
-        if(this.forUpdate == null)
-            this.forUpdate = new UpdatePreferences(this.forActivities().addKeyPrefix(
-                    Preferences.KEY_PREFIX_UPDATE));
-            return this.forUpdate;
+        return new UpdatePreferences(mContext);
     }
 
-    public SeriesDetailsPreferences forSeriesDetails() {
-        if(this.forSeriesDetails == null)
-            this.forSeriesDetails = new SeriesDetailsPreferences(this.forActivities().addKeyPrefix(Preferences.KEY_PREFIX_SERIES_DETAILS));
-        return this.forSeriesDetails;
+    public SeriesPreferences forSeries() {
+        return new SeriesPreferences(mContext);
     }
 
     public EpisodesPreferences forEpisodes() {
-        if(this.forEpisodes == null)
-            this.forEpisodes = new EpisodesPreferences(this.forActivities().addKeyPrefix(KEY_PREFIX_EPISODES));
-        return this.forEpisodes;
+        return new EpisodesPreferences(mContext);
     }
 
-    /* For app widgets */
-
-    public PrimitivePreferences forAppWidgets() {
-        this.forAppWidgets = new PrimitivePreferences(this.context);
-        return this.forAppWidgets;
+    public ScheduleWidgetPreferences forScheduleWidget(int widgetId) {
+        return new ScheduleWidgetPreferences(mContext, widgetId);
     }
 
-    public ScheduleWidgetPreferences forScheduleWidget() {
-        if(this.forScheduleWidget == null)
-            this.forScheduleWidget = new ScheduleWidgetPreferences(this.forAppWidgets().addKeyPrefix(
-                    Preferences.KEY_PREFIX_SCHEDULEWIDGET));
-        return this.forScheduleWidget;
+    public void removeEntriesRelatedToSeries(int seriesId) {
+        forLibrary().removeEntriesRelatedToSeries(seriesId);
+        forSchedule().removeEntriesRelatedToSeries(seriesId);
+        forStatistics().removeEntriesRelatedToSeries(seriesId);
     }
 
-    public ScheduleWidgetPreferences forScheduleWidget(int appWidgetId) {
-        if(this.forScheduleWidgets == null)
-            this.forScheduleWidgets = new SparseArray<ScheduleWidgetPreferences>();
-        if(this.forScheduleWidgets.get(appWidgetId) == null)
-            this.forScheduleWidgets.put(appWidgetId,
-                    new ScheduleWidgetPreferences(this.forAppWidgets()
-                            .addKeyPrefix(Preferences.KEY_PREFIX_SCHEDULEWIDGET)
-                            .addKeyPrefix(String.valueOf(appWidgetId))));
-        return this.forScheduleWidgets.get(appWidgetId);
+    public void removeEntriesRelatedToAllSeries(int[] seriesIds) {
+        forLibrary().removeEntriesRelatedToAllSeries(seriesIds);
+        forSchedule().removeEntriesRelatedToAllSeries(seriesIds);
+        forStatistics().removeEntriesRelatedToAllSeries(seriesIds);
     }
 
-    /* Removal */
-
-    public void removeEntriesRelatedToAllSeries(Collection<Series> series) {
-        this.forMySeries().removeEntriesRelatedToAllSeries(series);
-        this.forMySchedule().removeEntriesRelatedToAllSeries(series);
-        this.forScheduleWidget().removeEntriesRelatedToAllSeries(series);
-        this.forMyStatistics().removeEntriesRelatedToAllSeries(series);
-    }
-
-    public void removeEntriesRelatedToAppWidget(int appWidgetId) {
-        this.forScheduleWidget(appWidgetId).clear();
-    }
-
-    public void removeEntriesRelatedToSeries(Series series) {
-        this.forMySeries().removeEntriesRelatedToSeries(series);
-        this.forMySchedule().removeEntriesRelatedToSeries(series);
-        this.forScheduleWidget().removeEntriesRelatedToSeries(series);
-        this.forMyStatistics().removeEntriesRelatedToSeries(series);
+    public void removeEntriesRelatedToScheduleWidget(int widgetId) {
+        forScheduleWidget(widgetId).clear();
     }
 }

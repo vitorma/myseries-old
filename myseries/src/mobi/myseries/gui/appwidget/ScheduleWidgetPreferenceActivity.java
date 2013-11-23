@@ -1,8 +1,10 @@
 package mobi.myseries.gui.appwidget;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -112,7 +114,7 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
     private void setUpSeenEpisodesOptions() {
         this.showSeenEpisodes = (CheckedTextView) this.findViewById(R.id.showSeenEpisodes);
 
-        this.showSeenEpisodes.setChecked(this.preferences.showSeenEpisodes());
+        this.showSeenEpisodes.setChecked(this.preferences.showWatchedEpisodes());
         this.showSeenEpisodes.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +136,7 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
             final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.checkBox);
 
             seriesCheck.setText(s.name());
-            seriesCheck.setChecked(this.preferences.showSeries(s.id()));
+            seriesCheck.setChecked(this.preferences.hideSeries(s.id()));
             seriesCheck.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -204,9 +206,25 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
     }
 
     private void saveSeriesToShowPreference() {
-        for (Series s : this.seriesToShow.keySet()) {
-            this.preferences.putIfShowSeries(s.id(), this.seriesToShow.get(s).isChecked());
+        this.preferences.putSeriesToHide(seriesToHideIds());
+    }
+
+    private int[] seriesToHideIds() {
+        int[] seriesToHideIds = new int[this.seriesToShow.size()];
+
+        int i = 0;
+        int length = 0;
+
+        for (Entry<Series, CheckedTextView> entry : this.seriesToShow.entrySet()) {
+            if (!entry.getValue().isChecked()) {
+                seriesToHideIds[i] = entry.getKey().id();
+                length++;
+            }
+
+            i++;
         }
+
+        return Arrays.copyOf(seriesToHideIds, length);
     }
 
     private void updateAppWidget() {

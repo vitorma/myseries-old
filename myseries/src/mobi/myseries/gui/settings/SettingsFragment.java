@@ -10,8 +10,6 @@ import android.preference.PreferenceFragment;
 
 public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
-    //XXX (Cleber) Get preference keys from a string resource
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("Update.whenUpdateAutomatically")) {
@@ -28,27 +26,6 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
         setUpPrefWhenUpdateAutomatically();
     }
 
-    private void setUpPrefWhenUpdateAutomatically() {
-        UpdatePreferences prefs = App.preferences().forUpdate();
-        String key = "Update.whenUpdateAutomatically";
-
-        if (prefs.updateNever()) {
-            setSummary(key, getString(R.string.settings_update_automatically_never));
-            return;
-        }
-
-        if (prefs.updateOnlyOnWifi()) {
-            setSummary(key, getString(R.string.settings_update_automatically_only_on_wifi));
-            return;
-        }
-
-        setSummary(key, getString(R.string.settings_update_automatically_always));
-    }
-
-    private void setSummary(String key, String summary) {
-        findPreference(key).setSummary(summary);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -61,5 +38,28 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
         super.onPause();
 
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    /* Auxiliary */
+
+    private void setUpPrefWhenUpdateAutomatically() {
+        UpdatePreferences prefs = App.preferences().forUpdate();
+        int key = R.string.prefKey_update_whenUpdateAutomatically;
+
+        if (prefs.updateNever()) {
+            setSummary(key, R.string.settings_update_automatically_never);
+            return;
+        }
+
+        if (prefs.updateOnlyOnWifi()) {
+            setSummary(key, R.string.settings_update_automatically_only_on_wifi);
+            return;
+        }
+
+        setSummary(key, R.string.settings_update_automatically_always);
+    }
+
+    private void setSummary(int key, int summary) {
+        findPreference(getText(key)).setSummary(summary);
     }
 }

@@ -5,12 +5,12 @@
     <PreferenceCategory android:title="@string/settings_category_updates">
 
         <mobi.myseries.gui.settings.ThemedListPreference
-            android:key="Update.whenUpdateAutomatically"
+            android:key="@string/prefKey_update_whenUpdateAutomatically"
             android:title="@string/settings_update_automatically"
             android:dialogTitle="@string/settings_update_automatically"
             android:entries="@array/settings_update_automatically_entries"
-            android:entryValues="@array/settings_update_automatically_entryValues"
-            android:defaultValue="@string/settings_update_automatically_defaultValue"/>
+            android:entryValues="@array/prefValueArray_update_automatically"
+            android:defaultValue="@string/prefValue_update_automatically_default"/>
 
     </PreferenceCategory>
 

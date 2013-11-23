@@ -1,6 +1,9 @@
 package mobi.myseries.gui.statistics;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import mobi.myseries.R;
@@ -17,20 +20,64 @@ public class SeriesFilterDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Map<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(
-            SeriesComparator.byAscendingAlphabeticalOrder());
+        final Map<Series, Boolean> filterOptions = newFilterOptions();
 
-        filterOptions.putAll(App.preferences().forMyStatistics().seriesToCount());
-
-        return new SeriesFilterDialogBuilder(this.getActivity())
-            .setDefaultFilterOptions(filterOptions)
+        return new SeriesFilterDialogBuilder(getActivity())
             .setTitle(R.string.seriesToCount)
+            .setDefaultFilterOptions(filterOptions)
             .setOnFilterListener(new OnFilterListener() {
                 @Override
                 public void onFilter() {
-                    App.preferences().forMyStatistics().putIfCountSeries(filterOptions);
+                    App.preferences().forStatistics().putSeriesToDontCount(seriesToHideIdsFrom(filterOptions));
                 }
             })
             .build();
+    }
+
+    private TreeMap<Series, Boolean> newFilterOptions() {
+        TreeMap<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(SeriesComparator.byAscendingAlphabeticalOrder());
+        Collection<Series> seriesToHide = seriesToHideFromPreferences();
+        Collection<Series> seriesToShow = seriesToShowFrom(seriesToHide);
+
+        for(Series s : seriesToHide) {
+            filterOptions.put(s, false);
+        }
+
+        for(Series s : seriesToShow) {
+            filterOptions.put(s, true);
+        }
+
+        return filterOptions;
+    }
+
+    private Collection<Series> seriesToHideFromPreferences() {
+        return App.seriesFollowingService().getAllFollowedSeries(
+                App.preferences().forStatistics().seriesToDontCount());
+    }
+
+    private Collection<Series> seriesToShowFrom(Collection<Series> seriesToHide) {
+        Collection<Series> seriesToShow = App.seriesFollowingService().getAllFollowedSeries();
+
+        seriesToShow.removeAll(seriesToHide);
+
+        return seriesToShow;
+    }
+
+    private int[] seriesToHideIdsFrom(Map<Series, Boolean> filterOptions) {
+        int[] seriesToHideIds = new int[filterOptions.size()];
+
+        int i = 0;
+        int length = 0;
+
+        for (Entry<Series, Boolean> entry : filterOptions.entrySet()) {
+            if (!entry.getValue()) {
+                seriesToHideIds[i] = entry.getKey().id();
+                length++;
+            }
+
+            i++;
+        }
+
+        return Arrays.copyOf(seriesToHideIds, length);
     }
 }

@@ -2,7 +2,7 @@ package mobi.myseries.gui.statistics;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.preferences.MyStatisticsPreferences;
+import mobi.myseries.application.preferences.StatisticsPreferences;
 import mobi.myseries.gui.shared.FilterDialogBuilder;
 import mobi.myseries.gui.shared.FilterDialogBuilder.OnFilterListener;
 import mobi.myseries.gui.shared.FilterDialogBuilder.OnToggleOptionListener;
@@ -17,7 +17,7 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final MyStatisticsPreferences preferences = App.preferences().forMyStatistics();
+        StatisticsPreferences preferences = App.preferences().forStatistics();
 
         boolean[] episodesToCount = new boolean[]{
             preferences.countSpecialEpisodes(),
@@ -51,8 +51,10 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
         return new OnFilterListener() {
             @Override
             public void onFilter() {
-                App.preferences().forMyStatistics().putIfCountSpecialEpisodes(episodesToCount[SPECIAL_EPISODES_ITEM]);
-                App.preferences().forMyStatistics().putIfCountUnairedEpisodes(episodesToCount[UNAIRED_EPISODES_ITEM]);
+                StatisticsPreferences preferences = App.preferences().forStatistics();
+
+                preferences.putIfCountSpecialEpisodes(episodesToCount[SPECIAL_EPISODES_ITEM]);
+                preferences.putIfCountUnairedEpisodes(episodesToCount[UNAIRED_EPISODES_ITEM]);
             }
         };
     }

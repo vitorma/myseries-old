@@ -76,7 +76,7 @@ public class MySeriesContextMenuDialogFragment extends DialogFragment {
     }
 
     private void onHideClick(int seriesId) {
-        App.preferences().forMySeries().putShowSeries(seriesId, false);
+        App.preferences().forLibrary().putSeriesToHide(seriesId, true);
 
         this.dismiss();
     }

@@ -2,7 +2,7 @@ package mobi.myseries.gui.schedule;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.preferences.MySchedulePreferences;
+import mobi.myseries.application.preferences.SchedulePreferences;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.FilterDialogBuilder;
@@ -38,7 +38,7 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final MySchedulePreferences preferences = App.preferences().forMySchedule(this.scheduleMode);
+        SchedulePreferences preferences = App.preferences().forSchedule();
 
         int episodesToShowArrayResource;
         boolean[] episodesToShow;
@@ -52,7 +52,7 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
             episodesToShowArrayResource = R.array.action_episodes_to_show_array;
             episodesToShow = new boolean[] {
                 preferences.showSpecialEpisodes(),
-                preferences.showSeenEpisodes()
+                preferences.showWatchedEpisodes()
             };
         }
 
@@ -83,7 +83,7 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
         return new OnFilterListener() {
             @Override
             public void onFilter() {
-                MySchedulePreferences prefs = App.preferences().forMySchedule(scheduleMode);
+                SchedulePreferences prefs = App.preferences().forSchedule();
 
                 prefs.putIfShowSpecialEpisodes(episodesToShow[SPECIAL_EPISODES_ITEM]);
 

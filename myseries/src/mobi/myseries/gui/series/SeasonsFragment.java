@@ -72,7 +72,7 @@ public class SeasonsFragment extends Fragment {
         refreshViews();
 
         App.markingService().register(mMarkingListener);
-        App.preferences().forActivities().register(mOnSharedPreferenceChangeListener);
+        App.preferences().forSeries().register(mOnSharedPreferenceChangeListener);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class SeasonsFragment extends Fragment {
         super.onPause();
 
         App.markingService().deregister(mMarkingListener);
-        App.preferences().forActivities().deregister(mOnSharedPreferenceChangeListener);
+        App.preferences().forSeries().deregister(mOnSharedPreferenceChangeListener);
     }
 
     /* Auxiliary */

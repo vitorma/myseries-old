@@ -35,10 +35,9 @@ public class SeriesRemovalConfirmationDialogFragment extends DialogFragment {
                     int[] seriesToRemoveIds = SeriesRemovalConfirmationDialogFragment.this.getArguments().getIntArray("seriesToRemoveIds");
                     Collection<Series> seriesToRemove  = App.seriesFollowingService().getAllFollowedSeries(seriesToRemoveIds);
 
-                    //TODO (Cleber) Overload methods below so they can receive int[] (?)
-
+                    //TODO (Cleber) Overload method below so it can receive int[]
                     App.seriesFollowingService().unfollowAll(seriesToRemove);
-                    App.preferences().removeEntriesRelatedToAllSeries(seriesToRemove);
+                    App.preferences().removeEntriesRelatedToAllSeries(seriesToRemoveIds);
 
                     dialog.dismiss();
                 }

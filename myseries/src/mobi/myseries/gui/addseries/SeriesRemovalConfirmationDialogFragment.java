@@ -36,7 +36,7 @@ public class SeriesRemovalConfirmationDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(Dialog dialog) {
                     App.seriesFollowingService().unfollow(series);
-                    App.preferences().removeEntriesRelatedToSeries(series);
+                    App.preferences().removeEntriesRelatedToSeries(series.id());
 
                     dialog.dismiss();
                 }

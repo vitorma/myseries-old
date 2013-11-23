@@ -1,11 +1,13 @@
 package mobi.myseries.gui.schedule;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Series;
-import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder;
 import mobi.myseries.gui.shared.SeriesFilterDialogBuilder.OnFilterListener;
@@ -14,39 +16,66 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 
 public class SeriesFilterDialogFragment extends DialogFragment {
-    private int scheduleMode;
-
-    public static SeriesFilterDialogFragment newInstance(int scheduleMode) {
-        Bundle args = new Bundle();
-        args.putInt(Extra.SCHEDULE_MODE, scheduleMode);
-
-        SeriesFilterDialogFragment instance = new SeriesFilterDialogFragment();
-        instance.setArguments(args);
-
-        return instance;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.scheduleMode = this.getArguments().getInt(Extra.SCHEDULE_MODE);
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Map<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(SeriesComparator.byAscendingAlphabeticalOrder());
+        final Map<Series, Boolean> filterOptions = newFilterOptions();
 
-        filterOptions.putAll(App.preferences().forMySchedule(this.scheduleMode).seriesToShow());
-
-        return new SeriesFilterDialogBuilder(this.getActivity())
+        return new SeriesFilterDialogBuilder(getActivity())
             .setDefaultFilterOptions(filterOptions)
             .setOnFilterListener(new OnFilterListener() {
                 @Override
                 public void onFilter() {
-                    App.preferences().forMySchedule(SeriesFilterDialogFragment.this.scheduleMode).putIfShowSeries(filterOptions);
+                    App.preferences().forSchedule().putSeriesToHide(seriesToHideIdsFrom(filterOptions));
                 }
             })
             .build();
+    }
+
+    private TreeMap<Series, Boolean> newFilterOptions() {
+        TreeMap<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(SeriesComparator.byAscendingAlphabeticalOrder());
+        Collection<Series> seriesToHide = seriesToHideFromPreferences();
+        Collection<Series> seriesToShow = seriesToShowFrom(seriesToHide);
+
+        for(Series s : seriesToHide) {
+            filterOptions.put(s, false);
+        }
+
+        for(Series s : seriesToShow) {
+            filterOptions.put(s, true);
+        }
+
+        return filterOptions;
+    }
+
+    private Collection<Series> seriesToHideFromPreferences() {
+        return App.seriesFollowingService().getAllFollowedSeries(
+                App.preferences().forSchedule().seriesToHide());
+    }
+
+    private Collection<Series> seriesToShowFrom(Collection<Series> seriesToHide) {
+        Collection<Series> seriesToShow = App.seriesFollowingService().getAllFollowedSeries();
+
+        seriesToShow.removeAll(seriesToHide);
+
+        return seriesToShow;
+    }
+
+    private int[] seriesToHideIdsFrom(Map<Series, Boolean> filterOptions) {
+        int[] seriesToHideIds = new int[filterOptions.size()];
+
+        int i = 0;
+        int length = 0;
+
+        for (Entry<Series, Boolean> entry : filterOptions.entrySet()) {
+            if (!entry.getValue()) {
+                seriesToHideIds[i] = entry.getKey().id();
+                length++;
+            }
+
+            i++;
+        }
+
+        return Arrays.copyOf(seriesToHideIds, length);
     }
 }

@@ -14,7 +14,7 @@ public class SeasonSortingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new SortingDialogBuilder(getActivity())
             .setTitleArgument(R.string.seasons)
-            .setSortingOptions(R.array.action_sort_seasons_array, App.preferences().forSeriesDetails().sortMode(), onItemClickListener())
+            .setSortingOptions(R.array.action_sort_seasons_array, App.preferences().forSeries().sortMode(), onItemClickListener())
             .build();
     }
 
@@ -22,7 +22,7 @@ public class SeasonSortingDialogFragment extends DialogFragment {
         return new OnSelectOptionListener() {
             @Override
             public void onSelect(int index) {
-                App.preferences().forSeriesDetails().putSortMode(index);
+                App.preferences().forSeries().putSortMode(index);
             }
         };
     }

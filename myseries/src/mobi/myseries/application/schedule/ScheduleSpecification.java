@@ -1,9 +1,6 @@
 package mobi.myseries.application.schedule;
 
-import java.util.Map;
-
 import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.SortMode;
 import mobi.myseries.shared.AbstractSpecification;
 import mobi.myseries.shared.Validate;
@@ -12,13 +9,13 @@ import android.util.SparseBooleanArray;
 public class ScheduleSpecification extends AbstractSpecification<Episode> {
     private boolean mIsSatisfiedBySpecialEpisodes;
     private boolean mIsSatisfiedByWatchedEpisodes;
-    private SparseBooleanArray mSeriesToInclude;
+    private SparseBooleanArray mSeriesToExclude;
     private int mSortMode;
 
     public ScheduleSpecification() {
         mIsSatisfiedBySpecialEpisodes = false;
         mIsSatisfiedByWatchedEpisodes = false;
-        mSeriesToInclude = new SparseBooleanArray();
+        mSeriesToExclude = new SparseBooleanArray();
         mSortMode = SortMode.OLDEST_FIRST;
     }
 
@@ -34,19 +31,11 @@ public class ScheduleSpecification extends AbstractSpecification<Episode> {
         return this;
     }
 
-    public ScheduleSpecification specifyInclusionOfSeries(Series series, boolean including) {
-        Validate.isNonNull(series, "series");
+    public ScheduleSpecification excludingAllSeries(int[] seriesToHide) {
+        Validate.isNonNull(seriesToHide, "seriesToHide");
 
-        mSeriesToInclude.put(series.id(), including);
-
-        return this;
-    }
-
-    public ScheduleSpecification includingAllSeries(Map<Series, Boolean> inclusions) {
-        Validate.isNonNull(inclusions, "inclusions");
-
-        for (Series series : inclusions.keySet()) {
-            mSeriesToInclude.put(series.id(), inclusions.get(series));
+        for (int seriesId : seriesToHide) {
+            mSeriesToExclude.put(seriesId, true);
         }
 
         return this;
@@ -67,7 +56,7 @@ public class ScheduleSpecification extends AbstractSpecification<Episode> {
     }
 
     public boolean isSatisfiedByEpisodesOfSeries(int seriesId) {
-        return mSeriesToInclude.get(seriesId);
+        return !mSeriesToExclude.get(seriesId);
     }
 
     public int sortMode() {

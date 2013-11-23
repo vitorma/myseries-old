@@ -33,7 +33,7 @@ public class EpisodeSortingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new SortingDialogBuilder(getActivity())
             .setTitleArgument(R.string.episodes)
-            .setSortingOptions(R.array.action_sort_episodes_array, App.preferences().forMySchedule(mScheduleMode).sortMode(), onItemClickListener())
+            .setSortingOptions(R.array.action_sort_episodes_array, App.preferences().forSchedule().sortMode(), onItemClickListener())
             .build();
     }
 
@@ -41,7 +41,7 @@ public class EpisodeSortingDialogFragment extends DialogFragment {
         return new OnSelectOptionListener() {
             @Override
             public void onSelect(int index) {
-                App.preferences().forMySchedule(mScheduleMode).putSortMode(index);
+                App.preferences().forSchedule().putSortMode(index);
             }
         };
     }

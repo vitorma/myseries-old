@@ -3,11 +3,6 @@ package mobi.myseries.gui.library;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
@@ -16,6 +11,7 @@ import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.marking.MarkingListener;
+import mobi.myseries.application.preferences.LibraryPreferences;
 import mobi.myseries.application.update.BaseUpdateListener;
 import mobi.myseries.application.update.UpdateListener;
 import mobi.myseries.domain.model.Episode;
@@ -29,7 +25,6 @@ import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 import mobi.myseries.shared.Specification;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -96,13 +91,13 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     private void setUpView(ViewHolder viewHolder, final Series series) {
         String posterFilePath = App.imageService().getPosterOf(series);
         if(posterFilePath == null) {
-            UniversalImageLoader.loader().displayImage(UniversalImageLoader.drawableURI(R.drawable.generic_poster), 
-                    viewHolder.mPoster, 
+            UniversalImageLoader.loader().displayImage(UniversalImageLoader.drawableURI(R.drawable.generic_poster),
+                    viewHolder.mPoster,
                     UniversalImageLoader.defaultDisplayBuilder()
                     .build());
         } else {
-            UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath), 
-                    viewHolder.mPoster, 
+            UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath),
+                    viewHolder.mPoster,
                     UniversalImageLoader.defaultDisplayBuilder()
                     .showImageOnFail(R.drawable.generic_poster).build());
         }
@@ -110,8 +105,8 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
         String name = series.name();
         viewHolder.mName.setText(name);
 
-        boolean countSpecialEpisodes = App.preferences().forMySeries().countSpecialEpisodes();
-        boolean countUnairedEpisodes = App.preferences().forMySeries().countUnairedEpisodes();
+        boolean countSpecialEpisodes = App.preferences().forLibrary().countSpecialEpisodes();
+        boolean countUnairedEpisodes = App.preferences().forLibrary().countUnairedEpisodes();
         Specification<Episode> spec1 = new EpisodesToCountSpecification(countSpecialEpisodes, countUnairedEpisodes);
         Specification<Episode> spec2 = new SeenEpisodeSpecification();
 
@@ -159,18 +154,20 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpData() {
-        mItems = new ArrayList<Series>();
-        Map<Series,Boolean> filterOptions = App.preferences().forMySeries().seriesToShow();
+        LibraryPreferences prefs = App.preferences().forLibrary();
 
-        for (Entry<Series,Boolean> option : filterOptions.entrySet()) {
-            if (option.getValue()) {
-                mItems.add(option.getKey());
-            }
-        }
+        mItems = seriesToShow(prefs);
 
-        int sortMode = App.preferences().forMySeries().sortMode();
+        Collections.sort(mItems, SeriesComparator.bySortMode(prefs.sortMode()));
+    }
 
-        Collections.sort(mItems, SeriesComparator.bySortMode(sortMode));
+    private ArrayList<Series> seriesToShow(LibraryPreferences prefs) {
+        ArrayList<Series> seriesToShow = new ArrayList<Series>(
+                App.seriesFollowingService().getAllFollowedSeries());
+
+        seriesToShow.removeAll(App.seriesFollowingService().getAllFollowedSeries(prefs.seriesToHide()));
+
+        return seriesToShow;
     }
 
     /* ViewHolder */

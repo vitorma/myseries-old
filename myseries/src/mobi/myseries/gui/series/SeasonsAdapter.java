@@ -30,7 +30,7 @@ public class SeasonsAdapter extends BaseAdapter {
     public void sortItems() {
         Collections.sort(
                 mItems,
-                SeasonComparator.fromSortMode(App.preferences().forSeriesDetails().sortMode()));
+                SeasonComparator.fromSortMode(App.preferences().forSeries().sortMode()));
     }
 
     public Season getSeason(int position) {

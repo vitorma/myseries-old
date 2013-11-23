@@ -4,10 +4,10 @@ import mobi.myseries.R;
 import mobi.myseries.gui.shared.SortMode;
 import android.content.Context;
 
-public class EpisodesPreferences extends BasePreferences {
+public class SeriesPreferences extends BasePreferences {
     private static final int SORT_MODE_DEFAULT_VALUE = SortMode.OLDEST_FIRST;
 
-    public EpisodesPreferences(Context context) {
+    public SeriesPreferences(Context context) {
         super(context);
     }
 

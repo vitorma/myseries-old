@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Preference keys -->
+
+    <string name="prefKey_library_sortMode">library_sortMode</string>
+    <string name="prefKey_library_countSpecialEpisodes">library_countSpecialEpisodes</string>
+    <string name="prefKey_library_countUnairedEpisodes">library_countUnairedEpisodes</string>
+    <string name="prefKey_library_seriesToHide">library_seriesToHide</string>
+
+    <string name="prefKey_schedule_sortMode">schedule_sortMode</string>
+    <string name="prefKey_schedule_showSpecialEpisodes">schedule_showSpecialEpisodes</string>
+    <string name="prefKey_schedule_showWatchedEpisodes">schedule_showWatchedEpisodes</string>
+    <string name="prefKey_schedule_seriesToHide">schedule_seriesToHide</string>
+
+    <string name="prefKey_statistics_countSpecialEpisodes">statistics_countSpecialEpisodes</string>
+    <string name="prefKey_statistics_countUnairedEpisodes">statistics_countUnairedEpisodes</string>
+    <string name="prefKey_statistics_seriesToDontCount">statistics_seriesToDontCount</string>
+
+    <string name="prefKey_series_sortMode">series_sortMode</string>
+
+    <string name="prefKey_episodes_sortMode">episodes_sortMode</string>
+
+    <string name="prefKey_update_whenUpdateAutomatically">update_whenUpdateAutomatically</string>
+
+    <string name="prefKey_scheduleWidget_scheduleMode">scheduleWidget_scheduleMode</string>
+
+    <!-- Preference values -->
+
+    <string name="prefValue_update_automatically_always">UPDATE_AUTOMATICALLY_ALWAYS</string>
+    <string name="prefValue_update_automatically_only_on_wifi">UPDATE_AUTOMATICALLY_ONLY_ON_WIFI</string>
+    <string name="prefValue_update_automatically_never">UPDATE_AUTOMATICALLY_NEVER</string>
+    <string name="prefValue_update_automatically_default">@string/prefValue_update_automatically_always</string>
+    <string-array name="prefValueArray_update_automatically">
+        <item>@string/prefValue_update_automatically_always</item>
+        <item>@string/prefValue_update_automatically_only_on_wifi</item>
+        <item>@string/prefValue_update_automatically_never</item>
+    </string-array>
+
+</resources>

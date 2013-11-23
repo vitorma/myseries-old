@@ -161,7 +161,7 @@ public class ScheduleDualPaneActivity extends BaseActivity implements OnTabSelec
         if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this).setMessage(R.string.no_series_to_show).build().show();
         } else {
-            SeriesFilterDialogFragment.newInstance(mSelectedMode).show(getFragmentManager(), "seriesFilterDialog");
+            new SeriesFilterDialogFragment().show(getFragmentManager(), "seriesFilterDialog");
         }
     }
 

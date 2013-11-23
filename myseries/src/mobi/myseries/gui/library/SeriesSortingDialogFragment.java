@@ -14,7 +14,7 @@ public class SeriesSortingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new SortingDialogBuilder(getActivity())
             .setTitleArgument(R.string.series)
-            .setSortingOptions(R.array.action_sort_series_array, App.preferences().forMySeries().sortMode(), onItemClickListener())
+            .setSortingOptions(R.array.action_sort_series_array, App.preferences().forLibrary().sortMode(), onItemClickListener())
             .build();
     }
 
@@ -22,7 +22,7 @@ public class SeriesSortingDialogFragment extends DialogFragment {
         return new OnSelectOptionListener() {
             @Override
             public void onSelect(int index) {
-                App.preferences().forMySeries().putSortMode(index);
+                App.preferences().forLibrary().putSortMode(index);
             }
         };
     }

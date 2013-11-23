@@ -245,7 +245,7 @@ public class ScheduleSinglePaneActivity extends BaseActivity implements OnTabSel
         if (App.seriesFollowingService().getAllFollowedSeries().isEmpty()) {
             new ToastBuilder(this).setMessage(R.string.no_series_to_show).build().show();
         } else {
-            SeriesFilterDialogFragment.newInstance(mSelectedMode).show(getFragmentManager(), "seriesFilterDialog");
+            new SeriesFilterDialogFragment().show(getFragmentManager(), "seriesFilterDialog");
         }
     }
 
@@ -256,13 +256,13 @@ public class ScheduleSinglePaneActivity extends BaseActivity implements OnTabSel
     private void showSortDialog() {
         EpisodeSortingDialogFragment.newInstance(mSelectedMode).show(getFragmentManager(), "seriesSortingDialog");
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
         mTabAdapter.reset();
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
