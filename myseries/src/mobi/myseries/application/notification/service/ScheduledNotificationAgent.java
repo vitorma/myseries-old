@@ -40,7 +40,7 @@ public class ScheduledNotificationAgent extends Service {
 
 
         Series s = App.seriesFollowingService().getFollowedSeries(seriesId);
-        Episode e = s.seasonAt(seasonNumber).episode(episodeNumber);
+        Episode e = s.season(seasonNumber).episode(episodeNumber);
 
         String episodeFormat = String.format(
                 App.context().getResources().getString(R.string.episode_number_format),
