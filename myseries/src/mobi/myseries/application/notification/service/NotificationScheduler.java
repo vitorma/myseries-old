@@ -60,14 +60,14 @@ public class NotificationScheduler extends Service {
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
         mWakeLock.acquire();
 
-        scheduleNotificationsForEpisodes();
+        scheduleNotificationsForEpisodesStartingSoon();
 
         mWakeLock.release();
 
         return START_NOT_STICKY;
     }
 
-    private void scheduleNotificationsForEpisodes() {
+    private static void scheduleNotificationsForEpisodesStartingSoon() {
         Collection<Episode> unaired = unwatchedEpisodes();
         Context context = App.context();
         DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(context);
@@ -75,7 +75,7 @@ public class NotificationScheduler extends Service {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         long currentTime = System.currentTimeMillis();
 
-        Log.d(getClass().getName(), "looking for episodes starting soon...");
+        Log.d(NotificationScheduler.class.getName(), "looking for episodes starting soon...");
 
         for (Episode episode : unaired) {
             if (episode.airDate() == null) {
@@ -98,7 +98,7 @@ public class NotificationScheduler extends Service {
 
                 long notificationTime = episode.airDate().getTime() - NOTIFICATION_ADVANCE;
 
-                Log.d(getClass().getName(),
+                Log.d(NotificationScheduler.class.getName(),
                         String.format(
                                 "%s starts soon. Notification scheduled to %s",
                                 s.name(),
@@ -119,7 +119,7 @@ public class NotificationScheduler extends Service {
         return null;
     }
 
-    private Collection<Episode> unwatchedEpisodes() {
+    private static Collection<Episode> unwatchedEpisodes() {
         List<Episode> unairedEpisodes = new LinkedList<Episode>();
 
         Collection<Series> allSeries = App.seriesFollowingService().getAllFollowedSeries();
