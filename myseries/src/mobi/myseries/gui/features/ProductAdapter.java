@@ -4,17 +4,20 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.features.Product;
+import mobi.myseries.application.features.ProductId;
 
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class ProductAdapter extends BaseAdapter {
-    private List</*TODO Product*/ String> mItems;
+    private List<Product<?>> mItems;
 
-    public ProductAdapter(List</*TODO Product*/ String> items) {
+    public ProductAdapter(List<Product<?>> items) {
         mItems = items;
 
         //TODO sortItems();
@@ -28,7 +31,7 @@ public class ProductAdapter extends BaseAdapter {
     }
     */
 
-    public /*TODO Product*/ String getSeason(int position) {
+    public Product<?> getSeason(int position) {
         return mItems.get(position);
     }
 
@@ -53,11 +56,18 @@ public class ProductAdapter extends BaseAdapter {
         ViewHolder viewHolder;
 
         if (view == null) {
-            view = View.inflate(App.context(), R.layout.series_seasons_item, null);
+            view = View.inflate(App.context(), R.layout.features_product_item, null);
             viewHolder = new ViewHolder(view);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
+
+        Product<?> product = mItems.get(position);
+
+        viewHolder.mProductName.setText(product.name());
+
+        viewHolder.mBuyButton.setText(product.price());
+        viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product.id()));
 
         /* TODO
         Season season = mItems.get(position);
@@ -83,28 +93,26 @@ public class ProductAdapter extends BaseAdapter {
         private Button mBuyButton;
 
         private ViewHolder(View view) {
+            mProductName = (TextView) view.findViewById(R.id.productName);
+            mBuyButton = (Button) view.findViewById(R.id.buyButton);
             /* TODO
-            mProductName = (TextView) view.findViewById(R.id.name);
             mDescription = (TextView) view.findViewById(R.id.description);
-            mBuyButton= (Button) view.findViewById(R.id.buy);
             */
 
             view.setTag(this);
         }
 
-        /* TODO
-        private OnClickListener watchMarkOnClickListener(final Season season) {
+        private OnClickListener buyButtonOnClickListener(final ProductId productId) {
             return new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mWatchMark.isChecked()) {
-                        App.markingService().markAsWatched(season);
-                    } else {
-                        App.markingService().markAsUnwatched(season);
-                    }
+                    // XXX(Gabriel) verify if the product is owned.
+
+                    //if (App..isChecked()) {
+                        App.store().buy(productId);
+                    //}
                 }
             };
         }
-        */
     }
 }
