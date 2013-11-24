@@ -68,12 +68,11 @@
 
         <activity android:name="mobi.myseries.gui.episodes.EpisodesActivity" />
 
-        <!-- TODO: Show widget to users who has bought widget feature
-         activity android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity" >
+        <activity android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
-        </activity-->
+        </activity>
 
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
@@ -89,16 +88,15 @@
         </activity>
 
         <!-- Broadcast Receivers -->
-        
+
         <receiver android:name="mobi.myseries.application.notification.service.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-        
-<!-- TODO: Show widget to users who has bought widget feature
-            receiver
+
+        <receiver
             android:name="mobi.myseries.gui.appwidget.ScheduleWidget"
             android:enabled="true"
             android:label="@string/schedulewidget" >
@@ -120,21 +118,20 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/schedulewidget_info" />
-        </receiver-->
+        </receiver>
 
         <!-- Services -->
 
-        <!-- TODO: Show widget to users who has bought widget feature
-            service
+        <service
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetViewsService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" /-->
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <service android:name="mobi.myseries.gui.appwidget.TabService" />
-        
+
         <service android:name="mobi.myseries.application.notification.service.NotificationScheduler" />
-        
+
         <service android:name="mobi.myseries.application.notification.service.ScheduledNotificationAgent" />
-        
+
     </application>
 
 </manifest>
