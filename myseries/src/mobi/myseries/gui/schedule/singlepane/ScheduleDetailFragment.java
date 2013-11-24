@@ -180,11 +180,13 @@ public class ScheduleDetailFragment extends Fragment
     }
 
     private void setUpEmptyStateView() {
+        boolean thereAreFollowedSeries = !App.seriesFollowingService().getAllFollowedSeries().isEmpty();
+
         ScheduleSpecification specification = App.preferences().forSchedule().fullSpecification();
         boolean showHiddenEpisodesWarning = false;
 
         Button unhideSpecialEpisodes = (Button) mEmptyStateView.findViewById(R.id.unhideSpecialEpisodes);
-        if (!specification.isSatisfiedBySpecialEpisodes()) {
+        if (thereAreFollowedSeries && !specification.isSatisfiedBySpecialEpisodes()) {
             showHiddenEpisodesWarning = true;
             unhideSpecialEpisodes.setVisibility(View.VISIBLE);
             unhideSpecialEpisodes.setOnClickListener(new OnClickListener() {
@@ -198,7 +200,7 @@ public class ScheduleDetailFragment extends Fragment
         }
 
         Button unhideWatchedEpisodes = (Button) mEmptyStateView.findViewById(R.id.unhideWatchedEpisodes);
-        if (mScheduleMode != ScheduleMode.TO_WATCH && !specification.isSatisfiedByWatchedEpisodes()) {
+        if (thereAreFollowedSeries && mScheduleMode != ScheduleMode.TO_WATCH && !specification.isSatisfiedByWatchedEpisodes()) {
             showHiddenEpisodesWarning = true;
             unhideWatchedEpisodes.setVisibility(View.VISIBLE);
             unhideWatchedEpisodes.setOnClickListener(new OnClickListener() {
@@ -219,7 +221,7 @@ public class ScheduleDetailFragment extends Fragment
                 break;
             }
         }
-        if (!isSatisfiedByEpisodesOfAllSeries) {
+        if (thereAreFollowedSeries && !isSatisfiedByEpisodesOfAllSeries) {
             showHiddenEpisodesWarning = true;
             unhideEpisodesOfSomeSeries.setVisibility(View.VISIBLE);
             unhideEpisodesOfSomeSeries.setOnClickListener(new OnClickListener() {
