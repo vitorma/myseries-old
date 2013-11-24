@@ -6,6 +6,8 @@ import mobi.myseries.R;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.features.Features;
+import mobi.myseries.application.features.Store;
+import mobi.myseries.application.features.googleplay.GooglePlayStore;
 import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.marking.MarkingService;
@@ -45,6 +47,7 @@ public class App extends Application {
     /* (Cleber) This guy is ok */
     private static Preferences preferences;
     private static Features features;
+    private static Store<?, ?> store; // XXX (Gabriel) Populate this.
 
     /* XXX (Cleber) This guy should fly away */
     private static BroadcastService broadcastService;
@@ -81,6 +84,7 @@ public class App extends Application {
 
         preferences = new Preferences(this);
         features = new Features();
+        store = new GooglePlayStore();
 
         NotificationScheduler.setupAlarm(context());
     }
@@ -150,5 +154,9 @@ public class App extends Application {
 
     public static Features features() {
         return features;
+    }
+
+    public static Store<?,?> store() {
+        return store;
     }
 }

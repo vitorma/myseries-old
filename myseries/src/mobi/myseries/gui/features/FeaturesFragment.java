@@ -1,12 +1,19 @@
 package mobi.myseries.gui.features;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 import mobi.myseries.R;
+import mobi.myseries.application.App;
+import mobi.myseries.application.Log;
+import mobi.myseries.application.features.Product;
 import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.Validate;
 
 import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,17 +21,22 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 public class FeaturesFragment extends Fragment {
-    //TODO private ScheduleMode mItems;
+    private List<Product<?>> mItems;
 
     private ProductAdapter mAdapter;
 
     private ListView mListView;
     private View mEmptyStateView;
 
-    /* TODO
-    private AsyncTask<Void, Void, Void> loadTask;
-    private boolean isLoading = false;
-    */
+    private AtomicReference<LoadTask> loadTask = new AtomicReference<LoadTask>();
+
+    private void stopLoading() {
+        LoadTask currentTask = this.loadTask.getAndSet(null);
+
+        if (currentTask != null) {
+            currentTask.cancel(false);
+        }
+    }
 
     /* Fragment */
 
@@ -78,12 +90,18 @@ public class FeaturesFragment extends Fragment {
 
     private void findViews() {
         mListView = (ListView) getView().findViewById(R.id.products_list);
-        mEmptyStateView = getView().findViewById(R.id.empty_state);
         Validate.isNonNull(mListView, "mListView");
+
+        mEmptyStateView = getView().findViewById(R.id.empty_state);
         Validate.isNonNull(mEmptyStateView, "mEmptyStateView");
     }
 
     private void setUpData() {
+        Log.d(getClass().getCanonicalName(), "Loading products");
+        mItems = (List<Product<?>>) App.store().productsAvailableForPurchase();
+        mAdapter = new ProductAdapter(mItems);
+        Log.d(getClass().getCanonicalName(), "Loaded products");
+
         /* TODO
         if (mItems != null) { mItems.deregister(this); }
 
@@ -101,8 +119,9 @@ public class FeaturesFragment extends Fragment {
     }
 
     private void setUpListView() {
-        /* TODO
         mListView.setAdapter(mAdapter);
+
+        /* TODO
         setUpOnScrollListener();
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -125,45 +144,44 @@ public class FeaturesFragment extends Fragment {
     }
 
     private void hideOrshowViews() {
-        /* TODO
-        if (mItems.numberOfEpisodes() > 0) {
+        if (!mItems.isEmpty()) {
             mEmptyStateView.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
         } else {
             mEmptyStateView.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
         }
-        */
-
-        mEmptyStateView.setVisibility(View.VISIBLE);
-        mListView.setVisibility(View.GONE);
     }
 
     private void reload() {
-        /* TODO
-        if (isLoading) {
-            loadTask.cancel(true);
+        this.stopLoading();
+
+        LoadTask newTask = new LoadTask();
+
+        boolean newTaskIsTheCurrentTask = this.loadTask.compareAndSet(null, newTask);
+
+        if (newTaskIsTheCurrentTask) {
+            newTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private class LoadTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            //XXX mItems = (List<Product<?>>) App.store().productsAvailableForPurchase();
+            setUpData();
+            return null;
         }
 
-        loadTask = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                isLoading = true;
+        @Override
+        protected void onPostExecute(Void result) {
+            if (!isCancelled()) {
+                setUpViews();
+                Log.d(getClass().toString(), "Updated views.");
+            } else {
+                Log.d(getClass().toString(), "Views not updated.");
             }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                setUpData();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                if (!isCancelled()) { setUpViews(); }
-                isLoading = false;
-            }
-        }.execute();
-        */
+        }
     }
 
     private void setUpOnScrollListener() {
