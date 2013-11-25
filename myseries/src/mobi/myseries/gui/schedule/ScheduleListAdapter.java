@@ -113,7 +113,7 @@ public class ScheduleListAdapter extends BaseAdapter {
     }
 
     private void setUpViewBody(ViewHolder viewHolder, Series series, Episode episode) {
-        String posterFilePath = App.imageService().getPosterOf(series);
+        String posterFilePath = App.imageService().getPosterPath(series);
         if(posterFilePath == null) {
             UniversalImageLoader.loader().displayImage(UniversalImageLoader.drawableURI(R.drawable.generic_poster), 
                     viewHolder.mPoster, 

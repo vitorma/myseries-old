@@ -29,16 +29,8 @@
 
     </style>
 
-    <style name="MySeriesTheme.Dialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
-        <item name="android:windowActionBar">false</item>
+    <style name="MySeriesTheme.Dialog" parent="@android:Theme.Holo.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionModeOverlay">false</item>
-        <item name="android:windowCloseOnTouchOutside">false</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
     </style>
 
 </resources>

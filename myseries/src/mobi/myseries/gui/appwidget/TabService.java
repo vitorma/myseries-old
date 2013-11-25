@@ -1,7 +1,7 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.application.App;
-import mobi.myseries.application.broadcast.BroadcastService;
+import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
@@ -33,6 +33,6 @@ public class TabService extends IntentService {
 
         App.preferences().forScheduleWidget(appWidgetId).putScheduleMode(scheduleMode);
 
-        new BroadcastService(this.getApplicationContext()).broadcastUpdate();
+        App.context().sendBroadcast(new Intent(BroadcastAction.UPDATE));
     }
 }

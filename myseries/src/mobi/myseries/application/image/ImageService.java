@@ -51,7 +51,7 @@ public class ImageService {
 
     }
 
-    public String getPosterOf(Series series) {
+    public String getPosterPath(Series series) {
         return this.imageRepository.getPosterOf(series);
     }
 
@@ -83,7 +83,7 @@ public class ImageService {
 
     public String getPosterOf(SearchResult result) {
         Series resultAsSeries = result.toSeries();
-        String localPoster = this.getPosterOf(resultAsSeries);
+        String localPoster = this.getPosterPath(resultAsSeries);
         if (localPoster == null) {
             String posterUrl = result.poster();
 

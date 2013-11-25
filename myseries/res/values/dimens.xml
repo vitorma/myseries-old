@@ -81,10 +81,10 @@
     <dimen name="appwidget_tabbar_height">@dimen/toucharea_minimum_side</dimen>
     <dimen name="appwidget_tabbar_tabindicator_height">5dp</dimen>
 
-    <dimen name="schedulewidget_item_height">63dp</dimen>
-    <dimen name="schedulewidget_item_poster_height">59dp</dimen>
-    <dimen name="schedulewidget_item_poster_width">40dp</dimen>
-    <dimen name="schedulewidget_item_gap">6dp</dimen>
+    <dimen name="schedulewidget_item_height">69dp</dimen>
+    <dimen name="schedulewidget_item_poster_height">@dimen/myschedule_poster_height</dimen>
+    <dimen name="schedulewidget_item_poster_width">@dimen/myschedule_poster_width</dimen>
+    <dimen name="schedulewidget_item_gap">8dp</dimen>
     <dimen name="schedulewidget_min_height">143dp</dimen>
     <dimen name="schedulewidget_min_width">250dp</dimen>
     <dimen name="schedulewidget_margin">0dp</dimen>

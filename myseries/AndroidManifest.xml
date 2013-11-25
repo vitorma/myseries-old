@@ -76,6 +76,10 @@
         </activity>
 
         <activity
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetDialogActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"/>
+
+        <activity
             android:name="com.dropbox.client2.android.AuthActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask" >

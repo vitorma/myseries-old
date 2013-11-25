@@ -334,6 +334,9 @@
     <!-- AppWidget -->
 
     <string name="schedulewidget">MySeries - Schedule</string>
+    <string name="schedulewidget_dialog_mark_episode_as_watched">Mark as watched</string>
+    <string name="schedulewidget_dialog_mark_episode_as_unwatched">Mark as unwatched</string>
+    <string name="schedulewidget_dialog_see_episode_details">See episode details</string>
 
     <!-- Statistics -->
 

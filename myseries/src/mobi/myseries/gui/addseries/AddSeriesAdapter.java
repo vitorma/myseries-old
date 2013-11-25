@@ -48,7 +48,7 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
         }
 
         viewHolder.name.setText(result.title());
-        String posterFilePath = App.imageService().getPosterOf(result.toSeries());
+        String posterFilePath = App.imageService().getPosterPath(result.toSeries());
         if(posterFilePath != null) {
             UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath), viewHolder.image, 
                     UniversalImageLoader.defaultDisplayBuilder()

@@ -55,9 +55,9 @@ public class TabBar {
         this.show(R.id.airedTabIndicator);
         this.hide(R.id.unairedTabIndicator);
 
-        this.setTextColorToTranslucentWhite(R.id.toWatchTab);
-        this.setTextColorToWhite(R.id.airedTab);
-        this.setTextColorToTranslucentWhite(R.id.unairedTab);
+        this.setTextColorForUnselectedTab(R.id.toWatchTab);
+        this.setTextColorForSelectedTab(R.id.airedTab);
+        this.setTextColorForUnselectedTab(R.id.unairedTab);
     }
 
     private void hightlightNextTab() {
@@ -65,9 +65,9 @@ public class TabBar {
         this.hide(R.id.airedTabIndicator);
         this.hide(R.id.unairedTabIndicator);
 
-        this.setTextColorToWhite(R.id.toWatchTab);
-        this.setTextColorToTranslucentWhite(R.id.airedTab);
-        this.setTextColorToTranslucentWhite(R.id.unairedTab);
+        this.setTextColorForSelectedTab(R.id.toWatchTab);
+        this.setTextColorForUnselectedTab(R.id.airedTab);
+        this.setTextColorForUnselectedTab(R.id.unairedTab);
     }
 
     private void highlightUpcomingTab() {
@@ -75,9 +75,9 @@ public class TabBar {
         this.hide(R.id.airedTabIndicator);
         this.show(R.id.unairedTabIndicator);
 
-        this.setTextColorToTranslucentWhite(R.id.toWatchTab);
-        this.setTextColorToTranslucentWhite(R.id.airedTab);
-        this.setTextColorToWhite(R.id.unairedTab);
+        this.setTextColorForUnselectedTab(R.id.toWatchTab);
+        this.setTextColorForUnselectedTab(R.id.airedTab);
+        this.setTextColorForSelectedTab(R.id.unairedTab);
     }
 
     private void hide(int viewId) {
@@ -88,12 +88,12 @@ public class TabBar {
         this.appWidgetView.setViewVisibility(viewResourceId, View.VISIBLE);
     }
 
-    private void setTextColorToWhite(int viewId) {
-        this.appWidgetView.setTextColor(viewId, this.color(R.color.white));
+    private void setTextColorForSelectedTab(int viewId) {
+        this.appWidgetView.setTextColor(viewId, this.color(R.color.schedulewidget_tab_text_selected));
     }
 
-    private void setTextColorToTranslucentWhite(int viewId) {
-        this.appWidgetView.setTextColor(viewId, this.color(R.color.translucent_white));
+    private void setTextColorForUnselectedTab(int viewId) {
+        this.appWidgetView.setTextColor(viewId, this.color(R.color.schedulewidget_tab_text_unselected));
     }
 
     private int color(int colorId) {

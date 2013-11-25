@@ -2,11 +2,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@drawable/dialog_full_holo_light"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/gap_medium"
-    android:layout_marginRight="@dimen/gap_medium">
+    android:layout_height="wrap_content">
 
     <include
         layout="@layout/dialog_title"/>

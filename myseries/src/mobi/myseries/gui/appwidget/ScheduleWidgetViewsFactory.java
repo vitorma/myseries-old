@@ -3,8 +3,6 @@ package mobi.myseries.gui.appwidget;
 import java.util.List;
 
 import mobi.myseries.application.App;
-import mobi.myseries.application.preferences.ScheduleWidgetPreferences;
-import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
 import android.appwidget.AppWidgetManager;
@@ -38,7 +36,9 @@ public class ScheduleWidgetViewsFactory implements RemoteViewsService.RemoteView
 
     @Override
     public RemoteViews getViewAt(int position) {
-        return Item.from(this.context).createFor(this.episodes.get(position));
+        int scheduleMode = App.preferences().forScheduleWidget(appWidgetId).scheduleMode();
+
+        return Item.from(this.context).createFor(scheduleMode, position, this.episodes.get(position));
     }
 
     @Override
@@ -67,21 +67,9 @@ public class ScheduleWidgetViewsFactory implements RemoteViewsService.RemoteView
     }
 
     private void loadEpisodes() {
-        ScheduleWidgetPreferences prefs = App.preferences().forScheduleWidget(this.appWidgetId);
+        int scheduleMode = App.preferences().forScheduleWidget(appWidgetId).scheduleMode();
+        ScheduleSpecification specification = App.preferences().forSchedule().fullSpecification();
 
-        int scheduleMode = prefs.scheduleMode();
-        ScheduleSpecification specification = prefs.fullSpecification();
-
-        switch(scheduleMode) {
-            case ScheduleMode.AIRED:
-                this.episodes = App.schedule().aired(specification).episodes();
-                break;
-            case ScheduleMode.TO_WATCH:
-                this.episodes = App.schedule().toWatch(specification).episodes();
-                break;
-            case ScheduleMode.UNAIRED:
-                this.episodes = App.schedule().unaired(specification).episodes();
-                break;
-        }
+        this.episodes = App.schedule().mode(scheduleMode, specification).episodes();
     }
 }

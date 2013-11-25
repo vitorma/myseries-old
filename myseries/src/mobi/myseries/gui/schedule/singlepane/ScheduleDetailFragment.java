@@ -2,6 +2,7 @@ package mobi.myseries.gui.schedule.singlepane;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;
@@ -10,6 +11,7 @@ import mobi.myseries.gui.schedule.SchedulePagerAdapter;
 import mobi.myseries.gui.schedule.SeriesFilterDialogFragment;
 import mobi.myseries.gui.shared.Extra;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
@@ -245,5 +247,7 @@ public class ScheduleDetailFragment extends Fragment
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         reload();
+
+        App.context().sendBroadcast(new Intent(BroadcastAction.UPDATE));
     }
 }

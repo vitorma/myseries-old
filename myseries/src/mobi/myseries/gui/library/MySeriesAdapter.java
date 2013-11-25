@@ -89,7 +89,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
     }
 
     private void setUpView(ViewHolder viewHolder, final Series series) {
-        String posterFilePath = App.imageService().getPosterOf(series);
+        String posterFilePath = App.imageService().getPosterPath(series);
         if(posterFilePath == null) {
             UniversalImageLoader.loader().displayImage(UniversalImageLoader.drawableURI(R.drawable.generic_poster),
                     viewHolder.mPoster,

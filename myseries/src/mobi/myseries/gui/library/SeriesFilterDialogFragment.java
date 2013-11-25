@@ -64,16 +64,13 @@ public class SeriesFilterDialogFragment extends DialogFragment {
     private int[] seriesToHideIdsFrom(Map<Series, Boolean> filterOptions) {
         int[] seriesToHideIds = new int[filterOptions.size()];
 
-        int i = 0;
         int length = 0;
 
         for (Entry<Series, Boolean> entry : filterOptions.entrySet()) {
             if (!entry.getValue()) {
-                seriesToHideIds[i] = entry.getKey().id();
+                seriesToHideIds[length] = entry.getKey().id();
                 length++;
             }
-
-            i++;
         }
 
         return Arrays.copyOf(seriesToHideIds, length);

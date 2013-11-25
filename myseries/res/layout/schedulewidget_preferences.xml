@@ -25,17 +25,18 @@
             <TextView
                 android:id="@+id/sortMode"
                 android:text="@string/sort_episodes_by_upper"
-                style="@style/TextView.Medium.Blue.Bold"
+                style="@style/TextView.Medium.DarkGray.Ellipsized"
+                android:textStyle="bold"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <View
-                android:background="@color/blue"
+                android:background="@drawable/list_divider_holo_light"
                 android:layout_width="match_parent"
-                android:layout_height="1.5dp"
-                android:layout_marginTop="2dp"/>
+                android:layout_height="2dp"
+                android:layout_marginTop="4dp"/>
 
             <RadioGroup
                 android:id="@+id/sortModeRadioGroup"
@@ -73,7 +74,8 @@
 
             <TextView
                 android:text="@string/episodes_to_show_upper"
-                style="@style/TextView.Medium.Blue.Bold"
+                style="@style/TextView.Medium.DarkGray.Ellipsized"
+                android:textStyle="bold"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
@@ -81,10 +83,10 @@
                 android:layout_marginTop="@dimen/gap_large"/>
 
             <View
-                android:background="@color/blue"
+                android:background="@drawable/list_divider_holo_light"
                 android:layout_width="match_parent"
-                android:layout_height="1.5dp"
-                android:layout_marginTop="2dp"/>
+                android:layout_height="2dp"
+                android:layout_marginTop="4dp"/>
 
             <CheckedTextView
                 android:id="@+id/showSpecialEpisodes"
@@ -119,7 +121,8 @@
 
             <TextView
                 android:text="@string/series_to_show_upper"
-                style="@style/TextView.Medium.Blue.Bold"
+                style="@style/TextView.Medium.DarkGray.Ellipsized"
+                android:textStyle="bold"
                 android:paddingLeft="@dimen/gap_medium"
                 android:paddingRight="@dimen/gap_medium"
                 android:layout_width="match_parent"
@@ -127,10 +130,10 @@
                 android:layout_marginTop="@dimen/gap_large"/>
 
             <View
-                android:background="@color/dark_blue"
+                android:background="@drawable/list_divider_holo_light"
                 android:layout_width="match_parent"
-                android:layout_height="1.5dp"
-                android:layout_marginTop="2dp"/>
+                android:layout_height="2dp"
+                android:layout_marginTop="4dp"/>
 
             <LinearLayout
                 android:id="@+id/seriesToShowPanel"

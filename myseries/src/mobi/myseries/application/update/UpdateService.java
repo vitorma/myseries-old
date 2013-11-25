@@ -131,7 +131,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
     }
 
     private boolean posterAvailableButNotDownloaded(Series series) {
-        return series.hasPoster() && (this.imageService.getPosterOf(series) == null);
+        return series.hasPoster() && (this.imageService.getPosterPath(series) == null);
     }
 
     private boolean thereAreSeriesWhosePostersAreNotDownloaded() {

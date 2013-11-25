@@ -132,7 +132,7 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
         if (mSeries.poster() != null) {
             final ImageView posterImageView = (ImageView) layout.findViewById(R.id.poster);
 
-            String posterFilePath = App.imageService().getPosterOf(mSeries.toSeries());
+            String posterFilePath = App.imageService().getPosterPath(mSeries.toSeries());
             if(posterFilePath != null) {
                 UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath), 
                         posterImageView, 

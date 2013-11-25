@@ -3,10 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginLeft="@dimen/gap_medium"
-    android:layout_marginRight="@dimen/gap_medium"
-    android:background="@drawable/dialog_full_holo_light">
+    android:orientation="vertical">
 
     <CheckedTextView
         android:id="@+id/title"

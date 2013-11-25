@@ -93,7 +93,7 @@ public class OverviewFragment extends Fragment {
         }
 
         ImageView seriesPoster = (ImageView) getView().findViewById(R.id.seriesPosterImageView);
-        String posterFilePath = App.imageService().getPosterOf(series);
+        String posterFilePath = App.imageService().getPosterPath(series);
         if(posterFilePath != null) {
             UniversalImageLoader.loader().displayImage(UniversalImageLoader.fileURI(posterFilePath), 
                     seriesPoster, 

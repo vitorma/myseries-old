@@ -22,7 +22,7 @@ public class UniversalImageLoader {
             init();
         return ImageLoader.getInstance();
     }
-    
+
     public static DisplayImageOptions.Builder defaultDisplayBuilder() {
         return new DisplayImageOptions.Builder()
         .cacheInMemory(true)
@@ -31,7 +31,6 @@ public class UniversalImageLoader {
         .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
         .bitmapConfig(Bitmap.Config.RGB_565);
     }
-    
 
     private static void init() {
         ImageLoader.getInstance().init(imageLoaderConfiguration(App.context()));
@@ -43,7 +42,7 @@ public class UniversalImageLoader {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
         .defaultDisplayImageOptions(defaultOptions)
         .discCacheSize(DISK_CACHE_SIZE)
-        .denyCacheImageMultipleSizesInMemory()
+        /*.denyCacheImageMultipleSizesInMemory()*/
         .writeDebugLogs()
         .build();
         return config;

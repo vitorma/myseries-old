@@ -15,11 +15,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.view.View;
 import android.widget.RemoteViews;
-
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class Item {
     private final Context context;
@@ -36,7 +32,7 @@ public class Item {
         return new RemoteViews(context.getPackageName(), R.layout.schedulewidget_loading_view);
     }
 
-    public RemoteViews createFor(Episode episode) {
+    public RemoteViews createFor(int scheduleMode, int position, Episode episode) {
         Series series = App.seriesFollowingService().getFollowedSeries(episode.seriesId());
 
         RemoteViews item = new RemoteViews(context.getPackageName(), R.layout.schedulewidget_item);
@@ -45,27 +41,33 @@ public class Item {
         setUpEpisodeAirdate(item, episode);
         setUpAirtimeAndNetwork(item, series);
         setUpSeriesName(item, series);
-        setUpEpisodeName(item, episode);
-        setUpOnClickIntent(item, episode);
+        setUpEpisodeNumber(item, episode);
+        setUpEpisodeTitle(item, episode);
+        setUpOnClickFillInIntent(item, scheduleMode, position);
 
         return item;
     }
 
     private void setUpSeriesPoster(final RemoteViews item, Series series) {
-        String seriesPoster = App.imageService().getPosterOf(series);
-       UniversalImageLoader.loader().loadImage(seriesPoster, new SimpleImageLoadingListener() {
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    item.setImageViewBitmap(R.id.seriesPoster, loadedImage);
-                }
+        String seriesPosterPath = App.imageService().getPosterPath(series);
 
-                @Override
-                public void onLoadingFailed(String imageUri, View view,
-                FailReason failReason) {
-                    item.setImageViewResource(R.id.seriesPoster, R.drawable.generic_poster);
-                }
-        });
-        
+        if (seriesPosterPath == null) {
+            setUpGenericSeriesPoster(item);
+            return;
+        }
+
+        String seriesPosterUri = UniversalImageLoader.fileURI(seriesPosterPath);
+        Bitmap loadedImage = UniversalImageLoader.loader().loadImageSync(seriesPosterUri);
+
+        if (loadedImage != null) {
+            item.setImageViewBitmap(R.id.seriesPoster, loadedImage);
+        } else {
+            setUpGenericSeriesPoster(item);
+        }
+    }
+
+    private void setUpGenericSeriesPoster(RemoteViews item) {
+        item.setImageViewResource(R.id.seriesPoster, R.drawable.generic_poster_thumbnail);
     }
 
     private void setUpEpisodeAirdate(RemoteViews item, Episode episode) {
@@ -79,30 +81,28 @@ public class Item {
         String airtime = DatesAndTimes.toString(series.airtime(), DateFormat.getTimeFormat(context), "");
         String network = series.network();
 
-        item.setTextViewText(R.id.airtimeAndNetwork, Strings.concat(airtime, network, " - "));
+        item.setTextViewText(R.id.airtimeAndNetwork, Strings.concat(airtime, network, " "));
     }
 
     private void setUpSeriesName(RemoteViews item, Series series) {
         item.setTextViewText(R.id.seriesName, series.name());
     }
 
-    private void setUpEpisodeName(RemoteViews item, Episode episode) {
-        String format = context.getString(R.string.episode_number_format);
-        String episodeNumber = String.format(format, episode.seasonNumber(), episode.number());
-
-        item.setTextViewText(R.id.episodeNumber, episodeNumber + " " + episode.title());
+    private void setUpEpisodeNumber(RemoteViews item, Episode episode) {
+        item.setTextViewText(
+                R.id.episodeNumber,
+                context.getString(R.string.episode_number_format, episode.seasonNumber(), episode.number()));
     }
 
-    private void setUpOnClickIntent(RemoteViews item, Episode episode) {
-        setupOnClickFillInIntent(item, episode);
+    private void setUpEpisodeTitle(RemoteViews item, Episode episode) {
+        item.setTextViewText(R.id.episodeTitle, episode.title());
     }
 
-    private void setupOnClickFillInIntent(RemoteViews item, Episode episode) {
+    private void setUpOnClickFillInIntent(RemoteViews item, int scheduleMode, int position) {
         Bundle extras = new Bundle();
 
-        extras.putInt(Extra.SERIES_ID, episode.seriesId());
-        extras.putInt(Extra.SEASON_NUMBER, episode.seasonNumber());
-        extras.putInt(Extra.EPISODE_NUMBER, episode.number());
+        extras.putInt(Extra.SCHEDULE_MODE, scheduleMode);
+        extras.putInt(Extra.POSITION, position);
 
         Intent intent = new Intent().putExtras(extras);
 

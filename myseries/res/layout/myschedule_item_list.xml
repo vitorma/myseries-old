@@ -56,14 +56,14 @@
 
                 <CheckedTextView
                     android:id="@+id/episodeNumber"
-                    android:layout_marginTop="@dimen/gap_small"
                     style="@style/TextView.Small"
                     android:textColor="@color/dark_blue"
                     android:paddingLeft="@dimen/gap_medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/seriesName"
-                    android:layout_toRightOf="@id/poster"/>
+                    android:layout_toRightOf="@id/poster"
+                    android:layout_marginTop="@dimen/gap_small"/>
 
                 <CheckedTextView
                     android:id="@+id/episodeTitle"

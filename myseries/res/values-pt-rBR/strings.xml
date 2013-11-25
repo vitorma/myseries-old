@@ -336,6 +336,9 @@
     <!-- AppWidget -->
 
     <string name="schedulewidget">MySeries - Agenda</string>
+    <string name="schedulewidget_dialog_mark_episode_as_watched">Marcar como assistido</string>
+    <string name="schedulewidget_dialog_mark_episode_as_unwatched">Marcar como não assistido</string>
+    <string name="schedulewidget_dialog_see_episode_details">Ver detalhes do episódio</string>
 
     <!-- Statistics -->
 
