@@ -2,7 +2,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/card_background"
+    android:background="@drawable/bg_card"
     android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
