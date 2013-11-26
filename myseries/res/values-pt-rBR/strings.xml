@@ -340,6 +340,10 @@
     <string name="schedulewidget_dialog_mark_episode_as_unwatched">Marcar como não assistido</string>
     <string name="schedulewidget_dialog_see_episode_details">Ver detalhes do episódio</string>
 
+    <!-- DashClock -->
+
+    <string name="dashclock_description">Exibe o próximo episódio a ir ao ar.</string>
+
     <!-- Statistics -->
 
         <!-- series, seasons and episodes of a 'tv series' -->

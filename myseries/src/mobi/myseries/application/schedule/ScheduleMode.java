@@ -79,6 +79,10 @@ public abstract class ScheduleMode implements Publisher<ScheduleListener> {
         Collections.sort(mEpisodes, comparator(mSpecification.sortMode()));
     }
 
+    protected Comparator<Episode> comparator() {
+        return comparator(mSpecification.sortMode());
+    }
+
     private Comparator<Episode> comparator(int sortMode) {
         switch (sortMode) {
             case SortMode.OLDEST_FIRST:

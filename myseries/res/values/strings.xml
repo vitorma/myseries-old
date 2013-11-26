@@ -338,6 +338,10 @@
     <string name="schedulewidget_dialog_mark_episode_as_unwatched">Mark as unwatched</string>
     <string name="schedulewidget_dialog_see_episode_details">See episode details</string>
 
+    <!-- DashClock -->
+
+    <string name="dashclock_description">Displays the next upcoming episode.</string>
+
     <!-- Statistics -->
 
         <!-- series, seasons and episodes of a 'tv series' -->

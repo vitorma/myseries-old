@@ -20,19 +20,19 @@ public class Schedule {
         mUpdate = update;
     }
 
-    public ScheduleMode toWatch(ScheduleSpecification specification) {
+    public ToWatch toWatch(ScheduleSpecification specification) {
         Validate.isNonNull(specification, "specification");
 
         return new ToWatch(specification, mFollowing, mUpdate, mMarking);
     }
 
-    public ScheduleMode aired(ScheduleSpecification specification) {
+    public Aired aired(ScheduleSpecification specification) {
         Validate.isNonNull(specification, "specification");
 
         return new Aired(specification, mFollowing, mUpdate, mMarking);
     }
 
-    public ScheduleMode unaired(ScheduleSpecification specification) {
+    public Unaired unaired(ScheduleSpecification specification) {
         Validate.isNonNull(specification, "specification");
 
         return new Unaired(specification, mFollowing, mUpdate, mMarking);
