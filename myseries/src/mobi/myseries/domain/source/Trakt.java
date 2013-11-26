@@ -44,14 +44,14 @@ public class Trakt implements TraktApi {
             throws InvalidSearchCriteriaException, ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
         Validate.isNonBlank(query, new InvalidSearchCriteriaException());
 
-        String normalizedQuery = normalizeQuery(query);
+        //String normalizedQuery = normalizeQuery(query);
         try {
-            Validate.isNonBlank(normalizedQuery, "this query is not supported by trakt");
+            Validate.isNonBlank(query, "this query is not supported by trakt");
         } catch (IllegalArgumentException e) {
             return new ArrayList<SearchResult>();
         }
 
-        String url = searchUri(normalizedQuery).toString();
+        String url = searchUri(query).toString();
         Log.d("DELETE THIS LOG", url);
         return TraktParser.parseSearchResults(this.get(url));
     }
@@ -61,7 +61,7 @@ public class Trakt implements TraktApi {
         .appendPath(SEARCH)
         .appendPath(SHOW_JSON)
         .appendPath(this.apiKey)
-        .appendPath(query)
+        .appendQueryParameter("query", query)
         .build();
     }
 
@@ -132,6 +132,9 @@ public class Trakt implements TraktApi {
         return String.valueOf(timestamp).substring(0, 10);
     }
 
+
+    //TODO remove this method
+    @Deprecated
     private String normalizeQuery(String string) {
         string = string.trim();
         string = string.replaceAll("&", "and");
