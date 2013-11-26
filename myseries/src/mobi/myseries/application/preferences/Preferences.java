@@ -8,7 +8,7 @@ public class Preferences {
 
     public Preferences(Context context) {
         Validate.isNonNull(context, "context");
-
+        
         mContext = context;
     }
 
@@ -34,6 +34,10 @@ public class Preferences {
 
     public EpisodesPreferences forEpisodes() {
         return new EpisodesPreferences(mContext);
+    }
+    
+    public NotificationPreferences forNotifications() {
+    	return new NotificationPreferences(mContext);
     }
 
     public ScheduleWidgetPreferences forScheduleWidget(int widgetId) {

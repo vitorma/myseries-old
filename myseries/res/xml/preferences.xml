@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto" >
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <PreferenceCategory android:title="@string/settings_category_updates">
-
+    <PreferenceCategory android:title="@string/settings_category_updates" >
         <mobi.myseries.gui.settings.ThemedListPreference
-            android:key="@string/prefKey_update_whenUpdateAutomatically"
-            android:title="@string/settings_update_automatically"
+            android:defaultValue="@string/prefValue_update_automatically_default"
             android:dialogTitle="@string/settings_update_automatically"
             android:entries="@array/settings_update_automatically_entries"
             android:entryValues="@array/prefValueArray_update_automatically"
-            android:defaultValue="@string/prefValue_update_automatically_default"/>
+            android:key="@string/prefKey_update_whenUpdateAutomatically"
+            android:title="@string/settings_update_automatically" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_category_notifications" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/prefKey_notifications_enabled"
+            android:summary="@string/settings_enable_notifications_summary"
+            android:title="@string/settings_enable_notifications" />
 
+        <mobi.myseries.gui.settings.NumberPickerDialogPreference
+            android:defaultValue="10"
+            android:dependency="@string/prefKey_notifications_enabled"
+            android:dialogMessage="@string/settings_notification_advance"
+            android:key="@string/prefKey_notification_advance_minutes"
+            android:title="@string/settings_notification_advance"
+            android:summary="@string/settings_notification_advance_summary"
+            custom:max="60"
+            custom:min="0" />
     </PreferenceCategory>
 
-</PreferenceScreen>
+</PreferenceScreen> 
