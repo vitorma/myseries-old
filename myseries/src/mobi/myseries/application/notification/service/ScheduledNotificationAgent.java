@@ -7,6 +7,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.notification.AndroidNotificationDispatcher;
 import mobi.myseries.application.notification.NotificationLauncher;
 import mobi.myseries.application.notification.TextOnlyNotification;
+import mobi.myseries.application.preferences.NotificationPreferences;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import android.app.Service;
@@ -25,10 +26,18 @@ public class ScheduledNotificationAgent extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationPreferences prefs = App.preferences().forNotifications();
+        
+        if (!prefs.notificationsEnabled()) {
+        	//TODO: Is there a better way to do this?
+        	return START_NOT_STICKY; 
+        }
+    	
+    	
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,  this.getClass().getName());
 
-        mWakeLock.acquire();
+        mWakeLock.acquire();       
 
         NotificationLauncher notificationLauncher = new NotificationLauncher(new AndroidNotificationDispatcher(App.context()));
         DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(App.context());

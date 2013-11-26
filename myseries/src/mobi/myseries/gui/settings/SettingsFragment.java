@@ -2,6 +2,7 @@ package mobi.myseries.gui.settings;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.notification.service.NotificationScheduler;
 import mobi.myseries.application.preferences.UpdatePreferences;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -14,6 +15,8 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("Update.whenUpdateAutomatically")) {
             setUpPrefWhenUpdateAutomatically();
+        } else if (key.equals(getString(R.string.prefKey_notification_advance_minutes))) {
+        	NotificationScheduler.setupAlarm(this.getActivity());        	
         }
     }
 
