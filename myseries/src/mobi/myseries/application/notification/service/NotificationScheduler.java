@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mobi.myseries.application.App;
+import mobi.myseries.application.preferences.NotificationPreferences;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.UnairedEpisodeSpecification;
@@ -23,7 +24,6 @@ import android.util.Log;
 
 public class NotificationScheduler extends Service {
     private static final long FIRST_RUN_DELAY = 10 * 1000;
-    private static final long NOTIFICATION_ADVANCE = 10 * 60 * 1000;
 
     public static long wakeupInterval() {
         return AlarmManager.INTERVAL_HALF_DAY;
@@ -72,6 +72,10 @@ public class NotificationScheduler extends Service {
         Context context = App.context();
         DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(context);
 
+        NotificationPreferences prefs = App.preferences().forNotifications();
+        
+        long notificationAdvance = toMiliseconds(prefs.notificationAdvanceMinutes());
+        
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         long currentTime = System.currentTimeMillis();
 
@@ -96,7 +100,7 @@ public class NotificationScheduler extends Service {
 
                 PendingIntent pi = PendingIntent.getService(context, episode.seriesId(), in, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                long notificationTime = episode.airDate().getTime() - NOTIFICATION_ADVANCE;
+                long notificationTime = episode.airDate().getTime() - notificationAdvance;
 
                 Log.d(NotificationScheduler.class.getName(),
                         String.format(
@@ -114,7 +118,11 @@ public class NotificationScheduler extends Service {
         }
     }
 
-    @Override
+    private static long toMiliseconds(long minutes) {
+		return minutes * 60 * 1000;
+	}
+
+	@Override
     public IBinder onBind(Intent arg0) {
         return null;
     }

@@ -57,7 +57,7 @@ public class EpisodeComparator {
             public int compare(Episode episode1, Episode episode2) {
                 checkThatBothAreNotNull(episode1, episode2);
 
-                int byAirdate = compareByAirdate(episode1, episode2);
+                int byAirdate = compareOnlyByAirdate(episode1, episode2);
 
                 if (byAirdate != 0) {
                     return byAirdate;
@@ -114,7 +114,7 @@ public class EpisodeComparator {
         return episode1.seriesId() - episode2.seriesId();
     }
 
-    private static int compareByAirdate(Episode episode1, Episode episode2) {
+    public static int compareOnlyByAirdate(Episode episode1, Episode episode2) {
         return DatesAndTimes.compareByNullLast(episode1.airDate(), episode2.airDate());
     }
 

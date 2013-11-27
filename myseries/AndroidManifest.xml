@@ -36,9 +36,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity" />
+        <activity
+            android:name="mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity"
+            android:exported="true" />
 
-        <activity android:name="mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity" />
+        <activity
+            android:name="mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity"
+            android:exported="true" />
 
         <activity android:name="mobi.myseries.gui.statistics.StatisticsActivity" />
 
@@ -137,6 +141,18 @@
         <service android:name="mobi.myseries.application.notification.service.NotificationScheduler" />
 
         <service android:name="mobi.myseries.application.notification.service.ScheduledNotificationAgent" />
+
+        <service android:name="mobi.myseries.gui.dashclock.MySeriesDashClockExtension"
+            android:icon="@drawable/ic_notification"
+            android:label="@string/app"
+            android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA" >
+            <intent-filter>
+                <action android:name="com.google.android.apps.dashclock.Extension" />
+            </intent-filter>
+            <meta-data android:name="protocolVersion" android:value="2" />
+            <meta-data android:name="worldReadable" android:value="true" />
+            <meta-data android:name="description" android:value="@string/dashclock_description" />
+        </service>
 
     </application>
 

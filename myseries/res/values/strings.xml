@@ -331,12 +331,25 @@
         <item>@string/settings_update_automatically_never</item>
     </string-array>
 
+    <string name="settings_category_notifications" formatted="false">NOTIFICATIONS</string>
+    
+    <string name="settings_enable_notifications">Enable notifications</string>
+    <string name="settings_enable_notifications_summary">Be notified before new episodes of the series you follow are aired</string>
+
+    <string name="settings_notification_advance">When to notify</string>
+    <string name="settings_notification_advance_summary">Number of minutes before the episode release you want to receive the notification</string>
+    
+    
     <!-- AppWidget -->
 
     <string name="schedulewidget">MySeries - Schedule</string>
     <string name="schedulewidget_dialog_mark_episode_as_watched">Mark as watched</string>
     <string name="schedulewidget_dialog_mark_episode_as_unwatched">Mark as unwatched</string>
     <string name="schedulewidget_dialog_see_episode_details">See episode details</string>
+
+    <!-- DashClock -->
+
+    <string name="dashclock_description">Displays the next upcoming episode.</string>
 
     <!-- Statistics -->
 
@@ -366,7 +379,7 @@
     <!-- Notifications -->
     
     <string name="episode_starting_notification" formatted="false">%s %s starts at %s.</string>
-        
+
     <!-- Do not translate -->
     <string name="app">MySeries</string>
 
