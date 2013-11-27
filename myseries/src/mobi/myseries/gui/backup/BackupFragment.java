@@ -1,5 +1,8 @@
 package mobi.myseries.gui.backup;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
@@ -7,8 +10,10 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BackupService;
+import mobi.myseries.application.backup.BaseBackupListener;
 import mobi.myseries.application.backup.DriveBackup;
 import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.DropboxHelper;
@@ -56,9 +61,9 @@ public class BackupFragment extends Fragment {
     private TextView backupStatusTextView;
 
     private DropboxHelper dropboxHelper = App.backupService()
-            .getDropboxHelper();
+            .dropboxHelper();
     private String account;
-    private BackupServiceListener backupListener;
+    private BackupListener backupListener;
     private CloudBackupType pendingBackup;
     private BackupService backupService;
 
@@ -79,7 +84,7 @@ public class BackupFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.backupService = App.backupService().withHandler(new Handler());
+        this.backupService = App.backupService();
         this.accountManager = new GoogleAccountManager(getActivity());
         this.setupViews();
         this.setupBackupListener();
@@ -92,8 +97,8 @@ public class BackupFragment extends Fragment {
             boolean resumeSucess = dropboxHelper.onResume();
             if (resumeSucess) {
                 pendingBackup = null;
-                backupService.addToqueue(new DropboxBackup());
-                backupService.performBackup();
+                //backupService.doBackup(new)(new DropboxBackup());
+                //backupService.doBackup(new LinkedList<BackupMode>().add(new DropboxBackup()));
             }
         }
     }
@@ -103,8 +108,8 @@ public class BackupFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CloudBackupType.DRIVE.ordinal()
                 && resultCode == Activity.RESULT_OK) {
-            backupService.addToqueue(new DriveBackup(account));
-            backupService.performBackup();
+            //backupService.addToqueue(new DriveBackup(account));
+            //backupService.performBackup();
         }
     }
 
@@ -132,17 +137,18 @@ public class BackupFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                Collection<BackupMode> backups = new LinkedList<BackupMode>();
                 if (dropboxCheckbox.isChecked()) {
-                    backupService.addToqueue(new DropboxBackup());
+                    backups.add(new DropboxBackup());
                 }
                 if (googleDriveCheckbox.isChecked()) {
-                    backupService.addToqueue(new DriveBackup(account));
+                    backups.add(new DriveBackup(account));
                 }
                 if (sDcardCheckbox.isChecked()) {
-                    backupService.addToqueue(new SdcardBackup());
+                    backups.add(new SdcardBackup());
                 }
                 
-                backupService.performBackup();
+                backupService.doBackup(backups);
 
             }
         });
@@ -212,7 +218,7 @@ public class BackupFragment extends Fragment {
     }
 
     private void setupBackupListener() {
-        this.backupListener = new BackupServiceListener() {
+        this.backupListener = new BaseBackupListener() {
             @Override
             public void onBackupFailure(BackupMode mode, Exception e) {
                 super.onBackupFailure(mode, e);
@@ -229,22 +235,6 @@ public class BackupFragment extends Fragment {
 
     private View findView(int resourceId) {
         return this.getView().findViewById(resourceId);
-    }
-
-    private void performBackup(final BackupMode backupMode) {
-        backupService.doBackup(backupMode);
-    }
-
-    private void performGoogleDriveBackup() {
-        performBackup(new DriveBackup(account));
-    }
-
-    private void performDropboxBackup() {
-        performBackup(new DropboxBackup());
-    }
-
-    private void performSDCardBackup() {
-        performBackup(new SdcardBackup());
     }
 
     private void linkDropboxAccount() {

@@ -76,7 +76,7 @@ public class App extends Application {
         markingService = new MarkingService(environment);
 
         updateService = new UpdateService(environment, imageService);
-        backupService = new BackupService(environment.seriesRepository(), environment.dropboxHelper());
+        backupService = new BackupService(environment, imageService);
 
         schedule = new Schedule(seriesFollowingService, updateService, markingService);
         messageService = new MessageService(seriesFollowingService, updateService, backupService);

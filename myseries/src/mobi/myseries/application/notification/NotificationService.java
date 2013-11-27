@@ -8,6 +8,7 @@ import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BackupService;
+import mobi.myseries.application.backup.BaseBackupListener;
 import mobi.myseries.application.backup.exception.BackupTimeoutException;
 import mobi.myseries.application.backup.exception.ExternalStorageNotAvailableException;
 import mobi.myseries.application.backup.exception.GoogleDriveCannotCreateFileException;
@@ -303,7 +304,7 @@ public class NotificationService {
                 getBackupModeNotificationID(mode), notificationMessage));
     }
 
-    private BackupListener backupListener = new BackupListener() {
+    private BackupListener backupListener = new BaseBackupListener() {
 
         @Override
         public void onStart() {

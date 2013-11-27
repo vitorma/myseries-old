@@ -47,7 +47,7 @@ public class SdcardBackup implements BackupMode {
     }
 
     @Override
-    public void backupDB(File backup) throws IOException, ExternalStorageNotAvailableException {
+    public void backupFile(File backup) throws IOException, ExternalStorageNotAvailableException {
         FilesUtil.copy(backup, new File(backupFilePath(backup.getName())));
     }
 

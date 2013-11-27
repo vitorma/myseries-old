@@ -4,6 +4,8 @@ public class Features {
 
     public boolean isVisible(Feature feature) {
         // XXX
+        if(feature == Feature.BACKUP)
+            return true;
         //return feature == Feature.BACKUP;
         //return feature == Feature.FEATURE_SHOP;
         return false;

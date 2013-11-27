@@ -61,14 +61,14 @@ public class JsonHelper {
         out.close();
     }
     
-    public static Collection<Series> readSeriesJsonStream(InputStream in) throws IOException {
+    public static Collection<SeriesSnippet> readSeriesJsonStream(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        Collection<Series> series = new ArrayList<Series>();
+        Collection<SeriesSnippet> series = new ArrayList<SeriesSnippet>();
         reader.beginArray();
         while (reader.hasNext()) {
-            Series s = gson().fromJson(reader, Series.class);
+            SeriesSnippet s = gson().fromJson(reader, Series.class);
             series.add(s);
-            Log.v("json", "deserialized " + s.name());
+            Log.v("json", "deserialized " + s.id());
         }
         reader.endArray();
         reader.close();

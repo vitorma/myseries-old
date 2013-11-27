@@ -7,6 +7,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
+import mobi.myseries.application.backup.BaseBackupListener;
 import mobi.myseries.application.following.BaseSeriesFollowingListener;
 import mobi.myseries.application.following.SeriesFollowingListener;
 import mobi.myseries.application.preferences.StatisticsPreferences;
@@ -137,13 +138,7 @@ public class MyStatisticsFragment extends Fragment {
     };
 
     //XXX (Cleber) Create class BaseBackupListener, extend it here and override just the needed methods
-    private BackupListener mBackupListener = new BackupListener() {
-        @Override
-        public void onBackupFailure(BackupMode mode, Exception e) { }
-
-        @Override
-        public void onBackupSucess() { }
-
+    private BackupListener mBackupListener = new BaseBackupListener() {
         @Override
         public void onRestoreFailure(BackupMode mode, Exception e) {
             update();
@@ -153,18 +148,6 @@ public class MyStatisticsFragment extends Fragment {
         public void onRestoreSucess() {
             update();
         }
-
-        @Override
-        public void onStart() { }
-
-        @Override
-        public void onBackupCompleted(BackupMode mode) { }
-
-        @Override
-        public void onBackupRunning(BackupMode mode) { }
-
-        @Override
-        public void onRestoreRunning(BackupMode mode) { }
 
         @Override
         public void onRestoreCompleted(BackupMode mode) {

@@ -2,8 +2,10 @@ package mobi.myseries.gui.backup;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BackupService;
+import mobi.myseries.application.backup.BaseBackupListener;
 import mobi.myseries.application.backup.DriveBackup;
 import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.DropboxHelper;
@@ -44,13 +46,13 @@ public class RestoreFragment extends Fragment {
     private Button restoreButton;
     private GoogleAccountManager accountManager;
     private Spinner gDriveAccountSpinner;
-    private DropboxHelper dropboxHelper = App.backupService().getDropboxHelper();
+    private DropboxHelper dropboxHelper = App.backupService().dropboxHelper();
     private String account;
     
     private ProgressBar restoreProgressBar;
     private TextView restoreStatusTextView;
     
-    private BackupServiceListener restoreListener;
+    private BackupListener restoreListener;
     private CloudBackupType pendingRestore;
     private BackupService backupService;
     private RadioGroup restoreModeRadioGroup;
@@ -71,7 +73,7 @@ public class RestoreFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.backupService = App.backupService().withHandler(new Handler());
+        this.backupService = App.backupService();
         this.accountManager = new GoogleAccountManager(getActivity());
         this.setupViews();
         this.setupRestoreListener();
@@ -162,7 +164,7 @@ public class RestoreFragment extends Fragment {
 
     
     private void setupRestoreListener() {
-        this.restoreListener = new BackupServiceListener() {
+        this.restoreListener = new BaseBackupListener() {
             @Override
             public void onRestoreFailure(BackupMode mode, Exception e) {
                 super.onRestoreFailure(mode, e);
@@ -187,7 +189,7 @@ public class RestoreFragment extends Fragment {
     }
     
     private void performRestore(final BackupMode backupMode){
-                backupService.performRestore(backupMode);
+                backupService.restoreBackup(backupMode);
     }
 
     private void performGoogleDriveRestore() {
