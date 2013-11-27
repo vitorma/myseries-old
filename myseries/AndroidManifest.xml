@@ -35,9 +35,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity" />
+        <activity
+            android:name="mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity"
+            android:exported="true" />
 
-        <activity android:name="mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity" />
+        <activity
+            android:name="mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity"
+            android:exported="true" />
 
         <activity android:name="mobi.myseries.gui.statistics.StatisticsActivity" />
 

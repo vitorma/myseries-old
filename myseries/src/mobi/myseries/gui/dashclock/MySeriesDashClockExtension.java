@@ -51,7 +51,7 @@ public class MySeriesDashClockExtension extends DashClockExtension {
             .status(status(airDate))
             .expandedTitle(expandedTitle(airDate))
             .expandedBody(expandedBody(nextUnairedEpisodes))
-            .clickIntent(unairedScheduledEpisodesIntent()));
+            .clickIntent(clickIntent()));
     }
 
     private String status(Date airDate) {
@@ -83,7 +83,7 @@ public class MySeriesDashClockExtension extends DashClockExtension {
         return builder.toString();
     }
 
-    private Intent unairedScheduledEpisodesIntent() {
+    private Intent clickIntent() {
         Intent intent = App.resources().getBoolean(R.bool.isTablet) ?
                 ScheduleDualPaneActivity.newIntent(App.context(), ScheduleMode.UNAIRED) :
                 ScheduleSinglePaneActivity.newIntent(App.context(), ScheduleMode.UNAIRED);
