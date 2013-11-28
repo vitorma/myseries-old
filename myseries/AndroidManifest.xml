@@ -105,6 +105,7 @@
             </intent-filter>
         </receiver>
 
+        <!--
         <receiver
             android:name="mobi.myseries.gui.appwidget.ScheduleWidget"
             android:enabled="true"
@@ -128,14 +129,16 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/schedulewidget_info" />
         </receiver>
+        -->
 
         <!-- Services -->
 
+        <!--
         <service
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-
         <service android:name="mobi.myseries.gui.appwidget.TabService" />
+        -->
 
         <service android:name="mobi.myseries.application.notification.service.NotificationScheduler" />
 
