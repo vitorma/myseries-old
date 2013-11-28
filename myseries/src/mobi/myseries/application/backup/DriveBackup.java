@@ -49,7 +49,7 @@ public class DriveBackup implements BackupMode {
     }
 
     @Override
-    public void backupDB(java.io.File backup) throws Exception {
+    public void backupFile(java.io.File backup) throws Exception {
         if(!isOnline()) {
             throw new ConnectionFailedException();
         }

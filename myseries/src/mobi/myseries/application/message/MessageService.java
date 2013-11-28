@@ -16,7 +16,7 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.ListenerSet;
 import mobi.myseries.shared.Publisher;
 
-public class MessageService implements Publisher<MessageServiceListener>, BackupListener {
+public class MessageService implements Publisher<MessageServiceListener> {
 
     private ListenerSet<MessageServiceListener> listeners;
 
@@ -29,7 +29,6 @@ public class MessageService implements Publisher<MessageServiceListener>, Backup
 
         seriesFollowingService.register(mSeriesFollowingListener);
         updateService.register(mUpdateListener);
-        backupService.register(this);
     }
 
     @Override
@@ -79,74 +78,4 @@ public class MessageService implements Publisher<MessageServiceListener>, Backup
         }
     }
 
-    /* BackupListener */
-
-    @Override
-    public void onBackupSucess() {
-        //this.notifyBackupSuccess();
-    }
-
-    @Override
-    public void onBackupFailure(BackupMode mode, Exception e) {
-        //this.notifyBackupFailure(e);
-    }
-
-    @Override
-    public void onRestoreSucess() {
-        //this.notifyRestoreSuccess();
-    }
-
-    @Override
-    public void onStart() {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void onBackupCompleted(BackupMode mode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void onBackupRunning(BackupMode mode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void onRestoreFailure(BackupMode mode, Exception e) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void onRestoreRunning(BackupMode mode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void onRestoreCompleted(BackupMode mode) {
-        // TODO Auto-generated method stub
-    }
-
-    private void notifyBackupSuccess() {
-        for (MessageServiceListener l : this.listeners) {
-            l.onBackupSucess();
-        }
-    }
-
-    private void notifyBackupFailure(Exception e) {
-        for (MessageServiceListener l : this.listeners) {
-            l.onBackupFailure(e);
-        }
-    }
-
-    private void notifyRestoreSuccess() {
-        for (MessageServiceListener l : this.listeners) {
-            l.onRestoreSucess();
-        }
-    }
-
-    private void notifyRestoreFailure(Exception e) {
-        for (MessageServiceListener l : this.listeners) {
-            l.onRestoreFailure(e);
-        }
-    }
 }

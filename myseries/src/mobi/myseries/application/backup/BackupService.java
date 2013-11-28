@@ -1,272 +1,326 @@
 package mobi.myseries.application.backup;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Collection;
 
 import mobi.myseries.application.App;
-import mobi.myseries.application.backup.exception.BackupTimeoutException;
-import mobi.myseries.application.backup.exception.RestoreTimeoutException;
-import mobi.myseries.domain.repository.series.SeriesRepository;
-import mobi.myseries.shared.ListenerSet;
-import android.os.Handler;
+import mobi.myseries.application.ApplicationService;
+import mobi.myseries.application.ConnectionFailedException;
+import mobi.myseries.application.Environment;
+import mobi.myseries.application.NetworkUnavailableException;
+import mobi.myseries.application.backup.json.EpisodeSnippet;
+import mobi.myseries.application.backup.json.JsonHelper;
+import mobi.myseries.application.backup.json.SeriesSnippet;
+import mobi.myseries.application.image.ImageService;
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.domain.source.ParsingFailedException;
 
-public class BackupService {
+public class BackupService extends ApplicationService<BackupListener> {
 
-    private static final long TIME_IN_SECONDS = 60;
+    private ImageService imageService;
+    private RestoreTask currentRestoreTask;
 
-    private ListenerSet<BackupListener> listeners;
-
-    private SeriesRepository repository;
-
-    private DropboxHelper dropboxHelper;
-
-    private final AtomicBoolean isRunning;
-    private final ExecutorService executor;
-
-    private Handler handler;
-
-    private List<BackupMode> backupQueue = new ArrayList<BackupMode>();
-
-    public BackupService(SeriesRepository repository,
-            DropboxHelper dropboxHelper) {
-        this.listeners = new ListenerSet<BackupListener>();
-        this.repository = repository;
-        this.dropboxHelper = dropboxHelper;
-
-        this.isRunning = new AtomicBoolean(false);
-        this.executor = Executors.newSingleThreadExecutor();
+    public BackupService(Environment environment, ImageService imageService) {
+        super(environment);
+        this.imageService = imageService;
     }
 
-    public BackupService withHandler(Handler handler) {
-        this.handler = handler;
-        return this;
+    public void doBackup(final BackupMode backupMode) {
+        notifyOnBackupStart();
+        this.run(new Runnable() {
+            @Override
+            public void run() {
+                File jsonFile = null;
+                try {
+                    jsonFile = createSeriesJsonFile();
+                } catch (Exception e) {
+                    notifyOnBackupFail(e);
+                    return;
+                }
+
+                try {
+                    notifyOnBackupRunning(backupMode);
+                    backupMode.backupFile(jsonFile);
+                    notifyOnBackupCompleted(backupMode);
+                } catch (Exception e) {
+                    notifyOnBackupFail(backupMode, e);
+                }
+            }
+        });
     }
 
-    public OperationResult doBackup(final BackupMode backupMode) {
-        return runBackup(backupMode);
+    public void doBackup(final Collection<BackupMode> backupModes) {
+        notifyOnBackupStart();
+        this.run(new Runnable() {
+            @Override
+            public void run() {
+                File jsonFile = null;
+                try {
+                    jsonFile = createSeriesJsonFile();
+                } catch (Exception e) {
+                    notifyOnBackupFail(e);
+                    return;
+                }
+                for (BackupMode backupMode : backupModes) {
+                    try {
+                        notifyOnBackupRunning(backupMode);
+                        backupMode.backupFile(jsonFile);
+                        notifyOnBackupCompleted(backupMode);
+                    } catch (Exception e) {
+                        notifyOnBackupFail(backupMode, e);
+                    }
+                    
+                }
+            }
+        });
     }
 
-    private OperationResult runBackup(BackupMode backupMode) {
-        OperationTask backupTask;
-        OperationResult result = null;
+    public void restoreBackup(BackupMode backupMode) {
+        this.currentRestoreTask = new RestoreTask(environment(), backupMode,
+                imageService);
+        this.run(this.currentRestoreTask);
+    }
 
-        backupTask = new BackupTask(backupMode, repository);
-        try {
-            Future<?> future = executor.submit(backupTask);
-            future.get(TIME_IN_SECONDS, TimeUnit.SECONDS);
-            result = backupTask.result();
-            // if (!result.success()) {
-            // this.notifyListenersOfBackupFailure((result.error()));
-            return result;
-        } catch (InterruptedException e) {
-            // Should never happen
-            e.printStackTrace();
-            this.isRunning.set(false);
-            return new OperationResult().withError(e);
+    public void cancelCurrentRestore() {
+        if (currentRestoreTask == null)
+            return;
+        currentRestoreTask.cancel();
+        notifyRestoreCancel();
+        currentRestoreTask = null;
+    }
 
-        } catch (ExecutionException e) {
-            return new OperationResult().withError(e);
+    public DropboxHelper dropboxHelper() {
+        return environment().dropboxHelper();
+    }
 
-        } catch (TimeoutException e) {
-            return new OperationResult()
-                    .withError(new BackupTimeoutException(e));
+    private File createSeriesJsonFile() throws IOException,
+            FileNotFoundException {
+
+        File seriesCacheFile = new File(App.context().getCacheDir(),
+                "myseries.json");
+        Collection<Series> series = environment().seriesRepository().getAll();
+        JsonHelper.writeSeriesJsonStream(new BufferedOutputStream(
+                new FileOutputStream(seriesCacheFile)), series);
+        return seriesCacheFile;
+    }
+
+    public class RestoreTask implements Runnable {
+        private BackupMode backupMode;
+
+        private boolean isCancelled;
+
+        public RestoreTask(Environment environment, BackupMode backupMode,
+                ImageService imageService) {
+            this.backupMode = backupMode;
+        }
+
+        public void run() {
+            notifyOnRestoreRunning(backupMode);
+            Collection<SeriesSnippet> seriesJson = null;
+            try {
+                seriesJson = this.getSeriesFromFile("myseries.json");
+                this.restoreSeries(seriesJson);
+                notifyOnRestoreCompleted(backupMode);
+            } catch (Exception e) {
+                notifyOnRestoreFail(backupMode, e);
+            }
+        }
+
+        private Collection<SeriesSnippet> getSeriesFromFile(String jsonFileName)
+                throws Exception, IOException {
+            File cacheFile = null;
+            try {
+                cacheFile = new File(App.context().getCacheDir(), jsonFileName);
+                this.backupMode.downloadBackupToFile(cacheFile);
+                return JsonHelper.readSeriesJsonStream(new BufferedInputStream(
+                        new FileInputStream(cacheFile)));
+            } finally {
+                if (cacheFile != null)
+                    cacheFile.delete();
+            }
+        }
+
+        private void restoreSeries(Collection<SeriesSnippet> series)
+                throws ParsingFailedException, ConnectionFailedException,
+                NetworkUnavailableException {
+            Collection<Series> seriesToRestore = new ArrayList<Series>();
+
+            for (SeriesSnippet s : series) {
+                if (this.isCancelled())
+                    return;
+                Series fetchedSeries = environment().traktApi().fetchSeries(
+                        s.id());
+                for (EpisodeSnippet episodeSnippet : s.episodes()) {
+                    for(Episode episode : fetchedSeries.episodes())
+                        if(episodeSnippet.isTheSameAs(episode)) {
+                            episode.markAsWatched();
+                    }
+                }
+                seriesToRestore.add(fetchedSeries);
+                notifyRestoreProgress(seriesToRestore.size(), series.size());
+            }
+            if (this.isCancelled())
+                return;
+
+            environment().seriesRepository().clear();
+
+            for (Series s : seriesToRestore) {
+                if (this.isCancelled())
+                    return;
+                environment().seriesRepository().insert(s);
+                imageService.downloadAndSavePosterOf(s);
+            }
+
+            int current = 0;
+            for (Series s : seriesToRestore) {
+                current++;
+                if (this.isCancelled())
+                    return;
+                imageService.downloadAndSavePosterOf(s);
+                notifyRestorePosterDownloadProgress(current,
+                        seriesToRestore.size());
+            }
+        }
+
+        public boolean isCancelled() {
+            return this.isCancelled;
+        }
+
+        public void cancel() {
+            this.isCancelled = true;
         }
     }
 
-    public OperationResult restoreBackup(final BackupMode backupMode) {
-        return runRestore(backupMode);
-    }
-
-    private OperationResult runRestore(BackupMode backupMode) {
-        OperationTask restoreTask;
-        OperationResult result = null;
-
-        restoreTask = new RestoreTask(backupMode, repository);
-        try {
-            Future<?> future = executor.submit(restoreTask);
-            future.get(TIME_IN_SECONDS, TimeUnit.SECONDS);
-            result = restoreTask.result();
-            return result;
-        } catch (InterruptedException e) {
-            // Should never happen
-            e.printStackTrace();
-            this.isRunning.set(false);
-            return new OperationResult().withError(e);
-
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return new OperationResult().withError((Exception) e.getCause());
-
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            return new OperationResult().withError(new RestoreTimeoutException(
-                    e));
-        }
-    }
-
-    public DropboxHelper getDropboxHelper() {
-        return this.dropboxHelper;
-    }
-
-    private void notifyListenersOfBackupSucess() {
-        this.isRunning.set(false);
-
-        handler.post(new Runnable() {
+    private void notifyOnBackupRunning(final BackupMode backupMode) {
+        runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (BackupListener listener : listeners) {
-                    listener.onBackupSucess();
+                for (BackupListener listener : listeners()) {
+                    listener.onBackupRunning(backupMode);
                 }
             }
         });
     }
 
-    private void notifyListenersOfBackupFailure(final BackupMode mode,
-            final Exception e) {
-        handler.post(new Runnable() {
+    private void notifyOnBackupStart() {
+        runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (BackupListener listener : listeners) {
-                    listener.onBackupFailure(mode, e);
-
+                for (BackupListener listener : listeners()) {
+                    listener.onBackupStart();
                 }
             }
         });
     }
 
-    private void notifyListenersOfRestoreFailure(final BackupMode mode,
-            final Exception e) {
-        handler.post(new Runnable() {
+    private void notifyOnBackupCompleted(final BackupMode backupMode) {
+        runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (BackupListener listener : listeners) {
-                    listener.onRestoreFailure(mode, e);
+                for (BackupListener listener : listeners()) {
+                    listener.onBackupCompleted(backupMode);
                 }
             }
         });
     }
 
-    private void notifyListenersOfRestoreSucess() {
-        handler.post(new Runnable() {
+    private void notifyOnBackupFail(final Exception e) {
+        runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (BackupListener listener : listeners) {
-                    listener.onRestoreSucess();
+                for (BackupListener listener : listeners()) {
+                    listener.onBackupFailure(e);
                 }
             }
         });
     }
 
-    public boolean register(BackupListener listener) {
-        return this.listeners.register(listener);
-    }
-
-    public boolean deregister(BackupListener listener) {
-        return this.listeners.deregister(listener);
-    }
-
-    public void addToqueue(BackupMode backupMode) {
-        this.backupQueue.add(backupMode);
-
-    }
-
-    public void performBackup() {
-        new Thread(new Runnable() {
+    private void notifyOnBackupFail(final BackupMode backupMode,
+            final Exception exception) {
+        runInMainThread(new Runnable() {
             @Override
             public void run() {
-                if (backupQueue.iterator().hasNext()) {
-                    BackupMode mode = backupQueue.iterator().next();
-                    performBackup(mode);
-                }
-            }
-        }).start();
-
-    }
-
-    public void performBackup(BackupMode mode) {
-        notifyListenersOfBackupRunning(mode);
-        OperationResult result = doBackup(mode);
-        if (!result.success()) {
-            notifyListenersOfBackupFailure(mode, result.error());
-        } else {
-            notifyListenersOfBackupCompleted(mode);
-        }
-        backupQueue.remove(mode);
-        if (backupQueue.iterator().hasNext()) {
-            BackupMode mode2 = backupQueue.iterator().next();
-            performBackup(mode2);
-        }
-    }
-
-    public void performRestore(final BackupMode mode) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                notifyListenersOfRestoreRunning(mode);
-                OperationResult result = restoreBackup(mode);
-                if (!result.success()) {
-                    notifyListenersOfRestoreFailure(mode, result.error());
-                } else {
-                    notifyListenersOfRestoreCompleted(mode);
-                }
-            }
-        }).start();
-    }
-
-    private void notifyListenersOfBackupCompleted(final BackupMode mode) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                for (BackupListener listener : listeners) {
-                    listener.onBackupCompleted(mode);
+                for (BackupListener listener : listeners()) {
+                    listener.onBackupFailure(backupMode, exception);
                 }
             }
         });
-
     }
 
-    private void notifyListenersOfRestoreCompleted(final BackupMode mode) {
-        handler.post(new Runnable() {
+    private void notifyOnRestoreRunning(final BackupMode backupMode) {
+        runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (BackupListener listener : listeners) {
-                    listener.onRestoreCompleted(mode);
+                for (BackupListener listener : listeners()) {
+                    listener.onRestoreRunning(backupMode);
                 }
             }
         });
-
     }
 
-    private void notifyListenersOfBackupRunning(final BackupMode mode) {
-        handler.post(new Runnable() {
+    private void notifyOnRestoreFail(final BackupMode backupMode,
+            final Exception exception) {
+        runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (BackupListener listener : listeners) {
-                    listener.onBackupRunning(mode);
+                for (BackupListener listener : listeners()) {
+                    listener.onRestoreFailure(backupMode, exception);
                 }
             }
         });
-
     }
 
-    private void notifyListenersOfRestoreRunning(final BackupMode mode) {
-        handler.post(new Runnable() {
+    private void notifyRestoreProgress(final int current, final int total) {
+        runInMainThread(new Runnable() {
             @Override
             public void run() {
-                for (BackupListener listener : listeners) {
-                    listener.onRestoreRunning(mode);
+                for (BackupListener listener : listeners()) {
+                    listener.onRestoreProgress(current, total);
                 }
             }
         });
-
     }
+
+    private void notifyRestorePosterDownloadProgress(final int current,
+            final int total) {
+        runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                for (BackupListener listener : listeners()) {
+                    listener.onRestorePosterDownloadProgress(current, total);
+                }
+            }
+        });
+    }
+
+    private void notifyRestoreCancel() {
+        runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                for (BackupListener listener : listeners()) {
+                    listener.onRestoreCancelled();
+                }
+            }
+        });
+    }
+    
+    private void notifyOnRestoreCompleted(final BackupMode backupMode) {
+        runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                for (BackupListener listener : listeners()) {
+                    listener.onRestoreCompleted(backupMode);
+                }
+            }
+        });
+    }
+
 }

@@ -20,4 +20,14 @@ public interface BackupListener {
 
     public void onRestoreCompleted(BackupMode mode);
 
+    public void onBackupFailure(Exception e);
+
+    public void onRestoreProgress(int current, int total);
+
+    public void onRestorePosterDownloadProgress(int current, int total);
+
+    public void onBackupStart();
+
+    public void onRestoreCancelled();
+
 }
