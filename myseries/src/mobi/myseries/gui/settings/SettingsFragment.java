@@ -13,10 +13,10 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("Update.whenUpdateAutomatically")) {
+        if (key.equals(getString(R.string.prefKey_update_whenUpdateAutomatically))) {
             setUpPrefWhenUpdateAutomatically();
         } else if (key.equals(getString(R.string.prefKey_notification_advance_minutes))) {
-        	NotificationScheduler.setupAlarm(this.getActivity());        	
+            NotificationScheduler.setupAlarm(this.getActivity());
         }
     }
 
