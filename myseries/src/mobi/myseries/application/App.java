@@ -3,6 +3,7 @@ package mobi.myseries.application;
 import java.text.DateFormat;
 
 import mobi.myseries.R;
+import mobi.myseries.application.activityevents.ActivityEventsService;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.features.Features;
@@ -31,6 +32,7 @@ public class App extends Application {
     private static TrendingService trendingService;
     private static SeriesFollowingService seriesFollowingService;
     private static MarkingService markingService;
+    private static ActivityEventsService activityEventsService;
 
     /* XXX (Cleber) These guys should extend ApplicationService */
     private static UpdateService updateService;
@@ -47,7 +49,7 @@ public class App extends Application {
     /* (Cleber) This guy is ok */
     private static Preferences preferences;
     private static Features features;
-    private static Store<?, ?> store; // XXX (Gabriel) Populate this.
+    private static Store store;
 
     /* XXX (Cleber) This guy should fly away */
     private static BroadcastService broadcastService;
@@ -83,8 +85,11 @@ public class App extends Application {
         notificationService = new NotificationService(this, updateService, backupService);
 
         preferences = new Preferences(this);
+
+        activityEventsService = new ActivityEventsService(environment);
+
         features = new Features();
-        store = new GooglePlayStore();
+        store = new GooglePlayStore(environment, activityEventsService);
 
         NotificationScheduler.setupAlarm(context());
     }
@@ -156,7 +161,11 @@ public class App extends Application {
         return features;
     }
 
-    public static Store<?,?> store() {
+    public static Store store() {
         return store;
+    }
+
+    public static ActivityEventsService activityEvents() {
+        return activityEventsService;
     }
 }

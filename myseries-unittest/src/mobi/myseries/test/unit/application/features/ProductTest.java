@@ -1,56 +1,84 @@
 package mobi.myseries.test.unit.application.features;
 
-import mobi.myseries.application.features.Product;
-import mobi.myseries.application.features.ProductId;
-import android.test.AndroidTestCase;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public abstract class ProductTest<P extends Product<I>, I extends ProductId> extends AndroidTestCase {
+import android.test.AndroidTestCase;
 
-    protected abstract P newProductWithId(I id);
+import mobi.myseries.application.features.Price;
+import mobi.myseries.application.features.Product;
+import mobi.myseries.application.features.ProductDescription;
+import mobi.myseries.application.features.Sku;
 
-    protected abstract I newProductId1();
-    protected abstract I newProductId2();
-    
-    /* Test assumptions */
+public class ProductTest extends AndroidTestCase {
 
-    public void testProductIdsAreDifferent() {
-        assertThat(newProductId1(), not(equalTo(newProductId2())));
+    private static final Sku sku1 = new Sku("PRODUCT1");
+    private static final Sku sku2 = new Sku("PRODUCT2");
+    private static final ProductDescription description1 = newProductDescriptionWithSku(sku1);
+    private static final ProductDescription description2 = newProductDescriptionWithSku(sku2);
+    private static final Price price1 = new Price("$1.00");
+    private static final Price price2 = new Price("$2.00");
+
+    private static ProductDescription newProductDescriptionWithSku(Sku sku) {
+        return new ProductDescription(sku);
     }
 
-    public void testProductIdsAreIdempotent() {
-        assertThat(newProductId1(), equalTo(newProductId1()));
-        assertThat(newProductId2(), equalTo(newProductId2()));
+    /* Validate constructor */
+
+    public void testItCannotCreateAProductWithNullPrice() {
+        try {
+            new Product(null, description1);
+            fail("It should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    public void testItCannotCreateAProductWithNullDescriptions() {
+        try {
+            new Product(price1, null);
+            fail("It should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    /* Sku */
+
+    public void testTheSkuOfTheProductIsTheSameAsTheSkuOfItsDescription() {
+        ProductDescription productDescription = newProductDescriptionWithSku(sku1);
+        Product product = new Product(price1, productDescription);
+
+        assertThat(product.sku(), equalTo(product.description().sku()));
+    }
+
+    /* ProductDescription */
+
+    public void testTheDescriptionOfTheProductIsTheDescriptionUsedInItsConstruction() {
+        ProductDescription description = description1;
+        Product product = new Product(price1, description);
+
+        assertThat(product.description(), equalTo(description));
     }
 
     /* Entity tests*/
 
-    public void testTwoProductsAreEqualIfTheyHaveTheSameId() {
-        I id = newProductId1();
+    public void testTwoProductsAreEqualIfTheyHaveTheSameDescription() {
+        ProductDescription description = description1;
 
-        P p1 = newProductWithId(id);
-        P p2 = newProductWithId(id);
+        Product p1 = new Product(price1, description);
+        Product p2 = new Product(price2, description);
 
         assertThat(p1, equalTo(p2));
         assertThat(p2, equalTo(p1));
     }
 
-    public void testTwoProductsAreDifferentIfTheyHaveDifferentIds() {
-        I id1 = newProductId1();
-        I id2 = newProductId2();
-
-        P p1 = newProductWithId(id1);
-        P p2 = newProductWithId(id2);
+    public void testTwoProductsAreDifferentIfTheyHaveDifferentDescriptions() {
+        Product p1 = new Product(price1, description1);
+        Product p2 = new Product(price1, description2);
 
         assertThat(p1, not(equalTo(p2)));
         assertThat(p2, not(equalTo(p1)));
     }
 
     public void testNoProductIsEqualToNull() {
-        I id = newProductId1();
-        P product = newProductWithId(id);
+        Product product = new Product(price1, description1);
 
         assertThat(product, not(equalTo(null)));
     }

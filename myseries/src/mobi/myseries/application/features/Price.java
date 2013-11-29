@@ -1,15 +1,18 @@
-package mobi.myseries.application.features.googleplay;
+package mobi.myseries.application.features;
 
-import mobi.myseries.application.features.ProductId;
 import mobi.myseries.shared.Validate;
 
-public class GooglePlayProductId implements ProductId {
+public class Price {
 
     private final String value;
 
-    public GooglePlayProductId(String value) {
+    public Price(String value) {
         Validate.isNonNull(value, "value");
         this.value = value;
+    }
+
+    public String value() {
+        return value;
     }
 
     @Override
@@ -28,7 +31,7 @@ public class GooglePlayProductId implements ProductId {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        GooglePlayProductId other = (GooglePlayProductId) obj;
+        Price other = (Price) obj;
         if (value == null) {
             if (other.value != null)
                 return false;
@@ -39,6 +42,6 @@ public class GooglePlayProductId implements ProductId {
 
     @Override
     public String toString() {
-        return "GooglePlayProductId(" + value + ")";
+        return "Sku(" + value + ")";
     }
 }
