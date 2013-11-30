@@ -178,8 +178,10 @@ public class RestoreFragment extends Fragment {
                 super.onRestoreRunning(mode);
                 restoreButton.setText(R.string.cancel);
                 restoreButton.setOnClickListener(runningOnClickListener);
+                restoreProgressBar.setIndeterminate(true);
+                restoreStatusTextView.setText(App.context().getString(R.string.restore_progress_message, mode.name()));
             }
-            
+
             @Override
             public void onRestoreCancelled() {
                 super.onRestoreCancelled();
@@ -195,7 +197,7 @@ public class RestoreFragment extends Fragment {
                 super.onRestoreProgress(current, total);
                 restoreProgressBar.setIndeterminate(false);
                 restoreProgressBar.setMax(total);
-                restoreProgressBar.setProgress(current);
+                restoreProgressBar.setProgress(current - 1);
                 restoreStatusTextView.setText(R.string.restore_downloading_series_message);
             }
             @Override
@@ -203,7 +205,7 @@ public class RestoreFragment extends Fragment {
                 super.onRestorePosterDownloadProgress(current, total);
                 restoreProgressBar.setIndeterminate(false);
                 restoreProgressBar.setMax(total);
-                restoreProgressBar.setProgress(current);
+                restoreProgressBar.setProgress(current - 1);
                 restoreStatusTextView.setText(R.string.restore_downloading_posters_message);
             }
         };

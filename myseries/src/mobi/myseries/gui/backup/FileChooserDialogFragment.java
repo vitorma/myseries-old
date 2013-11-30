@@ -19,6 +19,8 @@ public class FileChooserDialogFragment extends DialogFragment {
         return new FileChooserDialogBuilder(getActivity())
             .setDefaultPath(SdcardBackup.getDefaultFolder())
             .setOnChooseListener(onChooseListener())
+            .setTitle(R.string.restore_choose_backup_to_restore)
+            .setEmptyMessage(R.string.restore_there_are_no_backups_to_restore)
             .build();
     }
 
@@ -26,7 +28,8 @@ public class FileChooserDialogFragment extends DialogFragment {
         return new OnChooseListener() {
             @Override
             public void onChoose(File chosenFile) {
-                App.backupService().restoreBackup(new SdcardBackup(chosenFile));
+                if(chosenFile != null)
+                    App.backupService().restoreBackup(new SdcardBackup(chosenFile));
             }
         };
     }

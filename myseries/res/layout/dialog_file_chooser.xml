@@ -11,6 +11,7 @@
     <include
         layout="@layout/dialog_title_divider"/>
 
+
     <ScrollView
         android:id="@+id/scrollPanel"
         android:layout_width="match_parent"

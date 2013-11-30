@@ -20,7 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class FileChooserDialogBuilder {
-    private static final int DEFAULT_TITLE_RESOURCE = R.string.choose_backup_to_restore;
+    private static final int DEFAULT_TITLE_RESOURCE = R.string.restore_choose_backup_to_restore;
 
     private final Context context;
     private int titleResource = DEFAULT_TITLE_RESOURCE;
@@ -34,6 +34,8 @@ public class FileChooserDialogBuilder {
 
     private OnChooseListener onChooseListener;
     protected String selectedFile;
+
+    private int emptyMessage;
 
     public FileChooserDialogBuilder(Context context) {
         this.context = context;
@@ -76,7 +78,7 @@ public class FileChooserDialogBuilder {
                 .findViewById(R.id.files);
 
         fileList = FilesUtil.listFilesOfDirectory(currentPath, fileEndsWith);
-
+ 
         for (int i = 0; i < fileList.length; i++) {
             View v = inflater
                     .inflate(R.layout.dialog_file_chooser_option, null);
@@ -142,6 +144,11 @@ public class FileChooserDialogBuilder {
             path = Environment.getExternalStorageDirectory();
         fileList = FilesUtil.listFilesOfDirectory(path, fileEndsWith);
         this.currentPath = path;
+        return this;
+    }
+
+    public FileChooserDialogBuilder setEmptyMessage(int stringResource) {
+        this.emptyMessage = stringResource;
         return this;
     }
 }
