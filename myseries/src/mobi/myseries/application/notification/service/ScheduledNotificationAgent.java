@@ -8,6 +8,9 @@ import mobi.myseries.application.preferences.NotificationPreferences;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.shared.UniversalImageLoader;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.BigPictureStyle;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -73,16 +76,16 @@ public class ScheduledNotificationAgent extends Service {
 
         Log.d(getClass().getName(), "Notification screen: " + (picture == null?  ("null") : picture.toString()));
 
-        Notification noti = new Notification.BigPictureStyle(
-                new Notification.Builder(App.context())
+        Notification noti = new NotificationCompat.Builder(App.context())
                 .setContentTitle(App.context().getText(R.string.app))
                 .setContentText(notificationMessage)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                 .setSound(App.preferences().forNotifications().notificationSound())
-                .setContentIntent(PendingIntent.getActivity(App.context(), 0, new Intent(), 0)))
-        .bigPicture(picture)
-        .build();
+                .setContentIntent(PendingIntent.getActivity(App.context(), 0, new Intent(), 0))
+                .setStyle(new BigPictureStyle()
+                        .bigPicture(picture))
+                .build();
 
         NotificationManager manager = (NotificationManager) App.context().getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(e.hashCode(), noti);
