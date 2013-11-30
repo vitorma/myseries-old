@@ -5,8 +5,10 @@ import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.features.Product;
-import mobi.myseries.application.features.ProductId;
+import mobi.myseries.application.features.ProductDescription;
+import mobi.myseries.application.features.Sku;
 
+import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -15,10 +17,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class ProductAdapter extends BaseAdapter {
-    private List<Product<?>> mItems;
+    private List<Product> mItems;
 
-    public ProductAdapter(List<Product<?>> items) {
+    private final Activity mActivity;
+
+    public ProductAdapter(List<Product> items, Activity activity) {
         mItems = items;
+        mActivity = activity;
 
         //TODO sortItems();
     }
@@ -31,7 +36,7 @@ public class ProductAdapter extends BaseAdapter {
     }
     */
 
-    public Product<?> getSeason(int position) {
+    public Product getSeason(int position) {
         return mItems.get(position);
     }
 
@@ -62,12 +67,13 @@ public class ProductAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        Product<?> product = mItems.get(position);
+        Product product = mItems.get(position);
+        ProductDescription productDescription = product.description();
 
-        viewHolder.mProductName.setText(product.name());
+        viewHolder.mProductName.setText(productDescription.name());
 
-        viewHolder.mBuyButton.setText(product.price());
-        viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product.id()));
+        viewHolder.mBuyButton.setText(product.price().value());
+        viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product.sku()));
 
         /* TODO
         Season season = mItems.get(position);
@@ -87,7 +93,7 @@ public class ProductAdapter extends BaseAdapter {
         return view;
     }
 
-    private static class ViewHolder {
+    private class ViewHolder {
         private TextView mProductName;
         private TextView mDescription;
         private Button mBuyButton;
@@ -102,14 +108,14 @@ public class ProductAdapter extends BaseAdapter {
             view.setTag(this);
         }
 
-        private OnClickListener buyButtonOnClickListener(final ProductId productId) {
+        private OnClickListener buyButtonOnClickListener(final Sku sku) {
             return new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // XXX(Gabriel) verify if the product is owned.
 
                     //if (App..isChecked()) {
-                        App.store().buy(productId);
+                        App.store().buy(sku, mActivity);
                     //}
                 }
             };

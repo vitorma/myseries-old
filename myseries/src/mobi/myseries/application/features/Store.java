@@ -1,11 +1,20 @@
 package mobi.myseries.application.features;
 
-import java.util.List;
+import java.util.Set;
 
-public interface Store<P extends Product<I>, I extends ProductId> {
-    public List<P> ownedProducts();
-    public List<P> productsAvailableForPurchase();
+import android.app.Activity;
 
-    // TODO(Gabriel): It should enforce the right type of ProductId 
-    public void buy(ProductId productId);
+import mobi.myseries.application.ApplicationService;
+import mobi.myseries.application.Environment;
+
+public abstract class Store extends ApplicationService<StoreListener> {
+
+    public Store(Environment environment) {
+        super(environment);
+    }
+
+    public abstract Set<Product> ownedProducts();
+    public abstract Set<Product> productsAvailableForPurchase();
+
+    public abstract void buy(Sku sku, Activity activity);
 }

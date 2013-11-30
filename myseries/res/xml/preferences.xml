@@ -11,6 +11,7 @@
             android:key="@string/prefKey_update_whenUpdateAutomatically"
             android:title="@string/settings_update_automatically" />
     </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/settings_category_notifications" >
         <CheckBoxPreference
             android:defaultValue="true"
@@ -27,6 +28,27 @@
             android:summary="@string/settings_notification_advance_summary"
             custom:max="60"
             custom:min="0" />
+        
+        <RingtonePreference
+            android:key="@string/prefKey_notification_sound"
+            android:ringtoneType="notification"
+            android:showDefault="true"
+            android:title="@string/settings_notification_sound"
+            android:summary="@string/settings_notification_sound_summary"
+            android:dependency="@string/prefKey_notifications_enabled"
+            android:defaultValue="content://settings/system/notification_sound" >
+        </RingtonePreference>
+        
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_category_others">
+        <Preference
+            android:title="@string/settings_about">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="mobi.myseries"
+                android:targetClass="mobi.myseries.gui.settings.AboutActivity" />
+        </Preference>
+    </PreferenceCategory>
+    
 </PreferenceScreen> 

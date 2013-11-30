@@ -10,8 +10,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -60,10 +60,19 @@
                 android:value="mobi.myseries.gui.library.LibraryActivity" />
         </activity>
 
-        <activity android:name=".gui.settings.SettingsActivity" >
+        <activity android:name="mobi.myseries.gui.settings.SettingsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="mobi.myseries.gui.library.LibraryActivity" />
+        </activity>
+
+        <activity android:name="mobi.myseries.gui.settings.AboutActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mobi.myseries.gui.settings.SettingsActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".gui.series.SeriesActivity" >
@@ -74,6 +83,7 @@
 
         <activity android:name="mobi.myseries.gui.episodes.EpisodesActivity" />
 
+        <!--
         <activity android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -83,6 +93,7 @@
         <activity
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetDialogActivity"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"/>
+        -->
 
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
@@ -106,6 +117,7 @@
             </intent-filter>
         </receiver>
 
+        <!--
         <receiver
             android:name="mobi.myseries.gui.appwidget.ScheduleWidget"
             android:enabled="true"
@@ -129,14 +141,16 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/schedulewidget_info" />
         </receiver>
+        -->
 
         <!-- Services -->
 
+        <!--
         <service
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-
         <service android:name="mobi.myseries.gui.appwidget.TabService" />
+        -->
 
         <service android:name="mobi.myseries.application.notification.service.NotificationScheduler" />
 
