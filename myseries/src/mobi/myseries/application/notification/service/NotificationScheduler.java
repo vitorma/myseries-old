@@ -73,9 +73,9 @@ public class NotificationScheduler extends Service {
         DateFormat airtimeFormat = android.text.format.DateFormat.getTimeFormat(context);
 
         NotificationPreferences prefs = App.preferences().forNotifications();
-        
-        long notificationAdvance = toMiliseconds(prefs.notificationAdvanceMinutes());
-        
+
+        long notificationAdvance = toMiliseconds(prefs.notificationAdvanceMinutes()) + toMiliseconds(12 * 60);
+
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         long currentTime = System.currentTimeMillis();
 
@@ -119,10 +119,10 @@ public class NotificationScheduler extends Service {
     }
 
     private static long toMiliseconds(long minutes) {
-		return minutes * 60 * 1000;
-	}
+        return minutes * 60 * 1000;
+    }
 
-	@Override
+    @Override
     public IBinder onBind(Intent arg0) {
         return null;
     }
