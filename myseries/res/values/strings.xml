@@ -337,7 +337,9 @@
     <string name="settings_enable_notifications_summary">Be notified before new episodes of the series you follow are aired</string>
     <string name="settings_notification_advance">When to notify</string>
     <string name="settings_notification_advance_summary">Number of minutes before the episode release you want to receive the notification</string>
-
+    <string name="settings_notification_sound">Notification Sound</string>
+    <string name="settings_notification_sound_summary">Sound to play before a new episode is aired</string>
+    
     <string name="settings_category_others">OTHERS</string>
     <string name="settings_about">About</string>
     <string name="settings_about_version_format">VERSION %s</string>

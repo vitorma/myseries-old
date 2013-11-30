@@ -17,21 +17,29 @@ public class AndroidNotificationDispatcher extends NotificationDispatcher {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         this.updateNotificationBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(context.getText(R.string.app))
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setAutoCancel(true)
-                // For some reason, setAutoCancel is not working properly with NotificationCompat.Builder,
-                // this contentIntent is an workaround for that.
-                // http://stackoverflow.com/questions/15033316/notification-setautocanceltrue-doesnt-work
-                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(), 0));
+        .setSmallIcon(R.drawable.ic_notification)
+        .setContentTitle(context.getText(R.string.app))
+        .setPriority(NotificationCompat.PRIORITY_LOW)
+        .setAutoCancel(true)
+        // For some reason, setAutoCancel is not working properly with
+        // NotificationCompat.Builder,
+        // this contentIntent is an workaround for that.
+        // http://stackoverflow.com/questions/15033316/notification-setautocanceltrue-doesnt-work
+        .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(), 0));
     }
 
     @Override
     public void notifyTextOnlyNotification(TextOnlyNotification notification) {
+        int defaults = 0;
+        if (notification.soundUri() != null) {
+            defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS;
+        }
+
         Notification androidNotification = this.updateNotificationBuilder
                 .setContentText(notification.message())
                 .setProgress(0, 0, false)
+                .setSound(notification.soundUri())
+                .setDefaults(defaults)
                 .build();
 
         this.notificationManager.notify(notification.id(), androidNotification);
@@ -40,6 +48,7 @@ public class AndroidNotificationDispatcher extends NotificationDispatcher {
     @Override
     public void notifyIndeterminateProgressNotification(
             IndeterminateProgressNotification notification) {
+
         Notification androidNotification = this.updateNotificationBuilder
                 .setContentText(notification.message())
                 .setProgress(0, 0, true)
