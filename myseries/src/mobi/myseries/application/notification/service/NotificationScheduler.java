@@ -74,7 +74,7 @@ public class NotificationScheduler extends Service {
 
         NotificationPreferences prefs = App.preferences().forNotifications();
 
-        long notificationAdvance = toMiliseconds(prefs.notificationAdvanceMinutes()) + toMiliseconds(12 * 60);
+        long notificationAdvance = toMiliseconds(prefs.notificationAdvanceMinutes());
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         long currentTime = System.currentTimeMillis();
