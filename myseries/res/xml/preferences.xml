@@ -28,6 +28,17 @@
             android:summary="@string/settings_notification_advance_summary"
             custom:max="60"
             custom:min="0" />
+        
+        <RingtonePreference
+            android:key="@string/prefKey_notification_sound"
+            android:ringtoneType="notification"
+            android:showDefault="true"
+            android:title="@string/settings_notification_sound"
+            android:summary="@string/settings_notification_sound_summary"
+            android:dependency="@string/prefKey_notifications_enabled"
+            android:defaultValue="content://settings/system/notification_sound" >
+        </RingtonePreference>
+        
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_category_others">
@@ -39,5 +50,5 @@
                 android:targetClass="mobi.myseries.gui.settings.AboutActivity" />
         </Preference>
     </PreferenceCategory>
-
+    
 </PreferenceScreen> 

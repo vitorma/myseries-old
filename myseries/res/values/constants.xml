@@ -48,5 +48,6 @@
     
     <string name="prefKey_notifications_enabled">notifications_enabled</string>
     <string name="prefKey_notification_advance_minutes">notification_advance_minutes</string>
+    <string name="prefKey_notification_sound">notification_sound</string>
     
 </resources>

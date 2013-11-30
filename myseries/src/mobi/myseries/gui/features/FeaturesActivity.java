@@ -32,4 +32,5 @@ public class FeaturesActivity extends BaseActivity {
     protected boolean isTopLevel() {
         return true;
     }
+
 }

@@ -1,12 +1,15 @@
 package mobi.myseries.gui.features;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.Log;
 import mobi.myseries.application.features.Product;
+import mobi.myseries.application.features.ProductDescription;
 import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.Validate;
 
@@ -21,7 +24,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 public class FeaturesFragment extends Fragment {
-    private List<Product<?>> mItems;
+
+    private List<Product> mItems;
 
     private ProductAdapter mAdapter;
 
@@ -98,8 +102,8 @@ public class FeaturesFragment extends Fragment {
 
     private void setUpData() {
         Log.d(getClass().getCanonicalName(), "Loading products");
-        mItems = (List<Product<?>>) App.store().productsAvailableForPurchase();
-        mAdapter = new ProductAdapter(mItems);
+        mItems = new ArrayList<Product>((Set<Product>) App.store().productsAvailableForPurchase());
+        mAdapter = new ProductAdapter(mItems, this.getActivity());
         Log.d(getClass().getCanonicalName(), "Loaded products");
 
         /* TODO

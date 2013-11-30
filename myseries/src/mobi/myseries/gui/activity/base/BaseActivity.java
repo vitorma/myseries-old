@@ -1,6 +1,7 @@
 package mobi.myseries.gui.activity.base;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.features.FeaturesActivity;
 import mobi.myseries.gui.library.LibraryActivity;
@@ -173,6 +174,12 @@ public abstract class BaseActivity extends Activity {
 
     private Intent topActivityIntentFrom(Intent intent) {
         return intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        App.activityEvents().notifyOnActivityResult(requestCode, resultCode, data);
     }
 
     //TODO (Cleber) Remove all the code below ASAP -----------------------------------------------------------------------------------------
