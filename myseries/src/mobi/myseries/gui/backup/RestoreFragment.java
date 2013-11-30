@@ -229,7 +229,11 @@ public class RestoreFragment extends Fragment {
     }
     
     private void performSDCardRestore() {
-        new FileChooserDialogFragment().show(this.getFragmentManager(), "FileChooserDialogFragment");
+        if(SdcardBackup.hasBackupFiles()) {
+            new FileChooserDialogFragment().show(this.getFragmentManager(), "FileChooserDialogFragment");
+        } else {
+            restoreStatusTextView.setText(R.string.restore_there_are_no_backups_to_restore);
+        }
     }
 
     private void linkDropboxAccount() {

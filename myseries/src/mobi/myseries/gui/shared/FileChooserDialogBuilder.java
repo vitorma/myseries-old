@@ -47,6 +47,11 @@ public class FileChooserDialogBuilder {
         return this;
     }
 
+    public FileChooserDialogBuilder fileEndsWith(String endsWith) {
+        this.fileEndsWith = endsWith;
+        return this;
+    }
+
     public FileChooserDialogBuilder setOnChooseListener(
             OnChooseListener listener) {
         this.onChooseListener = listener;

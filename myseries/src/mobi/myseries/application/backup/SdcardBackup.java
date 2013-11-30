@@ -71,4 +71,8 @@ public class SdcardBackup implements BackupMode {
         return new File(Environment.getExternalStorageDirectory().getPath()
                 + FILE_SEPARATOR + BACKUP_FOLDER);
     }
+
+    public static boolean hasBackupFiles() {
+        return FilesUtil.listFilesOfDirectory(getDefaultFolder(), "bkp").length > 0;
+    }
 }

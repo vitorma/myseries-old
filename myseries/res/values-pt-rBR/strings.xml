@@ -260,7 +260,7 @@
     <string name="restore_timeout">A restauração foi cancelada por demorar demais.</string>
 
     <string name="restore_choose_backup_to_restore">Escolha o backup a ser restaurado…</string>
-    <string name="restore_there_are_no_backups_to_restore">não há backups guardados para restaurar…</string>
+    <string name="restore_there_are_no_backups_to_restore">Não há backups guardados para restauração.</string>
 
     <string name="restore_progress_message">Restaurando de \"%s\"…</string>
     <string name="restore_success_message">Restauração de \"%s\" bem sucedida.</string>

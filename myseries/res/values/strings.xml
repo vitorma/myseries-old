@@ -259,7 +259,7 @@
     <string name="restore_timeout">Restore time limit exceeded.</string>
 
     <string name="restore_choose_backup_to_restore">Choose a backup to restore…</string>
-    <string name="restore_there_are_no_backups_to_restore">there are no backups to restore.</string>
+    <string name="restore_there_are_no_backups_to_restore">There are no backups to restore.</string>
     
     <string name="restore_progress_message">Restoring from \"%s\"…</string>
     <string name="restore_success_message">Restore from \"%s\" succeeded.</string>
