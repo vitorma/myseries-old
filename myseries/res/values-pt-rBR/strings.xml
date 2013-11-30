@@ -258,13 +258,21 @@
     <string name="restore_connection_failed">Não foi possível conectar a Internet.</string>
     <string name="restore_connection_timeout">Não foi possível conectar a Internet.</string>
     <string name="restore_timeout">A restauração foi cancelada por demorar demais.</string>
-    
-    <string name="restore_progress_message">Restaudando de \"%s\"…</string>
+
+    <string name="restore_choose_backup_to_restore">Escolha o backup a ser restaurado…</string>
+    <string name="restore_there_are_no_backups_to_restore">não há backups guardados para restaurar…</string>
+
+    <string name="restore_progress_message">Restaurando de \"%s\"…</string>
     <string name="restore_success_message">Restauração de \"%s\" bem sucedida.</string>
 
     <string name="restore_failed_with_cause">A restauração falhou: %s</string>
     <string name="restore_failed_without_cause">A restauração falhou.</string>
 
+    <string name="restore_cancelled">Restauração cancelada.</string>
+
+    <string name="restore_downloading_posters_message">Baixando os posters das séries…</string>
+    <string name="restore_downloading_series_message">Baixando as séries…</string>
+    
     <string name="restore_sdcard_not_available">Seu cartão SD não está disponível.</string>
     <string name="restore_sdcard_file_not_found">Não foi encontrado nenhum arquivo de backup no cartão SD.</string>
     <string name="restore_dropbox_error">Há algo errado com o Dropbox.</string>

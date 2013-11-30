@@ -5,9 +5,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FilesUtil {
 
@@ -112,4 +115,27 @@ public class FilesUtil {
 
         return directory;
     }
+
+    public static String[] listFilesOfDirectory(File path, final String fileEndsWith) {
+        List<String> fileNames = new ArrayList<String>();
+        if (path.exists()) {
+            FilenameFilter filter = new FilenameFilter() {
+                public boolean accept(File dir, String filename) {
+                    File sel = new File(dir, filename);
+                    if (!sel.canRead())
+                        return false;
+                    boolean endsWith = fileEndsWith != null ? filename
+                            .toLowerCase().endsWith(fileEndsWith) : true;
+                    return endsWith;
+
+                }
+            };
+            String[] fileNameList = path.list(filter);
+            for (String file : fileNameList) {
+                fileNames.add(file);
+            }
+        }
+        return (String[]) fileNames.toArray(new String[] {});
+    }
+
 }

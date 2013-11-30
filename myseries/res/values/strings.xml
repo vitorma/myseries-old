@@ -257,12 +257,19 @@
     <string name="restore_connection_failed">Could not connect to internet.</string>
     <string name="restore_connection_timeout">Could not connect to internet.</string>
     <string name="restore_timeout">Restore time limit exceeded.</string>
-    
-    <string name="restore_progress_message">Restoring from \"%s\"…</string>
+
+    <string name="choose_backup_to_restore">Choose a backup to restore…</string>
+    <string name="restore_there_are_no_backups_to_restore">there are no backups to restore.</string>
+
     <string name="restore_success_message">Restore from \"%s\" succeeded.</string>
 
     <string name="restore_failed_with_cause">Restore failed: %s</string>
     <string name="restore_failed_without_cause">Restore failed.</string>
+
+    <string name="restore_cancelled">Restore cancelled.</string>
+
+    <string name="restore_downloading_posters_message">Downloading series posters…</string>
+    <string name="restore_downloading_series_message">Downloading series…</string>
 
     <string name="restore_sdcard_not_available">Your SD card is unavailable.</string>
     <string name="restore_sdcard_file_not_found">Backup files nonumbert found in SD card.</string>

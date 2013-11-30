@@ -8,7 +8,7 @@ public class RestoreTimeoutException extends Exception {
     public RestoreTimeoutException(TimeoutException e) {
         super(e);
     }
-    
+
     public RestoreTimeoutException() {
     }
 

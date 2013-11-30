@@ -1,5 +1,7 @@
 package mobi.myseries.gui.backup;
 
+import java.io.File;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupListener;
@@ -16,6 +18,8 @@ import mobi.myseries.application.notification.IndeterminateProgressNotification;
 import mobi.myseries.application.notification.Notification;
 import mobi.myseries.application.notification.NotificationDispatcher;
 import mobi.myseries.application.notification.TextOnlyNotification;
+import mobi.myseries.gui.episodes.EpisodeSortingDialogFragment;
+
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
@@ -26,7 +30,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,23 +126,7 @@ public class RestoreFragment extends Fragment {
 
     private void setupRestoreButton() {
         this.restoreButton = (Button) this.findView(R.id.RestoreButton);
-        this.restoreButton.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                switch (restoreModeRadioGroup.getCheckedRadioButtonId()) {
-                case R.id.SDCardRadioButton:
-                    performSDCardRestore();
-                    break;
-                case R.id.GoogleDriveRadioButton:
-                    performGoogleDriveRestore();
-                    break;
-                case R.id.DropboxRadioButton:
-                    performDropboxRestore();
-                    break;
-                }
-            }
-        });
+        this.restoreButton.setOnClickListener(onClickListener);
     }
 
     private void setupGoogleDriveAccountSpinner() {
@@ -162,7 +152,6 @@ public class RestoreFragment extends Fragment {
         });
     }
 
-    
     private void setupRestoreListener() {
         this.restoreListener = new BaseBackupListener() {
             @Override
@@ -174,11 +163,48 @@ public class RestoreFragment extends Fragment {
                 } else if (e instanceof DropboxUnlinkedException) {
                     linkDropboxAccount();
                 }
+                restoreButton.setText(R.string.restore);
+                restoreButton.setOnClickListener(onClickListener);
             }
             @Override
             public void onRestoreCompleted(BackupMode mode) {
                 super.onRestoreCompleted(mode);
-                App.updateSeriesService().updateDataIfNeeded();
+                restoreButton.setText(R.string.restore);
+                restoreButton.setOnClickListener(onClickListener);
+            }
+
+            @Override
+            public void onRestoreRunning(BackupMode mode) {
+                super.onRestoreRunning(mode);
+                restoreButton.setText(R.string.cancel);
+                restoreButton.setOnClickListener(runningOnClickListener);
+            }
+            
+            @Override
+            public void onRestoreCancelled() {
+                super.onRestoreCancelled();
+                restoreButton.setText(R.string.restore);
+                restoreButton.setOnClickListener(onClickListener);
+                restoreProgressBar.setIndeterminate(false);
+                restoreProgressBar.setMax(0);
+                restoreProgressBar.setProgress(0);
+                restoreStatusTextView.setText(R.string.restore_cancelled);
+            }
+            @Override
+            public void onRestoreProgress(int current, int total) {
+                super.onRestoreProgress(current, total);
+                restoreProgressBar.setIndeterminate(false);
+                restoreProgressBar.setMax(total);
+                restoreProgressBar.setProgress(current);
+                restoreStatusTextView.setText(R.string.restore_downloading_series_message);
+            }
+            @Override
+            public void onRestorePosterDownloadProgress(int current, int total) {
+                super.onRestorePosterDownloadProgress(current, total);
+                restoreProgressBar.setIndeterminate(false);
+                restoreProgressBar.setMax(total);
+                restoreProgressBar.setProgress(current);
+                restoreStatusTextView.setText(R.string.restore_downloading_posters_message);
             }
         };
         App.backupService().register(restoreListener);
@@ -201,7 +227,7 @@ public class RestoreFragment extends Fragment {
     }
     
     private void performSDCardRestore() {
-        performRestore(new SdcardBackup());
+        new FileChooserDialogFragment().show(this.getFragmentManager(), "FileChooserDialogFragment");
     }
 
     private void linkDropboxAccount() {
@@ -265,5 +291,27 @@ public class RestoreFragment extends Fragment {
         App.notificationService().removeRestoreNotificationDispatcher(this.restoreNotificationDispatcher);
     }
 
-
+    private OnClickListener runningOnClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            App.backupService().cancelCurrentRestore();
+        }
+    };
+    
+    private OnClickListener onClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (restoreModeRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.SDCardRadioButton:
+                performSDCardRestore();
+                break;
+            case R.id.GoogleDriveRadioButton:
+                performGoogleDriveRestore();
+                break;
+            case R.id.DropboxRadioButton:
+                performDropboxRestore();
+                break;
+            }
+        }
+    };
 }

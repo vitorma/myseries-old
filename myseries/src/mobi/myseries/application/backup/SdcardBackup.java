@@ -2,6 +2,8 @@ package mobi.myseries.application.backup;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.os.Environment;
 import mobi.myseries.application.backup.exception.ExternalStorageNotAvailableException;
@@ -14,7 +16,16 @@ public class SdcardBackup implements BackupMode {
 
     private static final String BACKUP_FOLDER = "myseries_backup";
 
-    public String backupFilePath(String fileName) throws ExternalStorageNotAvailableException {
+    private File backupFile;
+
+    public SdcardBackup(File backupFile) {
+        this.backupFile = backupFile;
+    }
+    
+    public SdcardBackup() {}
+
+    public String backupFilePath() throws ExternalStorageNotAvailableException {
+        String fileName = new SimpleDateFormat("yy-MM-dd-hh-mm-ss'.bkp'").format(new Date());
         return backupFolder().getPath() + FILE_SEPARATOR + fileName;
     }
 
@@ -40,7 +51,7 @@ public class SdcardBackup implements BackupMode {
     @Override
     public void downloadBackupToFile(File backup) throws ExternalStorageNotAvailableException, SDcardException {
         try {
-            FilesUtil.copy(new File(backupFilePath(backup.getName())), backup);
+            FilesUtil.copy(backupFile, backup);
         } catch (IOException e) {
            throw new SDcardException(e);
         }
@@ -48,11 +59,16 @@ public class SdcardBackup implements BackupMode {
 
     @Override
     public void backupFile(File backup) throws IOException, ExternalStorageNotAvailableException {
-        FilesUtil.copy(backup, new File(backupFilePath(backup.getName())));
+        FilesUtil.copy(backup, new File(backupFilePath()));
     }
 
     @Override
     public String name() {
         return "SD card";
+    }
+
+    public static File getDefaultFolder() {
+        return new File(Environment.getExternalStorageDirectory().getPath()
+                + FILE_SEPARATOR + BACKUP_FOLDER);
     }
 }

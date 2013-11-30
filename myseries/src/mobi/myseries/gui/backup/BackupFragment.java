@@ -19,7 +19,6 @@ import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.application.backup.exception.GoogleDriveException;
-import mobi.myseries.application.backup.exception.GoogleDriveFileNotFoundException;
 import mobi.myseries.application.notification.DeterminateProgressNotification;
 import mobi.myseries.application.notification.IndeterminateProgressNotification;
 import mobi.myseries.application.notification.Notification;
@@ -30,7 +29,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -97,8 +95,7 @@ public class BackupFragment extends Fragment {
             boolean resumeSucess = dropboxHelper.onResume();
             if (resumeSucess) {
                 pendingBackup = null;
-                //backupService.doBackup(new)(new DropboxBackup());
-                //backupService.doBackup(new LinkedList<BackupMode>().add(new DropboxBackup()));
+                backupService.doBackup(new DropboxBackup());
             }
         }
     }
@@ -108,8 +105,7 @@ public class BackupFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CloudBackupType.DRIVE.ordinal()
                 && resultCode == Activity.RESULT_OK) {
-            //backupService.addToqueue(new DriveBackup(account));
-            //backupService.performBackup();
+            backupService.doBackup(new DriveBackup(account));
         }
     }
 
@@ -138,16 +134,15 @@ public class BackupFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Collection<BackupMode> backups = new LinkedList<BackupMode>();
+                if (sDcardCheckbox.isChecked()) {
+                    backups.add(new SdcardBackup());
+                }
                 if (dropboxCheckbox.isChecked()) {
                     backups.add(new DropboxBackup());
                 }
                 if (googleDriveCheckbox.isChecked()) {
                     backups.add(new DriveBackup(account));
                 }
-                if (sDcardCheckbox.isChecked()) {
-                    backups.add(new SdcardBackup());
-                }
-                
                 backupService.doBackup(backups);
 
             }
@@ -297,6 +292,4 @@ public class BackupFragment extends Fragment {
         super.onStop();
         App.notificationService().removeBackupNotificationDispatcher(this.backupNotificationDispatcher);
     }
-
-
 }
