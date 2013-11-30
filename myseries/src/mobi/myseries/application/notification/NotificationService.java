@@ -35,6 +35,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 public class NotificationService {
 
     private static int UPDATE_NOTIFICATION_ID = 0;
+    private static int BACKUP_NOTIFICATION_ID = 1;
 
     private final Context context;
     private final NotificationLauncher updateNotificationLauncher;
@@ -211,8 +212,8 @@ public class NotificationService {
 
 // ---------------------BACKUP-------------------------------------------------
 
-    private static int getBackupModeNotificationID(BackupMode mode) {
-        return mode.hashCode();
+    private static int getBackupModeNotificationID() {
+        return BACKUP_NOTIFICATION_ID;
 
     }
 
@@ -242,33 +243,26 @@ public class NotificationService {
     private void notifyRunningBackup(BackupMode mode) {
         this.backupNotificationLauncher
                 .launch(new IndeterminateProgressNotification(
-                        getBackupModeNotificationID(mode), context.getString(
+                        getBackupModeNotificationID(), context.getString(
                                 R.string.backup_progress_message, mode.name())));
-    }
-
-    private void notifyRunningRestore(BackupMode mode) {
-        this.restoreNotificationLauncher
-                .launch(new IndeterminateProgressNotification(
-                        getBackupModeNotificationID(mode), context.getString(
-                                R.string.restore_progress_message, mode.name())));
     }
 
     private void notifyBackupSuccess(BackupMode mode) {
         this.backupNotificationLauncher
-                .cancel(getBackupModeNotificationID(mode));
+                .cancel(getBackupModeNotificationID());
         String notificationMessage = context.getString(
                 R.string.backup_success_message, mode.name());
         this.backupNotificationLauncher.launch(new TextOnlyNotification(
-                getBackupModeNotificationID(mode), notificationMessage));
+                getBackupModeNotificationID(), notificationMessage));
     }
 
     private void notifyRestoreSuccess(BackupMode mode) {
         this.restoreNotificationLauncher
-                .cancel(getBackupModeNotificationID(mode));
+                .cancel(getBackupModeNotificationID());
         String notificationMessage = context.getString(
                 R.string.restore_success_message, mode.name());
         this.restoreNotificationLauncher.launch(new TextOnlyNotification(
-                getBackupModeNotificationID(mode), notificationMessage));
+                getBackupModeNotificationID(), notificationMessage));
     }
 
 
@@ -285,7 +279,7 @@ public class NotificationService {
         }
 
         this.backupNotificationLauncher.launch(new TextOnlyNotification(
-                getBackupModeNotificationID(mode), notificationMessage));
+                getBackupModeNotificationID(), notificationMessage));
     }
 
     private void notifyRestoreFailed(BackupMode mode, Exception cause) {
@@ -301,8 +295,29 @@ public class NotificationService {
         }
 
         this.restoreNotificationLauncher.launch(new TextOnlyNotification(
-                getBackupModeNotificationID(mode), notificationMessage));
+                getBackupModeNotificationID(), notificationMessage));
     }
+    
+    protected void notifyRestoreCancelled() {
+        String notificationMessage = context
+                .getString(R.string.restore_cancelled);
+
+    this.restoreNotificationLauncher.launch(new TextOnlyNotification(
+            getBackupModeNotificationID(), notificationMessage));
+    }
+
+    private void notifyRestoreProgress(int current, int total) {
+        this.restoreNotificationLauncher.launch(new DeterminateProgressNotification(
+            getBackupModeNotificationID(), context.getString(
+                    R.string.restore_downloading_series_message), current, total));
+    }
+
+    private void notifyRestorePosterDownloadingProgress(int current, int total) {
+        this.restoreNotificationLauncher.launch(new DeterminateProgressNotification(
+            getBackupModeNotificationID(), context.getString(
+                    R.string.restore_downloading_posters_message), current, total));
+    }
+
 
     private BackupListener backupListener = new BaseBackupListener() {
 
@@ -325,11 +340,11 @@ public class NotificationService {
         public void onBackupFailure(BackupMode mode, Exception e) {
             if (e.getCause() instanceof UserRecoverableAuthIOException) {
                 backupNotificationLauncher
-                        .cancel(getBackupModeNotificationID(mode));
+                        .cancel(getBackupModeNotificationID());
                 return;
             } else if (e instanceof DropboxUnlinkedException) {
                 backupNotificationLauncher
-                        .cancel(getBackupModeNotificationID(mode));
+                        .cancel(getBackupModeNotificationID());
                 return;
             }
             notifyBackupFailed(mode, e);
@@ -351,26 +366,35 @@ public class NotificationService {
         public void onRestoreFailure(BackupMode mode, Exception e) {
             if (e.getCause() instanceof UserRecoverableAuthIOException) {
                 restoreNotificationLauncher
-                        .cancel(getBackupModeNotificationID(mode));
+                        .cancel(getBackupModeNotificationID());
                 return;
             } else if (e instanceof DropboxUnlinkedException) {
                 restoreNotificationLauncher
-                        .cancel(getBackupModeNotificationID(mode));
+                        .cancel(getBackupModeNotificationID());
                 return;
             }
             notifyRestoreFailed(mode, e);
         }
 
         @Override
-        public void onRestoreRunning(BackupMode mode) {
-            notifyRunningRestore(mode);
+        public void onRestoreCompleted(BackupMode mode) {
+            notifyRestoreSuccess(mode);
 
         }
 
         @Override
-        public void onRestoreCompleted(BackupMode mode) {
-            notifyRestoreSuccess(mode);
+        public void onRestoreCancelled() {
+            notifyRestoreCancelled();
+        }
 
+        @Override
+        public void onRestoreProgress(int current, int total) {
+            notifyRestoreProgress(current, total);
+        }
+
+        @Override
+        public void onRestorePosterDownloadProgress(int current, int total) {
+            notifyRestorePosterDownloadingProgress(current, total);
         }
     };
 

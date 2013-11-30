@@ -2,6 +2,13 @@
 
 <resources>
 
+    <!-- Developers -->
+
+    <string name="cleber">CLEBER SOUSA</string>
+    <string name="gabriel">GABRIEL BEZERRA</string>
+    <string name="tiago">TIAGO REUL</string>
+    <string name="vitor">VITOR MORATO</string>
+
     <!-- Preference keys -->
 
     <string name="prefKey_library_sortMode">library_sortMode</string>

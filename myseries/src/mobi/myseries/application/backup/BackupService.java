@@ -7,8 +7,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import mobi.myseries.application.App;
 import mobi.myseries.application.ApplicationService;
@@ -27,6 +29,7 @@ public class BackupService extends ApplicationService<BackupListener> {
 
     private ImageService imageService;
     private RestoreTask currentRestoreTask;
+    public boolean restoreIsRunning;
 
     public BackupService(Environment environment, ImageService imageService) {
         super(environment);
@@ -93,7 +96,6 @@ public class BackupService extends ApplicationService<BackupListener> {
         if (currentRestoreTask == null)
             return;
         currentRestoreTask.cancel();
-        notifyRestoreCancel();
         currentRestoreTask = null;
     }
 
@@ -105,7 +107,7 @@ public class BackupService extends ApplicationService<BackupListener> {
             FileNotFoundException {
 
         File seriesCacheFile = new File(App.context().getCacheDir(),
-                "myseries.json");
+                "myseries.bkp");
         Collection<Series> series = environment().seriesRepository().getAll();
         JsonHelper.writeSeriesJsonStream(new BufferedOutputStream(
                 new FileOutputStream(seriesCacheFile)), series);
@@ -124,21 +126,28 @@ public class BackupService extends ApplicationService<BackupListener> {
 
         public void run() {
             notifyOnRestoreRunning(backupMode);
+            restoreIsRunning = true;
             Collection<SeriesSnippet> seriesJson = null;
             try {
-                seriesJson = this.getSeriesFromFile("myseries.json");
+                seriesJson = this.getSeriesFromFile("myseries.bkp");
                 this.restoreSeries(seriesJson);
+                if(isCancelled()) {
+                    notifyRestoreCancel();
+                    return;
+                }
                 notifyOnRestoreCompleted(backupMode);
+                restoreIsRunning = false;
             } catch (Exception e) {
+                restoreIsRunning = false;
                 notifyOnRestoreFail(backupMode, e);
             }
         }
 
-        private Collection<SeriesSnippet> getSeriesFromFile(String jsonFileName)
+        private Collection<SeriesSnippet> getSeriesFromFile(String fileName)
                 throws Exception, IOException {
             File cacheFile = null;
             try {
-                cacheFile = new File(App.context().getCacheDir(), jsonFileName);
+                cacheFile = new File(App.context().getCacheDir(), fileName);
                 this.backupMode.downloadBackupToFile(cacheFile);
                 return JsonHelper.readSeriesJsonStream(new BufferedInputStream(
                         new FileInputStream(cacheFile)));
@@ -321,6 +330,10 @@ public class BackupService extends ApplicationService<BackupListener> {
                 }
             }
         });
+    }
+
+    public boolean restoreIsRunning() {
+        return restoreIsRunning || !currentRestoreTask.isCancelled;
     }
 
 }
