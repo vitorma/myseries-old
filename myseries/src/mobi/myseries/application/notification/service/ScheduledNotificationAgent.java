@@ -5,8 +5,11 @@ import java.text.DateFormat;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.preferences.NotificationPreferences;
+import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity;
+import mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity;
 import mobi.myseries.gui.shared.UniversalImageLoader;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.BigPictureStyle;
@@ -35,7 +38,7 @@ public class ScheduledNotificationAgent extends Service {
         NotificationPreferences prefs = App.preferences().forNotifications();
 
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,  this.getClass().getName());
+        mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
 
         mWakeLock.acquire();
 
@@ -49,7 +52,7 @@ public class ScheduledNotificationAgent extends Service {
         Series s = App.seriesFollowingService().getFollowedSeries(seriesId);
 
         if (!prefs.notificationsEnabled() || s == null || isHiddenInSchedule(seriesId)) {
-            //TODO: Is there a better way to do this?
+            // TODO: Is there a better way to do this?
             return START_NOT_STICKY;
         }
 
@@ -74,7 +77,7 @@ public class ScheduledNotificationAgent extends Service {
 
         Bitmap picture = UniversalImageLoader.loader().loadImageSync(screenPath);
 
-        Log.d(getClass().getName(), "Notification screen: " + (picture == null?  ("null") : picture.toString()));
+        Log.d(getClass().getName(), "Notification screen: " + (picture == null ? ("null") : picture.toString()));
 
         Notification noti = new NotificationCompat.Builder(App.context())
                 .setContentTitle(App.context().getText(R.string.app))
@@ -82,7 +85,7 @@ public class ScheduledNotificationAgent extends Service {
                 .setSmallIcon(R.drawable.ic_notification)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                 .setSound(App.preferences().forNotifications().notificationSound())
-                .setContentIntent(PendingIntent.getActivity(App.context(), 0, new Intent(), 0))
+                .setContentIntent(PendingIntent.getActivity(App.context(), 0, clickIntent(), 0))
                 .setStyle(new BigPictureStyle()
                         .bigPicture(picture))
                 .build();
@@ -97,9 +100,21 @@ public class ScheduledNotificationAgent extends Service {
     private boolean isHiddenInSchedule(int seriesId) {
         int[] seriesToHide = App.preferences().forSchedule().seriesToHide();
 
-        for(int i : seriesToHide) { if (i == seriesId) { return true; } }
+        for (int i : seriesToHide) {
+            if (i == seriesId) {
+                return true;
+            }
+        }
 
         return false;
+    }
+
+    private Intent clickIntent() {
+        Intent intent = App.resources().getBoolean(R.bool.isTablet) ?
+                ScheduleDualPaneActivity.newIntent(App.context(), ScheduleMode.UNAIRED) :
+                ScheduleSinglePaneActivity.newIntent(App.context(), ScheduleMode.UNAIRED);
+
+        return intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
 }
