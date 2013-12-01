@@ -64,7 +64,7 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"
-        android:padding="@dimen/gap_small"
+        android:padding="@dimen/gap_medium"
         android:text="@string/dropbox"
         android:textSize="@dimen/text_size_medium"
         android:drawableLeft="@drawable/ic_dropbox"
