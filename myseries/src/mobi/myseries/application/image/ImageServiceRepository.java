@@ -31,4 +31,6 @@ public interface ImageServiceRepository {
     public void saveSeriesPoster(Series series, Bitmap poster);
 
     public void deleteAllImagesOf(Series series);
+
+    public void clear();
 }

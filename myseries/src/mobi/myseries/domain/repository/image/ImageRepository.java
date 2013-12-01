@@ -13,4 +13,6 @@ public interface ImageRepository {
     public void delete(long l) throws ImageRepositoryException;
 
     public Collection<Long> savedImages() throws ImageRepositoryException;
+
+    public void clear() throws ImageRepositoryException;
 }

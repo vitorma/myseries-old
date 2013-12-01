@@ -58,6 +58,10 @@ public class ImageService {
     public void removeAllImagesOf(Series series) {
         this.imageRepository.deleteAllImagesOf(series);
     }
+    
+    public void clear() {
+        this.imageRepository.clear();
+    }
 
     public void downloadAndSavePosterOf(Series series) {
         Validate.isNonNull(series, "series");
@@ -130,4 +134,5 @@ public class ImageService {
             return totalBytesSkipped;
         }
     }
+
 }

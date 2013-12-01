@@ -14,21 +14,15 @@ import android.os.AsyncTask;
 
 public class AndroidImageServiceRepository implements ImageServiceRepository {
     private static final String SERIES_POSTERS = "series_posters";
-    private static final String EPISODE_IMAGES = "episode_images";
 
     private static final String LOG_TAG = "Image Service Repository";
 
     private final ImageRepository posterDirectory;
-    private final ImageRepository episodeDirectory;
 
     public AndroidImageServiceRepository(Context context) {
         Validate.isNonNull(context, "context");
 
         this.posterDirectory =  new ExternalStorageImageDirectory(context, SERIES_POSTERS);
-
-       
-
-        this.episodeDirectory = new ExternalStorageImageDirectory(context, EPISODE_IMAGES);
     }
 
     @Override
@@ -74,10 +68,6 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
 
                 AndroidImageServiceRepository.this.deleteSeriesPoster(series);
 
-                for (Episode e : series.episodes()) {
-                    AndroidImageServiceRepository.this.deleteEpisodeImage(e);
-                }
-
                 return null;
             }
         }.execute(series);
@@ -93,13 +83,15 @@ public class AndroidImageServiceRepository implements ImageServiceRepository {
         }
     }
 
-    private void deleteEpisodeImage(Episode episode) {
-        Log.d(LOG_TAG, "Deleting image of episode " + episode.title());
+    @Override
+    public void clear() {
+        Log.d(LOG_TAG, "Deleting all images");
 
         try {
-            this.episodeDirectory.delete(episode.id());
+            this.posterDirectory.clear();
         } catch (ImageRepositoryException e) {
-            Log.w(LOG_TAG, "Failed deleting image of episode " + episode.title(), e);
+            Log.w(LOG_TAG, "Failed deleting all images", e);
         }
+        
     }
 }

@@ -180,12 +180,12 @@ public class BackupService extends ApplicationService<BackupListener> {
                 return;
 
             environment().seriesRepository().clear();
+            imageService.clear();
 
             for (Series s : seriesToRestore) {
                 if (this.isCancelled())
                     return;
                 environment().seriesRepository().insert(s);
-                imageService.downloadAndSavePosterOf(s);
             }
 
             int current = 0;
@@ -193,7 +193,7 @@ public class BackupService extends ApplicationService<BackupListener> {
                 current++;
                 if (this.isCancelled())
                     return;
-                imageService.downloadAndSavePosterOf(s);
+                //imageService.downloadAndSavePosterOf(s);
                 notifyRestorePosterDownloadProgress(current,
                         seriesToRestore.size());
             }

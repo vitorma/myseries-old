@@ -159,4 +159,11 @@ public class ExternalStorageImageDirectory implements ImageRepository {
             super("Can't open external storage directory for MySeries");
         }
     }
+
+    @Override
+    public void clear() throws ImageRepositoryException {
+        for(long id : savedImages()) {
+            delete(id);
+        }
+    }
 }

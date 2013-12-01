@@ -23,4 +23,7 @@ public class DummyImageRepository implements ImageRepository {
 
     @Override
     public void delete(long l) throws ImageRepositoryException {}
+
+    @Override
+    public void clear() throws ImageRepositoryException {}
 }
