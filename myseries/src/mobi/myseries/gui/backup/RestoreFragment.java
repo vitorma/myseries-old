@@ -13,6 +13,7 @@ import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.application.backup.exception.GoogleDriveException;
+import mobi.myseries.application.features.Feature;
 import mobi.myseries.application.notification.DeterminateProgressNotification;
 import mobi.myseries.application.notification.IndeterminateProgressNotification;
 import mobi.myseries.application.notification.Notification;
@@ -41,6 +42,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -108,7 +110,7 @@ public class RestoreFragment extends Fragment {
     private void setupViews() {
         this.setupRadioButtonGroup();
         this.setupRestoreButton();
-        this.setupGoogleDriveAccountSpinner();
+//        this.setupGoogleDriveAccountSpinner();
         this.setupProgressBar();
     }
     
@@ -121,7 +123,15 @@ public class RestoreFragment extends Fragment {
 
     private void setupRadioButtonGroup() {
         this.restoreModeRadioGroup = (RadioGroup) this.findView(R.id.RestoreModeRadioGroup);
-        
+        int count = this.restoreModeRadioGroup.getChildCount();
+        for (int i=0;i<count;i++) {
+            View button = this.restoreModeRadioGroup.getChildAt(i);
+            if (button instanceof RadioButton) {
+                int id = ((RadioButton) button).getId();
+                if(id == R.id.GoogleDriveRadioButton || id == R.id.DropboxRadioButton)
+                    button.setEnabled(App.features().isEnabled(Feature.CLOUD_BACKUP));
+            }
+        }
     }
 
     private void setupRestoreButton() {
@@ -129,28 +139,28 @@ public class RestoreFragment extends Fragment {
         this.restoreButton.setOnClickListener(onClickListener);
     }
 
-    private void setupGoogleDriveAccountSpinner() {
-        gDriveAccountSpinner = (Spinner) this.findView(R.id.GoogleAccountSpinner);
-        ArrayAdapter<String> spinnerAccountAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
-        for (Account a : this.accountManager.getAccounts()) {
-            spinnerAccountAdapter.add(a.name);
-        }
-        this.gDriveAccountSpinner.setAdapter(spinnerAccountAdapter);
-        this.gDriveAccountSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                    int arg2, long arg3) {
-                account = (String) arg0.getItemAtPosition(arg2);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-                
-            }
-        });
-    }
+//    private void setupGoogleDriveAccountSpinner() {
+//        gDriveAccountSpinner = (Spinner) this.findView(R.id.GoogleAccountSpinner);
+//        ArrayAdapter<String> spinnerAccountAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
+//        for (Account a : this.accountManager.getAccounts()) {
+//            spinnerAccountAdapter.add(a.name);
+//        }
+//        this.gDriveAccountSpinner.setAdapter(spinnerAccountAdapter);
+//        this.gDriveAccountSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> arg0, View arg1,
+//                    int arg2, long arg3) {
+//                account = (String) arg0.getItemAtPosition(arg2);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//                // TODO Auto-generated method stub
+//                
+//            }
+//        });
+//    }
 
     private void setupRestoreListener() {
         this.restoreListener = new BaseBackupListener() {

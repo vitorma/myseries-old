@@ -79,7 +79,7 @@ public class LibraryActivity extends BaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        menu.findItem(R.id.backup_restore).setVisible(App.features().isVisible(Feature.BACKUP));
+        menu.findItem(R.id.backup_restore).setVisible(App.features().isVisible(Feature.CLOUD_BACKUP));
 
         if (this.isDrawerOpen()) {
             for (int i = 0; i < menu.size(); i++) {
@@ -112,7 +112,7 @@ public class LibraryActivity extends BaseActivity {
                 this.runManualUpdate();
                 return true;
             case R.id.backup_restore:
-                if (App.features().isVisible(Feature.BACKUP)) {
+                if (App.features().isVisible(Feature.CLOUD_BACKUP)) {
                     this.startActivity(BackupActivity.newIntent(this));
                     return true;
                 }

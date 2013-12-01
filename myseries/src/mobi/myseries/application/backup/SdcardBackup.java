@@ -25,7 +25,7 @@ public class SdcardBackup implements BackupMode {
     public SdcardBackup() {}
 
     public String backupFilePath() throws ExternalStorageNotAvailableException {
-        String fileName = new SimpleDateFormat("yy-MM-dd-hh-mm-ss'.bkp'").format(new Date());
+        String fileName = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss'.bkp'").format(new Date());
         return backupFolder().getPath() + FILE_SEPARATOR + fileName;
     }
 

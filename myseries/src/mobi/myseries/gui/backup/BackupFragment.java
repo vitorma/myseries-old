@@ -19,6 +19,8 @@ import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.DropboxHelper;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.application.backup.exception.GoogleDriveException;
+import mobi.myseries.application.features.Feature;
+import mobi.myseries.application.features.Features;
 import mobi.myseries.application.notification.DeterminateProgressNotification;
 import mobi.myseries.application.notification.IndeterminateProgressNotification;
 import mobi.myseries.application.notification.Notification;
@@ -114,7 +116,7 @@ public class BackupFragment extends Fragment {
         this.setupGoogleDriveCheckbox();
         this.setupDropboxCheckbox();
         this.setupBackupButton();
-        this.setupGoogleDriveAccountSpinner();
+//        this.setupGoogleDriveAccountSpinner();
         this.setupProgressBar();
 
     }
@@ -152,6 +154,7 @@ public class BackupFragment extends Fragment {
     private void setupDropboxCheckbox() {
         this.dropboxCheckbox = (CheckedTextView) this
                 .findView(R.id.DropboxCheckbox);
+        this.dropboxCheckbox.setEnabled(App.features().isEnabled(Feature.CLOUD_BACKUP));
         this.dropboxCheckbox.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -162,35 +165,36 @@ public class BackupFragment extends Fragment {
 
     }
 
-    private void setupGoogleDriveAccountSpinner() {
-        gDriveAccountSpinner = (Spinner) this
-                .findView(R.id.GoogleAccountSpinner);
-        ArrayAdapter<String> spinnerAccountAdapter = new ArrayAdapter<String>(
-                getActivity(), android.R.layout.simple_spinner_item);
-        for (Account a : this.accountManager.getAccounts()) {
-            spinnerAccountAdapter.add(a.name);
-        }
-        this.gDriveAccountSpinner.setAdapter(spinnerAccountAdapter);
-        this.gDriveAccountSpinner
-                .setOnItemSelectedListener(new OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> arg0, View arg1,
-                            int arg2, long arg3) {
-                        account = (String) arg0.getItemAtPosition(arg2);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> arg0) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-    }
+//    private void setupGoogleDriveAccountSpinner() {
+//        gDriveAccountSpinner = (Spinner) this
+//                .findView(R.id.GoogleAccountSpinner);
+//        ArrayAdapter<String> spinnerAccountAdapter = new ArrayAdapter<String>(
+//                getActivity(), android.R.layout.simple_spinner_item);
+//        for (Account a : this.accountManager.getAccounts()) {
+//            spinnerAccountAdapter.add(a.name);
+//        }
+//        this.gDriveAccountSpinner.setAdapter(spinnerAccountAdapter);
+//        this.gDriveAccountSpinner
+//                .setOnItemSelectedListener(new OnItemSelectedListener() {
+//
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> arg0, View arg1,
+//                            int arg2, long arg3) {
+//                        account = (String) arg0.getItemAtPosition(arg2);
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> arg0) {
+//                        // TODO Auto-generated method stub
+//
+//                    }
+//                });
+//    }
 
     private void setupGoogleDriveCheckbox() {
         this.googleDriveCheckbox = (CheckedTextView) this
                 .findView(R.id.GoogleDriveCheckbox);
+        this.googleDriveCheckbox.setEnabled(App.features().isEnabled(Feature.CLOUD_BACKUP));
         this.googleDriveCheckbox.setOnClickListener(new OnClickListener() {
 
             @Override
