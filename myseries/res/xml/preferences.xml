@@ -39,6 +39,20 @@
             android:defaultValue="content://settings/system/notification_sound" >
         </RingtonePreference>
         
+        <CheckBoxPreference
+            android:key="@string/prefKey_notification_vibration"
+            android:title="@string/settings_notification_vibration"
+            android:dependency="@string/prefKey_notifications_enabled"
+            android:defaultValue="false" 
+            />
+        
+        <CheckBoxPreference
+            android:key="@string/prefKey_notification_lights"
+            android:title="@string/settings_notification_lights"
+            android:dependency="@string/prefKey_notifications_enabled"
+            android:defaultValue="false" 
+            />
+        
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_category_others">

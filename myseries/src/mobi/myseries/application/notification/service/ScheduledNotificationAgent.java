@@ -11,8 +11,6 @@ import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity;
 import mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity;
 import mobi.myseries.gui.shared.UniversalImageLoader;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.BigPictureStyle;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,6 +21,8 @@ import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.BigPictureStyle;
 import android.util.Log;
 
 public class ScheduledNotificationAgent extends Service {
@@ -39,20 +39,18 @@ public class ScheduledNotificationAgent extends Service {
 
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
-
         mWakeLock.acquire();
 
         DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(App.context());
 
         int seriesId = intent.getExtras().getInt("seriesId");
-        long episodeId = intent.getExtras().getLong("episodeId");
         int seasonNumber = intent.getExtras().getInt("seasonNumber");
         int episodeNumber = intent.getExtras().getInt("episodeNumber");
 
         Series s = App.seriesFollowingService().getFollowedSeries(seriesId);
 
-        if (!prefs.notificationsEnabled() || s == null || isHiddenInSchedule(seriesId)) {
-            // TODO: Is there a better way to do this?
+        if (!prefs.notificationsEnabled() || s == null || isHiddenInSchedule(seriesId)) { // TODO: Is there a better way to do this?
+            mWakeLock.release();
             return START_NOT_STICKY;
         }
 
@@ -80,15 +78,15 @@ public class ScheduledNotificationAgent extends Service {
         Log.d(getClass().getName(), "Notification screen: " + (picture == null ? ("null") : picture.toString()));
 
         Notification noti = new NotificationCompat.Builder(App.context())
-                .setContentTitle(App.context().getText(R.string.app))
-                .setContentText(notificationMessage)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
-                .setSound(App.preferences().forNotifications().notificationSound())
-                .setContentIntent(PendingIntent.getActivity(App.context(), 0, clickIntent(), 0))
-                .setStyle(new BigPictureStyle()
-                        .bigPicture(picture))
-                .build();
+        .setContentTitle(App.context().getText(R.string.app))
+        .setContentText(notificationMessage)
+        .setSmallIcon(R.drawable.ic_notification)
+        .setDefaults(notificationDefaults())
+        .setSound(App.preferences().forNotifications().notificationSound())
+        .setContentIntent(PendingIntent.getActivity(App.context(), 0, clickIntent(), 0))
+        .setStyle(new BigPictureStyle()
+        .bigPicture(picture))
+        .build();
 
         NotificationManager manager = (NotificationManager) App.context().getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(e.hashCode(), noti);
@@ -115,6 +113,18 @@ public class ScheduledNotificationAgent extends Service {
                 ScheduleSinglePaneActivity.newIntent(App.context(), ScheduleMode.UNAIRED);
 
         return intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+    private int notificationDefaults() {
+        NotificationPreferences prefs = App.preferences().forNotifications();
+
+        int defaults = 0;
+
+        if (prefs.vibrationEnabled()) { defaults |= Notification.DEFAULT_VIBRATE; }
+        if (prefs.lightsEnabled()) { defaults |= Notification.DEFAULT_LIGHTS; }
+        defaults |= Notification.DEFAULT_SOUND;
+
+        return defaults;
     }
 
 }

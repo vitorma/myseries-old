@@ -44,10 +44,11 @@
         <item>@string/prefValue_update_automatically_only_on_wifi</item>
         <item>@string/prefValue_update_automatically_never</item>
     </string-array>
-
     
     <string name="prefKey_notifications_enabled">notifications_enabled</string>
     <string name="prefKey_notification_advance_minutes">notification_advance_minutes</string>
     <string name="prefKey_notification_sound">notification_sound</string>
+    <string name="prefKey_notification_vibration">notification_vibration</string>
+    <string name="prefKey_notification_lights">notification_lights</string>
     
 </resources>
