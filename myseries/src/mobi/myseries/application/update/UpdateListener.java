@@ -15,4 +15,5 @@ public interface UpdateListener {
     public void onUpdateSeriesFailure(Map<Series, Exception> causes);
 
     public void onUpdateFinish();
+    public void onUpdateCancel();
 }

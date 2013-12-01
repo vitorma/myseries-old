@@ -26,4 +26,10 @@ public class BaseUpdateListener implements UpdateListener {
 
     @Override
     public void onUpdateFinish() { }
+
+    @Override
+    public void onUpdateCancel() {
+        // TODO Auto-generated method stub
+        
+    }
 }

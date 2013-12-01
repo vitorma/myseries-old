@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import mobi.myseries.application.App;
 import mobi.myseries.application.ApplicationService;
 import mobi.myseries.application.Communications;
 import mobi.myseries.application.Environment;
@@ -32,6 +33,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
     private final ImageService imageService;
     private final Communications communications;
     private final AtomicBoolean isUpdating;
+    private boolean isCancelled;
 
     public UpdateService(Environment environment, ImageService imageService) {
         super(environment);
@@ -73,6 +75,10 @@ public class UpdateService extends ApplicationService<UpdateListener> {
                 actualUpdateDataIfNeeded();
             }
         }).start();
+    }
+
+    public void cancel() {
+        notifyListenersOfUpdateCancel();
     }
 
     private void actualUpdateData() {
@@ -246,8 +252,24 @@ public class UpdateService extends ApplicationService<UpdateListener> {
 
         notifyListenersOfUpdateFinish();
     }
+    
+    private void notifyListenersOfUpdateCancel() {
+        this.isCancelled = true;
+        this.isUpdating.set(false);
+        this.runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                for (final UpdateListener listener : listeners()) {
+                    listener.onUpdateCancel();
+                }
+            }
+        });
+
+    }
 
     private void notifyListenersOfUpdateFinish() {
+        this.isCancelled = false;
+        this.isUpdating.set(false);
         this.runInMainThread(new Runnable() {
             @Override
             public void run() {
@@ -267,7 +289,8 @@ public class UpdateService extends ApplicationService<UpdateListener> {
             public Collection<Series> seriesWithPosterToUpdate;
 
             public boolean isUpdateNecessary() {
-                return !seriesWithDataToUpdate.isEmpty() || !seriesWithPosterToUpdate.isEmpty();
+                return (!seriesWithDataToUpdate.isEmpty() || !seriesWithPosterToUpdate.isEmpty()) 
+                        && !App.backupService().restoreIsRunning();
             }
 
             public Set<Series> seriesToBeUpdated() {
@@ -300,6 +323,11 @@ public class UpdateService extends ApplicationService<UpdateListener> {
             }
 
             Map<Series, Exception> errors = updateAllSeriesIn(whatHasToBeUpdated);
+            if(isCancelled) {
+                notifyListenersOfUpdateCancel();
+                return;
+            }
+
             if (!errors.isEmpty()) {
                 notifyListenersOfUpdateSeriesFailure(errors);
                 return;
@@ -380,6 +408,8 @@ public class UpdateService extends ApplicationService<UpdateListener> {
             // until now. It allows us to save data transfer by downloading shorter update data given that the earliest
             // update date of all followed series will be later after this process.
             for (final Series s : followedSeries()) {
+                if(isCancelled)
+                    break;
                 if (seriesToBeUpdated.contains(s)) {
                     notifyListenersOfUpdateProgress(currentUpdate++, totalNumberOfUpdates, s);
                 }

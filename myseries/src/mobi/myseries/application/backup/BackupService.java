@@ -29,7 +29,7 @@ public class BackupService extends ApplicationService<BackupListener> {
 
     private ImageService imageService;
     private RestoreTask currentRestoreTask;
-    public boolean restoreIsRunning;
+    private boolean restoreIsRunning = false;
 
     public BackupService(Environment environment, ImageService imageService) {
         super(environment);
@@ -89,6 +89,7 @@ public class BackupService extends ApplicationService<BackupListener> {
     public void restoreBackup(BackupMode backupMode) {
         this.currentRestoreTask = new RestoreTask(environment(), backupMode,
                 imageService);
+        App.updateSeriesService().cancel();
         this.run(this.currentRestoreTask);
     }
 
@@ -117,7 +118,7 @@ public class BackupService extends ApplicationService<BackupListener> {
     public class RestoreTask implements Runnable {
         private BackupMode backupMode;
 
-        private boolean isCancelled;
+        private boolean isCancelled = false;
 
         public RestoreTask(Environment environment, BackupMode backupMode,
                 ImageService imageService) {
@@ -136,10 +137,10 @@ public class BackupService extends ApplicationService<BackupListener> {
                     return;
                 }
                 notifyOnRestoreCompleted(backupMode);
-                restoreIsRunning = false;
             } catch (Exception e) {
-                restoreIsRunning = false;
                 notifyOnRestoreFail(backupMode, e);
+            } finally {
+                restoreIsRunning = false;
             }
         }
 
@@ -193,7 +194,7 @@ public class BackupService extends ApplicationService<BackupListener> {
                 current++;
                 if (this.isCancelled())
                     return;
-                //imageService.downloadAndSavePosterOf(s);
+                imageService.downloadAndSavePosterOf(s);
                 notifyRestorePosterDownloadProgress(current,
                         seriesToRestore.size());
             }
@@ -333,7 +334,7 @@ public class BackupService extends ApplicationService<BackupListener> {
     }
 
     public boolean restoreIsRunning() {
-        return restoreIsRunning || !currentRestoreTask.isCancelled;
+        return restoreIsRunning;
     }
 
 }

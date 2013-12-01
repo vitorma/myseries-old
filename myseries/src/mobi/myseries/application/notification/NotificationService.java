@@ -97,6 +97,10 @@ public class NotificationService {
     private void notifyUpdateSuccess() {
         this.updateNotificationLauncher.cancel(UPDATE_NOTIFICATION_ID);
     }
+    
+    private void notifyUpdateCancel() {
+        this.updateNotificationLauncher.cancel(UPDATE_NOTIFICATION_ID);
+    }
 
     private void notifyUpdateFailed(Exception cause) {
         String causeMessage = this.updateFailedMessageFor(cause);
@@ -186,6 +190,11 @@ public class NotificationService {
         @Override
         public void onUpdateSeriesFailure(Map<Series, Exception> causes) {
             notifyUpdateSeriesFailed(causes);
+        }
+
+        @Override
+        public void onUpdateCancel() {
+            notifyUpdateCancel();
         }
     };
 
