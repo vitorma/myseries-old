@@ -184,7 +184,7 @@
 
     <string name="no_series_to_update">No series to update</string>
     <string name="update_timeout">Update time limit exceeded</string>
-    
+
     <string name="checking_for_updates_message">Checking for updates…</string>
     <string name="update_progress_message">Updating \"%s\"…</string>
     <string name="update_success_message">Update succeeded.</string>
@@ -212,7 +212,7 @@
     <string name="features_watch_out_for_new_products">Watch out for upcoming products!</string>
 
     <!-- Backup -->
-    
+
     <string name="backup_restore">Backup/Restore</string>
     <string name="backup_description"><b>Backup</b> makes a copy of your actual following series to backup folder. \nTo <b>Restore</b> your series data, make sure that theres a valid backup file in backup folder.</string>
     <string name="backup_folder_file_path">Backup Folder: <b>%s</b></string>
@@ -235,10 +235,11 @@
 
         <!-- Backup  Messages -->
 
+    <string name="backup_network_unavailable">No Internet connection available.</string>
     <string name="backup_connection_failed">Could not connect to internet.</string>
     <string name="backup_connection_timeout">Could not connect to internet.</string>
     <string name="backup_timeout">Backup time limit exceeded.</string>
-    
+
     <string name="backup_progress_message">Backing up to \"%s\"…</string>
     <string name="backup_success_message">Backup to \"%s\" succeeded.</string>
 
@@ -251,16 +252,17 @@
     <string name="backup_google_drive_cannot_create_file">Cannot create the backup in Google Drive.</string>
     <string name="backup_google_drive_upload_error">An error to upload to Google Drive.</string>
     <string name="backup_google_drive_error">Something is wrong with Google Drive.</string>
-    
-            <!-- Restore  Messages -->
 
+        <!-- Restore  Messages -->
+
+    <string name="restore_network_unavailable">No Internet connection available.</string>
     <string name="restore_connection_failed">Could not connect to internet.</string>
     <string name="restore_connection_timeout">Could not connect to internet.</string>
     <string name="restore_timeout">Restore time limit exceeded.</string>
 
     <string name="restore_choose_backup_to_restore">Choose a backup to restore…</string>
     <string name="restore_there_are_no_backups_to_restore">There are no backups to restore.</string>
-    
+
     <string name="restore_progress_message">Restoring from \"%s\"…</string>
     <string name="restore_success_message">Restore from \"%s\" succeeded.</string>
 
@@ -348,8 +350,8 @@
     <string name="settings_notification_sound_silence">Silence</string>
     <string name="settings_notification_vibration"> Vibrate  </string>
     <string name="settings_notification_lights"> Pulse the notification light </string>
-    
-    
+
+
     <string name="settings_category_others">OTHERS</string>
     <string name="settings_about">About</string>
     <string name="settings_about_version_format">VERSION %s</string>
@@ -396,7 +398,7 @@
         <string name="minutes_symbol">min</string>
 
     <!-- Notifications -->
-    
+
     <string name="episode_starting_notification" formatted="false">%s %s starts at %s.</string>
 
     <!-- Do not translate -->

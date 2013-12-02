@@ -74,6 +74,7 @@
         <item quantity="one">%d restante</item>
         <item quantity="other">%d restantes</item>
     </plurals>
+
     <plurals name="plural_unaired">
         <item quantity="one">inédito</item>
         <item quantity="other">inéditos</item>
@@ -107,6 +108,7 @@
     <string name="nav_library">Biblioteca</string>
     <string name="nav_schedule">Agenda</string>
     <string name="nav_statistics">Estatísticas</string>
+    <string name="nav_features">Funcionalidades</string>
 
     <string-array name="sidemenu_items_array">
         <item>@string/nav_library</item>
@@ -126,6 +128,7 @@
     <string name="ab_title_schedule">Agenda</string>
     <string name="ab_title_library">Biblioteca</string>
     <string name="ab_title_statistics">Estatísticas</string>
+    <string name="ab_title_features">Funcionalidades</string>
     <string name="no">Não</string>
     <string name="no_episodes_to_see">Nenhum episódio por assistir.</string>
     <string name="ok">OK</string>
@@ -159,36 +162,31 @@
 
     <!-- Messages -->
 
-    <string name="connection_failed_title">Falha na conexão</string>
     <string name="connection_failed_message">Verifique sua conexão e tente novamente.</string>
-    <string name="connection_timeout_title">Tempo limite na conexão</string>
-    <string name="connection_timeout_message">Tempo limite na conexão excedido. Verifique sua conexão e tente novamente.</string>
-    <string name="invalid_criteria_title">Nome inválido para uma série</string>
-    <string name="invalid_criteria_message">Informe ao menos uma palavra.</string>
-    <string name="parsing_failed_title">Ocorreu um erro ao ler o arquivo da web</string>
-    <string name="parsing_failed_message">Talvez sua conexão esteja muito lenta.</string>
+    <string name="connection_failed_title">Falha na conexão</string>
     <string name="follow_toast_message_format" formatted="false">A série %s aparecerá em breve na sua coleção.</string>
+    <string name="invalid_criteria_message">Informe ao menos uma palavra.</string>
+    <string name="invalid_criteria_title">Nome inválido para uma série</string>
+    <string name="network_unavailable_message">Verifique sua conexão e tente novamente.</string>
+    <string name="network_unavailable_title">Não conectado à Internet</string>
+    <string name="parsing_failed_message">Talvez sua conexão esteja muito lenta.</string>
+    <string name="parsing_failed_title">Ocorreu um erro ao ler o arquivo da web</string>
 
     <!-- Adding Error Messages -->
 
     <string name="add_already_followed_series_message">Você já acompanha \'%s\'.</string>
-    <string name="add_failed_title">Falha na adição</string>
     <string name="add_connection_failed_message">A conexão falhou enquanto %s era adicionada. Verifique sua conexão e tente novamente.</string>
+    <string name="add_failed_title">Falha na adição</string>
     <string name="add_series_not_found">O banco de dados retornou "série não encontrada" ao tentar adicionar %s. Verifique sua conexão e configurações e tente novamente.</string>
+    <string name="btn_try_again">Tentar novamente</string>
 
     <!-- Updates -->
 
     <string name="updates">Atualizações</string>
 
     <string name="no_series_to_update">Nenhuma série para atualizar.</string>
-    <string name="update_network_unavailable">Não há nenhuma conexão à Internet disponível.</string>
-    <string name="update_connection_failed">Não foi possível conectar a TheTVDB.</string>
-    <string name="update_connection_timeout">Não foi possível conectar a TheTVDB.</string>
-    <string name="update_metadata_unavailable">Não foi possível conectar a  TheTVDB.</string>
-    <string name="update_series_not_found">TheTVDB só pode estar de brincadeira conosco =/.</string>
-    <string name="update_parsing_failed">Recebemos dados corrompidos de TheTVDB.</string>
     <string name="update_timeout">Limite de tempo da atualização alcançado.</string>
-    
+
     <string name="checking_for_updates_message">Procurando atualizações…</string>
     <string name="update_progress_message">Atualizando \"%s\"…</string>
     <string name="update_success_message">A atualização terminou com sucesso.</string>
@@ -210,8 +208,13 @@
     <string name="update_on_wifi_or_data_plan">Através de qualquer conexão disponível</string>
     <string name="do_not_update">Nunca (não recomendado)</string>
 
+    <!-- Features -->
+
+    <string name="features_no_products_available">Nenhum produto disponível</string>
+    <string name="features_watch_out_for_new_products">Fique alerta para novos produtos!</string>
+
     <!-- Backup -->
-    
+
     <string name="backup_restore">Backup/Restauração</string>
     <string name="backup_description"><b>Fazer Backup</b> faz uma cópia de segurança das séries que você acompanha para o diretório de backup. \nPara <b>Restaurar</b> os dados da suas séries, assegure-se de que há um arquivo de backup no diretório de backup.</string>
     <string name="backup_folder_file_path">Diretório de Backup: <b>%s</b></string>
@@ -234,11 +237,10 @@
 
         <!-- Backup  Messages -->
 
-    <string name="backup_network_unavailable">Não há nenhuma conexão a Internet disponível.</string>
     <string name="backup_connection_failed">Não foi possível conectar a Internet.</string>
     <string name="backup_connection_timeout">Não foi possível conectar a Internet.</string>
     <string name="backup_timeout">O backup foi cancelado por demorar demais.</string>
-    
+
     <string name="backup_progress_message">Fazendo backup em \"%s\"…</string>
     <string name="backup_success_message">O Backup em \"%s\" foi bem sucedido.</string>
 
@@ -251,7 +253,7 @@
     <string name="backup_google_drive_cannot_create_file">Não foi possível criar o arquivo no Google Drive.</string>
     <string name="backup_google_drive_upload_error">Erro ao enviar o arquivo para o Google Drive.</string>
     <string name="backup_google_drive_error">Há algo errado com o Google Drive.</string>
-    
+
             <!-- Restore  Messages -->
 
     <string name="restore_network_unavailable">Não há nenhuma conexão a Internet disponível.</string>
@@ -272,7 +274,7 @@
 
     <string name="restore_downloading_posters_message">Baixando os posters das séries…</string>
     <string name="restore_downloading_series_message">Baixando as séries…</string>
-    
+
     <string name="restore_sdcard_not_available">Seu cartão SD não está disponível.</string>
     <string name="restore_sdcard_file_not_found">Não foi encontrado nenhum arquivo de backup no cartão SD.</string>
     <string name="restore_dropbox_error">Há algo errado com o Dropbox.</string>
@@ -286,7 +288,6 @@
     <string name="menu_remove">Remover</string>
     <string name="action_filter">Filtrar</string>
     <string name="action_sort">Ordenar</string>
-
     <string name="menu_update">Atualizar</string>
     <string name="menu_backup_restore">Backup/Restauração</string>
     <string name="menu_settings">Configurações</string>
@@ -330,6 +331,7 @@
     <!-- Settings -->
 
     <string name="settings_activity_title">Configurações</string>
+
     <string name="settings_category_updates">ATUALIZAÇÕES</string>
     <string name="settings_update_automatically">Atualizar automaticamente</string>
     <string name="settings_update_automatically_always">Através de qualquer conexão disponível</string>
@@ -340,6 +342,15 @@
         <item>@string/settings_update_automatically_only_on_wifi</item>
         <item>@string/settings_update_automatically_never</item>
     </string-array>
+
+    <string name="settings_category_notifications" formatted="false">NOTIFICAÇÕES</string>
+    <string name="settings_enable_notifications">Notificar sobre novos episódios</string>
+    <string name="settings_notification_advance">Antecedência</string>
+    <string name="settings_notification_advance_summary" formatted="false">%d minutos</string>
+    <string name="settings_notification_sound">Som de notificação</string>
+    <string name="settings_notification_sound_silence">Silêncio</string>
+    <string name="settings_notification_vibration"> Vibrar </string>
+    <string name="settings_notification_lights"> Pulsar luz de notificação </string>
 
     <string name="settings_category_others">OUTROS</string>
     <string name="settings_about">Sobre</string>
@@ -385,6 +396,10 @@
         <string name="watched_runtime_format" formatted="false" >%dh%dmin ASSISTIDOS</string>
         <string name="hours_symbol">h</string>
         <string name="minutes_symbol">min</string>
+
+    <!-- Notifications -->
+
+    <string name="episode_starting_notification" formatted="false">%s %s vai começar às %s.</string>
 
     <!-- Do not translate -->
     <string name="app">MySeries</string>
