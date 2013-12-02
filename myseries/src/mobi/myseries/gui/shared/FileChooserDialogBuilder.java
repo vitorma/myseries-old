@@ -35,8 +35,6 @@ public class FileChooserDialogBuilder {
     private OnChooseListener onChooseListener;
     protected String selectedFile;
 
-    private int emptyMessage;
-
     public FileChooserDialogBuilder(Context context) {
         this.context = context;
         this.optionViews = new ArrayList<RadioButton>();
@@ -83,8 +81,7 @@ public class FileChooserDialogBuilder {
                 .findViewById(R.id.files);
 
         fileList = FilesUtil.listFilesOfDirectory(currentPath, fileEndsWith);
- 
-        for (int i = 0; i < fileList.length; i++) {
+            for (int i = fileList.length-1; i >= 0; i--) {
             View v = inflater
                     .inflate(R.layout.dialog_file_chooser_option, null);
             final RadioButton fileName = (RadioButton) v
@@ -153,7 +150,6 @@ public class FileChooserDialogBuilder {
     }
 
     public FileChooserDialogBuilder setEmptyMessage(int stringResource) {
-        this.emptyMessage = stringResource;
         return this;
     }
 }
