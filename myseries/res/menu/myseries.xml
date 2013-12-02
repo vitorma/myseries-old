@@ -45,7 +45,6 @@
         android:title="@string/menu_update"
         android:showAsAction="never"/>
 
-    <!-- This item may be hidden by the activity --> 
     <item
         android:id="@+id/backup_restore"
         android:title="@string/menu_backup_restore"
@@ -54,6 +53,11 @@
     <item
         android:id="@+id/settings"
         android:title="@string/menu_settings"
+        android:showAsAction="never"/>
+
+    <item
+        android:id="@+id/about"
+        android:title="@string/settings_about"
         android:showAsAction="never"/>
 
 </menu>

@@ -1,7 +1,6 @@
 package mobi.myseries.gui.library;
 
 import com.dropbox.client2.exception.DropboxUnlinkedException;
-import com.google.android.gms.common.AccountPicker;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import mobi.myseries.R;
@@ -11,23 +10,17 @@ import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BaseBackupListener;
 import mobi.myseries.application.backup.DriveBackup;
 import mobi.myseries.application.backup.DropboxBackup;
-import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.application.features.Feature;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
-import mobi.myseries.gui.backup.BackupActivity;
 import mobi.myseries.gui.backup.BackupDialogFragment;
-import mobi.myseries.gui.backup.FileChooserDialogFragment;
 import mobi.myseries.gui.backup.RestoreProgressDialogFragment;
+import mobi.myseries.gui.help.AboutActivity;
 import mobi.myseries.gui.settings.SettingsActivity;
-import mobi.myseries.gui.shared.BackupDialogBuilder;
-import mobi.myseries.gui.shared.FailureDialogBuilder;
 import mobi.myseries.gui.shared.ToastBuilder;
-import mobi.myseries.gui.shared.BackupDialogBuilder.OnBackupOperationRequestListener;
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -141,6 +134,9 @@ public class LibraryActivity extends BaseActivity {
                 }
             case R.id.settings:
                 this.startActivity(SettingsActivity.newIntent(this));
+                return true;
+            case R.id.about:
+                this.startActivity(AboutActivity.newIntent(this));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

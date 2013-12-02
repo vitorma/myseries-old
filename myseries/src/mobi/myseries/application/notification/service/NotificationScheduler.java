@@ -31,7 +31,25 @@ public class NotificationScheduler extends Service {
 
     private WakeLock mWakeLock;
 
+    public static boolean alarmIsSet(Context context) {
+        boolean alarmUp = (PendingIntent.getBroadcast(context, 0,
+                new Intent(context, NotificationScheduler.class),
+                PendingIntent.FLAG_NO_CREATE) != null);
+
+        if (alarmUp)
+        {
+            Log.d(NotificationScheduler.class.getName(), "Alarm is already active");
+            return true;
+        }
+
+        return false;
+    }
+
     public static void setupAlarm(Context context) {
+        if (alarmIsSet(context)) {
+            return;
+        }
+
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent newIntent = new Intent(context, NotificationScheduler.class);

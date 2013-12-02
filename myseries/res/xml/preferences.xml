@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto" >
 
@@ -16,7 +17,6 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prefKey_notifications_enabled"
-            android:summary="@string/settings_enable_notifications_summary"
             android:title="@string/settings_enable_notifications" />
 
         <mobi.myseries.gui.settings.NumberPickerDialogPreference
@@ -28,27 +28,31 @@
             android:summary="@string/settings_notification_advance_summary"
             custom:max="60"
             custom:min="0" />
-        
+
         <RingtonePreference
             android:key="@string/prefKey_notification_sound"
             android:ringtoneType="notification"
             android:showDefault="true"
+            android:showSilent="true"
             android:title="@string/settings_notification_sound"
-            android:summary="@string/settings_notification_sound_summary"
             android:dependency="@string/prefKey_notifications_enabled"
             android:defaultValue="content://settings/system/notification_sound" >
         </RingtonePreference>
-        
+
+        <CheckBoxPreference
+            android:key="@string/prefKey_notification_vibration"
+            android:title="@string/settings_notification_vibration"
+            android:dependency="@string/prefKey_notifications_enabled"
+            android:defaultValue="false" 
+            />
+
+        <CheckBoxPreference
+            android:key="@string/prefKey_notification_lights"
+            android:title="@string/settings_notification_lights"
+            android:dependency="@string/prefKey_notifications_enabled"
+            android:defaultValue="false" 
+            />
+
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/settings_category_others">
-        <Preference
-            android:title="@string/settings_about">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:targetPackage="mobi.myseries"
-                android:targetClass="mobi.myseries.gui.settings.AboutActivity" />
-        </Preference>
-    </PreferenceCategory>
-    
 </PreferenceScreen> 
