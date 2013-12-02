@@ -1,7 +1,8 @@
-package mobi.myseries.gui.settings;
+package mobi.myseries.gui.help;
 
 import mobi.myseries.R;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
@@ -17,6 +18,10 @@ public class AboutActivity extends Activity {
     private static final String USERVOICE_URL = "http://myseriesapp.uservoice.com/";
 
     private boolean mAreCreditDetailsVisible;
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, AboutActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
