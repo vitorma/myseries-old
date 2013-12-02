@@ -1,17 +1,30 @@
 package mobi.myseries.gui.library;
 
+import com.dropbox.client2.exception.DropboxUnlinkedException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.backup.BackupListener;
+import mobi.myseries.application.backup.BackupMode;
+import mobi.myseries.application.backup.BaseBackupListener;
+import mobi.myseries.application.backup.DriveBackup;
+import mobi.myseries.application.backup.DropboxBackup;
+import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.application.features.Feature;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
-import mobi.myseries.gui.backup.BackupActivity;
+import mobi.myseries.gui.backup.BackupDialogFragment;
+import mobi.myseries.gui.backup.RestoreProgressDialogFragment;
 import mobi.myseries.gui.help.AboutActivity;
 import mobi.myseries.gui.settings.SettingsActivity;
 import mobi.myseries.gui.shared.ToastBuilder;
+import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -41,6 +54,8 @@ public class LibraryActivity extends BaseActivity {
         }
 
         this.alreadyCheckedForUpdate = true;
+
+        setupBackupListener();
     }
 
     @Override
@@ -114,7 +129,7 @@ public class LibraryActivity extends BaseActivity {
                 return true;
             case R.id.backup_restore:
                 if (App.features().isVisible(Feature.CLOUD_BACKUP)) {
-                    this.startActivity(BackupActivity.newIntent(this));
+                    new BackupDialogFragment().show(this.getFragmentManager(), "backupDialog");
                     return true;
                 }
             case R.id.settings:
@@ -157,6 +172,89 @@ public class LibraryActivity extends BaseActivity {
             new ToastBuilder(this).setMessage(R.string.no_series_to_update).build().show();
         } else {
             App.updateSeriesService().updateData();
+        }
+    }
+
+    private static final int DRIVE_BACKUP = 1;
+    private static final int DRIVE_RESTORE = 2;
+    private static final int DROPBOX_BACKUP = 3;
+    private static final int DROPBOX_RESTORE = 4;
+    private BackupListener backupListener;
+    private int pendingOperation;
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode,
+            final Intent data) {
+        Log.v("activity", "fui chamado");
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DRIVE_BACKUP && resultCode == Activity.RESULT_OK) {
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            App.backupService().doBackup(new DriveBackup(accountName));
+      }
+        if (requestCode == DRIVE_RESTORE && resultCode == Activity.RESULT_OK) {
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            new RestoreProgressDialogFragment().show(getFragmentManager(), "RestoreProgressDialog");
+            App.backupService().restoreBackup(new DriveBackup(accountName));
+      }
+    }
+
+    private void setupBackupListener() {
+        this.backupListener = new BaseBackupListener() {
+            @Override
+            public void onBackupFailure(BackupMode mode, Exception e) {
+                super.onBackupFailure(mode, e);
+                if (e instanceof GoogleDriveException 
+                    && (e.getCause() instanceof UserRecoverableAuthIOException)) {
+                    requesUserPermissionToDrive((UserRecoverableAuthIOException) e.getCause(), DRIVE_BACKUP);
+                } else if (e instanceof DropboxUnlinkedException) {
+                    linkDropboxAccount(DROPBOX_BACKUP);
+                }
+            }
+
+            @Override
+            public void onRestoreFailure(BackupMode mode, Exception e) {
+                super.onRestoreFailure(mode, e);
+                if (e instanceof GoogleDriveException 
+                        && (e.getCause() instanceof UserRecoverableAuthIOException)) {
+                        requesUserPermissionToDrive((UserRecoverableAuthIOException) e.getCause(), DRIVE_RESTORE);
+                    } else if (e instanceof DropboxUnlinkedException) {
+                        linkDropboxAccount(DROPBOX_RESTORE);
+                    }
+            }
+        };
+        App.backupService().register(backupListener);
+    }
+
+    private void requesUserPermissionToDrive(UserRecoverableAuthIOException e, int operationCode) {
+        startActivityForResult(
+                e.getIntent(),
+                operationCode);
+    }
+
+    private void linkDropboxAccount(int operationCode) {
+        this.pendingOperation = operationCode;
+        App.backupService().dropboxHelper().getApi().getSession().startAuthentication(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(App.backupService().restoreIsRunning())
+            new RestoreProgressDialogFragment().show(getFragmentManager(), "RestoreProgressDialog");
+        
+        if (pendingOperation == DROPBOX_BACKUP) {
+            boolean resumeSucess = App.backupService().dropboxHelper().onResume();
+            if (resumeSucess) {
+                pendingOperation = 0;
+                App.backupService().doBackup(new DropboxBackup());
+            }
+        }
+        if (pendingOperation == DROPBOX_RESTORE) {
+            boolean resumeSucess = App.backupService().dropboxHelper().onResume();
+            if (resumeSucess) {
+                pendingOperation = 0;
+                App.backupService().restoreBackup(new DropboxBackup());
+            }
         }
     }
 }

@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/bg_light"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:gravity="center"
-    android:paddingBottom="@dimen/gap_medium"
-    android:paddingLeft="@dimen/gap_large"
-    android:paddingRight="@dimen/gap_large"
-    android:paddingTop="@dimen/gap_medium" >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include
+        layout="@layout/dialog_title"/>
+
+    <include
+        layout="@layout/dialog_title_divider"/>
+
+    <ScrollView
+        android:id="@+id/messagePanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
     <RadioGroup
         android:id="@+id/RestoreModeRadioGroup"
@@ -71,24 +79,51 @@
             android:drawablePadding="3dp" />
     </RadioGroup>
 
-    <ProgressBar
-        android:id="@+id/RestoreProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/buttonBar"
+        android:padding="0dp"
+        android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="48.5dp">
 
-     <TextView
-        android:id="@+id/RestoreStatusMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <View
+            android:id="@+id/buttonDividerHorizontal"
+            android:background="@drawable/list_divider_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentTop="true"/>
 
-    <Button
-        android:id="@+id/RestoreButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/toucharea_minimum_side"
-        android:layout_marginTop="@dimen/gap_medium"
-        android:text="@string/restore" />
+        <View
+            android:id="@+id/buttonDividerVertical"
+            android:background="@drawable/list_divider_holo_light" 
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/backupButton"
+            style="@style/DialogButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/buttonDividerHorizontal"
+            android:layout_toLeftOf="@id/buttonDividerVertical"/>
+
+        <Button
+            android:id="@+id/restoreButton"
+            style="@style/DialogButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/buttonDividerHorizontal"
+            android:layout_toRightOf="@id/buttonDividerVertical"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

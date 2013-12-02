@@ -28,8 +28,13 @@ public class FileChooserDialogFragment extends DialogFragment {
             @Override
             public void onChoose(File chosenFile) {
                 if(chosenFile != null)
+                    new RestoreProgressDialogFragment().show(getFragmentManager(), "RestoreProgressDialog");
                     App.backupService().restoreBackup(new SdcardBackup(chosenFile));
             }
         };
+    }
+
+    public static FileChooserDialogFragment newInstance() {
+        return new FileChooserDialogFragment();
     }
 }
