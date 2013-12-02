@@ -31,30 +31,19 @@ public class NotificationScheduler extends Service {
 
     private WakeLock mWakeLock;
 
-    public static boolean alarmIsSet(Context context) {
-        boolean alarmUp = (PendingIntent.getBroadcast(context, 0,
-                new Intent(context, NotificationScheduler.class),
-                PendingIntent.FLAG_NO_CREATE) != null);
-
-        if (alarmUp)
-        {
-            Log.d(NotificationScheduler.class.getName(), "Alarm is already active");
-            return true;
-        }
-
-        return false;
-    }
-
     public static void setupAlarm(Context context) {
-        if (alarmIsSet(context)) {
-            return;
-        }
-
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent newIntent = new Intent(context, NotificationScheduler.class);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, newIntent, 0);
 
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, newIntent, PendingIntent.FLAG_NO_CREATE);
+
+        if (pendingIntent != null) {
+            Log.d(NotificationScheduler.class.getName(), "Service is already scheduled");
+            return;
+        }
+
+        pendingIntent = PendingIntent.getService(context, 0, newIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
 
         // Needed because AlarmManager usually doesn't respect first execution
@@ -112,7 +101,6 @@ public class NotificationScheduler extends Service {
 
                 Intent in = new Intent(context, ScheduledNotificationAgent.class);
                 in.putExtra("seriesId", episode.seriesId());
-                in.putExtra("episodeId", episode.id());
                 in.putExtra("seasonNumber", episode.seasonNumber());
                 in.putExtra("episodeNumber", episode.number());
 
@@ -128,10 +116,7 @@ public class NotificationScheduler extends Service {
                                 )
                         );
 
-                alarmManager.set(
-                        AlarmManager.RTC_WAKEUP,
-                        notificationTime,
-                        pi);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime, pi);
             }
         }
     }
