@@ -49,7 +49,15 @@ public class ScheduledNotificationAgent extends Service {
 
         Series s = App.seriesFollowingService().getFollowedSeries(seriesId);
 
-        if (!prefs.notificationsEnabled() || s == null || isHiddenInSchedule(seriesId)) { // TODO: Is there a better way to do this?
+        if (!prefs.notificationsEnabled() || s == null || isHiddenInSchedule(seriesId)) { // TODO:
+                                                                                          // Is
+                                                                                          // there
+                                                                                          // a
+                                                                                          // better
+                                                                                          // way
+                                                                                          // to
+                                                                                          // do
+                                                                                          // this?
             mWakeLock.release();
             return START_NOT_STICKY;
         }
@@ -78,15 +86,17 @@ public class ScheduledNotificationAgent extends Service {
         Log.d(getClass().getName(), "Notification screen: " + (picture == null ? ("null") : picture.toString()));
 
         Notification noti = new NotificationCompat.Builder(App.context())
-        .setContentTitle(App.context().getText(R.string.app))
-        .setContentText(notificationMessage)
-        .setSmallIcon(R.drawable.ic_notification)
-        .setDefaults(notificationDefaults())
-        .setSound(App.preferences().forNotifications().notificationSound())
-        .setContentIntent(PendingIntent.getActivity(App.context(), 0, clickIntent(), 0))
-        .setStyle(new BigPictureStyle()
-        .bigPicture(picture))
-        .build();
+                .setContentTitle(App.context().getText(R.string.app))
+                .setContentText(notificationMessage)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setDefaults(notificationDefaults())
+                .setSound(App.preferences().forNotifications().notificationSound())
+                .setContentIntent(PendingIntent.getActivity(App.context(), 0, clickIntent(), 0))
+                .setStyle(new BigPictureStyle()
+                        .bigPicture(picture)
+                        .setSummaryText(notificationMessage)
+                        .setBigContentTitle(App.context().getText(R.string.app)))
+                .build();
 
         NotificationManager manager = (NotificationManager) App.context().getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(e.hashCode(), noti);
@@ -120,8 +130,12 @@ public class ScheduledNotificationAgent extends Service {
 
         int defaults = 0;
 
-        if (prefs.vibrationEnabled()) { defaults |= Notification.DEFAULT_VIBRATE; }
-        if (prefs.lightsEnabled()) { defaults |= Notification.DEFAULT_LIGHTS; }
+        if (prefs.vibrationEnabled()) {
+            defaults |= Notification.DEFAULT_VIBRATE;
+        }
+        if (prefs.lightsEnabled()) {
+            defaults |= Notification.DEFAULT_LIGHTS;
+        }
         defaults |= Notification.DEFAULT_SOUND;
 
         return defaults;

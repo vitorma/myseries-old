@@ -16,7 +16,6 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prefKey_notifications_enabled"
-            android:summary="@string/settings_enable_notifications_summary"
             android:title="@string/settings_enable_notifications" />
 
         <mobi.myseries.gui.settings.NumberPickerDialogPreference
@@ -33,8 +32,8 @@
             android:key="@string/prefKey_notification_sound"
             android:ringtoneType="notification"
             android:showDefault="true"
+            android:showSilent="true"
             android:title="@string/settings_notification_sound"
-            android:summary="@string/settings_notification_sound_summary"
             android:dependency="@string/prefKey_notifications_enabled"
             android:defaultValue="content://settings/system/notification_sound" >
         </RingtonePreference>

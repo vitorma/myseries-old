@@ -3,8 +3,6 @@ package mobi.myseries.gui.settings;
 import mobi.myseries.R;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
@@ -21,7 +19,7 @@ public class NumberPickerDialogPreference extends DialogPreference {
 	private int mValue;
 	private NumberPicker mNumberPicker;
 	private CharSequence mDialogTitle;
-	private CharSequence mDialogMessage;
+	private String mDialogMessage;
 
 	public NumberPickerDialogPreference(Context context) {
 		this(context, null);
@@ -39,19 +37,19 @@ public class NumberPickerDialogPreference extends DialogPreference {
 			setMaxValue(a.getInteger(
 					R.styleable.NumberPickerDialogPreference_max,
 					DEFAULT_MAX_VALUE));
-			
+
 		} finally {
 			a.recycle();
 		}
 
 		mDialogTitle = getTitle();
-		mDialogMessage = getSummary();
-		
+		mDialogMessage = String.format(getSummary().toString(), DEFAULT_VALUE);
+
 		setDialogLayoutResource(R.layout.preference_number_picker_dialog);
-		
+
 		setPositiveButtonText(android.R.string.ok);
-		setNegativeButtonText(android.R.string.cancel);	
-		
+		setNegativeButtonText(android.R.string.cancel);
+
 		setDialogIcon(null);
 		setDialogTitle(null);
 	}
@@ -76,7 +74,7 @@ public class NumberPickerDialogPreference extends DialogPreference {
 
 		TextView message = (TextView) view.findViewById(R.id.message);
 		message.setText(mDialogMessage);
-		
+
 		mNumberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
 		mNumberPicker.setMinValue(mMinValue);
 		mNumberPicker.setMaxValue(mMaxValue);
@@ -111,6 +109,8 @@ public class NumberPickerDialogPreference extends DialogPreference {
 		if (value != mValue) {
 			mValue = value;
 			persistInt(value);
+		    mDialogMessage = String.format(getSummary().toString(), value);
+	        setSummary(mDialogMessage);
 			notifyChanged();
 		}
 	}
