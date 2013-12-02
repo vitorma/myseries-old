@@ -6,6 +6,7 @@ import mobi.myseries.application.features.Feature;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.backup.BackupActivity;
+import mobi.myseries.gui.help.AboutActivity;
 import mobi.myseries.gui.settings.SettingsActivity;
 import mobi.myseries.gui.shared.ToastBuilder;
 import android.content.Context;
@@ -118,6 +119,9 @@ public class LibraryActivity extends BaseActivity {
                 }
             case R.id.settings:
                 this.startActivity(SettingsActivity.newIntent(this));
+                return true;
+            case R.id.about:
+                this.startActivity(AboutActivity.newIntent(this));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
