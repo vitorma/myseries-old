@@ -259,10 +259,6 @@ public class NotificationService {
     private void notifyBackupSuccess(BackupMode mode) {
         this.backupNotificationLauncher
                 .cancel(getBackupModeNotificationID());
-        String notificationMessage = context.getString(
-                R.string.backup_success_message, mode.name());
-        this.backupNotificationLauncher.launch(new TextOnlyNotification(
-                getBackupModeNotificationID(), notificationMessage));
     }
 
     private void notifyRestoreSuccess(BackupMode mode) {

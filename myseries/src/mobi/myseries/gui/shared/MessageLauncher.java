@@ -100,14 +100,13 @@ public class MessageLauncher implements MessageServiceListener {
     private void showToastWith(String message) {
         Toast t = Toast.makeText(this.activity, message, Toast.LENGTH_SHORT);
 
-        t.setGravity(Gravity.CENTER, 0, 0);
+
         t.show();
     }
 
     private void showToastWith(int messageId) {
         Toast t = Toast.makeText(this.activity, messageId, Toast.LENGTH_SHORT);
 
-        t.setGravity(Gravity.CENTER, 0, 0);
         t.show();
     }
 

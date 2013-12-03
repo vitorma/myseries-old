@@ -27,7 +27,7 @@ public class RestoreProgressDialogBuilder {
     public RestoreProgressDialogBuilder(Context context) {
         this.context = context;
     }
-    
+
     public Context context() {
         return this.context;
     }
@@ -36,9 +36,8 @@ public class RestoreProgressDialogBuilder {
     public Dialog build() {
         Dialog dialog = new Dialog(this.context, R.style.MySeriesTheme_Dialog);
 
-        dialog.setContentView(R.layout.dialog_restore_progress);
+        dialog.setContentView(R.layout.dialog_backup_restore_progress);
 
-        this.setupTitleFor(dialog);
         this.setupProgressBar(dialog);
         this.setupStatusMessage(dialog);
         this.setupCancelButton(dialog);
@@ -72,7 +71,7 @@ public class RestoreProgressDialogBuilder {
                 progressBar.setMax(total);
                 progressBar.setProgress(current);
             }
-            
+
             @Override
             public void onRestorePosterDownloadProgress(int current, int total) {
                 super.onRestorePosterDownloadProgress(current, total);
@@ -95,7 +94,7 @@ public class RestoreProgressDialogBuilder {
         cancelButton.setText(R.string.cancel);
 
         cancelButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -115,15 +114,6 @@ public class RestoreProgressDialogBuilder {
         this.progressBar = (ProgressBar) dialog.findViewById(R.id.RestoreProgressBar);
     }
 
-    private void setupTitleFor(Dialog dialog) {
-        TextView titleView = (TextView) dialog.findViewById(R.id.title);
-        titleView.setVisibility(View.VISIBLE);
-        titleView.setText(R.string.restore);
-
-        View titleDivider = dialog.findViewById(R.id.titleDivider);
-        titleDivider.setVisibility(View.VISIBLE);
-    }
-    
     private final NotificationDispatcher restoreNotificationDispatcher = new NotificationDispatcher() {
 
         @Override
@@ -137,7 +127,7 @@ public class RestoreProgressDialogBuilder {
             messageTextView.setText(notification.message());
         }
 
- 
+
         @Override
         public void cancel(Notification notification) {
             messageTextView.setText(notification.message());
@@ -149,6 +139,4 @@ public class RestoreProgressDialogBuilder {
             messageTextView.setText(notification.message());
         }
     };
-    
-
 }

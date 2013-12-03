@@ -14,8 +14,6 @@ import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.application.features.Feature;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
-import mobi.myseries.gui.backup.BackupDialogFragment;
-import mobi.myseries.gui.backup.RestoreProgressDialogFragment;
 import mobi.myseries.gui.help.AboutActivity;
 import mobi.myseries.gui.settings.SettingsActivity;
 import mobi.myseries.gui.shared.ToastBuilder;
