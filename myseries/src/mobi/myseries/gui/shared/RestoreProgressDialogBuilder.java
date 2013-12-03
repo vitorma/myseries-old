@@ -1,8 +1,7 @@
-package mobi.myseries.gui.backup;
+package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BaseBackupListener;
 import mobi.myseries.application.notification.DeterminateProgressNotification;
@@ -44,13 +43,13 @@ public class RestoreProgressDialogBuilder {
         this.setupStatusMessage(dialog);
         this.setupCancelButton(dialog);
         this.setupRestoreListener(dialog);
-        
-        App.notificationService().removeRestoreNotificationDispatcher(restoreNotificationDispatcher);
+
+        App.notificationService().setRestoreNotificationDispatcher(restoreNotificationDispatcher);
 
         return dialog;
     }
 
-    private void setupRestoreListener(Dialog dialog) {
+    private void setupRestoreListener(final Dialog dialog) {
         this.restoreListerner = new BaseBackupListener() {
             @Override
             public void onRestoreRunning (BackupMode mode) {
@@ -73,7 +72,7 @@ public class RestoreProgressDialogBuilder {
                 messageTextView.setText(R.string.restore_downloading_series_message);
                 progressBar.setIndeterminate(false);
                 progressBar.setMax(total);
-                progressBar.setProgress(current - 1);
+                progressBar.setProgress(current);
             }
             
             @Override
@@ -82,12 +81,12 @@ public class RestoreProgressDialogBuilder {
                 messageTextView.setText(R.string.restore_downloading_posters_message);
                 progressBar.setIndeterminate(false);
                 progressBar.setMax(total);
-                progressBar.setProgress(current - 1);
+                progressBar.setProgress(current);
             }
             @Override
             public void onRestoreFailure(BackupMode mode, Exception e) {
-                super.onRestoreFailure(mode, e);
                 progressBar.setProgress(0);
+                cancelButton.setText(R.string.ok);
             }
         };
         App.backupService().register(restoreListerner);
@@ -149,8 +148,7 @@ public class RestoreProgressDialogBuilder {
         @Override
         public void notifyDeterminateProgressNotification(
                 DeterminateProgressNotification notification) {
-            // TODO Auto-generated method stub
-            
+            messageTextView.setText(notification.message());
         }
     };
 

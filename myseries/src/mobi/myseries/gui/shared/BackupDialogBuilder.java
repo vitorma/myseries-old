@@ -1,11 +1,14 @@
 package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
+import mobi.myseries.application.App;
+import mobi.myseries.application.features.Feature;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -35,10 +38,25 @@ public class BackupDialogBuilder {
 
         this.setupTitleFor(dialog);
         this.setupRadioGroup(dialog);
+        this.setupCancelButtonFor(dialog);
         this.setupBackupButtonFor(dialog);
         this.setupRestoreButtonFor(dialog);
 
         return dialog;
+    }
+
+    private void setupCancelButtonFor(final Dialog dialog) {
+        Button cancelButton = (Button) dialog.findViewById(R.id.cancelButton);
+        cancelButton.setText(R.string.cancel);
+
+        cancelButton.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        
     }
 
     private void setupRestoreButtonFor(Dialog dialog) {
@@ -81,6 +99,15 @@ private OnClickListener restoreButtonListenerFor(final Dialog dialog) {
 
     private void setupRadioGroup(Dialog dialog) {
         this.radioGroup = (RadioGroup) dialog.findViewById(R.id.RestoreModeRadioGroup);
+        int count = this.radioGroup.getChildCount();
+        for (int i=0;i<count;i++) {
+            View button = this.radioGroup.getChildAt(i);
+            if (button instanceof RadioButton) {
+                int id = ((RadioButton) button).getId();
+                if(id == R.id.GoogleDriveRadioButton || id == R.id.DropboxRadioButton)
+                    button.setEnabled(App.features().isEnabled(Feature.CLOUD_BACKUP));
+            }
+        }
     }
 
     private void setupTitleFor(Dialog dialog) {

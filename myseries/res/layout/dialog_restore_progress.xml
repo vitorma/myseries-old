@@ -25,12 +25,18 @@
         android:id="@+id/RestoreProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="@dimen/gap_large" />
 
-     <TextView
+    <TextView
         android:id="@+id/RestoreStatusMessage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:paddingLeft="@dimen/gap_large"
+        android:paddingRight="@dimen/gap_large"
+        android:paddingBottom="@dimen/gap_large" />
 
     <View
         android:id="@+id/buttonHorizontalDivider"

@@ -447,7 +447,6 @@ public class NotificationService {
         if (e instanceof ConnectionFailedException) {
             return context.getString(R.string.restore_connection_failed);
 
-
         } else if (e instanceof NetworkUnavailableException) {
             return context.getString(R.string.restore_network_unavailable);
 

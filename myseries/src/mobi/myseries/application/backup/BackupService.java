@@ -166,6 +166,8 @@ public class BackupService extends ApplicationService<BackupListener> {
             for (SeriesSnippet s : series) {
                 if (this.isCancelled())
                     return;
+                notifyRestoreProgress(seriesToRestore.size(), series.size());
+
                 Series fetchedSeries = environment().traktApi().fetchSeries(
                         s.id());
                 for (EpisodeSnippet episodeSnippet : s.episodes()) {
@@ -175,7 +177,6 @@ public class BackupService extends ApplicationService<BackupListener> {
                     }
                 }
                 seriesToRestore.add(fetchedSeries);
-                notifyRestoreProgress(seriesToRestore.size(), series.size());
             }
             if (this.isCancelled())
                 return;
@@ -194,9 +195,9 @@ public class BackupService extends ApplicationService<BackupListener> {
                 current++;
                 if (this.isCancelled())
                     return;
-                imageService.downloadAndSavePosterOf(s);
                 notifyRestorePosterDownloadProgress(current,
                         seriesToRestore.size());
+                imageService.downloadAndSavePosterOf(s);
             }
         }
 

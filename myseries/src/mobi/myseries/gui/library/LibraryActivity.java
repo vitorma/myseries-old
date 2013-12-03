@@ -185,7 +185,6 @@ public class LibraryActivity extends BaseActivity {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
             final Intent data) {
-        Log.v("activity", "fui chamado");
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == DRIVE_BACKUP && resultCode == Activity.RESULT_OK) {
             String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
@@ -239,9 +238,6 @@ public class LibraryActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if(App.backupService().restoreIsRunning())
-            new RestoreProgressDialogFragment().show(getFragmentManager(), "RestoreProgressDialog");
-        
         if (pendingOperation == DROPBOX_BACKUP) {
             boolean resumeSucess = App.backupService().dropboxHelper().onResume();
             if (resumeSucess) {
