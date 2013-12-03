@@ -49,15 +49,7 @@ public class ScheduledNotificationAgent extends Service {
 
         Series s = App.seriesFollowingService().getFollowedSeries(seriesId);
 
-        if (!prefs.notificationsEnabled() || s == null || isHiddenInSchedule(seriesId)) { // TODO:
-                                                                                          // Is
-                                                                                          // there
-                                                                                          // a
-                                                                                          // better
-                                                                                          // way
-                                                                                          // to
-                                                                                          // do
-                                                                                          // this?
+        if (!prefs.notificationsEnabled() || s == null || isHiddenInSchedule(seriesId)) { // TODO: Is there a better way to do this?
             mWakeLock.release();
             return START_NOT_STICKY;
         }
