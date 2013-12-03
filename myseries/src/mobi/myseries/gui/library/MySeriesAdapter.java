@@ -243,7 +243,7 @@ public class MySeriesAdapter extends BaseAdapter implements Publisher<MySeriesAd
 
     private final BackupListener mBackupListener = new BaseBackupListener() {
         @Override
-        public void onRestoreSucess() {
+        public void onRestoreSuccess() {
             reloadData();
         }
 

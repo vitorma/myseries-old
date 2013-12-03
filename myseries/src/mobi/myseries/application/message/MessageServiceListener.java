@@ -12,8 +12,8 @@ public interface MessageServiceListener {
 
     public void onUpdateSuccess();
 
-    public void onBackupSucess();
+    public void onBackupSuccess();
     public void onBackupFailure(Exception e);
-    public void onRestoreSucess();
+    public void onRestoreSuccess();
     public void onRestoreFailure(Exception e);
 }

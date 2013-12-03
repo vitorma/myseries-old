@@ -112,7 +112,7 @@ public class MessageLauncher implements MessageServiceListener {
     }
 
     @Override
-    public void onBackupSucess() {
+    public void onBackupSuccess() {
         this.showToastWith(R.string.backup_completed);
     }
 
@@ -131,7 +131,7 @@ public class MessageLauncher implements MessageServiceListener {
     }
 
     @Override
-    public void onRestoreSucess() {
+    public void onRestoreSuccess() {
         this.showToastWith(R.string.restore_completed);
     }
 
