@@ -1,6 +1,7 @@
-package mobi.myseries.gui.backup;
+package mobi.myseries.gui.library;
 
 import com.google.android.gms.common.AccountPicker;
+
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;

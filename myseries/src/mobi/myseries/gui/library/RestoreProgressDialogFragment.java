@@ -1,4 +1,4 @@
-package mobi.myseries.gui.backup;
+package mobi.myseries.gui.library;
 
 import mobi.myseries.application.App;
 import mobi.myseries.gui.shared.RestoreProgressDialogBuilder;

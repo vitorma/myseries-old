@@ -34,7 +34,7 @@ public class BackupDialogBuilder {
     public Dialog build() {
         Dialog dialog = new Dialog(this.context, R.style.MySeriesTheme_Dialog);
 
-        dialog.setContentView(R.layout.dialog_restore);
+        dialog.setContentView(R.layout.dialog_backup_restore);
 
         this.setupTitleFor(dialog);
         this.setupRadioGroup(dialog);

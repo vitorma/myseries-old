@@ -36,7 +36,7 @@ public class RestoreProgressDialogBuilder {
     public Dialog build() {
         Dialog dialog = new Dialog(this.context, R.style.MySeriesTheme_Dialog);
 
-        dialog.setContentView(R.layout.dialog_restore_progress);
+        dialog.setContentView(R.layout.dialog_backup_restore_progress);
 
         this.setupTitleFor(dialog);
         this.setupProgressBar(dialog);
