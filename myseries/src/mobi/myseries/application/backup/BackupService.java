@@ -53,6 +53,7 @@ public class BackupService extends ApplicationService<BackupListener> {
                     notifyOnBackupRunning(backupMode);
                     backupMode.backupFile(jsonFile);
                     notifyOnBackupCompleted(backupMode);
+                    notifyOnBackupSuccess();
                 } catch (Exception e) {
                     notifyOnBackupFail(backupMode, e);
                 }
@@ -77,6 +78,7 @@ public class BackupService extends ApplicationService<BackupListener> {
                         notifyOnBackupRunning(backupMode);
                         backupMode.backupFile(jsonFile);
                         notifyOnBackupCompleted(backupMode);
+                        notifyOnBackupSuccess();
                     } catch (Exception e) {
                         notifyOnBackupFail(backupMode, e);
                     }
@@ -137,6 +139,7 @@ public class BackupService extends ApplicationService<BackupListener> {
                     return;
                 }
                 notifyOnRestoreCompleted(backupMode);
+                notifyOnRestoreSuccess();
             } catch (Exception e) {
                 notifyOnRestoreFail(backupMode, e);
             } finally {
@@ -329,6 +332,28 @@ public class BackupService extends ApplicationService<BackupListener> {
             public void run() {
                 for (BackupListener listener : listeners()) {
                     listener.onRestoreCompleted(backupMode);
+                }
+            }
+        });
+    }
+
+    private void notifyOnRestoreSuccess() {
+        runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                for (BackupListener listener : listeners()) {
+                    listener.onRestoreSuccess();
+                }
+            }
+        });
+    }
+
+    private void notifyOnBackupSuccess() {
+        runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                for (BackupListener listener : listeners()) {
+                    listener.onBackupSuccess();
                 }
             }
         });

@@ -3,13 +3,13 @@ package mobi.myseries.application.backup;
 public class BaseBackupListener implements BackupListener {
 
     @Override
-    public void onBackupSucess() {}
+    public void onBackupSuccess() {}
 
     @Override
     public void onBackupFailure(BackupMode mode, Exception e) {}
 
     @Override
-    public void onRestoreSucess() {}
+    public void onRestoreSuccess() {}
 
     @Override
     public void onRestoreFailure(BackupMode mode, Exception e) {}

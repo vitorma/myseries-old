@@ -259,19 +259,10 @@ public class NotificationService {
     private void notifyBackupSuccess(BackupMode mode) {
         this.backupNotificationLauncher
                 .cancel(getBackupModeNotificationID());
-        String notificationMessage = context.getString(
-                R.string.backup_success_message, mode.name());
-        this.backupNotificationLauncher.launch(new TextOnlyNotification(
-                getBackupModeNotificationID(), notificationMessage));
     }
 
     private void notifyRestoreSuccess(BackupMode mode) {
-        this.restoreNotificationLauncher
-                .cancel(getBackupModeNotificationID());
-        String notificationMessage = context.getString(
-                R.string.restore_success_message, mode.name());
-        this.restoreNotificationLauncher.launch(new TextOnlyNotification(
-                getBackupModeNotificationID(), notificationMessage));
+        this.restoreNotificationLauncher.cancel(BACKUP_NOTIFICATION_ID);
     }
 
 
@@ -336,12 +327,12 @@ public class NotificationService {
         }
 
         @Override
-        public void onRestoreSucess() {
+        public void onRestoreSuccess() {
 
         }
 
         @Override
-        public void onBackupSucess() {
+        public void onBackupSuccess() {
 
         }
 

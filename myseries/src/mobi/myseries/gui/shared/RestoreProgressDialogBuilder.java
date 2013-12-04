@@ -44,7 +44,6 @@ public class RestoreProgressDialogBuilder {
         this.setupRestoreListener(dialog);
 
         App.notificationService().setRestoreNotificationDispatcher(restoreNotificationDispatcher);
-
         return dialog;
     }
 
@@ -59,10 +58,9 @@ public class RestoreProgressDialogBuilder {
             @Override
             public void onRestoreCompleted(BackupMode mode) {
                 super.onRestoreCompleted(mode);
-                cancelButton.setText(R.string.ok);
-                messageTextView.setText(context.getString(R.string.restore_success_message, mode.name()));
-                progressBar.setIndeterminate(false);
-                progressBar.setProgress(0);
+                App.notificationService().removeRestoreNotificationDispatcher(restoreNotificationDispatcher);
+                dialog.dismiss();
+                
             }
 
             @Override
