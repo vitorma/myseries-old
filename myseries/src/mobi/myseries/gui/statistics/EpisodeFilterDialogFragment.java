@@ -14,21 +14,39 @@ import android.os.Bundle;
 public class EpisodeFilterDialogFragment extends DialogFragment {
     private static final int SPECIAL_EPISODES_ITEM = 0;
     private static final int UNAIRED_EPISODES_ITEM = 1;
+    private static final String EPISODE_IDS = "EPISODE_IDS";
+
+    private boolean[] mEpisodesToCount;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBooleanArray(EPISODE_IDS, mEpisodesToCount);
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        StatisticsPreferences preferences = App.preferences().forStatistics();
-
-        boolean[] episodesToCount = new boolean[]{
-            preferences.countSpecialEpisodes(),
-            preferences.countUnairedEpisodes()
-        };
+        if (savedInstanceState == null) {
+            mEpisodesToCount = newEpisodesToCount();
+        } else {
+            mEpisodesToCount = savedInstanceState.getBooleanArray(EPISODE_IDS);
+        }
 
         return new FilterDialogBuilder(this.getActivity())
             .setCheckableTitle(R.string.episodesToCount)
-            .setDefaultFilterOptions(R.array.action_episodes_to_count_array, episodesToCount, this.onItemClickListener(episodesToCount))
-            .setOnFilterListener(onConfirmListener(episodesToCount))
+            .setDefaultFilterOptions(R.array.action_episodes_to_count_array, mEpisodesToCount, onItemClickListener(mEpisodesToCount))
+            .setOnFilterListener(onConfirmListener(mEpisodesToCount))
             .build();
+    }
+
+    private boolean[] newEpisodesToCount() {
+        StatisticsPreferences preferences = App.preferences().forStatistics();
+
+        return new boolean[] {
+            preferences.countSpecialEpisodes(),
+            preferences.countUnairedEpisodes()
+        };
     }
 
     private OnToggleOptionListener onItemClickListener(final boolean[] episodesToCount) {

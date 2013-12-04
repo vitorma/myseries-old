@@ -16,25 +16,44 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 
 public class SeriesFilterDialogFragment extends DialogFragment {
+    private static final String SERIES_IDS = "SERIES_IDS";
+
+    private Map<Series, Boolean> mFilterOptions;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putIntArray(SERIES_IDS, seriesToHideIdsFrom(mFilterOptions));
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Map<Series, Boolean> filterOptions = newFilterOptions();
+        if (savedInstanceState == null) {
+            mFilterOptions = newFilterOptions();
+        } else {
+            mFilterOptions = filterOptionsFrom(savedInstanceState.getIntArray(SERIES_IDS));
+        }
 
         return new SeriesFilterDialogBuilder(getActivity())
-            .setDefaultFilterOptions(filterOptions)
+            .setDefaultFilterOptions(mFilterOptions)
             .setOnFilterListener(new OnFilterListener() {
                 @Override
                 public void onFilter() {
-                    App.preferences().forLibrary().putSeriesToHide(seriesToHideIdsFrom(filterOptions));
+                    App.preferences().forLibrary().putSeriesToHide(seriesToHideIdsFrom(mFilterOptions));
                 }
             })
             .build();
     }
 
     private TreeMap<Series, Boolean> newFilterOptions() {
+        return filterOptionsFrom(App.preferences().forLibrary().seriesToHide());
+    }
+
+    private TreeMap<Series, Boolean> filterOptionsFrom(int[] seriesToHideIds) {
         TreeMap<Series, Boolean> filterOptions = new TreeMap<Series, Boolean>(SeriesComparator.byAscendingAlphabeticalOrder());
-        Collection<Series> seriesToHide = seriesToHideFromPreferences();
+
+        Collection<Series> seriesToHide = seriesToHideFrom(seriesToHideIds);
         Collection<Series> seriesToShow = seriesToShowFrom(seriesToHide);
 
         for(Series s : seriesToHide) {
@@ -48,9 +67,8 @@ public class SeriesFilterDialogFragment extends DialogFragment {
         return filterOptions;
     }
 
-    private Collection<Series> seriesToHideFromPreferences() {
-        return App.seriesFollowingService().getAllFollowedSeries(
-                App.preferences().forLibrary().seriesToHide());
+    private Collection<Series> seriesToHideFrom(int[] seriesIds) {
+        return App.seriesFollowingService().getAllFollowedSeries(seriesIds);
     }
 
     private Collection<Series> seriesToShowFrom(Collection<Series> seriesToHide) {

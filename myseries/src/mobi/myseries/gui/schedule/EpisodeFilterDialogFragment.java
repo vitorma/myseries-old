@@ -16,8 +16,10 @@ import android.os.Bundle;
 public class EpisodeFilterDialogFragment extends DialogFragment {
     private static final int SPECIAL_EPISODES_ITEM = 0;
     private static final int WATCHED_EPISODES_ITEM = 1;
+    private static final String EPISODE_IDS = "EPISODE_IDS";
 
-    private int scheduleMode;
+    private int mScheduleMode;
+    private boolean[] mEpisodesToShow;
 
     public static EpisodeFilterDialogFragment newInstance(int scheduleMode) {
         Bundle args = new Bundle();
@@ -33,34 +35,45 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.scheduleMode = this.getArguments().getInt(Extra.SCHEDULE_MODE);
+        mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBooleanArray(EPISODE_IDS, mEpisodesToShow);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        SchedulePreferences preferences = App.preferences().forSchedule();
+        int episodesToShowArrayResource = episodesToShowArrayResource();
 
-        int episodesToShowArrayResource;
-        boolean[] episodesToShow;
-
-        if (this.scheduleMode == ScheduleMode.TO_WATCH) {
-            episodesToShowArrayResource = R.array.action_episodes_to_show_array_for_mode_next;
-            episodesToShow = new boolean[] {
-                preferences.showSpecialEpisodes()
-            };
+        if (savedInstanceState == null) {
+            mEpisodesToShow = episodesToShow();
         } else {
-            episodesToShowArrayResource = R.array.action_episodes_to_show_array;
-            episodesToShow = new boolean[] {
-                preferences.showSpecialEpisodes(),
-                preferences.showWatchedEpisodes()
-            };
+            mEpisodesToShow = savedInstanceState.getBooleanArray(EPISODE_IDS);
         }
 
         return new FilterDialogBuilder(this.getActivity())
-        .setCheckableTitle(R.string.episodesToShow)
-        .setDefaultFilterOptions(episodesToShowArrayResource, episodesToShow, this.onItemClickListener(episodesToShow))
-        .setOnFilterListener(onConfirmListener(episodesToShow))
-        .build();
+            .setCheckableTitle(R.string.episodesToShow)
+            .setDefaultFilterOptions(episodesToShowArrayResource, mEpisodesToShow, onItemClickListener(mEpisodesToShow))
+            .setOnFilterListener(onConfirmListener(mEpisodesToShow))
+            .build();
+    }
+
+    private int episodesToShowArrayResource() {
+        return mScheduleMode == ScheduleMode.TO_WATCH ?
+                R.array.action_episodes_to_show_array_for_mode_next :
+                R.array.action_episodes_to_show_array;
+    }
+
+    private boolean[] episodesToShow() {
+        SchedulePreferences preferences = App.preferences().forSchedule();
+
+        return mScheduleMode == ScheduleMode.TO_WATCH ?
+                new boolean[] { preferences.showSpecialEpisodes() } :
+                new boolean[] { preferences.showSpecialEpisodes(), preferences.showWatchedEpisodes() };
     }
 
     private OnToggleOptionListener onItemClickListener(final boolean[] episodesToShow) {
@@ -87,7 +100,7 @@ public class EpisodeFilterDialogFragment extends DialogFragment {
 
                 prefs.putIfShowSpecialEpisodes(episodesToShow[SPECIAL_EPISODES_ITEM]);
 
-                if (scheduleMode != ScheduleMode.TO_WATCH) {
+                if (mScheduleMode != ScheduleMode.TO_WATCH) {
                     prefs.putIfShowWatchedEpisodes(episodesToShow[WATCHED_EPISODES_ITEM]);
                 }
             }
