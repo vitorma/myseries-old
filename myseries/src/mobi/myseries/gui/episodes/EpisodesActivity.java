@@ -47,6 +47,8 @@ public class EpisodesActivity extends BaseActivity
 
     private EpisodeListFragment listFragment;
     private EpisodePagerFragment pagerFragment;
+    private int mLastPosition = -1;
+    private int mLastTop = 0;
 
     /* Intents */
 
@@ -164,6 +166,7 @@ public class EpisodesActivity extends BaseActivity
             this.isShowingPagerFragment = false;
 
             this.listFragment = EpisodeListFragment.newInstance(this.series.id(), this.seasonNumber, this.validEpisodeNumber());
+            this.listFragment.setScrollPosition(mLastPosition, mLastTop);
 
             FragmentTransaction ft = this.getFragmentManager().beginTransaction();
             ft.replace(this.listFragmentContainerId(), this.listFragment, EPISODE_LIST_FRAGMENT);
@@ -228,6 +231,9 @@ public class EpisodesActivity extends BaseActivity
                 this.pagerFragment.selectPage(position);
             }
         } else {
+            mLastPosition = listFragment.getListView().getFirstVisiblePosition();
+            mLastTop = listFragment.getListView().getTop();
+
             this.isShowingListFragment = false;
             this.isShowingPagerFragment = true;
 
