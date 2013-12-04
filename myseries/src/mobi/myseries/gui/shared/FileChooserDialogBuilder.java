@@ -36,6 +36,8 @@ public class FileChooserDialogBuilder {
 
     private RadioGroup radioGroup;
 
+    private int selectedPosition;
+
     public FileChooserDialogBuilder(Context context) {
         this.context = context;
         this.optionViews = new ArrayList<RadioButton>();
@@ -99,6 +101,8 @@ public class FileChooserDialogBuilder {
                 @Override
                 public void onClick(View v) {
                     radioGroup.check(fileName.getId());
+                    selectedPosition = fileName.getId();
+                    onChooseListener.onSelectPosition(selectedPosition);
                 }
             });
 
@@ -106,7 +110,7 @@ public class FileChooserDialogBuilder {
 
             this.optionViews.add(fileName);
         }
-            radioGroup.check(0);
+            radioGroup.check(selectedPosition);
     }
 
     private void setUpCancelButtonFor(final Dialog dialog) {
@@ -144,6 +148,8 @@ public class FileChooserDialogBuilder {
 
     public static interface OnChooseListener {
         public void onChoose(File chosenFile);
+
+        public void onSelectPosition(int selectedPosition);
     }
 
     public FileChooserDialogBuilder setDefaultPath(File path) {
@@ -154,7 +160,8 @@ public class FileChooserDialogBuilder {
         return this;
     }
 
-    public FileChooserDialogBuilder setEmptyMessage(int stringResource) {
+    public FileChooserDialogBuilder setSelectedOption(int selected) {
+        this.selectedPosition = selected;
         return this;
     }
 }
