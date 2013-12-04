@@ -1,8 +1,7 @@
-package mobi.myseries.gui.backup;
+package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BaseBackupListener;
 import mobi.myseries.application.notification.DeterminateProgressNotification;
@@ -28,7 +27,7 @@ public class RestoreProgressDialogBuilder {
     public RestoreProgressDialogBuilder(Context context) {
         this.context = context;
     }
-    
+
     public Context context() {
         return this.context;
     }
@@ -37,20 +36,18 @@ public class RestoreProgressDialogBuilder {
     public Dialog build() {
         Dialog dialog = new Dialog(this.context, R.style.MySeriesTheme_Dialog);
 
-        dialog.setContentView(R.layout.dialog_restore_progress);
+        dialog.setContentView(R.layout.dialog_backup_restore_progress);
 
-        this.setupTitleFor(dialog);
         this.setupProgressBar(dialog);
         this.setupStatusMessage(dialog);
         this.setupCancelButton(dialog);
         this.setupRestoreListener(dialog);
-        
-        App.notificationService().removeRestoreNotificationDispatcher(restoreNotificationDispatcher);
 
+        App.notificationService().setRestoreNotificationDispatcher(restoreNotificationDispatcher);
         return dialog;
     }
 
-    private void setupRestoreListener(Dialog dialog) {
+    private void setupRestoreListener(final Dialog dialog) {
         this.restoreListerner = new BaseBackupListener() {
             @Override
             public void onRestoreRunning (BackupMode mode) {
@@ -61,10 +58,9 @@ public class RestoreProgressDialogBuilder {
             @Override
             public void onRestoreCompleted(BackupMode mode) {
                 super.onRestoreCompleted(mode);
-                cancelButton.setText(R.string.ok);
-                messageTextView.setText(context.getString(R.string.restore_success_message, mode.name()));
-                progressBar.setIndeterminate(false);
-                progressBar.setProgress(0);
+                App.notificationService().removeRestoreNotificationDispatcher(restoreNotificationDispatcher);
+                dialog.dismiss();
+                
             }
 
             @Override
@@ -73,21 +69,21 @@ public class RestoreProgressDialogBuilder {
                 messageTextView.setText(R.string.restore_downloading_series_message);
                 progressBar.setIndeterminate(false);
                 progressBar.setMax(total);
-                progressBar.setProgress(current - 1);
+                progressBar.setProgress(current);
             }
-            
+
             @Override
             public void onRestorePosterDownloadProgress(int current, int total) {
                 super.onRestorePosterDownloadProgress(current, total);
                 messageTextView.setText(R.string.restore_downloading_posters_message);
                 progressBar.setIndeterminate(false);
                 progressBar.setMax(total);
-                progressBar.setProgress(current - 1);
+                progressBar.setProgress(current);
             }
             @Override
             public void onRestoreFailure(BackupMode mode, Exception e) {
-                super.onRestoreFailure(mode, e);
                 progressBar.setProgress(0);
+                cancelButton.setText(R.string.ok);
             }
         };
         App.backupService().register(restoreListerner);
@@ -98,7 +94,7 @@ public class RestoreProgressDialogBuilder {
         cancelButton.setText(R.string.cancel);
 
         cancelButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -118,15 +114,6 @@ public class RestoreProgressDialogBuilder {
         this.progressBar = (ProgressBar) dialog.findViewById(R.id.RestoreProgressBar);
     }
 
-    private void setupTitleFor(Dialog dialog) {
-        TextView titleView = (TextView) dialog.findViewById(R.id.title);
-        titleView.setVisibility(View.VISIBLE);
-        titleView.setText(R.string.restore);
-
-        View titleDivider = dialog.findViewById(R.id.titleDivider);
-        titleDivider.setVisibility(View.VISIBLE);
-    }
-    
     private final NotificationDispatcher restoreNotificationDispatcher = new NotificationDispatcher() {
 
         @Override
@@ -140,7 +127,7 @@ public class RestoreProgressDialogBuilder {
             messageTextView.setText(notification.message());
         }
 
- 
+
         @Override
         public void cancel(Notification notification) {
             messageTextView.setText(notification.message());
@@ -149,9 +136,7 @@ public class RestoreProgressDialogBuilder {
         @Override
         public void notifyDeterminateProgressNotification(
                 DeterminateProgressNotification notification) {
-            // TODO Auto-generated method stub
-            
+            messageTextView.setText(notification.message());
         }
     };
-
 }

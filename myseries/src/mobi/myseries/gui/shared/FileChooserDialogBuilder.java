@@ -1,8 +1,9 @@
 package mobi.myseries.gui.shared;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import mobi.myseries.R;
 import mobi.myseries.shared.FilesUtil;
@@ -13,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckedTextView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -35,7 +34,7 @@ public class FileChooserDialogBuilder {
     private OnChooseListener onChooseListener;
     protected String selectedFile;
 
-    private int emptyMessage;
+    private RadioGroup radioGroup;
 
     public FileChooserDialogBuilder(Context context) {
         this.context = context;
@@ -79,12 +78,14 @@ public class FileChooserDialogBuilder {
 
     private void setUpOptionViewsFor(Dialog dialog) {
         LayoutInflater inflater = LayoutInflater.from(this.context);
-        final RadioGroup radioGroup = (RadioGroup) dialog
+        this.radioGroup = (RadioGroup) dialog
                 .findViewById(R.id.files);
 
         fileList = FilesUtil.listFilesOfDirectory(currentPath, fileEndsWith);
- 
-        for (int i = 0; i < fileList.length; i++) {
+        List<String> list = Arrays.asList(fileList);
+        Collections.reverse(list);
+        fileList = (String[]) list.toArray();
+            for (int i = 0; i < fileList.length; i++) {
             View v = inflater
                     .inflate(R.layout.dialog_file_chooser_option, null);
             final RadioButton fileName = (RadioButton) v
@@ -98,7 +99,6 @@ public class FileChooserDialogBuilder {
                 @Override
                 public void onClick(View v) {
                     radioGroup.check(fileName.getId());
-                    selectedFile = fileList[fileName.getId()];
                 }
             });
 
@@ -106,6 +106,7 @@ public class FileChooserDialogBuilder {
 
             this.optionViews.add(fileName);
         }
+            radioGroup.check(0);
     }
 
     private void setUpCancelButtonFor(final Dialog dialog) {
@@ -126,6 +127,7 @@ public class FileChooserDialogBuilder {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                selectedFile = fileList[radioGroup.getCheckedRadioButtonId()];
                 File chosenFile = getChosenFile(selectedFile);
                 FileChooserDialogBuilder.this.onChooseListener
                         .onChoose(chosenFile);
@@ -153,7 +155,6 @@ public class FileChooserDialogBuilder {
     }
 
     public FileChooserDialogBuilder setEmptyMessage(int stringResource) {
-        this.emptyMessage = stringResource;
         return this;
     }
 }

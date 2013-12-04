@@ -220,7 +220,7 @@
     <string name="backup_folder_file_path">Diretório de Backup: <b>%s</b></string>
     <string name="backup">Fazer Backup</string>
     <string name="restore">Restaurar</string>
-    <string name="backup_button">Fazer Backup</string>
+    <string name="backup_button">Backup</string>
     <string name="restore_button">Restaurar</string>
     <string name="backup_completed">Backup completo!</string>
     <string name="restore_completed">Restauração completa!</string>

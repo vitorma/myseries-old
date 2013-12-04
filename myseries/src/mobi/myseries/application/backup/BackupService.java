@@ -53,6 +53,7 @@ public class BackupService extends ApplicationService<BackupListener> {
                     notifyOnBackupRunning(backupMode);
                     backupMode.backupFile(jsonFile);
                     notifyOnBackupCompleted(backupMode);
+                    notifyOnBackupSuccess();
                 } catch (Exception e) {
                     notifyOnBackupFail(backupMode, e);
                 }
@@ -77,6 +78,7 @@ public class BackupService extends ApplicationService<BackupListener> {
                         notifyOnBackupRunning(backupMode);
                         backupMode.backupFile(jsonFile);
                         notifyOnBackupCompleted(backupMode);
+                        notifyOnBackupSuccess();
                     } catch (Exception e) {
                         notifyOnBackupFail(backupMode, e);
                     }
@@ -137,6 +139,7 @@ public class BackupService extends ApplicationService<BackupListener> {
                     return;
                 }
                 notifyOnRestoreCompleted(backupMode);
+                notifyOnRestoreSuccess();
             } catch (Exception e) {
                 notifyOnRestoreFail(backupMode, e);
             } finally {
@@ -166,6 +169,8 @@ public class BackupService extends ApplicationService<BackupListener> {
             for (SeriesSnippet s : series) {
                 if (this.isCancelled())
                     return;
+                notifyRestoreProgress(seriesToRestore.size(), series.size());
+
                 Series fetchedSeries = environment().traktApi().fetchSeries(
                         s.id());
                 for (EpisodeSnippet episodeSnippet : s.episodes()) {
@@ -175,7 +180,6 @@ public class BackupService extends ApplicationService<BackupListener> {
                     }
                 }
                 seriesToRestore.add(fetchedSeries);
-                notifyRestoreProgress(seriesToRestore.size(), series.size());
             }
             if (this.isCancelled())
                 return;
@@ -194,9 +198,9 @@ public class BackupService extends ApplicationService<BackupListener> {
                 current++;
                 if (this.isCancelled())
                     return;
-                imageService.downloadAndSavePosterOf(s);
                 notifyRestorePosterDownloadProgress(current,
                         seriesToRestore.size());
+                imageService.downloadAndSavePosterOf(s);
             }
         }
 
@@ -328,6 +332,28 @@ public class BackupService extends ApplicationService<BackupListener> {
             public void run() {
                 for (BackupListener listener : listeners()) {
                     listener.onRestoreCompleted(backupMode);
+                }
+            }
+        });
+    }
+
+    private void notifyOnRestoreSuccess() {
+        runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                for (BackupListener listener : listeners()) {
+                    listener.onRestoreSuccess();
+                }
+            }
+        });
+    }
+
+    private void notifyOnBackupSuccess() {
+        runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                for (BackupListener listener : listeners()) {
+                    listener.onBackupSuccess();
                 }
             }
         });

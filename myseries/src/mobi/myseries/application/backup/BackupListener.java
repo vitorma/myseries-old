@@ -2,11 +2,11 @@ package mobi.myseries.application.backup;
 
 public interface BackupListener {
 
-    public void onBackupSucess();
+    public void onBackupSuccess();
 
     public void onBackupFailure(BackupMode mode, Exception e);
 
-    public void onRestoreSucess();
+    public void onRestoreSuccess();
 
     public void onRestoreFailure(BackupMode mode, Exception e);
 

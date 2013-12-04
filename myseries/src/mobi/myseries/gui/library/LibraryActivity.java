@@ -14,8 +14,6 @@ import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.application.features.Feature;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
-import mobi.myseries.gui.backup.BackupDialogFragment;
-import mobi.myseries.gui.backup.RestoreProgressDialogFragment;
 import mobi.myseries.gui.help.AboutActivity;
 import mobi.myseries.gui.settings.SettingsActivity;
 import mobi.myseries.gui.shared.ToastBuilder;
@@ -185,7 +183,6 @@ public class LibraryActivity extends BaseActivity {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
             final Intent data) {
-        Log.v("activity", "fui chamado");
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == DRIVE_BACKUP && resultCode == Activity.RESULT_OK) {
             String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
@@ -239,9 +236,6 @@ public class LibraryActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if(App.backupService().restoreIsRunning())
-            new RestoreProgressDialogFragment().show(getFragmentManager(), "RestoreProgressDialog");
-        
         if (pendingOperation == DROPBOX_BACKUP) {
             boolean resumeSucess = App.backupService().dropboxHelper().onResume();
             if (resumeSucess) {

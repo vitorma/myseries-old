@@ -145,7 +145,7 @@ public class MyStatisticsFragment extends Fragment {
         }
 
         @Override
-        public void onRestoreSucess() {
+        public void onRestoreSuccess() {
             update();
         }
 
