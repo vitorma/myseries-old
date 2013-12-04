@@ -8,7 +8,7 @@ import android.test.AndroidTestCase;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public abstract class ProductDescriptionTest extends AndroidTestCase {
+public class ProductDescriptionTest extends AndroidTestCase {
 
     private static final Sku sku1 = new Sku("PRODUCT1");
     private static final Sku sku2 = new Sku("PRODUCT2");

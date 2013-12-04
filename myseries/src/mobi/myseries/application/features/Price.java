@@ -4,11 +4,22 @@ import mobi.myseries.shared.Validate;
 
 public class Price {
 
+    public static final Price NotAvailable = new Price("") {
+        @Override
+        public boolean isAvailable() {
+            return false;
+        }
+    };
+
     private final String value;
 
     public Price(String value) {
         Validate.isNonNull(value, "value");
         this.value = value;
+    }
+
+    public boolean isAvailable() {
+        return true;
     }
 
     public String value() {

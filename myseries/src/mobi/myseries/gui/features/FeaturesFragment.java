@@ -10,6 +10,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.Log;
 import mobi.myseries.application.features.Product;
 import mobi.myseries.application.features.ProductDescription;
+import mobi.myseries.application.features.Store;
 import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.Validate;
 
@@ -25,9 +26,25 @@ import android.widget.ListView;
 
 public class FeaturesFragment extends Fragment {
 
-    private List<Product> mItems;
+    private volatile ItemsAndAdapter itemsAndAdapter;
 
-    private ProductAdapter mAdapter;
+    private class ItemsAndAdapter {
+        private List<Product> mItems;
+        private ProductAdapter mAdapter;
+
+        public ItemsAndAdapter(List<Product> items) {
+            mItems = items;
+            mAdapter = new ProductAdapter(items, FeaturesFragment.this.getActivity());
+        }
+
+        public List<Product> items() {
+            return mItems;
+        }
+
+        public ProductAdapter adapter() {
+            return mAdapter;
+        }
+    }
 
     private ListView mListView;
     private View mEmptyStateView;
@@ -102,8 +119,32 @@ public class FeaturesFragment extends Fragment {
 
     private void setUpData() {
         Log.d(getClass().getCanonicalName(), "Loading products");
-        mItems = new ArrayList<Product>((Set<Product>) App.store().productsAvailableForPurchase());
-        mAdapter = new ProductAdapter(mItems, this.getActivity());
+
+        // TODO: loading state: empty case
+        Set<Product> productsWithoutPrice = App.store().productsWithoutAvilabilityInformation();
+        this.itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(productsWithoutPrice));
+
+        App.store().productsAvailableForPurchase(new Store.AvailableProductsResultListener() {
+            @Override
+            public void onSuccess(Set<Product> products) {
+                // TODO Auto-generated method stub
+                itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(products));
+                // remove loading state
+                // draw list
+                setUpViews();
+                Log.d(getClass().getCanonicalName(), "Loaded products: success");
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // TODO Auto-generated method stub
+                // set error state
+                // draw error view
+                setUpViews();
+                Log.d(getClass().getCanonicalName(), "Loaded products: failure");
+            }
+        });
+
         Log.d(getClass().getCanonicalName(), "Loaded products");
 
         /* TODO
@@ -123,7 +164,7 @@ public class FeaturesFragment extends Fragment {
     }
 
     private void setUpListView() {
-        mListView.setAdapter(mAdapter);
+        mListView.setAdapter(this.itemsAndAdapter.adapter());
 
         /* TODO
         setUpOnScrollListener();
@@ -148,7 +189,7 @@ public class FeaturesFragment extends Fragment {
     }
 
     private void hideOrshowViews() {
-        if (!mItems.isEmpty()) {
+        if (!this.itemsAndAdapter.items().isEmpty()) {
             mEmptyStateView.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
         } else {

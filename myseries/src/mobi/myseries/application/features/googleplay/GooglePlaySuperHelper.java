@@ -103,13 +103,10 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
     // Debug tag, for logging
     private final String TAG = getClass().getCanonicalName();
 
-    private final Set<Sku> implementedProducts; // unmodifiableSet
-
     public static class Products {
-        private final Set<Sku> ownedProducts = new HashSet<Sku>();
-        private final Map<Sku, Price> availableProducts = new HashMap<Sku, Price>();
+        private final Set<Sku> ownedSkus = new HashSet<Sku>();
+        private final Map<Sku, Price> skusInStore = new HashMap<Sku, Price>();
     }
-
     private final Products products;
 
     private final String base64PublicKey;
@@ -120,16 +117,14 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
     // The helper object
     private IabHelper mHelper;
 
-    public GooglePlaySuperHelper(Context context, Set<Sku> implementedProducts, String base64PublicKey) {
+    public GooglePlaySuperHelper(Context context, String base64PublicKey) {
         Validate.isNonNull(context, "context");
-        Validate.isNonNull(implementedProducts, "implementedProducts");
         Validate.isNonNull(base64PublicKey, "base64PublicKey");
 
         this.context = context;
 
         this.base64PublicKey = base64PublicKey;
 
-        this.implementedProducts = Collections.unmodifiableSet(implementedProducts);
         this.products = new Products();
 
         this.listeners = new ListenerSet<SuperHelperListener>();
@@ -148,12 +143,12 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
         return strSkus;
     }
 
-    public void buy(Sku product, Activity activity) {
-        this.onCreate(thenStartPurchasing(product, activity));
+    public void buy(Sku product, Activity activity, Set<Sku> implementedProducts) {
+        this.onCreate(implementedProducts, thenStartPurchasing(product, activity));
     }
 
-    public void loadProducts() {
-        this.onCreate(thenDestroy());
+    public void loadProducts(Set<Sku> implementedProducts) {
+        this.onCreate(implementedProducts, thenDestroy());
     }
 
     public Products products() {
@@ -182,7 +177,7 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
 
     /* The code below is based upon the main activity of the sample application */
 
-    private void onCreate(final Runnable nextAction) {
+    private void onCreate(final Set<Sku> implementedProducts, final Runnable nextAction) {
 
         /* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
          * (that you got from the Google Play developer console). This is not your
@@ -229,7 +224,7 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
 
                 // IAB is fully set up. Now, let's get an inventory of stuff we own.
                 Log.d(TAG, "Setup successful. Querying inventory.");
-                mHelper.queryInventoryAsync(true, skuValuesFrom(implementedProducts), new GotInventoryListener(nextAction));
+                mHelper.queryInventoryAsync(true, skuValuesFrom(implementedProducts), new GotInventoryListener(implementedProducts, nextAction));
             }
         });
     }
@@ -237,9 +232,11 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
     // Listener that's called when we finish querying the items and subscriptions we own
     private class GotInventoryListener implements IabHelper.QueryInventoryFinishedListener {
         private final Runnable nextAction;
+        private final Set<Sku> implementedProducts;
 
-        public GotInventoryListener(Runnable nextAction) {
+        public GotInventoryListener(Set<Sku> implementedProducts, Runnable nextAction) {
             this.nextAction = nextAction;
+            this.implementedProducts = implementedProducts;
         }
 
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
@@ -273,8 +270,8 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
              */
 
             synchronized (products) {
-                products.availableProducts.clear();
-                products.ownedProducts.clear();
+                products.skusInStore.clear();
+                products.ownedSkus.clear();
 
                 for (Sku product : implementedProducts) {
                     String sku = product.value();
@@ -284,12 +281,12 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
                             Price price = new Price(inventory.getSkuDetails(sku).getPrice());
 
                             Log.d(TAG, product + " is available");
-                            products.availableProducts.put(product, price);
+                            products.skusInStore.put(product, price);
                         }
 
                         if (verifyDeveloperPayload(inventory.getPurchase(sku))) {
                             Log.d(TAG, "User owns " + product);
-                            products.ownedProducts.add(product);
+                            products.ownedSkus.add(product);
                         }
                     }
                 }
@@ -361,7 +358,7 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
                 Sku product = skuFromPurchase(purchase);
 
                 synchronized (products) {
-                    products.ownedProducts.add(product);
+                    products.ownedSkus.add(product);
                 }
 
                 Log.d(TAG, "Purchase is " + product + ".");
