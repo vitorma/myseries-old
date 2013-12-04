@@ -29,6 +29,9 @@ public class ScheduleSinglePaneActivity extends BaseActivity implements OnTabSel
 
     private ViewPager mViewPager;
     private ActionBarTabAdapter mTabAdapter;
+    private TabDefinition[] mTabs;
+    private int mLastTop = 0;
+    private int mLastPosition = -1;
 
     /* Intents */
 
@@ -128,6 +131,13 @@ public class ScheduleSinglePaneActivity extends BaseActivity implements OnTabSel
             mIsShowingList = true;
 
             setUpAdapter();
+
+            try {
+                currentFragment().listView().setSelectionFromTop(mLastPosition, mLastTop);
+            } catch (Exception e) {
+                // Just ignore scroll if user had selected another tab in details view.
+            }
+
         } else {
             super.onBackPressed();
         }
@@ -146,6 +156,9 @@ public class ScheduleSinglePaneActivity extends BaseActivity implements OnTabSel
     public void onItemClick(int scheduleMode, int position) {
         mIsShowingList = false;
         mSelectedItem = position;
+
+        mLastTop = currentFragment().listView().getTop();
+        mLastPosition = currentFragment().listView().getFirstVisiblePosition();
 
         setUpAdapter();
     }
@@ -198,7 +211,7 @@ public class ScheduleSinglePaneActivity extends BaseActivity implements OnTabSel
     }
 
     private TabDefinition[] newTabDefinitionsForList() {
-        return new TabDefinition[] {
+        return mTabs = new TabDefinition[] {
             new TabDefinition(
                 R.string.tab_next_to_watch,
                 ScheduleListFragment.newInstance(ScheduleMode.TO_WATCH)),
@@ -209,6 +222,10 @@ public class ScheduleSinglePaneActivity extends BaseActivity implements OnTabSel
                 R.string.tab_unaired,
                 ScheduleListFragment.newInstance(ScheduleMode.UNAIRED))
         };
+    }
+
+    private ScheduleListFragment currentFragment() {
+        return (ScheduleListFragment) mTabs[mSelectedMode].fragment();
     }
 
     private TabDefinition[] newTabDefinitionsForDetail() {

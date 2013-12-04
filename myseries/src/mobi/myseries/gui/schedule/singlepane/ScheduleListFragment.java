@@ -234,8 +234,9 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     }
 
     private void reload() {
-        if(isLoading)
+        if(isLoading) {
             loadTask.cancel(true);
+        }
 
         loadTask = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -262,6 +263,10 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
         boolean pauseOnFling = true;
         PauseOnScrollListener listener = new PauseOnScrollListener(UniversalImageLoader.loader(), pauseOnScroll, pauseOnFling);
         this.mListView.setOnScrollListener(listener);
+    }
+
+    ListView listView() {
+        return mListView;
     }
 
     @Override
