@@ -6,7 +6,7 @@ import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.gui.features.FeaturesActivity;
 import mobi.myseries.gui.library.LibraryActivity;
 import mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity;
-import mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity;
+import mobi.myseries.gui.schedule.singlepane.ScheduleListActivity;
 import mobi.myseries.gui.shared.MessageLauncher;
 import mobi.myseries.gui.statistics.StatisticsActivity;
 import android.app.Activity;
@@ -141,8 +141,8 @@ public abstract class BaseActivity extends Activity {
             case MENU_ITEM_MYSCHEDULE:
                 boolean isTablet = this.getResources().getBoolean(R.bool.isTablet);
 
-                if (!isTablet && this.getClass() != ScheduleSinglePaneActivity.class) {
-                    this.startActivity(topActivityIntentFrom(ScheduleSinglePaneActivity.newIntent(this, ScheduleMode.TO_WATCH)));
+                if (!isTablet && this.getClass() != ScheduleListActivity.class) {
+                    this.startActivity(topActivityIntentFrom(ScheduleListActivity.newIntent(this, ScheduleMode.TO_WATCH)));
                 }
 
                 if (isTablet && this.getClass() != ScheduleDualPaneActivity.class) {

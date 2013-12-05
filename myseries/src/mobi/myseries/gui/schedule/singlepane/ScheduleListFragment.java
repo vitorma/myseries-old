@@ -39,6 +39,7 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     private OnItemClickListener mOnItemClickListener;
     private AsyncTask<Void, Void, Void> loadTask;
     private boolean isLoading = false;
+    private boolean mReloadOnResume;
 
     /* OnItemClickListener */
 
@@ -78,6 +79,8 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
         setRetainInstance(true);
 
         mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
+
+        App.preferences().forSchedule().register(this);
     }
 
     @Override
@@ -93,18 +96,27 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
 
-        App.preferences().forSchedule().register(this);
+        if (mReloadOnResume) {
+            mReloadOnResume = false;
+            reload();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        App.preferences().forSchedule().deregister(this);
         mItems.deregister(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        App.preferences().forSchedule().deregister(this);
     }
 
     /* ScheduleListener */
@@ -271,8 +283,12 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        reload();
-
-        App.context().sendBroadcast(new Intent(BroadcastAction.UPDATE));
+        if (isVisible()) {
+            mReloadOnResume = false;
+            reload();
+            App.context().sendBroadcast(new Intent(BroadcastAction.UPDATE));
+        } else {
+            mReloadOnResume = true;
+        }
     }
 }

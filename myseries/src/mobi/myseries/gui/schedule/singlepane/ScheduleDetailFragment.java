@@ -36,6 +36,7 @@ public class ScheduleDetailFragment extends Fragment
     private ViewPager mViewPager;
     private View mEmptyStateView;
     private SchedulePagerAdapter mPagerAdapter;
+    private boolean mReloadOnResume;
 
     /* New instance */
 
@@ -61,6 +62,8 @@ public class ScheduleDetailFragment extends Fragment
 
         mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
         mSelectedPage = getArguments().getInt(Extra.POSITION);
+
+        App.preferences().forSchedule().register(this);
     }
 
     @Override
@@ -77,18 +80,27 @@ public class ScheduleDetailFragment extends Fragment
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
 
-        App.preferences().forSchedule().register(this);
+        if (mReloadOnResume) {
+            mReloadOnResume = false;
+            reload();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        App.preferences().forSchedule().deregister(this);
         mItems.deregister(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        App.preferences().forSchedule().deregister(this);
     }
 
     /* ScheduleListener */
@@ -246,8 +258,12 @@ public class ScheduleDetailFragment extends Fragment
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        reload();
-
-        App.context().sendBroadcast(new Intent(BroadcastAction.UPDATE));
+        if (isVisible()) {
+            mReloadOnResume = false;
+            reload();
+            App.context().sendBroadcast(new Intent(BroadcastAction.UPDATE));
+        } else {
+            mReloadOnResume = true;
+        }
     }
 }

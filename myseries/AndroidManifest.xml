@@ -37,7 +37,11 @@
         </activity>
 
         <activity
-            android:name="mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity"
+            android:name="mobi.myseries.gui.schedule.singlepane.ScheduleListActivity"
+            android:exported="true" />
+
+        <activity
+            android:name="mobi.myseries.gui.schedule.singlepane.ScheduleDetailActivity"
             android:exported="true" />
 
         <activity
