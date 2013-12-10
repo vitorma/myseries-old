@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 public class EpisodeListFragment extends ListFragment {
@@ -33,6 +34,8 @@ public class EpisodeListFragment extends ListFragment {
     private int episodeNumber;
     private EpisodeListAdapter adapter;
     private OnSelectItemListener listener;
+    private int mLastPosition = -1;
+    private int mLastTop = 0;
 
     @Override
     public void onAttach(Activity activity) {
@@ -68,7 +71,7 @@ public class EpisodeListFragment extends ListFragment {
         this.setUpEmptyText();
 
         if (this.listener.shouldHighlightSelectedItem()) {
-            this.getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            this.getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
             this.checkItem(this.adapter.positionOf(this.season.episode(this.episodeNumber)));
         }
 
@@ -85,6 +88,8 @@ public class EpisodeListFragment extends ListFragment {
             int backgroundColor = App.resources().getColor(R.color.bg_light);
 
             this.getView().setBackgroundColor(backgroundColor);
+
+            this.getListView().setSelectionFromTop(mLastPosition, mLastTop);
         }
     }
 
@@ -128,5 +133,10 @@ public class EpisodeListFragment extends ListFragment {
 
     public void update(Season season) {
         this.update(season, this.episodeNumber);
+    }
+
+    public void setScrollPosition(int position, int top) {
+        mLastPosition = position;
+        mLastTop = top;
     }
 }

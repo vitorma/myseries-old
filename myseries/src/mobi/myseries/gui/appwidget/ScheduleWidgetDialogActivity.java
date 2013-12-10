@@ -5,7 +5,7 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.schedule.ScheduleSpecification;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity;
-import mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity;
+import mobi.myseries.gui.schedule.singlepane.ScheduleDetailActivity;
 import mobi.myseries.gui.shared.Extra;
 import android.app.Activity;
 import android.content.Intent;
@@ -53,7 +53,7 @@ public class ScheduleWidgetDialogActivity extends Activity {
 
                 Intent intent = new Intent(
                         getApplicationContext(),
-                        isDualPane ? ScheduleDualPaneActivity.class : ScheduleSinglePaneActivity.class);
+                        isDualPane ? ScheduleDualPaneActivity.class : ScheduleDetailActivity.class);
 
                 intent
                     .putExtra(Extra.SCHEDULE_MODE, scheduleMode)

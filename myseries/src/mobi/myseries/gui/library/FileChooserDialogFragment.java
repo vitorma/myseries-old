@@ -7,18 +7,33 @@ import mobi.myseries.application.App;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.gui.shared.FileChooserDialogBuilder;
 import mobi.myseries.gui.shared.FileChooserDialogBuilder.OnChooseListener;
-import mobi.myseries.gui.shared.SortingDialogBuilder.OnSelectOptionListener;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 
 public class FileChooserDialogFragment extends DialogFragment {
 
+    private int selected;
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt("selectedPosition", selected);
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            selected = 0;
+        } else {
+           selected = savedInstanceState.getInt("selectedPosition");
+        }
+        
         return new FileChooserDialogBuilder(getActivity())
             .setDefaultPath(SdcardBackup.getDefaultFolder())
             .setOnChooseListener(onChooseListener())
+            .setSelectedOption(selected)
             .setTitle(R.string.restore_choose_backup_to_restore)
             .build();
     }
@@ -30,6 +45,11 @@ public class FileChooserDialogFragment extends DialogFragment {
                 if(chosenFile != null)
                     new RestoreProgressDialogFragment().show(getFragmentManager(), "RestoreProgressDialog");
                     App.backupService().restoreBackup(new SdcardBackup(chosenFile));
+            }
+
+            @Override
+            public void onSelectPosition(int selectedPosition) {
+                selected = selectedPosition;
             }
         };
     }

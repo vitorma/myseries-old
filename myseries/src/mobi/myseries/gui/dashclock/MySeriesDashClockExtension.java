@@ -12,7 +12,7 @@ import mobi.myseries.application.schedule.Unaired;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity;
-import mobi.myseries.gui.schedule.singlepane.ScheduleSinglePaneActivity;
+import mobi.myseries.gui.schedule.singlepane.ScheduleListActivity;
 import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.shared.DatesAndTimes;
@@ -86,7 +86,7 @@ public class MySeriesDashClockExtension extends DashClockExtension {
     private Intent clickIntent() {
         Intent intent = App.resources().getBoolean(R.bool.isTablet) ?
                 ScheduleDualPaneActivity.newIntent(App.context(), ScheduleMode.UNAIRED) :
-                ScheduleSinglePaneActivity.newIntent(App.context(), ScheduleMode.UNAIRED);
+                ScheduleListActivity.newIntent(App.context(), ScheduleMode.UNAIRED);
 
         return intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
     }

@@ -68,16 +68,20 @@ public class SeriesFilterDialogBuilder {
         this.titleView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                SeriesFilterDialogBuilder.this.titleView.toggle();
+                titleView.toggle();
 
-                for (CheckedTextView tv : SeriesFilterDialogBuilder.this.optionViews.values()) {
-                    tv.setChecked(SeriesFilterDialogBuilder.this.titleView.isChecked());
+                for (CheckedTextView tv : optionViews.values()) {
+                    tv.setChecked(titleView.isChecked());
                 }
 
-                if (SeriesFilterDialogBuilder.this.titleView.isChecked()) {
-                    SeriesFilterDialogBuilder.this.numberOfCheckedViews = SeriesFilterDialogBuilder.this.optionViews.size();
+                for (Map.Entry<Series,Boolean> option : options.entrySet()) {
+                    option.setValue(titleView.isChecked());
+                }
+
+                if (titleView.isChecked()) {
+                    numberOfCheckedViews = optionViews.size();
                 } else {
-                    SeriesFilterDialogBuilder.this.numberOfCheckedViews = 0;
+                    numberOfCheckedViews = 0;
                 }
             }
         });
@@ -88,12 +92,12 @@ public class SeriesFilterDialogBuilder {
         LinearLayout optionPanel = (LinearLayout) dialog.findViewById(R.id.optionPanel);
         int counter = 0;
 
-        for (Series s : this.options.keySet()) {
+        for (final Map.Entry<Series,Boolean> option : options.entrySet()) {
             View v = inflater.inflate(R.layout.dialog_filter_option, null);
             final CheckedTextView seriesCheck = (CheckedTextView) v.findViewById(R.id.checkBox);
 
-            seriesCheck.setText(s.name());
-            seriesCheck.setChecked(this.options.get(s));
+            seriesCheck.setText(option.getKey().name());
+            seriesCheck.setChecked(option.getValue());
 
             if (seriesCheck.isChecked()) { this.numberOfCheckedViews++; }
 
@@ -102,14 +106,15 @@ public class SeriesFilterDialogBuilder {
                 public void onClick(View v) {
                     seriesCheck.toggle();
 
+                    option.setValue(seriesCheck.isChecked());
+
                     if (seriesCheck.isChecked()) {
-                        SeriesFilterDialogBuilder.this.numberOfCheckedViews++;
+                        numberOfCheckedViews++;
                     } else {
-                        SeriesFilterDialogBuilder.this.numberOfCheckedViews--;
+                        numberOfCheckedViews--;
                     }
 
-                    SeriesFilterDialogBuilder.this.titleView.setChecked(
-                            SeriesFilterDialogBuilder.this.numberOfCheckedViews == SeriesFilterDialogBuilder.this.optionViews.size());
+                    titleView.setChecked(numberOfCheckedViews == optionViews.size());
                 }
             });
 
@@ -121,7 +126,7 @@ public class SeriesFilterDialogBuilder {
 
             optionPanel.addView(v);
 
-            this.optionViews.put(s, seriesCheck);
+            this.optionViews.put(option.getKey(), seriesCheck);
         }
 
         this.titleView.setChecked(this.numberOfCheckedViews == this.optionViews.size());
@@ -144,15 +149,9 @@ public class SeriesFilterDialogBuilder {
         okButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Series s : SeriesFilterDialogBuilder.this.options.keySet()) {
-                    boolean checked = SeriesFilterDialogBuilder.this.optionViews.get(s).isChecked();
-
-                    SeriesFilterDialogBuilder.this.options.put(s, checked);
-                }
-
                 dialog.dismiss();
 
-                SeriesFilterDialogBuilder.this.onFilterListener.onFilter();
+                onFilterListener.onFilter();
             }
         });
     }
