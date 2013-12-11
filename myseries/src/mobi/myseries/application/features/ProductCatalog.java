@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import mobi.myseries.application.features.product.Price;
+import mobi.myseries.application.features.product.Availability;
 import mobi.myseries.application.features.product.Product;
 import mobi.myseries.application.features.product.ProductDescription;
 import mobi.myseries.application.features.product.Sku;
@@ -17,7 +17,7 @@ public abstract class ProductCatalog {
         Set<Product> products = new HashSet<Product>();
 
         for (ProductDescription p : this.implementedProducts()) {
-            products.add(new Product(Price.NotAvailable, p));
+            products.add(new Product(p, Availability.NotAvailable));
         }
 
         return Collections.unmodifiableSet(products);

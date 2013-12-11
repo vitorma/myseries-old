@@ -4,15 +4,15 @@ import mobi.myseries.shared.Validate;
 
 public class Product {
 
-    private final Price price;
     private final ProductDescription description;
+    private final Availability availability;
 
-    public Product(Price price, ProductDescription description) {
-        Validate.isNonNull(price, "price");
+    public Product(ProductDescription description, Availability availability) {
         Validate.isNonNull(description, "description");
+        Validate.isNonNull(availability, "availability");
 
-        this.price = price;
         this.description = description;
+        this.availability = availability;
     }
 
     public Sku sku() {
@@ -24,10 +24,12 @@ public class Product {
     }
 
     public Price price() {
-        return this.price;
+        return this.availability.price();
     }
 
-    // TODO(Gabriel): public boolean isOwned()
+    public boolean isOwned() {
+        return this.availability.isOwned();
+    }
 
     // Equals and HashCode
 

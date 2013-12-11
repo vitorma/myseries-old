@@ -63,9 +63,10 @@ public class Store extends ApplicationService<StoreListener> {
 
                     if (a != null) {
                         Log.d(getClass().getCanonicalName(), "Created product with availability: " + d.sku());
-                        products.add(new Product(a.price(), d));
+                        products.add(new Product(d, a));
                     } else {
                         Log.d(getClass().getCanonicalName(), "Availability not found for: " + d.sku());
+                        products.add(new Product(d, Availability.NotAvailable));
                     }
                 }
 
