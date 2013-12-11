@@ -1,7 +1,9 @@
-package mobi.myseries.application.features.googleplay;
+package mobi.myseries.application.features.backend.googleplay;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
@@ -10,9 +12,12 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 import mobi.myseries.application.Log;
 import mobi.myseries.application.activityevents.ActivityEventsService;
-import mobi.myseries.application.features.Product;
-import mobi.myseries.application.features.Sku;
-import mobi.myseries.application.features.StoreBackend;
+import mobi.myseries.application.features.backend.StoreBackend;
+import mobi.myseries.application.features.backend.googleplay.GooglePlaySuperHelper.Products;
+import mobi.myseries.application.features.product.Availability;
+import mobi.myseries.application.features.product.Price;
+import mobi.myseries.application.features.product.Product;
+import mobi.myseries.application.features.product.Sku;
 import mobi.myseries.shared.Validate;
 
 public class GooglePlayStore implements StoreBackend {
@@ -43,14 +48,12 @@ public class GooglePlayStore implements StoreBackend {
     private final GooglePlaySuperHelper helper;
 
     private final Set<Product> ownedProducts = new HashSet<Product>();
-    private final Set<Product> availableProducts = new HashSet<Product>();
 
     public GooglePlayStore(Context context, ActivityEventsService activityEventsService) {
         Validate.isNonNull(context, "context");
         Validate.isNonNull(activityEventsService, "activityEventsService");
 
         this.helper = new GooglePlaySuperHelper(context, base64PublicKey());
-        this.helper.register(this.helperListener);
 
         activityEventsService.register(this.helper);
     }
@@ -63,27 +66,43 @@ public class GooglePlayStore implements StoreBackend {
         }
     }
 
+    @Override
+    public void availableProductsFrom(final Set<Sku> availableSkus, final AvailabilityResultListener listener) {
+        // XXX
+        this.helper.loadProducts(availableSkus, new GooglePlaySuperHelper.LoadProductsListener() {
+            @Override
+            public void onSuccess(Products products) {
+                // TODO Auto-generated method stub
+                Map<Sku, Availability> availabilities = new HashMap<Sku, Availability>(products.skusInStore.size());
+
+                for (Sku s : availableSkus) {
+                    if (products.skusInStore.containsKey(s)) {
+                        boolean isOwned = products.ownedSkus.contains(s);
+                        Price price = products.skusInStore.get(s);
+
+                        availabilities.put(s, new Availability(price, isOwned));
+
+                        Log.d(getClass().getCanonicalName(), "Created availability for " + s);
+                    }
+                }
+
+                listener.onSuccess(availabilities);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                // TODO Auto-generated method stub
+                listener.onFailure();
+            }
+        });
+    }
+
     // XXX
     @Override
     public void buy(Sku sku, Activity activity) {
+        // TODO set up purchase listener to notify store listeners when a purchase is complete.
+        // Should the listener be defined here or in Store?
         Log.d(getClass().getCanonicalName(), "GooglePlayStore: buying " + sku);
         //this.helper.buy(sku, activity);
     }
-
-
-    private final SuperHelperListener helperListener = new SuperHelperListener() {
-        @Override
-        public void onProductsChanged() {
-            // TODO Auto-generated method stub
-            // reload products, notify StoreListeners
-            Log.d(getClass().getCanonicalName(), "GooglePlayStore helperListener onProductsChanged called.");
-        }
-
-        @Override
-        public void onError() {
-            // TODO Auto-generated method stub
-            // reload products, notify StoreListeners
-            Log.d(getClass().getCanonicalName(), "GooglePlayStore helperListener onError called.");
-        }
-    };
 }

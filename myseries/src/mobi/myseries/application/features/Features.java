@@ -4,11 +4,9 @@ public class Features {
 
     public boolean isVisible(Feature feature) {
         // XXX
-        if(feature == Feature.CLOUD_BACKUP)
-            return true;
-        //return feature == Feature.BACKUP;
-        //return feature == Feature.FEATURE_SHOP;
-        return false;
+        return feature == Feature.CLOUD_BACKUP ||
+               feature == Feature.FEATURE_SHOP;
+        //return false;
     }
 
     public boolean isEnabled(Feature feature) {

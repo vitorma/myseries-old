@@ -1,44 +1,27 @@
 package mobi.myseries.application.features;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
 
 import mobi.myseries.application.ApplicationService;
 import mobi.myseries.application.Environment;
+import mobi.myseries.application.Log;
 import mobi.myseries.application.activityevents.ActivityEventsService;
-import mobi.myseries.application.features.googleplay.GooglePlayStore;
+import mobi.myseries.application.features.backend.DummyBackend;
+import mobi.myseries.application.features.backend.StoreBackend;
+import mobi.myseries.application.features.backend.googleplay.GooglePlayStore;
+import mobi.myseries.application.features.product.Availability;
+import mobi.myseries.application.features.product.Product;
+import mobi.myseries.application.features.product.ProductDescription;
+import mobi.myseries.application.features.product.Sku;
 import mobi.myseries.shared.Validate;
 
 public class Store extends ApplicationService<StoreListener> {
 
-    private static final Set<ProductDescription> implementedProducts =
-            Collections.unmodifiableSet(new HashSet<ProductDescription>(Arrays.asList(
-                    new ProductDescription(new Sku("android.test.purchased")),
-                    new ProductDescription(new Sku("android.test.canceled")),
-                    new ProductDescription(new Sku("android.test.refunded")),
-                    new ProductDescription(new Sku("android.test.item_unavailable")))));
-
-    private static final Set<Sku> implementedProductsSkus;
-    static {
-        Set<Sku> implementedSkus = new HashSet<Sku>();
-        for (ProductDescription p : implementedProducts) {
-            implementedSkus.add(p.sku());
-        }
-        implementedProductsSkus = Collections.unmodifiableSet(implementedSkus);
-    }
-
-    private static final Set<Product> productsWithoutPrice;
-    static {
-        Set<Product> products = new HashSet<Product>();
-        for (ProductDescription p : implementedProducts) {
-            products.add(new Product(Price.NotAvailable, p));
-        }
-        productsWithoutPrice = Collections.unmodifiableSet(products);
-    }
+    private final ProductCatalog productCatalog;
 
     private volatile StoreBackend backend;
 
@@ -54,32 +37,36 @@ public class Store extends ApplicationService<StoreListener> {
         }
         this.backend = backend;
 
+        // XXX(Gabriel): Implement and use a production products catalog.
+        this.productCatalog = new TestProductsCatalog();
+
         // XXX
         //this.backend.loadProducts(implementedProductsSkus);
     }
 
     public Set<Product> productsWithoutAvilabilityInformation() {
-        return productsWithoutPrice;
+        return this.productCatalog.productsWithoutPrice();
     }
 
     public void productsAvailableForPurchase(final AvailableProductsResultListener listener) {
-        //return Collections.unmodifiableSet(this.availableProducts);
 
-        /**/ //TODO
-        final Set<Product> products = new HashSet<Product>(Arrays.asList(
-                new Product(new Price("$1.00"), new ProductDescription(new Sku("android.test.purchased"))),
-                new Product(new Price("$2.00"), new ProductDescription(new Sku("android.test.canceled"))),
-                new Product(new Price("$3.00"), new ProductDescription(new Sku("android.test.refunded"))),
-                new Product(new Price("$4.00"), new ProductDescription(new Sku("android.test.item_unavailable")))));
+        this.backend.availableProductsFrom(
+                this.productCatalog.implementedProductsSkus(),
+                new StoreBackend.AvailabilityResultListener() {
 
-        run(new Runnable() {
             @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            public void onSuccess(Map<Sku, Availability> availabilities) {
+                final Set<Product> products = new HashSet<Product>(productCatalog.implementedProducts().size());
+
+                for (ProductDescription d : productCatalog.implementedProducts()) {
+                    Availability a = availabilities.get(d.sku());
+
+                    if (a != null) {
+                        Log.d(getClass().getCanonicalName(), "Created product with availability: " + d.sku());
+                        products.add(new Product(a.price(), d));
+                    } else {
+                        Log.d(getClass().getCanonicalName(), "Availability not found for: " + d.sku());
+                    }
                 }
 
                 if (listener != null) {
@@ -91,18 +78,33 @@ public class Store extends ApplicationService<StoreListener> {
                     });
                 }
             }
+
+            @Override
+            public void onFailure() {
+                // TODO Auto-generated method stub
+
+                if (listener != null) {
+                    runInMainThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onFailure();
+                        }
+                    });
+                }
+            }
         });
-        // */
     }
     public static interface AvailableProductsResultListener {
         public void onSuccess(Set<Product> products);
-        public void onFailure(Exception e);
+        public void onFailure(); // TODO(Gabriel) handle exceptions
     }
 
+    /* TODO?
     public Set<Product> ownedProducts() {
         //XXX
         return new HashSet<Product>();
     }
+    */
 
     public void buy(Product product, Activity activity) {
         // XXX

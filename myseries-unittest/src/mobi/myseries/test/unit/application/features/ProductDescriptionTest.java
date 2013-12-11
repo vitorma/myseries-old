@@ -1,7 +1,7 @@
 package mobi.myseries.test.unit.application.features;
 
-import mobi.myseries.application.features.ProductDescription;
-import mobi.myseries.application.features.Sku;
+import mobi.myseries.application.features.product.ProductDescription;
+import mobi.myseries.application.features.product.Sku;
 
 import android.test.AndroidTestCase;
 

@@ -1,6 +1,6 @@
 package mobi.myseries.test.unit.application.features;
 
-import mobi.myseries.application.features.Sku;
+import mobi.myseries.application.features.product.Sku;
 import android.test.AndroidTestCase;
 
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package mobi.myseries.application.features.googleplay.util;
+package mobi.myseries.application.features.backend.googleplay.util;
 
 // This code was converted from code at http://iharder.sourceforge.net/base64/
 // Lots of extraneous features were removed.

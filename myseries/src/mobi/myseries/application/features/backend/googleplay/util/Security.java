@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package mobi.myseries.application.features.googleplay.util;
+package mobi.myseries.application.features.backend.googleplay.util;
 
 import android.text.TextUtils;
 import android.util.Log;

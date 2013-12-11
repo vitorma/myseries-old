@@ -1,6 +1,6 @@
 package mobi.myseries.test.unit.application.features;
 
-import mobi.myseries.application.features.Price;
+import mobi.myseries.application.features.product.Price;
 import android.test.AndroidTestCase;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -39,6 +39,10 @@ public class PriceTest extends AndroidTestCase {
     }
 
     /* Equal and hashCode tests*/
+
+    public void testNotAvailablePriceIsEqualToNotAvailablePrice() {
+        assertThat(Price.NotAvailable, equalTo(Price.NotAvailable));
+    }
 
     public void testNotAvailablePriceIsDifferentFromBlankPrice() {
         assertThat(notAvailablePrice, not(equalTo(new Price(""))));

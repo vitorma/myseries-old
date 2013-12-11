@@ -4,8 +4,8 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.features.Product;
-import mobi.myseries.application.features.ProductDescription;
+import mobi.myseries.application.features.product.Product;
+import mobi.myseries.application.features.product.ProductDescription;
 
 import android.app.Activity;
 import android.view.View;

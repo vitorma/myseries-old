@@ -5,10 +5,10 @@ import static org.hamcrest.Matchers.*;
 
 import android.test.AndroidTestCase;
 
-import mobi.myseries.application.features.Price;
-import mobi.myseries.application.features.Product;
-import mobi.myseries.application.features.ProductDescription;
-import mobi.myseries.application.features.Sku;
+import mobi.myseries.application.features.product.Price;
+import mobi.myseries.application.features.product.Product;
+import mobi.myseries.application.features.product.ProductDescription;
+import mobi.myseries.application.features.product.Sku;
 
 public class ProductTest extends AndroidTestCase {
 

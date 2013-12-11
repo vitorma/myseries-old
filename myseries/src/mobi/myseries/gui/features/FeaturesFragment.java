@@ -8,9 +8,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.Log;
-import mobi.myseries.application.features.Product;
-import mobi.myseries.application.features.ProductDescription;
 import mobi.myseries.application.features.Store;
+import mobi.myseries.application.features.product.Product;
 import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.Validate;
 
@@ -136,7 +135,7 @@ public class FeaturesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Exception e) {
+            public void onFailure() {
                 // TODO Auto-generated method stub
                 // set error state
                 // draw error view
