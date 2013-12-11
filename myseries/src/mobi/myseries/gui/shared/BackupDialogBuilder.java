@@ -105,7 +105,15 @@ private OnClickListener restoreButtonListenerFor(final Dialog dialog) {
             if (button instanceof RadioButton) {
                 int id = ((RadioButton) button).getId();
                 if(id == R.id.GoogleDriveRadioButton || id == R.id.DropboxRadioButton)
-                    button.setEnabled(App.features().isEnabled(Feature.CLOUD_BACKUP));
+                    if(!App.features().isEnabled(Feature.CLOUD_BACKUP)) {
+                        button.setEnabled(false);
+                        String label = (String) ((RadioButton) button).getText() 
+                                                + " - " 
+                                                + System.getProperty("line.separator") 
+                                                + context.getString(R.string.purchase_feature, context.getString(R.string.cloud_backup));
+                        ((RadioButton) button).setText(label);
+                    }
+                    
             }
         }
     }
