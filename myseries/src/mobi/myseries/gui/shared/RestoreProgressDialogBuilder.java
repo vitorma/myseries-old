@@ -1,9 +1,13 @@
 package mobi.myseries.gui.shared;
 
+import com.dropbox.client2.exception.DropboxUnlinkedException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.backup.BackupMode;
 import mobi.myseries.application.backup.BaseBackupListener;
+import mobi.myseries.application.backup.exception.GoogleDriveException;
 import mobi.myseries.application.notification.DeterminateProgressNotification;
 import mobi.myseries.application.notification.IndeterminateProgressNotification;
 import mobi.myseries.application.notification.Notification;
@@ -82,6 +86,10 @@ public class RestoreProgressDialogBuilder {
             }
             @Override
             public void onRestoreFailure(BackupMode mode, Exception e) {
+                if ((e instanceof GoogleDriveException  && (e.getCause() instanceof UserRecoverableAuthIOException)) 
+                        || (e instanceof DropboxUnlinkedException)) {
+                        dialog.dismiss();
+                }
                 progressBar.setProgress(0);
                 cancelButton.setText(R.string.ok);
             }

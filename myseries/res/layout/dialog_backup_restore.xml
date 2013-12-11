@@ -48,11 +48,11 @@
 
             <RadioButton
                 android:id="@+id/GoogleDriveRadioButton"
+                android:enabled="false"
                 android:text="@string/google_drive"
                 android:drawableLeft="@drawable/ic_drive"
                 style="@style/RadioButton"
                 android:textSize="@dimen/text_size_large"
-                android:textColor="@color/dialog_message"
                 android:drawablePadding="@dimen/gap_large"
                 android:gravity="center_vertical"
                 android:paddingTop="@dimen/gap_medium"
@@ -71,11 +71,11 @@
 
             <RadioButton
                 android:id="@+id/DropboxRadioButton"
+                android:enabled="false"
                 android:text="@string/dropbox"
                 android:drawableLeft="@drawable/ic_dropbox"
                 style="@style/RadioButton"
                 android:textSize="@dimen/text_size_large"
-                android:textColor="@color/dialog_message"
                 android:drawablePadding="@dimen/gap_large"
                 android:gravity="center_vertical"
                 android:paddingTop="@dimen/gap_medium"

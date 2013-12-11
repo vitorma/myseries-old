@@ -212,6 +212,8 @@
 
     <string name="features_no_products_available">Nenhum produto disponível</string>
     <string name="features_watch_out_for_new_products">Fique alerta para novos produtos!</string>
+    <string name="purchase_feature">compre \"%s\" na loja de funcionalidades</string>
+    <string name="cloud_backup">Backup para a nuvem</string>
 
     <!-- Backup -->
 
@@ -234,6 +236,7 @@
     <string name="google_drive">Google Drive</string>
     <string name="sd_card">SD Card</string>
     <string name="dropbox">Dropbox</string>
+    <string name="purchase_cloud_backup">compre o backup para a nuvem na loja de funcionalidades</string>
 
         <!-- Backup  Messages -->
 
