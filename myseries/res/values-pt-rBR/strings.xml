@@ -213,7 +213,7 @@
     <string name="features_no_products_available">Nenhum produto disponível</string>
     <string name="features_watch_out_for_new_products">Fique alerta para novos produtos!</string>
     <string name="purchase_feature">compre \"%s\" na loja de funcionalidades</string>
-    <string name="cloud_backup">backup para a nuvem</string>
+    <string name="cloud_backup">Backup para a nuvem</string>
 
     <!-- Backup -->
 

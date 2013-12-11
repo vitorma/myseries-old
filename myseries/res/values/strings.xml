@@ -211,7 +211,7 @@
     <string name="features_no_products_available">No products available</string>
     <string name="features_watch_out_for_new_products">Watch out for upcoming products!</string>
     <string name="purchase_feature">purchase \"%s\" on feature shop</string>
-    <string name="cloud_backup">cloud backup</string>
+    <string name="cloud_backup">Cloud backup</string>
 
     <!-- Backup -->
 
