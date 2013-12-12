@@ -1,12 +1,12 @@
 package mobi.myseries.test.unit.application.features;
 
-import mobi.myseries.application.features.Sku;
+import mobi.myseries.application.features.product.Sku;
 import android.test.AndroidTestCase;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public abstract class SkuTest extends AndroidTestCase {
+public class SkuTest extends AndroidTestCase {
 
     private static final String productA = "Product A";
     private static final String productB = "Product B";

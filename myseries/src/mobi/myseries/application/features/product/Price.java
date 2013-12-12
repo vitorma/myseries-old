@@ -1,14 +1,25 @@
-package mobi.myseries.application.features;
+package mobi.myseries.application.features.product;
 
 import mobi.myseries.shared.Validate;
 
-public class Sku {
+public class Price {
+
+    public static final Price NotAvailable = new Price("") {
+        @Override
+        public boolean isAvailable() {
+            return false;
+        }
+    };
 
     private final String value;
 
-    public Sku(String value) {
+    public Price(String value) {
         Validate.isNonNull(value, "value");
         this.value = value;
+    }
+
+    public boolean isAvailable() {
+        return true;
     }
 
     public String value() {
@@ -31,7 +42,7 @@ public class Sku {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Sku other = (Sku) obj;
+        Price other = (Price) obj;
         if (value == null) {
             if (other.value != null)
                 return false;

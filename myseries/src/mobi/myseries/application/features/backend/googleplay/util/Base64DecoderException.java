@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package mobi.myseries.application.features.googleplay.util;
+package mobi.myseries.application.features.backend.googleplay.util;
 
 /**
  * Exception thrown when encountering an invalid Base64 input character.

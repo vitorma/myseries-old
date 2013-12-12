@@ -4,9 +4,8 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.features.Product;
-import mobi.myseries.application.features.ProductDescription;
-import mobi.myseries.application.features.Sku;
+import mobi.myseries.application.features.product.Product;
+import mobi.myseries.application.features.product.ProductDescription;
 
 import android.app.Activity;
 import android.view.View;
@@ -72,8 +71,13 @@ public class ProductAdapter extends BaseAdapter {
 
         viewHolder.mProductName.setText(productDescription.name());
 
-        viewHolder.mBuyButton.setText(product.price().value());
-        viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product.sku()));
+        if (product.price().isAvailable()) {
+            viewHolder.mBuyButton.setVisibility(View.VISIBLE);
+            viewHolder.mBuyButton.setText(product.price().value());
+            viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product));
+        } else {
+            viewHolder.mBuyButton.setVisibility(View.GONE);
+        }
 
         /* TODO
         Season season = mItems.get(position);
@@ -108,14 +112,14 @@ public class ProductAdapter extends BaseAdapter {
             view.setTag(this);
         }
 
-        private OnClickListener buyButtonOnClickListener(final Sku sku) {
+        private OnClickListener buyButtonOnClickListener(final Product product) {
             return new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // XXX(Gabriel) verify if the product is owned.
 
                     //if (App..isChecked()) {
-                        App.store().buy(sku, mActivity);
+                        App.store().buy(product, mActivity);
                     //}
                 }
             };

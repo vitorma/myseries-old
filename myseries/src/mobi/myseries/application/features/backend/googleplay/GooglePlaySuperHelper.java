@@ -13,11 +13,10 @@
  * limitations under the License.
  */
 
-package mobi.myseries.application.features.googleplay;
+package mobi.myseries.application.features.backend.googleplay;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,16 +29,17 @@ import android.content.Intent;
 import android.util.Log;
 
 import mobi.myseries.application.activityevents.ActivityEventsListener;
-import mobi.myseries.application.features.Price;
-import mobi.myseries.application.features.Sku;
-import mobi.myseries.application.features.googleplay.util.IabHelper;
-import mobi.myseries.application.features.googleplay.util.IabResult;
-import mobi.myseries.application.features.googleplay.util.Inventory;
-import mobi.myseries.application.features.googleplay.util.Purchase;
-import mobi.myseries.shared.ListenerSet;
-import mobi.myseries.shared.Publisher;
+import mobi.myseries.application.features.FailureListener;
+import mobi.myseries.application.features.PurchaseListener;
+import mobi.myseries.application.features.backend.RemoteStoreApiException;
+import mobi.myseries.application.features.backend.RemoteStoreApiNotAvailableException;
+import mobi.myseries.application.features.backend.googleplay.util.IabHelper;
+import mobi.myseries.application.features.backend.googleplay.util.IabResult;
+import mobi.myseries.application.features.backend.googleplay.util.Inventory;
+import mobi.myseries.application.features.backend.googleplay.util.Purchase;
+import mobi.myseries.application.features.product.Price;
+import mobi.myseries.application.features.product.Sku;
 import mobi.myseries.shared.Validate;
-
 
 /**
  * Example game using in-app billing version 3.
@@ -94,23 +94,18 @@ import mobi.myseries.shared.Validate;
  *
  * @author Bruno Oliveira (Google)
  */
-public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<SuperHelperListener> {
+public class GooglePlaySuperHelper implements ActivityEventsListener {
 
     private final Context context;
     private final boolean debugMode = true;
-    private final ListenerSet<SuperHelperListener> listeners;
 
     // Debug tag, for logging
     private final String TAG = getClass().getCanonicalName();
 
-    private final Set<Sku> implementedProducts; // unmodifiableSet
-
     public static class Products {
-        private final Set<Sku> ownedProducts = new HashSet<Sku>();
-        private final Map<Sku, Price> availableProducts = new HashMap<Sku, Price>();
+        public final Set<Sku> ownedSkus = new HashSet<Sku>();
+        public final Map<Sku, Price> skusInStore = new HashMap<Sku, Price>();
     }
-
-    private final Products products;
 
     private final String base64PublicKey;
 
@@ -120,19 +115,13 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
     // The helper object
     private IabHelper mHelper;
 
-    public GooglePlaySuperHelper(Context context, Set<Sku> implementedProducts, String base64PublicKey) {
+    public GooglePlaySuperHelper(Context context, String base64PublicKey) {
         Validate.isNonNull(context, "context");
-        Validate.isNonNull(implementedProducts, "implementedProducts");
         Validate.isNonNull(base64PublicKey, "base64PublicKey");
 
         this.context = context;
 
         this.base64PublicKey = base64PublicKey;
-
-        this.implementedProducts = Collections.unmodifiableSet(implementedProducts);
-        this.products = new Products();
-
-        this.listeners = new ListenerSet<SuperHelperListener>();
     }
 
     private Sku skuFromPurchase(Purchase purchase) {
@@ -148,18 +137,25 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
         return strSkus;
     }
 
-    public void buy(Sku product, Activity activity) {
-        this.onCreate(thenStartPurchasing(product, activity));
+    public void buy(Sku product, Activity activity, PurchaseListener listener) {
+        this.setUp(thenStartPurchasing(product, activity, listener), listener);
     }
 
-    public void loadProducts() {
-        this.onCreate(thenDestroy());
+    public void loadProducts(Set<Sku> implementedProducts, LoadProductsListener listener) {
+        this.setUp(thenLoadProducts(implementedProducts,listener, thenDestroy()), listener);
+    }
+    public static interface LoadProductsListener extends FailureListener {
+        public void onSuccess(Products products);
     }
 
-    public Products products() {
-        synchronized (this.products) {
-            return this.products;
-        }
+    private Runnable thenLoadProducts(final Set<Sku> implementedProducts, final LoadProductsListener listener, final Runnable nextAction) {
+
+        return new Runnable() {
+            @Override
+            public void run() {
+                mHelper.queryInventoryAsync(true, skuValuesFrom(implementedProducts), new GotInventoryListener(implementedProducts, listener, nextAction));
+            }
+        };
     }
 
     private Runnable thenDestroy() {
@@ -171,19 +167,18 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
         };
     }
 
-    private Runnable thenStartPurchasing(final Sku product, final Activity activity) {
+    private Runnable thenStartPurchasing(final Sku product, final Activity activity, final PurchaseListener listener) {
         return new Runnable() {
             @Override
             public void run() {
-                startPurchasing(product, activity);
+                startPurchasing(product, activity, listener);
             }
         };
     }
 
     /* The code below is based upon the main activity of the sample application */
 
-    private void onCreate(final Runnable nextAction) {
-
+    private void setUp(final Runnable nextAction, final FailureListener failureListener) {
         /* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
          * (that you got from the Google Play developer console). This is not your
          * developer public key, it's the *app-specific* public key.
@@ -213,55 +208,91 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
         // Start setup. This is asynchronous and the specified listener
         // will be called once setup completes.
         Log.d(TAG, "Starting setup.");
-        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                Log.d(TAG, "Setup finished.");
+        mHelper.startSetup(new SetupFinishedListener(nextAction, failureListener));
+    }
 
-                if (!result.isSuccess()) {
-                    // Oh noes, there was a problem.
-                    complain("Problem setting up in-app billing: " + result);
-                    onDestroy(); // XXX
-                    return;
+    private class SetupFinishedListener implements IabHelper.OnIabSetupFinishedListener {
+        private final Runnable nextAction;
+        private FailureListener failureListener;
+
+        public SetupFinishedListener(Runnable nextAction, FailureListener failureListener) {
+            this.nextAction = nextAction;
+            this.failureListener = failureListener;
+        }
+
+        @Override
+        public void onIabSetupFinished(IabResult result) {
+            try {
+                doItAndThrowExceptionOnFailure(result);
+
+                if (nextAction != null) {
+                    nextAction.run();
                 }
+            } catch (Throwable t) {
+                onDestroy();
 
-                // Have we been disposed of in the meantime? If so, quit.
-                if (mHelper == null) return;
-
-                // IAB is fully set up. Now, let's get an inventory of stuff we own.
-                Log.d(TAG, "Setup successful. Querying inventory.");
-                mHelper.queryInventoryAsync(true, skuValuesFrom(implementedProducts), new GotInventoryListener(nextAction));
+                if (failureListener != null) {
+                    failureListener.onFailure(t);
+                }
             }
-        });
+        }
+
+        private void doItAndThrowExceptionOnFailure(IabResult result)
+                throws RemoteStoreApiException, RemoteStoreApiNotAvailableException {
+            Log.d(TAG, "Setup finished.");
+
+            if (!result.isSuccess()) {
+                // Oh noes, there was a problem.
+                throw complain("Problem setting up in-app billing: " + result);
+            }
+
+            // Have we been disposed of in the meantime? If so, quit.
+            if (mHelper == null) throw new RemoteStoreApiNotAvailableException();
+
+            // IAB is fully set up. Now, let's get an inventory of stuff we own.
+            Log.d(TAG, "Setup successful.");
+        }
     }
 
     // Listener that's called when we finish querying the items and subscriptions we own
     private class GotInventoryListener implements IabHelper.QueryInventoryFinishedListener {
         private final Runnable nextAction;
+        private final Set<Sku> implementedProducts;
+        private final LoadProductsListener listener;
 
-        public GotInventoryListener(Runnable nextAction) {
+        public GotInventoryListener(Set<Sku> implementedProducts, LoadProductsListener listener, Runnable nextAction) {
             this.nextAction = nextAction;
+            this.implementedProducts = implementedProducts;
+            this.listener = listener;
         }
 
+        @Override
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
-            if (this.doItAndReturnTrueIfEverythingWentFine(result, inventory)) {
+            try {
+                doItAndThrowExceptionOnFailure(result, inventory);
+
                 if (nextAction != null) {
                     nextAction.run();
                 }
-            } else {
+            } catch (Throwable t) {
                 onDestroy();
+
+                if (listener != null) {
+                    listener.onFailure(t);
+                }
             }
         }
 
-        public boolean doItAndReturnTrueIfEverythingWentFine(IabResult result, Inventory inventory) {
+        public void doItAndThrowExceptionOnFailure(IabResult result, Inventory inventory)
+                throws RemoteStoreApiException, RemoteStoreApiNotAvailableException {
             Log.d(TAG, "Query inventory finished.");
 
             // Have we been disposed of in the meantime? If so, quit.
-            if (mHelper == null) return false;
+            if (mHelper == null) throw new RemoteStoreApiNotAvailableException();
 
             // Is it a failure?
             if (result.isFailure()) {
-                complain("Failed to query inventory: " + result);
-                return false;
+                throw complain("Failed to query inventory: " + result);
             }
 
             Log.d(TAG, "Query inventory was successful.");
@@ -272,47 +303,52 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
              * verifyDeveloperPayload().
              */
 
-            synchronized (products) {
-                products.availableProducts.clear();
-                products.ownedProducts.clear();
+            Products products = new Products();
 
-                for (Sku product : implementedProducts) {
-                    String sku = product.value();
+            for (Sku product : implementedProducts) {
+                String sku = product.value();
 
-                    if (inventory.hasPurchase(sku)) {
-                        if (inventory.hasDetails(sku)) {
-                            Price price = new Price(inventory.getSkuDetails(sku).getPrice());
+                if (inventory.hasDetails(sku)) {
+                    Price price = new Price(inventory.getSkuDetails(sku).getPrice());
 
-                            Log.d(TAG, product + " is available");
-                            products.availableProducts.put(product, price);
-                        }
+                    Log.d(TAG, product + " is available");
+                    products.skusInStore.put(product, price);
+                } else {
+                    Log.d(TAG, product + " is not available");
+                }
 
-                        if (verifyDeveloperPayload(inventory.getPurchase(sku))) {
-                            Log.d(TAG, "User owns " + product);
-                            products.ownedProducts.add(product);
-                        }
+                if (inventory.hasPurchase(sku)) {
+                    Log.d(TAG, "Purchase found for " + sku + ". Checking its developer payload.");
+
+                    if (verifyDeveloperPayload(inventory.getPurchase(sku))) {
+                        Log.d(TAG, "User owns " + product);
+                        products.ownedSkus.add(product);
+                    } else {
+                        Log.d(TAG, "User doesn't own " + product);
                     }
                 }
             }
 
-            Log.d(TAG, "Initial inventory query finished; enabling main UI.");
-            updateUi();
+            if (this.listener != null) {
+                this.listener.onSuccess(products);
+            }
 
-            return true;
+            Log.d(TAG, "Inventory query finished.");
+            updateUi();
         }
     }
 
-    private void startPurchasing(Sku product, Activity activity) {
+    private void startPurchasing(Sku product, Activity activity, PurchaseListener listener) {
 
         Log.d(TAG, "Upgrade button clicked; launching purchase flow for upgrade.");
 
-        /* TODO: for security, generate your payload here for verification. See the comments on
-         *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use
-         *        an empty string, but on a production app you should carefully generate this. */
+        /* for security, generate your payload here for verification. See the comments on
+         * verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use
+         * an empty string, but on a production app you should carefully generate this. */
         String payload = this.calculateDeveloperPayload();
 
         mHelper.launchPurchaseFlow(activity, product.value(), RC_REQUEST,
-                mPurchaseFinishedListener, payload);
+                new PurchaseFinishedListener(listener), payload);
     }
 
     @Override
@@ -333,41 +369,46 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
     }
 
     // Callback for when a purchase is finished
-    private IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
-        
-        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-            this.doItAndReturnTrueIfEverythingWentFine(result, purchase);
-            onDestroy();
+    private class PurchaseFinishedListener implements IabHelper.OnIabPurchaseFinishedListener {
+        private final PurchaseListener listener;
+
+        public PurchaseFinishedListener(PurchaseListener listener) {
+            this.listener = listener;
         }
 
-        public boolean doItAndReturnTrueIfEverythingWentFine(IabResult result, Purchase purchase) {
+        @Override
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+            try {
+                this.doItAndThrowExceptionOnFailure(result, purchase);
+            } catch (Throwable t) {
+                listener.onFailure(t);
+            } finally {
+                onDestroy();
+            }
+        }
+
+        public void doItAndThrowExceptionOnFailure(IabResult result, Purchase purchase)
+                throws RemoteStoreApiNotAvailableException, RemoteStoreApiException {
             Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
 
             // if we were disposed of in the meantime, quit.
-            if (mHelper == null) return false;
+            if (mHelper == null) throw new RemoteStoreApiNotAvailableException();
 
             if (result.isFailure()) {
-                complain("Error purchasing: " + result);
-                return false;
+                throw complain("Error purchasing: " + result);
             }
+
             if (!verifyDeveloperPayload(purchase)) {
-                complain("Error purchasing. Authenticity verification failed.");
-                return false;
-            }
+                throw complain("Error purchasing. Authenticity verification failed.");
+            } else {
+                Log.d(TAG, "Purchase successful.");
 
-            Log.d(TAG, "Purchase successful.");
-
-            if (verifyDeveloperPayload(purchase)) {
                 Sku product = skuFromPurchase(purchase);
 
-                synchronized (products) {
-                    products.ownedProducts.add(product);
-                }
-
                 Log.d(TAG, "Purchase is " + product + ".");
+                listener.onSuccess(product);
                 updateUi();
             }
-            return true;
         }
     };
 
@@ -385,18 +426,12 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
 
     // updates UI to reflect model
     private void updateUi() {
-        for (SuperHelperListener l : this.listeners) {
-            l.onProductsChanged();
-        }
+        // XXX
     }
 
-    private void complain(String message) {
+    private RemoteStoreApiException complain(String message) {
         Log.e(TAG, "**** IAB Error: " + message);
-
-        for (SuperHelperListener l : this.listeners) {
-            // XXX (Gabriel) send the exception related to the error.
-            l.onError();
-        }
+        return new RemoteStoreApiException(message);
     }
 
 
@@ -435,15 +470,5 @@ public class GooglePlaySuperHelper implements ActivityEventsListener, Publisher<
          */
 
         return true;
-    }
-
-    @Override
-    public boolean register(SuperHelperListener listener) {
-        return this.listeners.register(listener);
-    }
-
-    @Override
-    public boolean deregister(SuperHelperListener listener) {
-        return this.listeners.deregister(listener);
     }
 }

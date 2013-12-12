@@ -8,7 +8,6 @@ import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.features.Features;
 import mobi.myseries.application.features.Store;
-import mobi.myseries.application.features.googleplay.GooglePlayStore;
 import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.marking.MarkingService;
@@ -89,7 +88,7 @@ public class App extends Application {
         activityEventsService = new ActivityEventsService(environment);
 
         features = new Features();
-        store = new GooglePlayStore(environment, activityEventsService);
+        store = new Store(environment, activityEventsService);
 
         NotificationScheduler.setupAlarm(context());
     }

@@ -1,15 +1,17 @@
 package mobi.myseries.test.unit.application.features;
 
-import mobi.myseries.application.features.Price;
+import mobi.myseries.application.features.product.Price;
 import android.test.AndroidTestCase;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public abstract class PriceTest extends AndroidTestCase {
+public class PriceTest extends AndroidTestCase {
 
     private static final String priceA = "$1.00";
     private static final String priceB = "$2.00";
+
+    private static final Price notAvailablePrice = Price.NotAvailable;
 
     private static final Price pA1 = new Price(priceA);
     private static final Price pA2 = new Price(priceA);
@@ -22,7 +24,29 @@ public abstract class PriceTest extends AndroidTestCase {
         assertThat(pA1, not(equalTo(pB)));
     }
 
+    /* Availability */
+
+    public void testNotAvailablePriceIsNotAvailable() {
+        assertThat(notAvailablePrice.isAvailable(), is(false));
+    }
+
+    public void testAvailablePriceIsAvailable() {
+        assertThat(pA1.isAvailable(), is(true));
+    }
+
+    public void testNotAvailablePriceHasNotNullValue() {
+        assertThat(notAvailablePrice.value(), not(nullValue()));
+    }
+
     /* Equal and hashCode tests*/
+
+    public void testNotAvailablePriceIsEqualToNotAvailablePrice() {
+        assertThat(Price.NotAvailable, equalTo(Price.NotAvailable));
+    }
+
+    public void testNotAvailablePriceIsDifferentFromBlankPrice() {
+        assertThat(notAvailablePrice, not(equalTo(new Price(""))));
+    }
 
     public void testReflexivity() {
         assertThat(pA1, equalTo(pA1));
