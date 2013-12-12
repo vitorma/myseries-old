@@ -82,6 +82,12 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
 
         App.preferences().forSchedule().register(this);
     }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        App.preferences().forSchedule().deregister(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,13 +116,6 @@ public class ScheduleListFragment extends Fragment implements ScheduleListener, 
         super.onStop();
 
         mItems.deregister(this);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        App.preferences().forSchedule().deregister(this);
     }
 
     /* ScheduleListener */
