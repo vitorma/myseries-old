@@ -71,28 +71,22 @@ public class ProductAdapter extends BaseAdapter {
 
         viewHolder.mProductName.setText(productDescription.name());
 
-        if (product.price().isAvailable()) {
-            viewHolder.mBuyButton.setVisibility(View.VISIBLE);
-            viewHolder.mBuyButton.setText(product.price().value());
-            viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product));
+
+        if (product.isOwned()) {
+            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.black));
+            viewHolder.mBuyButton.setText("Purchased");
         } else {
-            viewHolder.mBuyButton.setVisibility(View.GONE);
+            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.dark_blue));
+
+            if (product.price().isAvailable()) {
+                viewHolder.mBuyButton.setText(product.price().value());
+            } else {
+                // XXX Find a good text for this
+                viewHolder.mBuyButton.setText("N/A");
+            }
+
+            viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product));
         }
-
-        /* TODO
-        Season season = mItems.get(position);
-
-        int numberOfEpisodes = season.numberOfEpisodes();
-        int numberOfWatchedEpisodes = season.numberOfEpisodes(new EpisodeWatchMarkSpecification(true));
-        int numberOfUnairedEpisodes = season.numberOfEpisodes(new UnairedEpisodeSpecification());
-        String pluralOfUnaired = App.resources().getQuantityString(R.plurals.plural_unaired, numberOfUnairedEpisodes);
-        String allAired = App.resources().getString(R.string.all_aired);
-
-        viewHolder.mSeasonNumber.setText(LocalText.of(season));
-        viewHolder.mNumberOfEpisodes.setText("/" + String.valueOf(numberOfEpisodes));
-        viewHolder.mWatchMark.setChecked(numberOfWatchedEpisodes == season.numberOfEpisodes());
-        viewHolder.mWatchMark.setOnClickListener(viewHolder.watchMarkOnClickListener(season));
-        */
 
         return view;
     }
@@ -116,11 +110,7 @@ public class ProductAdapter extends BaseAdapter {
             return new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // XXX(Gabriel) verify if the product is owned.
-
-                    //if (App..isChecked()) {
-                        App.store().buy(product, mActivity);
-                    //}
+                    App.store().buy(product, mActivity);
                 }
             };
         }
