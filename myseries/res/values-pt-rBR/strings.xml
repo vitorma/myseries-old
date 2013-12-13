@@ -4,7 +4,7 @@
     <!-- Recently added -->
 
     <string name="loading">Carregando…</string>
-    <string name="widget_preferences">Preferências do Widget</string>
+    <string name="widget_preferences">Preferências da Agenda</string>
     <string name="sort_episodes_by_upper">ORDENAR EPISÓDIOS POR…</string>
     <string name="episodes_to_show_upper">MOSTRAR EPISÓDIOS</string>
     <string name="series_to_show_upper">MOSTRAR SÉRIES</string>
@@ -370,6 +370,9 @@
     <string name="schedulewidget_dialog_mark_episode_as_watched">Marcar como assistido</string>
     <string name="schedulewidget_dialog_mark_episode_as_unwatched">Marcar como não assistido</string>
     <string name="schedulewidget_dialog_see_episode_details">Ver detalhes do episódio</string>
+    <string name="schedulewidget_dialog_purchase_message"><b>Widget de agenda</b> é um recurso premium. Compre-o agora mesmo e controle sua agenda a partir da home screen. \n\n<i>Pode ser adicionado à lock screen em dispositivos com Android 4.2+.</i></string>
+    <string name="schedulewidget_dialog_purchase_button_negative">Talvez depois</string>
+    <string name="schedulewidget_dialog_purchase_button_positive">Comprar</string>
 
     <!-- DashClock -->
 

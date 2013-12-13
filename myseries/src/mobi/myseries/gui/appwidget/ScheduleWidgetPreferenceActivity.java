@@ -8,8 +8,10 @@ import java.util.TreeSet;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
+import mobi.myseries.application.features.Feature;
 import mobi.myseries.application.preferences.SchedulePreferences;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.features.FeaturesActivity;
 import mobi.myseries.gui.shared.SeriesComparator;
 import mobi.myseries.gui.shared.SortMode;
 import android.app.Activity;
@@ -50,10 +52,38 @@ public class ScheduleWidgetPreferenceActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.schedulewidget_preferences);
+
         this.getExtraAppWidgetIdOrFinish();
-        this.setUpViews();
-        this.getActionBar().setTitle(R.string.widget_preferences);
+
+        if (App.features().isEnabled(Feature.SCHEDULE_WIDGET)) {
+            this.setTheme(R.style.MySeriesTheme);
+            this.setContentView(R.layout.schedulewidget_preferences);
+            this.setUpViews();
+            this.getActionBar().setTitle(R.string.widget_preferences);
+        } else {
+            this.setContentView(R.layout.schedulewidget_popup_buy);
+            this.setUpDialogView();
+        }
+    }
+
+    private void setUpDialogView() {
+            Button negativeButton = (Button) findViewById(R.id.negativeButton);
+            Button positiveButton = (Button) findViewById(R.id.positiveButton);
+
+            negativeButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
+            positiveButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                    startActivity(FeaturesActivity.newIntent(getApplicationContext()));
+                }
+            });
     }
 
     private void getExtraAppWidgetIdOrFinish() {

@@ -84,8 +84,9 @@
 
         <activity android:name="mobi.myseries.gui.episodes.EpisodesActivity" />
 
-        <!--
-        <activity android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity" >
+        <activity
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -94,7 +95,6 @@
         <activity
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetDialogActivity"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"/>
-        -->
 
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
@@ -118,7 +118,6 @@
             </intent-filter>
         </receiver>
 
-        <!--
         <receiver
             android:name="mobi.myseries.gui.appwidget.ScheduleWidget"
             android:enabled="true"
@@ -142,16 +141,13 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/schedulewidget_info" />
         </receiver>
-        -->
 
         <!-- Services -->
 
-        <!--
         <service
             android:name="mobi.myseries.gui.appwidget.ScheduleWidgetViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service android:name="mobi.myseries.gui.appwidget.TabService" />
-        -->
 
         <service android:name="mobi.myseries.application.notification.service.NotificationScheduler" />
 

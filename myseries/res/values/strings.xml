@@ -4,7 +4,7 @@
     <!-- Recently added -->
 
     <string name="loading">Loading…</string>
-    <string name="widget_preferences">Widget Preferences</string>
+    <string name="widget_preferences">Schedule Preferences</string>
     <string name="sort_episodes_by_upper">SORT EPISODES BY…</string>
     <string name="episodes_to_show_upper">EPISODES TO SHOW</string>
     <string name="series_to_show_upper">SERIES TO SHOW</string>
@@ -369,6 +369,9 @@
     <string name="schedulewidget_dialog_mark_episode_as_watched">Mark as watched</string>
     <string name="schedulewidget_dialog_mark_episode_as_unwatched">Mark as unwatched</string>
     <string name="schedulewidget_dialog_see_episode_details">See episode details</string>
+    <string name="schedulewidget_dialog_purchase_message"><b>Schedule widget</b> is a premium feature. Purchase it right now and control your schedule from the home screen. \n\n<i>It can be added to the lock screen in devices with Android 4.2+</i></string>
+    <string name="schedulewidget_dialog_purchase_button_negative">Maybe later</string>
+    <string name="schedulewidget_dialog_purchase_button_positive">Purchase</string>
 
     <!-- DashClock -->
 
