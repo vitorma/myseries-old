@@ -210,10 +210,16 @@
 
     <!-- Features -->
 
-    <string name="features_no_products_available">Nenhum produto disponível</string>
-    <string name="features_watch_out_for_new_products">Fique alerta para novos produtos!</string>
+    <string name="features_no_products_available">Nenhuma funcionalide premium disponível</string>
+    <string name="features_watch_out_for_new_products">Fique alerta para novas funcionalidades!</string>
+
+    <string name="features_price_not_available">N/A</string>
+    <string name="features_price_purchased">Adquirido</string>
+
     <string name="purchase_feature">compre \"%s\" na loja de funcionalidades</string>
+
     <string name="cloud_backup">Backup para a nuvem</string>
+    <string name="schedule_widget">Widget de agenda</string>
 
     <!-- Backup -->
 

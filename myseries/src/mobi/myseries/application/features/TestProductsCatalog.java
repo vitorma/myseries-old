@@ -58,6 +58,16 @@ public class TestProductsCatalog extends ProductCatalog {
                         public String description() {
                             return "A product that Google Play treats as unavailable.";
                         }
+                    },
+                    new ProductDescription(new Sku("invalid_sku")) {
+                        @Override
+                        public String name() {
+                            return "Invalid product";
+                        }
+                        @Override
+                        public String description() {
+                            return "Its price should be unavailable.";
+                        }
                     })));
 
     @Override

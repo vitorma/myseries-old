@@ -1,5 +1,6 @@
 package mobi.myseries.gui.features;
 
+import java.util.Collections;
 import java.util.List;
 
 import mobi.myseries.R;
@@ -26,16 +27,12 @@ public class ProductAdapter extends BaseAdapter {
         mIsLoading = isLoading;
         mActivity = activity;
 
-        //TODO sortItems();
+        sortItems();
     }
 
-    /*
-    public void sortItems() {
-        Collections.sort(
-                mItems,
-                SeasonComparator.fromSortMode(App.preferences().forSeriesDetails().sortMode()));
+    private void sortItems() {
+        Collections.sort(mItems);
     }
-    */
 
     @Override
     public int getCount() {
@@ -73,11 +70,11 @@ public class ProductAdapter extends BaseAdapter {
         if (mIsLoading) {
             // XXX(Gabriel): animate with bouncing/hopping ellipsis
             viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
-            viewHolder.mBuyButton.setText("...");
+            viewHolder.mBuyButton.setText(". . .");
         } else {
             if (product.isOwned()) {
                 viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.green));
-                viewHolder.mBuyButton.setText("Purchased");
+                viewHolder.mBuyButton.setText(R.string.features_price_purchased);
             } else {
                 if (product.price().isAvailable()) {
                     viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
@@ -85,9 +82,8 @@ public class ProductAdapter extends BaseAdapter {
 
                     viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product));
                 } else {
-                    // XXX Find a good text for this
                     viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
-                    viewHolder.mBuyButton.setText("N/A");
+                    viewHolder.mBuyButton.setText(R.string.features_price_not_available);
                 }
             }
         }
