@@ -32,9 +32,9 @@ public class FeaturesFragment extends Fragment {
         private List<Product> mItems;
         private ProductAdapter mAdapter;
 
-        public ItemsAndAdapter(List<Product> items) {
+        public ItemsAndAdapter(List<Product> items, boolean isLoading) {
             mItems = items;
-            mAdapter = new ProductAdapter(items, FeaturesFragment.this.getActivity());
+            mAdapter = new ProductAdapter(items, isLoading, FeaturesFragment.this.getActivity());
         }
 
         public List<Product> items() {
@@ -82,14 +82,12 @@ public class FeaturesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
         App.store().register(mStoreListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
         App.store().deregister(mStoreListener);
     }
 
@@ -120,13 +118,13 @@ public class FeaturesFragment extends Fragment {
     private void setUpData() {
         Log.d(getClass().getCanonicalName(), "Loading products");
 
-        // TODO: loading state: empty case
+        // TODO: empty case
         // TODO: order items: alphabetically? owned first? owned last? by price?
 
         // The fragment has no items at the first time it is loaded.
         if (this.itemsAndAdapter == null) {
             Set<Product> productsWithoutPrice = App.store().productsWithoutAvilabilityInformation();
-            this.itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(productsWithoutPrice));
+            this.itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(productsWithoutPrice), true);
         }
 
         Log.d(getClass().getCanonicalName(), "Loading products' availability...");
@@ -134,7 +132,7 @@ public class FeaturesFragment extends Fragment {
             @Override
             public void onSuccess(Set<Product> products) {
                 // TODO Auto-generated method stub
-                itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(products));
+                itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(products), false);
                 // remove loading state
                 // draw list
                 setUpViews();
@@ -144,7 +142,8 @@ public class FeaturesFragment extends Fragment {
             @Override
             public void onFailure() {
                 // TODO Auto-generated method stub
-                // set error state - stop loading
+                itemsAndAdapter = new ItemsAndAdapter(itemsAndAdapter.items(), false);  // <Stop loading
+                // set error state
                 // draw error view
                 setUpViews();
                 Log.d(getClass().getCanonicalName(), "Loaded products: failure");
@@ -197,7 +196,6 @@ public class FeaturesFragment extends Fragment {
         this.stopLoading();
 
         LoadTask newTask = new LoadTask();
-
         boolean newTaskIsTheCurrentTask = this.loadTask.compareAndSet(null, newTask);
 
         if (newTaskIsTheCurrentTask) {

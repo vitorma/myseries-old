@@ -16,12 +16,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class ProductAdapter extends BaseAdapter {
-    private List<Product> mItems;
+    private final List<Product> mItems;
+    private final boolean mIsLoading;
 
     private final Activity mActivity;
 
-    public ProductAdapter(List<Product> items, Activity activity) {
+    public ProductAdapter(List<Product> items, boolean isLoading, Activity activity) {
         mItems = items;
+        mIsLoading = isLoading;
         mActivity = activity;
 
         //TODO sortItems();
@@ -34,10 +36,6 @@ public class ProductAdapter extends BaseAdapter {
                 SeasonComparator.fromSortMode(App.preferences().forSeriesDetails().sortMode()));
     }
     */
-
-    public Product getSeason(int position) {
-        return mItems.get(position);
-    }
 
     @Override
     public int getCount() {
@@ -72,19 +70,26 @@ public class ProductAdapter extends BaseAdapter {
         viewHolder.mProductName.setText(productDescription.name());
         viewHolder.mDescription.setText(productDescription.description());
 
-        if (product.isOwned()) {
-            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.green));
-            viewHolder.mBuyButton.setText("Purchased");
-        } else {
+        if (mIsLoading) {
+            // XXX(Gabriel): animate with bouncing/hopping ellipsis
             viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
-            if (product.price().isAvailable()) {
-                viewHolder.mBuyButton.setText(product.price().value());
+            viewHolder.mBuyButton.setText("...");
+        } else {
+            if (product.isOwned()) {
+                viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.green));
+                viewHolder.mBuyButton.setText("Purchased");
             } else {
-                // XXX Find a good text for this
-                viewHolder.mBuyButton.setText("N/A");
-            }
+                if (product.price().isAvailable()) {
+                    viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+                    viewHolder.mBuyButton.setText(product.price().value());
 
-            viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product));
+                    viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product));
+                } else {
+                    // XXX Find a good text for this
+                    viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+                    viewHolder.mBuyButton.setText("N/A");
+                }
+            }
         }
 
         return view;
