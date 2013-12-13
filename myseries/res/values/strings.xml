@@ -208,10 +208,16 @@
 
     <!-- Features -->
 
-    <string name="features_no_products_available">No products available</string>
-    <string name="features_watch_out_for_new_products">Watch out for upcoming products!</string>
+    <string name="features_no_products_available">No premium features available</string>
+    <string name="features_watch_out_for_new_products">Watch out for upcoming features!</string>
+
+    <string name="features_price_not_available">N/A</string>
+    <string name="features_price_purchased">Purchased</string>
+
     <string name="purchase_feature">purchase \"%s\" on feature shop</string>
+
     <string name="cloud_backup">Cloud backup</string>
+    <string name="schedule_widget">Schedule widget</string>
 
     <!-- Backup -->
 

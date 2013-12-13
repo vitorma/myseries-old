@@ -190,7 +190,7 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
          * want to make it easy for an attacker to replace the public key with one
          * of their own and then fake messages from the server.
          */
-        String base64EncodedPublicKey = this.base64PublicKey; //XXX "CONSTRUCT_YOUR_KEY_AND_PLACE_IT_HERE";
+        String base64EncodedPublicKey = this.base64PublicKey; //"CONSTRUCT_YOUR_KEY_AND_PLACE_IT_HERE";
 
         // Some sanity checks to see if the developer (that's you!) really followed the
         // instructions to run this sample (don't put these checks on your app!)
@@ -320,7 +320,11 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
                 if (inventory.hasPurchase(sku)) {
                     Log.d(TAG, "Purchase found for " + sku + ". Checking its developer payload.");
 
-                    if (verifyDeveloperPayload(inventory.getPurchase(sku))) {
+                    Purchase purchase = inventory.getPurchase(sku);
+                    boolean purchaseIsPurchased = purchase.getPurchaseState() == 0;
+                    boolean purchaseIsCanceled = purchase.getPurchaseState() == 1;
+                    boolean purchaseIsRefunded = purchase.getPurchaseState() == 2;
+                    if (purchaseIsPurchased && verifyDeveloperPayload(inventory.getPurchase(sku))) {
                         Log.d(TAG, "User owns " + product);
                         products.ownedSkus.add(product);
                     } else {
@@ -330,13 +334,11 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
                     Log.d(TAG, "Purchase not found for " + sku + ".");
                 }
             }
+            Log.d(TAG, "Inventory query finished.");
 
             if (this.listener != null) {
                 this.listener.onSuccess(products);
             }
-
-            Log.d(TAG, "Inventory query finished.");
-            updateUi();
         }
     }
 
@@ -409,7 +411,6 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
 
                 Log.d(TAG, "Purchase is " + product + ".");
                 listener.onSuccess(product);
-                updateUi();
             }
         }
     }
@@ -424,11 +425,6 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
             mHelper.dispose();
             mHelper = null;
         }
-    }
-
-    // updates UI to reflect model
-    private void updateUi() {
-        // XXX
     }
 
     private RemoteStoreApiException complain(String message) {

@@ -79,6 +79,87 @@ public class ProductTest extends AndroidTestCase {
         assertThat(product.isOwned(), equalTo(availability.isOwned()));
     }
 
+    /* Comparison */
+
+    private final static ProductDescription descriptionA = new ProductDescription(sku1) {
+        @Override
+        public String name() {
+            return "A";
+        }
+    };
+    private final static ProductDescription descriptionB = new ProductDescription(sku1) {
+        @Override
+        public String name() {
+            return "B";
+        }
+    };
+    private final static ProductDescription descriptionC = new ProductDescription(sku1) {
+        @Override
+        public String name() {
+            return "C";
+        }
+    };
+    private final static Availability availabilityOwned = new Availability(price1, true);
+    private final static Availability availabilityNotOwned = new Availability(price1, false);
+
+    private final static Product ownedA = new Product(descriptionA, availabilityOwned);
+    private final static Product ownedB = new Product(descriptionB, availabilityOwned);
+    private final static Product ownedC = new Product(descriptionC, availabilityOwned);
+    private final static Product notOwnedA = new Product(descriptionA, availabilityNotOwned);
+    private final static Product notOwnedB = new Product(descriptionB, availabilityNotOwned);
+    private final static Product notOwnedC = new Product(descriptionC, availabilityNotOwned);
+
+    public void testOwnedProductsAreOrderedByName() {
+        // Transitiveness
+        assertThat(ownedA, lessThan(ownedB));
+        assertThat(ownedA, lessThan(ownedC));
+        assertThat(ownedB, lessThan(ownedC));
+
+        // Invertible
+        assertThat(ownedB, greaterThan(ownedA));
+        assertThat(ownedC, greaterThan(ownedA));
+        assertThat(ownedC, greaterThan(ownedB));
+    }
+
+    public void testNotOwnedProductsAreOrderedByName() {
+        // Transitiveness
+        assertThat(notOwnedA, lessThan(notOwnedB));
+        assertThat(notOwnedA, lessThan(notOwnedC));
+        assertThat(notOwnedB, lessThan(notOwnedC));
+
+        // Invertible
+        assertThat(notOwnedB, greaterThan(notOwnedA));
+        assertThat(notOwnedC, greaterThan(notOwnedA));
+        assertThat(notOwnedC, greaterThan(notOwnedB));
+    }
+
+    public void testOwnedProdudctsAwaysComeAfterNotOwnedProducts() {
+        assertThat(notOwnedA, lessThan(ownedA));
+        assertThat(notOwnedA, lessThan(ownedB));
+        assertThat(notOwnedA, lessThan(ownedC));
+
+        assertThat(notOwnedB, lessThan(ownedA));
+        assertThat(notOwnedB, lessThan(ownedB));
+        assertThat(notOwnedB, lessThan(ownedC));
+
+        assertThat(notOwnedC, lessThan(ownedA));
+        assertThat(notOwnedC, lessThan(ownedB));
+        assertThat(notOwnedC, lessThan(ownedC));
+    }
+
+    public void testHowTheOrderShouldBeWithTheTestProducts() {
+        assertThat(notOwnedA, lessThan(notOwnedB));
+        assertThat(notOwnedB, lessThan(notOwnedC));
+        assertThat(notOwnedC, lessThan(ownedA));
+        assertThat(ownedA,    lessThan(ownedB));
+        assertThat(ownedB,    lessThan(ownedC));
+    }
+
+    public void testProductsWithTheSameNameAndOwnershipAreEquivalent() {
+        assertThat(ownedA, not(lessThan(ownedA)));
+        assertThat(ownedA, not(greaterThan(ownedA)));
+    }
+
     /* Entity tests*/
 
     public void testTwoProductsAreEqualIfTheyHaveTheSameDescription() {

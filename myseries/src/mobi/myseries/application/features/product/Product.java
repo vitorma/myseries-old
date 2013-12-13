@@ -2,7 +2,7 @@ package mobi.myseries.application.features.product;
 
 import mobi.myseries.shared.Validate;
 
-public class Product {
+public class Product implements Comparable<Product> {
 
     private final ProductDescription description;
     private final Availability availability;
@@ -29,6 +29,15 @@ public class Product {
 
     public boolean isOwned() {
         return this.availability.isOwned();
+    }
+
+    @Override
+    public int compareTo(Product that) {
+        if (this.isOwned() == that.isOwned()) {
+            return this.description().name().compareTo(that.description().name());
+        } else {
+            return (this.isOwned() ? 1 : -1);
+        }
     }
 
     // Equals and HashCode

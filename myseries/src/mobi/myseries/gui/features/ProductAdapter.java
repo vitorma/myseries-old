@@ -1,5 +1,6 @@
 package mobi.myseries.gui.features;
 
+import java.util.Collections;
 import java.util.List;
 
 import mobi.myseries.R;
@@ -16,27 +17,21 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class ProductAdapter extends BaseAdapter {
-    private List<Product> mItems;
+    private final List<Product> mItems;
+    private final boolean mIsLoading;
 
     private final Activity mActivity;
 
-    public ProductAdapter(List<Product> items, Activity activity) {
+    public ProductAdapter(List<Product> items, boolean isLoading, Activity activity) {
         mItems = items;
+        mIsLoading = isLoading;
         mActivity = activity;
 
-        //TODO sortItems();
+        sortItems();
     }
 
-    /*
-    public void sortItems() {
-        Collections.sort(
-                mItems,
-                SeasonComparator.fromSortMode(App.preferences().forSeriesDetails().sortMode()));
-    }
-    */
-
-    public Product getSeason(int position) {
-        return mItems.get(position);
+    private void sortItems() {
+        Collections.sort(mItems);
     }
 
     @Override
@@ -70,22 +65,27 @@ public class ProductAdapter extends BaseAdapter {
         ProductDescription productDescription = product.description();
 
         viewHolder.mProductName.setText(productDescription.name());
+        viewHolder.mDescription.setText(productDescription.description());
 
-
-        if (product.isOwned()) {
-            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.black));
-            viewHolder.mBuyButton.setText("Purchased");
+        if (mIsLoading) {
+            // XXX(Gabriel): animate with bouncing/hopping ellipsis
+            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+            viewHolder.mBuyButton.setText(". . .");
         } else {
-            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.dark_blue));
-
-            if (product.price().isAvailable()) {
-                viewHolder.mBuyButton.setText(product.price().value());
+            if (product.isOwned()) {
+                viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.green));
+                viewHolder.mBuyButton.setText(R.string.features_price_purchased);
             } else {
-                // XXX Find a good text for this
-                viewHolder.mBuyButton.setText("N/A");
-            }
+                if (product.price().isAvailable()) {
+                    viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+                    viewHolder.mBuyButton.setText(product.price().value());
 
-            viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product));
+                    viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product));
+                } else {
+                    viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+                    viewHolder.mBuyButton.setText(R.string.features_price_not_available);
+                }
+            }
         }
 
         return view;
@@ -98,10 +98,8 @@ public class ProductAdapter extends BaseAdapter {
 
         private ViewHolder(View view) {
             mProductName = (TextView) view.findViewById(R.id.productName);
+            mDescription = (TextView) view.findViewById(R.id.productDescription);
             mBuyButton = (Button) view.findViewById(R.id.buyButton);
-            /* TODO
-            mDescription = (TextView) view.findViewById(R.id.description);
-            */
 
             view.setTag(this);
         }

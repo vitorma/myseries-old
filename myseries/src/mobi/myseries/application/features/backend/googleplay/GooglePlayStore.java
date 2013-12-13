@@ -65,7 +65,6 @@ public class GooglePlayStore implements StoreBackend {
         this.helper.loadProducts(availableSkus, new GooglePlaySuperHelper.LoadProductsListener() {
             @Override
             public void onSuccess(Products products) {
-                // TODO Auto-generated method stub
                 Map<Sku, Availability> availabilities = new HashMap<Sku, Availability>(products.skusInStore.size());
 
                 for (Sku s : availableSkus) {
