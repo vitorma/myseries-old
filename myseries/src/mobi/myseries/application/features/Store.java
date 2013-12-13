@@ -44,11 +44,19 @@ public class Store extends ApplicationService<StoreListener> {
         //this.backend.loadProducts(implementedProductsSkus);
     }
 
+    /**
+     * Synchronous method to query the implemented products. The returned products are all marked
+     * as unavailable.
+     */
     public Set<Product> productsWithoutAvilabilityInformation() {
         return this.productCatalog.productsWithoutPrice();
     }
 
-    public void productsAvailableForPurchase(final AvailableProductsResultListener listener) {
+    /**
+     * Asynchronous method to query the implemented products. The returned products are all marked
+     * with their actual availability information.
+     */
+    public void productsWithAvailabilityInformation(final AvailableProductsResultListener listener) {
         this.backend.availableProductsFrom(
                 this.productCatalog.implementedProductsSkus(),
                 new StoreBackend.AvailabilityResultListener() {

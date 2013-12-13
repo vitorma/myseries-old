@@ -130,7 +130,7 @@ public class FeaturesFragment extends Fragment {
         }
 
         Log.d(getClass().getCanonicalName(), "Loading products' availability...");
-        App.store().productsAvailableForPurchase(new Store.AvailableProductsResultListener() {
+        App.store().productsWithAvailabilityInformation(new Store.AvailableProductsResultListener() {
             @Override
             public void onSuccess(Set<Product> products) {
                 // TODO Auto-generated method stub

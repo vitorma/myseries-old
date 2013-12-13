@@ -15,7 +15,9 @@ public class DummyBackend implements StoreBackend {
 
     @Override
     public void availableProductsFrom(Set<Sku> availableSkus, AvailabilityResultListener listener) {
-        listener.onSuccess(new HashMap<Sku, Availability>());
+        if (listener != null) {
+            listener.onSuccess(new HashMap<Sku, Availability>());
+        }
     }
 
     @Override
@@ -25,6 +27,8 @@ public class DummyBackend implements StoreBackend {
 
         Log.d(getClass().getCanonicalName(), "DummyStore: buying " + sku);
 
-        purchaseListener.onSuccess(sku);
+        if (purchaseListener != null) {
+            purchaseListener.onSuccess(sku);
+        }
     }
 }
