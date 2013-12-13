@@ -326,6 +326,8 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
                     } else {
                         Log.d(TAG, "User doesn't own " + product);
                     }
+                } else {
+                    Log.d(TAG, "Purchase not found for " + sku + ".");
                 }
             }
 
@@ -410,7 +412,7 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
                 updateUi();
             }
         }
-    };
+    }
 
     // We're being destroyed. It's important to dispose of the helper here!
     private void onDestroy() {

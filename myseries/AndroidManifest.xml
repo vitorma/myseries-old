@@ -58,12 +58,6 @@
                 android:value="mobi.myseries.gui.library.LibraryActivity" />
         </activity>
 
-        <activity android:name=".gui.backup.BackupActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="mobi.myseries.gui.library.LibraryActivity" />
-        </activity>
-
         <activity android:name="mobi.myseries.gui.settings.SettingsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

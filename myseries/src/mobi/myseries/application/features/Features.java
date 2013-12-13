@@ -1,21 +1,71 @@
 package mobi.myseries.application.features;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import mobi.myseries.application.Log;
+import mobi.myseries.application.features.product.Product;
+import mobi.myseries.shared.Validate;
+
 public class Features {
 
+    private final Store store;
+    private final StoreListener storeListener = new StoreListener() {
+        @Override
+        public void onProductsChanged() {
+            queryStoreForEnabledFeatures();
+        }
+    };
+
+    private volatile Set<Feature> enabledFeatures;
+
+    public Features(Store store) {
+        Validate.isNonNull(store, "store");
+
+        this.store = store;
+        this.store.register(this.storeListener);
+
+        this.enabledFeatures = new HashSet<Feature>();
+        this.queryStoreForEnabledFeatures();
+    }
+
     public boolean isVisible(Feature feature) {
-        // XXX
         return feature == Feature.CLOUD_BACKUP ||
                feature == Feature.FEATURE_SHOP;
-        //return false;
     }
 
     public boolean isEnabled(Feature feature) {
-        //XXX
-        return false;
+        return this.enabledFeatures.contains(feature);
     }
 
-    public boolean isAvailableForPurchase(Feature feature) {
-        //XXX
-        return false;
+    private void queryStoreForEnabledFeatures() {
+        this.store.productsWithAvailabilityInformation(new Store.AvailableProductsResultListener() {
+
+            @Override
+            public void onSuccess(Set<Product> products) {
+                enabledFeatures = availableFeaturesFromProducts(products);
+                // TODO(Gabriel): notify that there are new features available
+            }
+
+            @Override
+            public void onFailure() {
+                // keep the current features.
+            }
+        });
+    }
+
+    private Set<Feature> availableFeaturesFromProducts(Collection<Product> products) {
+        Set<Feature> availableFeatures = new HashSet<Feature>();
+
+        for (Product p : products) {
+            if (p.isOwned()) {
+                availableFeatures.addAll(p.description().features());
+            }
+        }
+        Log.d(getClass().getCanonicalName(), "New features available: " + availableFeatures);
+
+        return Collections.unmodifiableSet(availableFeatures);
     }
 }

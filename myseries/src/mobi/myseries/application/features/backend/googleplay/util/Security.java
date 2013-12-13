@@ -18,6 +18,8 @@ package mobi.myseries.application.features.backend.googleplay.util;
 import android.text.TextUtils;
 import android.util.Log;
 
+import mobi.myseries.BuildConfig;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,6 +61,11 @@ public class Security {
         if (TextUtils.isEmpty(signedData) || TextUtils.isEmpty(base64PublicKey) ||
                 TextUtils.isEmpty(signature)) {
             Log.e(TAG, "Purchase verification failed: missing data.");
+            // XXX(Gabriel): begin http://stackoverflow.com/a/19735453
+            if (BuildConfig.DEBUG) {
+                return true;
+            }
+            // XXX(Gabriel): end
             return false;
         }
 

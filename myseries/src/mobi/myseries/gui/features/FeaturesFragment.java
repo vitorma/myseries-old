@@ -9,6 +9,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.Log;
 import mobi.myseries.application.features.Store;
+import mobi.myseries.application.features.StoreListener;
 import mobi.myseries.application.features.product.Product;
 import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.Validate;
@@ -63,9 +64,7 @@ public class FeaturesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // TODO (Gabriel) should we use it? setRetainInstance(true);
-
         // TODO mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
     }
 
@@ -77,7 +76,6 @@ public class FeaturesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setUp();
     }
 
@@ -85,20 +83,23 @@ public class FeaturesFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        /* TODO
-        App.preferences().forMySchedule(mScheduleMode).register(this);
-        */
+        App.store().register(mStoreListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        /* TODO
-        App.preferences().forMySchedule(mScheduleMode).deregister(this);
-        mItems.deregister(this);
-        */
+        App.store().deregister(mStoreListener);
     }
+
+    private final StoreListener mStoreListener = new StoreListener() {
+        @Override
+        public void onProductsChanged() {
+            Log.d(getClass().getCanonicalName(), "FeaturesFragment onProductsChanged called");
+            reload();
+        }
+    };
 
     /* Auxiliary */
 
@@ -120,10 +121,16 @@ public class FeaturesFragment extends Fragment {
         Log.d(getClass().getCanonicalName(), "Loading products");
 
         // TODO: loading state: empty case
-        Set<Product> productsWithoutPrice = App.store().productsWithoutAvilabilityInformation();
-        this.itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(productsWithoutPrice));
+        // TODO: order items: alphabetically? owned first? owned last? by price?
 
-        App.store().productsAvailableForPurchase(new Store.AvailableProductsResultListener() {
+        // The fragment has no items at the first time it is loaded.
+        if (this.itemsAndAdapter == null) {
+            Set<Product> productsWithoutPrice = App.store().productsWithoutAvilabilityInformation();
+            this.itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(productsWithoutPrice));
+        }
+
+        Log.d(getClass().getCanonicalName(), "Loading products' availability...");
+        App.store().productsWithAvailabilityInformation(new Store.AvailableProductsResultListener() {
             @Override
             public void onSuccess(Set<Product> products) {
                 // TODO Auto-generated method stub
@@ -137,23 +144,12 @@ public class FeaturesFragment extends Fragment {
             @Override
             public void onFailure() {
                 // TODO Auto-generated method stub
-                // set error state
+                // set error state - stop loading
                 // draw error view
                 setUpViews();
                 Log.d(getClass().getCanonicalName(), "Loaded products: failure");
             }
         });
-
-        Log.d(getClass().getCanonicalName(), "Loaded products");
-
-        /* TODO
-        if (mItems != null) { mItems.deregister(this); }
-
-        mItems = App.schedule().mode(mScheduleMode, App.preferences().forMySchedule(mScheduleMode).fullSpecification());
-        mAdapter = new ScheduleListAdapter(mItems);
-
-        mItems.register(this);
-        */
     }
 
     private void setUpViews() {
@@ -212,7 +208,6 @@ public class FeaturesFragment extends Fragment {
     private class LoadTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            //XXX mItems = (List<Product<?>>) App.store().productsAvailableForPurchase();
             setUpData();
             return null;
         }

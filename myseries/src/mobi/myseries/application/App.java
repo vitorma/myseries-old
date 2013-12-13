@@ -32,6 +32,7 @@ public class App extends Application {
     private static SeriesFollowingService seriesFollowingService;
     private static MarkingService markingService;
     private static ActivityEventsService activityEventsService;
+    private static Store store;
 
     /* XXX (Cleber) These guys should extend ApplicationService */
     private static UpdateService updateService;
@@ -48,7 +49,6 @@ public class App extends Application {
     /* (Cleber) This guy is ok */
     private static Preferences preferences;
     private static Features features;
-    private static Store store;
 
     /* XXX (Cleber) This guy should fly away */
     private static BroadcastService broadcastService;
@@ -87,8 +87,8 @@ public class App extends Application {
 
         activityEventsService = new ActivityEventsService(environment);
 
-        features = new Features();
         store = new Store(environment, activityEventsService);
+        features = new Features(store);
 
         NotificationScheduler.setupAlarm(context());
     }

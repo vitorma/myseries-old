@@ -1,8 +1,6 @@
 package mobi.myseries.application.features.backend.googleplay;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,11 +10,11 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 import mobi.myseries.application.Log;
 import mobi.myseries.application.activityevents.ActivityEventsService;
+import mobi.myseries.application.features.PurchaseListener;
 import mobi.myseries.application.features.backend.StoreBackend;
 import mobi.myseries.application.features.backend.googleplay.GooglePlaySuperHelper.Products;
 import mobi.myseries.application.features.product.Availability;
 import mobi.myseries.application.features.product.Price;
-import mobi.myseries.application.features.product.Product;
 import mobi.myseries.application.features.product.Sku;
 import mobi.myseries.shared.Validate;
 
@@ -42,12 +40,15 @@ public class GooglePlayStore implements StoreBackend {
     }
 
     private static String base64PublicKey() {
-        return "your public key here"; //"XXX TODO Put a public key here";
+        //return "your public key here"; //"XXX TODO Put a public key here";
+        //return ""; //"XXX TODO Put a public key here";
+        return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApFeFCstQf3LYtzbiEYvvUs1T7eWaSpFaGFJ7ryRbJqF+pPoF9wAnz1QSbj2aJy+Kiy5xgzDtgy1/Sx" +
+               "sjD4zSh7ZfkFZYqpsFTDihkXDllwAb/Jy48hraaAhB+tMqsEwrdPBPHharX+ASpEHxE1eY6Dx2DnzSQEDb85QfnXyLiDNxQexXIApPbGPT9dDgpGo88QK9QMqx" +
+               "h1+qM5ysbnaioDtn5oUhv8Ry5FRLmXZZH31sZ7NF7j0y738W8LCb7kI+TKU4hYdrwe8NizYJD+hK8vfKdnXWYnia2fRmFUTMNo7yBsMURBwC5IuBpXbGddrSeK" +
+               "OlpRa5P+xQYcZp1kpEfwIDAQAB";
     }
 
     private final GooglePlaySuperHelper helper;
-
-    private final Set<Product> ownedProducts = new HashSet<Product>();
 
     public GooglePlayStore(Context context, ActivityEventsService activityEventsService) {
         Validate.isNonNull(context, "context");
@@ -56,14 +57,6 @@ public class GooglePlayStore implements StoreBackend {
         this.helper = new GooglePlaySuperHelper(context, base64PublicKey());
 
         activityEventsService.register(this.helper);
-    }
-
-
-    // XXX
-    public Set<Product> ownedProducts() {
-        synchronized (this.ownedProducts) {
-            return Collections.unmodifiableSet(this.ownedProducts);
-        }
     }
 
     @Override
@@ -99,10 +92,10 @@ public class GooglePlayStore implements StoreBackend {
 
     // XXX
     @Override
-    public void buy(Sku sku, Activity activity) {
+    public void buy(Sku sku, Activity activity, PurchaseListener purchaseListener) {
         // TODO set up purchase listener to notify store listeners when a purchase is complete.
         // Should the listener be defined here or in Store?
         Log.d(getClass().getCanonicalName(), "GooglePlayStore: buying " + sku);
-        //this.helper.buy(sku, activity);
+        this.helper.buy(sku, activity, purchaseListener);
     }
 }

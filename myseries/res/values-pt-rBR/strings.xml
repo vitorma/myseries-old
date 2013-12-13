@@ -224,8 +224,8 @@
     <string name="restore">Restaurar</string>
     <string name="backup_button">Backup</string>
     <string name="restore_button">Restaurar</string>
-    <string name="backup_completed">Backup completo!</string>
-    <string name="restore_completed">Restauração completa!</string>
+    <string name="backup_completed">Backup completo.</string>
+    <string name="restore_completed">Restauração completa.</string>
     <string name="backup_failed_title">Falha ao fazer backup</string>
     <string name="backup_failed_message">Por favor, certifique-se de que o seu cartão SD está montado e de que há espaço suficiente nele.</string>
     <string name="restore_failed_title">Falha na restauração</string>
@@ -236,7 +236,6 @@
     <string name="google_drive">Google Drive</string>
     <string name="sd_card">SD Card</string>
     <string name="dropbox">Dropbox</string>
-    <string name="purchase_cloud_backup">compre o backup para a nuvem na loja de funcionalidades</string>
 
         <!-- Backup  Messages -->
 

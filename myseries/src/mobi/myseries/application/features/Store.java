@@ -44,21 +44,29 @@ public class Store extends ApplicationService<StoreListener> {
         //this.backend.loadProducts(implementedProductsSkus);
     }
 
+    /**
+     * Synchronous method to query the implemented products. The returned products are all marked
+     * as unavailable.
+     */
     public Set<Product> productsWithoutAvilabilityInformation() {
         return this.productCatalog.productsWithoutPrice();
     }
 
-    public void productsAvailableForPurchase(final AvailableProductsResultListener listener) {
-
+    /**
+     * Asynchronous method to query the implemented products. The returned products are all marked
+     * with their actual availability information.
+     */
+    public void productsWithAvailabilityInformation(final AvailableProductsResultListener listener) {
         this.backend.availableProductsFrom(
                 this.productCatalog.implementedProductsSkus(),
                 new StoreBackend.AvailabilityResultListener() {
 
             @Override
             public void onSuccess(Map<Sku, Availability> availabilities) {
-                final Set<Product> products = new HashSet<Product>(productCatalog.implementedProducts().size());
+                final Set<ProductDescription> implementedProducts = productCatalog.implementedProducts();
+                final Set<Product> products = new HashSet<Product>(implementedProducts.size());
 
-                for (ProductDescription d : productCatalog.implementedProducts()) {
+                for (ProductDescription d : implementedProducts) {
                     Availability a = availabilities.get(d.sku());
 
                     if (a != null) {
@@ -82,8 +90,6 @@ public class Store extends ApplicationService<StoreListener> {
 
             @Override
             public void onFailure() {
-                // TODO Auto-generated method stub
-
                 if (listener != null) {
                     runInMainThread(new Runnable() {
                         @Override
@@ -100,15 +106,31 @@ public class Store extends ApplicationService<StoreListener> {
         public void onFailure(); // TODO(Gabriel) handle exceptions
     }
 
-    /* TODO?
-    public Set<Product> ownedProducts() {
-        //XXX
-        return new HashSet<Product>();
-    }
-    */
-
     public void buy(Product product, Activity activity) {
-        // XXX
-        this.backend.buy(product.sku(), activity);
+        this.backend.buy(product.sku(), activity, this.purchaseListener);
     }
+
+    private final PurchaseListener purchaseListener = new PurchaseListener() {
+
+        @Override
+        public void onSuccess(Sku product) {
+            this.notifyStoreListeners();
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+            this.notifyStoreListeners();
+        }
+
+        private void notifyStoreListeners() {
+            runInMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    for (StoreListener l : listeners()) {
+                        l.onProductsChanged();
+                    }
+                }
+            });
+        }
+    };
 }
