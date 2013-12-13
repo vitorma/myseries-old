@@ -5,9 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
+    <GridView
         android:id="@+id/products_list"
         android:listSelector="@color/transparent"
+        android:drawSelectorOnTop="true"
+        android:fastScrollEnabled="true"
+        android:gravity="center"
+        android:numColumns="auto_fit"
+        android:stretchMode="spacingWidthUniform"
+        android:horizontalSpacing="0dp"
+        android:verticalSpacing="@dimen/myseries_grid_gap"
+        android:columnWidth="@dimen/store_product_width"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

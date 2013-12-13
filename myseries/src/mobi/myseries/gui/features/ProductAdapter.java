@@ -70,14 +70,13 @@ public class ProductAdapter extends BaseAdapter {
         ProductDescription productDescription = product.description();
 
         viewHolder.mProductName.setText(productDescription.name());
-
+        viewHolder.mDescription.setText(productDescription.description());
 
         if (product.isOwned()) {
-            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.black));
+            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.green));
             viewHolder.mBuyButton.setText("Purchased");
         } else {
-            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.dark_blue));
-
+            viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
             if (product.price().isAvailable()) {
                 viewHolder.mBuyButton.setText(product.price().value());
             } else {
@@ -98,10 +97,8 @@ public class ProductAdapter extends BaseAdapter {
 
         private ViewHolder(View view) {
             mProductName = (TextView) view.findViewById(R.id.productName);
+            mDescription = (TextView) view.findViewById(R.id.productDescription);
             mBuyButton = (Button) view.findViewById(R.id.buyButton);
-            /* TODO
-            mDescription = (TextView) view.findViewById(R.id.description);
-            */
 
             view.setTag(this);
         }

@@ -22,7 +22,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.GridView;
 
 public class FeaturesFragment extends Fragment {
 
@@ -46,7 +46,7 @@ public class FeaturesFragment extends Fragment {
         }
     }
 
-    private ListView mListView;
+    private GridView mGridView;
     private View mEmptyStateView;
 
     private AtomicReference<LoadTask> loadTask = new AtomicReference<LoadTask>();
@@ -110,8 +110,8 @@ public class FeaturesFragment extends Fragment {
     }
 
     private void findViews() {
-        mListView = (ListView) getView().findViewById(R.id.products_list);
-        Validate.isNonNull(mListView, "mListView");
+        mGridView = (GridView) getView().findViewById(R.id.products_list);
+        Validate.isNonNull(mGridView, "mListView");
 
         mEmptyStateView = getView().findViewById(R.id.empty_state);
         Validate.isNonNull(mEmptyStateView, "mEmptyStateView");
@@ -159,7 +159,7 @@ public class FeaturesFragment extends Fragment {
     }
 
     private void setUpListView() {
-        mListView.setAdapter(this.itemsAndAdapter.adapter());
+        mGridView.setAdapter(this.itemsAndAdapter.adapter());
 
         /* TODO
         setUpOnScrollListener();
@@ -186,10 +186,10 @@ public class FeaturesFragment extends Fragment {
     private void hideOrshowViews() {
         if (!this.itemsAndAdapter.items().isEmpty()) {
             mEmptyStateView.setVisibility(View.GONE);
-            mListView.setVisibility(View.VISIBLE);
+            mGridView.setVisibility(View.VISIBLE);
         } else {
             mEmptyStateView.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
+            mGridView.setVisibility(View.GONE);
         }
     }
 

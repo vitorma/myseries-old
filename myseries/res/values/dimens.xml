@@ -44,6 +44,10 @@
     <dimen name="myschedule_poster_width">59dp</dimen>
     <dimen name="myschedule_poster_height">87dp</dimen>
 
+    <!-- Store -->
+
+    <dimen name="store_product_width">300dp</dimen>
+
     <!-- My Statistics -->
 
     <dimen name="mystatistics_side_padding">8dp</dimen>

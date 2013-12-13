@@ -39,9 +39,6 @@ public class Store extends ApplicationService<StoreListener> {
 
         // XXX(Gabriel): Implement and use a production products catalog.
         this.productCatalog = new TestProductsCatalog();
-
-        // XXX
-        //this.backend.loadProducts(implementedProductsSkus);
     }
 
     /**
@@ -57,6 +54,15 @@ public class Store extends ApplicationService<StoreListener> {
      * with their actual availability information.
      */
     public void productsWithAvailabilityInformation(final AvailableProductsResultListener listener) {
+        this.run(new Runnable() {
+            @Override
+            public void run() {
+                actualProductsWithAvailabilityInformation(listener);
+            }
+        });
+    }
+
+    private void actualProductsWithAvailabilityInformation(final AvailableProductsResultListener listener) {
         this.backend.availableProductsFrom(
                 this.productCatalog.implementedProductsSkus(),
                 new StoreBackend.AvailabilityResultListener() {
@@ -106,8 +112,13 @@ public class Store extends ApplicationService<StoreListener> {
         public void onFailure(); // TODO(Gabriel) handle exceptions
     }
 
-    public void buy(Product product, Activity activity) {
-        this.backend.buy(product.sku(), activity, this.purchaseListener);
+    public void buy(final Product product, final Activity activity) {
+        this.run(new Runnable() {
+            @Override
+            public void run() {
+                backend.buy(product.sku(), activity, purchaseListener);
+            }
+        });
     }
 
     private final PurchaseListener purchaseListener = new PurchaseListener() {

@@ -32,6 +32,29 @@ public class ProductDescriptionTest extends AndroidTestCase {
         } catch (IllegalArgumentException e) {}
     }
 
+    /* Attributes */
+
+    public void testTheProductsNameMustNeverBeNull() {
+        Sku sku = sku1;
+        ProductDescription product = newProductWithSku(sku);
+
+        assertThat(product.name(), not(nullValue()));
+    }
+
+    public void testTheProductsDescriptionMustNeverBeNull() {
+        Sku sku = sku1;
+        ProductDescription product = newProductWithSku(sku);
+
+        assertThat(product.description(), not(nullValue()));
+    }
+
+    public void testTheProductsFeaturesMustNeverBeNull() {
+        Sku sku = sku1;
+        ProductDescription product = newProductWithSku(sku);
+
+        assertThat(product.features(), not(nullValue()));
+    }
+
     /* Entity tests*/
 
     public void testTwoProductsAreEqualIfTheyHaveTheSameSku() {
@@ -57,19 +80,5 @@ public class ProductDescriptionTest extends AndroidTestCase {
         ProductDescription product = newProductWithSku(sku);
 
         assertThat(product, not(equalTo(null)));
-    }
-
-    public void testTheProductsNameMustNeverBeNull() {
-        Sku sku = sku1;
-        ProductDescription product = newProductWithSku(sku);
-
-        assertThat(product.name(), not(nullValue()));
-    }
-
-    public void testTheProductsFeaturesMustNeverBeNull() {
-        Sku sku = sku1;
-        ProductDescription product = newProductWithSku(sku);
-
-        assertThat(product.features(), not(nullValue()));
     }
 }

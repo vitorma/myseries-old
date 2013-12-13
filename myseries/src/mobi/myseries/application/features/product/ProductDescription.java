@@ -7,8 +7,7 @@ import mobi.myseries.application.features.Feature;
 import mobi.myseries.shared.Validate;
 
 /**
- * A description of a product. It should be embedded in a Product in
- * order to receive its price.
+ * The description of a product, without price or ownership information.
  */
 public class ProductDescription {
 
@@ -24,14 +23,14 @@ public class ProductDescription {
     }
 
     public String name() {
-        // TODO Auto-generated method stub
-        //return null;
-        return "GooglePlayProduct(" + this.sku() + ")";
+        return "ProductDescription(" + this.sku() + ")";
+    }
+
+    public String description() {
+        return "The description of ProductDescription(" + this.sku() + ")";
     }
 
     public Set<Feature> features() {
-        // TODO Auto-generated method stub
-        //return null;
         return new HashSet<Feature>();
     }
 
