@@ -21,6 +21,8 @@ public class Features {
         }
     };
 
+    private final FeaturesPersistence persistence;
+
     private volatile Set<Feature> enabledFeatures;
 
     public Features(Store store) {
@@ -29,7 +31,9 @@ public class Features {
         this.store = store;
         this.store.register(this.storeListener);
 
-        this.enabledFeatures = new HashSet<Feature>();
+        this.persistence = new FeaturesPersistence(new AndroidFeaturesPersistenceBackend());
+
+        this.enabledFeatures = this.persistence.load();
         this.queryStoreForEnabledFeatures();
     }
 
@@ -47,7 +51,8 @@ public class Features {
 
             @Override
             public void onSuccess(Set<Product> products) {
-                enabledFeatures = availableFeaturesFromProducts(products);
+                persistence.save(availableFeaturesFromProducts(products));
+                enabledFeatures = persistence.load();
                 // TODO(Gabriel): notify that there are new features available
             }
 
