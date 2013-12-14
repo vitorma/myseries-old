@@ -8,9 +8,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.Log;
-import mobi.myseries.application.features.Store;
-import mobi.myseries.application.features.StoreListener;
 import mobi.myseries.application.features.product.Product;
+import mobi.myseries.application.features.store.Store;
+import mobi.myseries.application.features.store.StoreListener;
 import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.Validate;
 

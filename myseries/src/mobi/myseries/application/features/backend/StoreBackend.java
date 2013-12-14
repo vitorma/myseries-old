@@ -3,9 +3,9 @@ package mobi.myseries.application.features.backend;
 import java.util.Map;
 import java.util.Set;
 
-import mobi.myseries.application.features.PurchaseListener;
 import mobi.myseries.application.features.product.Availability;
 import mobi.myseries.application.features.product.Sku;
+import mobi.myseries.application.features.store.PurchaseListener;
 
 import android.app.Activity;
 

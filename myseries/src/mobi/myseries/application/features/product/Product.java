@@ -2,6 +2,8 @@ package mobi.myseries.application.features.product;
 
 import mobi.myseries.shared.Validate;
 
+// TODO(Gabriel): Remove Comparable interface and extract the Comparator.
+//                Do not forget the tests, they can be reused ;).
 public class Product implements Comparable<Product> {
 
     private final ProductDescription description;

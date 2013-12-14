@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 import mobi.myseries.application.Log;
-import mobi.myseries.application.features.PurchaseListener;
 import mobi.myseries.application.features.product.Availability;
 import mobi.myseries.application.features.product.Sku;
+import mobi.myseries.application.features.store.PurchaseListener;
 import mobi.myseries.shared.Validate;
 import android.app.Activity;
 

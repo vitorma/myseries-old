@@ -1,10 +1,11 @@
-package mobi.myseries.application.features;
+package mobi.myseries.application.features.store;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import mobi.myseries.application.features.Feature;
 import mobi.myseries.application.features.product.ProductDescription;
 import mobi.myseries.application.features.product.Sku;
 

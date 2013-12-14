@@ -29,8 +29,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import mobi.myseries.application.activityevents.ActivityEventsListener;
-import mobi.myseries.application.features.FailureListener;
-import mobi.myseries.application.features.PurchaseListener;
 import mobi.myseries.application.features.backend.RemoteStoreApiException;
 import mobi.myseries.application.features.backend.RemoteStoreApiNotAvailableException;
 import mobi.myseries.application.features.backend.googleplay.util.IabHelper;
@@ -39,6 +37,8 @@ import mobi.myseries.application.features.backend.googleplay.util.Inventory;
 import mobi.myseries.application.features.backend.googleplay.util.Purchase;
 import mobi.myseries.application.features.product.Price;
 import mobi.myseries.application.features.product.Sku;
+import mobi.myseries.application.features.store.FailureListener;
+import mobi.myseries.application.features.store.PurchaseListener;
 import mobi.myseries.shared.Validate;
 
 /**

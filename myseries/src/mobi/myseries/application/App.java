@@ -7,7 +7,7 @@ import mobi.myseries.application.activityevents.ActivityEventsService;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.features.Features;
-import mobi.myseries.application.features.Store;
+import mobi.myseries.application.features.store.Store;
 import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.application.marking.MarkingService;

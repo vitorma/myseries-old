@@ -1,4 +1,4 @@
-package mobi.myseries.application.features;
+package mobi.myseries.application.features.store;
 
 import java.util.HashSet;
 import java.util.Map;

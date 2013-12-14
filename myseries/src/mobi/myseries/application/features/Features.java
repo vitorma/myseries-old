@@ -7,6 +7,8 @@ import java.util.Set;
 
 import mobi.myseries.application.Log;
 import mobi.myseries.application.features.product.Product;
+import mobi.myseries.application.features.store.Store;
+import mobi.myseries.application.features.store.StoreListener;
 import mobi.myseries.shared.Validate;
 
 public class Features {
