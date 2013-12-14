@@ -23,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class FeaturesFragment extends Fragment {
 
@@ -46,6 +48,8 @@ public class FeaturesFragment extends Fragment {
         }
     }
 
+    private RelativeLayout mNonEmptyStateView;
+    private TextView mLoadingErrorMessageView;
     private GridView mGridView;
     private View mEmptyStateView;
 
@@ -65,7 +69,6 @@ public class FeaturesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO (Gabriel) should we use it? setRetainInstance(true);
-        // TODO mScheduleMode = getArguments().getInt(Extra.SCHEDULE_MODE);
     }
 
     @Override
@@ -108,8 +111,14 @@ public class FeaturesFragment extends Fragment {
     }
 
     private void findViews() {
+        mNonEmptyStateView = (RelativeLayout) getView().findViewById(R.id.non_empty_state);
+        Validate.isNonNull(mNonEmptyStateView, "mNonEmptyStateView");
+
+        mLoadingErrorMessageView = (TextView) getView().findViewById(R.id.error_message_view);
+        Validate.isNonNull(mLoadingErrorMessageView, "mLoadingErrorMessageView");
+
         mGridView = (GridView) getView().findViewById(R.id.products_list);
-        Validate.isNonNull(mGridView, "mListView");
+        Validate.isNonNull(mGridView, "mGridView");
 
         mEmptyStateView = getView().findViewById(R.id.empty_state);
         Validate.isNonNull(mEmptyStateView, "mEmptyStateView");
@@ -118,10 +127,7 @@ public class FeaturesFragment extends Fragment {
     private void setUpData() {
         Log.d(getClass().getCanonicalName(), "Loading products");
 
-        // TODO: empty case
-        // TODO: order items: alphabetically? owned first? owned last? by price?
-
-        // The fragment has no items at the first time it is loaded.
+        // It starts with no items.
         if (this.itemsAndAdapter == null) {
             Set<Product> productsWithoutPrice = App.store().productsWithoutAvilabilityInformation();
             this.itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(productsWithoutPrice), true);
@@ -131,21 +137,20 @@ public class FeaturesFragment extends Fragment {
         App.store().productsWithAvailabilityInformation(new Store.AvailableProductsResultListener() {
             @Override
             public void onSuccess(Set<Product> products) {
-                // TODO Auto-generated method stub
-                itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(products), false);
                 // remove loading state
-                // draw list
+                itemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(products), false);
                 setUpViews();
+
                 Log.d(getClass().getCanonicalName(), "Loaded products: success");
             }
 
             @Override
             public void onFailure() {
-                // TODO Auto-generated method stub
                 itemsAndAdapter = new ItemsAndAdapter(itemsAndAdapter.items(), false);  // <Stop loading
-                // set error state
-                // draw error view
                 setUpViews();
+
+                showLoadingErrorMessage();
+
                 Log.d(getClass().getCanonicalName(), "Loaded products: failure");
             }
         });
@@ -171,6 +176,14 @@ public class FeaturesFragment extends Fragment {
         */
     }
 
+    private void showLoadingErrorMessage() {
+        mLoadingErrorMessageView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoadingErrorMessage() {
+        mLoadingErrorMessageView.setVisibility(View.GONE);
+    }
+
     private void setUpEmptyStateView() {
         /* TODO
         View hiddenEpisodesWarning = mEmptyStateView.findViewById(R.id.hiddenEpisodes);
@@ -185,11 +198,12 @@ public class FeaturesFragment extends Fragment {
     private void hideOrshowViews() {
         if (!this.itemsAndAdapter.items().isEmpty()) {
             mEmptyStateView.setVisibility(View.GONE);
-            mGridView.setVisibility(View.VISIBLE);
+            mNonEmptyStateView.setVisibility(View.VISIBLE);
         } else {
             mEmptyStateView.setVisibility(View.VISIBLE);
-            mGridView.setVisibility(View.GONE);
+            mNonEmptyStateView.setVisibility(View.GONE);
         }
+        this.hideLoadingErrorMessage();
     }
 
     private void reload() {
