@@ -46,7 +46,7 @@
 
     <!-- Store -->
 
-    <dimen name="store_product_width">300dp</dimen>
+    <dimen name="store_product_width">200dp</dimen>
 
     <!-- My Statistics -->
 
