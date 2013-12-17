@@ -2,7 +2,7 @@ package mobi.myseries.test.unit.application.features;
 
 import static org.mockito.Mockito.*;
 
-import mobi.myseries.application.features.Features;
+import mobi.myseries.application.features.features.Features;
 import mobi.myseries.application.features.store.Store;
 import mobi.myseries.application.preferences.Preferences;
 import android.test.AndroidTestCase;

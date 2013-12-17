@@ -1,7 +1,7 @@
 package mobi.myseries.test.unit.application.features;
 
-import mobi.myseries.application.features.DummyFeaturesPersistenceBackend;
-import mobi.myseries.application.features.FeaturesPersistenceBackend;
+import mobi.myseries.application.features.features.DummyFeaturesPersistenceBackend;
+import mobi.myseries.application.features.features.FeaturesPersistenceBackend;
 
 public class DummyFeaturesPersistenceBackendTest extends FeaturesPersistenceBackendTest {
 

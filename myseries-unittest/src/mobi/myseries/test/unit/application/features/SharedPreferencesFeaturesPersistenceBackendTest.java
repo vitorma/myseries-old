@@ -1,7 +1,7 @@
 package mobi.myseries.test.unit.application.features;
 
-import mobi.myseries.application.features.FeaturesPersistenceBackend;
-import mobi.myseries.application.features.SharedPreferencesFeaturesPersistenceBackend;
+import mobi.myseries.application.features.features.FeaturesPersistenceBackend;
+import mobi.myseries.application.features.features.SharedPreferencesFeaturesPersistenceBackend;
 import mobi.myseries.application.preferences.Preferences;
 
 public class SharedPreferencesFeaturesPersistenceBackendTest extends FeaturesPersistenceBackendTest {

@@ -1,4 +1,4 @@
-package mobi.myseries.application.features;
+package mobi.myseries.application.features.features;
 
 public enum Feature {
     FEATURE_SHOP,

@@ -1,4 +1,4 @@
-package mobi.myseries.application.features.backend;
+package mobi.myseries.application.features.store.backend;
 
 import java.util.Map;
 import java.util.Set;

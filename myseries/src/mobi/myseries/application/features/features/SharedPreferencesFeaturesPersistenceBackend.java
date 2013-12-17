@@ -1,6 +1,6 @@
-package mobi.myseries.application.features;
+package mobi.myseries.application.features.features;
 
-import mobi.myseries.application.features.FeaturesPersistence.State;
+import mobi.myseries.application.features.features.FeaturesPersistence.State;
 import mobi.myseries.application.preferences.FeaturesPreferences;
 import mobi.myseries.shared.Validate;
 

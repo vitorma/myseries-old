@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import mobi.myseries.application.features.DummyFeaturesPersistenceBackend;
-import mobi.myseries.application.features.Feature;
-import mobi.myseries.application.features.FeaturesPersistence;
+import mobi.myseries.application.features.features.DummyFeaturesPersistenceBackend;
+import mobi.myseries.application.features.features.Feature;
+import mobi.myseries.application.features.features.FeaturesPersistence;
 import android.test.AndroidTestCase;
 
 public class FeaturesPersistenceTest extends AndroidTestCase {

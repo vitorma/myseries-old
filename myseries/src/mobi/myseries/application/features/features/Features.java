@@ -1,4 +1,4 @@
-package mobi.myseries.application.features;
+package mobi.myseries.application.features.features;
 
 import java.util.Collection;
 import java.util.Collections;

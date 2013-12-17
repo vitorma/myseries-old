@@ -6,7 +6,7 @@ import java.util.List;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.features.Feature;
+import mobi.myseries.application.features.features.Feature;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -3,7 +3,7 @@ package mobi.myseries.application.features.product;
 import java.util.HashSet;
 import java.util.Set;
 
-import mobi.myseries.application.features.Feature;
+import mobi.myseries.application.features.features.Feature;
 import mobi.myseries.shared.Validate;
 
 /**

@@ -3,7 +3,7 @@ package mobi.myseries.application.preferences;
 import com.google.gson.Gson;
 
 import mobi.myseries.R;
-import mobi.myseries.application.features.FeaturesPersistence.State;
+import mobi.myseries.application.features.features.FeaturesPersistence.State;
 import android.content.Context;
 
 public class FeaturesPreferences extends BasePreferences {

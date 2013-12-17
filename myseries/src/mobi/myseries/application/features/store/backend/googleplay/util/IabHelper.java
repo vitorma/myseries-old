@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package mobi.myseries.application.features.backend.googleplay.util;
+package mobi.myseries.application.features.store.backend.googleplay.util;
 
 import android.app.Activity;
 import android.app.PendingIntent;
