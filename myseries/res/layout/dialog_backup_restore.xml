@@ -48,7 +48,6 @@
 
             <RadioButton
                 android:id="@+id/GoogleDriveRadioButton"
-                android:enabled="false"
                 android:text="@string/google_drive"
                 android:drawableLeft="@drawable/ic_drive"
                 style="@style/RadioButton"
@@ -71,7 +70,6 @@
 
             <RadioButton
                 android:id="@+id/DropboxRadioButton"
-                android:enabled="false"
                 android:text="@string/dropbox"
                 android:drawableLeft="@drawable/ic_dropbox"
                 style="@style/RadioButton"
