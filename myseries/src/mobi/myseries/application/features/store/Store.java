@@ -37,8 +37,8 @@ public class Store extends ApplicationService<StoreListener> {
         }
         this.backend = backend;
 
-        // XXX(Gabriel): Implement and use a production products catalog.
-        this.productCatalog = new TestProductsCatalog();
+        //this.productCatalog = new TestProductsCatalog();
+        this.productCatalog = new ProductionProductsCatalog(environment.context());
     }
 
     /**

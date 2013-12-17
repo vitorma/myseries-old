@@ -36,6 +36,7 @@ public class Features {
         this.persistence = new FeaturesPersistence(new SharedPreferencesFeaturesPersistenceBackend(preferences.forFeatures()));
 
         this.enabledFeatures = this.persistence.load();
+        Log.d(getClass().getCanonicalName(), "Loaded features: " + this.enabledFeatures);
         this.queryStoreForEnabledFeatures();
     }
 

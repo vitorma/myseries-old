@@ -213,12 +213,15 @@
     <string name="features_watch_out_for_new_products">Watch out for upcoming features!</string>
 
     <string name="features_price_not_available">N/A</string>
-    <string name="features_price_purchased">Purchased</string>
+    <string name="features_price_purchased">PURCHASED</string>
 
     <string name="purchase_feature">purchase \"%s\" on feature shop</string>
 
     <string name="cloud_backup">Cloud backup</string>
+    <string name="cloud_backup_description">Backup your series data to Dropbox or Google Drive and restore whichever version you want.</string>
+
     <string name="schedule_widget">Schedule widget</string>
+    <string name="schedule_widget_description">Manage your schedule from your home screen.\n\nAlso available for the lock screen on devices with Android 4.2+.</string>
 
     <!-- Backup -->
 
@@ -376,7 +379,7 @@
     <string name="schedulewidget_dialog_mark_episode_as_watched">Mark as watched</string>
     <string name="schedulewidget_dialog_mark_episode_as_unwatched">Mark as unwatched</string>
     <string name="schedulewidget_dialog_see_episode_details">See episode details</string>
-    <string name="schedulewidget_dialog_purchase_message"><b>Schedule widget</b> is a premium feature. Purchase it now and control your schedule from the home screen. \n\n<i>It can also be added to the lock screen on devices with Android 4.2+</i></string>
+    <string name="schedulewidget_dialog_purchase_message"><b>Schedule widget</b> is a premium feature. Purchase it now and manage your schedule from the home screen. \n\n<i>It can also be added to the lock screen on devices with Android 4.2+</i></string>
     <string name="schedulewidget_dialog_purchase_button_negative">Maybe later</string>
     <string name="schedulewidget_dialog_purchase_button_positive">Purchase</string>
 
