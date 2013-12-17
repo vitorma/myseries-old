@@ -13,9 +13,6 @@ import mobi.myseries.application.features.store.Store;
 import mobi.myseries.application.features.store.StoreListener;
 import mobi.myseries.gui.shared.UniversalImageLoader;
 import mobi.myseries.shared.Validate;
-
-import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
-
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,8 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 public class FeaturesFragment extends Fragment {
 
@@ -48,7 +46,7 @@ public class FeaturesFragment extends Fragment {
         }
     }
 
-    private RelativeLayout mNonEmptyStateView;
+    private View mNonEmptyStateView;
     private TextView mLoadingErrorMessageView;
     private GridView mGridView;
     private View mEmptyStateView;
@@ -111,7 +109,7 @@ public class FeaturesFragment extends Fragment {
     }
 
     private void findViews() {
-        mNonEmptyStateView = (RelativeLayout) getView().findViewById(R.id.non_empty_state);
+        mNonEmptyStateView = getView().findViewById(R.id.non_empty_state);
         Validate.isNonNull(mNonEmptyStateView, "mNonEmptyStateView");
 
         mLoadingErrorMessageView = (TextView) getView().findViewById(R.id.error_message_view);
