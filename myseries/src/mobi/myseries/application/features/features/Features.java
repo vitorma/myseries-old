@@ -1,4 +1,4 @@
-package mobi.myseries.application.features;
+package mobi.myseries.application.features.features;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +9,7 @@ import mobi.myseries.application.Log;
 import mobi.myseries.application.features.product.Product;
 import mobi.myseries.application.features.store.Store;
 import mobi.myseries.application.features.store.StoreListener;
+import mobi.myseries.application.preferences.Preferences;
 import mobi.myseries.shared.Validate;
 
 public class Features {
@@ -25,13 +26,14 @@ public class Features {
 
     private volatile Set<Feature> enabledFeatures;
 
-    public Features(Store store) {
+    public Features(Store store, Preferences preferences) {
         Validate.isNonNull(store, "store");
+        Validate.isNonNull(preferences, "preferences");
 
         this.store = store;
         this.store.register(this.storeListener);
 
-        this.persistence = new FeaturesPersistence(new AndroidFeaturesPersistenceBackend());
+        this.persistence = new FeaturesPersistence(new SharedPreferencesFeaturesPersistenceBackend(preferences.forFeatures()));
 
         this.enabledFeatures = this.persistence.load();
         this.queryStoreForEnabledFeatures();

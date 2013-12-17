@@ -4,33 +4,18 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import mobi.myseries.application.features.Feature;
-import mobi.myseries.application.features.FeaturesPersistence;
-import mobi.myseries.application.features.FeaturesPersistence.PersistenceBackend;
-import mobi.myseries.application.features.FeaturesPersistence.State;
+import mobi.myseries.application.features.features.DummyFeaturesPersistenceBackend;
+import mobi.myseries.application.features.features.Feature;
+import mobi.myseries.application.features.features.FeaturesPersistence;
 import android.test.AndroidTestCase;
 
 public class FeaturesPersistenceTest extends AndroidTestCase {
 
-    private DummyBackend dummyBackend;
-
-    private class DummyBackend implements PersistenceBackend {
-        public State savedState;
-
-        @Override
-        public void saveState(State newState) {
-            this.savedState = newState;
-        }
-
-        @Override
-        public State retrieveState() {
-            return this.savedState;
-        }
-    }
+    private DummyFeaturesPersistenceBackend dummyBackend;
 
     @Override
     public void setUp() {
-        this.dummyBackend = new DummyBackend();
+        this.dummyBackend = new DummyFeaturesPersistenceBackend();
     }
 
     public void testItCannotBeInstantiatedWithNullBackend() {

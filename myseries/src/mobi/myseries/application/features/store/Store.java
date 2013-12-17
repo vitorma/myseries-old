@@ -10,13 +10,13 @@ import mobi.myseries.application.ApplicationService;
 import mobi.myseries.application.Environment;
 import mobi.myseries.application.Log;
 import mobi.myseries.application.activityevents.ActivityEventsService;
-import mobi.myseries.application.features.backend.DummyBackend;
-import mobi.myseries.application.features.backend.StoreBackend;
-import mobi.myseries.application.features.backend.googleplay.GooglePlayStore;
 import mobi.myseries.application.features.product.Availability;
 import mobi.myseries.application.features.product.Product;
 import mobi.myseries.application.features.product.ProductDescription;
 import mobi.myseries.application.features.product.Sku;
+import mobi.myseries.application.features.store.backend.DummyBackend;
+import mobi.myseries.application.features.store.backend.StoreBackend;
+import mobi.myseries.application.features.store.backend.googleplay.GooglePlayStore;
 import mobi.myseries.shared.Validate;
 
 public class Store extends ApplicationService<StoreListener> {

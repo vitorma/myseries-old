@@ -6,7 +6,7 @@ import mobi.myseries.R;
 import mobi.myseries.application.activityevents.ActivityEventsService;
 import mobi.myseries.application.backup.BackupService;
 import mobi.myseries.application.broadcast.BroadcastService;
-import mobi.myseries.application.features.Features;
+import mobi.myseries.application.features.features.Features;
 import mobi.myseries.application.features.store.Store;
 import mobi.myseries.application.following.SeriesFollowingService;
 import mobi.myseries.application.image.ImageService;
@@ -88,7 +88,7 @@ public class App extends Application {
         activityEventsService = new ActivityEventsService(environment);
 
         store = new Store(environment, activityEventsService);
-        features = new Features(store);
+        features = new Features(store, preferences);
 
         NotificationScheduler.setupAlarm(context());
     }

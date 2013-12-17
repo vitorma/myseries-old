@@ -1,4 +1,4 @@
-package mobi.myseries.application.features.backend.googleplay;
+package mobi.myseries.application.features.store.backend.googleplay;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,12 +10,12 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 import mobi.myseries.application.Log;
 import mobi.myseries.application.activityevents.ActivityEventsService;
-import mobi.myseries.application.features.backend.StoreBackend;
-import mobi.myseries.application.features.backend.googleplay.GooglePlaySuperHelper.Products;
 import mobi.myseries.application.features.product.Availability;
 import mobi.myseries.application.features.product.Price;
 import mobi.myseries.application.features.product.Sku;
 import mobi.myseries.application.features.store.PurchaseListener;
+import mobi.myseries.application.features.store.backend.StoreBackend;
+import mobi.myseries.application.features.store.backend.googleplay.GooglePlaySuperHelper.Products;
 import mobi.myseries.shared.Validate;
 
 public class GooglePlayStore implements StoreBackend {

@@ -31,6 +31,8 @@
 
     <string name="prefKey_update_whenUpdateAutomatically">update_whenUpdateAutomatically</string>
 
+    <string name="prefKey_features_state">features_state</string>
+
     <string name="prefKey_scheduleWidget_scheduleMode">scheduleWidget_scheduleMode</string>
 
     <!-- Preference values -->

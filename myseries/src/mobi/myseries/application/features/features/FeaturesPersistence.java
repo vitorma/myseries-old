@@ -1,4 +1,4 @@
-package mobi.myseries.application.features;
+package mobi.myseries.application.features.features;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,10 +15,6 @@ import mobi.myseries.shared.Validate;
 
 public class FeaturesPersistence {
 
-    public static interface PersistenceBackend {
-        public void saveState(State newState);
-        public State retrieveState();
-    }
     public static class State {
         public int nonce;
         public String base64Signature;
@@ -32,9 +28,9 @@ public class FeaturesPersistence {
         return android.provider.Settings.Secure.ANDROID_ID;
     }
 
-    private final PersistenceBackend persistenceBackend;
+    private final FeaturesPersistenceBackend persistenceBackend;
 
-    public FeaturesPersistence(PersistenceBackend persistenceBackend) {
+    public FeaturesPersistence(FeaturesPersistenceBackend persistenceBackend) {
         Validate.isNonNull(persistenceBackend, "persistenceBackend");
         this.persistenceBackend = persistenceBackend;
     }
@@ -46,11 +42,11 @@ public class FeaturesPersistence {
         newState.nonce = randomNumberGenerator.nextInt();
         newState.base64Signature = this.generateBase64SignatureFor(newState.nonce, newState.features);
 
-        this.persistenceBackend.saveState(newState);
+        this.persistenceBackend.save(newState);
     }
 
     public Set<Feature> load() {
-        State savedState = this.persistenceBackend.retrieveState();
+        State savedState = this.persistenceBackend.retrieve();
 
         if (savedState != null
                 && savedState.features != null
@@ -72,10 +68,12 @@ public class FeaturesPersistence {
 
         byte[] nonceBytes = Integer.toString(nonce).getBytes();
         byte[] saltBytes = deviceSalt().getBytes();
+        byte[] someMagicBytes = "1 2 3 4 5 magic :)".getBytes();
         byte[] featuresBytes = features.toString().getBytes();
 
         digest.update(nonceBytes);
         digest.update(saltBytes);
+        digest.update(someMagicBytes);
         digest.update(featuresBytes);
 
         return Base64.encodeToString(digest.digest(), Base64.DEFAULT);

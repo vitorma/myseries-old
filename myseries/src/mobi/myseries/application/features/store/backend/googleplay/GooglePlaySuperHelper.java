@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package mobi.myseries.application.features.backend.googleplay;
+package mobi.myseries.application.features.store.backend.googleplay;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,16 +29,16 @@ import android.content.Intent;
 import android.util.Log;
 
 import mobi.myseries.application.activityevents.ActivityEventsListener;
-import mobi.myseries.application.features.backend.RemoteStoreApiException;
-import mobi.myseries.application.features.backend.RemoteStoreApiNotAvailableException;
-import mobi.myseries.application.features.backend.googleplay.util.IabHelper;
-import mobi.myseries.application.features.backend.googleplay.util.IabResult;
-import mobi.myseries.application.features.backend.googleplay.util.Inventory;
-import mobi.myseries.application.features.backend.googleplay.util.Purchase;
 import mobi.myseries.application.features.product.Price;
 import mobi.myseries.application.features.product.Sku;
 import mobi.myseries.application.features.store.FailureListener;
 import mobi.myseries.application.features.store.PurchaseListener;
+import mobi.myseries.application.features.store.backend.RemoteStoreApiException;
+import mobi.myseries.application.features.store.backend.RemoteStoreApiNotAvailableException;
+import mobi.myseries.application.features.store.backend.googleplay.util.IabHelper;
+import mobi.myseries.application.features.store.backend.googleplay.util.IabResult;
+import mobi.myseries.application.features.store.backend.googleplay.util.Inventory;
+import mobi.myseries.application.features.store.backend.googleplay.util.Purchase;
 import mobi.myseries.shared.Validate;
 
 /**
