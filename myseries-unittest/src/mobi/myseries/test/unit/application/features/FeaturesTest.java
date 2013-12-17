@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 
 import mobi.myseries.application.features.features.Features;
 import mobi.myseries.application.features.store.Store;
+import mobi.myseries.application.preferences.FeaturesPreferences;
 import mobi.myseries.application.preferences.Preferences;
 import android.test.AndroidTestCase;
 
@@ -32,6 +33,8 @@ public class FeaturesTest extends AndroidTestCase {
     public void testNullFeaturesAreNeverEnabled() {
         Store store = mock(Store.class);
         Preferences preferences = mock(Preferences.class);
+        when(preferences.forFeatures()).thenReturn(mock(FeaturesPreferences.class));
+
         Features features = new Features(store, preferences);
 
         assertFalse(features.isEnabled(null));
