@@ -7,7 +7,6 @@ import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.features.product.Product;
 import mobi.myseries.application.features.product.ProductDescription;
-
 import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,19 +70,22 @@ public class ProductAdapter extends BaseAdapter {
             // XXX(Gabriel): animate with bouncing/hopping ellipsis
             viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
             viewHolder.mBuyButton.setText(". . .");
+            viewHolder.mBuyButton.setOnClickListener(null);
         } else {
             if (product.isOwned()) {
-                viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.green));
+                viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.yellow));
                 viewHolder.mBuyButton.setText(R.string.features_price_purchased);
+                viewHolder.mBuyButton.setOnClickListener(null);
             } else {
                 if (product.price().isAvailable()) {
-                    viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+                    viewHolder.mBuyButton.setBackgroundResource(R.drawable.bg_button_green);
                     viewHolder.mBuyButton.setText(product.price().value());
 
                     viewHolder.mBuyButton.setOnClickListener(viewHolder.buyButtonOnClickListener(product));
                 } else {
-                    viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+                    viewHolder.mBuyButton.setBackgroundColor(mActivity.getResources().getColor(R.color.gray));
                     viewHolder.mBuyButton.setText(R.string.features_price_not_available);
+                    viewHolder.mBuyButton.setOnClickListener(null);
                 }
             }
         }

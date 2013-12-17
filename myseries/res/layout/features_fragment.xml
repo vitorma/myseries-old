@@ -16,15 +16,15 @@
             android:text="@string/features_loading_products_with_availability_error_message"
             android:textSize="@dimen/text_size_xmedium"
             android:textColor="@color/white"
-            android:background="@color/dark_red"
             android:textStyle="bold"
-            android:padding="@dimen/gap_small"
+            android:background="@color/dark_red"
+            android:padding="@dimen/gap_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <GridView
             android:id="@+id/products_list"
-            android:listSelector="@color/transparent"
+            android:listSelector="@drawable/list_selector_holo_light"
             android:drawSelectorOnTop="true"
             android:fastScrollEnabled="true"
             android:scrollbarStyle="outsideOverlay"
