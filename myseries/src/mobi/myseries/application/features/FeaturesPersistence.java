@@ -68,10 +68,12 @@ public class FeaturesPersistence {
 
         byte[] nonceBytes = Integer.toString(nonce).getBytes();
         byte[] saltBytes = deviceSalt().getBytes();
+        byte[] someMagicBytes = "1 2 3 4 5 magic :)".getBytes();
         byte[] featuresBytes = features.toString().getBytes();
 
         digest.update(nonceBytes);
         digest.update(saltBytes);
+        digest.update(someMagicBytes);
         digest.update(featuresBytes);
 
         return Base64.encodeToString(digest.digest(), Base64.DEFAULT);
