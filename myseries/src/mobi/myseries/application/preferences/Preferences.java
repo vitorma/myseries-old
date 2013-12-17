@@ -37,7 +37,11 @@ public class Preferences {
     }
 
     public NotificationPreferences forNotifications() {
-    	return new NotificationPreferences(mContext);
+        return new NotificationPreferences(mContext);
+    }
+
+    public FeaturesPreferences forFeatures() {
+        return new FeaturesPreferences(mContext);
     }
 
     public ScheduleWidgetPreferences forScheduleWidget(int widgetId) {

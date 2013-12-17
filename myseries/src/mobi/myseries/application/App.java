@@ -88,7 +88,7 @@ public class App extends Application {
         activityEventsService = new ActivityEventsService(environment);
 
         store = new Store(environment, activityEventsService);
-        features = new Features(store);
+        features = new Features(store, preferences);
 
         NotificationScheduler.setupAlarm(context());
     }
