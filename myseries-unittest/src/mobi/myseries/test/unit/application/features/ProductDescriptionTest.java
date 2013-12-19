@@ -55,6 +55,13 @@ public class ProductDescriptionTest extends AndroidTestCase {
         assertThat(product.features(), not(nullValue()));
     }
 
+    public void testTheProductsPicturesResourcesMustNeverBeNull() {
+        Sku sku = sku1;
+        ProductDescription product = newProductWithSku(sku);
+
+        assertThat(product.picturesResourceIds(), not(nullValue()));
+    }
+
     /* Entity tests*/
 
     public void testTwoProductsAreEqualIfTheyHaveTheSameSku() {

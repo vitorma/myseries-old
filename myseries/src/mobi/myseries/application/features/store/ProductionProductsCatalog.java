@@ -3,6 +3,7 @@ package mobi.myseries.application.features.store;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import android.content.Context;
@@ -45,6 +46,14 @@ public class ProductionProductsCatalog extends ProductCatalog {
                 @Override
                 public Set<Feature> features() {
                     return new HashSet<Feature>(Arrays.asList(Feature.SCHEDULE_WIDGET));
+                }
+                @Override
+                public List<Integer> picturesResourceIds() {
+                    // TODO(Cleber,Gabriel): Add screenshot of the widget on the lock screen 
+                    return Arrays.asList(
+                            R.drawable.features_schedulewidget_homescreen,
+                            R.drawable.features_schedulewidget_settings,
+                            R.drawable.features_schedulewidget_homescreen_checking_episode);
                 }
             })));
 

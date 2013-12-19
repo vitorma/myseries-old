@@ -1,8 +1,12 @@
 package mobi.myseries.application.features.product;
 
+import java.io.Serializable;
+
 import mobi.myseries.shared.Validate;
 
-public class Sku {
+public class Sku implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String value;
 

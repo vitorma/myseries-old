@@ -1,10 +1,8 @@
 package mobi.myseries.application.features.store.backend;
 
-import java.util.HashMap;
 import java.util.Set;
 
 import mobi.myseries.application.Log;
-import mobi.myseries.application.features.product.Availability;
 import mobi.myseries.application.features.product.Sku;
 import mobi.myseries.application.features.store.PurchaseListener;
 import mobi.myseries.shared.Validate;
@@ -12,11 +10,10 @@ import android.app.Activity;
 
 public class DummyBackend implements StoreBackend {
 
-
     @Override
     public void availableProductsFrom(Set<Sku> availableSkus, AvailabilityResultListener listener) {
         if (listener != null) {
-            listener.onSuccess(new HashMap<Sku, Availability>());
+            listener.onFailure();
         }
     }
 

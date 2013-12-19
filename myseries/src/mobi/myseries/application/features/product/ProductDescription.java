@@ -1,6 +1,8 @@
 package mobi.myseries.application.features.product;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import mobi.myseries.application.features.features.Feature;
@@ -32,6 +34,10 @@ public class ProductDescription {
 
     public Set<Feature> features() {
         return new HashSet<Feature>();
+    }
+
+    public List<Integer> picturesResourceIds() {
+        return Arrays.asList();
     }
 
     @Override

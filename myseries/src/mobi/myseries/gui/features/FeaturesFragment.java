@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -156,21 +158,28 @@ public class FeaturesFragment extends Fragment {
 
     private void setUpViews() {
         setUpEmptyStateView();
-        setUpListView();
+        setUpGridView();
         hideOrshowViews();
     }
 
-    private void setUpListView() {
+    private void setUpGridView() {
         mGridView.setAdapter(this.itemsAndAdapter.adapter());
+
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(getClass().getCanonicalName(), "FeaturesFragment#onItemClick at " + position);
+
+                Product product = itemsAndAdapter.mItems.get(position);
+
+                ProductDetailsDialogFragment
+                        .newInstance(product.sku())
+                        .show(getActivity().getFragmentManager(), product.sku().value());
+            }
+        });
 
         /* TODO
         setUpOnScrollListener();
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mOnItemClickListener.onItemClick(mScheduleMode, position);
-            }
-        });
         */
     }
 

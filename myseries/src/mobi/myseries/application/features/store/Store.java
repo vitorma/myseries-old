@@ -41,6 +41,19 @@ public class Store extends ApplicationService<StoreListener> {
         this.productCatalog = new ProductionProductsCatalog(environment.context());
     }
 
+    public ProductDescription productDescriptionFor(Sku sku) {
+        Validate.isNonNull(sku, "sku");
+
+        Set<ProductDescription> allProducts = this.productCatalog.implementedProducts();
+
+        for (ProductDescription d : allProducts) {
+            if (d.sku().equals(sku)) {
+                return d;
+            }
+        }
+        return null;
+    }
+
     /**
      * Synchronous method to query the implemented products. The returned products are all marked
      * as unavailable.
