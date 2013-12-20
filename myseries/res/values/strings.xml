@@ -208,6 +208,7 @@
 
     <!-- Features -->
 
+    <string name="features_screenshots_not_available">Screenshots are not available for this feature.</string>
     <string name="features_loading_products_with_availability_error_message">Failed to communicate with Google Play™. Please, check your Internet connection.</string>
     <string name="features_no_products_available">No premium features available</string>
     <string name="features_watch_out_for_new_products">Watch out for upcoming features!</string>

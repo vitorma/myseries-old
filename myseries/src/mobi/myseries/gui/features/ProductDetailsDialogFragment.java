@@ -9,6 +9,9 @@ import mobi.myseries.shared.Validate;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.TextView;
 
 public class ProductDetailsDialogFragment extends DialogFragment {
 
@@ -44,6 +47,24 @@ public class ProductDetailsDialogFragment extends DialogFragment {
 
         Dialog dialog = new Dialog(this.getActivity(), R.style.MySeriesTheme_Dialog);
         dialog.setContentView(R.layout.features_product_details);
+
+        TextView noPicturesMessage = (TextView) dialog.findViewById(R.id.no_screenshots_message);
+        Validate.isNonNull(noPicturesMessage, "noPicturesMessage");
+
+        ViewPager picturesPager = (ViewPager) dialog.findViewById(R.id.picturesPager);
+        Validate.isNonNull(picturesPager, "picturesPager");
+
+        if (productDescription.picturesResourceIds().isEmpty()) {
+            // hide pager
+            picturesPager.setVisibility(View.INVISIBLE);
+            // show no pictures message
+            noPicturesMessage.setVisibility(View.VISIBLE);
+        } else {
+            // show pager
+            picturesPager.setVisibility(View.VISIBLE);
+            // hide no pictures message
+            noPicturesMessage.setVisibility(View.GONE);
+        }
 
         return dialog;
     }

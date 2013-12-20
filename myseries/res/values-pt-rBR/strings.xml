@@ -210,6 +210,7 @@
 
     <!-- Features -->
 
+    <string name="features_screenshots_not_available">Imagens não disponíveis para esta funcionalidade.</string>
     <string name="features_loading_products_with_availability_error_message">Falha na comunicação com o Google Play™. Por favor, verifique sua conexão.</string>
     <string name="features_no_products_available">Nenhuma funcionalide premium disponível</string>
     <string name="features_watch_out_for_new_products">Fique alerta para novas funcionalidades!</string>
