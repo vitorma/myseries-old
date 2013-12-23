@@ -7,7 +7,10 @@ import java.util.Set;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 
+import mobi.myseries.R;
+import mobi.myseries.application.App;
 import mobi.myseries.application.Log;
 import mobi.myseries.application.activityevents.ActivityEventsService;
 import mobi.myseries.application.features.product.Availability;
@@ -40,12 +43,17 @@ public class GooglePlayStore implements StoreBackend {
     }
 
     private static String base64PublicKey() {
-        //return "your public key here"; //"XXX TODO Put a public key here";
-        //return ""; //"XXX TODO Put a public key here";
-        return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApFeFCstQf3LYtzbiEYvvUs1T7eWaSpFaGFJ7ryRbJqF+pPoF9wAnz1QSbj2aJy+Kiy5xgzDtgy1/Sx" +
-               "sjD4zSh7ZfkFZYqpsFTDihkXDllwAb/Jy48hraaAhB+tMqsEwrdPBPHharX+ASpEHxE1eY6Dx2DnzSQEDb85QfnXyLiDNxQexXIApPbGPT9dDgpGo88QK9QMqx" +
-               "h1+qM5ysbnaioDtn5oUhv8Ry5FRLmXZZH31sZ7NF7j0y738W8LCb7kI+TKU4hYdrwe8NizYJD+hK8vfKdnXWYnia2fRmFUTMNo7yBsMURBwC5IuBpXbGddrSeK" +
-               "OlpRa5P+xQYcZp1kpEfwIDAQAB";
+        Resources res = App.context().getResources();
+        return res.getString(R.string.googleInAppBilling_key_part_0) +
+               res.getString(R.string.googleInAppBilling_key_part_1) +
+               res.getString(R.string.googleInAppBilling_key_part_2) +
+               res.getString(R.string.googleInAppBilling_key_part_3) +
+               res.getString(R.string.googleInAppBilling_key_part_4) +
+               res.getString(R.string.googleInAppBilling_key_part_5) +
+               res.getString(R.string.googleInAppBilling_key_part_6) +
+               res.getString(R.string.googleInAppBilling_key_part_7) +
+               res.getString(R.string.googleInAppBilling_key_part_8) +
+               res.getString(R.string.googleInAppBilling_key_part_9);
     }
 
     private final GooglePlaySuperHelper helper;

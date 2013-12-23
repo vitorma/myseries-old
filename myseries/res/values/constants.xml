@@ -46,11 +46,24 @@
         <item>@string/prefValue_update_automatically_only_on_wifi</item>
         <item>@string/prefValue_update_automatically_never</item>
     </string-array>
-    
+
     <string name="prefKey_notifications_enabled">notifications_enabled</string>
     <string name="prefKey_notification_advance_minutes">notification_advance_minutes</string>
     <string name="prefKey_notification_sound">notification_sound</string>
     <string name="prefKey_notification_vibration">notification_vibration</string>
     <string name="prefKey_notification_lights">notification_lights</string>
-    
+
+    <!-- Google Play In-app Billing key to check communication signature -->
+
+    <string name="googleInAppBilling_key_part_0">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApFeFCstQf3LYtzbiE</string>
+    <string name="googleInAppBilling_key_part_1">YvvUs1T7eWaSpFaGFJ7ryRbJqF+pPoF9wAnz1QSbj2aJy+Kiy5xgzDtgy1/Sx</string>
+    <string name="googleInAppBilling_key_part_2">sjD4zSh7ZfkFZYqpsFTDihkXDllwAb/Jy48hraaAhB+tMqsEwrdPBPHharX+A</string>
+    <string name="googleInAppBilling_key_part_3">SpEHxE1eY6Dx2DnzSQEDb85QfnXyLiDNxQexXIApPbGPT9dDgpGo88QK9QMqx</string>
+    <string name="googleInAppBilling_key_part_4">h1+qM5ysbnaioDtn5oUhv8Ry5FRLmXZZH31sZ7</string>
+    <string name="googleInAppBilling_key_part_5">NF7j0y738W8LCb7kI+TKU4hYdr</string>
+    <string name="googleInAppBilling_key_part_6">we8NizYJD+hK8vfKdnXWYnia2f</string>
+    <string name="googleInAppBilling_key_part_7">RmFUTMNo7yBsMURBwC5IuBpXbG</string>
+    <string name="googleInAppBilling_key_part_8">ddrSeK</string>
+    <string name="googleInAppBilling_key_part_9">OlpRa5P+xQYcZp1kpEfwIDAQAB</string>
+
 </resources>
