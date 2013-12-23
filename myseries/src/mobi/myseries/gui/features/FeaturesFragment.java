@@ -172,9 +172,7 @@ public class FeaturesFragment extends Fragment {
 
                 Product product = itemsAndAdapter.mItems.get(position);
 
-                ProductDetailsDialogFragment
-                        .newInstance(product.sku())
-                        .show(getActivity().getFragmentManager(), product.sku().value());
+                startActivity(ProductDetailsActivity.newInstance(getActivity(), product.sku()));
             }
         });
 

@@ -101,7 +101,6 @@ public class GooglePlayStore implements StoreBackend {
     @Override
     public void buy(Sku sku, Activity activity, PurchaseListener purchaseListener) {
         // TODO set up purchase listener to notify store listeners when a purchase is complete.
-        // Should the listener be defined here or in Store?
         Log.d(getClass().getCanonicalName(), "GooglePlayStore: buying " + sku);
         this.helper.buy(sku, activity, purchaseListener);
     }

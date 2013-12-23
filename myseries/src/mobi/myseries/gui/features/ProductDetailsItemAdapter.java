@@ -12,12 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-public class ProductDetailsDialogItemAdapter extends PagerAdapter {
+public class ProductDetailsItemAdapter extends PagerAdapter {
 
     private final List<Integer> mItems;
     private final LayoutInflater mInflater;
 
-    public ProductDetailsDialogItemAdapter(List<Integer> items) {
+    public ProductDetailsItemAdapter(List<Integer> items) {
         Validate.isNonNull(items, "items");
         mItems = items;
         mInflater = LayoutInflater.from(App.context());
@@ -37,7 +37,8 @@ public class ProductDetailsDialogItemAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View view = mInflater.inflate(R.layout.features_product_details_item, null);
 
-        ImageView productImage = (ImageView) view.findViewById(R.id.productImage);
+//        ImageView productImage = (ImageView) view.findViewById(R.id.productImage);
+        ImageView productImage = (ImageView) view;
         Validate.isNonNull(productImage, "productImage");
 
         productImage.setImageResource(mItems.get(position));

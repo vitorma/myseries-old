@@ -6,33 +6,34 @@ import mobi.myseries.application.Log;
 import mobi.myseries.application.features.product.ProductDescription;
 import mobi.myseries.application.features.product.Sku;
 import mobi.myseries.shared.Validate;
-import android.app.Dialog;
-import android.app.DialogFragment;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
-public class ProductDetailsDialogFragment extends DialogFragment {
+public class ProductDetailsActivity extends Activity {
 
     private final static String SKU_KEY = "sku";
 
-    public static ProductDetailsDialogFragment newInstance(Sku productSku) {
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(SKU_KEY, productSku);
+    public static Intent newInstance(Context context, Sku productSku) {
+        Intent intent = new Intent(context, ProductDetailsActivity.class);
+        intent.putExtra(SKU_KEY, productSku);
 
-        ProductDetailsDialogFragment instance = new ProductDetailsDialogFragment();
-        instance.setArguments(arguments);
-
-        return instance;
+        return intent;
     }
 
     private ProductDescription mProductDescription;
-    private ProductDetailsDialogItemAdapter currentAdapter;
+    private ProductDetailsItemAdapter currentAdapter;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Sku productSku = (Sku) this.getArguments().getSerializable(SKU_KEY);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        Sku productSku = (Sku) intent.getExtras().getSerializable(SKU_KEY);
         Validate.isNonNull(productSku, "productSku");
 
         mProductDescription = App.store().productDescriptionFor(productSku);
@@ -40,22 +41,20 @@ public class ProductDetailsDialogFragment extends DialogFragment {
 
         Log.d(getClass().getCanonicalName(), "onCreateDialog: mProductDescription = " + mProductDescription);
 
-        return createDialogFor(mProductDescription);
+        setUpViewFor(mProductDescription);
     }
 
-    private Dialog createDialogFor(ProductDescription productDescription) {
-        // TODO XXX FIXME Build dialog
+    private void setUpViewFor(ProductDescription productDescription) {
+        this.setContentView(R.layout.features_product_details);
+        this.getActionBar().hide();
 
-        Dialog dialog = new Dialog(this.getActivity(), R.style.MySeriesTheme_Dialog);
-        dialog.setContentView(R.layout.features_product_details);
-
-        TextView noPicturesMessage = (TextView) dialog.findViewById(R.id.no_screenshots_message);
+        TextView noPicturesMessage = (TextView) this.findViewById(R.id.no_screenshots_message);
         Validate.isNonNull(noPicturesMessage, "noPicturesMessage");
 
-        ViewPager picturesPager = (ViewPager) dialog.findViewById(R.id.picturesPager);
+        ViewPager picturesPager = (ViewPager) this.findViewById(R.id.picturesPager);
         Validate.isNonNull(picturesPager, "picturesPager");
 
-        this.currentAdapter = new ProductDetailsDialogItemAdapter(productDescription.picturesResourceIds());
+        this.currentAdapter = new ProductDetailsItemAdapter(productDescription.picturesResourceIds());
         picturesPager.setAdapter(currentAdapter);
 
         // Show the empty view if needed
@@ -66,7 +65,5 @@ public class ProductDetailsDialogFragment extends DialogFragment {
             picturesPager.setVisibility(View.VISIBLE);
             noPicturesMessage.setVisibility(View.GONE);
         }
-
-        return dialog;
     }
 }
