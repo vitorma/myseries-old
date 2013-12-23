@@ -28,6 +28,7 @@ public class ProductDetailsDialogFragment extends DialogFragment {
     }
 
     private ProductDescription mProductDescription;
+    private ProductDetailsDialogItemAdapter currentAdapter;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -54,15 +55,15 @@ public class ProductDetailsDialogFragment extends DialogFragment {
         ViewPager picturesPager = (ViewPager) dialog.findViewById(R.id.picturesPager);
         Validate.isNonNull(picturesPager, "picturesPager");
 
+        this.currentAdapter = new ProductDetailsDialogItemAdapter(productDescription.picturesResourceIds());
+        picturesPager.setAdapter(currentAdapter);
+
+        // Show the empty view if needed
         if (productDescription.picturesResourceIds().isEmpty()) {
-            // hide pager
             picturesPager.setVisibility(View.INVISIBLE);
-            // show no pictures message
             noPicturesMessage.setVisibility(View.VISIBLE);
         } else {
-            // show pager
             picturesPager.setVisibility(View.VISIBLE);
-            // hide no pictures message
             noPicturesMessage.setVisibility(View.GONE);
         }
 
