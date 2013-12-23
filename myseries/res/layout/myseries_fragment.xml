@@ -5,12 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/paddingTop"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/myseries_grid_gap"
-        android:layout_alignParentTop="true"/>
-
     <GridView
         android:id="@+id/showsGrid"
         android:listSelector="@drawable/list_selector_holo_light"
@@ -22,9 +16,12 @@
         android:horizontalSpacing="0dp"
         android:verticalSpacing="@dimen/myseries_grid_gap"
         android:columnWidth="@dimen/myseries_poster_width"
+        android:paddingTop="@dimen/myseries_grid_gap"
+        android:paddingBottom="@dimen/myseries_grid_gap"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/paddingTop"/>
+        android:layout_alignParentTop="true"/>
 
     <LinearLayout
         android:id="@+id/empty"
@@ -92,11 +89,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
-
-    <View
-        android:id="@+id/paddingBottom"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/myseries_grid_gap"
-        android:layout_below="@id/showsGrid"/>
 
 </RelativeLayout>

@@ -84,6 +84,8 @@
         android:horizontalSpacing="0dp"
         android:verticalSpacing="@dimen/myseries_grid_gap"
         android:columnWidth="@dimen/myseries_poster_width"
+        android:paddingBottom="@dimen/myseries_grid_gap"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/numberOfResultsLabel"/>
