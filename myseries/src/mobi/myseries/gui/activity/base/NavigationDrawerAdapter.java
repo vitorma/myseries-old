@@ -71,7 +71,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
                     App.resources().getString(R.string.nav_features)
             );
         }
-        mTitles = titles; 
+        mTitles = titles;
     }
 
     private void loadDrawables() {
@@ -83,7 +83,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         if (App.features().isVisible(Feature.FEATURE_SHOP)) {
             drawables.add(
                     // XXX(Gabriel): Find an icon for the feature shop
-                    App.resources().getDrawable(R.drawable.ic_nav_statistics)
+                    App.resources().getDrawable(R.drawable.ic_nav_shop)
             );
         }
         mDrawables = drawables;
