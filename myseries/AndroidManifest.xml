@@ -51,7 +51,9 @@
         <activity android:name="mobi.myseries.gui.statistics.StatisticsActivity" />
 
         <activity android:name="mobi.myseries.gui.features.FeaturesActivity" />
-        <activity android:name="mobi.myseries.gui.features.ProductDetailsActivity" />
+        <activity
+            android:name="mobi.myseries.gui.features.ProductDetailsActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
 
         <activity android:name=".gui.addseries.AddSeriesActivity" >
             <meta-data
