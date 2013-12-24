@@ -82,7 +82,6 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         ));
         if (App.features().isVisible(Feature.FEATURE_SHOP)) {
             drawables.add(
-                    // XXX(Gabriel): Find an icon for the feature shop
                     App.resources().getDrawable(R.drawable.ic_nav_shop)
             );
         }

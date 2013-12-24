@@ -1,10 +1,10 @@
 package mobi.myseries.gui.features;
 
+import mobi.myseries.R;
+import mobi.myseries.gui.activity.base.BaseActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import mobi.myseries.R;
-import mobi.myseries.gui.activity.base.BaseActivity;
 
 public class FeaturesActivity extends BaseActivity {
 
@@ -13,14 +13,16 @@ public class FeaturesActivity extends BaseActivity {
     }
 
     @Override
-    protected void init(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        
-    }
+    protected void init(Bundle savedInstanceState) { }
 
     @Override
     protected CharSequence title() {
-        return this.getString(R.string.ab_title_features);
+        return getString(R.string.ab_title_features);
+    }
+
+    @Override
+    protected CharSequence titleForSideMenu() {
+        return getString(R.string.nav_features);
     }
 
     @Override
@@ -32,5 +34,4 @@ public class FeaturesActivity extends BaseActivity {
     protected boolean isTopLevel() {
         return true;
     }
-
 }
