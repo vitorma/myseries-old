@@ -105,7 +105,7 @@ private OnClickListener restoreButtonListenerFor(final Dialog dialog) {
             if (button instanceof RadioButton) {
                 int id = ((RadioButton) button).getId();
                 if (id == R.id.GoogleDriveRadioButton || id == R.id.DropboxRadioButton)
-                    if (!App.features().isEnabled(Feature.CLOUD_BACKUP)) {
+                    if (false) {
                         button.setEnabled(false);
                         String label = (String) ((RadioButton) button).getText() 
                                                 + " -" 

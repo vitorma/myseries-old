@@ -21,6 +21,7 @@ public class BackupDialogFragment extends DialogFragment {
     private static final int DRIVE_RESTORE = 2;
     private static final int DROPBOX_BACKUP = 3;
     private static final int DROPBOX_RESTORE = 4;
+    static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -55,10 +56,9 @@ public class BackupDialogFragment extends DialogFragment {
                         getActivity().startActivityForResult(intent, DRIVE_RESTORE);
                     } else {
                         if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
-                            new FailureDialogBuilder(getActivity())
-                            .setTitle(R.string.restore_failed_title)
-                            .setMessage(R.string.play_services_must_be_installed)
-                            .build().show();
+                            dismiss();
+                            GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 
+                                    REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
                         }
                     }  
                     break;
@@ -86,14 +86,12 @@ public class BackupDialogFragment extends DialogFragment {
                         getActivity().startActivityForResult(intent, DRIVE_BACKUP);
                     } else {
                         if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
-                            new FailureDialogBuilder(getActivity())
-                            .setTitle(R.string.backup_failed_title)
-                            .setMessage(R.string.play_services_must_be_installed)
-                            .build().show();
+                            dismiss();
+                            GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 
+                                    REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
                         }
-                    }
+                    }  
                     break;
-
                 case R.id.DropboxRadioButton:
                     App.backupService().doBackup(new DropboxBackup());
 
