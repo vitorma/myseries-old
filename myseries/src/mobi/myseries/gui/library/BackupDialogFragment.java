@@ -1,6 +1,8 @@
 package mobi.myseries.gui.library;
 
 import com.google.android.gms.common.AccountPicker;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -8,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.backup.BackupListener;
 import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.SdcardBackup;
 import mobi.myseries.gui.shared.BackupDialogBuilder;
@@ -20,6 +21,7 @@ public class BackupDialogFragment extends DialogFragment {
     private static final int DRIVE_RESTORE = 2;
     private static final int DROPBOX_BACKUP = 3;
     private static final int DROPBOX_RESTORE = 4;
+    static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -47,9 +49,18 @@ public class BackupDialogFragment extends DialogFragment {
                     }
                     break;
                 case R.id.GoogleDriveRadioButton:
-                    Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
-                            true, null, null, null, null);
-                    getActivity().startActivityForResult(intent, DRIVE_RESTORE);
+                    int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+                    if (status == ConnectionResult.SUCCESS) {
+                        Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+                                true, null, null, null, null);
+                        getActivity().startActivityForResult(intent, DRIVE_RESTORE);
+                    } else {
+                        if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+                            dismiss();
+                            GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 
+                                    REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
+                        }
+                    }  
                     break;
                 case R.id.DropboxRadioButton:
                     new RestoreProgressDialogFragment().show(getFragmentManager(), "RestoreProgressDialog");
@@ -68,11 +79,19 @@ public class BackupDialogFragment extends DialogFragment {
                     break;
 
                 case R.id.GoogleDriveRadioButton:
-                    Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
-                            true, null, null, null, null);
-                    getActivity().startActivityForResult(intent, DRIVE_BACKUP);
+                    int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+                    if (status == ConnectionResult.SUCCESS) {
+                        Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+                                true, null, null, null, null);
+                        getActivity().startActivityForResult(intent, DRIVE_BACKUP);
+                    } else {
+                        if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+                            dismiss();
+                            GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 
+                                    REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
+                        }
+                    }  
                     break;
-
                 case R.id.DropboxRadioButton:
                     App.backupService().doBackup(new DropboxBackup());
 
@@ -83,4 +102,4 @@ public class BackupDialogFragment extends DialogFragment {
             }
         };
     }
-}
+}       
