@@ -245,6 +245,7 @@
     <string name="google_drive">Google Drive</string>
     <string name="sd_card">SD Card</string>
     <string name="dropbox">Dropbox</string>
+    <string name="play_services_must_be_installed">Google Play Services must be installed to use Google Drive</string>
 
         <!-- Backup  Messages -->
 
