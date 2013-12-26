@@ -53,9 +53,7 @@ public class ProductionProductsCatalog extends ProductCatalog {
                 }
                 @Override
                 public List<Integer> picturesResourceIds() {
-                    return Arrays.asList(
-                            R.drawable.features_schedulewidget_homescreen,
-                            R.drawable.features_schedulewidget_lockscreen);
+                    return Arrays.asList(R.drawable.features_schedulewidget_lockscreen);
                 }
             })));
 
