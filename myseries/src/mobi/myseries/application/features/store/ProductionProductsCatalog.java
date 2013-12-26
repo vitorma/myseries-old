@@ -33,6 +33,10 @@ public class ProductionProductsCatalog extends ProductCatalog {
                 public Set<Feature> features() {
                     return new HashSet<Feature>(Arrays.asList(Feature.CLOUD_BACKUP));
                 }
+                
+                public java.util.List<Integer> picturesResourceIds() {
+                	return Arrays.asList(R.drawable.features_cloudbackup);
+                };
             },
             new ProductDescription(new Sku("schedule_widget")) {
                 @Override
@@ -49,11 +53,9 @@ public class ProductionProductsCatalog extends ProductCatalog {
                 }
                 @Override
                 public List<Integer> picturesResourceIds() {
-                    // TODO(Cleber,Gabriel): Add screenshot of the widget on the lock screen 
                     return Arrays.asList(
                             R.drawable.features_schedulewidget_homescreen,
-                            R.drawable.features_schedulewidget_settings,
-                            R.drawable.features_schedulewidget_homescreen_checking_episode);
+                            R.drawable.features_schedulewidget_lockscreen);
                 }
             })));
 
