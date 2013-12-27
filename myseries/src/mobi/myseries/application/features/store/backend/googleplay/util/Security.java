@@ -61,11 +61,12 @@ public class Security {
         if (TextUtils.isEmpty(signedData) || TextUtils.isEmpty(base64PublicKey) ||
                 TextUtils.isEmpty(signature)) {
             Log.e(TAG, "Purchase verification failed: missing data.");
-            // XXX(Gabriel): begin http://stackoverflow.com/a/19735453
+            // begin http://stackoverflow.com/a/19735453
             if (BuildConfig.DEBUG) {
+                Log.w(TAG, "Bypassing purchase signature verification due to BuildConfig.DEBUG");
                 return true;
             }
-            // XXX(Gabriel): end
+            // end
             return false;
         }
 
