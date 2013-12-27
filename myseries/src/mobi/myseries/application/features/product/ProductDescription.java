@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import mobi.myseries.application.features.features.Feature;
 import mobi.myseries.shared.Validate;
 
 /**

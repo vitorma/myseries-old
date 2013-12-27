@@ -4,9 +4,9 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 import android.test.AndroidTestCase;
-import mobi.myseries.application.features.features.Feature;
 import mobi.myseries.application.features.features.FeaturesPersistenceBackend;
 import mobi.myseries.application.features.features.FeaturesPersistence.State;
+import mobi.myseries.application.features.product.Feature;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;

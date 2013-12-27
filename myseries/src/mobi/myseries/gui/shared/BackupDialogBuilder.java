@@ -2,7 +2,7 @@ package mobi.myseries.gui.shared;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.features.features.Feature;
+import mobi.myseries.application.features.product.Feature;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;

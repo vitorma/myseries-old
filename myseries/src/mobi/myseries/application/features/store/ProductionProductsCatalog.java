@@ -9,7 +9,7 @@ import java.util.Set;
 import android.content.Context;
 
 import mobi.myseries.R;
-import mobi.myseries.application.features.features.Feature;
+import mobi.myseries.application.features.product.Feature;
 import mobi.myseries.application.features.product.ProductDescription;
 import mobi.myseries.application.features.product.Sku;
 import mobi.myseries.shared.Validate;

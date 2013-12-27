@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.features.features.Feature;
+import mobi.myseries.application.features.product.Feature;
 import mobi.myseries.application.preferences.SchedulePreferences;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.gui.features.FeaturesActivity;

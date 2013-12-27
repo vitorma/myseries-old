@@ -11,7 +11,7 @@ import mobi.myseries.application.backup.BaseBackupListener;
 import mobi.myseries.application.backup.DriveBackup;
 import mobi.myseries.application.backup.DropboxBackup;
 import mobi.myseries.application.backup.exception.GoogleDriveException;
-import mobi.myseries.application.features.features.Feature;
+import mobi.myseries.application.features.product.Feature;
 import mobi.myseries.gui.activity.base.BaseActivity;
 import mobi.myseries.gui.addseries.AddSeriesActivity;
 import mobi.myseries.gui.help.AboutActivity;

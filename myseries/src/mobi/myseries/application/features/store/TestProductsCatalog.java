@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import mobi.myseries.application.features.features.Feature;
+import mobi.myseries.application.features.product.Feature;
 import mobi.myseries.application.features.product.ProductDescription;
 import mobi.myseries.application.features.product.Sku;
 

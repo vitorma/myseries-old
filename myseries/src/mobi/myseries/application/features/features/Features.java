@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mobi.myseries.application.Log;
+import mobi.myseries.application.features.product.Feature;
 import mobi.myseries.application.features.product.Product;
 import mobi.myseries.application.features.store.Store;
 import mobi.myseries.application.features.store.StoreListener;

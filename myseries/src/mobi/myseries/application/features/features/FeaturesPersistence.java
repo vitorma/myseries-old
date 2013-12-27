@@ -11,6 +11,7 @@ import java.util.Set;
 
 import android.util.Base64;
 
+import mobi.myseries.application.features.product.Feature;
 import mobi.myseries.shared.Validate;
 
 public class FeaturesPersistence {
