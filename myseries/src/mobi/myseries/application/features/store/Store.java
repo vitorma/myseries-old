@@ -58,7 +58,7 @@ public class Store extends ApplicationService<StoreListener> {
      * Synchronous method to query the implemented products. The returned products are all marked
      * as unavailable.
      */
-    public Set<Product> productsWithoutAvilabilityInformation() {
+    public Set<Product> productsWithoutAvailabilityInformation() {
         return this.productCatalog.productsWithoutPrice();
     }
 

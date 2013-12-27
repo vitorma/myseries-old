@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 
 import android.app.Activity;
 import android.content.Context;
@@ -178,7 +179,17 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
 
     /* The code below is based upon the main activity of the sample application */
 
+    private final Semaphore singleOperationLock = new Semaphore(1);
+
     private void setUp(final Runnable nextAction, final FailureListener failureListener) {
+        try {
+            Log.d(TAG, "Acquiring Helper lock.");
+            this.singleOperationLock.acquire();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         /* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
          * (that you got from the Google Play developer console). This is not your
          * developer public key, it's the *app-specific* public key.
@@ -425,6 +436,9 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
             mHelper.dispose();
             mHelper = null;
         }
+
+        Log.d(TAG, "Releasing Helper lock.");
+        this.singleOperationLock.release();
     }
 
     private RemoteStoreApiException complain(String message) {

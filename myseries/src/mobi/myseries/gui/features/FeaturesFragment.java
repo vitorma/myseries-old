@@ -80,7 +80,7 @@ public class FeaturesFragment extends Fragment {
 
         // It starts with no items.
         if (mItemsAndAdapter == null) {
-            Set<Product> productsWithoutPrice = App.store().productsWithoutAvilabilityInformation();
+            Set<Product> productsWithoutPrice = App.store().productsWithoutAvailabilityInformation();
             mItemsAndAdapter = new ItemsAndAdapter(new ArrayList<Product>(productsWithoutPrice), true);
         }
 
