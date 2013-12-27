@@ -182,13 +182,8 @@ public class GooglePlaySuperHelper implements ActivityEventsListener {
     private final Semaphore singleOperationLock = new Semaphore(1);
 
     private void setUp(final Runnable nextAction, final FailureListener failureListener) {
-        try {
-            Log.d(TAG, "Acquiring Helper lock.");
-            this.singleOperationLock.acquire();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        Log.d(TAG, "Acquiring Helper lock.");
+        this.singleOperationLock.acquireUninterruptibly();
 
         /* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
          * (that you got from the Google Play developer console). This is not your
