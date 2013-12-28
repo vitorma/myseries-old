@@ -55,8 +55,14 @@ public class Features {
 
             @Override
             public void onSuccess(Set<Product> products) {
-                persistence.save(availableFeaturesFromProducts(products));
+                Set<Feature> newFeatures = availableFeaturesFromProducts(products);
+
+                Log.d(getClass().getCanonicalName(), "Persisting new features");
+                persistence.save(newFeatures);
+
+                Log.d(getClass().getCanonicalName(), "Reloading enabled features from persistence");
                 enabledFeatures = persistence.load();
+
                 // TODO(Gabriel): notify that there are new features available
             }
 
