@@ -425,6 +425,7 @@ public class NotificationService {
             return context.getString(R.string.backup_google_drive_upload_error);
 
         } else if (e instanceof GoogleDriveException) {
+        	e.printStackTrace();
             return context.getString(R.string.backup_google_drive_error);
 
         } else {

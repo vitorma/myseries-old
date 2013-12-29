@@ -247,6 +247,7 @@ public class LibraryActivity extends BaseActivity {
             boolean resumeSucess = App.backupService().dropboxHelper().onResume();
             if (resumeSucess) {
                 pendingOperation = 0;
+                new RestoreProgressDialogFragment().show(getFragmentManager(), "RestoreProgressDialog");
                 App.backupService().restoreBackup(new DropboxBackup());
             }
         }

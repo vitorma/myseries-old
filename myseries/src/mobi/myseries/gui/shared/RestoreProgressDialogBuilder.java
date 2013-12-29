@@ -90,6 +90,7 @@ public class RestoreProgressDialogBuilder {
                         || (e instanceof DropboxUnlinkedException)) {
                         dialog.dismiss();
                 }
+                progressBar.setIndeterminate(false);
                 progressBar.setProgress(0);
                 cancelButton.setText(R.string.ok);
             }
