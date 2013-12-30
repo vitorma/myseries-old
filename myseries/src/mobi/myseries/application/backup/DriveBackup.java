@@ -71,7 +71,7 @@ public class DriveBackup implements BackupMode {
 
     private void setupDriveService() {
         GoogleAccountCredential credential = GoogleAccountCredential
-                .usingOAuth2(context, DriveScopes.DRIVE);
+                .usingOAuth2(context, Arrays.asList(DriveScopes.DRIVE));
         credential.setSelectedAccountName(account);
         this.service = new Drive.Builder(AndroidHttp.newCompatibleTransport(),
                 new GsonFactory(), credential)
