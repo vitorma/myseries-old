@@ -20,6 +20,7 @@ import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.application.backup.json.EpisodeSnippet;
 import mobi.myseries.application.backup.json.JsonHelper;
 import mobi.myseries.application.backup.json.SeriesSnippet;
+import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
@@ -338,6 +339,8 @@ public class BackupService extends ApplicationService<BackupListener> {
     }
 
     private void notifyOnRestoreSuccess() {
+    	broadcast(BroadcastAction.UPDATE);
+
         runInMainThread(new Runnable() {
             @Override
             public void run() {
