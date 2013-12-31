@@ -3,6 +3,8 @@ package mobi.myseries.gui.appwidget;
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.application.broadcast.BroadcastAction;
+import mobi.myseries.shared.DatesAndTimes;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -58,6 +60,8 @@ public class ScheduleWidget extends AppWidgetProvider {
         super.onDisabled(context);
 
         Log.d(TAG, "last appwidget was removed");
+
+        cancelAlarm(context);
     }
 
     @Override
@@ -73,13 +77,15 @@ public class ScheduleWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
+
         for (int i = 0; i < appWidgetIds.length; i++) {
             setUp(context, appWidgetManager, appWidgetIds[i]);
 
             Log.d(TAG, "appwidget " + appWidgetIds[i] + " was updated");
         }
 
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
+        scheduleAlarm(context);
     }
 
     @Override
@@ -105,5 +111,29 @@ public class ScheduleWidget extends AppWidgetProvider {
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
 
         this.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
+
+    private void scheduleAlarm(Context context) {
+        alarmManager(context).setRepeating(
+                AlarmManager.RTC,
+                DatesAndTimes.today().getTime(),
+                AlarmManager.INTERVAL_DAY,
+                pendingIntentForUpdate(context));
+    }
+
+    private void cancelAlarm(Context context) {
+        alarmManager(context).cancel(pendingIntentForUpdate(context));
+    }
+
+    private AlarmManager alarmManager(Context context) {
+        return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    }
+
+    private PendingIntent pendingIntentForUpdate(Context context) {
+        return PendingIntent.getBroadcast(
+                context,
+                195,
+                new Intent(BroadcastAction.UPDATE),
+                0);
     }
 }
