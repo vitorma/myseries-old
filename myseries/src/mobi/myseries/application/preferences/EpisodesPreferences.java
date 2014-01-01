@@ -13,13 +13,13 @@ public class EpisodesPreferences extends BasePreferences {
 
     public int sortMode() {
         return getInt(
-                key(R.string.prefKey_series_sortMode),
+                key(R.string.prefKey_episodes_sortMode),
                 SORT_MODE_DEFAULT_VALUE);
     }
 
     public void putSortMode(int sortMode) {
         putInt(
-                key(R.string.prefKey_series_sortMode),
+                key(R.string.prefKey_episodes_sortMode),
                 sortMode);
     }
 }

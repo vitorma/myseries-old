@@ -2,6 +2,10 @@
 
 <resources>
 
+    <!-- Application -->
+
+    <string name="app">MySeries</string>
+
     <!-- Developers -->
 
     <string name="cleber">CLEBER SOUSA</string>

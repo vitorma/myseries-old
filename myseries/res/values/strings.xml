@@ -417,7 +417,4 @@
 
     <string name="episode_starting_notification" formatted="false">%s %s starts at %s.</string>
 
-    <!-- Do not translate -->
-    <string name="app">MySeries</string>
-
 </resources>
