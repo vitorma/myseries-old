@@ -53,6 +53,8 @@ public class ScheduleWidget extends AppWidgetProvider {
         super.onEnabled(context);
 
         Log.d(TAG, "first appwidget was added");
+
+        scheduleAlarm(context);
     }
 
     @Override
@@ -84,8 +86,6 @@ public class ScheduleWidget extends AppWidgetProvider {
 
             Log.d(TAG, "appwidget " + appWidgetIds[i] + " was updated");
         }
-
-        scheduleAlarm(context);
     }
 
     @Override
@@ -102,6 +102,7 @@ public class ScheduleWidget extends AppWidgetProvider {
     private boolean shouldCallOnUpdate(String action) {
         return BroadcastAction.MARKING.equals(action) ||
                BroadcastAction.UPDATE.equals(action) ||
+               BroadcastAction.UPDATE_ALARM.equals(action) ||
                BroadcastAction.ADDITION.equals(action) ||
                BroadcastAction.REMOVAL.equals(action);
     }
@@ -113,27 +114,33 @@ public class ScheduleWidget extends AppWidgetProvider {
         this.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    private void scheduleAlarm(Context context) {
+    /* TODO (Cleber) Extract an object to do this work. */
+    /* XXX (Cleber) Set the right interval after testing and before uploading to store */
+
+    public static void scheduleAlarm(Context context) {
+        cancelAlarm(context);
+
         alarmManager(context).setRepeating(
                 AlarmManager.RTC,
                 DatesAndTimes.today().getTime(),
-                AlarmManager.INTERVAL_DAY,
+//                AlarmManager.INTERVAL_DAY,
+                1000*60,
                 pendingIntentForUpdate(context));
     }
 
-    private void cancelAlarm(Context context) {
+    private static void cancelAlarm(Context context) {
         alarmManager(context).cancel(pendingIntentForUpdate(context));
     }
 
-    private AlarmManager alarmManager(Context context) {
+    private static AlarmManager alarmManager(Context context) {
         return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
-    private PendingIntent pendingIntentForUpdate(Context context) {
+    private static PendingIntent pendingIntentForUpdate(Context context) {
         return PendingIntent.getBroadcast(
                 context,
-                195,
-                new Intent(BroadcastAction.UPDATE),
+                0,
+                new Intent(BroadcastAction.UPDATE_ALARM),
                 0);
     }
 }

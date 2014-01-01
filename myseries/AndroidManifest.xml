@@ -119,6 +119,9 @@
                 <action android:name="mobi.myseries.application.broadcast.action.UPDATE" />
             </intent-filter>
             <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.UPDATE_ALARM" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="mobi.myseries.application.broadcast.action.ADDITION" />
             </intent-filter>
             <intent-filter>

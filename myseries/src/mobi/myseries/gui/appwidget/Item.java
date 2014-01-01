@@ -1,9 +1,12 @@
 package mobi.myseries.gui.appwidget;
 
+import java.util.Locale;
+
 import mobi.myseries.R;
 import mobi.myseries.application.App;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Series;
+import mobi.myseries.gui.shared.DateFormats;
 import mobi.myseries.gui.shared.Extra;
 import mobi.myseries.gui.shared.LocalText;
 import mobi.myseries.gui.shared.UniversalImageLoader;
@@ -71,10 +74,22 @@ public class Item {
     }
 
     private void setUpEpisodeAirdate(RemoteViews item, Episode episode) {
-        RelativeDay relativeAirDay = DatesAndTimes.parse(episode.airDate(), null);
-        String airDate = DatesAndTimes.toString(episode.airDate(), DateFormat.getDateFormat(context), "");
+        RelativeDay relativeDay = DatesAndTimes.parse(episode.airDate(), null);
+        String airDateString = DatesAndTimes.toString(episode.airDate(), DateFormat.getDateFormat(context), "");
+        String relativeDayString = LocalText.of(relativeDay, airDateString);
 
-        item.setTextViewText(R.id.episodeAirDate, LocalText.of(relativeAirDay, airDate));
+        if (relativeDay != null && shouldShowWeekday(relativeDay)) {
+            String weekday = DatesAndTimes.toString(episode.airDate(), DateFormats.forShortWeekDay(Locale.getDefault()), "");
+
+            item.setTextViewText(R.id.episodeAirDate, weekday + ", " + relativeDayString.toLowerCase());
+        } else {
+            item.setTextViewText(R.id.episodeAirDate, relativeDayString);
+        }
+    }
+
+    private boolean shouldShowWeekday(RelativeDay relativeDay) {
+        return (relativeDay.isInLessThanAWeek() && !relativeDay.isTomorrow()) ||
+                (relativeDay.wasLessThanAWeekAgo() && !relativeDay.isYesterday());
     }
 
     private void setUpAirtimeAndNetwork(RemoteViews item, Series series) {
