@@ -115,7 +115,6 @@ public class ScheduleWidget extends AppWidgetProvider {
     }
 
     /* TODO (Cleber) Extract an object to do this work. */
-    /* XXX (Cleber) Set the right interval after testing and before uploading to store */
 
     public static void scheduleAlarm(Context context) {
         cancelAlarm(context);
@@ -123,8 +122,7 @@ public class ScheduleWidget extends AppWidgetProvider {
         alarmManager(context).setRepeating(
                 AlarmManager.RTC,
                 DatesAndTimes.today().getTime(),
-//                AlarmManager.INTERVAL_DAY,
-                1000*60,
+                AlarmManager.INTERVAL_DAY,
                 pendingIntentForUpdate(context));
     }
 
