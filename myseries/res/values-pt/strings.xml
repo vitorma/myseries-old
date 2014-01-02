@@ -100,12 +100,6 @@
     <string name="nav_statistics">Estatísticas</string>
     <string name="nav_features">Funcionalidades</string>
 
-    <string-array name="sidemenu_items_array">
-        <item>@string/nav_library</item>
-        <item>@string/nav_schedule</item>
-        <item>@string/nav_statistics</item>
-    </string-array>
-
     <string name="sidemenu_accessibility_open">Abrir gaveta de navegação</string>
     <string name="sidemenu_accessibility_close">Fechar gaveta de navegação</string>
 

@@ -42,6 +42,7 @@
     <string name="tab_overview">OVERVIEW</string>
     <string name="tab_seasons">SEASONS</string>
     <string name="actors">ACTORS</string>
+    <string name="overview">OVERVIEW</string>
     <plurals name="plural_remaining">
         <item quantity="one">%d remaining</item>
         <item quantity="other">%d remaining</item>
