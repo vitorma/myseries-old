@@ -2,7 +2,7 @@ package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.broadcast.BroadcastAction;
+import mobi.myseries.application.BroadcastAction;
 import mobi.myseries.shared.DatesAndTimes;
 import android.app.AlarmManager;
 import android.app.PendingIntent;

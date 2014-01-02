@@ -5,7 +5,6 @@ import java.text.DateFormat;
 import mobi.myseries.R;
 import mobi.myseries.application.activityevents.ActivityEventsService;
 import mobi.myseries.application.backup.BackupService;
-import mobi.myseries.application.broadcast.BroadcastService;
 import mobi.myseries.application.features.features.Features;
 import mobi.myseries.application.features.store.Store;
 import mobi.myseries.application.following.SeriesFollowingService;
@@ -50,9 +49,6 @@ public class App extends Application {
     private static Preferences preferences;
     private static Features features;
 
-    /* XXX (Cleber) This guy should fly away */
-    private static BroadcastService broadcastService;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -60,8 +56,6 @@ public class App extends Application {
         Log.setLogger(Log.ANDROID_LOGGER);
 
         environment = new EnvironmentImpl(this);
-
-        broadcastService = new BroadcastService(this);
 
         imageService = new ImageService(
                 environment.imageRepository(),

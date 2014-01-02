@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import mobi.myseries.application.ApplicationService;
+import mobi.myseries.application.BroadcastAction;
 import mobi.myseries.application.Environment;
-import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.application.image.ImageService;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Series;

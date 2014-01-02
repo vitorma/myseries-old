@@ -2,7 +2,7 @@ package mobi.myseries.gui.schedule.singlepane;
 
 import mobi.myseries.R;
 import mobi.myseries.application.App;
-import mobi.myseries.application.broadcast.BroadcastAction;
+import mobi.myseries.application.BroadcastAction;
 import mobi.myseries.application.schedule.ScheduleListener;
 import mobi.myseries.application.schedule.ScheduleMode;
 import mobi.myseries.application.schedule.ScheduleSpecification;

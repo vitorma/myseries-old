@@ -1,7 +1,7 @@
 package mobi.myseries.gui.appwidget;
 
 import mobi.myseries.application.App;
-import mobi.myseries.application.broadcast.BroadcastAction;
+import mobi.myseries.application.BroadcastAction;
 import mobi.myseries.gui.shared.Extra;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;

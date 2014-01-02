@@ -19,7 +19,7 @@
  *   along with MySeries.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package mobi.myseries.application.broadcast;
+package mobi.myseries.application;
 
 public class BroadcastAction {
     public static final String MARKING = "mobi.myseries.application.broadcast.action.SEEN_MARKUP";

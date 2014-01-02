@@ -1,8 +1,8 @@
 package mobi.myseries.application.marking;
 
 import mobi.myseries.application.ApplicationService;
+import mobi.myseries.application.BroadcastAction;
 import mobi.myseries.application.Environment;
-import mobi.myseries.application.broadcast.BroadcastAction;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
