@@ -111,13 +111,13 @@
     <string name="ab_title_statistics">Estatísticas</string>
     <string name="ab_title_features">Funcionalidades</string>
     <string name="no">Não</string>
-    <string name="no_episodes_to_see">Nenhum episódio por assistir.</string>
+    
     <string name="ok">OK</string>
     <string name="overview">RESUMO</string>
-    <string name="powered_by_thetvdb">Powered by TheTVDB.com</string>
+
     <string name="add_series">Adicionar Séries</string>
     <string name="search">PROCURAR</string>
-    <string name="seasons">Temporadas</string>
+    <string name="seasons">temporadas</string>
     <string name="series_name">Nome da série</string>
     <string name="to_be_announced">Não anunciado</string>
     <string name="yes">Sim</string>

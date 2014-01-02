@@ -94,7 +94,7 @@ public class EpisodeListFragment extends ListFragment {
     }
 
     private void setUpEmptyText() {
-        this.setEmptyText(this.getString(R.string.no_episodes_to_see));
+        this.setEmptyText("");
     }
 
     @Override
