@@ -22,24 +22,15 @@
     <string name="seriesToCount">Séries a contar</string>
     <string name="episodesToShow">Episódios a mostrar</string>
     <string name="episodesToCount">Episódios a contar</string>
-    <string name="showAll">Mostrar todas</string>
-    <string name="showSelected">Mostrar selecionadas</string>
-    <string name="countAll">Contar com todas</string>
-    <string name="countSelected">Contar com selecionadas</string>
     <string name="series_to_remove">Remover séries</string>
-    <string name="remove_all">Remover todas</string>
-    <string name="remove_selected">Remover selecionadas</string>
     <string name="are_you_sure">Você tem certeza?</string>
     <string name="cannot_be_undone">A remoção não poderá ser desfeita.</string>
     <string name="no_series_selected_to_remove">Nenhuma série marcada para remoção.</string>
     <string name="no_series_to_remove">Nenhuma série para remover.</string>
     <string name="no_series_to_filter">Nenhuma série para filtrar.</string>
     <string name="no_series_to_show">Nenhuma série para mostrar</string>
-    <string name="no_series_to_sort">Nenhuma série para ordenar.</string>
     <string name="no_episodes_to_sort">Nenhum episódio para ordenar.</string>
-    <string name="no_episodes_to_show">Nenhum episódio para exibir.</string>
     <string name="no_episodes_to_count">Nenhum episódio para contar.</string>
-    <string name="no_seasons_to_sort">Nenhuma temporada para ordenar.</string>
     <string name="add_success">%s adicionada com sucesso.</string>
     <string name="relative_time_today">Hoje</string>
     <string name="relative_time_tomorrow">Amanhã</string>
@@ -58,7 +49,6 @@
     <string name="tab_next_to_watch">PRÓXIMO A VER</string>
     <string name="tab_aired">EXIBIDOS</string>
     <string name="tab_unaired">INÉDITOS</string>
-    <string name="all_seasons">Todas as temporadas</string>
     <string name="tab_overview">VISÃO GERAL</string>
     <string name="tab_seasons">TEMPORADAS</string>
     <string name="confirmation_removal_single_series">Você quer mesmo remover %s?</string>
@@ -122,9 +112,6 @@
     <!-- Labels -->
 
     <string name="actors">ATORES</string>
-    <string name="details">Detalhes</string>
-    <string name="directors">DIRETORES</string>
-    <string name="guest_stars">ARTISTAS CONVIDADOS</string>
     <string name="ab_title_schedule">Agenda</string>
     <string name="ab_title_library">Biblioteca</string>
     <string name="ab_title_statistics">Estatísticas</string>
@@ -133,14 +120,12 @@
     <string name="no_episodes_to_see">Nenhum episódio por assistir.</string>
     <string name="ok">OK</string>
     <string name="overview">RESUMO</string>
-    <string name="overview_unavailable">Resumo indisponível.</string>
     <string name="powered_by_thetvdb">Powered by TheTVDB.com</string>
     <string name="add_series">Adicionar Séries</string>
     <string name="search">PROCURAR</string>
     <string name="seasons">Temporadas</string>
     <string name="series_name">Nome da série</string>
     <string name="to_be_announced">Não anunciado</string>
-    <string name="writers">AUTORES</string>
     <string name="yes">Sim</string>
     <string name="add">Adicionar</string>
     <string name="remove">Remover</string>
@@ -164,7 +149,6 @@
 
     <string name="connection_failed_message">Verifique sua conexão e tente novamente.</string>
     <string name="connection_failed_title">Falha na conexão</string>
-    <string name="follow_toast_message_format" formatted="false">A série %s aparecerá em breve na sua coleção.</string>
     <string name="invalid_criteria_message">Informe ao menos uma palavra.</string>
     <string name="invalid_criteria_title">Nome inválido para uma série</string>
     <string name="network_unavailable_message">Verifique sua conexão e tente novamente.</string>
@@ -174,18 +158,13 @@
 
     <!-- Adding Error Messages -->
 
-    <string name="add_already_followed_series_message">Você já acompanha \'%s\'.</string>
     <string name="add_connection_failed_message">A conexão falhou enquanto %s era adicionada. Verifique sua conexão e tente novamente.</string>
     <string name="add_failed_title">Falha na adição</string>
-    <string name="add_series_not_found">O banco de dados retornou "série não encontrada" ao tentar adicionar %s. Verifique sua conexão e configurações e tente novamente.</string>
     <string name="btn_try_again">Tentar novamente</string>
 
     <!-- Updates -->
 
-    <string name="updates">Atualizações</string>
-
     <string name="no_series_to_update">Nenhuma série para atualizar.</string>
-    <string name="update_timeout">Limite de tempo da atualização alcançado.</string>
 
     <string name="checking_for_updates_message">Procurando atualizações…</string>
     <string name="update_progress_message">Atualizando \"%s\"…</string>
@@ -197,16 +176,6 @@
     <string name="update_single_series_failed_without_cause">Falha na atualização de \"%s\".</string>
     <string name="update_many_series_failed_with_cause">Falha na atualização de %1$d séries: %2$s</string>
     <string name="update_many_series_failed_without_cause">Falha na atualização de %d séries.</string>
-
-    <string name="latest_successful_update">A última atualização bem sucedida ocorreu em %1$s às %2$s</string>
-
-    <string name="update_status">ESTADO DA ATUALIZAÇÃO</string>
-    <string name="update_not_running">Parada.</string>
-    <string name="update_now">Atualizar agora</string>
-    <string name="update_data_automatically">ATUALIZAR AUTOMATICAMENTE…</string>
-    <string name="update_on_wifi">Somente via Wi-Fi</string>
-    <string name="update_on_wifi_or_data_plan">Através de qualquer conexão disponível</string>
-    <string name="do_not_update">Nunca (não recomendado)</string>
 
     <!-- Features -->
 
@@ -229,9 +198,6 @@
     <!-- Backup -->
 
     <string name="backup_restore">Backup/Restauração</string>
-    <string name="backup_description"><b>Fazer Backup</b> faz uma cópia de segurança das séries que você acompanha para o diretório de backup. \nPara <b>Restaurar</b> os dados da suas séries, assegure-se de que há um arquivo de backup no diretório de backup.</string>
-    <string name="backup_folder_file_path">Diretório de Backup: <b>%s</b></string>
-    <string name="backup">Fazer Backup</string>
     <string name="restore">Restaurar</string>
     <string name="backup_button">Backup</string>
     <string name="restore_button">Restaurar</string>
@@ -251,11 +217,9 @@
         <!-- Backup  Messages -->
 
     <string name="backup_connection_failed">Não foi possível conectar a Internet.</string>
-    <string name="backup_connection_timeout">Não foi possível conectar a Internet.</string>
     <string name="backup_timeout">O backup foi cancelado por demorar demais.</string>
 
     <string name="backup_progress_message">Fazendo backup em \"%s\"…</string>
-    <string name="backup_success_message">O Backup em \"%s\" foi bem sucedido.</string>
 
     <string name="backup_failed_with_cause">Falha ao fazer backup: %s</string>
     <string name="backup_failed_without_cause">Falha ao fazer backup.</string>
@@ -271,14 +235,12 @@
 
     <string name="restore_network_unavailable">Não há nenhuma conexão a Internet disponível.</string>
     <string name="restore_connection_failed">Não foi possível conectar a Internet.</string>
-    <string name="restore_connection_timeout">Não foi possível conectar a Internet.</string>
     <string name="restore_timeout">A restauração foi cancelada por demorar demais.</string>
 
     <string name="restore_choose_backup_to_restore">Escolha o backup a ser restaurado…</string>
     <string name="restore_there_are_no_backups_to_restore">Não há backups guardados para restauração.</string>
 
     <string name="restore_progress_message">Restaurando de \"%s\"…</string>
-    <string name="restore_success_message">Restauração de \"%s\" bem sucedida.</string>
 
     <string name="restore_failed_with_cause">A restauração falhou: %s</string>
     <string name="restore_failed_without_cause">A restauração falhou.</string>
@@ -365,7 +327,6 @@
     <string name="settings_notification_vibration"> Vibrar </string>
     <string name="settings_notification_lights"> Pulsar luz de notificação </string>
 
-    <string name="settings_category_others">OUTROS</string>
     <string name="settings_about">Sobre</string>
     <string name="settings_about_version_format">VERSÃO %s</string>
     <string name="settings_about_community">Comunidade</string>
