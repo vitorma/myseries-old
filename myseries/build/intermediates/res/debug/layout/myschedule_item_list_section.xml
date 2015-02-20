@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingTop = "@dimen/gap_medium"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/date"
+        style="@style/TextView.Medium"
+        android:textColor="@color/dark_red"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:id="@+id/airDay"
+        style="@style/TextView.Small.LightGray"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/gap_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/date"
+        android:layout_toRightOf="@id/date"/>
+
+    <TextView
+        android:id="@+id/relativeDay"
+        style="@style/TextView.Small.LightGray.Ellipsized"
+        android:gravity="right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/date"
+        android:layout_toRightOf="@id/airDay"/>
+
+    <View
+        android:background="@color/dark_red"
+        android:layout_width="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_height="1.5dp"
+        android:layout_below="@id/date"/>
+
+</RelativeLayout><!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/myschedule_item_list_section.xml -->

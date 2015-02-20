@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/fullStateView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/masterList"
+            android:listSelector="@color/transparent"
+            android:divider="@null"
+            android:choiceMode="singleChoice"
+            android:verticalScrollbarPosition="left"
+            android:background="@drawable/list_background_holo"
+            android:paddingLeft="@dimen/episode_list_side_gap"
+            android:paddingRight="0dp"
+            android:layout_width="@dimen/episode_list_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/detailsPager"
+            android:background="@color/bg_light"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/masterList">
+
+            <android.support.v4.view.PagerTitleStrip
+                android:id="@+id/detailsTitles"
+                android:paddingTop="@dimen/gap_small"
+                android:paddingBottom="@dimen/gap_small"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"/>
+
+        </android.support.v4.view.ViewPager>
+
+    </RelativeLayout>
+
+    <include
+        layout="@layout/myschedule_fragment_empty"/>
+
+</FrameLayout><!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/myschedule_fragment_dualpane.xml -->

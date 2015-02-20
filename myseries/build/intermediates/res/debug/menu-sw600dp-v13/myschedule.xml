@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/filter"
+        android:title="@string/action_filter"
+        android:icon="@drawable/ic_action_filter_inverse"
+        android:showAsAction="always|withText">
+
+        <menu>
+
+            <item
+                android:id="@+id/filter_series"
+                android:title="@string/seriesToShow"/>
+
+            <item
+                android:id="@+id/filter_episodes"
+                android:title="@string/episodesToShow"/>
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/sort"
+        android:title="@string/action_sort"
+        android:icon="@drawable/ic_action_sort_inverse"
+        android:showAsAction="always|withText"/>
+
+</menu><!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/menu-sw600dp/myschedule.xml -->

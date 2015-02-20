@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/loadingView"
+    android:text="@string/loading"
+    style="@style/TextView.Small.LightGray"
+    android:fontFamily="sans-serif-light"
+    android:gravity="center_vertical"
+    android:padding="@dimen/gap_medium"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/schedulewidget_item_height"/><!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/schedulewidget_loading_view.xml -->

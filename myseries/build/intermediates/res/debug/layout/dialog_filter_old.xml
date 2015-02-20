@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <CheckedTextView
+        android:id="@+id/title"
+        style="@style/TextView.XLarge.DarkGray.Ellipsized"
+        android:textColor="#ff808080"
+        android:background="@drawable/list_selector_holo_light"
+        android:checkMark="@drawable/checkbox"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/gap_large"
+        android:paddingBottom="@dimen/gap_large"
+        android:paddingLeft="@dimen/gap_large"
+        android:paddingRight="@dimen/gap_large"
+        android:minHeight="48dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/topDivider"
+        android:background="#ff808080"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"/>
+
+    <ScrollView
+        android:id="@+id/scrollPanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/optionPanel"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/buttonBar"
+        android:padding="0dp"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="49dp">
+
+        <View
+            android:id="@+id/buttonDividerHorizontal"
+            android:background="@drawable/list_divider_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"/>
+
+        <View
+            android:id="@+id/buttonDividerVertical"
+            android:background="@drawable/list_divider_holo_light" 
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:text="@string/cancel"
+            style="@style/DialogButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/buttonDividerHorizontal"
+            android:layout_toLeftOf="@id/buttonDividerVertical"/>
+
+        <Button
+            android:id="@+id/okButton"
+            android:text="@string/ok"
+            style="@style/DialogButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/buttonDividerHorizontal"
+            android:layout_toRightOf="@id/buttonDividerVertical"/>
+
+    </RelativeLayout>
+
+</LinearLayout><!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/dialog_filter_old.xml -->

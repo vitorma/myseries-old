@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/bg_light"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:paddingBottom="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingTop="@dimen/gap_medium"
+            android:paddingBottom="@dimen/gap_medium"
+            android:paddingLeft="@dimen/gap_large"
+            android:paddingRight="@dimen/gap_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/sortMode"
+                android:text="@string/sort_episodes_by_upper"
+                style="@style/TextView.Medium.DarkGray.Ellipsized"
+                android:textStyle="bold"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="4dp"/>
+
+            <RadioGroup
+                android:id="@+id/sortModeRadioGroup"
+                style="@style/RadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/oldest_first"
+                    android:text="@string/oldest_first"
+                    android:textSize="@dimen/text_size_medium"
+                    android:checked="true"
+                    style="@style/RadioButton"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"/>
+
+                <View
+                    android:background="@drawable/list_divider_holo_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"/>
+
+                <RadioButton
+                    android:id="@+id/newest_first"
+                    android:text="@string/newest_first"
+                    android:textSize="@dimen/text_size_medium"
+                    style="@style/RadioButton"
+                    android:paddingLeft="@dimen/gap_medium"
+                    android:paddingRight="@dimen/gap_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toucharea_minimum_side"/>
+
+            </RadioGroup>
+
+            <TextView
+                android:text="@string/episodes_to_show_upper"
+                style="@style/TextView.Medium.DarkGray.Ellipsized"
+                android:textStyle="bold"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_large"/>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="4dp"/>
+
+            <CheckedTextView
+                android:id="@+id/showSpecialEpisodes"
+                android:text="@string/showSpecialEpisodes"
+                style = "@style/TextView.Medium.DarkGray"
+                android:background="@drawable/list_selector_holo_light"
+                android:checkMark="@drawable/checkbox"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:padding="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+            <CheckedTextView
+                android:id="@+id/showSeenEpisodes"
+                android:text="@string/show_watched_episodes"
+                style = "@style/TextView.Medium.DarkGray"
+                android:background="@drawable/list_selector_holo_light"
+                android:checkMark="@drawable/checkbox"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:padding="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:text="@string/series_to_show_upper"
+                style="@style/TextView.Medium.DarkGray.Ellipsized"
+                android:textStyle="bold"
+                android:paddingLeft="@dimen/gap_medium"
+                android:paddingRight="@dimen/gap_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_large"/>
+
+            <View
+                android:background="@drawable/list_divider_holo_light"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="4dp"/>
+
+            <LinearLayout
+                android:id="@+id/seriesToShowPanel"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_gravity="bottom">
+
+        <View
+            android:background="@drawable/list_divider_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentTop="true"/>
+
+        <View
+            android:id="@+id/dividerVertical"
+            android:background="@drawable/list_divider_holo_light"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:text="@string/cancel"
+            android:background="@drawable/item_background_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toLeftOf="@id/dividerVertical"/>
+
+        <Button
+            android:id="@+id/saveButton"
+            android:text="@string/save"
+            android:background="@drawable/item_background_holo_light"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toucharea_minimum_side"
+            android:layout_toRightOf="@id/dividerVertical"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
+<!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/schedulewidget_preferences.xml -->

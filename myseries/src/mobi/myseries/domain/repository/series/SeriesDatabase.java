@@ -416,7 +416,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
     private Series seriesByCurrentPositionOf(Cursor c) {
         return Series.builder()
-                .withTvdbId(c.getInt(c.getColumnIndex(SERIES_ID)))
+                .withTraktId(c.getInt(c.getColumnIndex(SERIES_ID)))
                 .withTitle(c.getString(c.getColumnIndex(SERIES_NAME)))
                 .withStatus(Status.from(c.getString(c.getColumnIndex(SERIES_STATUS))))
                 .withAirTime(DatesAndTimes.parseDate(c.getLong(c.getColumnIndex(SERIES_AIRTIME)), DEFAULT_AIRTIME))

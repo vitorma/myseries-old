@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/bg_card"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/seriesPoster"
+        android:contentDescription="@string/description_poster"
+        android:scaleType="fitXY"
+        android:layout_width="@dimen/myseries_poster_width"
+        android:layout_height="@dimen/myseries_poster_height"
+        android:layout_alignParentTop="true"/>
+
+    <FrameLayout
+        android:id="@+id/addButtonPanel"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_width="@dimen/toucharea_minimum_side"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/seriesPoster">
+
+        <ImageButton
+            android:id="@+id/addButton"
+            android:src="@drawable/ic_action_add_inverse"
+            android:background="@drawable/item_background_holo_light"
+            android:visibility="invisible"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/progressAdd"
+            style="@style/ProgressBarAdd"
+            android:visibility="invisible"
+            android:padding="@dimen/gap_medium"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/progressRemove"
+            style="@style/ProgressBarRemove"
+            android:visibility="invisible"
+            android:padding="@dimen/gap_medium"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/removeButton"
+            android:src="@drawable/ic_action_remove_red"
+            android:background="@drawable/item_background_holo_light"
+            android:visibility="invisible"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/itemName"
+        style="@style/TextView.Medium.DarkGray.Ellipsized"
+        android:textStyle="bold"
+        android:singleLine="false"
+        android:maxLines="2"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/gap_medium"
+        android:paddingRight="@dimen/gap_medium"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toucharea_minimum_side"
+        android:layout_below="@id/seriesPoster"
+        android:layout_toLeftOf="@id/addButtonPanel"/>
+
+</RelativeLayout>
+<!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/addseries_item.xml -->

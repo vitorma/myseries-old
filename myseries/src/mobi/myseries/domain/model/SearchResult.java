@@ -17,7 +17,7 @@ public class SearchResult implements Parcelable {
         }
     };
 
-    private String tvdbId = "";
+    private String traktId = "";
     private String title = "";
     private String overview = "";
     private String genres = "";
@@ -26,7 +26,7 @@ public class SearchResult implements Parcelable {
     public SearchResult() { }
 
     public SearchResult(Parcel in) {
-        this.tvdbId = in.readString();
+        this.traktId = in.readString();
         this.title = in.readString();
         this.overview = in.readString();
         this.genres = in.readString();
@@ -35,7 +35,7 @@ public class SearchResult implements Parcelable {
 
     public SearchResult copy() {
         return new SearchResult()
-            .setTvdbId(this.tvdbId)
+            .setTraktId(this.traktId)
             .setTitle(this.title)
             .setOverview(this.overview)
             .setGenres(this.genres)
@@ -44,7 +44,7 @@ public class SearchResult implements Parcelable {
 
     public Series toSeries() {
         return Series.builder()
-            .withTvdbId(Integer.valueOf(this.tvdbId))
+            .withTraktId(Integer.valueOf(this.traktId))
             .withTitle(this.title)
             .withOverview(this.overview)
             .withGenres(this.genres)
@@ -52,8 +52,8 @@ public class SearchResult implements Parcelable {
             .build();
     }
 
-    public int tvdbIdAsInt() {
-        return Integer.valueOf(this.tvdbId);
+    public int traktIdAsInt() {
+        return Integer.valueOf(this.traktId);
     }
 
     @Override
@@ -63,14 +63,14 @@ public class SearchResult implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.tvdbId);
+        dest.writeString(this.traktId);
         dest.writeString(this.title);
         dest.writeString(this.overview);
         dest.writeString(this.poster);
     }
 
-    public String tvdbId() {
-        return this.tvdbId;
+    public String traktId() {
+        return this.traktId;
     }
 
     public String title() {
@@ -89,8 +89,8 @@ public class SearchResult implements Parcelable {
         return this.poster;
     }
 
-    public SearchResult setTvdbId(String tvdbId2) {
-        this.tvdbId = tvdbId2;
+    public SearchResult setTraktId(String traktId) {
+        this.traktId = traktId;
         return this;
     }
 
@@ -116,12 +116,12 @@ public class SearchResult implements Parcelable {
 
     @Override
     public int hashCode() {
-        return this.tvdbId.hashCode();
+        return this.traktId.hashCode();
     }
 
     @Override
     public boolean equals(Object other) {
         return other instanceof SearchResult &&
-                ((SearchResult) other).tvdbId.equals(this.tvdbId);
+                ((SearchResult) other).traktId.equals(this.traktId);
     }
 }

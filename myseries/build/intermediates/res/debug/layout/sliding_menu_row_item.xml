@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/menu_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="@dimen/gap_medium"
+        android:src="@drawable/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/menu_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_toRightOf="@+id/menu_icon"
+        android:gravity="center_vertical"
+        android:text="@string/app"
+        style="@style/TextView.Large.White"/>
+
+</RelativeLayout><!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/sliding_menu_row_item.xml -->

@@ -16,7 +16,7 @@ public class EnvironmentImpl implements Environment {
     // Note that this is a really insecure way to do this, and you shouldn't
     // ship code which contains your key & secret in such an obvious way.
     // Obfuscation is good.
-    private static final String TRAKTTV_API_KEY = "2665c5546c888a02c4ceff0afccfa927";
+    private static final String TRAKTTV_API_KEY = "09947a26a83582ddb747c94070c5206df61e0d71a69113f41e77c2054e879443";
     // Replace this with your app key and secret assigned by Dropbox.
     private static final String DROPBOX_APP_KEY = "16plq57cyv3mxdb";
     private static final String DROPBOX_APP_SECRET = "5z6c5a0ku03kyjy";

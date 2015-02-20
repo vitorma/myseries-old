@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="mobi.myseries"
+    android:versionCode="18"
+    android:versionName="0.5.6" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <application
+        android:name="mobi.myseries.application.App"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app"
+        android:theme="@style/MySeriesTheme" >
+
+        <!-- Activities -->
+
+        <activity
+            android:name="mobi.myseries.gui.library.LibraryActivity"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="mobi.myseries.gui.schedule.singlepane.ScheduleListActivity"
+            android:exported="true" />
+        <activity
+            android:name="mobi.myseries.gui.schedule.singlepane.ScheduleDetailActivity"
+            android:exported="true" />
+        <activity
+            android:name="mobi.myseries.gui.schedule.dualpane.ScheduleDualPaneActivity"
+            android:exported="true" />
+        <activity android:name="mobi.myseries.gui.statistics.StatisticsActivity" />
+        <activity android:name="mobi.myseries.gui.features.FeaturesActivity" />
+        <activity
+            android:name="mobi.myseries.gui.features.ProductDetailsActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
+        <activity android:name="mobi.myseries.gui.addseries.AddSeriesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mobi.myseries.gui.library.LibraryActivity" />
+        </activity>
+        <activity android:name="mobi.myseries.gui.settings.SettingsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mobi.myseries.gui.library.LibraryActivity" />
+        </activity>
+        <activity android:name="mobi.myseries.gui.help.AboutActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mobi.myseries.gui.library.LibraryActivity" />
+        </activity>
+        <activity android:name="mobi.myseries.gui.series.SeriesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mobi.myseries.gui.library.LibraryActivity" />
+        </activity>
+        <activity android:name="mobi.myseries.gui.episodes.EpisodesActivity" />
+        <activity
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetPreferenceActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetDialogActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
+        <activity
+            android:name="com.dropbox.client2.android.AuthActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask" >
+            <intent-filter>
+
+                <!-- Change this to be db- followed by your app key -->
+                <data android:scheme="db-16plq57cyv3mxdb" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Broadcast Receivers -->
+
+        <receiver android:name="mobi.myseries.application.notification.service.BootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidget"
+            android:enabled="true"
+            android:label="@string/schedulewidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.SEEN_MARKUP" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.UPDATE_ALARM" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.ADDITION" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mobi.myseries.application.broadcast.action.REMOVAL" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/schedulewidget_info" />
+        </receiver>
+
+        <!-- Services -->
+
+        <service
+            android:name="mobi.myseries.gui.appwidget.ScheduleWidgetViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name="mobi.myseries.gui.appwidget.TabService" />
+        <service android:name="mobi.myseries.application.notification.service.NotificationScheduler" />
+        <service android:name="mobi.myseries.application.notification.service.ScheduledNotificationAgent" />
+        <service
+            android:name="mobi.myseries.gui.dashclock.MySeriesDashClockExtension"
+            android:icon="@drawable/ic_notification"
+            android:label="@string/app"
+            android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA" >
+            <intent-filter>
+                <action android:name="com.google.android.apps.dashclock.Extension" />
+            </intent-filter>
+
+            <meta-data
+                android:name="protocolVersion"
+                android:value="2" />
+            <meta-data
+                android:name="worldReadable"
+                android:value="true" />
+            <meta-data
+                android:name="description"
+                android:value="@string/dashclock_description" />
+        </service>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+    </application>
+
+</manifest>

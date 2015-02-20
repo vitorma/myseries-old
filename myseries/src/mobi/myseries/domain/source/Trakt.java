@@ -2,29 +2,40 @@ package mobi.myseries.domain.source;
 
 import java.io.InputStream;
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import mobi.myseries.application.Communications;
 import mobi.myseries.application.ConnectionFailedException;
 import mobi.myseries.application.NetworkUnavailableException;
 import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.Season;
 import mobi.myseries.domain.model.Series;
 import mobi.myseries.shared.Validate;
 import android.net.Uri;
 import android.net.Uri.Builder;
 import android.util.Log;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 public class Trakt implements TraktApi {
-    private static final String TRAKT_PROTOCOL = "http";
-    private static final String TRAKT = "api.trakt.tv";
-    private static final String TRENDING_JSON = "trending.json";
+    private static final String TRAKT_PROTOCOL = "https";
+    private static final String TRAKT = "api-v2launch.trakt.tv";
+    private static final String TRENDING = "trending";
     private static final String SEARCH = "search";
-    private static final String SHOW_JSON = "shows.json";
     private static final String SHOWS = "shows";
     private static final String SHOW = "show";
-    private static final String SUMMARY_JSON = "summary.json";
-    private static final String UPDATE_JSON = "updated.json";
+    private static final String UPDATES = "updates";
+
+    private static final String CONTENT_HEADER_KEY = "Content-type";
+    private static final String CONTENT_HEADER_VALUE = "application/json";
+
+    private static final String API_KEY_HEADER_KEY = "trakt-api-key";
+
+    private static final String API_VERSION_HEADER_KEY = "trakt-api-version";
+    private static final String API_VERSION_HEADER_VALUE = "2";
 
     private final String apiKey;
     private final Communications communications;
@@ -59,41 +70,44 @@ public class Trakt implements TraktApi {
     private Uri searchUri(String query) {
         return traktUriBuilder()
         .appendPath(SEARCH)
-        .appendPath(SHOW_JSON)
-        .appendPath(this.apiKey)
         .appendQueryParameter("query", query)
+        .appendQueryParameter("type", SHOW)
+        .appendQueryParameter("extended", "full,images")
         .build();
     }
 
     @Override
     public List<SearchResult> listTrending() throws ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
         String url = trendingUri().toString() ;
-
+        Log.d("DELETE THIS LOG", this.get(url).toString());
         return TraktParser.parseSearchResults(this.get(url));
     }
 
     private Uri trendingUri() {
         return traktUriBuilder()
                      .appendPath(SHOWS)
-                     .appendPath(TRENDING_JSON)
-                     .appendPath(this.apiKey)
+                     .appendPath(TRENDING)
+                     .appendQueryParameter("extended", "full,images")
                      .build();
     }
 
     @Override
     public Series fetchSeries(int seriesId) throws ParsingFailedException, ConnectionFailedException, NetworkUnavailableException {
-        String url = showSummaryUri(seriesId).toString();
-
-        return TraktParser.parseSeries(this.get(url));
+        String seriesUrl = showSummaryUri(seriesId).toString();
+        Series series = TraktParser.parseSeries(this.get(seriesUrl));
+//        List<Season> seasons = TraktParser.parseSeasons(this.get(seasonsUrl));
+//        for(season : seasons) {
+//            s.includingAll(TraktParser.parseEpisode(this.get(EpisodeUrl)))
+//        }
+//        List<Epis> seasons = TraktParser.parseSeasons(this.get(seasonsUrl));
+        return series;
     }
 
     private Uri showSummaryUri(int seriesId) {
         return traktUriBuilder()
-                     .appendPath(SHOW)
-                     .appendPath(SUMMARY_JSON)
-                     .appendPath(apiKey)
+                     .appendPath(SHOWS)
                      .appendPath(String.valueOf(seriesId))
-                     .appendPath("extended")
+                     .appendQueryParameter("extended", "full,images")
                      .build();
     }
 
@@ -109,16 +123,15 @@ public class Trakt implements TraktApi {
     private Uri updateUri(long pstTimestamp) {
         return traktUriBuilder()
                      .appendPath(SHOWS)
-                     .appendPath(UPDATE_JSON)
-                     .appendPath(this.apiKey)
-                     .appendPath(dropMillisecondsFromTimeStamp(pstTimestamp))
+                     .appendPath(UPDATES)
+                     .appendPath(millisecondsToISO8601(pstTimestamp))
                      .build();
     }
 
     /* Auxiliary */
 
     private InputStream get(String url) throws ConnectionFailedException, NetworkUnavailableException {
-        return this.communications.streamFor(url);
+        return this.communications.streamFor(url, this.connectionHeaders());
     }
 
     private Builder traktUriBuilder() {
@@ -127,11 +140,24 @@ public class Trakt implements TraktApi {
         .authority(TRAKT);
     }
 
+    public Map<String, String> connectionHeaders() {
+        Map headers = new LinkedTreeMap<String, String>();
+        headers.put(CONTENT_HEADER_KEY,CONTENT_HEADER_VALUE);
+        headers.put(API_KEY_HEADER_KEY,this.apiKey);
+        headers.put(API_VERSION_HEADER_KEY,API_VERSION_HEADER_VALUE);
+        return headers;
+    }
+
     //XXX Trakt.tv does not work with milliseconds
     private String dropMillisecondsFromTimeStamp(long timestamp) {
         return String.valueOf(timestamp).substring(0, 10);
     }
 
+    private String millisecondsToISO8601(long timestamp) {
+        java.text.DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+        String formattedDate = df.format(timestamp);
+        return formattedDate;
+    }
 
     //TODO remove this method
     @Deprecated

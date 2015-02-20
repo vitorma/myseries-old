@@ -84,7 +84,7 @@ public class Series {
             return this;
         }
 
-        public Builder withTvdbId(int id) {
+        public Builder withTraktId(int id) {
             this.id = id;
             return this;
         }

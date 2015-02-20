@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/bg_light"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingBottom="@dimen/gap_medium"
+    android:paddingLeft="@dimen/gap_large"
+    android:paddingRight="@dimen/gap_large"
+    android:paddingTop="@dimen/gap_medium" >
+
+    <RadioGroup
+        android:id="@+id/RestoreModeRadioGroup"
+        style="@style/RadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/SDCardRadioButton"
+            style="@style/RadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:paddingLeft="@dimen/gap_medium"
+            android:paddingRight="@dimen/gap_medium"
+            android:paddingTop="@dimen/gap_medium"
+            android:text="@string/sd_card"
+            android:textSize="@dimen/text_size_medium"
+            android:drawableLeft="@drawable/ic_sdcard"
+            android:drawablePadding="3dp" />
+
+        <View
+            android:id="@+id/SDCardDivider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/list_divider_holo_light" />
+
+        <RadioButton
+            android:id="@+id/GoogleDriveRadioButton"
+            style="@style/RadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/gap_medium"
+            android:paddingRight="@dimen/gap_medium"
+            android:paddingTop="@dimen/gap_medium"
+            android:text="@string/google_drive"
+            android:textSize="@dimen/text_size_medium"
+            android:drawableLeft="@drawable/ic_drive"
+            android:drawablePadding="3dp"/>
+
+        <View
+            android:id="@+id/GoogleDriveDivider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/list_divider_holo_light" />
+
+        <RadioButton
+            android:id="@+id/DropboxRadioButton"
+            style="@style/RadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/gap_medium"
+            android:paddingRight="@dimen/gap_medium"
+            android:paddingTop="@dimen/gap_medium"
+            android:text="@string/dropbox"
+            android:textSize="@dimen/text_size_medium"
+            android:drawableLeft="@drawable/ic_dropbox"
+            android:drawablePadding="3dp" />
+    </RadioGroup>
+
+    <ProgressBar
+        android:id="@+id/RestoreProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+     <TextView
+        android:id="@+id/RestoreStatusMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/RestoreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/toucharea_minimum_side"
+        android:layout_marginTop="@dimen/gap_medium"
+        android:text="@string/restore" />
+
+</LinearLayout><!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/restore_fragment.xml -->

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/values-sw720dp/dimens.xml -->
+    <eat-comment/>
+    <dimen name="episode_list_side_gap">16dp</dimen>
+    <dimen name="episode_list_width">320dp</dimen>
+    <dimen name="episode_screen_height">225dp</dimen>
+    <dimen name="myseries_grid_gap">8dp</dimen>
+    <dimen name="myseries_poster_height">250dp</dimen>
+    <dimen name="myseries_poster_width">170dp</dimen>
+    <dimen name="mystatistics_side_padding">120dp</dimen>
+    <dimen name="series_details_gap">24dp</dimen>
+    <dimen name="series_seasons_margin">@dimen/gap_large</dimen>
+    <dimen name="series_seasons_width">320dp</dimen>
+</resources>

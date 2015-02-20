@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import mobi.myseries.domain.model.Episode;
@@ -22,7 +22,6 @@ import mobi.myseries.shared.Time;
 import mobi.myseries.shared.WeekDay;
 import android.util.Log;
 
-import com.google.android.gms.internal.p;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -35,12 +34,19 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
 
 public class TraktParser {
-    private static final String TVDB_ID = "tvdb_id";
+    private static final String IDS = "ids";
+    private static final String TVDB_ID = "tvdb";
+    private static final String TRAKT_ID = "trakt";
+    private static final String IMDB_ID = "imdb";
+    private static final String TMDB_ID = "tmdb";
+    private static final String TVRAGE_ID = "tvrage";
     private static final String TITLE = "title";
     private static final String STATUS = "status";
-    private static final String AIR_DAY = "air_day_utc";
-    private static final String AIR_TIME = "air_time_utc";
-    private static final String AIR_DATE = "first_aired_utc";
+    private static final String AIRS = "airs";
+    private static final String AIR_DAY = "day";
+    private static final String AIR_TIME = "time";
+    private static final String TIMEZONE = "timezone";
+    private static final String FIRST_AIRED = "first_aired";
     private static final String RUNTIME = "runtime";
     private static final String NETWORK = "network";
     private static final String OVERVIEW = "overview";
@@ -49,15 +55,20 @@ public class TraktParser {
     private static final String ACTORS = "actors";
     private static final String NAME = "name";
     private static final String IMAGES = "images";
-    private static final String POSTER = "poster";
+    private static final String POSTERS = "poster";
+    private static final String POSTER_MEDIUM = "medium";
+
     private static final String SEASONS = "seasons";
     private static final String SEASON = "season";
     private static final String EPISODES = "episodes";
     private static final String NUMBER = "number";
     private static final String SCREEN = "screen";
     private static final String SHOWS = "shows";
+    private static final String SHOW = "show";
     private static final String TRAKT_DEFAULT_POSTER_FILENAME = "poster-dark.jpg";
     private static final String TRAKT_DEFAULT_SCREEN_FILENAME = "episode-dark.jpg";
+
+    private static final java.text.DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
 
     private static final int COMPRESSED_POSTER_300 = 300;
 
@@ -66,46 +77,48 @@ public class TraktParser {
         public Series deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject seriesObject = element.getAsJsonObject();
 
-            int seriesId = readTvdbId(seriesObject);
+            int seriesId = readTraktId(seriesObject);
 
             //TODO(Reul): use a single date to store airday and airtime
             Time time = readAirTime(seriesObject);
+
             WeekDay airDay = readAirDay(seriesObject);
 
             Date airtime = null;
             if (time != null && airDay != null) {
                 airtime = new Date(airDay.toDate().getTime() + time.toLong());
             }
+            Date seriesAirTime = DatesAndTimes.toUtcTime(airtime, readTimeZone(seriesObject));
 
             Series.Builder seriesBuilder = Series.builder()
-                    .withTvdbId(readTvdbId(seriesObject))
+                    .withTraktId(readTraktId(seriesObject))
                     .withTitle(readTitle(seriesObject))
                     .withStatus(readStatus(seriesObject))
-                    .withAirTime(airtime)
+                    .withAirTime(seriesAirTime)
                     .withAirDate(readAirDate(seriesObject))
                     .withRuntime(readRuntime(seriesObject))
                     .withNetwork(readNetwork(seriesObject))
                     .withOverview(readOverview(seriesObject))
                     .withGenres(readGenres(seriesObject))
-                    .withActors(readActors(seriesObject))
+//                    .withActors(readActors(seriesObject))
                     .withPoster(readPoster(seriesObject));
 
-            JsonArray seasonsArray = seriesObject.getAsJsonArray(SEASONS);
-
-            for (JsonElement seasonElement : seasonsArray) {
-                JsonArray episodesArray = seasonElement.getAsJsonObject().getAsJsonArray(EPISODES);
-
-                for (JsonElement episodeElement : episodesArray) {
-                    Episode.Builder episodeBuilder = context.deserialize(episodeElement, Episode.Builder.class);
-
-                    episodeBuilder.withId(Long.parseLong(String.format("%d%03d%03d", seriesId, readSeason(episodeElement.getAsJsonObject()),
-                            readNumber(episodeElement.getAsJsonObject()))));
-
-                    Episode episode = episodeBuilder.withSeriesId(seriesId).withAirtime(airtime).build();
-
-                    seriesBuilder.withEpisode(episode);
-                }
-            }
+//            JsonArray seasonsArray = seriesObject.getAsJsonArray(SEASONS);
+//
+//            for (JsonElement seasonElement : seasonsArray) {
+//                JsonArray episodesArray = seasonElement.getAsJsonObject().getAsJsonArray(EPISODES);
+//
+//                for (JsonElement episodeElement : episodesArray) {
+//                    Episode.Builder episodeBuilder = context.deserialize(episodeElement, Episode.Builder.class);
+//
+//                    episodeBuilder.withId(Long.parseLong(String.format("%d%03d%03d", seriesId, readSeason(episodeElement.getAsJsonObject()),
+//                            readNumber(episodeElement.getAsJsonObject()))));
+//
+//                    Episode episode = episodeBuilder.withSeriesId(seriesId).withAirtime(airtime).build();
+//
+//                    seriesBuilder.withEpisode(episode);
+//                }
+//            }
 
             return seriesBuilder.build();
         }
@@ -130,13 +143,14 @@ public class TraktParser {
         @Override
         public SearchResult deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject resultElement = element.getAsJsonObject();
+            JsonObject showElement = resultElement.get(SHOW).getAsJsonObject();
 
             return new SearchResult()
-            .setTvdbId(readTvdbIdAsString(resultElement))
-            .setTitle(readTitle(resultElement))
-            .setOverview(readOverview(resultElement))
-            .setGenres(readGenres(resultElement))
-            .setPoster(readPoster(resultElement));
+            .setTraktId(readTraktIdAsString(showElement))
+            .setTitle(readTitle(showElement))
+            .setOverview(readOverview(showElement))
+//            .setGenres(readGenres(showElement))
+            .setPoster(readPoster(showElement));
         }
     };
 
@@ -150,7 +164,7 @@ public class TraktParser {
 
             for (JsonElement updatedSeriesElement : updatedSeriesArray) {
                 try {
-                    updateMetadata.add(readTvdbId(updatedSeriesElement.getAsJsonObject()));
+                    updateMetadata.add(readTraktId(updatedSeriesElement.getAsJsonObject()));
                 } catch (Exception e) {
                     e.printStackTrace();
                     continue;
@@ -184,7 +198,6 @@ public class TraktParser {
         try {
             JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(in, "UTF-8")));
             List<SearchResult> results = new ArrayList<SearchResult>();
-
             reader.beginArray();
 
             while (reader.hasNext()) {
@@ -240,12 +253,14 @@ public class TraktParser {
         return gson;
     }
 
-    private static int readTvdbId(JsonObject object) {
-        return object.get(TVDB_ID).getAsInt();
+    private static int readTraktId(JsonObject object) {
+        JsonObject idsObject = object.get(IDS).getAsJsonObject();
+        return idsObject.get(TRAKT_ID).getAsInt();
     }
 
-    private static String readTvdbIdAsString(JsonObject object) {
-        return object.get(TVDB_ID).getAsString();
+    private static String readTraktIdAsString(JsonObject object) {
+        JsonObject idsObject = object.get(IDS).getAsJsonObject();
+        return idsObject.get(TRAKT_ID).getAsString();
     }
 
     private static String readTitle(JsonObject object) {
@@ -262,7 +277,8 @@ public class TraktParser {
 
     private static WeekDay readAirDay(JsonObject object) {
         try {
-            return WeekDay.valueOf(object.get(AIR_DAY).getAsString());
+            JsonObject airsObject = object.get(AIRS).getAsJsonObject();
+            return WeekDay.valueOf(airsObject.get(AIR_DAY).getAsString());
         } catch (Exception e) {
             return null;
         }
@@ -270,7 +286,17 @@ public class TraktParser {
 
     private static Time readAirTime(JsonObject object) {
         try {
-            return Time.valueOf(object.get(AIR_TIME).getAsString());
+            JsonObject airsObject = object.get(AIRS).getAsJsonObject();
+            return Time.valueOf(airsObject.get(AIR_TIME).getAsString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static TimeZone readTimeZone(JsonObject object) {
+        try {
+            JsonObject airsObject = object.get(AIRS).getAsJsonObject();
+            return TimeZone.getTimeZone(airsObject.get(TIMEZONE).getAsString());
         } catch (Exception e) {
             return null;
         }
@@ -278,13 +304,13 @@ public class TraktParser {
 
     private static Date readAirDate(JsonObject object) {
         try {
-            long airDate = object.get(AIR_DATE).getAsLong();
-            if (airDate == 0) {
+            JsonObject airDateObject = object.get(FIRST_AIRED).getAsJsonObject();
+            if (airDateObject.isJsonNull()) {
                 Log.d(TraktParser.class.getName(), "AIRDATE == (Unix time) 0. Returning null instead.");
                 return null;
             }
 
-            return DatesAndTimes.parseDate(toMiliseconds(airDate), null);
+            return DatesAndTimes.parse(airDateObject.getAsString(), df, null);
         } catch (Exception e) {
             return null;
         }
@@ -340,12 +366,17 @@ public class TraktParser {
 
     private static String readPoster(JsonObject object) {
         JsonObject imagesObject = object.getAsJsonObject(IMAGES);
+        JsonObject postersObject = imagesObject.getAsJsonObject(POSTERS);
 
-        String posterUrl = readStringSafely(imagesObject.get(POSTER));
+        if(postersObject.get(POSTER_MEDIUM).isJsonNull()) {
+            return "";
+        }
+
+        String posterUrl = readStringSafely(postersObject.get(POSTER_MEDIUM));
         if(isDefaultPoster(posterUrl))
             posterUrl = "";
 
-        return posterUrl.isEmpty() ? posterUrl : compressedPosterUrl(posterUrl, COMPRESSED_POSTER_300);
+        return posterUrl;
     }
 
     private static boolean isDefaultPoster(String posterUrl) {

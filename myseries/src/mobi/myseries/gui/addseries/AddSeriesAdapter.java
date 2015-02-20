@@ -22,9 +22,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
 public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publisher<AddSeriesAdapterListener> {
     private final LayoutInflater layoutInflater;
 
@@ -87,12 +84,12 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
             viewHolder.showAddButton();
         }
 
-        viewHolder.seriesId = result.tvdbId();
+        viewHolder.seriesId = result.traktId();
         App.seriesFollowingService().register(viewHolder);
 
-        if (App.seriesFollowingService().isTryingToFollowSeries(result.tvdbIdAsInt())) {
+        if (App.seriesFollowingService().isTryingToFollowSeries(result.traktIdAsInt())) {
             viewHolder.showProgressAdd();
-        } else if (App.seriesFollowingService().isTryingToUnfollowSeries(result.tvdbIdAsInt())) {
+        } else if (App.seriesFollowingService().isTryingToUnfollowSeries(result.traktIdAsInt())) {
             viewHolder.showProgressRemove();
         }
 
@@ -152,7 +149,7 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
 
         @Override
         public void onStartToFollow(SearchResult series) {
-            if (series.tvdbId().equals(this.seriesId)) {
+            if (series.traktId().equals(this.seriesId)) {
                 this.showProgressAdd();
             }
         }
@@ -166,7 +163,7 @@ public class AddSeriesAdapter extends ArrayAdapter<SearchResult> implements Publ
 
         @Override
         public void onFailToFollow(SearchResult series, Exception e) {
-            if (series.tvdbId().equals(this.seriesId)) {
+            if (series.traktId().equals(this.seriesId)) {
                 this.showAddButton();
             }
         }

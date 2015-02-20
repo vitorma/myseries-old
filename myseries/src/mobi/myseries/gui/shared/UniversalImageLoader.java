@@ -64,9 +64,9 @@ public class UniversalImageLoader {
     public static String httpURI(String httpPath) {
         Validate.isNonNull(httpPath, "ImageLoader http path");
 
-        if(httpPath.startsWith(URI_HTTP_PREFIX))
-            return httpPath;
+//        if(httpPath.startsWith(URI_HTTP_PREFIX))
+//            return httpPath;
 
-        return URI_HTTP_PREFIX + httpPath;
+        return httpPath;
     }
 }

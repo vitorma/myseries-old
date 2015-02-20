@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <GridView
+        android:id="@+id/showsGrid"
+        android:listSelector="@drawable/list_selector_holo_light"
+        android:drawSelectorOnTop="true"
+        android:fastScrollEnabled="true"
+        android:gravity="center"
+        android:numColumns="auto_fit"
+        android:stretchMode="spacingWidthUniform"
+        android:horizontalSpacing="0dp"
+        android:verticalSpacing="@dimen/myseries_grid_gap"
+        android:columnWidth="@dimen/myseries_poster_width"
+        android:paddingTop="@dimen/myseries_grid_gap"
+        android:paddingBottom="@dimen/myseries_grid_gap"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+
+    <LinearLayout
+        android:id="@+id/empty"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:paddingLeft="@dimen/gap_large"
+        android:paddingRight="@dimen/gap_large"
+        android:layout_width="@dimen/empty_state_view_width"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/title"
+            android:text="@string/no_series_to_show"
+            style="@style/TextView.XLarge.DarkGray"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_state_internal_gap_top"/>
+
+        <TextView
+            android:id="@+id/hiddenSeries"
+            android:textSize="@dimen/text_size_xmedium"
+            android:textColor="@color/yellow"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_state_internal_gap_bottom"/>
+
+        <Button
+            android:id="@+id/filterSeries"
+            android:text="@string/btn_unhide_series"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/text_dark_gray"
+            android:drawableLeft="@drawable/ic_action_filter_inverse"
+            android:drawablePadding="@dimen/gap_medium"
+            android:gravity="left|center_vertical"
+            android:paddingRight="@dimen/gap_large"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="@dimen/gap_micro"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            android:id="@+id/addSeries"
+            android:text="@string/btn_add_series"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/text_dark_gray"
+            android:drawableLeft="@drawable/ic_action_add_inverse"
+            android:drawablePadding="@dimen/gap_medium"
+            android:gravity="left|center_vertical"
+            android:paddingRight="@dimen/gap_large"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressIndicator"
+        style="?android:attr/progressBarStyleLarge"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout><!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/myseries_fragment.xml -->

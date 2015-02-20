@@ -5,11 +5,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.*;
 
+import mobi.myseries.shared.Strings;
 import mobi.myseries.shared.Validate;
 
 public class CommunicationsImpl implements Communications {
@@ -39,6 +42,7 @@ public class CommunicationsImpl implements Communications {
         return androidConnectivityManager.getActiveNetworkInfo();
     }
 
+    //TODO remove this method if all connections need headers
     @Override
     public InputStream streamFor(String url) throws ConnectionFailedException, NetworkUnavailableException {
         Validate.isNonNull(url, "url");
@@ -58,6 +62,26 @@ public class CommunicationsImpl implements Communications {
         }
     }
 
+    @Override
+    public InputStream streamFor(String url, Map<String, String> properties) throws ConnectionFailedException, NetworkUnavailableException {
+        Validate.isNonNull(url, "url");
+        Validate.isNonBlank(url, "url");
+        Validate.isNonNull(properties, "properties");
+
+        if (!this.isConnected()) {
+            throw new NetworkUnavailableException();
+        }
+
+        try {
+            HttpURLConnection connection = buildHttpUrlConnection(url, properties);
+            connection.connect();
+
+            return connection.getInputStream();
+        } catch (IOException e) {
+            throw new ConnectionFailedException(e);
+        }
+    }
+
     private HttpURLConnection buildHttpUrlConnection(String urlString) throws MalformedURLException, IOException {
         //AndroidUtils.disableConnectionReuseIfNecessary();
 
@@ -68,6 +92,14 @@ public class CommunicationsImpl implements Communications {
         conn.setConnectTimeout(CONNECT_TIMEOUT);
         conn.setDoInput(true);
         conn.setRequestMethod("GET");
+        return conn;
+    }
+
+    private HttpURLConnection buildHttpUrlConnection(String urlString, Map<String,String> properties) throws MalformedURLException, IOException {
+        HttpURLConnection conn = this.buildHttpUrlConnection(urlString);
+        for(String property : properties.keySet()) {
+            conn.setRequestProperty(property, properties.get(property));
+        }
         return conn;
     }
 }

@@ -85,7 +85,7 @@ public class SeriesFollowingService extends ApplicationService<SeriesFollowingLi
         runInMainThread(new Runnable() {
             @Override
             public void run() {
-                mSeriesBeingFollowed.put(seriesToFollow.tvdbIdAsInt(), true);
+                mSeriesBeingFollowed.put(seriesToFollow.traktIdAsInt(), true);
 
                 for (SeriesFollowingListener listener : listeners()) {
                     listener.onStartToFollow(seriesToFollow);
@@ -113,7 +113,7 @@ public class SeriesFollowingService extends ApplicationService<SeriesFollowingLi
         runInMainThread(new Runnable() {
             @Override
             public void run() {
-                mSeriesBeingFollowed.delete(seriesToFollow.tvdbIdAsInt());
+                mSeriesBeingFollowed.delete(seriesToFollow.traktIdAsInt());
 
                 for (SeriesFollowingListener listener : listeners()) {
                     listener.onFailToFollow(seriesToFollow, exception);
@@ -224,7 +224,7 @@ public class SeriesFollowingService extends ApplicationService<SeriesFollowingLi
             notifyOnStartToFollow(mSeriesToFollow);
 
             try {
-                Series followedSeries = environment().traktApi().fetchSeries(mSeriesToFollow.tvdbIdAsInt());
+                Series followedSeries = environment().traktApi().fetchSeries(mSeriesToFollow.traktIdAsInt());
 
                 environment().seriesRepository().insert(followedSeries);
                 mImageService.downloadAndSavePosterOf(followedSeries);

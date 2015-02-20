@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/values-sw720dp-land/dimens.xml -->
+    <eat-comment/>
+    <dimen name="episode_list_width">360dp</dimen>
+    <dimen name="episode_screen_height">405dp</dimen>
+</resources>

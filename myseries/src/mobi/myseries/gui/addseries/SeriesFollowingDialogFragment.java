@@ -22,10 +22,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
 public class SeriesFollowingDialogFragment extends DialogFragment {
 
     private static final String TAG_REMOVAL_CONFIRMATION_DIALOG = "SeriesRemovalConfirmationDialog";
@@ -159,21 +155,21 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
     }
 
     private boolean shouldDisableButtons() {
-        return App.seriesFollowingService().isTryingToFollowSeries(mSeries.tvdbIdAsInt()) ||
-                App.seriesFollowingService().isTryingToUnfollowSeries(mSeries.tvdbIdAsInt());
+        return App.seriesFollowingService().isTryingToFollowSeries(mSeries.traktIdAsInt()) ||
+                App.seriesFollowingService().isTryingToUnfollowSeries(mSeries.traktIdAsInt());
     }
 
     private SeriesFollowingListener mSeriesFollowingListener = new BaseSeriesFollowingListener() {
         @Override
         public void onSuccessToFollow(Series followedSeries) {
-            if (mSeries.tvdbIdAsInt() == followedSeries.id()) {
+            if (mSeries.traktIdAsInt() == followedSeries.id()) {
                 showRemoveButton();
             }
         }
 
         @Override
         public void onSuccessToUnfollow(Series unfollowedSeries) {
-            if (mSeries.tvdbIdAsInt() == unfollowedSeries.id()) {
+            if (mSeries.traktIdAsInt() == unfollowedSeries.id()) {
                 showAddButton();
             }
         }
@@ -181,7 +177,7 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
         @Override
         public void onSuccessToUnfollowAll(Collection<Series> allUnfollowedSeries) {
             for (Series s : allUnfollowedSeries) {
-                if (s.id() == mSeries.tvdbIdAsInt()) {
+                if (s.id() == mSeries.traktIdAsInt()) {
                     showAddButton();
                     break;
                 }
@@ -191,14 +187,14 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
 
         @Override
         public void onFailToFollow(SearchResult seriesToFollow, Exception e) {
-            if (mSeries.tvdbId().equals(seriesToFollow.tvdbId())) {
+            if (mSeries.traktId().equals(seriesToFollow.traktId())) {
                 showAddButton();
             }
         }
 
         @Override
         public void onFailToUnfollow(Series seriesToUnfollow, Exception e) {
-            if (mSeries.tvdbIdAsInt() == seriesToUnfollow.id()) {
+            if (mSeries.traktIdAsInt() == seriesToUnfollow.id()) {
                 showRemoveButton();
             }
         }
@@ -206,7 +202,7 @@ public class SeriesFollowingDialogFragment extends DialogFragment {
         @Override
         public void onFailToUnfollowAll(Collection<Series> allSeriesToUnfollow, Exception e) {
             for (Series s : allSeriesToUnfollow) {
-                if (s.id() == mSeries.tvdbIdAsInt()) {
+                if (s.id() == mSeries.traktIdAsInt()) {
                     showRemoveButton();
                     break;
                 }

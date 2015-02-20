@@ -1,0 +1,10 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
+    style="@style/TextView.XLarge"
+    android:fontFamily="sans-serif-light"
+    android:textColor="@color/white"
+    android:gravity="center_vertical"
+    android:paddingLeft="0dp"
+    android:paddingRight="56dp"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toucharea_minimum_side"/><!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/layout/activity_base_sidemenu_item.xml -->
