@@ -37,8 +37,10 @@
     <string name="relative_time_yesterday">Ontem</string>
     <string name="relative_time_past">%d dias atrás</string>
     <string name="relative_time_future">Daqui a %d dias</string>
-    <string name="status_continuing">Em exibição</string>
+    <string name="status_returning">Em exibição</string>
     <string name="status_ended">Encerrada</string>
+    <string name="status_in_production">Em breve</string>
+    <string name="status_canceled">Cancelada</string>
     <string name="number_of_results_for_search_by_name" formatted="false">%d séries encontradas</string>
     <string name="trending">TENDÊNCIAS</string>
     <string name="powered_by_trakt">Powered by Trakt.tv</string>

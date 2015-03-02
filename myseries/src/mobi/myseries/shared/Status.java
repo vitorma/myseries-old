@@ -22,19 +22,32 @@
 package mobi.myseries.shared;
 
 public enum Status {
-    CONTINUING,
-    ENDED,
-    UNKNOWN;
+    RETURNING_SERIES ("returning series"),
+    IN_PRODUCTION ("in production"),
+    ENDED ("ended"),
+    CANCELED ("canceled"),
+    UNKNOWN ("unknown");
+
+    private String status;
+
+    private Status(String status) {
+        this.status = status;
+    }
 
     public static Status from(String status) {
         Validate.isNonNull(status, "status");
 
         for (Status s : values()) {
-            if (s.name().equalsIgnoreCase(status)) {
+            if (s.toString().equalsIgnoreCase(status)) {
                 return s;
             }
         }
 
         return UNKNOWN;
+    }
+
+    @Override
+    public String toString() {
+        return this.status;
     }
 }

@@ -287,8 +287,10 @@
     <string formatted="false" name="sort_by_format">Ordenar %s por…</string>
     <string name="sort_episodes_by_upper">ORDENAR EPISÓDIOS POR…</string>
     <string name="special_episodes">EPISÓDIOS ESPECIAIS</string>
-    <string name="status_continuing">Em exibição</string>
+    <string name="status_canceled">Cancelada</string>
     <string name="status_ended">Encerrada</string>
+    <string name="status_in_production">Em breve</string>
+    <string name="status_returning">Em exibição</string>
     <string name="tab_aired">EXIBIDOS</string>
     <string name="tab_next_to_watch">PRÓXIMO A VER</string>
     <string name="tab_overview">VISÃO GERAL</string>

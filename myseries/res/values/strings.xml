@@ -37,8 +37,10 @@
     <string name="unavailable_status">UNAVAILABLE STATUS</string>
     <string name="unavailable_air_info">UNAVAILABLE AIR INFORMATION</string>
     <string name="unavailable_runtime">UNAVAILABLE RUNTIME</string>
-    <string name="status_continuing">Continuing</string>
+    <string name="status_returning">On Air</string>
     <string name="status_ended">Ended</string>
+    <string name="status_in_production">Airing soon</string>
+    <string name="status_canceled">Canceled</string>
     <string name="tab_overview">OVERVIEW</string>
     <string name="tab_seasons">SEASONS</string>
     <string name="actors">ACTORS</string>

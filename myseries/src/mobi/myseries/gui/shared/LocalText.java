@@ -35,10 +35,14 @@ public class LocalText {
         Validate.isNonNull(defaultText, "defaultText");
 
         switch (status) {
-            case CONTINUING:
-                return get(R.string.status_continuing);
+            case RETURNING_SERIES:
+                return get(R.string.status_returning);
+            case IN_PRODUCTION:
+                return get(R.string.status_in_production);
             case ENDED:
                 return get(R.string.status_ended);
+            case CANCELED:
+                return get(R.string.status_canceled);
             case UNKNOWN:
             default:
                 return defaultText;

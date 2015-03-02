@@ -522,8 +522,10 @@
     <string formatted="false" name="sort_by_format">Sort %s by…</string>
     <string name="sort_episodes_by_upper">SORT EPISODES BY…</string>
     <string name="special_episodes">SPECIAL EPISODES</string>
-    <string name="status_continuing">Continuing</string>
+    <string name="status_canceled">Canceled</string>
     <string name="status_ended">Ended</string>
+    <string name="status_in_production">Airing soon</string>
+    <string name="status_returning">On Air</string>
     <string name="tab_aired">AIRED</string>
     <string name="tab_next_to_watch">NEXT TO WATCH</string>
     <string name="tab_overview">OVERVIEW</string>
