@@ -379,7 +379,7 @@ public class SeriesDatabase extends SQLiteOpenHelper implements SeriesRepository
 
         cv.put(SERIES_ID, s.id());
         cv.put(SERIES_NAME, s.name());
-        cv.put(SERIES_STATUS, s.status().name());
+        cv.put(SERIES_STATUS, s.status().toString());
         cv.put(SERIES_AIRTIME, Numbers.parseLong(s.airtime(), null));
         cv.put(SERIES_AIRDATE, Numbers.parseLong(s.airDate(), null));
         cv.put(SERIES_RUNTIME, s.runtime());
