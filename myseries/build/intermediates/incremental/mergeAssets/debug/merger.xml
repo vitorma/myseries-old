@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="unspecified"><source path="/home/vitorma/workspace/myseries-old/myseries/build/intermediates/exploded-aar/myseries-old/google-play-services_lib/unspecified/assets"/></dataSet><dataSet config="main"><source path="/home/vitorma/workspace/myseries-old/myseries/assets"/></dataSet><dataSet config="debug"><source path="/home/vitorma/workspace/myseries-old/myseries/build-types/debug/assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/home/vitorma/workspace/myseries-old/myseries/assets"/></dataSet><dataSet config="debug"><source path="/home/vitorma/workspace/myseries-old/myseries/build-types/debug/assets"/></dataSet></merger>

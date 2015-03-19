@@ -12,3 +12,10 @@ local.properties
 .idea/
 *.iml
 **/out/
+*.apk
+
+.gradle
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+*/build/
