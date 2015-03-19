@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/values-sw360dp/dimens.xml -->
-    <eat-comment/>
-    <dimen name="episode_screen_height">202dp</dimen>
-    <dimen name="myseries_grid_gap">8dp</dimen>
-    <dimen name="myseries_poster_height">247dp</dimen>
-    <dimen name="myseries_poster_width">168dp</dimen>
-</resources>

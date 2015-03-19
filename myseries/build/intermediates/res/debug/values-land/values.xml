@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/home/vitorma/workspace/myseries-old/myseries/res/values-land/dimens.xml -->
-    <eat-comment/>
-    <dimen name="empty_state_internal_gap_bottom">8dp</dimen>
-    <dimen name="empty_state_internal_gap_top">4dp</dimen>
-</resources>
