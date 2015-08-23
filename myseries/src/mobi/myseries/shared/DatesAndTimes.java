@@ -45,6 +45,7 @@ public class DatesAndTimes {
         try {
             return format.parse(date);
         } catch (ParseException e) {
+            e.printStackTrace();
             return defaultDate;
         }
     }

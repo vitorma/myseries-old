@@ -44,6 +44,7 @@ public class EpisodeListFragment extends ListFragment {
         try {
             this.listener = (OnSelectItemListener) activity;
         } catch (ClassCastException e) {
+            e.printStackTrace();
             throw new ClassCastException(activity.toString() + " must implement EpisodeListFragmentListener");
         }
     }

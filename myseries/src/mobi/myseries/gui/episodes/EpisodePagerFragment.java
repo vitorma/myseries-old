@@ -47,6 +47,7 @@ public class EpisodePagerFragment extends Fragment implements OnPageChangeListen
         try {
             this.listener = (OnSelectPageListener) activity;
         } catch (ClassCastException e) {
+            e.printStackTrace();
             throw new ClassCastException(activity.toString() + " must implement EpisodePagerFragmentListener");
         }
     }

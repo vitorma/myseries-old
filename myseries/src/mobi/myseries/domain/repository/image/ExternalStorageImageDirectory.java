@@ -108,8 +108,10 @@ public class ExternalStorageImageDirectory implements ImageRepository {
                 nomedia.createNewFile();
             }
         } catch (SecurityException e) {
+            e.printStackTrace();
             throw new ImageDirectoryIoException("create", path, e);
         } catch (IOException e) {
+            e.printStackTrace();
             throw new ImageDirectoryIoException("write/read on", path, e);
         }
 

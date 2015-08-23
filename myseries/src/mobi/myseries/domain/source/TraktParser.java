@@ -1,26 +1,7 @@
 package mobi.myseries.domain.source;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.TimeZone;
-
-import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.SearchResult;
-import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.DatesAndTimes;
-import mobi.myseries.shared.Objects;
-import mobi.myseries.shared.Status;
-import mobi.myseries.shared.Time;
-import mobi.myseries.shared.WeekDay;
 import android.util.Log;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,6 +13,27 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.Season;
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.DatesAndTimes;
+import mobi.myseries.shared.Objects;
+import mobi.myseries.shared.Status;
+import mobi.myseries.shared.Time;
+import mobi.myseries.shared.WeekDay;
 
 public class TraktParser {
     private static final String IDS = "ids";
@@ -63,6 +65,7 @@ public class TraktParser {
     private static final String EPISODES = "episodes";
     private static final String NUMBER = "number";
     private static final String SCREEN = "screen";
+    private static final String FULL = "full";
     private static final String SHOWS = "shows";
     private static final String SHOW = "show";
     private static final String TRAKT_DEFAULT_POSTER_FILENAME = "poster-dark.jpg";
@@ -76,6 +79,7 @@ public class TraktParser {
         @Override
         public Series deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject seriesObject = element.getAsJsonObject();
+            Log.d("\n\nDELETE THIS LOG", "/ SERIES:\n" + seriesObject.toString());
 
             int seriesId = readTraktId(seriesObject);
 
@@ -124,12 +128,26 @@ public class TraktParser {
         }
     };
 
+    private static final JsonDeserializer<Season> SEASON_ADAPTER = new JsonDeserializer<Season>() {
+        @Override
+        public Season deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject seasonElement = element.getAsJsonObject();
+
+            int seriesId = 0; //TODO
+
+            return new Season(seriesId, readNumber(seasonElement));
+        }
+    };
+
     private static final JsonDeserializer<Episode.Builder> EPISODE_ADAPTER = new JsonDeserializer<Episode.Builder>() {
         @Override
         public Episode.Builder deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject episodeElement = element.getAsJsonObject();
 
+            Log.d("\n\nDELETE THIS LOG", "/ EPISODE:\n" + episodeElement.toString());
+
             return Episode.builder()
+                    .withId(readTraktId(episodeElement))
                     .withNumber(readNumber(episodeElement))
                     .withSeasonNumber(readSeason(episodeElement))
                     .withTitle(readTitle(episodeElement))
@@ -146,11 +164,11 @@ public class TraktParser {
             JsonObject showElement = resultElement.get(SHOW).getAsJsonObject();
 
             return new SearchResult()
-            .setTraktId(readTraktIdAsString(showElement))
-            .setTitle(readTitle(showElement))
-            .setOverview(readOverview(showElement))
+                    .setTraktId(readTraktIdAsString(showElement))
+                    .setTitle(readTitle(showElement))
+                    .setOverview(readOverview(showElement))
 //            .setGenres(readGenres(showElement))
-            .setPoster(readPoster(showElement));
+                    .setPoster(readPoster(showElement));
         }
     };
 
@@ -175,6 +193,9 @@ public class TraktParser {
         }
     };
 
+    private static final String EPISODE_COUNT = "episode_count";
+    public static final String SCREENSHOT = "screenshot";
+
     private static Gson gson;
 
     /* Interface */
@@ -190,9 +211,55 @@ public class TraktParser {
 
             return series;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ParsingFailedException(e);
         }
     }
+
+    public static List<Pair<Integer, Integer>> parseSeasons(InputStream in) throws ParsingFailedException {
+        List<Pair<Integer, Integer>> seasons = new ArrayList<Pair<Integer, Integer>>();
+
+        try {
+            JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(in, "UTF-8")));
+
+            reader.beginArray();
+
+            while (reader.hasNext()) {
+                reader.beginObject();
+                int seasonNumber = -1;
+                int episodeCount = 0;
+                while (reader.hasNext()) {
+                    String name = reader.nextName();
+
+                    if (name.equals(NUMBER)) {
+                        seasonNumber = reader.nextInt();
+
+                    } else if (name.equals(EPISODE_COUNT)) {
+                        episodeCount = reader.nextInt();
+
+                    } else {
+                        reader.skipValue();
+                    }
+
+                }
+                Log.d(TraktParser.class.getName(), String.format(Locale.US, "SEASON %d: %d episodes", seasonNumber, episodeCount));
+                seasons.add(new Pair<Integer, Integer>(seasonNumber, episodeCount));
+                reader.endObject();
+            }
+
+            reader.close();
+            in.close();
+
+            //return seasons;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            //TODO: throw new ParsingFailedException(e);
+        }
+
+        return seasons;
+    }
+
 
     public static List<SearchResult> parseSearchResults(InputStream in) throws ParsingFailedException {
         try {
@@ -206,6 +273,7 @@ public class TraktParser {
                     result.toSeries();
                     results.add(result);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     //Ignore the result if it cannot be converted to a Series object.
                     //TODO(Tiago) Is there a better way to do this?
                 }
@@ -243,11 +311,12 @@ public class TraktParser {
     private static Gson gson() {
         if (gson == null) {
             gson = new GsonBuilder()
-            .registerTypeAdapter(Series.class, SERIES_ADAPTER)
-            .registerTypeAdapter(Episode.Builder.class, EPISODE_ADAPTER)
-            .registerTypeAdapter(SearchResult.class, SEARCH_RESULT_ADAPTER)
-            .registerTypeAdapter(List.class, UPDATE_METADATA_ADAPTER) //XXX (Cleber) Create a class to encapsulate UpdateMetadata
-            .create();
+                    .registerTypeAdapter(Series.class, SERIES_ADAPTER)
+                    .registerTypeAdapter(Episode.Builder.class, EPISODE_ADAPTER)
+                    .registerTypeAdapter(Season.class, SEASON_ADAPTER)
+                    .registerTypeAdapter(SearchResult.class, SEARCH_RESULT_ADAPTER)
+                    .registerTypeAdapter(List.class, UPDATE_METADATA_ADAPTER) //XXX (Cleber) Create a class to encapsulate UpdateMetadata
+                    .create();
         }
 
         return gson;
@@ -271,6 +340,7 @@ public class TraktParser {
         try {
             return Status.from(object.get(STATUS).getAsString());
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -280,6 +350,7 @@ public class TraktParser {
             JsonObject airsObject = object.get(AIRS).getAsJsonObject();
             return WeekDay.valueOf(airsObject.get(AIR_DAY).getAsString());
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -298,20 +369,17 @@ public class TraktParser {
             JsonObject airsObject = object.get(AIRS).getAsJsonObject();
             return TimeZone.getTimeZone(airsObject.get(TIMEZONE).getAsString());
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
 
     private static Date readAirDate(JsonObject object) {
         try {
-            JsonObject airDateObject = object.get(FIRST_AIRED).getAsJsonObject();
-            if (airDateObject.isJsonNull()) {
-                Log.d(TraktParser.class.getName(), "AIRDATE == (Unix time) 0. Returning null instead.");
-                return null;
-            }
-
-            return DatesAndTimes.parse(airDateObject.getAsString(), df, null);
+            String airDateObject = object.get(FIRST_AIRED).getAsString();
+            return DatesAndTimes.parse(airDateObject, df, null);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -368,12 +436,12 @@ public class TraktParser {
         JsonObject imagesObject = object.getAsJsonObject(IMAGES);
         JsonObject postersObject = imagesObject.getAsJsonObject(POSTERS);
 
-        if(postersObject.get(POSTER_MEDIUM).isJsonNull()) {
+        if (postersObject.get(POSTER_MEDIUM).isJsonNull()) {
             return "";
         }
 
         String posterUrl = readStringSafely(postersObject.get(POSTER_MEDIUM));
-        if(isDefaultPoster(posterUrl))
+        if (isDefaultPoster(posterUrl))
             posterUrl = "";
 
         return posterUrl;
@@ -392,11 +460,11 @@ public class TraktParser {
     }
 
     private static String readScreen(JsonObject object) {
-        String screenUrl = readStringSafely(object.get(SCREEN));
-        if(isDefaultScreen(screenUrl))
+        String screenUrl = readStringSafely(object.get(IMAGES).getAsJsonObject().get(SCREENSHOT).getAsJsonObject().get(FULL));
+        if (isDefaultScreen(screenUrl))
             screenUrl = "";
 
-        return screenUrl; 
+        return screenUrl;
     }
 
     private static boolean isDefaultScreen(String screenUrl) {
@@ -405,6 +473,10 @@ public class TraktParser {
 
 
     private static String readStringSafely(JsonElement object) {
+        if (object.isJsonNull()) {
+            return "";
+        }
+
         return Objects.nullSafe(object, new JsonPrimitive("")).getAsString();
     }
 
@@ -415,12 +487,29 @@ public class TraktParser {
     private static String compressedPosterUrl(String poster, int size) {
         int extensionIndex = poster.lastIndexOf(".");
 
-        if (extensionIndex == -1) { return poster; }
+        if (extensionIndex == -1) {
+            return poster;
+        }
 
         return new StringBuilder()
-        .append(poster.substring(0, extensionIndex))
-        .append("-" + size)
-        .append(poster.substring(extensionIndex))
-        .toString();
+                .append(poster.substring(0, extensionIndex))
+                .append("-" + size)
+                .append(poster.substring(extensionIndex))
+                .toString();
+    }
+
+    public static Episode.Builder parseEpisode(InputStream in) throws ParsingFailedException {
+        try {
+            JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(in, "UTF-8")));
+            Episode.Builder episode = gson().fromJson(reader, Episode.Builder.class);
+            reader.close();
+            in.close();
+
+            return episode;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ParsingFailedException(e);
+        }
     }
 }

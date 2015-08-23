@@ -23,7 +23,7 @@ public class FetchUpdateMetadataTask implements UpdateTask {
 
             this.result = new UpdateResult();
         } catch (Exception e) {
-
+            e.printStackTrace();
             this.result = new UpdateResult().withError(e);
         }
     }

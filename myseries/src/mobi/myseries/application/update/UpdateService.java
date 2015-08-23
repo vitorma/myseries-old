@@ -252,7 +252,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
 
         notifyListenersOfUpdateFinish();
     }
-    
+
     private void notifyListenersOfUpdateCancel() {
         this.isCancelled = true;
         this.isUpdating.set(false);
@@ -289,7 +289,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
             public Collection<Series> seriesWithPosterToUpdate;
 
             public boolean isUpdateNecessary() {
-                return (!seriesWithDataToUpdate.isEmpty() || !seriesWithPosterToUpdate.isEmpty()) 
+                return (!seriesWithDataToUpdate.isEmpty() || !seriesWithPosterToUpdate.isEmpty())
                         && !App.backupService().restoreIsRunning();
             }
 
@@ -314,6 +314,7 @@ public class UpdateService extends ApplicationService<UpdateListener> {
             try {
                 whatHasToBeUpdated = checkForUpdates();
             } catch (Exception e) {
+                e.printStackTrace();
                 notifyListenersOfUpdateFailure(e);
                 return;
             }
@@ -450,12 +451,16 @@ public class UpdateService extends ApplicationService<UpdateListener> {
 
                 } catch (InterruptedException e) {
                     // Should never happen
+                    e.printStackTrace();
                     errors.put(s, e);
 
+
                 } catch (ExecutionException e) {
+                    e.printStackTrace();
                     errors.put(s, (Exception) e.getCause());
 
                 } catch (TimeoutException e) {
+                    e.printStackTrace();
                     errors.put(s, new UpdateTimeoutException(e));
 
                 }
