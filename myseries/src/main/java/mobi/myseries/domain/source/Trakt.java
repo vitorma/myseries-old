@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import mobi.myseries.application.Communications;
@@ -72,7 +71,7 @@ public class Trakt implements TraktApi {
         }
 
         String url = searchUri(query).toString();
-        Log.d("DELETE THIS LOG", url);
+        Log.d(Trakt.class.getName(), "SEARCH URL: " + url);
         return TraktParser.parseSearchResults(this.get(url));
     }
 
@@ -163,7 +162,7 @@ public class Trakt implements TraktApi {
     public List<Integer> updatedSeriesSince(long utcTimestamp)
             throws ConnectionFailedException, ParsingFailedException, NetworkUnavailableException {
         String url = updateUri(utcTimestamp).toString();
-        Log.d("DELETE THIS LOG", url);
+        Log.d(Trakt.class.getName(), "UPDATE URL: " + url);
 
         return TraktParser.parseUpdateMetadata(this.get(url));
     }
@@ -189,7 +188,7 @@ public class Trakt implements TraktApi {
     }
 
     public Map<String, String> connectionHeaders() {
-        Map headers = new LinkedTreeMap<String, String>();
+        Map<String, String> headers = new LinkedTreeMap<String, String>();
         headers.put(CONTENT_HEADER_KEY, CONTENT_HEADER_VALUE);
         headers.put(API_KEY_HEADER_KEY, this.apiKey);
         headers.put(API_VERSION_HEADER_KEY, API_VERSION_HEADER_VALUE);

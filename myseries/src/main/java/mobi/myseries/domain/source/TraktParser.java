@@ -1,7 +1,7 @@
 package mobi.myseries.domain.source;
 
-import android.util.Log;
 import android.util.Pair;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -12,15 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
-import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.SearchResult;
-import mobi.myseries.domain.model.Season;
-import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.DatesAndTimes;
-import mobi.myseries.shared.Objects;
-import mobi.myseries.shared.Status;
-import mobi.myseries.shared.Time;
-import mobi.myseries.shared.WeekDay;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -30,8 +21,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
+
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.Season;
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.DatesAndTimes;
+import mobi.myseries.shared.Objects;
+import mobi.myseries.shared.Status;
+import mobi.myseries.shared.Time;
+import mobi.myseries.shared.WeekDay;
 
 public class TraktParser {
     private static final String IDS = "ids";
@@ -77,9 +77,6 @@ public class TraktParser {
         @Override
         public Series deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject seriesObject = element.getAsJsonObject();
-            Log.d("\n\nDELETE THIS LOG", "/ SERIES:\n" + seriesObject.toString());
-
-            int seriesId = readTraktId(seriesObject);
 
             //TODO(Reul): use a single date to store airday and airtime
             Time time = readAirTime(seriesObject);
@@ -105,23 +102,6 @@ public class TraktParser {
 //                    .withActors(readActors(seriesObject))
                     .withPoster(readPoster(seriesObject));
 
-//            JsonArray seasonsArray = seriesObject.getAsJsonArray(SEASONS);
-//
-//            for (JsonElement seasonElement : seasonsArray) {
-//                JsonArray episodesArray = seasonElement.getAsJsonObject().getAsJsonArray(EPISODES);
-//
-//                for (JsonElement episodeElement : episodesArray) {
-//                    Episode.Builder episodeBuilder = context.deserialize(episodeElement, Episode.Builder.class);
-//
-//                    episodeBuilder.withId(Long.parseLong(String.format("%d%03d%03d", seriesId, readSeason(episodeElement.getAsJsonObject()),
-//                            readNumber(episodeElement.getAsJsonObject()))));
-//
-//                    Episode episode = episodeBuilder.withSeriesId(seriesId).withAirtime(airtime).build();
-//
-//                    seriesBuilder.withEpisode(episode);
-//                }
-//            }
-
             return seriesBuilder.build();
         }
     };
@@ -141,8 +121,6 @@ public class TraktParser {
         @Override
         public Episode.Builder deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject episodeElement = element.getAsJsonObject();
-
-            Log.d("\n\nDELETE THIS LOG", "/ EPISODE:\n" + episodeElement.toString());
 
             return Episode.builder()
                     .withId(readTraktId(episodeElement))
@@ -175,16 +153,18 @@ public class TraktParser {
         public List<Integer> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             List<Integer> updateMetadata = new ArrayList<Integer>();
 
-            JsonObject updateMetadataObject = element.getAsJsonObject();
-            JsonArray updatedSeriesArray = updateMetadataObject.getAsJsonArray(SHOWS);
+            JsonArray updatedSeriesArray = element.getAsJsonArray();
 
-            for (JsonElement updatedSeriesElement : updatedSeriesArray) {
-                try {
-                    updateMetadata.add(readTraktId(updatedSeriesElement.getAsJsonObject()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    continue;
-                }
+            for (JsonElement updatedSeries : updatedSeriesArray) {
+                int seriesId = updatedSeries.getAsJsonObject()
+                        .get(SHOW).getAsJsonObject()
+                        .get(IDS).getAsJsonObject()
+                        .get(TRAKT_ID).getAsInt();
+
+                String title = updatedSeries.getAsJsonObject()
+                        .get(SHOW).getAsJsonObject()
+                        .get(TITLE).getAsString();
+                updateMetadata.add(seriesId);
             }
 
             return updateMetadata;
@@ -240,7 +220,7 @@ public class TraktParser {
                     }
 
                 }
-                Log.d(TraktParser.class.getName(), String.format(Locale.US, "SEASON %d: %d episodes", seasonNumber, episodeCount));
+
                 seasons.add(new Pair<Integer, Integer>(seasonNumber, episodeCount));
                 reader.endObject();
             }
