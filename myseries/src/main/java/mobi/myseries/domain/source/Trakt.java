@@ -75,6 +75,7 @@ public class Trakt implements TraktApi {
                 .appendQueryParameter("query", query)
                 .appendQueryParameter("type", SHOW)
                 .appendQueryParameter("extended", "full,images")
+                .appendQueryParameter("limit", "100")
                 .build();
     }
 
@@ -90,6 +91,7 @@ public class Trakt implements TraktApi {
                 .appendPath(SHOWS)
                 .appendPath(TRENDING)
                 .appendQueryParameter("extended", "full,images")
+                .appendQueryParameter("limit", "100")
                 .build();
     }
 
