@@ -221,7 +221,7 @@ public class TraktParser {
 
                 }
 
-                seasons.add(new Pair<Integer, Integer>(seasonNumber, episodeCount));
+                seasons.add(new Pair<>(seasonNumber, episodeCount));
                 reader.endObject();
             }
 
@@ -242,14 +242,16 @@ public class TraktParser {
     public static List<SearchResult> parseSearchResults(InputStream in) throws ParsingFailedException {
         try {
             JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(in, "UTF-8")));
-            List<SearchResult> results = new ArrayList<SearchResult>();
+            List<SearchResult> results = new ArrayList<>();
             reader.beginArray();
 
             while (reader.hasNext()) {
                 SearchResult result = gson().fromJson(reader, SearchResult.class);
+
                 try {
                     result.toSeries();
                     results.add(result);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     //Ignore the result if it cannot be converted to a Series object.
@@ -451,7 +453,7 @@ public class TraktParser {
 
 
     private static String readStringSafely(JsonElement object) {
-        if (object.isJsonNull()) {
+        if (null == object || object.isJsonNull()) {
             return "";
         }
 

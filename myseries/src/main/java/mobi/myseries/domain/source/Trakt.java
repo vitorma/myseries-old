@@ -4,8 +4,14 @@ import android.net.Uri;
 import android.net.Uri.Builder;
 import android.util.Log;
 import android.util.Pair;
-
 import com.google.gson.internal.LinkedTreeMap;
+import mobi.myseries.application.Communications;
+import mobi.myseries.application.ConnectionFailedException;
+import mobi.myseries.application.NetworkUnavailableException;
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.Validate;
 
 import java.io.InputStream;
 import java.text.Normalizer;
@@ -15,15 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import mobi.myseries.application.Communications;
-import mobi.myseries.application.ConnectionFailedException;
-import mobi.myseries.application.NetworkUnavailableException;
-import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.SearchResult;
-import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.Validate;
-
 public class Trakt implements TraktApi {
+    public static final String TAG = Trakt.class.getName();
     private static final String TRAKT_PROTOCOL = "https";
     private static final String TRAKT = "api-v2launch.trakt.tv";
     private static final String TRENDING = "trending";
@@ -33,16 +32,11 @@ public class Trakt implements TraktApi {
     private static final String UPDATES = "updates";
     private static final String SEASONS = "seasons";
     private static final String EPISODES = "episodes";
-
     private static final String CONTENT_HEADER_KEY = "Content-type";
     private static final String CONTENT_HEADER_VALUE = "application/json";
-
     private static final String API_KEY_HEADER_KEY = "trakt-api-key";
-
     private static final String API_VERSION_HEADER_KEY = "trakt-api-version";
     private static final String API_VERSION_HEADER_VALUE = "2";
-    public static final String TAG = Trakt.class.getName();
-
     private final String apiKey;
     private final Communications communications;
 
@@ -67,7 +61,7 @@ public class Trakt implements TraktApi {
 
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return new ArrayList<SearchResult>();
+            return new ArrayList<>();
         }
 
         String url = searchUri(query).toString();
