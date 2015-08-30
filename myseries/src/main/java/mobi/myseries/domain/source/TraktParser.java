@@ -1,17 +1,13 @@
 package mobi.myseries.domain.source;
 
 import android.util.Pair;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import mobi.myseries.domain.model.Episode;
+import mobi.myseries.domain.model.SearchResult;
+import mobi.myseries.domain.model.Season;
+import mobi.myseries.domain.model.Series;
+import mobi.myseries.shared.*;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -23,17 +19,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import mobi.myseries.domain.model.Episode;
-import mobi.myseries.domain.model.SearchResult;
-import mobi.myseries.domain.model.Season;
-import mobi.myseries.domain.model.Series;
-import mobi.myseries.shared.DatesAndTimes;
-import mobi.myseries.shared.Objects;
-import mobi.myseries.shared.Status;
-import mobi.myseries.shared.Time;
-import mobi.myseries.shared.WeekDay;
-
 public class TraktParser {
+    public static final String SCREENSHOT = "screenshot";
     private static final String IDS = "ids";
     private static final String TVDB_ID = "tvdb";
     private static final String TRAKT_ID = "trakt";
@@ -57,7 +44,6 @@ public class TraktParser {
     private static final String IMAGES = "images";
     private static final String POSTERS = "poster";
     private static final String POSTER_MEDIUM = "medium";
-
     private static final String SEASONS = "seasons";
     private static final String SEASON = "season";
     private static final String EPISODES = "episodes";
@@ -68,11 +54,8 @@ public class TraktParser {
     private static final String SHOW = "show";
     private static final String TRAKT_DEFAULT_POSTER_FILENAME = "poster-dark.jpg";
     private static final String TRAKT_DEFAULT_SCREEN_FILENAME = "episode-dark.jpg";
-
     private static final java.text.DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
-
     private static final int COMPRESSED_POSTER_300 = 300;
-
     private static final JsonDeserializer<Series> SERIES_ADAPTER = new JsonDeserializer<Series>() {
         @Override
         public Series deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
@@ -83,17 +66,19 @@ public class TraktParser {
 
             WeekDay airDay = readAirDay(seriesObject);
 
-            Date airtime = null;
+            Date airtimeUtc = null;
             if (time != null && airDay != null) {
-                airtime = new Date(airDay.toDate().getTime() + time.toLong());
+                airtimeUtc = DatesAndTimes.toUtcTime(
+                        new Date(airDay.toDate().getTime() + time.toLong()),
+                        readTimeZone(seriesObject)
+                );
             }
-            Date seriesAirTime = DatesAndTimes.toUtcTime(airtime, readTimeZone(seriesObject));
 
             Series.Builder seriesBuilder = Series.builder()
                     .withTraktId(readTraktId(seriesObject))
                     .withTitle(readTitle(seriesObject))
                     .withStatus(readStatus(seriesObject))
-                    .withAirTime(seriesAirTime)
+                    .withAirTime(airtimeUtc)
                     .withAirDate(readAirDate(seriesObject))
                     .withRuntime(readRuntime(seriesObject))
                     .withNetwork(readNetwork(seriesObject))
@@ -105,7 +90,6 @@ public class TraktParser {
             return seriesBuilder.build();
         }
     };
-
     private static final JsonDeserializer<Season> SEASON_ADAPTER = new JsonDeserializer<Season>() {
         @Override
         public Season deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
@@ -116,7 +100,6 @@ public class TraktParser {
             return new Season(seriesId, readNumber(seasonElement));
         }
     };
-
     private static final JsonDeserializer<Episode.Builder> EPISODE_ADAPTER = new JsonDeserializer<Episode.Builder>() {
         @Override
         public Episode.Builder deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
@@ -132,7 +115,6 @@ public class TraktParser {
                     .withScreenUrl(readScreen(episodeElement));
         }
     };
-
     private static final JsonDeserializer<SearchResult> SEARCH_RESULT_ADAPTER = new JsonDeserializer<SearchResult>() {
         @Override
         public SearchResult deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
@@ -147,7 +129,6 @@ public class TraktParser {
                     .setPoster(readPoster(showElement));
         }
     };
-
     private static final JsonDeserializer<List<Integer>> UPDATE_METADATA_ADAPTER = new JsonDeserializer<List<Integer>>() {
         @Override
         public List<Integer> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
@@ -170,10 +151,7 @@ public class TraktParser {
             return updateMetadata;
         }
     };
-
     private static final String EPISODE_COUNT = "episode_count";
-    public static final String SCREENSHOT = "screenshot";
-
     private static Gson gson;
 
     /* Interface */

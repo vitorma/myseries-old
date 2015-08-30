@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Trakt implements TraktApi {
     public static final String TAG = Trakt.class.getName();
@@ -103,26 +106,67 @@ public class Trakt implements TraktApi {
         String seasonsUrl = showSeasonsUri(seriesId).toString();
         Log.d(TAG, "FETCHING SEASONS FROM:" + seasonsUrl);
 
-        Series series = TraktParser.parseSeries(this.get(seriesUrl));
+        final Series series = TraktParser.parseSeries(this.get(seriesUrl));
 
         List<Pair<Integer, Integer>> seasons = TraktParser.parseSeasons(this.get(seasonsUrl));
 
-        List<Episode> episodes = new LinkedList<Episode>();
-        for (Pair<Integer, Integer> season : seasons) {
-            int seasonNumber = season.first;
+        ExecutorService taskExecutor = Executors.newFixedThreadPool(seasons.size());
+        for (final Pair<Integer, Integer> season : seasons) {
 
-            for (int episodeNumber = 1; episodeNumber <= season.second; ++episodeNumber) {
-                String episodeUrl = showEpisodesUri(seriesId, seasonNumber, episodeNumber).toString();
-                Log.d(TAG, "FETCHING EPISODE: " + episodeUrl);
+            taskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        downloadSeasonEpisodes(series, season);
 
-                Episode.Builder episode = TraktParser.parseEpisode(this.get(episodeUrl));
-                episodes.add(episode.withSeriesId(seriesId).build());
-            }
+                    } catch (ParsingFailedException | ConnectionFailedException | NetworkUnavailableException e) {
+                        e.printStackTrace();
 
-            series.includingAll(episodes);
+                    }
+                }
+            });
+        }
+
+        taskExecutor.shutdown();
+
+        try {
+            taskExecutor.awaitTermination(2, TimeUnit.MINUTES);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+
         }
 
         return series;
+    }
+
+    private void downloadSeasonEpisodes(Series series, Pair<Integer, Integer> season) throws ParsingFailedException, ConnectionFailedException, NetworkUnavailableException {
+        List<Episode> seasonEpisodes = new LinkedList<>();
+        for (int episodeNumber = 1; episodeNumber <= season.second; ++episodeNumber) {
+            String episodeUrl = showEpisodesUri(series.id(), season.first, episodeNumber).toString();
+            Log.d(TAG, "FETCHING EPISODE: " + episodeUrl);
+
+            for (int tries = 1; tries <= 3; ++tries) {
+                try {
+                    Episode.Builder episodeBuilder = TraktParser.parseEpisode(this.get(episodeUrl));
+                    seasonEpisodes.add(episodeBuilder.withSeriesId(series.id()).build());
+                    break;
+
+                } catch (ConnectionFailedException | NetworkUnavailableException e) {
+                    e.printStackTrace();
+
+                    if (tries >= 3) {
+                        throw e;
+
+                    } else {
+                        Log.d(TAG, "FETCHING EPISODE: " + episodeUrl + " FAILED. Retrying..." + 2);
+
+                    }
+                }
+            }
+        }
+
+        series.seasons().includeAll(seasonEpisodes);
     }
 
     private Uri showEpisodesUri(int seriesId, Integer seasonNumber, Integer episodeNumber) {
