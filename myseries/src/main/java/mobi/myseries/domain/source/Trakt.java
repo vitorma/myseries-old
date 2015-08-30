@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Trakt implements TraktApi {
     public static final String TAG = Trakt.class.getName();
+    public static final int N_THREADS = 6;
+    public static final int MAX_TRIES = 5;
     private static final String TRAKT_PROTOCOL = "https";
     private static final String TRAKT = "api-v2launch.trakt.tv";
     private static final String TRENDING = "trending";
@@ -110,21 +111,43 @@ public class Trakt implements TraktApi {
 
         List<Pair<Integer, Integer>> seasons = TraktParser.parseSeasons(this.get(seasonsUrl));
 
-        ExecutorService taskExecutor = Executors.newFixedThreadPool(seasons.size());
+        ExecutorService taskExecutor = Executors.newFixedThreadPool(N_THREADS);
         for (final Pair<Integer, Integer> season : seasons) {
 
-            taskExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        downloadSeasonEpisodes(series, season);
+            for (int i = 1; i <= season.second; ++i) {
+                final int episodeNumber = i;
 
-                    } catch (ParsingFailedException | ConnectionFailedException | NetworkUnavailableException e) {
-                        e.printStackTrace();
+                taskExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String episodeUrl = showEpisodesUri(series.id(), season.first, episodeNumber).toString();
 
+                            for (int tries = 1; tries <= MAX_TRIES; ++tries) {
+                                try {
+                                    Episode.Builder episodeBuilder = TraktParser.parseEpisode(Trakt.this.get(episodeUrl));
+                                    series.seasons().include(episodeBuilder.withSeriesId(series.id()).build());
+                                    break;
+
+                                } catch (ConnectionFailedException | NetworkUnavailableException e) {
+                                    if (tries >= MAX_TRIES) {
+                                        throw e;
+
+                                    } else {
+                                        e.printStackTrace();
+
+                                        Log.d(TAG, "FETCHING EPISODE: " + episodeUrl + " FAILED. Retrying..." + 2);
+
+                                    }
+                                }
+                            }
+                        } catch (ParsingFailedException | ConnectionFailedException | NetworkUnavailableException e) {
+                            e.printStackTrace();
+
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         taskExecutor.shutdown();
@@ -138,35 +161,6 @@ public class Trakt implements TraktApi {
         }
 
         return series;
-    }
-
-    private void downloadSeasonEpisodes(Series series, Pair<Integer, Integer> season) throws ParsingFailedException, ConnectionFailedException, NetworkUnavailableException {
-        List<Episode> seasonEpisodes = new LinkedList<>();
-        for (int episodeNumber = 1; episodeNumber <= season.second; ++episodeNumber) {
-            String episodeUrl = showEpisodesUri(series.id(), season.first, episodeNumber).toString();
-            Log.d(TAG, "FETCHING EPISODE: " + episodeUrl);
-
-            for (int tries = 1; tries <= 3; ++tries) {
-                try {
-                    Episode.Builder episodeBuilder = TraktParser.parseEpisode(this.get(episodeUrl));
-                    seasonEpisodes.add(episodeBuilder.withSeriesId(series.id()).build());
-                    break;
-
-                } catch (ConnectionFailedException | NetworkUnavailableException e) {
-                    e.printStackTrace();
-
-                    if (tries >= 3) {
-                        throw e;
-
-                    } else {
-                        Log.d(TAG, "FETCHING EPISODE: " + episodeUrl + " FAILED. Retrying..." + 2);
-
-                    }
-                }
-            }
-        }
-
-        series.seasons().includeAll(seasonEpisodes);
     }
 
     private Uri showEpisodesUri(int seriesId, Integer seasonNumber, Integer episodeNumber) {

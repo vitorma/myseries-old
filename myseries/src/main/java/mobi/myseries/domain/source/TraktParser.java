@@ -3,6 +3,7 @@ package mobi.myseries.domain.source;
 import android.util.Pair;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import mobi.myseries.application.Log;
 import mobi.myseries.domain.model.Episode;
 import mobi.myseries.domain.model.SearchResult;
 import mobi.myseries.domain.model.Season;
@@ -337,7 +338,7 @@ public class TraktParser {
             String airDateObject = object.get(FIRST_AIRED).getAsString();
             return DatesAndTimes.parse(airDateObject, df, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            //No information about airdate is available. This is ok.
             return null;
         }
     }

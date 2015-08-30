@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import mobi.myseries.shared.DatesAndTimes;
 import mobi.myseries.shared.Specification;
@@ -12,13 +13,13 @@ import mobi.myseries.shared.Validate;
 
 public class SeasonSet {
     private final int seriesId;
-    private final TreeMap<Integer, Season> seasons;
+    private final ConcurrentSkipListMap<Integer, Season> seasons;
 
     public SeasonSet(int seriesId) {
         Validate.isTrue(seriesId >= 0, "seriesId should be non-negative");
 
         this.seriesId = seriesId;
-        this.seasons = new TreeMap<Integer, Season>();
+        this.seasons = new ConcurrentSkipListMap<>();
     }
 
     public int seriesId() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import mobi.myseries.shared.Specification;
 import mobi.myseries.shared.Validate;
@@ -13,7 +14,7 @@ public class Season {
 
     private final int seriesId;
     private final int number;
-    private final TreeMap<Integer, Episode> episodes;
+    private final ConcurrentSkipListMap<Integer, Episode> episodes;
 
     public Season(int seriesId, int number) {
         Validate.isTrue(number >= 0, "number should be non-negative");
@@ -21,7 +22,7 @@ public class Season {
         this.seriesId = seriesId;
         this.number = number;
 
-        this.episodes = new TreeMap<Integer, Episode>();
+        this.episodes = new ConcurrentSkipListMap<>();
     }
 
     public int seriesId() {
